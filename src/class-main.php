@@ -27,6 +27,7 @@ class Main implements Service {
    * @var Service[]
    */
   private $services = [];
+
   /**
    * Register the plugin with the WordPress system.
    *
@@ -42,6 +43,7 @@ class Main implements Service {
 
     $this->register_assets_manifest_data();
   }
+
   /**
    * Register the individual services of this plugin.
    *
@@ -74,6 +76,7 @@ class Main implements Service {
   protected function get_manifest_url() : string {
     return get_template_directory() . '/skin/public/manifest.json';
   }
+
   /**
    * Register bundled asset manifest
    *
@@ -90,6 +93,7 @@ class Main implements Service {
 
     define( 'INF_ASSETS_MANIFEST', implode( ' ', file( $manifest ) ) );
   }
+
   /**
    * Instantiate a single service.
    *
@@ -108,6 +112,7 @@ class Main implements Service {
     }
     return $service;
   }
+
   /**
    * Get the list of services to register.
    *

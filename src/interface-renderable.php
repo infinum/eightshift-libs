@@ -14,6 +14,7 @@ namespace Eightshift_Libs\Core;
  * An object that can be rendered.
  */
 interface Renderable {
+
   /**
    * Render the current Renderable.
    *

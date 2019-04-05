@@ -14,6 +14,7 @@ use Eightshift_Libs\Core\Service;
  * Route interface that adds routes
  */
 interface Route extends Service {
+
     /**
      * Alias for GET transport method.
      *

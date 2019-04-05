@@ -16,6 +16,7 @@ namespace Eightshift_Libs\Core;
  * @since 1.0.0
  */
 interface Service extends Registrable {
+
   /**
    * Theme Name Constant
    *

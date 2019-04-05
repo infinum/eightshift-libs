@@ -12,6 +12,7 @@ namespace Eightshift_Libs\Routes;
  * Route interface that adds routes
  */
 interface Rest_Callable {
+
   /**
    * Method that returns rest response
    *
