@@ -30,7 +30,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\": "src/"
+      "Eightshift_Libs\\": "src/"
     }
   }
 }
