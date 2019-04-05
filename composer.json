@@ -1,5 +1,5 @@
 {
-  "name": "infinum/wordpress-libs",
+  "name": "infinum/eightshift-libs",
   "description": "WordPress libs developed by Eightshift theme to use in WordPress boilerplate.",
   "keywords": [
     "composer", "installer", "plugin"
@@ -15,8 +15,8 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/infinum/wordpress-libs/issues",
-    "source": "https://github.com/infinum/wordpress-libs"
+    "issues": "https://github.com/infinum/eightshift-libs/issues",
+    "source": "https://github.com/infinum/eightshift-libs"
   },
   "require": {
     "php": "^5.6|^7",

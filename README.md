@@ -1,1 +1,1 @@
-# WordPress Libs
+# Eightshift Libs
