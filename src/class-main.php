@@ -19,7 +19,7 @@ use Eightshift_Libs\Exception;
  * Also maintains the unique identifier of this theme as well as the current
  * version of the theme.
  */
-class Main implements Registrable {
+class Main implements Service {
 
   /**
    * Array of instantiated services.
@@ -88,13 +88,7 @@ class Main implements Registrable {
       throw Exception\Missing_Manifest::message( $error_message );
     }
 
-    $response = file( $manifest );
-    if ( ! $response ) {
-      $error_message = esc_html__( 'manifest.json is no valid. Bundle the theme before using it.', 'developer-portal' );
-      throw Exception\Missing_Manifest::message( $error_message );
-    }
-
-    define( 'INF_ASSETS_MANIFEST', implode( ' ', $response ) );
+    define( 'INF_ASSETS_MANIFEST', implode( ' ', file( $manifest ) ) );
   }
   /**
    * Instantiate a single service.
