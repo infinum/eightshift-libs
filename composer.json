@@ -1,7 +1,6 @@
 {
   "name": "infinum/wordpress-libs",
   "description": "WordPress libs developed by Eightshift theme to use in WordPress boilerplate.",
-  "type": "composer-plugin",
   "keywords": [
     "composer", "installer", "plugin"
   ],
