@@ -81,13 +81,19 @@ class Main implements Registrable {
    * @return void
    */
   public function register_assets_manifest_data() {
-    // phpcs:disable
-    $response = ( file( $this->get_manifest_url() ) );
-    // phpcs:enable
-    if ( ! $response ) {
+
+    $manifest = $this->get_manifest_url();
+    if ( ! file_exists( $manifest ) ) {
       $error_message = esc_html__( 'manifest.json is missing. Bundle the theme before using it.', 'developer-portal' );
       throw Exception\Missing_Manifest::message( $error_message );
     }
+
+    $response = file( $manifest );
+    if ( ! $response ) {
+      $error_message = esc_html__( 'manifest.json is no valid. Bundle the theme before using it.', 'developer-portal' );
+      throw Exception\Missing_Manifest::message( $error_message );
+    }
+
     define( 'INF_ASSETS_MANIFEST', implode( ' ', $response ) );
   }
   /**
