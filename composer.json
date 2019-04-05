@@ -1,0 +1,40 @@
+{
+  "name": "eightshift/libs",
+  "description": "WordPress libs developed by Eightshift theme to use in WordPress boilerplate.",
+  "type": "composer-plugin",
+  "keywords": [
+    "composer", "installer", "plugin"
+  ],
+  "homepage": "https://eightshift.com/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Eightshift team",
+      "email": "team@eightshift.com",
+      "homepage": "https://eightshift.com/",
+      "role": "Developer / IT Manager"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/infinum/wordpress-libs/issues",
+    "source": "https://github.com/infinum/wordpress-libs"
+  },
+  "require": {
+    "php": "^5.6|^7",
+    "composer-plugin-api": "^1.0"
+  },
+  "require-dev": {
+    "composer/composer": "*",
+    "sensiolabs/security-checker": "^4.1.0",
+    "phpcompatibility/php-compatibility": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\": "src/"
+    }
+  },
+  "extra": {
+  },
+  "scripts": {
+  }
+}
