@@ -20,6 +20,7 @@ use Eightshift_Libs\Exception;
  * version of the theme.
  */
 class Main implements Registrable {
+
   /**
    * Array of instantiated services.
    *
@@ -52,6 +53,7 @@ class Main implements Registrable {
       return;
     }
     $classes        = $this->get_service_classes();
+
     $this->services = array_map(
       [ $this, 'instantiate_service' ],
       $classes
@@ -63,6 +65,15 @@ class Main implements Registrable {
       }
     );
   }
+
+  /**
+   * Provide menifest json url location.
+   *
+   * @return string
+   */
+  protected function get_manifest_url() : string {
+    return get_template_directory() . '/skin/public/manifest.json';
+  }
   /**
    * Register bundled asset manifest
    *
@@ -71,7 +82,7 @@ class Main implements Registrable {
    */
   public function register_assets_manifest_data() {
     // phpcs:disable
-    $response = ( file( get_template_directory() . '/skin/public/manifest.json' ) );
+    $response = ( file( $this->get_manifest_url() ) );
     // phpcs:enable
     if ( ! $response ) {
       $error_message = esc_html__( 'manifest.json is missing. Bundle the theme before using it.', 'developer-portal' );
@@ -104,11 +115,7 @@ class Main implements Registrable {
    *
    * @return array<string> Array of fully qualified class names.
    */
-  private function get_service_classes() {
-    return [
-
-      // Admin.
-      
-    ];
+  protected function get_service_classes() {
+    return [];
   }
 }
