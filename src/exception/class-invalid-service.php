@@ -2,7 +2,7 @@
 /**
  * File containing the invalid service exception class
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package Eightshift_Libs\Exception
  */
 

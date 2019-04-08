@@ -23,10 +23,23 @@
     "composer-plugin-api": "^1.0"
   },
   "require-dev": {
+    "infinum/coding-standards-wp": "*",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.5"
   },
   "autoload": {
     "psr-4": {
       "Eightshift_Libs\\": "src/"
     }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "process-timeout": 2000
+  },
+  "scripts": {
+    "check-cs": "@php ./vendor/bin/phpcs --extensions=php --ignore=/vendor/",
+    "fix-cs": "@php ./vendor/bin/phpcbf --extensions=php --ignore=/vendor/"
   }
 }

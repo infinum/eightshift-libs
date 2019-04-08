@@ -2,7 +2,7 @@
 /**
  * File containing label generator class
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package Eightshift_Libs\Custom_Post_Type
  */
 
@@ -40,7 +40,7 @@ final class Label_Generator {
    *
    * @since 1.0.0
    */
-  const PLURAL_NAME_UC   = 'plural_name_uc';
+  const PLURAL_NAME_UC = 'plural_name_uc';
 
   /**
    * Plural name LC Constant
@@ -49,7 +49,7 @@ final class Label_Generator {
    *
    * @since 1.0.0
    */
-  const PLURAL_NAME_LC   = 'plural_name_lc';
+  const PLURAL_NAME_LC = 'plural_name_lc';
 
   /**
    * Requiered Nons Constant
@@ -142,16 +142,16 @@ final class Label_Generator {
     ];
 
     return array_map(
-      function( $label ) use ( $nouns ) {
-        return sprintf(
-          $label,
-          $nouns[ self::SINGULAR_NAME_UC ],
-          $nouns[ self::SINGULAR_NAME_LC ],
-          $nouns[ self::PLURAL_NAME_UC ],
-          $nouns[ self::PLURAL_NAME_LC ]
-        );
-      },
-      $label_templates
+    function( $label ) use ( $nouns ) {
+      return sprintf(
+        $label,
+        $nouns[ self::SINGULAR_NAME_UC ],
+        $nouns[ self::SINGULAR_NAME_LC ],
+        $nouns[ self::PLURAL_NAME_UC ],
+        $nouns[ self::PLURAL_NAME_LC ]
+      );
+    },
+    $label_templates
     );
   }
 }

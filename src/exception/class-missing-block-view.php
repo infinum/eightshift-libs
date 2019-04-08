@@ -2,7 +2,7 @@
 /**
  * File containing invalid Block view exception
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -16,7 +16,8 @@ class Missing_Block_View extends \InvalidArgumentException implements General_Ex
   /**
    * Create a new instance of the exception for an missing block view.
    *
-   * @param string $key Asset handle that is not valid.
+   * @param string $name Block name.
+   * @param string $path Path to block on disk.
    *
    * @return static
    *

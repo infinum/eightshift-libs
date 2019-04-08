@@ -2,7 +2,7 @@
 /**
  * File containing the failure exception class when assets aren't bundled
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -18,7 +18,7 @@ class Missing_Manifest extends \InvalidArgumentException implements General_Exce
    * a manifest file is missing.
    *
    * @param string $message Error message to show on
-   * thrown exception.
+   *                        thrown exception.
    *
    * @return static
    *

@@ -2,7 +2,7 @@
 /**
  * File that holds base abstract class for Gutenberg blocks registration
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package Eightshift_Libs\Blocks
  */
 
@@ -130,22 +130,21 @@ abstract class Base_Block implements Block, Service {
    *   Block:     class-heading.php
    *   Template:  heading.php
    *
-   * @param  array  $attributes Array of attributes as defined in block's index.js.
-   * @param  string $content    Block's content.
+   * @param array  $attributes Array of attributes as defined in block's index.js.
+   * @param string $content    Block's content.
    *
    * @throws \Exception On missing attributes OR missing template.
-   * @echo string
+   * @echo   string
    *
    * @since 1.0.0
    */
-  public function render( array $attributes, string $content ) : string {
+  public function render( array $attributes, string $content ) : string { //phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
 
     // Block must have a defined name to find it's template.
     // Make sure the class (block) extending this class (abstract Base_Block)
     // has defined it's own name.
     if ( static::NAME === self::NAME ) {
       throw Missing_Block_Name::message();
-      throw Missing_Block_View::message();
     }
 
     $template_path = 'src/blocks/' . static::NAME . '/view/' . static::NAME . '.php';

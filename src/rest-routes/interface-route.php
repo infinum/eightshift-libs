@@ -2,7 +2,7 @@
 /**
  * File containing type interface
  *
- * @since 1.0.0
+ * @since   1.0.0
  * @package Eightshift_Libs\Routes
  */
 
@@ -15,50 +15,50 @@ use Eightshift_Libs\Core\Service;
  */
 interface Route extends Service {
 
-    /**
-     * Alias for GET transport method.
-     *
-     * @var string
-     *
-     * @since 1.0.0
-     */
-    const READABLE = 'GET';
+  /**
+   * Alias for GET transport method.
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
+  const READABLE = 'GET';
+
+  /**
+   * Alias for POST transport method.
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
+  const CREATABLE = 'POST';
 
     /**
-     * Alias for POST transport method.
-     *
-     * @var string
-     *
-     * @since 1.0.0
-     */
-    const CREATABLE = 'POST';
+   * Alias for PATCH transport method.
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
+  const EDITABLE = 'PATCH';
 
-    /**
-     * Alias for PATCH transport method.
-     *
-     * @var string
-     *
-     * @since 1.0.0
-     */
-    const EDITABLE = 'PATCH';
+  /**
+   * Alias for PUT transport method.
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
+  const UPDATEABLE = 'PUT';
 
-    /**
-     * Alias for PUT transport method.
-     *
-     * @var string
-     *
-     * @since 1.0.0
-     */
-    const UPDATEABLE = 'PUT';
-
-    /**
-     * Alias for DELETE transport method.
-     *
-     * @var string
-     *
-     * @since 1.0.0
-     */
-    const DELETABLE = 'DELETE';
+  /**
+   * Alias for DELETE transport method.
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
+  const DELETABLE = 'DELETE';
 
   /**
    * Method for adding custom routes
