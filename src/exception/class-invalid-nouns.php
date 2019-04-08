@@ -6,8 +6,6 @@
  * @package Eightshift_Libs\Exception
  */
 
-declare( strict_types=1 );
-
 namespace Eightshift_Libs\Exception;
 
 /**
@@ -22,6 +20,8 @@ class Invalid_Nouns extends \InvalidArgumentException implements General_Excepti
    * @param string $key Asset handle that is not valid.
    *
    * @return static
+   *
+   * @since 1.0.0
    */
   public static function from_key( string $key ) {
     $message = sprintf(

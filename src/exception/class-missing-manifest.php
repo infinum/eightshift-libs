@@ -21,6 +21,8 @@ class Missing_Manifest extends \InvalidArgumentException implements General_Exce
    * thrown exception.
    *
    * @return static
+   *
+   * @since 1.0.0
    */
   public static function message( $message ) {
     return new static( $message );

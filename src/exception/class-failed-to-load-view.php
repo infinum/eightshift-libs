@@ -22,6 +22,8 @@ class Failed_To_Load_View extends \RuntimeException implements General_Exception
    * @param \Exception $exception Exception that was thrown by the view file.
    *
    * @return static
+   *
+   * @since 1.0.0
    */
   public static function view_exception( $uri, $exception ) {
     $message = sprintf(

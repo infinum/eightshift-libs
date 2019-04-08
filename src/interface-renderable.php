@@ -21,6 +21,8 @@ interface Renderable {
    * @param array $context Context in which to render.
    *
    * @return string Rendered HTML.
+   *
+   * @since 1.0.0
    */
   public function render( array $context = [] ) : string;
 }

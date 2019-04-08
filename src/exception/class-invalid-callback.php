@@ -20,6 +20,8 @@ class Invalid_Callback extends \InvalidArgumentException implements General_Exce
    * @param string $callback Class name of the callback that was not recognized.
    *
    * @return static
+   *
+   * @since 1.0.0
    */
   public static function from_callback( $callback ) {
     $message = sprintf(

@@ -19,7 +19,7 @@ use Eightshift_Libs\Exception;
  * Also maintains the unique identifier of this theme as well as the current
  * version of the theme.
  */
-class Main implements Service {
+abstract class Main implements Service {
 
   /**
    * Array of instantiated services.
@@ -36,6 +36,10 @@ class Main implements Service {
    * themn in one place.
    *
    * @throws Exception\Invalid_Service If a service is not valid.
+   *
+   * @return void
+   *
+   * @since 1.0.0
    */
   public function register() : void {
 
@@ -48,13 +52,19 @@ class Main implements Service {
    * Register the individual services of this plugin.
    *
    * @throws Exception\Invalid_Service If a service is not valid.
+   *
+   * @return void
+   *
+   * @since 1.0.0
    */
-  public function register_services() {
+  public function register_services() : void {
+
     // Bail early so we don't instantiate services twice.
     if ( ! empty( $this->services ) ) {
       return;
     }
-    $classes        = $this->get_service_classes();
+
+    $classes = $this->get_service_classes();
 
     $this->services = array_map(
       [ $this, 'instantiate_service' ],
@@ -72,6 +82,8 @@ class Main implements Service {
    * Provide menifest json url location.
    *
    * @return string
+   *
+   * @since 1.0.0
    */
   protected function get_manifest_url() : string {
     return get_template_directory() . '/skin/public/manifest.json';
@@ -81,9 +93,12 @@ class Main implements Service {
    * Register bundled asset manifest
    *
    * @throws Exception\Missing_Manifest Throws error if manifest is missing.
+   *
    * @return void
+   *
+   * @since 1.0.0
    */
-  public function register_assets_manifest_data() {
+  public function register_assets_manifest_data() : void {
 
     $manifest = $this->get_manifest_url();
     if ( ! file_exists( $manifest ) ) {
@@ -99,17 +114,22 @@ class Main implements Service {
    *
    * @param string $class Service class to instantiate.
    *
-   * @return Service
    * @throws Exception\Invalid_Service If the service is not valid.
+   *
+   * @return Service
+   *
+   * @since 1.0.0
    */
   private function instantiate_service( $class ) {
     if ( ! class_exists( $class ) ) {
       throw Exception\Invalid_Service::from_service( $class );
     }
+
     $service = new $class();
     if ( ! $service instanceof Service ) {
       throw Exception\Invalid_Service::from_service( $service );
     }
+
     return $service;
   }
 
@@ -119,8 +139,10 @@ class Main implements Service {
    * A list of classes which contain hooks.
    *
    * @return array<string> Array of fully qualified class names.
+   *
+   * @since 1.0.0
    */
-  protected function get_service_classes() {
+  protected function get_service_classes() : array {
     return [];
   }
 }

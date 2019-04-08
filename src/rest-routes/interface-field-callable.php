@@ -23,6 +23,8 @@ interface Field_Callable {
    * @return mixed          If response generated an error, WP_Error, if response
    *                        is already an instance, WP_HTTP_Response, otherwise
    *                        returns a new WP_REST_Response instance.
+   *
+   * @since 1.0.0
    */
   public function field_callback( object $object, string $attr, object $request, string $object_type );
 }

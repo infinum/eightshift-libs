@@ -18,40 +18,45 @@ interface Route extends Service {
     /**
      * Alias for GET transport method.
      *
-     * @since 1.5.0
      * @var string
+     *
+     * @since 1.0.0
      */
     const READABLE = 'GET';
 
     /**
      * Alias for POST transport method.
      *
-     * @since 1.5.0
      * @var string
+     *
+     * @since 1.0.0
      */
     const CREATABLE = 'POST';
 
     /**
      * Alias for PATCH transport method.
      *
-     * @since 1.5.0
      * @var string
+     *
+     * @since 1.0.0
      */
     const EDITABLE = 'PATCH';
 
     /**
      * Alias for PUT transport method.
      *
-     * @since 1.5.0
      * @var string
+     *
+     * @since 1.0.0
      */
     const UPDATEABLE = 'PUT';
 
     /**
      * Alias for DELETE transport method.
      *
-     * @since 1.5.0
      * @var string
+     *
+     * @since 1.0.0
      */
     const DELETABLE = 'DELETE';
 
@@ -59,6 +64,8 @@ interface Route extends Service {
    * Method for adding custom routes
    *
    * @return void
+   *
+   * @since 1.0.0
    */
   public function register_route() : void;
 }

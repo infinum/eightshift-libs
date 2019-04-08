@@ -20,9 +20,29 @@ interface Block {
    * - rootClass: Block's root (base) BEM CSS class, built in "block/$name" format (example: block-heading)
    * - jsClass:   Block's js selector class, built in "js-block-$name" format (example: js-block-heading)
    *
-   * @return void
+   * @return array
+   *
+   * @since 1.0.0
    */
-  public function add_default_attributes() : void;
+  public function get_default_attributes() : array;
+
+  /**
+   * Get block attributes assigned inside block class.
+   *
+   * @return array
+   *
+   * @since 1.0.0
+   */
+  public function get_block_attributes() : array;
+
+  /**
+   * Get all block attributes. Default and block attributes.
+   *
+   * @return array
+   *
+   * @since 1.0.0
+   */
+  public function get_attributes() : array;
 
   /**
    * Renders the block using a template in Infinum\Blocks\Templates namespace/folder.

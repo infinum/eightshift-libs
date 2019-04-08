@@ -20,6 +20,8 @@ class Invalid_Service extends \InvalidArgumentException implements General_Excep
    * @param string $service Class name of the service that was not recognized.
    *
    * @return static
+   *
+   * @since 1.0.0
    */
   public static function from_service( $service ) {
     $message = sprintf(

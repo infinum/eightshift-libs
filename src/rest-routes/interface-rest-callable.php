@@ -20,6 +20,8 @@ interface Rest_Callable {
    * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
    *                                is already an instance, WP_HTTP_Response, otherwise
    *                                returns a new WP_REST_Response instance.
+   *
+   * @since 1.0.0
    */
   public function rest_callback( \WP_REST_Request $request );
 }

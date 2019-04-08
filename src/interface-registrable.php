@@ -12,8 +12,6 @@ namespace Eightshift_Libs\Core;
  * Interface Registrable.
  *
  * An object that can be registered.
- *
- * @since 1.0.0
  */
 interface Registrable {
 
@@ -26,6 +24,8 @@ interface Registrable {
    * This is why every class should hold its own hooks.
    *
    * @return void
+   *
+   * @since 1.0.0
    */
   public function register() : void;
 }

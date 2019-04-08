@@ -12,16 +12,52 @@ use Eightshift_Libs\Exception\Invalid_Nouns;
 
 /**
  * Class that generates lables for custom post type
- *
- * @since 1.0.0
  */
 final class Label_Generator {
 
+  /**
+   * Singular name UC Constant
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
   const SINGULAR_NAME_UC = 'singular_name_uc';
+
+  /**
+   * Singular name LC Constant
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
   const SINGULAR_NAME_LC = 'singular_name_lc';
+
+  /**
+   * Plural name UC Constant
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
   const PLURAL_NAME_UC   = 'plural_name_uc';
+
+  /**
+   * Plural name LC Constant
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
   const PLURAL_NAME_LC   = 'plural_name_lc';
 
+  /**
+   * Requiered Nons Constant
+   *
+   * @var string
+   *
+   * @since 1.0.0
+   */
   const REQUIRED_NOUNS = [
     self::SINGULAR_NAME_UC,
     self::SINGULAR_NAME_LC,
@@ -37,6 +73,8 @@ final class Label_Generator {
    *
    * @return string[] array Array of labels.
    * @throws Invalid_Nouns Invalid nouns exception.
+   *
+   * @since 1.0.0
    */
   public function get_generated_labels( array $nouns ) : array {
 

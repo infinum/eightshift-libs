@@ -19,6 +19,8 @@ interface Field extends Service {
    * Method for adding custom routes
    *
    * @return void
+   *
+   * @since 1.0.0
    */
   public function register_field() : void;
 }

@@ -19,6 +19,10 @@ abstract class Base_Taxonomy implements Service {
 
   /**
    * Register custom taxonomy.
+   *
+   * @return void
+   *
+   * @since 1.0.0
    */
   public function register() : void {
     add_action(
@@ -37,6 +41,8 @@ abstract class Base_Taxonomy implements Service {
    * Get the slug of the custom taxonomy
    *
    * @return string Custom taxonomy slug.
+   *
+   * @since 1.0.0
    */
   abstract protected function get_taxonomy_slug() : string;
 
@@ -44,6 +50,8 @@ abstract class Base_Taxonomy implements Service {
    * Get the post type slug to use the taxonomy to
    *
    * @return string Custom post type slug.
+   *
+   * @since 1.0.0
    */
   abstract protected function get_post_type_slug() : string;
 
@@ -51,6 +59,8 @@ abstract class Base_Taxonomy implements Service {
    * Get the arguments that configure the custom taxonomy.
    *
    * @return array Array of arguments.
+   *
+   * @since 1.0.0
    */
   abstract protected function get_taxonomy_arguments() : array;
 }
