@@ -22,7 +22,10 @@ abstract class Base_Post_Type implements Service {
    */
   public function register() : void {
     add_action(
-      'init', register_post_type( $this->get_post_type_slug(), $this->get_post_type_arguments() )
+      'init',
+      function() {
+        register_post_type( $this->get_post_type_slug(), $this->get_post_type_arguments() );
+      }
     );
   }
 
