@@ -25,7 +25,7 @@ class Failed_To_Load_View extends \RuntimeException implements General_Exception
    */
   public static function view_exception( $uri, $exception ) {
     $message = sprintf(
-      esc_html__( 'Could not load the View URI "%1$s". Reason: "%2$s".', 'eightshift-libs' ),
+      esc_html__( 'Could not load the View URI: %1$s. Reason: %2$s.', 'eightshift-libs' ),
       $uri,
       $exception->getMessage()
     );

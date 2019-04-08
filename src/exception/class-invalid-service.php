@@ -23,7 +23,7 @@ class Invalid_Service extends \InvalidArgumentException implements General_Excep
    */
   public static function from_service( $service ) {
     $message = sprintf(
-      esc_html__( 'The service "%s" is not recognized and cannot be registered.', 'eightshift-libs' ),
+      esc_html__( 'The service %s is not recognized and cannot be registered.', 'eightshift-libs' ),
       is_object( $service )
         ? get_class( $service )
         : (string) $service

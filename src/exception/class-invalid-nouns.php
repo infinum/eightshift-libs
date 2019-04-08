@@ -25,7 +25,7 @@ class Invalid_Nouns extends \InvalidArgumentException implements General_Excepti
    */
   public static function from_key( string $key ) {
     $message = sprintf(
-      esc_html__( 'The array of nouns passed into the Label_Generator is missing the "%s" noun.', 'eightshift-libs' ),
+      esc_html__( 'The array of nouns passed into the Label_Generator is missing the %s noun.', 'eightshift-libs' ),
       $key
     );
 

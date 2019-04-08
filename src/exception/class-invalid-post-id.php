@@ -22,7 +22,7 @@ class Invalid_Post_ID extends \InvalidArgumentException implements General_Excep
    */
   public static function from_id( $id ) {
     $message = sprintf(
-      esc_html__( 'The post ID "%d" is not valid.', 'eightshift-libs' ),
+      esc_html__( 'The post ID %d is not valid.', 'eightshift-libs' ),
       $id
     );
 
