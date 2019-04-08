@@ -23,7 +23,7 @@ class Invalid_Callback extends \InvalidArgumentException implements General_Exce
    */
   public static function from_callback( $callback ) {
     $message = sprintf(
-      'The callback "%s" is not recognized and cannot be registered.',
+      esc_html__( 'The callback "%s" is not recognized and cannot be registered.', 'eightshift-libs' ),
       is_object( $callback )
         ? get_class( $callback )
         : (string) $callback

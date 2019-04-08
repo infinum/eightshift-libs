@@ -24,7 +24,7 @@ class Invalid_URI extends \InvalidArgumentException implements General_Exception
    */
   public static function from_uri( $uri ) {
     $message = sprintf(
-      'The View URI "%s" is not accessible or readable.',
+      esc_html__( 'The View URI "%s" is not accessible or readable.', 'eightshift-libs' ),
       $uri
     );
 
