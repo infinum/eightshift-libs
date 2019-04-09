@@ -8,15 +8,15 @@
     <severity>0</severity>
   </rule>
 
-  <rule ref="WordPress.WP.EnqueuedResourceParameters.NotInFooter">
-    <severity>0</severity>
-  </rule>
-
   <rule ref="WordPress.WP.GlobalVariablesOverride.OverrideProhibited">
     <severity>0</severity>
   </rule>
 
   <rule ref="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.objectFound">
+    <severity>0</severity>
+  </rule>
+
+  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassAfterLastUsed">
     <severity>0</severity>
   </rule>
 </ruleset>
