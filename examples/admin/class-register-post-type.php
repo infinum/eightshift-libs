@@ -3,10 +3,10 @@
  * File that holds faq custom post type registration details
  *
  * @since 1.0.0
- * @package Inf_Theme\Admin
+ * @package Custom_Namespace\Admin
  */
 
-namespace Inf_Theme\Admin;
+namespace Custom_Namespace\Admin;
 
 use Eightshift_Libs\Custom_Post_Type\Base_Post_Type;
 use Eightshift_Libs\Custom_Post_Type\Label_Generator;
@@ -23,7 +23,7 @@ final class Faq extends Base_Post_Type {
    *
    * @var string
    */
-   const POST_TYPE_SLUG = 'faq-type';
+   const POST_TYPE_SLUG = 'faq';
 
   /**
    * The custom post type menu icon

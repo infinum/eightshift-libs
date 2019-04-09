@@ -6,14 +6,14 @@
  * theme-facing side of the site and the admin area.
  *
  * @since   1.0.0
- * @package Inf_Theme\Includes
+ * @package Custom_Namespace\Includes
  */
 
-namespace Inf_Theme\Includes;
+namespace Custom_Namespace\Includes;
 
 use Eightshift_Libs\Core\Main as LibMain;
 
-use Inf_Theme\Admin;
+use Custom_Namespace\Admin;
 
 /**
  * The main start class.

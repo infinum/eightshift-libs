@@ -3,14 +3,15 @@
  * File that holds taxonomy class for fax taxonomy registration
  *
  * @since 1.0.0
- * @package Inf_Theme\Admin
+ * @package Custom_Namespace\Admin
  */
 
-namespace Inf_Theme\Admin;
+namespace Custom_Namespace\Admin;
 
 use Eightshift_Libs\Custom_Taxonomy\Base_Taxonomy;
 use Eightshift_Libs\Custom_Post_Type\Label_Generator;
-use Inf_Theme\Admin\Faq;
+
+use Custom_Namespace\Admin\Faq;
 
 /**
  * Class Faq_Taxonomy.

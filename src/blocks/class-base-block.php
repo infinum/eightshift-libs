@@ -15,7 +15,7 @@ use Eightshift_Libs\Exception\Missing_Block_Name;
 /**
  * Class Block
  */
-abstract class Base_Block implements Block, Service {
+abstract class Base_Block extends Attribute_Type_Enums implements Block {
 
   /**
    * Block Name.
@@ -33,16 +33,7 @@ abstract class Base_Block implements Block, Service {
    *
    * @since 1.0.0
    */
-  const BLOCK_NAMESPACE = 'infinum';
-
-  /**
-   * Block default type.
-   *
-   * @var string
-   *
-   * @since 1.0.0
-   */
-  const BLOCK_DEFAULT_ATTRIBUTE_TYPE = 'string';
+  const BLOCK_NAMESPACE = 'eightshift';
 
   /**
    * Register all the hooks
@@ -80,22 +71,22 @@ abstract class Base_Block implements Block, Service {
   public function get_default_attributes() : array {
 
     // Make sure the class (block) extending this class (abstract Base_Block)
-    // has defined it's own name.
+    // has defined its own name.
     if ( static::NAME === self::NAME ) {
-      throw Missing_Block_Name::message();
+      throw Missing_Block::name_exception();
     }
 
     return [
       'blockName' => array(
-        'type' => self::BLOCK_DEFAULT_ATTRIBUTE_TYPE,
+        'type' => parent::TYPE_STRING,
         'default' => self::BLOCK_NAMESPACE . '/' . static::NAME,
       ),
       'rootClass' => array(
-        'type' => self::BLOCK_DEFAULT_ATTRIBUTE_TYPE,
+        'type' => parent::TYPE_STRING,
         'default' => 'block-' . static::NAME,
       ),
       'jsClass' => array(
-        'type' => self::BLOCK_DEFAULT_ATTRIBUTE_TYPE,
+        'type' => parent::TYPE_STRING,
         'default' => 'js-block-' . static::NAME,
       ),
     ];
@@ -138,20 +129,20 @@ abstract class Base_Block implements Block, Service {
    *
    * @since 1.0.0
    */
-  public function render( array $attributes, string $content ) : string { //phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
+  public function render( array $attributes, string $content ) : string {
 
-    // Block must have a defined name to find it's template.
+    // Block must have a defined name to find its template.
     // Make sure the class (block) extending this class (abstract Base_Block)
-    // has defined it's own name.
+    // has defined its own name.
     if ( static::NAME === self::NAME ) {
-      throw Missing_Block_Name::message();
+      throw Missing_Block::name_exception();
     }
 
     $template_path = 'src/blocks/' . static::NAME . '/view/' . static::NAME . '.php';
     $template      = locate_template( $template_path );
 
     if ( empty( $template ) ) {
-      throw Missing_Block_View::message( static::NAME, $template_path );
+      throw Missing_Block::view_exception( static::NAME, $template_path );
     }
 
     // If everything is ok, return the contents of the template (return, NOT echo).

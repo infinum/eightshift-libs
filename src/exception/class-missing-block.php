@@ -1,6 +1,6 @@
 <?php
 /**
- * File containing invalid Block view exception
+ * File containing invalid Gutenberg Block exception
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Exception
@@ -9,9 +9,22 @@
 namespace Eightshift_Libs\Exception;
 
 /**
- * Class Missing_Block_View.
+ * Class Missing_Block.
  */
-class Missing_Block_View extends \InvalidArgumentException implements General_Exception {
+class Missing_Block extends \InvalidArgumentException implements General_Exception {
+
+  /**
+   * Create a new instance of the exception for an missing block name.
+   *
+   * @return static
+   *
+   * @since 1.0.0
+   */
+  public static function name_exception() {
+    $message = esc_html_e( 'Missing Block Name', 'eightshift-libs' );
+
+    return new static( $message );
+  }
 
   /**
    * Create a new instance of the exception for an missing block view.
@@ -23,7 +36,7 @@ class Missing_Block_View extends \InvalidArgumentException implements General_Ex
    *
    * @since 1.0.0
    */
-  public static function message( string $name, string $path ) {
+  public static function view_exception( string $name, string $path ) {
     $message = sprintf(
       esc_html__( 'Missing view template for block called: %1$s | Expecting a template in path: %2$s', 'eightshift-libs' ),
       $name,

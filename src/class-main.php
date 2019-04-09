@@ -1,6 +1,6 @@
 <?php
 /**
- * File containing the main theme class
+ * File containing the main intro class
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Core

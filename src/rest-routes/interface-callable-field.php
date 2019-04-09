@@ -11,7 +11,7 @@ namespace Eightshift_Libs\Routes;
 /**
  * Field interface that adds/extends fields in routes
  */
-interface Field_Callable {
+interface Callable_Field {
 
   /**
    * Method that returns rest response

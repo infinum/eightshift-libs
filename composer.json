@@ -1,6 +1,6 @@
 {
   "name": "infinum/eightshift-libs",
-  "description": "WordPress libs developed by Eightshift team to use in WordPress boilerplate.",
+  "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
   "keywords": [
     "composer", "installer", "plugin"
   ],
@@ -19,11 +19,10 @@
     "source": "https://github.com/infinum/eightshift-libs"
   },
   "require": {
-    "php": "^5.6|^7",
-    "composer-plugin-api": "^1.0"
+    "php": ">=7.0"
   },
   "require-dev": {
-    "infinum/coding-standards-wp": "*",
+    "infinum/coding-standards-wp": "^0.4.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.5"
   },
   "autoload": {
@@ -39,7 +38,7 @@
     "process-timeout": 2000
   },
   "scripts": {
-    "check-cs": "@php ./vendor/bin/phpcs --extensions=php --ignore=/vendor/",
-    "fix-cs": "@php ./vendor/bin/phpcbf --extensions=php --ignore=/vendor/"
+    "check-cs": "@php ./vendor/bin/phpcs",
+    "fix-cs": "@php ./vendor/bin/phpcbf"
   }
 }

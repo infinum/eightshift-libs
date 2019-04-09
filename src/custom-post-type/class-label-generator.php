@@ -2,6 +2,8 @@
 /**
  * File containing label generator class
  *
+ * Original author: https://github.com/schlessera/wcbtn-2018-api/blob/master/src/CustomPostType/LabelGenerator.php
+ *
  * @since   1.0.0
  * @package Eightshift_Libs\Custom_Post_Type
  */

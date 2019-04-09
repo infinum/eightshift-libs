@@ -3,10 +3,10 @@
  * All info regarding the Heading block
  *
  * @since 1.0.0
- * @package Inf_Theme\Blocks\Heading
+ * @package Custom_Namespace\Blocks\Heading
  */
 
-namespace Inf_Theme\Blocks\Heading;
+namespace Custom_Namespace\Blocks\Heading;
 
 use Eightshift_Libs\Blocks\Base_Block;
 
@@ -32,18 +32,18 @@ class Heading extends Base_Block {
   public function get_block_attributes() : array {
     return array(
       'content' => array(
-        'type' => 'string',
+        'type' => parent::TYPE_STRING,
       ),
       'level' => array(
-        'type' => 'int',
+        'type' => parent::TYPE_NUMBER,
         'default' => '2',
       ),
       'styleAlign' => array(
-        'type' => 'string',
+        'type' => parent::TYPE_STRING,
         'default' => 'center',
       ),
       'styleSize' => array(
-        'type' => 'string',
+        'type' => parent::TYPE_STRING,
         'default' => 'huge',
       ),
     );

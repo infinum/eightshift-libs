@@ -14,22 +14,4 @@ namespace Eightshift_Libs\Core;
  * A generic service. Service is a part of the plugin functionality.
  */
 interface Service extends Registrable {
-
-  /**
-   * Theme Name Constant
-   *
-   * @var string
-   *
-   * @since 1.0.0
-   */
-  const THEME_NAME = 'infinum';
-
-  /**
-   * Theme Version Constant
-   *
-   * @var string
-   *
-   * @since 1.0.0
-   */
-  const THEME_VERSION = '1.0.0';
 }

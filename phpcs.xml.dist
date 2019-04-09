@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Infinum">
-  <description>Loader for the Infinum coding standards for WordPress.</description>
+<ruleset name="Eightshift Library">
+  <description>Eightshift Library uses extended WordPress coding standards with some minor corections. TBD</description>
 
   <rule ref="Infinum" />
 
