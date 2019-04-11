@@ -14,42 +14,6 @@ namespace Eightshift_Libs\Blocks;
 interface Block {
 
   /**
-   * Register the current registrable.
-   *
-   * A register method holds the plugin action and filter hooks.
-   * Following the single responsibility principle, every class
-   * holds a functionality for a certain part of the plugin.
-   * This is why every class should hold its own hooks.
-   *
-   * @return void
-   *
-   * @since 1.0.0
-   */
-  public function register() : void;
-
-  /**
-   * Adds default attributes that are dynamically built for all blocks.
-   * These are:
-   * - blockName: Block's full name including namespace (example: Infinum/heading)
-   * - rootClass: Block's root (base) BEM CSS class, built in "block/$name" format (example: block-heading)
-   * - jsClass:   Block's js selector class, built in "js-block-$name" format (example: js-block-heading)
-   *
-   * @return array
-   *
-   * @since 1.0.0
-   */
-  public function get_default_attributes() : array;
-
-  /**
-   * Get block attributes assigned inside block class.
-   *
-   * @return array
-   *
-   * @since 1.0.0
-   */
-  public function get_block_attributes() : array;
-
-  /**
    * Get all block attributes. Default and block attributes.
    *
    * @return array
@@ -57,20 +21,4 @@ interface Block {
    * @since 1.0.0
    */
   public function get_attributes() : array;
-
-  /**
-   * Renders the block using a template in Infinum\Blocks\Templates namespace/folder.
-   * Template file must have the same name as the class-blockname file, for example:
-   *
-   *   Block:     class-heading.php
-   *   Template:  heading.php
-   *
-   * @param array  $attributes Array of attributes as defined in block's index.js.
-   * @param string $content    Block's content.
-   *
-   * @echo string
-   *
-   * @since 1.0.0
-   */
-  public function render( array $attributes, string $content ) : string;
 }

@@ -45,7 +45,6 @@ abstract class Main implements Service {
 
     add_action( 'after_setup_theme', [ $this, 'register_services' ] );
 
-    $this->register_assets_manifest_data();
   }
 
   /**
@@ -76,37 +75,6 @@ abstract class Main implements Service {
         $service->register();
       }
     );
-  }
-
-  /**
-   * Provide menifest json url location.
-   *
-   * @return string
-   *
-   * @since 1.0.0
-   */
-  protected function get_manifest_url() : string {
-    return get_template_directory() . '/skin/public/manifest.json';
-  }
-
-  /**
-   * Register bundled asset manifest
-   *
-   * @throws Exception\Missing_Manifest Throws error if manifest is missing.
-   *
-   * @return void
-   *
-   * @since 1.0.0
-   */
-  public function register_assets_manifest_data() : void {
-
-    $manifest = $this->get_manifest_url();
-    if ( ! file_exists( $manifest ) ) {
-      $error_message = esc_html__( 'manifest.json is missing. Bundle the theme before using it.', 'developer-portal' );
-      throw Exception\Missing_Manifest::message( $error_message );
-    }
-
-    define( 'INF_ASSETS_MANIFEST', implode( ' ', file( $manifest ) ) );
   }
 
   /**
@@ -142,7 +110,5 @@ abstract class Main implements Service {
    *
    * @since 1.0.0
    */
-  protected function get_service_classes() : array {
-    return [];
-  }
+  abstract protected function get_service_classes() : array;
 }
