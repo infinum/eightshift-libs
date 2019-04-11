@@ -1,6 +1,6 @@
 <?php
 /**
- * File that holds base abstract class for custom taxonomy registration
+ * File that holds base abstract class for custom taxonomy registration.
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Custom_Taxonomy
@@ -11,7 +11,7 @@ namespace Eightshift_Libs\Custom_Taxonomy;
 use Eightshift_Libs\Core\Service;
 
 /**
- * Abstract class Base_Taxonomy.
+ * Abstract class Base_Taxonomy class.
  *
  * @since 1.0.0
  */
@@ -47,7 +47,7 @@ abstract class Base_Taxonomy implements Service {
   abstract protected function get_taxonomy_slug() : string;
 
   /**
-   * Get the post type slug to use the taxonomy to
+   * Get the post type slug to use the taxonomy.
    *
    * @return string Custom post type slug.
    *

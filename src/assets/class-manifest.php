@@ -1,6 +1,8 @@
 <?php
 /**
- * File containing the main intro class
+ * File containing an abstract class for holding Assets Manifest functionality.
+ *
+ * It is used to provide manifest.json file location used with Webpack to fetch correct file locations.
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Assets
@@ -9,12 +11,12 @@
 namespace Eightshift_Libs\Assets;
 
 /**
- * Manifest class
+ * Abstract class Manifest class.
  */
 abstract class Manifest {
 
   /**
-   * Provide menifest json url location.
+   * Provide manifest.json url location.
    *
    * @return string
    *
@@ -26,15 +28,16 @@ abstract class Manifest {
 
 
   /**
-   * Register bundled asset manifest
+   * Fetches manifest.json data from get_manifest_url() location, parses and returns as a sanitized array.
+   * Generally, you would assign this data to a global variable or some helper that is going to be used in the application to fetch assets data.
    *
    * @throws Exception\Missing_Manifest Throws error if manifest is missing.
    *
-   * @return mixed
+   * @return string
    *
    * @since 1.0.0
    */
-  public function register_assets_manifest_data() : mixed {
+  public function register_assets_manifest_data() : string {
 
     $manifest = $this->get_manifest_url();
     if ( ! file_exists( $manifest ) ) {

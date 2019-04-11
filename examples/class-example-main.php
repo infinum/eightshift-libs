@@ -7,6 +7,8 @@
  *
  * @since   1.0.0
  * @package Custom_Namespace\Core
+ *
+ * TODO: Refactor and test
  */
 
 namespace Custom_Namespace\Core;

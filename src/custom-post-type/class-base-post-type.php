@@ -1,6 +1,6 @@
 <?php
 /**
- * File that holds base abstract class for custom post type registration
+ * File that holds base abstract class for custom post type registration.
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Custom_Post_Type
@@ -11,12 +11,12 @@ namespace Eightshift_Libs\Custom_Post_Type;
 use Eightshift_Libs\Core\Service;
 
 /**
- * Abstract class Base_Post_Type.
+ * Abstract class Base_Post_Type class.
  */
 abstract class Base_Post_Type implements Service {
 
   /**
-   * Register custom post type and taxonomy.
+   * Register custom post type.
    *
    * @return void
    *

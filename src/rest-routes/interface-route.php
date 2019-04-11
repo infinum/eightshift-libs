@@ -1,6 +1,6 @@
 <?php
 /**
- * File containing type interface
+ * File containing Request type interface
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Routes

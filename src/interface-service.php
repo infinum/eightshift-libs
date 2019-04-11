@@ -11,7 +11,7 @@ namespace Eightshift_Libs\Core;
 /**
  * Interface Service.
  *
- * A generic service. Service is a part of the plugin functionality.
+ * A generic service. Service is a part of the plugin/theme functionality.
  */
 interface Service extends Registrable {
 }

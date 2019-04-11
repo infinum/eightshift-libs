@@ -1,6 +1,6 @@
 <?php
 /**
- * File containing field callable interface
+ * File containing Rest/Api field callable interface
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Routes
@@ -9,7 +9,7 @@
 namespace Eightshift_Libs\Routes;
 
 /**
- * Field interface that adds/extends fields in routes
+ * Field interface that adds/extends fields in routes.
  */
 interface Callable_Field {
 

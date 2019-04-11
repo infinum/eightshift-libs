@@ -4,6 +4,8 @@
  *
  * @since 1.0.0
  * @package Custom_Namespace\Blocks\Heading
+ *
+ * TODO: Refactor and test
  */
 
 namespace Custom_Namespace\Blocks\Heading;
