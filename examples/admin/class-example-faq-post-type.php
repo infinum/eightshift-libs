@@ -3,10 +3,10 @@
  * File that holds faq custom post type registration details
  *
  * @since 1.0.0
- * @package Custom_Namespace\Admin
+ * @package Custom_Namespace\Examples
  */
 
-namespace Custom_Namespace\Admin;
+namespace Custom_Namespace\Examples;
 
 use Eightshift_Libs\Custom_Post_Type\Base_Post_Type;
 use Eightshift_Libs\Custom_Post_Type\Label_Generator;
@@ -16,7 +16,7 @@ use Eightshift_Libs\Custom_Post_Type\Label_Generator;
  *
  * @since 1.0.0
  */
-final class Faq extends Base_Post_Type {
+final class Example_Faq_Post_Type extends Base_Post_Type {
 
   /**
    * The custom post type type slug

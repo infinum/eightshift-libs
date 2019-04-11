@@ -13,7 +13,7 @@ use Eightshift_Libs\Blocks\Base_Block;
 /**
  * Class Heading
  */
-class Heading extends Base_Block {
+class Example_Heading extends Base_Block {
 
   /**
    * Block's name.

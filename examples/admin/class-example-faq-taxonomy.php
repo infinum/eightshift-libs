@@ -3,22 +3,22 @@
  * File that holds taxonomy class for fax taxonomy registration
  *
  * @since 1.0.0
- * @package Custom_Namespace\Admin
+ * @package Custom_Namespace\Examples
  */
 
-namespace Custom_Namespace\Admin;
+namespace Custom_Namespace\Examples;
 
 use Eightshift_Libs\Custom_Taxonomy\Base_Taxonomy;
 use Eightshift_Libs\Custom_Post_Type\Label_Generator;
 
-use Custom_Namespace\Admin\Faq;
+use Custom_Namespace\Examples\Example_Faq_Post_Type;
 
 /**
- * Class Faq_Taxonomy.
+ * Class Example_Faq_Taxonomy.
  *
  * @since 1.0.0
  */
-class Faq_Taxonomy extends Base_Taxonomy {
+class Example_Faq_Taxonomy extends Base_Taxonomy {
   /**
    * The systems custom taxonomy type slug
    *
