@@ -24,6 +24,7 @@ final class Manifest {
     return get_template_directory() . '/skin/public/manifest.json';
   }
 
+
   /**
    * Register bundled asset manifest
    *
