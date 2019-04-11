@@ -11,7 +11,7 @@ namespace Eightshift_Libs\Assets;
 /**
  * Manifest class
  */
-final class Manifest {
+abstract class Manifest {
 
   /**
    * Provide menifest json url location.
