@@ -26,7 +26,6 @@ abstract class Manifest {
     return get_template_directory() . '/skin/public/manifest.json';
   }
 
-
   /**
    * Fetches manifest.json data from get_manifest_url() location, parses and returns as a sanitized array.
    * Generally, you would assign this data to a global variable or some helper that is going to be used in the application to fetch assets data.
