@@ -9,22 +9,14 @@
 namespace Eightshift_Libs\Blocks;
 
 use Eightshift_Libs\Blocks\Block;
+use Eightshift_Libs\Blocks\Renderable_Block;
 use Eightshift_Libs\Core\Service;
 use Eightshift_Libs\Exception\Missing_Block_Name;
 
 /**
  * Class Block
  */
-abstract class Base_Block extends Attribute_Type_Enums implements Block {
-
-  /**
-   * Block Name.
-   *
-   * @var string
-   *
-   * @since 1.0.0
-   */
-  const NAME = 'abstract-block';
+abstract class Base_Block extends Attribute_Type_Enums implements Block, Service, Renderable_Block {
 
   /**
    * Namespace in which all our blocks exist.
@@ -45,7 +37,7 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block {
       'init',
       function() {
         register_block_type(
-          static::BLOCK_NAMESPACE . '/' . static::NAME,
+          $this->get_block_namespace() . '/' . $this->get_block_name(),
           array(
             'render_callback' => [ $this, 'render' ],
             'attributes' => $this->get_attributes(),
@@ -56,9 +48,51 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block {
   }
 
   /**
+   * Get the block name to use to register block.
+   *
+   * @return string Custom blog name.
+   *
+   * @since 1.0.0
+   */
+  abstract protected function get_block_name() : string;
+
+  /**
+   * Get the block name to use to register block.
+   *
+   * @return string Custom blog name.
+   *
+   * @since 1.0.0
+   */
+  protected function get_block_namespace() : string {
+    return static::BLOCK_NAMESPACE;
+  }
+
+  /**
+   * Get block attributes assigned inside block class.
+   *
+   * @return array
+   *
+   * @since 1.0.0
+   */
+  abstract public function get_block_attributes() : array;
+
+  /**
+   * Get block view path.
+   *
+   * @return string
+   *
+   * @since 1.0.0
+   */
+  public function get_block_view_path() {
+    $block_name = $this->get_block_name();
+
+    return 'src/blocks/' . $block_name . '/view/' . $block_name . '.php';
+  }
+
+  /**
    * Adds default attributes that are dynamically built for all blocks.
    * These are:
-   * - blockName: Block's full name including namespace (example: infinum/heading)
+   * - blockName: Block's full name including namespace (example: eightshift/heading)
    * - rootClass: Block's root (base) BEM CSS class, built in "block/$name" format (example: block-heading)
    * - jsClass:   Block's js selector class, built in "js-block-$name" format (example: js-block-heading)
    *
@@ -69,38 +103,23 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block {
    * @since 1.0.0
    */
   public function get_default_attributes() : array {
-
-    // Make sure the class (block) extending this class (abstract Base_Block)
-    // has defined its own name.
-    if ( static::NAME === self::NAME ) {
-      throw Missing_Block::name_exception();
-    }
+    $block_namespace = $this->get_block_namespace();
+    $block_name      = $this->get_block_name();
 
     return [
       'blockName' => array(
         'type' => parent::TYPE_STRING,
-        'default' => self::BLOCK_NAMESPACE . '/' . static::NAME,
+        'default' => "{$block_namespace}/{$block_name}",
       ),
       'rootClass' => array(
         'type' => parent::TYPE_STRING,
-        'default' => 'block-' . static::NAME,
+        'default' => "block-{$block_name}",
       ),
       'jsClass' => array(
         'type' => parent::TYPE_STRING,
-        'default' => 'js-block-' . static::NAME,
+        'default' => "js-block-{$block_name}",
       ),
     ];
-  }
-
-  /**
-   * Get block attributes assigned inside block class.
-   *
-   * @return array
-   *
-   * @since 1.0.0
-   */
-  public function get_block_attributes() : array {
-    return [];
   }
 
   /**
@@ -124,25 +143,17 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block {
    * @param array  $attributes Array of attributes as defined in block's index.js.
    * @param string $content    Block's content.
    *
-   * @throws \Exception On missing attributes OR missing template.
-   * @echo   string
+   * @throws Missing_Block::view_exception On missing attributes OR missing template.
+   * @return string html template for block.
    *
    * @since 1.0.0
    */
   public function render( array $attributes, string $content ) : string {
+    $template_path = $this->get_block_view_path();
 
-    // Block must have a defined name to find its template.
-    // Make sure the class (block) extending this class (abstract Base_Block)
-    // has defined its own name.
-    if ( static::NAME === self::NAME ) {
-      throw Missing_Block::name_exception();
-    }
-
-    $template_path = 'src/blocks/' . static::NAME . '/view/' . static::NAME . '.php';
-    $template      = locate_template( $template_path );
-
+    $template = locate_template( $template_path );
     if ( empty( $template ) ) {
-      throw Missing_Block::view_exception( static::NAME, $template_path );
+      throw Missing_Block::view_exception( $this->get_block_name(), $template_path );
     }
 
     // If everything is ok, return the contents of the template (return, NOT echo).

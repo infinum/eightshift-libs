@@ -1,6 +1,6 @@
 <?php
 /**
- * File containing rest callable interface
+ * File containing Rest/Api callable interface
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Routes

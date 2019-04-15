@@ -13,7 +13,7 @@ namespace Eightshift_Libs\Custom_Post_Type;
 use Eightshift_Libs\Exception\Invalid_Nouns;
 
 /**
- * Class that generates lables for custom post type
+ * Class that generates lables for custom post type.
  */
 final class Label_Generator {
 

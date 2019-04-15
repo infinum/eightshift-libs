@@ -4,6 +4,8 @@
  *
  * @since 1.0.0
  * @package Custom_Namespace\Blocks\Heading
+ *
+ * TODO: Refactor and test
  */
 
 namespace Custom_Namespace\Blocks\Heading;
@@ -13,7 +15,7 @@ use Eightshift_Libs\Blocks\Base_Block;
 /**
  * Class Heading
  */
-class Heading extends Base_Block {
+class Example_Heading extends Base_Block {
 
   /**
    * Block's name.

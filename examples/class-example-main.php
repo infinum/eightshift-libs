@@ -2,14 +2,16 @@
 /**
  * The file that defines the main start class
  *
- * A class definition that includes attributes and functions used across both the
+ * A class definition that Core attributes and functions used across both the
  * theme-facing side of the site and the admin area.
  *
  * @since   1.0.0
- * @package Custom_Namespace\Includes
+ * @package Custom_Namespace\Core
+ *
+ * TODO: Refactor and test
  */
 
-namespace Custom_Namespace\Includes;
+namespace Custom_Namespace\Core;
 
 use Eightshift_Libs\Core\Main as LibMain;
 
@@ -24,7 +26,7 @@ use Custom_Namespace\Admin;
  * Also maintains the unique identifier of this theme as well as the current
  * version of the theme.
  */
-class Main extends LibMain {
+class Example_Main extends LibMain {
 
   /**
    * Get the list of services to register.

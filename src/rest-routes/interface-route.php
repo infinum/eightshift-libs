@@ -1,6 +1,6 @@
 <?php
 /**
- * File containing type interface
+ * File containing Request type interface
  *
  * @since   1.0.0
  * @package Eightshift_Libs\Routes
@@ -59,13 +59,4 @@ interface Route extends Service {
    * @since 1.0.0
    */
   const DELETABLE = 'DELETE';
-
-  /**
-   * Method for adding custom routes
-   *
-   * @return void
-   *
-   * @since 1.0.0
-   */
-  public function register_route() : void;
 }

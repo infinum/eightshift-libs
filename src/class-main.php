@@ -13,11 +13,7 @@ use Eightshift_Libs\Exception;
 /**
  * The main start class.
  *
- * This is used to define admin-specific hooks, and
- * theme-facing site hooks.
- *
- * Also maintains the unique identifier of this theme as well as the current
- * version of the theme.
+ * This is used to define instantiate all classes used the lib.
  */
 abstract class Main implements Service {
 
@@ -25,15 +21,24 @@ abstract class Main implements Service {
    * Array of instantiated services.
    *
    * @var Service[]
+   *
+   * @since 1.0.0
    */
   private $services = [];
 
   /**
-   * Register the plugin with the WordPress system.
+   * Default main action hook that start the whole lib.
+   *
+   * @since 1.0.0
+   */
+  const DEFAULT_REGISTER_ACTION_HOOK = 'after_setup_theme';
+
+  /**
+   * Register the theme/plugin with the WordPress system.
    *
    * The register_service method will call the register() method in every service class,
    * which holds the actions and filters - effectively replacing the need to manually add
-   * themn in one place.
+   * them in one place.
    *
    * @throws Exception\Invalid_Service If a service is not valid.
    *
@@ -42,14 +47,22 @@ abstract class Main implements Service {
    * @since 1.0.0
    */
   public function register() : void {
-
-    add_action( 'after_setup_theme', [ $this, 'register_services' ] );
-
-    $this->register_assets_manifest_data();
+    add_action( $this->get_register_action_hook(), [ $this, 'register_services' ] );
   }
 
   /**
-   * Register the individual services of this plugin.
+   * Returns Theme/Plugin main action hook that start the whole lib.
+   *
+   * @return string
+   *
+   * @since 1.0.0
+   */
+  public function get_register_action_hook() : string {
+    return self::DEFAULT_REGISTER_ACTION_HOOK;
+  }
+
+  /**
+   * Register the individual services of this theme/plugin.
    *
    * @throws Exception\Invalid_Service If a service is not valid.
    *
@@ -76,37 +89,6 @@ abstract class Main implements Service {
         $service->register();
       }
     );
-  }
-
-  /**
-   * Provide menifest json url location.
-   *
-   * @return string
-   *
-   * @since 1.0.0
-   */
-  protected function get_manifest_url() : string {
-    return get_template_directory() . '/skin/public/manifest.json';
-  }
-
-  /**
-   * Register bundled asset manifest
-   *
-   * @throws Exception\Missing_Manifest Throws error if manifest is missing.
-   *
-   * @return void
-   *
-   * @since 1.0.0
-   */
-  public function register_assets_manifest_data() : void {
-
-    $manifest = $this->get_manifest_url();
-    if ( ! file_exists( $manifest ) ) {
-      $error_message = esc_html__( 'manifest.json is missing. Bundle the theme before using it.', 'developer-portal' );
-      throw Exception\Missing_Manifest::message( $error_message );
-    }
-
-    define( 'INF_ASSETS_MANIFEST', implode( ' ', file( $manifest ) ) );
   }
 
   /**
@@ -142,7 +124,5 @@ abstract class Main implements Service {
    *
    * @since 1.0.0
    */
-  protected function get_service_classes() : array {
-    return [];
-  }
+  abstract protected function get_service_classes() : array;
 }
