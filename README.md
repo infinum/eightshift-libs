@@ -1,8 +1,8 @@
 # Eightshift Libs
 
-Magical lib initially used to bring modern development tools to the [Eightshift WordPress Boilerplate](https://github.com/infinum/wp-boilerplate), but you can use it on any WordPress project.
+This library is aimed at bringing the modern development tools to the [Eightshift WordPress Boilerplate](https://github.com/infinum/wp-boilerplate), but you can use it on any WordPress project.
 
-It used service pattern to instantiate all WordPress hooks in thus speeds up loading time and provides a testable environment for your next project.
+It uses central service instantiator that instatiates all classes that obey single responsibility principle (SRP). Every class is responsible for registering it's own hooks. This provides a more testable environment for your project.
 
 We provide some helpers, abstract classes, interfaces and abstractions on original WordPress functionlality to help you write more modern code.
 
@@ -26,4 +26,4 @@ Eightshift WordPress Boilerplate is maintained and sponsored by Eightshift and I
 
 ## :scroll: License
 
-Infinum WordPress Boilerplate is Copyright ©2018 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.
+Eightshift WordPress Boilerplate is Copyright ©2019 Eightshift. It is free software, and may be redistributed under the terms specified in the LICENSE file.

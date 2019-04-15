@@ -103,18 +103,21 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block, Service
    * @since 1.0.0
    */
   public function get_default_attributes() : array {
+    $block_namespace = $this->get_block_namespace();
+    $block_name      = $this->get_block_name();
+
     return [
       'blockName' => array(
         'type' => parent::TYPE_STRING,
-        'default' => $this->get_block_namespace() . '/' . $this->get_block_name(),
+        'default' => "{$block_namespace}/{$block_name}",
       ),
       'rootClass' => array(
         'type' => parent::TYPE_STRING,
-        'default' => 'block-' . $this->get_block_name(),
+        'default' => "block-{$block_name}",
       ),
       'jsClass' => array(
         'type' => parent::TYPE_STRING,
-        'default' => 'js-block-' . $this->get_block_name(),
+        'default' => "js-block-{$block_name}",
       ),
     ];
   }
@@ -140,8 +143,8 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block, Service
    * @param array  $attributes Array of attributes as defined in block's index.js.
    * @param string $content    Block's content.
    *
-   * @throws \Exception On missing attributes OR missing template.
-   * @echo   string
+   * @throws Missing_Block::view_exception On missing attributes OR missing template.
+   * @return string html template for block.
    *
    * @since 1.0.0
    */
