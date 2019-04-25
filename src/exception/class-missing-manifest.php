@@ -2,7 +2,7 @@
 /**
  * File containing the failure exception class when assets aren't bundled
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -22,7 +22,7 @@ class Missing_Manifest extends \InvalidArgumentException implements General_Exce
    *
    * @return static
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public static function message( $message ) {
     return new static( $message );

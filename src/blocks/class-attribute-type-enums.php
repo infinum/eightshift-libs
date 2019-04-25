@@ -2,7 +2,7 @@
 /**
  * File that holds all block attribute types used as enums.
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Blocks
  */
 
@@ -18,7 +18,7 @@ abstract class Attribute_Type_Enums {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const TYPE_STRING = 'string';
 
@@ -27,7 +27,7 @@ abstract class Attribute_Type_Enums {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const TYPE_NUMBER = 'number';
 
@@ -36,7 +36,7 @@ abstract class Attribute_Type_Enums {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const TYPE_BOOL = 'bool';
 
@@ -45,7 +45,7 @@ abstract class Attribute_Type_Enums {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const TYPE_ARRAY = 'array';
 
@@ -54,7 +54,7 @@ abstract class Attribute_Type_Enums {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const TYPE_OBJECT = 'object';
 }

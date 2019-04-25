@@ -2,7 +2,7 @@
 /**
  * File containing the main intro class
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Core
  */
 
@@ -22,14 +22,14 @@ abstract class Main implements Service {
    *
    * @var Service[]
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   private $services = [];
 
   /**
    * Default main action hook that start the whole lib.
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const DEFAULT_REGISTER_ACTION_HOOK = 'after_setup_theme';
 
@@ -44,7 +44,7 @@ abstract class Main implements Service {
    *
    * @return void
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public function register() : void {
     add_action( $this->get_register_action_hook(), [ $this, 'register_services' ] );
@@ -55,7 +55,7 @@ abstract class Main implements Service {
    *
    * @return string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public function get_register_action_hook() : string {
     return self::DEFAULT_REGISTER_ACTION_HOOK;
@@ -68,7 +68,7 @@ abstract class Main implements Service {
    *
    * @return void
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public function register_services() : void {
 
@@ -100,7 +100,7 @@ abstract class Main implements Service {
    *
    * @return Service
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   private function instantiate_service( $class ) {
     if ( ! class_exists( $class ) ) {
@@ -122,7 +122,7 @@ abstract class Main implements Service {
    *
    * @return array<string> Array of fully qualified class names.
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   abstract protected function get_service_classes() : array;
 }

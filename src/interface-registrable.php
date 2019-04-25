@@ -2,7 +2,7 @@
 /**
  * File that holds the registrable interface.
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Core
  */
 
@@ -25,7 +25,7 @@ interface Registrable {
    *
    * @return void
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public function register() : void;
 }

@@ -2,7 +2,7 @@
 /**
  * File that holds the renderable Block interface.
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Blocks
  */
 
@@ -28,7 +28,7 @@ interface Renderable_Block {
    * @throws \Exception On missing attributes OR missing template.
    * @echo   string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public function render( array $attributes, string $content ) : string;
 }

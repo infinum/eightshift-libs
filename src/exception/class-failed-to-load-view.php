@@ -2,7 +2,7 @@
 /**
  * File containing failed to load view class
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -23,7 +23,7 @@ class Failed_To_Load_View extends \RuntimeException implements General_Exception
    *
    * @return static
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public static function view_exception( $uri, $exception ) {
     $message = sprintf(

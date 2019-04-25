@@ -2,7 +2,7 @@
 /**
  * Interface for blocks.
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Blocks
  */
 
@@ -18,7 +18,7 @@ interface Block {
    *
    * @return array
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public function get_attributes() : array;
 }

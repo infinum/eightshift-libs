@@ -2,7 +2,7 @@
 /**
  * File containing Request type interface
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Routes
  */
 
@@ -20,7 +20,7 @@ interface Route extends Service {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const READABLE = 'GET';
 
@@ -29,7 +29,7 @@ interface Route extends Service {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const CREATABLE = 'POST';
 
@@ -38,7 +38,7 @@ interface Route extends Service {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const EDITABLE = 'PATCH';
 
@@ -47,7 +47,7 @@ interface Route extends Service {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const UPDATEABLE = 'PUT';
 
@@ -56,7 +56,7 @@ interface Route extends Service {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const DELETABLE = 'DELETE';
 }

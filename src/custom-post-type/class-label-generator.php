@@ -4,7 +4,7 @@
  *
  * Original author: https://github.com/schlessera/wcbtn-2018-api/blob/master/src/CustomPostType/LabelGenerator.php
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Custom_Post_Type
  */
 
@@ -22,7 +22,7 @@ final class Label_Generator {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const SINGULAR_NAME_UC = 'singular_name_uc';
 
@@ -31,7 +31,7 @@ final class Label_Generator {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const SINGULAR_NAME_LC = 'singular_name_lc';
 
@@ -40,7 +40,7 @@ final class Label_Generator {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const PLURAL_NAME_UC = 'plural_name_uc';
 
@@ -49,7 +49,7 @@ final class Label_Generator {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const PLURAL_NAME_LC = 'plural_name_lc';
 
@@ -58,7 +58,7 @@ final class Label_Generator {
    *
    * @var string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   const REQUIRED_NOUNS = [
     self::SINGULAR_NAME_UC,
@@ -76,7 +76,7 @@ final class Label_Generator {
    * @return string[] array Array of labels.
    * @throws Invalid_Nouns Invalid nouns exception.
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public function get_generated_labels( array $nouns ) : array {
 

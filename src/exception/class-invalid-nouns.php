@@ -2,7 +2,7 @@
 /**
  * File containing invalid nouns exception
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -21,7 +21,7 @@ class Invalid_Nouns extends \InvalidArgumentException implements General_Excepti
    *
    * @return static
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public static function from_key( string $key ) {
     $message = sprintf(

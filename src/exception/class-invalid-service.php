@@ -2,7 +2,7 @@
 /**
  * File containing the invalid service exception class
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -21,7 +21,7 @@ class Invalid_Service extends \InvalidArgumentException implements General_Excep
    *
    * @return static
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public static function from_service( $service ) {
     $message = sprintf(

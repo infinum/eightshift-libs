@@ -4,7 +4,7 @@
  *
  * It is used to provide manifest.json file location used with Webpack to fetch correct file locations.
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Assets
  */
 
@@ -21,7 +21,7 @@ abstract class Manifest {
    *
    * @return string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   abstract protected function get_manifest_url() : string;
 
@@ -33,7 +33,7 @@ abstract class Manifest {
    *
    * @return string
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public function register_assets_manifest_data() : string {
 

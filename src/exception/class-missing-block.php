@@ -2,7 +2,7 @@
 /**
  * File containing invalid Gutenberg Block exception
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -18,7 +18,7 @@ class Missing_Block extends \InvalidArgumentException implements General_Excepti
    *
    * @return static
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public static function name_exception() {
     $message = esc_html_e( 'Missing Block Name', 'eightshift-libs' );
@@ -34,7 +34,7 @@ class Missing_Block extends \InvalidArgumentException implements General_Excepti
    *
    * @return static
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public static function view_exception( string $name, string $path ) {
     $message = sprintf(

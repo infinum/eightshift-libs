@@ -2,7 +2,7 @@
 /**
  * File containing the invalid callback exception class
  *
- * @since   1.0.0
+ * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -21,7 +21,7 @@ class Invalid_Callback extends \InvalidArgumentException implements General_Exce
    *
    * @return static
    *
-   * @since 1.0.0
+   * @since 0.1.0
    */
   public static function from_callback( $callback ) {
     $message = sprintf(
