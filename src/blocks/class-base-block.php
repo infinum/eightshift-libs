@@ -2,6 +2,7 @@
 /**
  * File that holds base abstract class for Gutenberg blocks registration
  *
+ * @since   0.3.0 Separating Wrapper_Block and General_Block.
  * @since   0.1.0
  * @package Eightshift_Libs\Blocks
  */
@@ -11,12 +12,20 @@ namespace Eightshift_Libs\Blocks;
 use Eightshift_Libs\Blocks\Block;
 use Eightshift_Libs\Blocks\Renderable_Block;
 use Eightshift_Libs\Core\Service;
-use Eightshift_Libs\Exception\Missing_Block_Name;
 
 /**
  * Class Block
  */
 abstract class Base_Block extends Attribute_Type_Enums implements Block, Service, Renderable_Block {
+
+  /**
+   * Block name constant that you define in project block implementation.
+   *
+   * @var string
+   *
+   * @since 0.3.0
+   */
+  const BLOCK_NAME = '';
 
   /**
    * Namespace in which all our blocks exist.
@@ -48,45 +57,25 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block, Service
   }
 
   /**
-   * Get the block name to use to register block.
+   * Get the block name used to register block.
    *
-   * @return string Custom blog name.
+   * @return string Custom block name.
    *
    * @since 0.1.0
    */
-  abstract protected function get_block_name() : string;
+  protected function get_block_name() : string {
+    return static::BLOCK_NAME;
+  }
 
   /**
-   * Get the block name to use to register block.
+   * Get the block namespace used to register block.
    *
-   * @return string Custom blog name.
+   * @return string Custom block name.
    *
    * @since 0.1.0
    */
   protected function get_block_namespace() : string {
     return static::BLOCK_NAMESPACE;
-  }
-
-  /**
-   * Get block attributes assigned inside block class.
-   *
-   * @return array
-   *
-   * @since 0.1.0
-   */
-  abstract public function get_block_attributes() : array;
-
-  /**
-   * Get block view path.
-   *
-   * @return string
-   *
-   * @since 0.1.0
-   */
-  public function get_block_view_path() {
-    $block_name = $this->get_block_name();
-
-    return 'src/blocks/' . $block_name . '/view/' . $block_name . '.php';
   }
 
   /**
@@ -123,44 +112,24 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block, Service
   }
 
   /**
-   * Get all block attributes. Default and block attributes.
+   * Get block attributes assigned inside block class.
    *
    * @return array
    *
    * @since 0.1.0
    */
-  public function get_attributes() : array {
-    return array_merge( $this->get_default_attributes(), $this->get_block_attributes() );
-  }
+  abstract public function get_block_attributes() : array;
 
   /**
-   * Renders the block using a template in Infinum\Blocks\Templates namespace/folder.
-   * Template file must have the same name as the class-blockname file, for example:
+   * Get block view path.
    *
-   *   Block:     class-heading.php
-   *   Template:  heading.php
+   * @return string
    *
-   * @param array  $attributes Array of attributes as defined in block's index.js.
-   * @param string $content    Block's content.
-   *
-   * @throws Missing_Block::view_exception On missing attributes OR missing template.
-   * @return string html template for block.
-   *
-   * @since 0.1.0
+   * @since 0.3.0
    */
-  public function render( array $attributes, string $content ) : string {
-    $template_path = $this->get_block_view_path();
+  public function get_block_view_path() {
+    $block_name = $this->get_block_name();
 
-    $template = locate_template( $template_path );
-    if ( empty( $template ) ) {
-      throw Missing_Block::view_exception( $this->get_block_name(), $template_path );
-    }
-
-    // If everything is ok, return the contents of the template (return, NOT echo).
-    ob_start();
-    include $template;
-    $output = ob_get_clean();
-    unset( $template );
-    return $output;
+    return 'src/blocks/' . $block_name . '/view/' . $block_name . '.php';
   }
 }

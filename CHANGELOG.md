@@ -8,6 +8,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [0.3.0]
+
+### Added
+
+- Separating Wrapper_Block and General_Block.
+
 ## [0.2.0]
 
 ### Added
@@ -18,11 +24,6 @@ _No documentation available about unreleased changes as of yet._
 ### Changed
 
 - Interface name for rest route
-
-### Removed
-
-- Removed ACF class from the boilerplate
-- Removed unnecessary register_global_theme_options_variable method that set global variable
 
 ## [0.1.0] - 2018-04-24
 
