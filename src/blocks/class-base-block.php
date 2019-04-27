@@ -2,6 +2,7 @@
 /**
  * File that holds base abstract class for Gutenberg blocks registration
  *
+ * @since   0.4.0 Chaning block view path.
  * @since   0.3.0 Separating Wrapper_Block and General_Block.
  * @since   0.1.0
  * @package Eightshift_Libs\Blocks
@@ -125,11 +126,12 @@ abstract class Base_Block extends Attribute_Type_Enums implements Block, Service
    *
    * @return string
    *
+   * @since 0.4.0 Changing the path.
    * @since 0.3.0
    */
   public function get_block_view_path() {
     $block_name = $this->get_block_name();
 
-    return 'src/blocks/' . $block_name . '/view/' . $block_name . '.php';
+    return 'src/blocks/' . $block_name . '/view.php';
   }
 }

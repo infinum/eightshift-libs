@@ -3,6 +3,7 @@
  * File that holds Wrapper_Block abstract class for Gutenberg blocks registration.
  * This implementation is used if you want to add markup around you block that is reused in the project.
  *
+ * @since   0.4.0 Changing wrapper block view path.
  * @since   0.3.0
  * @package Eightshift_Libs\Blocks
  */
@@ -21,12 +22,13 @@ abstract class Wrapper_Block extends Base_Block {
    *
    * @return string
    *
+   * @since 0.4.0 Changing view path.
    * @since 0.3.0
    */
   public function get_block_wrapper_view_path() {
     $block_name = $this->get_block_name();
 
-    return 'src/blocks/wrapper-block/wrapper.php';
+    return 'src/blocks/wrapper-block/view.php';
   }
 
   /**

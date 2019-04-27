@@ -1,4 +1,3 @@
-
 # Change Log for the Eightshift Libs
 All notable changes to this project will be documented in this file.
 
@@ -7,6 +6,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [Unreleased]
 
 _No documentation available about unreleased changes as of yet._
+
+## [0.4.0]
+
+### Changed
+
+- Changing wrapper block view path.
 
 ## [0.3.0]
 
