@@ -34,15 +34,16 @@ abstract class General_Block extends Base_Block {
    *   Block:     class-heading.php
    *   Template:  heading.php
    *
-   * @param array  $attributes Array of attributes as defined in block's index.js.
-   * @param string $content    Block's content.
+   * @param array  $attributes          Array of attributes as defined in block's index.js.
+   * @param string $inner_block_content Block's content.
    *
    * @throws Missing_Block::view_exception On missing attributes OR missing template.
    * @return string html template for block.
    *
+   * @since 0.5.0 Changed $content to $inner_block_content for better naming.
    * @since 0.3.0
    */
-  public function render( array $attributes, string $content ) : string {
+  public function render( array $attributes, ?string $inner_block_content ) : string {
     $template_path = $this->get_block_view_path();
 
     $template = locate_template( $template_path );
@@ -54,7 +55,7 @@ abstract class General_Block extends Base_Block {
     ob_start();
     include $template;
     $output = ob_get_clean();
-    unset( $template );
+    unset( $attributes, $inner_block_content, $template );
     return $output;
   }
 }

@@ -7,6 +7,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [0.5.0]
+
+### Changed
+
+- Changed $content to $inner_block_content for better naming.
+- Unsetting variables in block render.
+
 ## [0.4.0]
 
 ### Changed
