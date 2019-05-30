@@ -22,5 +22,5 @@ interface Manifest_Data {
    *
    * @since 0.7.0 Init
    */
-  public function get_assets_manifest_item( $key = null ) : string;
+  public function get_assets_manifest_item( string $key ) : string;
 }

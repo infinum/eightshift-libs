@@ -63,7 +63,7 @@ abstract class Manifest implements Service, Manifest_Data {
    * @since 0.7.0 Changed to non static method.
    * @since 0.6.0 Init
    */
-  public function get_assets_manifest_item( $key = null ) : string {
+  public function get_assets_manifest_item( string $key ) : string {
     if ( ! $key ) {
       return '';
     }
