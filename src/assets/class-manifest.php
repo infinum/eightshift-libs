@@ -15,8 +15,11 @@ use Eightshift_Libs\Core\Service;
 
 /**
  * Abstract class Manifest class.
+ *
+ * @since 0.7.0 Added Manifest_Data Interface.
+ * @since 0.1.0 Init.
  */
-abstract class Manifest implements Service {
+abstract class Manifest implements Service, Manifest_Data {
 
   /**
    * Global variable name contant.
@@ -57,20 +60,21 @@ abstract class Manifest implements Service {
    * @param string $key File name key you want to get from manifest.
    * @return string Full path to asset.
    *
+   * @since 0.7.0 Changed to non static method.
    * @since 0.6.0 Init
    */
-  public static function get_assets_manifest_item( $key = null ) : string {
+  public function get_assets_manifest_item( $key = null ) : string {
     if ( ! $key ) {
       return '';
     }
 
-    $data = static::get_decoded_manifest_data();
+    $data = $this->get_decoded_manifest_data();
 
     $asset = $data->$key ?? '';
     if ( empty( $asset ) ) {
       return '';
     }
-    return static::get_assets_manifest_output_prefix() . $asset;
+    return $this->get_assets_manifest_output_prefix() . $asset;
   }
 
   /**
@@ -78,10 +82,11 @@ abstract class Manifest implements Service {
    *
    * @return string
    *
+   * @since 0.7.0 Fetching variable name as static.
    * @since 0.6.0 Init.
    */
   protected function get_global_variable_name() : string {
-    return self::GLOBAL_VARIABLE_NAME;
+    return static::GLOBAL_VARIABLE_NAME;
   }
 
   /**
@@ -96,7 +101,7 @@ abstract class Manifest implements Service {
    */
   protected function get_raw_data() : string {
 
-    $manifest = self::get_manifest_url();
+    $manifest = $this->get_manifest_url();
     if ( ! file_exists( $manifest ) ) {
       $error_message = esc_html__( 'manifest.json is missing. Bundle the theme before using it.', 'eightshift-libs' );
       throw Exception\Missing_Manifest::message( $error_message );
@@ -123,10 +128,11 @@ abstract class Manifest implements Service {
    *
    * @return object Manifest Object.
    *
+   * @since 0.7.0 Changed to non static method.
    * @since 0.6.0 Init
    */
   protected function get_decoded_manifest_data() {
-    $data = \json_decode( constant( static::get_global_variable_name() ) );
+    $data = \json_decode( constant( $this->get_global_variable_name() ) );
     if ( ! $data ) {
       return null;
     }

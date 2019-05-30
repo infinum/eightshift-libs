@@ -2,6 +2,7 @@
 /**
  * File containing the main intro class
  *
+ * @since   0.7.0 Dependency Injection Refactoring
  * @since   0.1.0
  * @package Eightshift_Libs\Core
  */
@@ -9,6 +10,8 @@
 namespace Eightshift_Libs\Core;
 
 use Eightshift_Libs\Exception;
+
+use \DI\ContainerBuilder;
 
 /**
  * The main start class.
@@ -62,12 +65,13 @@ abstract class Main implements Service {
   }
 
   /**
-   * Register the individual services of this theme/plugin.
+   * Register the individual services with optional dependency injection.
    *
    * @throws Exception\Invalid_Service If a service is not valid.
    *
    * @return void
    *
+   * @since 0.7.0 Dependency Injection Refactoring
    * @since 0.1.0
    */
   public function register_services() : void {
@@ -77,17 +81,105 @@ abstract class Main implements Service {
       return;
     }
 
-    $classes = $this->get_service_classes();
+    $this->services = $this->get_service_classes_with_di();
 
-    $this->services = array_map(
-      [ $this, 'instantiate_service' ],
-      $classes
-    );
     array_walk(
       $this->services,
-      function( Service $service ) {
-        $service->register();
+      function( $class ) {
+        if ( ! $class instanceof Service ) {
+          return;
+        }
+
+        $class->register();
       }
+    );
+  }
+
+  /**
+   * Return array of services with Dependency Injection parameters.
+   *
+   * @return array
+   *
+   * @since 0.7.0 Init
+   */
+  private function get_service_classes_with_di() : array {
+    $services = $this->get_service_classes_prepared_array();
+
+    $container = $this->get_di_container( $services );
+
+    return array_map(
+      function( $class ) use ( $container ) {
+        return $container->get( $class );
+      },
+      array_keys( $services )
+    );
+  }
+
+  /**
+   * Get services classes array ad prepare it.
+   * Key should be class name, and value empty array or DI items.
+   *
+   * @return array
+   *
+   * @since 0.7.0 Init.
+   */
+  private function get_service_classes_prepared_array() : array {
+    $output = [];
+    foreach ( $this->get_service_classes() as $key => $value ) {
+      if ( gettype( $value ) !== 'array' ) {
+        $output[ $value ] = [];
+      } else {
+        $output[ $key ] = $value;
+      }
+    }
+
+    return $output;
+  }
+
+  /**
+   * Implement PHP-DI.
+   * Create Object used for PHP-DI to create Dependency Injection methods.
+   *
+   * @param array $services Array of service.
+   * @return object
+   *
+   * @since 0.7.0 Init.
+   */
+  private function get_di_container( array $services ) {
+    $builder = new ContainerBuilder();
+    $builder->useAnnotations( false );
+    $builder->useAutowiring( true );
+
+    $definitions = [];
+    foreach ( $services as  $key => $values ) {
+      if ( gettype( $values ) !== 'array' ) {
+        continue;
+      }
+
+      $definitions[ $key ] = \DI\create()->constructor( ...$this->get_di_items( $values ) );
+    }
+
+    return $builder->addDefinitions( $definitions )->build();
+  }
+
+  /**
+   * Return prepared Dependency Injection objects.
+   * If you pass a class use PHP-DI to prepare if not just output it.
+   *
+   * @param array $items Array of classes/parameters to push in constructor.
+   * @return array
+   *
+   * @since 0.7.0 Init
+   */
+  private function get_di_items( array $items ) : array {
+    return array_map(
+      function( $class ) {
+        if ( class_exists( $class ) ) {
+          return \DI\get( $class );
+        }
+        return $class;
+      },
+      $items
     );
   }
 

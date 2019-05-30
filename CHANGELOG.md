@@ -7,6 +7,19 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [0.7.0]
+
+### Added
+
+- Added dependency injection in service locator inside class-main.php
+- Changed Manifest.php method to fetch items to non static method.
+
+## [0.6.0]
+
+### Changed
+
+- Updating Manifest.php with new methods
+
 ## [0.5.0]
 
 ### Changed
