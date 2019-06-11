@@ -125,11 +125,11 @@ abstract class Main implements Service {
    */
   private function get_service_classes_prepared_array() : array {
     $output = [];
-    foreach ( $this->get_service_classes() as $key => $value ) {
-      if ( gettype( $value ) !== 'array' ) {
-        $output[ $value ] = [];
+    foreach ( $this->get_service_classes() as $class => $dependencies ) {
+      if ( gettype( $dependencies ) !== 'array' ) {
+        $output[ $dependencies ] = [];
       } else {
-        $output[ $key ] = $value;
+        $output[ $class ] = $dependencies;
       }
     }
 
@@ -148,8 +148,6 @@ abstract class Main implements Service {
    */
   private function get_di_container( array $services ) {
     $builder = new ContainerBuilder();
-    $builder->useAnnotations( false );
-    $builder->useAutowiring( true );
 
     $definitions = [];
     foreach ( $services as  $key => $values ) {
@@ -157,7 +155,7 @@ abstract class Main implements Service {
         continue;
       }
 
-      $definitions[ $key ] = \DI\create()->constructor( ...$this->get_di_items( $values ) );
+      $definitions[ $key ] = \DI\create()->constructor( ...$this->get_di_dependencies( $values ) );
     }
 
     return $builder->addDefinitions( $definitions )->build();
@@ -167,20 +165,20 @@ abstract class Main implements Service {
    * Return prepared Dependency Injection objects.
    * If you pass a class use PHP-DI to prepare if not just output it.
    *
-   * @param array $items Array of classes/parameters to push in constructor.
+   * @param array $dependencies Array of classes/parameters to push in constructor.
    * @return array
    *
    * @since 0.7.0 Init
    */
-  private function get_di_items( array $items ) : array {
+  private function get_di_dependencies( array $dependencies ) : array {
     return array_map(
-      function( $class ) {
-        if ( class_exists( $class ) ) {
-          return \DI\get( $class );
+      function( $dependency ) {
+        if ( class_exists( $dependency ) ) {
+          return \DI\get( $dependency );
         }
-        return $class;
+        return $dependency;
       },
-      $items
+      $dependencies
     );
   }
 

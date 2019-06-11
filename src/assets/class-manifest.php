@@ -71,9 +71,11 @@ abstract class Manifest implements Service, Manifest_Data {
     $data = $this->get_decoded_manifest_data();
 
     $asset = $data->$key ?? '';
+
     if ( empty( $asset ) ) {
       return '';
     }
+
     return $this->get_assets_manifest_output_prefix() . $asset;
   }
 
@@ -102,6 +104,7 @@ abstract class Manifest implements Service, Manifest_Data {
   protected function get_raw_data() : string {
 
     $manifest = $this->get_manifest_url();
+
     if ( ! file_exists( $manifest ) ) {
       $error_message = esc_html__( 'manifest.json is missing. Bundle the theme before using it.', 'eightshift-libs' );
       throw Exception\Missing_Manifest::message( $error_message );
@@ -116,7 +119,7 @@ abstract class Manifest implements Service, Manifest_Data {
    *
    * @return string
    *
-   * @since 0.6.0 Changed from abstract to predefined.
+   * @since 0.6.0 Changed from abstract method to prefilled.
    * @since 0.1.0
    */
   protected function get_manifest_url() : string {
@@ -132,7 +135,8 @@ abstract class Manifest implements Service, Manifest_Data {
    * @since 0.6.0 Init
    */
   protected function get_decoded_manifest_data() {
-    $data = \json_decode( constant( $this->get_global_variable_name() ) );
+    $data = \json_decode( constant( $this->get_global_variable_name() ), true );
+
     if ( ! $data ) {
       return null;
     }
