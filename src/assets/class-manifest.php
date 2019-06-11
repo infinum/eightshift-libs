@@ -22,7 +22,7 @@ use Eightshift_Libs\Core\Service;
 abstract class Manifest implements Service, Manifest_Data {
 
   /**
-   * Global variable name contant.
+   * Global variable name constant.
    *
    * @var string
    *
@@ -43,7 +43,7 @@ abstract class Manifest implements Service, Manifest_Data {
 
   /**
    * Define global variable for assets manifest.
-   * Used to cache data insinde global variable so you don't fetch manifest.json file on every call.
+   * Used to cache data inside a global variable so you don't have to fetch manifest.json file on every call.
    *
    * @return void
    *
@@ -54,7 +54,7 @@ abstract class Manifest implements Service, Manifest_Data {
   }
 
   /**
-   * Return full path for specific asset from manifest.json
+   * Return full path for specific asset from manifest.json.
    * This is used for cache busting assets.
    *
    * @param string $key File name key you want to get from manifest.
@@ -78,7 +78,7 @@ abstract class Manifest implements Service, Manifest_Data {
   }
 
   /**
-   * Set global variable name to store cached data into.
+   * Get global variable name to store the cached data into.
    *
    * @return string
    *
@@ -111,7 +111,7 @@ abstract class Manifest implements Service, Manifest_Data {
   }
 
   /**
-   * Provide manifest.json url location.
+   * Get manifest.json url location.
    * If you are using a plugin or a different manifest location provide location with this method.
    *
    * @return string
@@ -141,7 +141,7 @@ abstract class Manifest implements Service, Manifest_Data {
   }
 
   /**
-   * Retrun string as a assets output prefix.
+   * Retrun string as an assets output prefix.
    * Override this if you are using lib for a plugin.
    *
    * @return string

@@ -116,8 +116,8 @@ abstract class Main implements Service {
   }
 
   /**
-   * Get services classes array ad prepare it.
-   * Key should be class name, and value empty array or DI items.
+   * Get services classes array and prepare it for dependency injection.
+   * Key should be a class name, and value should be an empty array or the dependencies of the class.
    *
    * @return array
    *
@@ -138,7 +138,8 @@ abstract class Main implements Service {
 
   /**
    * Implement PHP-DI.
-   * Create Object used for PHP-DI to create Dependency Injection methods.
+   * Build and return a DI container.
+   * Wire all the dependencies automatically, based on the provided array of class => dependencies from the get_di_items().
    *
    * @param array $services Array of service.
    * @return object
