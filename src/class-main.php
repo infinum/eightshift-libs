@@ -86,7 +86,7 @@ abstract class Main implements Service {
     array_walk(
       $this->services,
       function( $class ) {
-        if ( ! $class instanceof Service ) {
+        if ( ! $class instanceof Registrable ) {
           return;
         }
 
@@ -150,12 +150,12 @@ abstract class Main implements Service {
     $builder = new ContainerBuilder();
 
     $definitions = [];
-    foreach ( $services as  $key => $values ) {
-      if ( gettype( $values ) !== 'array' ) {
+    foreach ( $services as  $service_key => $service_values ) {
+      if ( gettype( $service_values ) !== 'array' ) {
         continue;
       }
 
-      $definitions[ $key ] = \DI\create()->constructor( ...$this->get_di_dependencies( $values ) );
+      $definitions[ $service_key ] = \DI\create()->constructor( ...$this->get_di_dependencies( $service_values ) );
     }
 
     return $builder->addDefinitions( $definitions )->build();
@@ -199,7 +199,7 @@ abstract class Main implements Service {
     }
 
     $service = new $class();
-    if ( ! $service instanceof Service ) {
+    if ( ! $service instanceof Registrable ) {
       throw Exception\Invalid_Service::from_service( $service );
     }
 

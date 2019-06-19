@@ -11,8 +11,9 @@ _No documentation available about unreleased changes as of yet._
 
 ### Added
 
-- Added dependency injection in service locator inside class-main.php
-- Changed Manifest.php method to fetch items to non static method.
+- Added DI instead of SL inside the class-main.php.
+- Changed methods used for fetching the manifest items inside Manifest.php to non static methods.
+
 
 ## [0.6.0]
 

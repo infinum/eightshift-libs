@@ -4,7 +4,7 @@
  *
  * It is used to provide manifest.json file location used with Webpack to fetch correct file locations.
  *
- * @since   0.6.0 Adding multiple methodes for easier extending.
+ * @since   0.6.0 Added multiple methods for easier extending.
  * @since   0.1.0
  * @package Eightshift_Libs\Assets
  */
@@ -12,6 +12,7 @@
 namespace Eightshift_Libs\Assets;
 
 use Eightshift_Libs\Core\Service;
+use Eightshift_Libs\Exception\Missing_Manifest;
 
 /**
  * Abstract class Manifest class.
@@ -50,7 +51,7 @@ abstract class Manifest implements Service, Manifest_Data {
    * @since 0.6.0 Init.
    */
   public function register_global_variable() : void {
-    \define( $this->get_global_variable_name(), $this->get_raw_data() );
+    define( $this->get_global_variable_name(), $this->get_raw_data() );
   }
 
   /**
@@ -58,9 +59,12 @@ abstract class Manifest implements Service, Manifest_Data {
    * This is used for cache busting assets.
    *
    * @param string $key File name key you want to get from manifest.
+   *
+   * @throws Exception\Missing_Manifest Throws error if manifest key is missing.
+   *
    * @return string Full path to asset.
    *
-   * @since 0.7.0 Changed to non static method.
+   * @since 0.7.0 Changed to non static method and added Exception for missing key.
    * @since 0.6.0 Init
    */
   public function get_assets_manifest_item( string $key ) : string {
@@ -70,13 +74,15 @@ abstract class Manifest implements Service, Manifest_Data {
 
     $data = $this->get_decoded_manifest_data();
 
-    $asset = $data->$key ?? '';
-
-    if ( empty( $asset ) ) {
-      return '';
+    if ( ! isset( $data[ $key ] ) ) {
+      $error_message = sprintf(
+        esc_html__( '%s is missing in manifest.json. Please check if provided key is correct.', 'eightshift-libs' ),
+        $key
+      );
+      throw Missing_Manifest::message( $error_message );
     }
 
-    return $this->get_assets_manifest_output_prefix() . $asset;
+    return $this->get_assets_manifest_output_prefix() . $data[ $key ];
   }
 
   /**
@@ -99,6 +105,7 @@ abstract class Manifest implements Service, Manifest_Data {
    *
    * @return string
    *
+   * @since 0.7.0 Fixed Exception msg.
    * @since 0.1.0
    */
   protected function get_raw_data() : string {
@@ -107,7 +114,7 @@ abstract class Manifest implements Service, Manifest_Data {
 
     if ( ! file_exists( $manifest ) ) {
       $error_message = esc_html__( 'manifest.json is missing. Bundle the theme before using it.', 'eightshift-libs' );
-      throw Exception\Missing_Manifest::message( $error_message );
+      throw Missing_Manifest::message( $error_message );
     }
 
     return implode( ' ', file( $manifest ) );
@@ -135,7 +142,7 @@ abstract class Manifest implements Service, Manifest_Data {
    * @since 0.6.0 Init
    */
   protected function get_decoded_manifest_data() {
-    $data = \json_decode( constant( $this->get_global_variable_name() ), true );
+    $data = json_decode( constant( $this->get_global_variable_name() ), true );
 
     if ( ! $data ) {
       return null;
@@ -153,6 +160,6 @@ abstract class Manifest implements Service, Manifest_Data {
    * @since 0.6.0
    */
   protected function get_assets_manifest_output_prefix() : string {
-    return \home_url( '/' );
+    return home_url( '/' );
   }
 }

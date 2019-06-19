@@ -19,7 +19,7 @@
     "source": "https://github.com/infinum/eightshift-libs"
   },
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.2",
     "php-di/php-di": "^6.0"
   },
   "require-dev": {

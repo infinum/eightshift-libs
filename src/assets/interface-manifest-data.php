@@ -1,7 +1,7 @@
 <?php
 /**
  * Assets manifest data interface.
- * 
+ *
  * Used to define the way manifest item is retrieved from the manifest file.
  *
  * @since   0.7.0
