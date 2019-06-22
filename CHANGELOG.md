@@ -7,6 +7,20 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [0.7.0]
+
+### Added
+
+- Added DI instead of SL inside the class-main.php.
+- Changed methods used for fetching the manifest items inside Manifest.php to non static methods.
+
+
+## [0.6.0]
+
+### Changed
+
+- Updating Manifest.php with new methods
+
 ## [0.5.0]
 
 ### Changed
