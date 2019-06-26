@@ -22,7 +22,8 @@ interface Registrable_Route {
    *
    * @return void
    *
+   * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.2.0
    */
-  public function register_route() : void;
+  public function register_route();
 }

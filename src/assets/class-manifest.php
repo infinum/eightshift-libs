@@ -36,9 +36,10 @@ abstract class Manifest implements Service, Manifest_Data {
    *
    * @return void
    *
+   * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.6.0 Init.
    */
-  public function register() : void {
+  public function register() {
     add_action( 'init', [ $this, 'register_global_variable' ] );
   }
 
@@ -50,7 +51,7 @@ abstract class Manifest implements Service, Manifest_Data {
    *
    * @since 0.6.0 Init.
    */
-  public function register_global_variable() : void {
+  public function register_global_variable() {
     define( $this->get_global_variable_name(), $this->get_raw_data() );
   }
 

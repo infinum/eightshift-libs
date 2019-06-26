@@ -25,8 +25,9 @@ interface Callable_Field {
    *               is already an instance, WP_HTTP_Response, otherwise
    *               returns a new WP_REST_Response instance.
    *
+   * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.2.0 Removed type hinting from first argument because it can be object|array.
    * @since 0.1.0
    */
-  public function field_callback( $object, string $attr, object $request, string $object_type );
+  public function field_callback( $object, string $attr, $request, string $object_type );
 }

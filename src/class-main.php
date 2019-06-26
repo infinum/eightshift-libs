@@ -47,9 +47,10 @@ abstract class Main implements Service {
    *
    * @return void
    *
+   * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.1.0
    */
-  public function register() : void {
+  public function register() {
     add_action( $this->get_register_action_hook(), [ $this, 'register_services' ] );
   }
 
@@ -74,7 +75,7 @@ abstract class Main implements Service {
    * @since 0.7.0 Dependency Injection Refactoring
    * @since 0.1.0
    */
-  public function register_services() : void {
+  public function register_services() {
 
     // Bail early so we don't instantiate services twice.
     if ( ! empty( $this->services ) ) {
