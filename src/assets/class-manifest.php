@@ -87,6 +87,25 @@ abstract class Manifest implements Service, Manifest_Data {
   }
 
   /**
+   * Return json_decoded manifest data, now you can call items by object key to get the value.
+   *
+   * @return object Manifest Object.
+   *
+   * @since 0.8.0 Changed to public method.
+   * @since 0.7.0 Changed to non static method.
+   * @since 0.6.0 Init
+   */
+  public function get_decoded_manifest_data() {
+    $data = json_decode( constant( $this->get_global_variable_name() ), true );
+
+    if ( ! $data ) {
+      return null;
+    }
+
+    return $data;
+  }
+
+  /**
    * Get global variable name to store the cached data into.
    *
    * @return string
@@ -132,24 +151,6 @@ abstract class Manifest implements Service, Manifest_Data {
    */
   protected function get_manifest_url() : string {
     return get_template_directory() . '/skin/public/manifest.json';
-  }
-
-  /**
-   * Return json_decoded manifest data, now you can call items by object key to get the value.
-   *
-   * @return object Manifest Object.
-   *
-   * @since 0.7.0 Changed to non static method.
-   * @since 0.6.0 Init
-   */
-  protected function get_decoded_manifest_data() {
-    $data = json_decode( constant( $this->get_global_variable_name() ), true );
-
-    if ( ! $data ) {
-      return null;
-    }
-
-    return $data;
   }
 
   /**
