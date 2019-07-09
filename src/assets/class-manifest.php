@@ -89,17 +89,17 @@ abstract class Manifest implements Service, Manifest_Data {
   /**
    * Return json_decoded manifest data, now you can call items by object key to get the value.
    *
-   * @return object Manifest Object.
+   * @return array Manifest Array Data.
    *
    * @since 0.8.0 Changed to public method.
    * @since 0.7.0 Changed to non static method.
    * @since 0.6.0 Init
    */
-  public function get_decoded_manifest_data() {
+  public function get_decoded_manifest_data() : array {
     $data = json_decode( constant( $this->get_global_variable_name() ), true );
 
     if ( ! $data ) {
-      return null;
+      return [];
     }
 
     return $data;
