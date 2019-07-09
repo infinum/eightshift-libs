@@ -7,6 +7,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [0.8.0]
+
+### Removed
+
+- Removing type hinting void for php 7.0.
+- Removing Blocks folder and adding eigthshift-blocks lib.
+
 ## [0.7.0]
 
 ### Added

@@ -20,9 +20,10 @@ abstract class Base_Post_Type implements Service {
    *
    * @return void
    *
+   * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.1.0
    */
-  public function register() : void {
+  public function register() {
     add_action(
       'init',
       function() {

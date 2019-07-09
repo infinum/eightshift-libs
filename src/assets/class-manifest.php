@@ -36,9 +36,10 @@ abstract class Manifest implements Service, Manifest_Data {
    *
    * @return void
    *
+   * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.6.0 Init.
    */
-  public function register() : void {
+  public function register() {
     add_action( 'init', [ $this, 'register_global_variable' ] );
   }
 
@@ -50,7 +51,7 @@ abstract class Manifest implements Service, Manifest_Data {
    *
    * @since 0.6.0 Init.
    */
-  public function register_global_variable() : void {
+  public function register_global_variable() {
     define( $this->get_global_variable_name(), $this->get_raw_data() );
   }
 
@@ -83,6 +84,25 @@ abstract class Manifest implements Service, Manifest_Data {
     }
 
     return $this->get_assets_manifest_output_prefix() . $data[ $key ];
+  }
+
+  /**
+   * Return json_decoded manifest data, now you can call items by object key to get the value.
+   *
+   * @return array Manifest Array Data.
+   *
+   * @since 0.8.0 Changed to public method.
+   * @since 0.7.0 Changed to non static method.
+   * @since 0.6.0 Init
+   */
+  public function get_decoded_manifest_data() : array {
+    $data = json_decode( constant( $this->get_global_variable_name() ), true );
+
+    if ( ! $data ) {
+      return [];
+    }
+
+    return $data;
   }
 
   /**
@@ -131,24 +151,6 @@ abstract class Manifest implements Service, Manifest_Data {
    */
   protected function get_manifest_url() : string {
     return get_template_directory() . '/skin/public/manifest.json';
-  }
-
-  /**
-   * Return json_decoded manifest data, now you can call items by object key to get the value.
-   *
-   * @return object Manifest Object.
-   *
-   * @since 0.7.0 Changed to non static method.
-   * @since 0.6.0 Init
-   */
-  protected function get_decoded_manifest_data() {
-    $data = json_decode( constant( $this->get_global_variable_name() ), true );
-
-    if ( ! $data ) {
-      return null;
-    }
-
-    return $data;
   }
 
   /**
