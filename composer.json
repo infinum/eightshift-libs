@@ -27,9 +27,9 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.5"
   },
   "autoload": {
-    "psr-4": {
-      "Eightshift_Libs\\": "src/"
-    }
+    "classmap": [
+      "src/"
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
