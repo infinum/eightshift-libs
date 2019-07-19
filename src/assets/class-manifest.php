@@ -29,7 +29,7 @@ abstract class Manifest implements Service, Manifest_Data {
    *
    * @since 0.6.0
    */
-  const GLOBAL_VARIABLE_NAME = 'INF_ASSETS_MANIFEST';
+  const GLOBAL_VARIABLE_NAME = 'ES_ASSETS_MANIFEST';
 
   /**
    * Register all hooks.
