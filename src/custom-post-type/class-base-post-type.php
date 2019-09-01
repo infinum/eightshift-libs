@@ -20,16 +20,21 @@ abstract class Base_Post_Type implements Service {
    *
    * @return void
    *
+   * @since 0.9.0 Removing anonymous class because of testing.
    * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.1.0
    */
   public function register() {
-    add_action(
-      'init',
-      function() {
-        register_post_type( $this->get_post_type_slug(), $this->get_post_type_arguments() );
-      }
-    );
+    add_action( 'init', [ $this, 'register_post_type' ] );
+  }
+
+  /**
+   * Callback hook for registering custom post type
+   *
+   * @return void
+   */
+  public function register_post_type() {
+    \register_post_type( $this->get_post_type_slug(), $this->get_post_type_arguments() );
   }
 
   /**

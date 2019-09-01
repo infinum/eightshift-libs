@@ -64,7 +64,9 @@ abstract class Manifest implements Service, Manifest_Data {
    * @since 0.6.0 Init.
    */
   public function register_global_variable() {
-    define( $this->get_global_variable_name(), $this->get_raw_data() );
+    if ( ! defined( $this->get_global_variable_name() ) ) {
+      define( $this->get_global_variable_name(), $this->get_raw_data() );
+    }
   }
 
   /**

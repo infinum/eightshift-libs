@@ -2,23 +2,23 @@
 /**
  * File that holds faq custom post type registration details
  *
- * @since 1.0.0
- * @package Custom_Namespace\Examples
- *
- * TODO: Refactor and test
+ * @since 0.9.0
+ * @package Eightshift_Libs\Tests\Fixtures\Plugin
  */
 
-namespace Custom_Namespace\Examples;
+namespace Eightshift_Libs\Tests\Fixtures\Plugin;
 
 use Eightshift_Libs\Custom_Post_Type\Base_Post_Type;
 use Eightshift_Libs\Custom_Post_Type\Label_Generator;
 
 /**
- * Class that initializes the faq custom post type and taxonomy
+ * FAQ post type class
+ *
+ * This class will register the custom post type.
  *
  * @since 1.0.0
  */
-final class Example_Faq_Post_Type extends Base_Post_Type {
+final class Faq_Post_Type extends Base_Post_Type {
 
   /**
    * The custom post type type slug

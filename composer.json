@@ -2,7 +2,7 @@
   "name": "infinum/eightshift-libs",
   "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
   "keywords": [
-    "composer", "installer", "plugin"
+    "composer", "installer", "plugin", "library"
   ],
   "homepage": "https://eightshift.com/",
   "license": "MIT",
@@ -23,12 +23,18 @@
     "php-di/php-di": "^6.0"
   },
   "require-dev": {
+    "brain/monkey": "~2.3.0",
+    "codedungeon/phpunit-result-printer": "^0.20.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
     "infinum/coding-standards-wp": "^0.4.1",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.5"
+    "pcov/clobber": "^2.0",
+    "phpunit/phpunit": "^7",
+    "roave/security-advisories": "dev-master"
   },
   "autoload": {
     "classmap": [
-      "src/"
+      "src/",
+      "tests/"
     ]
   },
   "minimum-stability": "dev",
@@ -39,7 +45,14 @@
     "process-timeout": 2000
   },
   "scripts": {
-    "check-cs": "@php ./vendor/bin/phpcs",
-    "fix-cs": "@php ./vendor/bin/phpcbf"
+    "check-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
+    "fix-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
+    "setup-tests": "bash bin/install-wp-tests.sh wordpress_test root '' localhost latest",
+    "clobber-tests": "@php ./vendor/pcov/clobber/bin/pcov clobber",
+    "unclobber-tests": "@php ./vendor/pcov/clobber/bin/pcov unclobber",
+    "run-tests-unit": "@php ./vendor/phpunit/phpunit/phpunit -c phpunit.xml.dist --no-coverage --colors=always --testdox",
+    "run-tests-unit-cov": "@php ./vendor/phpunit/phpunit/phpunit -c phpunit.xml.dist --colors=always",
+    "run-tests-integ": "@php ./vendor/phpunit/phpunit/phpunit -c phpunit-integ.xml.dist --no-coverage --colors=always --testdox",
+    "run-tests-integ-cov": "@php ./vendor/phpunit/phpunit/phpunit -c phpunit-integ.xml.dist --colors=always"
   }
 }

@@ -22,19 +22,24 @@ abstract class Base_Taxonomy implements Service {
    *
    * @return void
    *
+   * @since 0.9.0 Removing anonymous class because of testing.
    * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.1.0
    */
   public function register() {
-    add_action(
-      'init',
-      function() {
-        register_taxonomy(
-          $this->get_taxonomy_slug(),
-          [ $this->get_post_type_slug() ],
-          $this->get_taxonomy_arguments()
-        );
-      }
+    add_action( 'init', [ $this, 'register_custom_taxonomy' ] );
+  }
+
+  /**
+   * Callback hook for registering custom taxonomy
+   *
+   * @return void
+   */
+  public function register_custom_taxonomy() {
+    \register_taxonomy(
+      $this->get_taxonomy_slug(),
+      [ $this->get_post_type_slug() ],
+      $this->get_taxonomy_arguments()
     );
   }
 

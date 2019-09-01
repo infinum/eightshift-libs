@@ -1,26 +1,24 @@
 <?php
 /**
- * File that holds taxonomy class for fax taxonomy registration
+ * File that holds taxonomy class for faq taxonomy registration
  *
- * @since 1.0.0
- * @package Custom_Namespace\Examples
- *
- * TODO: Refactor and test
+ * @since 0.9.0
+ * @package Eightshift_Libs\Tests\Fixtures\Plugin
  */
 
-namespace Custom_Namespace\Examples;
+namespace Eightshift_Libs\Tests\Fixtures\Plugin;
 
 use Eightshift_Libs\Custom_Taxonomy\Base_Taxonomy;
 use Eightshift_Libs\Custom_Post_Type\Label_Generator;
 
-use Custom_Namespace\Examples\Example_Faq_Post_Type;
-
 /**
- * Class Example_Faq_Taxonomy.
+ * FAQ Taxonomy class
+ *
+ * This class will register the custom taxonomy.
  *
  * @since 1.0.0
  */
-class Example_Faq_Taxonomy extends Base_Taxonomy {
+class Faq_Taxonomy extends Base_Taxonomy {
   /**
    * The systems custom taxonomy type slug
    *
@@ -33,7 +31,7 @@ class Example_Faq_Taxonomy extends Base_Taxonomy {
    *
    * @var string
    */
-   const POST_TYPE_SLUG = Faq::POST_TYPE_SLUG;
+   const POST_TYPE_SLUG = Faq_Post_Type::POST_TYPE_SLUG;
 
   /**
    * Get the slug of the custom taxonomy

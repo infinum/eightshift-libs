@@ -62,7 +62,7 @@ abstract class Main implements Service {
    * @since 0.1.0
    */
   public function get_register_action_hook() : string {
-    return self::DEFAULT_REGISTER_ACTION_HOOK;
+    return static::DEFAULT_REGISTER_ACTION_HOOK;
   }
 
   /**
@@ -126,6 +126,7 @@ abstract class Main implements Service {
    */
   private function get_service_classes_prepared_array() : array {
     $output = [];
+
     foreach ( $this->get_service_classes() as $class => $dependencies ) {
       if ( gettype( $dependencies ) !== 'array' ) {
         $output[ $dependencies ] = [];
@@ -151,11 +152,8 @@ abstract class Main implements Service {
     $builder = new ContainerBuilder();
 
     $definitions = [];
-    foreach ( $services as  $service_key => $service_values ) {
-      if ( gettype( $service_values ) !== 'array' ) {
-        continue;
-      }
 
+    foreach ( $services as  $service_key => $service_values ) {
       $definitions[ $service_key ] = \DI\create()->constructor( ...$this->get_di_dependencies( $service_values ) );
     }
 
@@ -181,30 +179,6 @@ abstract class Main implements Service {
       },
       $dependencies
     );
-  }
-
-  /**
-   * Instantiate a single service.
-   *
-   * @param string $class Service class to instantiate.
-   *
-   * @throws Exception\Invalid_Service If the service is not valid.
-   *
-   * @return Service
-   *
-   * @since 0.1.0
-   */
-  private function instantiate_service( $class ) {
-    if ( ! class_exists( $class ) ) {
-      throw Exception\Invalid_Service::from_service( $class );
-    }
-
-    $service = new $class();
-    if ( ! $service instanceof Registrable ) {
-      throw Exception\Invalid_Service::from_service( $service );
-    }
-
-    return $service;
   }
 
   /**
