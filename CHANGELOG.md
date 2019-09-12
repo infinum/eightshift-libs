@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [0.9.0]
+
+### Changed
+
+- Renaming assets to manifest folder.
+
 ## [0.8.0]
 
 ### Removed

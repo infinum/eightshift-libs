@@ -6,10 +6,10 @@
  *
  * @since   0.6.0 Added multiple methods for easier extending.
  * @since   0.1.0
- * @package Eightshift_Libs\Assets
+ * @package Eightshift_Libs\Manifest
  */
 
-namespace Eightshift_Libs\Assets;
+namespace Eightshift_Libs\Manifest;
 
 use Eightshift_Libs\Core\Service;
 use Eightshift_Libs\Exception\Missing_Manifest;
@@ -17,6 +17,7 @@ use Eightshift_Libs\Exception\Missing_Manifest;
 /**
  * Abstract class Manifest class.
  *
+ * @since 0.9.0 Adding Manifest Item filter.
  * @since 0.7.0 Added Manifest_Data Interface.
  * @since 0.1.0 Init.
  */
@@ -32,15 +33,26 @@ abstract class Manifest implements Service, Manifest_Data {
   const GLOBAL_VARIABLE_NAME = 'ES_ASSETS_MANIFEST';
 
   /**
+   * Manifest item filter name constant.
+   *
+   * @var string
+   *
+   * @since 0.9.0
+   */
+  const MANIFEST_ITEM_FILTER_NAME = 'es_manifest_item';
+
+  /**
    * Register all hooks.
    *
    * @return void
    *
+   * @since 0.9.0 Adding manifest item filter.
    * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.6.0 Init.
    */
   public function register() {
     add_action( 'init', [ $this, 'register_global_variable' ] );
+    add_filter( $this->get_manifest_item_filter_name(), [ $this, 'get_assets_manifest_item' ] );
   }
 
   /**
@@ -118,6 +130,17 @@ abstract class Manifest implements Service, Manifest_Data {
   }
 
   /**
+   * Get manifest item filter name for fetching single manifest items.
+   *
+   * @return string
+   *
+   * @since 0.9.0 Init
+   */
+  protected function get_manifest_item_filter_name() : string {
+    return static::MANIFEST_ITEM_FILTER_NAME;
+  }
+
+  /**
    * Fetches manifest.json data from get_manifest_url() location, parses and returns as a sanitized array.
    * Generally, you would assign this data to a global variable or some helper that is going to be used in the application to fetch assets data.
    *
@@ -150,7 +173,7 @@ abstract class Manifest implements Service, Manifest_Data {
    * @since 0.1.0
    */
   protected function get_manifest_url() : string {
-    return get_template_directory() . '/skin/public/manifest.json';
+    return get_template_directory() . '/public/manifest.json';
   }
 
   /**
