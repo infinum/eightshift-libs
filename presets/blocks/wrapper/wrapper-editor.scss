@@ -1,0 +1,5 @@
+.wrapper__show-only-mobile--1 {
+  @include media(tablet up) {
+    display: block;
+  }
+}

@@ -1,0 +1,18 @@
+$paragraph: (
+  colors: (
+    default: $base-black-color,
+    primary: $base-primary-color,
+  ),
+);
+
+.paragraph {
+  @extend %paragraph-reset;
+
+  &__color {
+    @include modifiers-deep($paragraph, colors, color);
+  }
+
+  &__align {
+    @include text-align-modifiers;
+  }
+}

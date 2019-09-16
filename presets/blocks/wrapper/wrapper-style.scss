@@ -1,0 +1,114 @@
+$wrapper: (
+  background-colors: (
+    default: $base-background-color,
+    primary: $base-primary-color,
+    black: $base-black-color,
+  ),
+  text-colors: (
+    default: $base-text-color,
+  ),
+  spacings: (
+    biggest:    100px,
+    bigger:     90px,
+    big:        80px,
+    largest:    70px,
+    larger:     60px,
+    large:      50px,
+    default:    40px,
+    medium:     30px,
+    small:      20px,
+    tiny:       10px,
+    no-spacing: 0
+  ),
+  container-spacings: (
+    default: $base-gutter-size,
+    no-spacing: 0,
+  ),
+  containers: (
+    default: $base-container-size,
+    medium: 1110px,
+    no-width: auto,
+  ),
+);
+
+.wrapper {
+  $this: &;
+  position: relative;
+
+  &__show-only-mobile--1 {
+    @include media(tablet up) {
+      display: none;
+    }
+  }
+
+  &__spacing-top {
+    @include modifiers-deep($wrapper, spacings, padding-top);
+  }
+
+  &__spacing-top-tablet {
+    @include media(tablet) {
+      @include modifiers-deep($wrapper, spacings, padding-top);
+    }
+  }
+
+  &__spacing-top-mobile {
+    @include media(mobile down) {
+      @include modifiers-deep($wrapper, spacings, padding-top);
+    }
+  }
+
+  &__spacing-bottom {
+    @include modifiers-deep($wrapper, spacings, padding-bottom);
+  }
+
+  &__spacing-bottom-tablet {
+    @include media(tablet) {
+      @include modifiers-deep($wrapper, spacings, padding-bottom);
+    }
+  }
+
+  &__spacing-bottom-mobile {
+    @include media(mobile down) {
+      @include modifiers-deep($wrapper, spacings, padding-bottom);
+    }
+  }
+
+  &__bg-color {
+    @include modifiers-deep($wrapper, background-colors, background-color);
+  }
+
+  &__text-color {
+    @include modifiers-deep($wrapper, text-colors, color);
+  }
+
+  &__container {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+  }
+
+  &__container-spacing {
+    @include modifiers-deep($wrapper, container-spacings, padding-left);
+    @include modifiers-deep($wrapper, container-spacings, padding-right);
+  }
+
+  &__container-width {
+    @include modifiers-deep($wrapper, containers, max-width);
+  }
+
+  &__inner {
+    @include flex-grid-width;
+  }
+
+  &__width {
+    @include media(desktop up) {
+      @include flex-grid-width-modifiers($wrapper: #{$this}__inner);
+    }
+  }
+
+  &__inner-offset {
+    &--center {
+      margin: 0 auto;
+    }
+  }
+}

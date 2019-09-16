@@ -2,7 +2,12 @@
   "name": "infinum/eightshift-libs",
   "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
   "keywords": [
-    "composer", "installer", "plugin"
+    "composer",
+    "installer",
+    "plugin",
+    "blocks",
+    "Gutenberg",
+    "WordPress"
   ],
   "homepage": "https://eightshift.com/",
   "license": "MIT",

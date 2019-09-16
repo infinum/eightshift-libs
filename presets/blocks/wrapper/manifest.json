@@ -1,0 +1,59 @@
+{
+  "attributes": {
+    "id": {
+      "type": "string"
+    },
+    "styleContentWidth": {
+      "type": "string",
+      "default": "12"
+    },
+    "styleContentOffset": {
+      "type": "string",
+      "default": "none"
+    },
+    "styleContainerSpacing": {
+      "type": "string",
+      "default": "default"
+    },
+    "styleContainerWidth": {
+      "type": "string",
+      "default": "medium"
+    },
+    "styleTextColor": {
+      "type": "string",
+      "default": "default"
+    },
+    "styleBackgroundColor": {
+      "type": "string",
+      "default": "white"
+    },
+    "styleSpacingTop": {
+      "type": "string",
+      "default": "no-spacing"
+    },
+    "styleSpacingTopTablet": {
+      "type": "string"
+    },
+    "styleSpacingTopMobile": {
+      "type": "string"
+    },
+    "styleSpacingBottom": {
+      "type": "string",
+      "default": "default"
+    },
+    "styleSpacingBottomTablet": {
+      "type": "string"
+    },
+    "styleSpacingBottomMobile": {
+      "type": "string"
+    },
+    "styleShowOnlyMobile": {
+      "type": "bool",
+      "default": false
+    },
+    "hasWrapper": {
+      "type": "bool",
+      "default": true
+    }
+  }
+}

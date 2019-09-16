@@ -1,0 +1,15 @@
+{
+  "blockName": "section",
+  "title": "Section",
+  "description" : "Section block with custom settings.",
+  "category": "common",
+  "icon": {
+    "src": "screenoptions"
+  },
+  "keywords": [
+    "container",
+    "section",
+    "group"
+  ],
+  "hasInnerBlocks": true
+}
