@@ -2,7 +2,6 @@
 /**
  * File containing failed to load view class
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -10,6 +9,8 @@ namespace Eightshift_Libs\Exception;
 
 /**
  * Class Failed_To_Load_View.
+ *
+ * @since 0.1.0
  */
 class Failed_To_Load_View extends \RuntimeException implements General_Exception {
 

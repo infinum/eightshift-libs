@@ -2,13 +2,10 @@
 /**
  * Class Missing_Block_Full_Name provides Exception if block fullname is not foud.
  *
- * TODO: Provide better name_exception msg with block path.
- *
- * @since   1.0.0
- * @package Eightshift_Blocks\Exception
+ * @package Eightshift_Libs\Exception
  */
 
-namespace Eightshift_Blocks\Exception;
+namespace Eightshift_Libs\Exception;
 
 /**
  * Class Missing_Block_Full_Name.

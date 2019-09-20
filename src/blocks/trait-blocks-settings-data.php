@@ -3,13 +3,13 @@
  * Class Blocks_Settings_Data holds registration of global variable for cache and storing blocks settings manifest data.
  *
  * @since   1.0.0
- * @package Eightshift_Blocks
+ * @package Eightshift_Libs\Blocks
  */
 
-namespace Eightshift_Blocks;
+namespace Eightshift_Libs\Blocks;
 
-use Eightshift_Blocks\Exception\Missing_Blocks_Manifest;
-use Eightshift_Blocks\Exception\Missing_Block_Namespace;
+use Eightshift_Libs\Exception\Missing_Blocks_Manifest;
+use Eightshift_Libs\Exception\Missing_Block_Namespace;
 
 /**
  * Class Blocks_Settings_Data

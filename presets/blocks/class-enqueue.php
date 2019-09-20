@@ -8,7 +8,7 @@
 
 namespace Eightshift_Boilerplate\Blocks;
 
-use Eightshift_Blocks\Enqueue as Lib_Enqueue;
+use Eightshift_Libs\Blocks\Enqueue as Lib_Enqueue;
 use Eightshift_Libs\Manifest\Manifest_Data;
 
 /**

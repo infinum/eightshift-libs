@@ -2,23 +2,41 @@
 /**
  * File containing the main intro class
  *
- * @since   0.7.0 Dependency Injection Refactoring
- * @since   0.1.0
  * @package Eightshift_Libs\Core
  */
 
 namespace Eightshift_Libs\Core;
 
-use Eightshift_Libs\Exception;
-
 use \DI\ContainerBuilder;
+
+use Eightshift_Libs\Exception;
+use Eightshift_Libs\Exception\Missing_Manifest;
 
 /**
  * The main start class.
  *
  * This is used to define instantiate all classes used the lib.
+ *
+ * @since 2.0.0 Adding project prefix constant to use in lib.
+ * @since 0.7.0 Dependency Injection Refactoring.
+ * @since 0.1.0
  */
 abstract class Main implements Service {
+
+  /**
+   * Default main action hook that start the whole lib.
+   *
+   * @since 0.1.0
+   */
+  const DEFAULT_REGISTER_ACTION_HOOK = 'after_setup_theme';
+
+
+  /**
+   * Default lib prefix used to prefix all filters and hooks
+   *
+   * @since 2.0.0
+   */
+  const PROJECT_PREFIX = 'es';
 
   /**
    * Array of instantiated services.
@@ -28,13 +46,6 @@ abstract class Main implements Service {
    * @since 0.1.0
    */
   private $services = [];
-
-  /**
-   * Default main action hook that start the whole lib.
-   *
-   * @since 0.1.0
-   */
-  const DEFAULT_REGISTER_ACTION_HOOK = 'after_setup_theme';
 
   /**
    * Register the theme/plugin with the WordPress system.
@@ -47,22 +58,12 @@ abstract class Main implements Service {
    *
    * @return void
    *
+   * @since 2.0.0 Adding hook for project config.
    * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.1.0
    */
   public function register() {
-    add_action( $this->get_register_action_hook(), [ $this, 'register_services' ] );
-  }
-
-  /**
-   * Returns Theme/Plugin main action hook that start the whole lib.
-   *
-   * @return string
-   *
-   * @since 0.1.0
-   */
-  public function get_register_action_hook() : string {
-    return self::DEFAULT_REGISTER_ACTION_HOOK;
+    add_action( static::DEFAULT_REGISTER_ACTION_HOOK, [ $this, 'register_services' ] );
   }
 
   /**

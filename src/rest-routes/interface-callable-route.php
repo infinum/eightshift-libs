@@ -2,8 +2,6 @@
 /**
  * File containing Rest/Api callable interface
  *
- * @since   0.2.0 Rename to callable route.
- * @since   0.1.0
  * @package Eightshift_Libs\Routes
  */
 
@@ -11,6 +9,9 @@ namespace Eightshift_Libs\Routes;
 
 /**
  * Route interface that adds routes
+ *
+ * @since   0.2.0 Rename to callable route.
+ * @since   0.1.0
  */
 interface Callable_Route {
 

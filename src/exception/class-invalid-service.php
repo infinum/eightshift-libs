@@ -2,7 +2,6 @@
 /**
  * File containing the invalid service exception class
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -10,6 +9,8 @@ namespace Eightshift_Libs\Exception;
 
 /**
  * Class Invalid_Service.
+ *
+ * @since 0.1.0
  */
 class Invalid_Service extends \InvalidArgumentException implements General_Exception {
 

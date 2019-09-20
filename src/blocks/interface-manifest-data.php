@@ -5,10 +5,10 @@
  * Used to define the way manifest item is retrieved from the manifest file.
  *
  * @since   1.0.0
- * @package Eightshift_Blocks
+ * @package Eightshift_Libs\Blocks
  */
 
-namespace Eightshift_Blocks;
+namespace Eightshift_Libs\Blocks;
 
 /**
  * Interface Manifest_Data

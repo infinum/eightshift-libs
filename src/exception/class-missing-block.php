@@ -2,7 +2,6 @@
 /**
  * File containing invalid Gutenberg Block exception
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
 
@@ -10,6 +9,8 @@ namespace Eightshift_Libs\Exception;
 
 /**
  * Class Missing_Block.
+ *
+ * @since 0.1.0
  */
 class Missing_Block extends \InvalidArgumentException implements General_Exception {
 

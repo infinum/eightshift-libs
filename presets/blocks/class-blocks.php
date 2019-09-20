@@ -8,7 +8,7 @@
 
 namespace Eightshift_Boilerplate\Blocks;
 
-use Eightshift_Blocks\Blocks as Lib_Blocks;
+use Eightshift_Libs\Blocks\Blocks as Lib_Blocks;
 
 /**
  * Blocks class.

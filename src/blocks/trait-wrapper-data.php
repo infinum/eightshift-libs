@@ -3,10 +3,10 @@
  * Class Wrapper_Data holds registration of global variable for cache and storing wrapper manifest data.
  *
  * @since   1.0.0
- * @package Eightshift_Blocks
+ * @package Eightshift_Libs\Blocks
  */
 
-namespace Eightshift_Blocks;
+namespace Eightshift_Libs\Blocks;
 
 /**
  * Class Wrapper_Data

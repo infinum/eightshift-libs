@@ -3,15 +3,15 @@
  * Class Attributes holds all attributes definitions for blocks.
  *
  * @since   1.0.0
- * @package Eightshift_Blocks
+ * @package Eightshift_Libs\Blocks
  */
 
-namespace Eightshift_Blocks;
+namespace Eightshift_Libs\Blocks;
 
-use Eightshift_Blocks\Blocks_Full_Data;
-use Eightshift_Blocks\Attributes;
-use Eightshift_Blocks\Exception\Missing_Block_Wrapper_View;
-use Eightshift_Blocks\Exception\Missing_Block_View;
+use Eightshift_Libs\Blocks\Blocks_Full_Data;
+use Eightshift_Libs\Blocks\Attributes;
+use Eightshift_Libs\Exception\Missing_Block_Wrapper_View;
+use Eightshift_Libs\Exception\Missing_Block_View;
 
 /**
  * Class Attributes

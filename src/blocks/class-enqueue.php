@@ -3,15 +3,15 @@
  * Enqueue class used to define all script and style enqueues for Gutenberg blocks.
  *
  * @since   1.0.0
- * @package Eightshift_Blocks
+ * @package Eightshift_Libs\Blocks
  */
 
-namespace Eightshift_Blocks;
+namespace Eightshift_Libs\Blocks;
 
 use Eightshift_Libs\Core\Service;
-use Eightshift_Blocks\Manifest_Data;
-use Eightshift_Blocks\Exception\Missing_Assets_Manifest;
-use Eightshift_Blocks\Exception\Missing_Assets_Manifest_Key;
+use Eightshift_Libs\Blocks\Manifest_Data;
+use Eightshift_Libs\Exception\Missing_Assets_Manifest;
+use Eightshift_Libs\Exception\Missing_Assets_Manifest_Key;
 
 /**
  * Enqueue class.

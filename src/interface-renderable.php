@@ -2,7 +2,6 @@
 /**
  * File that holds the renderable interface.
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Core
  */
 
@@ -12,6 +11,8 @@ namespace Eightshift_Libs\Core;
  * Interface Renderable.
  *
  * An object that can be rendered.
+ *
+ * @since 0.1.0
  */
 interface Renderable {
 

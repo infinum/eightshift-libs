@@ -2,11 +2,10 @@
 /**
  * Class Missing_Block_Namespace provides Exception if block namespace is not foud.
  *
- * @since   1.0.0
- * @package Eightshift_Blocks\Exception
+ * @package Eightshift_Libs\Exception
  */
 
-namespace Eightshift_Blocks\Exception;
+namespace Eightshift_Libs\Exception;
 
 /**
  * Class Missing_Block_Namespace.

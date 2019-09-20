@@ -3,15 +3,15 @@
  * Class Blocks_Full_Data holds abstract class for Gutenberg blocks data.
  *
  * @since   1.0.0
- * @package Eightshift_Blocks
+ * @package Eightshift_Libs\Blocks
  */
 
-namespace Eightshift_Blocks;
+namespace Eightshift_Libs\Blocks;
 
 use Eightshift_Libs\Core\Service;
-use Eightshift_Blocks\Blocks_Settings_Data;
-use Eightshift_Blocks\Blocks_Data;
-use Eightshift_Blocks\Wrapper_Data;
+use Eightshift_Libs\Blocks\Blocks_Settings_Data;
+use Eightshift_Libs\Blocks\Blocks_Data;
+use Eightshift_Libs\Blocks\Wrapper_Data;
 
 /**
  * Class Blocks_Full_Data

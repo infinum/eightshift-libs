@@ -2,7 +2,6 @@
 /**
  * File that holds base abstract class for custom taxonomy registration.
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Custom_Taxonomy
  */
 
