@@ -30,13 +30,7 @@ abstract class Main implements Service {
    */
   const DEFAULT_REGISTER_ACTION_HOOK = 'after_setup_theme';
 
-
-  /**
-   * Default lib prefix used to prefix all filters and hooks
-   *
-   * @since 2.0.0
-   */
-  const PROJECT_PREFIX = 'es';
+  // Define global variable by project type and use that variable inside the project.!!!!!
 
   /**
    * Array of instantiated services.

@@ -8,12 +8,10 @@
  *
  */
 
-namespace Eightshift_Boilerplate;
-
+use Eightshift_Boilerplate\Core\Config;
 use Eightshift_Libs\Manifest\Manifest;
 
-$icon = apply_filters( Manifest::MANIFEST_ITEM_FILTER_NAME, 'logo.svg' );
-
+$icon = apply_filters( Config::get_config( Manifest::MANIFEST_ITEM_FILTER_NAME ), 'logo.svg' );
 ?>
 
 <meta charset="<?php bloginfo( 'charset' ); ?>" />

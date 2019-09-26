@@ -8,13 +8,14 @@
  */
 
 use Eightshift_Boilerplate\Admin\Menu\Menu;
-use Eightshift_Boilerplate\Manifest\Manifest;
+use Eightshift_Boilerplate\Core\Config;
+use Eightshift_Libs\Manifest\Manifest;
 
 $main_menu        = new Menu();
 $blog_name        = get_bloginfo( 'name' );
 $blog_description = get_bloginfo( 'description' );
 $header_logo_info = $blog_name . ' - ' . $blog_description;
-$logo_img         = apply_filters( Manifest::MANIFEST_ITEM_FILTER_NAME, 'logo.svg' );
+$logo_img         = apply_filters( Config::get_config( Manifest::MANIFEST_ITEM_FILTER_NAME ), 'logo.svg' );
 
 ?>
 <div class="header">

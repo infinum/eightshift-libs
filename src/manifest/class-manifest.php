@@ -11,7 +11,8 @@ namespace Eightshift_Libs\Manifest;
 
 use Eightshift_Libs\Core\Service;
 use Eightshift_Libs\Exception\Missing_Manifest;
-use Eightshift_Boilerplate\Core\Main;
+use Eightshift_Libs\Manifest\Manifest_Data;
+use Eightshift_Libs\Core\Config_Data;
 
 /**
  * Abstract class Manifest class.
@@ -21,7 +22,27 @@ use Eightshift_Boilerplate\Core\Main;
  * @since 0.7.0 Added Manifest_Data Interface.
  * @since 0.1.0 Init.
  */
-abstract class Manifest implements Service, Manifest_Data {
+class Manifest implements Service, Manifest_Data {
+
+  /**
+   * Instance variable of project config data.
+   *
+   * @var object
+   *
+   * @since 2.0.0
+   */
+  protected $config;
+
+  /**
+   * Create a new instance that injects config data to get project specific details.
+   *
+   * @param Config_Data $config Inject config which holds data regarding project details.
+   *
+   * @since 2.0.0
+   */
+  public function __construct( Config_Data $config ) {
+      $this->config = $config;
+  }
 
   /**
    * Manifest item filter name constant.
@@ -31,20 +52,21 @@ abstract class Manifest implements Service, Manifest_Data {
    * @since 2.0.0 Added Project Prefix.
    * @since 0.9.0 Init.
    */
-  const MANIFEST_ITEM_FILTER_NAME =  Main::PROJECT_PREFIX . '_manifest_item';
+  const MANIFEST_ITEM_FILTER_NAME = 'manifest-item';
 
   /**
    * Register all hooks.
    *
    * @return void
    *
+   * @since 2.0.0 Changed filter name to manifest.
    * @since 0.9.0 Adding manifest item filter.
    * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.6.0 Init.
    */
   public function register() {
     add_action( 'init', [ $this, 'validate_manifest' ] );
-    add_filter( static::MANIFEST_ITEM_FILTER_NAME, [ $this, 'get_assets_manifest_item' ] );
+    add_filter( $this->config->get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
   }
 
   /**

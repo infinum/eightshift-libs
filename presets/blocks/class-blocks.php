@@ -6,6 +6,8 @@
  * @package Eightshift_Boilerplate\Blocks
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Boilerplate\Blocks;
 
 use Eightshift_Libs\Blocks\Blocks as Lib_Blocks;

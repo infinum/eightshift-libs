@@ -9,9 +9,10 @@
  * TODO: Create this as a class with attributes.
  */
 
-use Eightshift_Boilerplate\Manifest\Manifest;
+use Eightshift_Boilerplate\Core\Config;
+use Eightshift_Libs\Manifest\Manifest;
 
-$logo_img = apply_filters( Manifest::MANIFEST_ITEM_FILTER_NAME, 'logo.svg' );
+$logo_img = apply_filters( Config::get_config( Manifest::MANIFEST_ITEM_FILTER_NAME ), 'logo.svg' );
 ?>
 
 <!-- Google Rich Snippets -->
