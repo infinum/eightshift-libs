@@ -1,7 +1,7 @@
 import { InspectorControls, BlockControls } from '@wordpress/editor';
 
 import { getActions } from 'EighshiftBlocksGetActions';
-import manifest from './manifest.json';
+import manifest from './manifest.json.js';
 
 import { Wrapper } from './../../wrapper/wrapper';
 import { ExampleEditor } from './components/example-editor';
