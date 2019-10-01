@@ -12,7 +12,7 @@ namespace Eightshift_Libs\Core;
  *
  * @since 2.0.0
  */
-abstract class Config {
+abstract class Config implements Config_Data {
 
   /**
    * Method that returns every string prefixed with project prefix based on project type.

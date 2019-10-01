@@ -65,26 +65,7 @@ class Manifest implements Service, Manifest_Data {
    * @since 0.6.0 Init.
    */
   public function register() {
-    add_action( 'init', [ $this, 'validate_manifest' ] );
     add_filter( $this->config->get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
-  }
-
-  /**
-   * Validates if manifest file exists in public folder. If not throw an error.
-   *
-   * @throws Exception\Missing_Manifest Throws error if manifest is missing.
-   *
-   * @return void
-   *
-   * @since 2.0.0
-   */
-  public function validate_manifest() {
-
-    $manifest = $this->get_manifest_url();
-
-    if ( ! file_exists( $manifest ) ) {
-      throw Missing_Manifest::message( esc_html__( 'manifest.json is missing. Bundle the theme before using it. Or your bundling process is returning and error.', 'eightshift-libs' ) );
-    }
   }
 
   /**
@@ -102,7 +83,13 @@ class Manifest implements Service, Manifest_Data {
    * @since 0.6.0 Init
    */
   public function get_assets_manifest_item( string $key ) : string {
-    $data = json_decode( implode( ' ', file( $this->get_manifest_url() ) ), true );
+    $path = $this->config->get_project_path() . '/public/manifest.json';
+
+    if ( ! file_exists( $path ) ) {
+      throw Missing_Manifest::message( esc_html__( 'manifest.json is missing. Bundle the theme before using it. Or your bundling process is returning and error.', 'eightshift-libs' ) );
+    }
+
+    $data = json_decode( implode( ' ', file( $path ) ), true );
 
     if ( ! isset( $data[ $key ] ) ) {
       throw Missing_Manifest::message(
@@ -117,27 +104,13 @@ class Manifest implements Service, Manifest_Data {
   }
 
   /**
-   * Get manifest.json url location.
-   * If you are using a plugin or a different manifest location provide location with this method.
-   *
-   * @return string
-   *
-   * @since 0.6.0 Changed from abstract method to prefilled.
-   * @since 0.1.0
-   */
-  protected function get_manifest_url() : string {
-    return get_template_directory() . '/public/manifest.json';
-  }
-
-  /**
-   * Retrun string as an assets output prefix.
-   * Override this if you are using lib for a plugin.
+   * This method appends full site url to the relative manifest data item.
    *
    * @return string
    *
    * @since 0.6.0
    */
   protected function get_assets_manifest_output_prefix() : string {
-    return home_url();
+    return site_url();
   }
 }
