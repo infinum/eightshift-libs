@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Blocks holds base abstract class for Gutenberg blocks registration.
+ * Class Blocks holds base class for Gutenberg blocks registration.
  * It provides ability to register custom blocks using manifest.json setup.
  *
  * @package Eightshift_Libs\Blocks
@@ -8,15 +8,10 @@
 
 namespace Eightshift_Libs\Blocks;
 
+use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Libs\Core\Service;
 use Eightshift_Libs\Blocks\Renderable_Block;
-use Eightshift_Libs\Exception\Missing_Block_Wrapper_View;
-use Eightshift_Libs\Exception\Missing_Block_View_Helper;
-use Eightshift_Libs\Exception\Missing_Block_View;
-use Eightshift_Libs\Blocks\Blocks_Full_Data;
-use Eightshift_Libs\Exception\Missing_Blocks_Manifest;
-use Eightshift_Libs\Exception\Missing_Block_Namespace;
-use Eightshift_Libs\Core\Config_Data;
+use Eightshift_Libs\Exception\Invalid_Block;
 
 /**
  * Class Blocks
@@ -35,6 +30,15 @@ class Blocks implements Service, Renderable_Block {
   protected $config;
 
   /**
+   * Transient cache name constant.
+   *
+   * @var string
+   *
+   * @since 2.0.0
+   */
+  const CACHE_NAME = 'blocks-data';
+
+  /**
    * Create a new instance that injects config data to get project specific details.
    *
    * @param Config_Data $config Inject config which holds data regarding project details.
@@ -48,9 +52,12 @@ class Blocks implements Service, Renderable_Block {
   /**
    * Register all the hooks
    *
+   * @return void
+   *
    * @since 2.0.0
    */
   public function register() {
+
     // // Register all custom blocks.
     add_action( 'init', [ $this, 'register_blocks' ] );
 
@@ -60,7 +67,7 @@ class Blocks implements Service, Renderable_Block {
 
   /**
    * Get all blocks with full block name.
-   * Used to limit what blocks are going to be used in your project.
+   * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
    *
    * @return array
    *
@@ -83,12 +90,18 @@ class Blocks implements Service, Renderable_Block {
   /**
    * Method used to register all custom blocks with data fetched from blocks manifest.json.
    *
+   * @throws Exception\Invalid_Block Throws error if blocks are missing.
+   *
    * @return void
    *
    * @since 2.0.0
    */
   public function register_blocks() {
     $blocks = $this->get_data()['blocks'];
+
+    if ( empty( $blocks ) ) {
+      throw Invalid_Block::missing_blocks_exception();
+    }
 
     if ( ! empty( $blocks ) ) {
       \array_map(
@@ -105,19 +118,17 @@ class Blocks implements Service, Renderable_Block {
    * It uses native register_block_type method from WP.
    * Render method is provided depending on the hasWrapper key.
    *
-   * @param array $block_details Block Manifest details.
+   * @param array $block_details Full Block Manifest details.
    *
    * @return void
    *
    * @since 2.0.0
    */
   public function register_block( array $block_details ) {
-    $render = $block_details['hasWrapper'] ? 'render_wrapper' : 'render';
-
     register_block_type(
       $block_details['blockFullName'],
       array(
-        'render_callback' => [ $this, $render ],
+        'render_callback' => [ $this, $block_details['hasWrapper'] ? 'render_wrapper' : 'render' ],
         'attributes' => $this->get_attributes( $block_details ),
       )
     );
@@ -169,14 +180,14 @@ class Blocks implements Service, Renderable_Block {
   }
 
   /**
-   * Provides block registration render wrapper callback method.
+   * Provides block registration callback method for render when using wrapper option.
    * If block is using `hasWrapper:true` setting view method is first routed through wrapper component view and then in block view.
    *
    * @param array  $attributes          Array of attributes as defined in block's manifest.json.
-   * @param string $inner_block_content Block's content.
+   * @param string $inner_block_content Block's content if using inner blocks.
    *
-   * @throws Exception\Missing_Block_Wrapper_View Throws error if wrapper component view is missing.
-   * @throws Exception\Missing_Block_View         Throws error if block view is missing.
+   * @throws Exception\Invalid_Block Throws error if block wrapper view is missing.
+   * @throws Exception\Invalid_Block Throws error if block view is missing.
    *
    * @return string Html template for block.
    *
@@ -195,12 +206,12 @@ class Blocks implements Service, Renderable_Block {
 
     // Check if wrapper componet exists.
     if ( ! file_exists( $wrapper_path ) ) {
-      throw Missing_Block_Wrapper_View::view_wrapper_exception( $block_name, $wrapper_path );
+      throw Invalid_Block::missing_wrapper_view_exception( $wrapper_path );
     }
 
     // Check if actual block exists.
     if ( ! file_exists( $template_path ) ) {
-      throw Missing_Block_View::view_exception( $block_name, $template_path );
+      throw Invalid_Block::missing_view_exception( $block_name, $template_path );
     }
 
     // If everything is ok, return the contents of the template (return, NOT echo).
@@ -216,9 +227,9 @@ class Blocks implements Service, Renderable_Block {
    * If block is using `hasWrapper:false` setting view method is provides in block.
    *
    * @param array  $attributes          Array of attributes as defined in block's manifest.json.
-   * @param string $inner_block_content Block's content.
+   * @param string $inner_block_content Block's content if using inner blocks.
    *
-   * @throws Exception\Missing_Block_View Throws error if block view is missing.
+   * @throws Exception\Invalid_Block Throws error if block view is missing.
    *
    * @return string Html template for block.
    *
@@ -234,7 +245,7 @@ class Blocks implements Service, Renderable_Block {
 
     // Check if actual block exists.
     if ( ! file_exists( $template_path ) ) {
-      throw Missing_Block_View::view_exception( $block_name, $template_path );
+      throw Invalid_Block::missing_view_exception( $block_name, $template_path );
     }
 
     // If everything is ok, return the contents of the template (return, NOT echo).
@@ -293,15 +304,14 @@ class Blocks implements Service, Renderable_Block {
   }
 
   /**
-   * Get blocks full data for global settings, blocks and wrapper.
+   * Get blocks full data from global settings, blocks and wrapper.
    * If develop env data is fetched from json otherwise data is stored in transient.
    *
    * @return array
    *
    * @since 2.0.0
    */
-  protected function get_data() : array {
-    $blocks   = $this->get_blocks();
+  protected function get_data_raw() : array {
     $settings = $this->get_settings();
     $wrapper  = $this->get_wrapper();
 
@@ -325,9 +335,34 @@ class Blocks implements Service, Renderable_Block {
   }
 
   /**
-   * Get blocks manifest data from blocks manifest.json files.
+   * Get Blocks data depending on the env.
+   * If env is develop output only raw data.
+   * If env is staging or production output cached data in transient.
    *
-   * @throws Exception\Missing_Block_Name Throws error if block name is missing.
+   * @return array
+   *
+   * @since 2.0.0
+   */
+  protected function get_data() : array {
+    if ( $this->config->get_project_env() === 'develop' ) {
+      return $this->get_data_raw();
+    }
+
+    $cache_name = $this->config->get_config( static::CACHE_NAME );
+    $data       = \get_transient( $cache_name );
+
+    if ( $data === false ) {
+      $data = $this->get_data_raw();
+      \set_transient( $cache_name, $data );
+    }
+
+    return $data;
+  }
+
+  /**
+   * Throws error if manifest key blockName is missing.
+   *
+   * @throws Exception\Invalid_Block Throws error if block name is missing.
    *
    * @return array
    *
@@ -336,13 +371,12 @@ class Blocks implements Service, Renderable_Block {
   protected function get_blocks() : array {
 
     return array_map(
-      function( $block ) {
-
-        $block = implode( ' ', file( ( $block ) ) );
+      function( $block_path ){
+        $block = implode( ' ', file( ( $block_path ) ) );
         $block = json_decode( $block, true );
 
         if ( ! isset( $block['blockName'] ) ) {
-          throw Missing_Block_Name::name_exception();
+          throw Invalid_Block::missing_name_exception( $block_path );
         }
 
         if ( ! isset( $block['classes'] ) ) {
@@ -370,6 +404,8 @@ class Blocks implements Service, Renderable_Block {
   /**
    * Get wrapper manifest data from wrapper manifest.json file.
    *
+   * @throws Exception\Invalid_Block Throws error if wrapper settings manifest.json is missing.
+   *
    * @return array
    *
    * @since 2.0.0
@@ -378,7 +414,7 @@ class Blocks implements Service, Renderable_Block {
     $manifest_path = "{$this->get_wrapper_path()}/manifest.json";
 
     if ( ! file_exists( $manifest_path ) ) {
-      throw Missing_Blocks_Manifest::manifest_exception( $manifest_path );
+      throw Invalid_Block::missing_wrapper_manifest_exception( $manifest_path );
     }
 
     $settings = implode( ' ', file( ( $manifest_path ) ) );
@@ -390,25 +426,25 @@ class Blocks implements Service, Renderable_Block {
   /**
    * Get blocks global settings manifest data from settings manifest.json file.
    *
-   * @throws Exception\Missing_Blocks_Manifest Throws error if blocks manifest is missing.
-   * @throws Exception\Missing_Block_Namespace Throws error if block namespace is missing.
+   * @throws Exception\Invalid_Block Throws error if global settings manifest.json is missing.
+   * @throws Exception\Invalid_Block Throws error if global manifest settings key namespace is missing.
    *
    * @return array
    *
    * @since 2.0.0
    */
   protected function get_settings() : array {
-    $manifest_path = $this->get_blocks_path() . '/manifest.json';
+    $manifest_path = "{$this->get_blocks_path()}/manifest.json";
 
     if ( ! file_exists( $manifest_path ) ) {
-      throw Missing_Blocks_Manifest::manifest_exception( $manifest_path );
+      throw Invalid_Block::missing_settings_manifest_exception( $manifest_path );
     }
 
     $settings = implode( ' ', file( ( $manifest_path ) ) );
     $settings = json_decode( $settings, true );
 
     if ( ! isset( $settings['namespace'] ) ) {
-      throw Missing_Block_Namespace::namespace_exception();
+      throw Invalid_Block::missing_namespace_exception();
     }
 
     return $settings;
@@ -422,13 +458,13 @@ class Blocks implements Service, Renderable_Block {
    * @param array  $attributes           Attributes array to pass in template.
    * @param string $inner_block_content If using inner blocks content pass the data.
    *
-   * @throws Exception\Missing_Wrapper_View_Helper Throws error if wrapper view template is missing.
+   * @throws Exception\Invalid_Block Throws error if wrapper view template is missing.
    *
    * @since 2.0.0
    */
   public function render_wrapper_view( string $src, array $attributes, $inner_block_content = null ) {
     if ( ! file_exists( $src ) ) {
-      throw Missing_Wrapper_View_Helper::view_exception( $src );
+      throw Invalid_Block::missing_wrapper_view_exception( $src );
     }
 
     include $src;
@@ -443,7 +479,7 @@ class Blocks implements Service, Renderable_Block {
    * @param array  $attributes           Attributes array to pass in template.
    * @param string $inner_block_content If using inner blocks content pass the data.
    *
-   * @throws Exception\Missing_Wrapper_View_Helper Throws error if wrapper view template is missing.
+   * @throws Exception\Missing_Wrapper_View_Helper Throws error if render block view is missing.
    *
    * @since 2.0.0
    */
@@ -451,7 +487,7 @@ class Blocks implements Service, Renderable_Block {
     $path = $this->get_blocks_path() . $src;
 
     if ( ! file_exists( $path ) ) {
-      throw Missing_Block_View_Helper::view_exception( $path );
+      throw Invalid_Block::missing_render_view_exception( $path );
     }
 
     include $path;

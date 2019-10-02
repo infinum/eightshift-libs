@@ -10,7 +10,6 @@ namespace Eightshift_Libs\Core;
 use \DI\ContainerBuilder;
 
 use Eightshift_Libs\Exception;
-use Eightshift_Libs\Exception\Missing_Manifest;
 
 /**
  * The main start class.
@@ -42,13 +41,11 @@ abstract class Main implements Service {
   private $services = [];
 
   /**
-   * Register the theme/plugin with the WordPress system.
+   * Register the project with the WordPress system.
    *
    * The register_service method will call the register() method in every service class,
    * which holds the actions and filters - effectively replacing the need to manually add
    * them in one place.
-   *
-   * @throws Exception\Invalid_Service If a service is not valid.
    *
    * @return void
    *

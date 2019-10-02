@@ -10,7 +10,7 @@
 namespace Eightshift_Libs\Manifest;
 
 use Eightshift_Libs\Core\Service;
-use Eightshift_Libs\Exception\Missing_Manifest;
+use Eightshift_Libs\Exception\Invalid_Manifest;
 use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Libs\Core\Config_Data;
 
@@ -45,6 +45,15 @@ class Manifest implements Service, Manifest_Data {
   }
 
   /**
+   * Transient cache name constant.
+   *
+   * @var string
+   *
+   * @since 2.0.0
+   */
+  const CACHE_NAME = 'manifest-data';
+
+  /**
    * Manifest item filter name constant.
    *
    * @var string
@@ -70,11 +79,10 @@ class Manifest implements Service, Manifest_Data {
 
   /**
    * Return full path for specific asset from manifest.json.
-   * This is used for cache busting assets.
    *
    * @param string $key File name key you want to get from manifest.
    *
-   * @throws Exception\Missing_Manifest Throws error if manifest key is missing.
+   * @throws Exception\Invalid_Manifest Throws error if manifest key is missing.
    *
    * @return string Full path to asset.
    *
@@ -83,24 +91,69 @@ class Manifest implements Service, Manifest_Data {
    * @since 0.6.0 Init
    */
   public function get_assets_manifest_item( string $key ) : string {
+    $data = $this->get_assets_manifest_data();
+
+    if ( ! isset( $data[ $key ] ) ) {
+      throw Invalid_Manifest::missing_manifest_item_exception();
+    }
+
+    return $data[ $key ];
+  }
+
+  /**
+   * Return full manifest data with site url prefix.
+   *
+   * @param string $key File name key you want to get from manifest.
+   *
+   * @throws Exception\Invalid_Manifest Throws error if manifest.json file is missing.
+   *
+   * @return array
+   *
+   * @since 2.0.0
+   */
+  protected function get_assets_manifest_raw() : array {
     $path = $this->config->get_project_path() . '/public/manifest.json';
 
     if ( ! file_exists( $path ) ) {
-      throw Missing_Manifest::message( esc_html__( 'manifest.json is missing. Bundle the theme before using it. Or your bundling process is returning and error.', 'eightshift-libs' ) );
+      throw Invalid_Manifest::missing_manifest_exception( $path );
     }
 
     $data = json_decode( implode( ' ', file( $path ) ), true );
-
-    if ( ! isset( $data[ $key ] ) ) {
-      throw Missing_Manifest::message(
-        sprintf(
-          esc_html__( '%s is missing in manifest.json. Please check if provided key is correct.', 'eightshift-libs' ),
-          $key
-        )
-      );
+    if ( empty( $data ) ) {
+      return [];
     }
 
-    return $this->get_assets_manifest_output_prefix() . $data[ $key ];
+    return array_map(
+      function( $manifest_item ) {
+        return "{$this->get_assets_manifest_output_prefix()}{$manifest_item}";
+      },
+      $data
+    );
+  }
+
+  /**
+   * Get Assets Manifest data depending on the env.
+   * If env is develop output only raw data.
+   * If env is staging or production output cached data in transient.
+   *
+   * @return array
+   *
+   * @since 2.0.0
+   */
+  protected function get_assets_manifest_data() : array {
+    if ( $this->config->get_project_env() === 'develop' ) {
+      return $this->get_assets_manifest_raw();
+    }
+
+    $cache_name = $this->config->get_config( static::CACHE_NAME );
+    $data       = \get_transient( $cache_name );
+
+    if ( $data === false ) {
+      $data = $this->get_assets_manifest_raw();
+      \set_transient( $cache_name, $data );
+    }
+
+    return $data;
   }
 
   /**
