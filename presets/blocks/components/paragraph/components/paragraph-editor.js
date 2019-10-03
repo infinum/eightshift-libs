@@ -9,6 +9,7 @@ export const ParagraphEditor = (props) => {
     onChangeContent,
     styleAlign,
     styleColor,
+    styleSize,
     removeStyle,
   } = props;
 
@@ -18,6 +19,7 @@ export const ParagraphEditor = (props) => {
     componentClass,
     `${componentClass}__color--${styleColor}`,
     `${componentClass}__align--${styleAlign}`,
+    `${componentClass}__size--${styleSize}`,
     `${blockClass}__paragraph`,
   ]);
 

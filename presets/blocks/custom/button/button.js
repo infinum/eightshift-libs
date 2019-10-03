@@ -36,6 +36,8 @@ export const Button = (props) => {
           onChangeStyleSizeWidth={actions.onChangeStyleSizeWidth}
           btnId={btnId}
           onChangeBtnId={actions.onChangeBtnId}
+          title={title}
+          onChangeTitle={actions.onChangeTitle}
         />
       </InspectorControls>
       <ButtonEditor

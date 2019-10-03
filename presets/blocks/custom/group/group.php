@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for the Section block.
+ * Template for the Group block.
  *
  * @since 1.0.0
  * @package Eightshift_Boilerplate\Blocks.

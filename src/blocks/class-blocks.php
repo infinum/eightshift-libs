@@ -6,6 +6,8 @@
  * @package Eightshift_Libs\Blocks
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Blocks;
 
 use Eightshift_Libs\Core\Config_Data;
@@ -37,6 +39,15 @@ class Blocks implements Service, Renderable_Block {
    * @since 2.0.0
    */
   const CACHE_NAME = 'blocks-data';
+
+  /**
+   * Block view filter name constant.
+   *
+   * @var string
+   *
+   * @since 2.0.0
+   */
+  const BLOCK_VIEW_FILTER_NAME = 'block-view-data';
 
   /**
    * Create a new instance that injects config data to get project specific details.
@@ -248,11 +259,18 @@ class Blocks implements Service, Renderable_Block {
       throw Invalid_Block::missing_view_exception( $block_name, $template_path );
     }
 
+    // Add custom data to block using filter hook.
+    $filter_name = $this->config->get_config( static::BLOCK_VIEW_FILTER_NAME );
+    $custom_data = '';
+    if ( has_filter( $filter_name ) ) {
+      $custom_data = apply_filters( $filter_name, [ $this, '' ] );
+    }
+
     // If everything is ok, return the contents of the template (return, NOT echo).
     ob_start();
     include $template_path;
     $output = ob_get_clean();
-    unset( $block_name, $template_path, $attributes, $inner_block_content );
+    unset( $block_name, $template_path, $attributes, $inner_block_content, $custom_data );
     return $output;
   }
 

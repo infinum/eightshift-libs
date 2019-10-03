@@ -24,6 +24,14 @@
     "styleType": {
       "type": "string",
       "default": "primary"
+    },
+    "styleSize": {
+      "type": "string",
+      "default": "default"
+    },
+    "removeStyle": {
+      "type": "bool",
+      "default": false
     }
   }
 }

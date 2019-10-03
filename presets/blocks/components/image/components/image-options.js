@@ -8,10 +8,10 @@ export const ImageOptions = (props) => {
   } = props;
 
   return (
-    <PanelBody title={__('Image Settings', 'eightshift-boilerplate')}>
+    <PanelBody title={__('Image Details', 'eightshift-boilerplate')}>
       {onChangeMedia &&
-        <div>
-          <label htmlFor="media">{__('Image', 'eightshift-boilerplate')}</label>
+        <div className="components-base-control">
+          <label className="components-base-control__label" htmlFor="url">{__('Image', 'eightshift-boilerplate')}</label>
           <MediaPlaceholder
             icon="format-image"
             onSelect={onChangeMedia}

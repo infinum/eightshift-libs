@@ -7,6 +7,8 @@
  * @package Eightshift_Libs\Manifest
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Manifest;
 
 /**

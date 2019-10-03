@@ -16,11 +16,13 @@ if ( ! $remove_style ) {
   $block_class     = $attributes['blockClass'] ?? '';
   $style_align     = isset( $attributes['styleAlign'] ) ? "{$component_class}__align--{$attributes['styleAlign']}" : '';
   $style_color     = isset( $attributes['styleColor'] ) ? "{$component_class}__color--{$attributes['styleColor']}" : '';
+  $style_size      = isset( $attributes['styleSize'] ) ? "{$component_class}__size--{$attributes['styleSize']}" : '';
 
   $paragraph_class = "
     {$component_class}
     {$style_color}
     {$style_align}
+    {$style_size}
     {$block_class}__paragraph
   ";
 

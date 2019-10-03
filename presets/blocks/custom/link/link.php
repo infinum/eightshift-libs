@@ -15,5 +15,6 @@ $this->render_block_view(
     'title' => $attributes['title'] ?? '',
     'url' => $attributes['url'] ?? '',
     'styleColor' => $attributes['styleColor'] ?? '',
+    'isAnchor' => $attributes['isAnchor'] ?? false,
   ]
 );

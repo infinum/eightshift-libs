@@ -14,7 +14,7 @@ export const VideoEditor = (props) => {
   ]);
 
   return (
-    <video className={videoClass} autoPlay loop muted>
+    <video className={videoClass} muted>
       <source src={url} type="video/mp4" />
     </video>
   );

@@ -6,6 +6,8 @@ export const ParagraphOptions = (props) => {
   const {
     styleColor,
     onChangeStyleColor,
+    styleSize,
+    onChangeStyleSize,
     removeStyle,
   } = props;
 
@@ -14,7 +16,7 @@ export const ParagraphOptions = (props) => {
       {removeStyle !== true &&
         <PanelBody title={__('Paragraph Details', 'eightshift-boilerplate')}>
 
-          {styleColor &&
+          {onChangeStyleColor &&
             <SelectControl
               label={__('Paragraph Color', 'eightshift-boilerplate')}
               value={styleColor}
@@ -25,6 +27,19 @@ export const ParagraphOptions = (props) => {
               onChange={onChangeStyleColor}
             />
           }
+
+          {onChangeStyleSize &&
+            <SelectControl
+              label={__('Paragraph Font Size', 'eightshift-boilerplate')}
+              value={styleSize}
+              options={[
+                { label: __('Default (22px)', 'infinum'), value: 'default' },
+                { label: __('Small (20px)', 'infinum'), value: 'small' },
+              ]}
+              onChange={onChangeStyleSize}
+            />
+          }
+
         </PanelBody>
       }
     </Fragment>

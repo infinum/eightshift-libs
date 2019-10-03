@@ -5,6 +5,8 @@
  * @package Eightshift_Libs\Custom_Taxonomy
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Custom_Taxonomy;
 
 use Eightshift_Libs\Core\Service;

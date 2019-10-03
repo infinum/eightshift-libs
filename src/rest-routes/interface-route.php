@@ -5,6 +5,8 @@
  * @package Eightshift_Libs\Routes
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Routes;
 
 use Eightshift_Libs\Core\Service;

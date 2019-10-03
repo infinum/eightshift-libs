@@ -139,3 +139,29 @@ $editor: (
     display: none !important;
   }
 }
+
+// Creating custom button tabs style.
+.custom-button-tabs {
+  .components-tab-panel__tabs {
+    display: flex;
+  }
+
+  .custom-button-with-icon {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Aligning image and text vertically.
+.components-base-control .components-base-control__label {
+  display: flex;
+  align-items: center;
+
+  .dashicon,
+  svg {
+    margin-right: 10px;
+  }
+}
+

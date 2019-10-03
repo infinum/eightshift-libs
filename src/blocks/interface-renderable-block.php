@@ -6,6 +6,8 @@
  * @package Eightshift_Libs\Blocks
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Blocks;
 
 /**

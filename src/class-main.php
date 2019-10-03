@@ -1,9 +1,11 @@
 <?php
 /**
- * File containing the main intro class
+ * File containing the main intro class for your project.
  *
  * @package Eightshift_Libs\Core
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Core;
 
@@ -13,23 +15,13 @@ use Eightshift_Libs\Exception;
 
 /**
  * The main start class.
- *
- * This is used to define instantiate all classes used the lib.
+ * This is used to define instantiate all classes used in the lib.
  *
  * @since 2.0.0 Adding project prefix constant to use in lib.
  * @since 0.7.0 Dependency Injection Refactoring.
  * @since 0.1.0
  */
 abstract class Main implements Service {
-
-  /**
-   * Default main action hook that start the whole lib.
-   *
-   * @since 0.1.0
-   */
-  const DEFAULT_REGISTER_ACTION_HOOK = 'after_setup_theme';
-
-  // Define global variable by project type and use that variable inside the project.!!!!!
 
   /**
    * Array of instantiated services.
@@ -54,7 +46,16 @@ abstract class Main implements Service {
    * @since 0.1.0
    */
   public function register() {
-    add_action( static::DEFAULT_REGISTER_ACTION_HOOK, [ $this, 'register_services' ] );
+    add_action( $this->get_default_register_action_hook(), [ $this, 'register_services' ] );
+  }
+
+  /**
+   * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.
+   *
+   * @since 2.0.0
+   */
+  public function get_default_register_action_hook() : string {
+    return 'after_setup_theme';
   }
 
   /**

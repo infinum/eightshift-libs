@@ -5,6 +5,8 @@
  * @package Eightshift_Libs\Exception
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Exception;
 
 /**

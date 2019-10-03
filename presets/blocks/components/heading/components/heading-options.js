@@ -12,7 +12,7 @@ export const HeadingOptions = (props) => {
   return (
     <PanelBody title={__('Heading Details', 'eightshift-boilerplate')}>
 
-      {styleColor &&
+      {onChangeStyleColor &&
         <SelectControl
           label={__('Heading Color', 'eightshift-boilerplate')}
           value={styleColor}
@@ -24,7 +24,7 @@ export const HeadingOptions = (props) => {
         />
       }
 
-      {styleSize &&
+      {onChangeStyleSize &&
         <SelectControl
           label={__('Heading Size', 'eightshift-boilerplate')}
           value={styleSize}

@@ -7,6 +7,8 @@
  * @package Eightshift_Libs\Custom_Post_Type
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Custom_Post_Type;
 
 use Eightshift_Libs\Exception\Invalid_Nouns;

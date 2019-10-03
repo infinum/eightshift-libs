@@ -1,6 +1,6 @@
 import { InnerBlocks } from '@wordpress/editor';
 
-export const SectionEditor = (props) => {
+export const GroupEditor = (props) => {
   const {
     attributes: {
       blockClass,

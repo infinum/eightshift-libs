@@ -67,6 +67,10 @@ $btn: (
     duration: 0.3s;
   }
 
+  &:disabled {
+    cursor: not-allowed;
+  }
+
   &__size-width {
     &--block {
       display: flex;

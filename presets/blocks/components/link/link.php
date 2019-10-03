@@ -8,16 +8,19 @@
 
 namespace Eightshift_Boilerplate\Blocks;
 
-$title = $attributes['title'] ?? '';
-$url   = $attributes['url'] ?? '';
+$title     = $attributes['title'] ?? '';
+$url       = $attributes['url'] ?? '';
+$is_anchor = $attributes['isAnchor'] ?? false;
 
 $component_class = 'link';
 $block_class     = $attributes['blockClass'] ?? '';
-$style_color     = $attributes['styleColor'] ?? '';
+$style_color     = isset( $attributes['styleColor'] ) ? "{$component_class}__color--{$attributes['styleColor']}" : '';
+$is_anchor       = ( $is_anchor === true ) ? 'js-scroll-to-anchor' : '';
 
 $link_class = "
   {$component_class}
-  {$component_class}__color--{$style_color}
+  {$style_color}
+  {$is_anchor}
   {$block_class}__link
 ";
 ?>

@@ -7,6 +7,8 @@
  * @package Eightshift_Libs\Core
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Core;
 
 /**

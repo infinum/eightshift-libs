@@ -1,12 +1,10 @@
 import classnames from 'classnames';
-import { __ } from '@wordpress/i18n';
-import { RichText } from '@wordpress/editor';
+import { Fragment } from '@wordpress/element';
 
 export const ButtonEditor = (props) => {
   const {
     blockClass,
     title,
-    onChangeTitle,
     styleSize,
     styleColor,
     styleSizeWidth,
@@ -23,12 +21,10 @@ export const ButtonEditor = (props) => {
   ]);
 
   return (
-    <RichText
-      placeholder={__('Add Button Title', 'eightshift-boilerplate')}
-      value={title}
-      onChange={onChangeTitle}
-      className={buttonClass}
-      keepPlaceholderOnFocus
-    />
+    <Fragment>
+      {title && (
+        <div className={buttonClass}>{title}</div>
+      )}
+    </Fragment>
   );
 };

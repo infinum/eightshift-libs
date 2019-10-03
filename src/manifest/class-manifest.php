@@ -7,6 +7,8 @@
  * @package Eightshift_Libs\Manifest
  */
 
+declare( strict_types=1 );
+
 namespace Eightshift_Libs\Manifest;
 
 use Eightshift_Libs\Core\Service;
@@ -58,7 +60,6 @@ class Manifest implements Service, Manifest_Data {
    *
    * @var string
    *
-   * @since 2.0.0 Added Project Prefix.
    * @since 0.9.0 Init.
    */
   const MANIFEST_ITEM_FILTER_NAME = 'manifest-item';

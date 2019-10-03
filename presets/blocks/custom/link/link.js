@@ -14,6 +14,7 @@ export const Link = (props) => {
       title,
       url,
       styleColor,
+      isAnchor,
     },
   } = props;
 
@@ -27,6 +28,8 @@ export const Link = (props) => {
           onChangeUrl={actions.onChangeUrl}
           styleColor={styleColor}
           onChangeColor={actions.onChangeColor}
+          isAnchor={isAnchor}
+          onChangeIsAnchor={actions.onChangeIsAnchor}
         />
       </InspectorControls>
       <LinkEditor
@@ -34,6 +37,7 @@ export const Link = (props) => {
         title={title}
         onChangeTitle={actions.onChangeTitle}
         styleColor={styleColor}
+        isAnchor={isAnchor}
       />
     </Fragment>
   );

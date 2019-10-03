@@ -1,9 +1,11 @@
 <?php
 /**
- * File that holds Has_Activation interface
+ * File that holds Service interface
  *
  * @package Eightshift_Libs\Core
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Core;
 

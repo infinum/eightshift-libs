@@ -15,5 +15,7 @@ $this->render_block_view(
     'content' => $attributes['content'] ?? '',
     'styleAlign' => $attributes['styleAlign'] ?? '',
     'styleColor' => $attributes['styleColor'] ?? '',
+    'styleSize'   => $attributes['styleSize'] ?? '',
+    'removeStyle' => $attributes['removeStyle'] ?? false,
   ]
 );

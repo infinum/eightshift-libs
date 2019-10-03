@@ -4,20 +4,36 @@ export const WrapperEditor = (props) => {
   const {
     children,
     attributes: {
-      styleBackgroundColor,
-      styleTextColor,
-      styleContentWidth,
-      styleContentOffset,
-      styleContainerWidth,
-      styleContainerSpacing,
-      styleSpacingTop,
-      styleSpacingTopTablet,
-      styleSpacingTopMobile,
-      styleSpacingBottom,
-      styleSpacingBottomTablet,
-      styleSpacingBottomMobile,
-      styleShowOnlyMobile,
       id,
+      styleBackgroundColor,
+
+      styleContentWidthLarge,
+      styleContentOffsetLarge,
+      styleContainerWidthLarge,
+      styleContainerSpacingLarge,
+      styleSpacingTopLarge,
+      styleSpacingBottomLarge,
+
+      styleContentWidthDesktop,
+      styleContentOffsetDesktop,
+      styleContainerWidthDesktop,
+      styleContainerSpacingDesktop,
+      styleSpacingTopDesktop,
+      styleSpacingBottomDesktop,
+
+      styleContentWidthTablet,
+      styleContentOffsetTablet,
+      styleContainerWidthTablet,
+      styleContainerSpacingTablet,
+      styleSpacingTopTablet,
+      styleSpacingBottomTablet,
+
+      styleContentWidthMobile,
+      styleContentOffsetMobile,
+      styleContainerWidthMobile,
+      styleContainerSpacingMobile,
+      styleSpacingTopMobile,
+      styleSpacingBottomMobile,
     },
   } = props;
 
@@ -25,27 +41,64 @@ export const WrapperEditor = (props) => {
 
   const wrapperClass = classnames([
     wrapperMainClass,
-    `${wrapperMainClass}__bg-color--${styleBackgroundColor}`,
-    `${wrapperMainClass}__text-color--${styleTextColor}`,
-    `${wrapperMainClass}__width--${styleContentWidth}`,
-    `${wrapperMainClass}__spacing-top--${styleSpacingTop}`,
-    `${wrapperMainClass}__spacing-top-tablet--${styleSpacingTopTablet}`,
-    `${wrapperMainClass}__spacing-top-mobile--${styleSpacingTopMobile}`,
-    `${wrapperMainClass}__spacing-bottom--${styleSpacingBottom}`,
-    `${wrapperMainClass}__spacing-bottom-tablet--${styleSpacingBottomTablet}`,
-    `${wrapperMainClass}__spacing-bottom-mobile--${styleSpacingBottomMobile}`,
-    `${wrapperMainClass}__show-only-mobile--${styleShowOnlyMobile}`,
+    styleBackgroundColor && `${wrapperMainClass}__bg-color--${styleBackgroundColor}`,
+
+    // Large.
+    styleSpacingTopLarge && `${wrapperMainClass}__spacing-top-large--${styleSpacingTopLarge}`,
+    styleSpacingBottomLarge && `${wrapperMainClass}__spacing-bottom-large--${styleSpacingBottomLarge}`,
+
+    // Desktop.
+    styleSpacingTopDesktop && `${wrapperMainClass}__spacing-top-desktop--${styleSpacingTopDesktop}`,
+    styleSpacingBottomDesktop && `${wrapperMainClass}__spacing-bottom-desktop--${styleSpacingBottomDesktop}`,
+
+    // Tablet.
+    styleSpacingTopTablet && `${wrapperMainClass}__spacing-top-tablet--${styleSpacingTopTablet}`,
+    styleSpacingBottomTablet && `${wrapperMainClass}__spacing-bottom-tablet--${styleSpacingBottomTablet}`,
+
+    // Mobile.
+    styleSpacingTopMobile && `${wrapperMainClass}__spacing-top-mobile--${styleSpacingTopMobile}`,
+    styleSpacingBottomMobile && `${wrapperMainClass}__spacing-bottom-mobile--${styleSpacingBottomMobile}`,
   ]);
 
   const wrapperContainerClass = classnames([
     `${wrapperMainClass}__container`,
-    `${wrapperMainClass}__container-width--${styleContainerWidth}`,
-    `${wrapperMainClass}__container-spacing--${styleContainerSpacing}`,
+
+    // Large.
+    styleContainerWidthLarge && `${wrapperMainClass}__container-width-large--${styleContainerWidthLarge}`,
+    styleContainerSpacingLarge && `${wrapperMainClass}__container-spacing-large--${styleContainerSpacingLarge}`,
+
+    // Desktop.
+    styleContainerWidthDesktop && `${wrapperMainClass}__container-width-desktop--${styleContainerWidthDesktop}`,
+    styleContainerSpacingDesktop && `${wrapperMainClass}__container-spacing-desktop--${styleContainerSpacingDesktop}`,
+
+    // Tablet.
+    styleContainerWidthTablet && `${wrapperMainClass}__container-width-tablet--${styleContainerWidthTablet}`,
+    styleContainerSpacingTablet && `${wrapperMainClass}__container-spacing-tablet--${styleContainerSpacingTablet}`,
+
+    // Mobile.
+    styleContainerWidthMobile && `${wrapperMainClass}__container-width-mobile--${styleContainerWidthMobile}`,
+    styleContainerSpacingMobile && `${wrapperMainClass}__container-spacing-mobile--${styleContainerSpacingMobile}`,
+    
   ]);
 
   const wrapperInnerClass = classnames([
     `${wrapperMainClass}__inner`,
-    `${wrapperMainClass}__inner-offset--${styleContentOffset}`,
+
+    // Large.
+    styleContentWidthLarge && `${wrapperMainClass}__inner-content-width-large--${styleContentWidthLarge}`,
+    styleContentOffsetLarge && `${wrapperMainClass}__inner-offset-large--${styleContentOffsetLarge}`,
+
+    // Desktop.
+    styleContentWidthDesktop && `${wrapperMainClass}__inner-content-width-desktop--${styleContentWidthDesktop}`,
+    styleContentOffsetDesktop && `${wrapperMainClass}__inner-offset-desktop--${styleContentOffsetDesktop}`,
+
+    // Tablet.
+    styleContentWidthTablet && `${wrapperMainClass}__inner-content-width-tablet--${styleContentWidthTablet}`,
+    styleContentOffsetTablet && `${wrapperMainClass}__inner-offset-tablet--${styleContentOffsetTablet}`,
+
+    // Mobile.
+    styleContentWidthMobile && `${wrapperMainClass}__inner-content-width-mobile--${styleContentWidthMobile}`,
+    styleContentOffsetMobile && `${wrapperMainClass}__inner-offset-mobile--${styleContentOffsetMobile}`,
   ]);
 
   return (

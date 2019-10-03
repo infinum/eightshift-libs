@@ -14,12 +14,14 @@ export const ButtonOptions = (props) => {
     onChangeStyleSizeWidth,
     id,
     onChangeId,
+    title,
+    onChangeTitle,
   } = props;
 
   return (
     <PanelBody title={__('Button Details', 'eightshift-boilerplate')}>
 
-      {styleColor &&
+      {onChangeStyleColor &&
         <SelectControl
           label={__('Button Color', 'eightshift-boilerplate')}
           value={styleColor}
@@ -31,7 +33,7 @@ export const ButtonOptions = (props) => {
         />
       }
 
-      {styleSize &&
+      {onChangeStyleSize &&
         <SelectControl
           label={__('Button Size', 'eightshift-boilerplate')}
           value={styleSize}
@@ -43,7 +45,7 @@ export const ButtonOptions = (props) => {
         />
       }
 
-      {styleSizeWidth &&
+      {onChangeStyleSizeWidth &&
         <SelectControl
           label={__('Button Size Width', 'eightshift-boilerplate')}
           value={styleSizeWidth}
@@ -56,24 +58,29 @@ export const ButtonOptions = (props) => {
       }
 
       {onChangeUrl &&
-        <div>
-          <label htmlFor="url">{__('Button Link', 'eightshift-boilerplate')}</label>
+        <div className="components-base-control">
+          <label className="components-base-control__label" htmlFor="url">{__('Button Link', 'eightshift-boilerplate')}</label>
           <URLInput
             value={url}
             onChange={onChangeUrl}
           />
-          <br />
         </div>
       }
 
+      {onChangeTitle &&
+        <TextControl
+          label={__('Button Title', 'eightshift-boilerplate')}
+          value={title}
+          onChange={onChangeTitle}
+        />
+      }
+
       {onChangeId &&
-        <div>
-          <TextControl
-            label={__('Button ID', 'eightshift-boilerplate')}
-            value={id}
-            onChange={onChangeId}
-          />
-        </div>
+        <TextControl
+          label={__('Button ID', 'eightshift-boilerplate')}
+          value={id}
+          onChange={onChangeId}
+        />
       }
 
     </PanelBody>

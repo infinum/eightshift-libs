@@ -20,6 +20,12 @@ $video_class = "
 
 ?>
 
-<video class="<?php echo esc_attr( $video_class ); ?>" autoplay loop muted>
-  <source src="<?php echo esc_url( $url ); ?>" type="video/mp4">
+<video
+  src="<?php echo esc_url( $url ); ?>"
+  class="<?php echo esc_attr( $video_class ); ?>"
+  autoplay
+  loop
+  muted
+  playsinline
+  preload="metadata">
 </video>
