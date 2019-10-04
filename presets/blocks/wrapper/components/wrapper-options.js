@@ -4,7 +4,7 @@ import { PanelBody, TextControl, Dashicon, TabPanel, Icon } from '@wordpress/com
 import { ColorPaletteCustom } from '../../toolbars/color-palette-custom';
 import { WrapperResponsiveTabContent } from './wrapper-responsive-tab-content';
 
-import globalSettings from '../../manifest.json.js';
+import globalSettings from '../../manifest.json';
 
 export const WrapperOptions = (props) => {
   const {

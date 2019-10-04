@@ -2,7 +2,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 import { SelectControl, RangeControl, ToggleControl, Icon } from '@wordpress/components';
 
-import globalSettings from '../../manifest.json.js';
+import globalSettings from '../../manifest.json';
 
 export const WrapperResponsiveTabContent = (props) => {
   const {

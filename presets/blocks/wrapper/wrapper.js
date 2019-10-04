@@ -2,7 +2,7 @@ import { Fragment } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/editor';
 
 import { getActions } from 'EighshiftBlocksGetActions';
-import manifest from './manifest.json.js';
+import manifest from './manifest.json';
 
 import { WrapperEditor } from './components/wrapper-editor';
 import { WrapperOptions } from './components/wrapper-options';
