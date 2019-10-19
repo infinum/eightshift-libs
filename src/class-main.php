@@ -68,11 +68,11 @@ abstract class Main implements Service {
   /**
    * Register the individual services with optional dependency injection.
    *
-   * @throws Exception\Invalid_Service If a service is not valid.
-   *
    * @return void
    *
-   * @since 0.7.0 Dependency Injection Refactoring
+   * @throws \Exception
+   *
+   * @throws Exception\Invalid_Service If a service is not valid.*@since 0.7.0 Dependency Injection Refactoring
    * @since 0.1.0
    */
   public function register_services() {
@@ -86,7 +86,7 @@ abstract class Main implements Service {
 
     array_walk(
       $this->services,
-      function( $class ) {
+      static function($class ) {
         if ( ! $class instanceof Registrable ) {
           return;
         }
@@ -101,6 +101,7 @@ abstract class Main implements Service {
    *
    * @return array
    *
+   * @throws \Exception
    * @since 0.7.0 Init
    */
   private function get_service_classes_with_di() : array {
@@ -109,7 +110,7 @@ abstract class Main implements Service {
     $container = $this->get_di_container( $services );
 
     return array_map(
-      function( $class ) use ( $container ) {
+      static function($class ) use ( $container ) {
         return $container->get( $class );
       },
       array_keys( $services )
@@ -128,7 +129,7 @@ abstract class Main implements Service {
     $output = [];
 
     foreach ( $this->get_service_classes() as $class => $dependencies ) {
-      if ( gettype( $dependencies ) !== 'array' ) {
+      if (!is_array($dependencies)) {
         $output[ $dependencies ] = [];
       } else {
         $output[ $class ] = $dependencies;
@@ -146,6 +147,7 @@ abstract class Main implements Service {
    * @param array $services Array of service.
    * @return object
    *
+   * @throws \Exception
    * @since 0.7.0 Init.
    */
   private function get_di_container( array $services ) {
@@ -154,7 +156,7 @@ abstract class Main implements Service {
     $definitions = [];
 
     foreach ( $services as  $service_key => $service_values ) {
-      $definitions[ $service_key ] = \DI\create()->constructor( ...$this->get_di_dependencies( $service_values ) );
+      $definitions[ $service_key ] = \DI\autowire()->constructor( ...$this->get_di_dependencies( $service_values ) );
     }
 
     return $builder->addDefinitions( $definitions )->build();
@@ -171,7 +173,7 @@ abstract class Main implements Service {
    */
   private function get_di_dependencies( array $dependencies ) : array {
     return array_map(
-      function( $dependency ) {
+      static function($dependency ) {
         if ( class_exists( $dependency ) ) {
           return \DI\get( $dependency );
         }
