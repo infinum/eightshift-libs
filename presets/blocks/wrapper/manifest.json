@@ -29,11 +29,11 @@
       "default": "default"
     },
     "styleSpacingTopLarge": {
-      "type": "string"
+      "type": "number"
     },
     "styleSpacingBottomLarge": {
-      "type": "string",
-      "default": "default"
+      "type": "number",
+      "default": 40
     },
     "styleHideBlockLarge": {
       "type": "bool",
@@ -53,10 +53,10 @@
       "type": "string"
     },
     "styleSpacingTopDesktop": {
-      "type": "string"
+      "type": "number"
     },
     "styleSpacingBottomDesktop": {
-      "type": "string"
+      "type": "number"
     },
     "styleHideBlockDesktop": {
       "type": "bool",
@@ -76,10 +76,10 @@
       "type": "string"
     },
     "styleSpacingTopTablet": {
-      "type": "string"
+      "type": "number"
     },
     "styleSpacingBottomTablet": {
-      "type": "string"
+      "type": "number"
     },
     "styleHideBlockTablet": {
       "type": "bool"
@@ -98,10 +98,10 @@
       "type": "string"
     },
     "styleSpacingTopMobile": {
-      "type": "string"
+      "type": "number"
     },
     "styleSpacingBottomMobile": {
-      "type": "string"
+      "type": "number"
     },
     "styleHideBlockMobile": {
       "type": "bool"

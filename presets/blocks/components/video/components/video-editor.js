@@ -1,5 +1,3 @@
-import classnames from 'classnames';
-
 export const VideoEditor = (props) => {
   const {
     blockClass,
@@ -8,10 +6,10 @@ export const VideoEditor = (props) => {
 
   const componentClass = 'video';
 
-  const videoClass = classnames([
-    componentClass,
-    `${blockClass}__video`,
-  ]);
+  const videoClass = `
+    ${componentClass}
+    ${blockClass}__video
+  `;
 
   return (
     <video className={videoClass} muted>

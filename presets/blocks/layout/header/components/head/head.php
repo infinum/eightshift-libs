@@ -5,7 +5,6 @@
  * @package Eightshift_Boilerplate\Views\Header\Head
  *
  * @since 1.0.0
- *
  */
 
 use Eightshift_Boilerplate\Core\Config;

@@ -26,6 +26,7 @@ export const Image = (props) => {
     <Fragment>
       <InspectorControls>
         <ImageOptions
+          url={mediaUrl}
           onChangeMedia={actions.onChangeMedia}
         />
       </InspectorControls>

@@ -1,6 +1,6 @@
 import { AlignmentToolbar } from '@wordpress/editor';
 import { Fragment } from '@wordpress/element';
-import { HeadingLevel } from '../../../toolbars/heading-level';
+import { HeadingLevel } from 'EighshiftComponentHeadingLevel';
 
 export const HeadingToolbar = (props) => {
   const {

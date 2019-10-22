@@ -1,103 +1,160 @@
 /* eslint-disable import/no-extraneous-dependencies*/
 
-// Webpack specific imports.
-const webpack = require('webpack');
+/**
+ * Project Base config used in production and development build.
+ *
+ * @since 2.0.0
+ */
 
-// Plugins.
+const webpack = require('webpack');
+const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { isUsed } = require('./helpers');
 
-// Main Webpack build setup.
-module.exports = (config) => {
+
+module.exports = (options) => {
 
   // All Plugins used in production and development build.
-  const plugins = [
+  const plugins = [];
 
-    // Provide global variables to window object.
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    }),
+  // Provide global variables to window object.
+  if (isUsed(options.plugins, 'providePlugin')) {
+    plugins.push(
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery',
+      })
+    );
+  }
 
-    // Create manifest.json file.
-    new ManifestPlugin({
-      seed: {},
-    }),
+  // Create manifest.json file.
+  if (isUsed(options.plugins, 'manifestPlugin')) {
+    plugins.push(
+      new ManifestPlugin({
+        seed: {},
+      })
+    );
+  }
 
-    new MiniCssExtractPlugin({
-      filename: '[name]-[hash].css',
-    }),
+  // Output css from Js.
+  if (isUsed(options.plugins, 'miniCssExtractPlugin')) {
+    plugins.push(
+      new MiniCssExtractPlugin({
+        filename: '[name]-[hash].css',
+      })
+    );
+  }
 
-    // Copy files to new destination.
-    new CopyWebpackPlugin([
-
-      // Find jQuery in node_modules and copy it to public folder
-      {
-        from: `${config.absolutePath}/node_modules/jquery/dist/jquery.min.js`,
-        to: config.output,
-      },
-    ]),
-  ];
+  // Copy files to new destination.
+  if (isUsed(options.plugins, 'copyWebpackPlugin')) {
+    plugins.push(
+      new CopyWebpackPlugin([
+        // Find jQuery in node_modules and copy it to public folder
+        {
+          from: `${options.config.libNodeModules}/jquery/dist/jquery.min.js`,
+          to: options.config.outputPath,
+        },
+      ])
+    );
+  }
 
   // All Optimizations used in production and development build.
   const optimization = {
     runtimeChunk: false,
   };
 
-  // All Loaders used in production and development build.
-  const loaders = {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: 'babel-loader',
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
-        exclude: [/fonts/, /node_modules/],
-        use: 'file-loader?name=[name].[ext]',
-      },
-      {
-        test: /\.(eot|otf|ttf|woff|woff2|svg)$/,
-        exclude: [/images/, /node_modules/],
-        use: 'file-loader?name=[name].[ext]',
-      },
-      {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              url: false,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-          {
-            loader: 'import-glob-loader',
-          },
-        ],
-      },
-    ],
+  // All module used in production and development build.
+  const module = {
+    rules: [],
   };
+
+  // Module for JS and JSX.
+  if (isUsed(options.module, 'js')) {
+    module.rules.push({
+      test: /\.(js|jsx)$/,
+      exclude: /node_modules/,
+      use: [
+        {
+          loader: path.join(options.config.libNodeModules, 'babel-loader'),
+        }
+      ],
+    })
+  }
+
+  // Module for Images.
+  if (isUsed(options.module, 'images')) {
+    module.rules.push({
+      test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
+      exclude: [/fonts/, /node_modules/],
+      use: [
+        {
+          loader: path.join(options.config.libNodeModules, 'file-loader'),
+          options: {
+            name: '[name].[ext]',
+          },
+        }
+      ],
+    })
+  }
+
+  // Module for Fonts.
+  if (isUsed(options.module, 'fonts')) {
+    module.rules.push({
+      test: /\.(eot|otf|ttf|woff|woff2|svg)$/,
+      exclude: [/images/, /node_modules/],
+      use: [
+        {
+          loader: path.join(options.config.libNodeModules, 'file-loader'),
+          options: {
+            name: '[name].[ext]',
+          },
+        }
+      ],
+    })
+  }
+
+  // Module for Scss.
+  if (isUsed(options.module, 'scss')) {
+    module.rules.push({
+      test: /\.scss$/,
+      exclude: /node_modules/,
+      use: [
+        MiniCssExtractPlugin.loader,
+        {
+          // loader: 'css-loader',
+          loader: path.join(options.config.libNodeModules, 'css-loader'),
+          options: {
+            sourceMap: true,
+            url: false,
+          },
+        },
+        {
+          // loader: 'postcss-loader',
+          loader: path.join(options.config.libNodeModules, 'postcss-loader'),
+          options: {
+            sourceMap: true,
+          },
+        },
+        {
+          // loader: 'sass-loader',
+          loader: path.join(options.config.libNodeModules, 'sass-loader'),
+          options: {
+            sourceMap: true,
+          },
+        },
+        {
+          // loader: 'import-glob-loader',
+          loader: path.join(options.config.libNodeModules, 'import-glob-loader'),
+        },
+      ],
+    })
+  }
 
   return {
     optimization,
     plugins,
-    module: loaders,
+    module,
   };
 };

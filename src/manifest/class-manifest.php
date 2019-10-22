@@ -95,7 +95,7 @@ class Manifest implements Service, Manifest_Data {
     $data = $this->get_assets_manifest_data();
 
     if ( ! isset( $data[ $key ] ) ) {
-      throw Invalid_Manifest::missing_manifest_item_exception();
+      throw Invalid_Manifest::missing_manifest_item_exception( $key );
     }
 
     return $data[ $key ];
@@ -103,8 +103,6 @@ class Manifest implements Service, Manifest_Data {
 
   /**
    * Return full manifest data with site url prefix.
-   *
-   * @param string $key File name key you want to get from manifest.
    *
    * @throws Exception\Invalid_Manifest Throws error if manifest.json file is missing.
    *

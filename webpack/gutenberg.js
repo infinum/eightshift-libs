@@ -1,12 +1,19 @@
+/**
+ * Project Gutenberg config used for Gutenberg specific build.
+ *
+ * @since 2.0.0
+ */
+
 const path = require('path');
 
-// Export everything so it can be used in project webpack config.
-module.exports = () => {
-
-  // Define libs assets path.
-  const blocksHelpers = path.resolve(__dirname, '..', 'assets');
-
-  // Define all external components used in Gutenberg.
+/**
+ * Return all global objects from window object.
+ * Add all Gutenberg external libs so you can use it like @wordpress/lib_name.
+ *
+ * @since 2.0.0
+ */
+function getExternals() {
+  const ext = {};
   const wplib = [
     'components',
     'compose',
@@ -23,29 +30,31 @@ module.exports = () => {
     'url',
     'apiFetch',
   ];
-  
-  // Add all Gutenberg external libs so you can use it like @wordpress/lib_name.
-  const externals = (function() {
-    const ext = {};
-    wplib.forEach((name) => {
-      ext[`@wp/${name}`] = `wp.${name}`;
-      ext[`@wordpress/${name}`] = `wp.${name}`;
-    });
-    ext.ga = 'ga';
-    ext.gtag = 'gtag';
-    ext.jquery = 'jQuery';
-    ext.react = 'React';
-    ext['react-dom'] = 'ReactDOM';
-    ext.backbone = 'Backbone';
-    ext.lodash = 'lodash';
-    ext.moment = 'moment';
-    ext.tinyMCE = 'tinyMCE';
-    ext.tinymce = 'tinymce';
-    return ext;
-  })();
+  wplib.forEach((name) => {
+    ext[`@wp/${name}`] = `wp.${name}`;
+    ext[`@wordpress/${name}`] = `wp.${name}`;
+  });
+  ext.ga = 'ga';
+  ext.gtag = 'gtag';
+  ext.jquery = 'jQuery';
+  ext.react = 'React';
+  ext['react-dom'] = 'ReactDOM';
+  ext.backbone = 'Backbone';
+  ext.lodash = 'lodash';
+  ext.moment = 'moment';
+  ext.tinyMCE = 'tinyMCE';
+  ext.tinymce = 'tinymce';
+
+  return ext;
+}
+
+module.exports = (options) => {
+
+  // Define libs assets path.
+  const blocksHelpers = path.resolve(__dirname, '..', 'assets');
 
   return {
-    externals,
+    externals: getExternals(),
     resolve: {
       alias: {
         EighshiftBlocksDynamicImport: `${blocksHelpers}/scripts/dynamic-import`,
@@ -53,6 +62,8 @@ module.exports = () => {
         EighshiftBlocksUcfirst: `${blocksHelpers}/scripts/ucfirst`,
         EighshiftBlocksGetActions: `${blocksHelpers}/scripts/get-actions`,
         EighshiftEditorStyleOverride: `${blocksHelpers}/styles/override-editor.scss`,
+        EighshiftComponentColorPalette: `${blocksHelpers}/toolbars/color-palette-custom.js`,
+        EighshiftComponentHeadingLevel: `${blocksHelpers}/toolbars/heading-level.js`,
       },
     },
   }

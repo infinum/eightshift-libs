@@ -22,30 +22,18 @@ export const WrapperResponsiveTabContent = (props) => {
     onChangeHideBlock,
   } = props;
 
-  const spacingOptions = [
-    { label: __('Not Set', 'eightshift-boilerplate'), value: '' },
-    { label: __('Great (300px)', 'eightshift-boilerplate'), value: 'great' },
-    { label: __('Gigantic (280px)', 'eightshift-boilerplate'), value: 'gigantic' },
-    { label: __('Gargantuan (260px)', 'eightshift-boilerplate'), value: 'gargantuan' },
-    { label: __('Extensive (240px)', 'eightshift-boilerplate'), value: 'extensive' },
-    { label: __('Enormous (220px)', 'eightshift-boilerplate'), value: 'enormous' },
-    { label: __('Colossal (200px)', 'eightshift-boilerplate'), value: 'colossal' },
-    { label: __('Hugest (180px)', 'eightshift-boilerplate'), value: 'hugest' },
-    { label: __('Huger (160px)', 'eightshift-boilerplate'), value: 'huger' },
-    { label: __('Huge (140px)', 'eightshift-boilerplate'), value: 'huge' },
-    { label: __('Giant (120px)', 'eightshift-boilerplate'), value: 'giant' },
-    { label: __('Biggest (100px)', 'eightshift-boilerplate'), value: 'biggest' },
-    { label: __('Bigger (90px)', 'eightshift-boilerplate'), value: 'bigger' },
-    { label: __('Big (80px)', 'eightshift-boilerplate'), value: 'big' },
-    { label: __('Largest (70px)', 'eightshift-boilerplate'), value: 'largest' },
-    { label: __('Larger (60px)', 'eightshift-boilerplate'), value: 'larger' },
-    { label: __('Large (50px)', 'eightshift-boilerplate'), value: 'large' },
-    { label: __('Default (40px)', 'eightshift-boilerplate'), value: 'default' },
-    { label: __('Medium (30px)', 'eightshift-boilerplate'), value: 'medium' },
-    { label: __('Small (20px)', 'eightshift-boilerplate'), value: 'small' },
-    { label: __('Tiny (10px)', 'eightshift-boilerplate'), value: 'tiny' },
-    { label: __('None (0px)', 'eightshift-boilerplate'), value: 'no-spacing' },
-  ];
+  const spacingOptions = {
+    min: -1,
+    max: 300,
+    step: 10,
+  };
+
+  const widthOptions = {
+    min: -1,
+    max: globalSettings.maxCols,
+    step: 1,
+    initial: globalSettings.maxCols,
+  };
 
   return (
     <Fragment>
@@ -57,12 +45,13 @@ export const WrapperResponsiveTabContent = (props) => {
               {__('Content Width', 'eightshift-boilerplate')}
             </Fragment>
           }
-          help={sprintf(__('Change block width in %d columns range. Example 6 = 50% screen width.', 'eightshift-boilerplate'), globalSettings.maxCols)}
+          help={sprintf(__('Change block width in %d columns range. Example 6 = 50% screen width. If you set a value to -1 it will not be used and the parent brakepoint will be used.', 'eightshift-boilerplate'), globalSettings.maxCols)}
           value={contentWidth}
           onChange={onChangeContentWidth}
-          min={1}
-          max={globalSettings.maxCols}
-          initialPosition={globalSettings.maxCols}
+          min={widthOptions.min}
+          max={widthOptions.max}
+          step={widthOptions.step}
+          initialPosition={widthOptions.initial}
         />
       )}
 
@@ -70,7 +59,7 @@ export const WrapperResponsiveTabContent = (props) => {
         <SelectControl
           label={
             <Fragment>
-              <Icon icon={() => <svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m19 10c.552 0 1 .448 1 1v6c0 .552-.448 1-1 1h-18c-.552 0-1-.448-1-1v-6c0-.552.448-1 1-1h2v2h2v-2h2v4h2v-4h2v2h2v-2h2v4h2v-4zm-3-8 3.414 3-3.414 3v-2h-16v-2h16z"/></svg>} />
+              <Icon icon={() => <svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m19 10c.552 0 1 .448 1 1v6c0 .552-.448 1-1 1h-18c-.552 0-1-.448-1-1v-6c0-.552.448-1 1-1h2v2h2v-2h2v4h2v-4h2v2h2v-2h2v4h2v-4zm-3-8 3.414 3-3.414 3v-2h-16v-2h16z" /></svg>} />
               {__('Content Offset', 'eightshift-boilerplate')}
             </Fragment>
           }
@@ -123,34 +112,39 @@ export const WrapperResponsiveTabContent = (props) => {
       }
 
       {onChangeSpacingTop &&
-        <SelectControl
+        <RangeControl
           label={
             <Fragment>
               <Icon icon={() => <svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m10.4936829 16.8025207-3.50662235-3.7069702 1.13510132-1.073761 2.36846923 2.5038148 2.3544312-2.5022889 1.1380004 1.0707092zm6.4750671-1.4900207v-10.625c0-2.58468629-2.1028137-4.6875-4.6875-4.6875h-3.59375c-2.58468629 0-4.6875 2.10281371-4.6875 4.6875v10.625c0 2.5846863 2.10281371 4.6875 4.6875 4.6875h3.59375c2.5846863 0 4.6875-2.1028137 4.6875-4.6875zm-4.6875-13.75c1.723175 0 3.125 1.40182496 3.125 3.125v10.625c0 1.723175-1.401825 3.125-3.125 3.125h-3.59375c-1.72317504 0-3.125-1.401825-3.125-3.125v-10.625c0-1.72317504 1.40182496-3.125 3.125-3.125zm-1.796875 1.6015625c-.4315186 0-.78125.34973145-.78125.78125s.3497314.78125.78125.78125.78125-.34973145.78125-.78125-.3497314-.78125-.78125-.78125zm0 3.125c-.4315186 0-.78125.34973145-.78125.78125s.3497314.78125.78125.78125.78125-.34973145.78125-.78125-.3497314-.78125-.78125-.78125zm0 3.125c-.4315186 0-.78125.34973145-.78125.78125 0 .4315186.3497314.78125.78125.78125s.78125-.3497314.78125-.78125c0-.43151855-.3497314-.78125-.78125-.78125z" transform="matrix(-1 0 0 -1 20.96875 20)" /></svg>} />
               {__('Spacing Top', 'eightshift-boilerplate')}
             </Fragment>
           }
-          help={__('Change Block Spacing from the top.', 'eightshift-boilerplate')}
+          help={__('Change Block Spacing from the top. If you set a value to -1 it will not be used and the parent brakepoint will be used.', 'eightshift-boilerplate')}
           value={spacingTop}
-          options={spacingOptions}
           onChange={onChangeSpacingTop}
+          min={spacingOptions.min}
+          max={spacingOptions.max}
+          step={spacingOptions.step}
         />
       }
 
       {onChangeSpacingBottom &&
-        <SelectControl
+        <RangeControl
           label={
             <Fragment>
               <Icon icon={() => <svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m10.4936829 16.8025207-3.50662235-3.7069702 1.13510132-1.073761 2.36846923 2.5038148 2.3544312-2.5022889 1.1380004 1.0707092zm6.4750671-1.4900207v-10.625c0-2.58468629-2.1028137-4.6875-4.6875-4.6875h-3.59375c-2.58468629 0-4.6875 2.10281371-4.6875 4.6875v10.625c0 2.5846863 2.10281371 4.6875 4.6875 4.6875h3.59375c2.5846863 0 4.6875-2.1028137 4.6875-4.6875zm-4.6875-13.75c1.723175 0 3.125 1.40182496 3.125 3.125v10.625c0 1.723175-1.401825 3.125-3.125 3.125h-3.59375c-1.72317504 0-3.125-1.401825-3.125-3.125v-10.625c0-1.72317504 1.40182496-3.125 3.125-3.125zm-1.796875 1.6015625c-.4315186 0-.78125.34973145-.78125.78125s.3497314.78125.78125.78125.78125-.34973145.78125-.78125-.3497314-.78125-.78125-.78125zm0 3.125c-.4315186 0-.78125.34973145-.78125.78125s.3497314.78125.78125.78125.78125-.34973145.78125-.78125-.3497314-.78125-.78125-.78125zm0 3.125c-.4315186 0-.78125.34973145-.78125.78125 0 .4315186.3497314.78125.78125.78125s.78125-.3497314.78125-.78125c0-.43151855-.3497314-.78125-.78125-.78125z" /></svg>} />
               {__('Spacing Bottom', 'eightshift-boilerplate')}
             </Fragment>
           }
-          help={__('Change Block Spacing from the bottom.', 'eightshift-boilerplate')}
+          help={__('Change Block Spacing from the bottom. If you set a value to -1 it will not be used and the parent brakepoint will be used.', 'eightshift-boilerplate')}
           value={spacingBottom}
-          options={spacingOptions}
           onChange={onChangeSpacingBottom}
+          min={spacingOptions.min}
+          max={spacingOptions.max}
+          step={spacingOptions.step}
         />
       }
+
 
       {onChangeHideBlock &&
         <ToggleControl

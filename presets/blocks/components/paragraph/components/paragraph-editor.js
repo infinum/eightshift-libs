@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { RichText } from '@wordpress/editor';
 
@@ -15,13 +14,13 @@ export const ParagraphEditor = (props) => {
 
   const componentClass = 'paragraph';
 
-  const paragraphClass = classnames([
-    componentClass,
-    `${componentClass}__color--${styleColor}`,
-    `${componentClass}__align--${styleAlign}`,
-    `${componentClass}__size--${styleSize}`,
-    `${blockClass}__paragraph`,
-  ]);
+  const paragraphClass = `
+    ${componentClass}
+    ${componentClass}__color--${styleColor}
+    ${componentClass}__align--${styleAlign}
+    ${componentClass}__size--${styleSize}
+    ${blockClass}__paragraph
+  `;
 
   return (
     <RichText

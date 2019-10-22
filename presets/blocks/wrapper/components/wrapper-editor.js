@@ -1,5 +1,3 @@
-import classnames from 'classnames';
-
 export const WrapperEditor = (props) => {
   const {
     children,
@@ -39,67 +37,66 @@ export const WrapperEditor = (props) => {
 
   const wrapperMainClass = 'wrapper';
 
-  const wrapperClass = classnames([
-    wrapperMainClass,
-    styleBackgroundColor && `${wrapperMainClass}__bg-color--${styleBackgroundColor}`,
+  const wrapperClass = `
+    ${wrapperMainClass}
+    ${styleBackgroundColor && `${wrapperMainClass}__bg-color--${styleBackgroundColor}`}
 
     // Large.
-    styleSpacingTopLarge && `${wrapperMainClass}__spacing-top-large--${styleSpacingTopLarge}`,
-    styleSpacingBottomLarge && `${wrapperMainClass}__spacing-bottom-large--${styleSpacingBottomLarge}`,
+    ${styleSpacingTopLarge && `${wrapperMainClass}__spacing-top-large--${styleSpacingTopLarge}`}
+    ${styleSpacingBottomLarge && `${wrapperMainClass}__spacing-bottom-large--${styleSpacingBottomLarge}`}
 
     // Desktop.
-    styleSpacingTopDesktop && `${wrapperMainClass}__spacing-top-desktop--${styleSpacingTopDesktop}`,
-    styleSpacingBottomDesktop && `${wrapperMainClass}__spacing-bottom-desktop--${styleSpacingBottomDesktop}`,
+    ${styleSpacingTopDesktop && `${wrapperMainClass}__spacing-top-desktop--${styleSpacingTopDesktop}`}
+    ${styleSpacingBottomDesktop && `${wrapperMainClass}__spacing-bottom-desktop--${styleSpacingBottomDesktop}`}
 
     // Tablet.
-    styleSpacingTopTablet && `${wrapperMainClass}__spacing-top-tablet--${styleSpacingTopTablet}`,
-    styleSpacingBottomTablet && `${wrapperMainClass}__spacing-bottom-tablet--${styleSpacingBottomTablet}`,
+    ${styleSpacingTopTablet && `${wrapperMainClass}__spacing-top-tablet--${styleSpacingTopTablet}`}
+    ${styleSpacingBottomTablet && `${wrapperMainClass}__spacing-bottom-tablet--${styleSpacingBottomTablet}`}
 
     // Mobile.
-    styleSpacingTopMobile && `${wrapperMainClass}__spacing-top-mobile--${styleSpacingTopMobile}`,
-    styleSpacingBottomMobile && `${wrapperMainClass}__spacing-bottom-mobile--${styleSpacingBottomMobile}`,
-  ]);
+    ${styleSpacingTopMobile && `${wrapperMainClass}__spacing-top-mobile--${styleSpacingTopMobile}`}
+    ${styleSpacingBottomMobile && `${wrapperMainClass}__spacing-bottom-mobile--${styleSpacingBottomMobile}`}
+  `;
 
-  const wrapperContainerClass = classnames([
-    `${wrapperMainClass}__container`,
+  const wrapperContainerClass = `
+    ${wrapperMainClass}__container
 
     // Large.
-    styleContainerWidthLarge && `${wrapperMainClass}__container-width-large--${styleContainerWidthLarge}`,
-    styleContainerSpacingLarge && `${wrapperMainClass}__container-spacing-large--${styleContainerSpacingLarge}`,
+    ${styleContainerWidthLarge && `${wrapperMainClass}__container-width-large--${styleContainerWidthLarge}`}
+    ${styleContainerSpacingLarge && `${wrapperMainClass}__container-spacing-large--${styleContainerSpacingLarge}`}
 
     // Desktop.
-    styleContainerWidthDesktop && `${wrapperMainClass}__container-width-desktop--${styleContainerWidthDesktop}`,
-    styleContainerSpacingDesktop && `${wrapperMainClass}__container-spacing-desktop--${styleContainerSpacingDesktop}`,
+    ${styleContainerWidthDesktop && `${wrapperMainClass}__container-width-desktop--${styleContainerWidthDesktop}`}
+    ${styleContainerSpacingDesktop && `${wrapperMainClass}__container-spacing-desktop--${styleContainerSpacingDesktop}`}
 
     // Tablet.
-    styleContainerWidthTablet && `${wrapperMainClass}__container-width-tablet--${styleContainerWidthTablet}`,
-    styleContainerSpacingTablet && `${wrapperMainClass}__container-spacing-tablet--${styleContainerSpacingTablet}`,
+    ${styleContainerWidthTablet && `${wrapperMainClass}__container-width-tablet--${styleContainerWidthTablet}`}
+    ${styleContainerSpacingTablet && `${wrapperMainClass}__container-spacing-tablet--${styleContainerSpacingTablet}`}
 
     // Mobile.
-    styleContainerWidthMobile && `${wrapperMainClass}__container-width-mobile--${styleContainerWidthMobile}`,
-    styleContainerSpacingMobile && `${wrapperMainClass}__container-spacing-mobile--${styleContainerSpacingMobile}`,
-    
-  ]);
+    ${styleContainerWidthMobile && `${wrapperMainClass}__container-width-mobile--${styleContainerWidthMobile}`}
+    ${styleContainerSpacingMobile && `${wrapperMainClass}__container-spacing-mobile--${styleContainerSpacingMobile}`}
+  `;
 
-  const wrapperInnerClass = classnames([
-    `${wrapperMainClass}__inner`,
+  const wrapperInnerClass = `
+    ${wrapperMainClass}__inner
 
     // Large.
-    styleContentWidthLarge && `${wrapperMainClass}__inner-content-width-large--${styleContentWidthLarge}`,
-    styleContentOffsetLarge && `${wrapperMainClass}__inner-offset-large--${styleContentOffsetLarge}`,
+    ${styleContentWidthLarge && `${wrapperMainClass}__inner-content-width-large--${styleContentWidthLarge}`}
+    ${styleContentOffsetLarge && `${wrapperMainClass}__inner-offset-large--${styleContentOffsetLarge}`}
 
     // Desktop.
-    styleContentWidthDesktop && `${wrapperMainClass}__inner-content-width-desktop--${styleContentWidthDesktop}`,
-    styleContentOffsetDesktop && `${wrapperMainClass}__inner-offset-desktop--${styleContentOffsetDesktop}`,
+    ${styleContentWidthDesktop && `${wrapperMainClass}__inner-content-width-desktop--${styleContentWidthDesktop}`}
+    ${styleContentOffsetDesktop && `${wrapperMainClass}__inner-offset-desktop--${styleContentOffsetDesktop}`}
 
     // Tablet.
-    styleContentWidthTablet && `${wrapperMainClass}__inner-content-width-tablet--${styleContentWidthTablet}`,
-    styleContentOffsetTablet && `${wrapperMainClass}__inner-offset-tablet--${styleContentOffsetTablet}`,
+    ${styleContentWidthTablet && `${wrapperMainClass}__inner-content-width-tablet--${styleContentWidthTablet}`}
+    ${styleContentOffsetTablet && `${wrapperMainClass}__inner-offset-tablet--${styleContentOffsetTablet}`}
 
     // Mobile.
-    styleContentWidthMobile && `${wrapperMainClass}__inner-content-width-mobile--${styleContentWidthMobile}`,
-    styleContentOffsetMobile && `${wrapperMainClass}__inner-offset-mobile--${styleContentOffsetMobile}`,
-  ]);
+    ${styleContentWidthMobile && `${wrapperMainClass}__inner-content-width-mobile--${styleContentWidthMobile}`}
+    ${styleContentOffsetMobile && `${wrapperMainClass}__inner-offset-mobile--${styleContentOffsetMobile}`}
+  `;
 
   return (
     <div className={wrapperClass} id={id}>

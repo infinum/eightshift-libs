@@ -1,22 +1,34 @@
 /* eslint-disable import/no-extraneous-dependencies*/
+/**
+ * Project Production config used only in production build.
+ *
+ * @since 2.0.0
+ */
 
-// Plugins.
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { isUsed } = require('./helpers');
 
-// Define productionConfig setup.
-module.exports = () => {
+module.exports = (options) => {
 
   // All Plugins used in production build.
-  const plugins = [
+  const plugins = [];
 
-    // Clean public files before next build.
-    new CleanWebpackPlugin(),
-  ];
+  // Clean public files before next build.
+  if (isUsed(options.plugins, 'cleanWebpackPlugin')) {
+    plugins.push(
+      new CleanWebpackPlugin()
+    );
+  }
 
   // All Optimizations used in production build.
   const optimization = {
-    minimizer: [
+    minimizer: [],
+  };
+  
+  // Plugin used to minify output.
+  if (isUsed(options.optimization, 'terserPlugin')) {
+    optimization.minimizer.push(
       new TerserPlugin({
         cache: true,
         parallel: true,
@@ -25,9 +37,9 @@ module.exports = () => {
             comments: false,
           },
         },
-      }),
-    ],
-  };
+      },
+    ));
+  }
 
   return {
     plugins,

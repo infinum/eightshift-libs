@@ -6,28 +6,10 @@ $wrapper: (
     primary:  $base-primary-color,
     black:  $base-black-color,
   ),
-  spacings: (
-    great:      300px,
-    gigantic:   280px,
-    gargantuan: 260px,
-    extensive:  240px,
-    enormous:   220px,
-    colossal:   200px,
-    hugest:     180px,
-    huger:      160px,
-    huge:       140px,
-    giant:      120px,
-    biggest:    100px,
-    bigger:     90px,
-    big:        80px,
-    largest:    70px,
-    larger:     60px,
-    large:      50px,
-    default:    40px,
-    medium:     30px,
-    small:      20px,
-    tiny:       10px,
-    no-spacing: 0,
+  spacing: (
+    min:  0,
+    max:  300,
+    step: 10,
   ),
   containers: (
     default: $base-container-size,
@@ -43,13 +25,13 @@ $wrapper: (
 
   &__spacing-top {
     @include responsive-selectors {
-      @include modifiers-deep($wrapper, spacings, padding-top);
+      @include modifiers-range($wrapper, spacing, padding-top);
     }
   }
 
   &__spacing-bottom {
     @include responsive-selectors {
-      @include modifiers-deep($wrapper, spacings, padding-bottom);
+      @include modifiers-range($wrapper, spacing, padding-bottom);
     }
   }
 
@@ -59,7 +41,7 @@ $wrapper: (
     }
   }
 
-  // Container DIV.
+  // Container Div.
   &__container {
     margin: 0 auto;
     width: 100%;

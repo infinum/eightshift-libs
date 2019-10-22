@@ -26,6 +26,7 @@ export const Video = (props) => {
     <Fragment>
       <InspectorControls>
         <VideoOptions
+          url={mediaUrl}
           onChangeMedia={actions.onChangeMedia}
         />
       </InspectorControls>

@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { RichText } from '@wordpress/editor';
 
@@ -12,11 +11,11 @@ export const LinkEditor = (props) => {
 
   const componentClass = 'link';
 
-  const linkClass = classnames([
-    componentClass,
-    `${componentClass}__color--${styleColor}`,
-    `${blockClass}__link`,
-  ]);
+  const linkClass = `
+    ${componentClass}
+    ${componentClass}__color--${styleColor}
+    ${blockClass}__link
+  `;
 
   return (
     <RichText

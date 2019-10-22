@@ -1,62 +1,47 @@
 /* eslint-disable import/no-extraneous-dependencies, global-require*/
 
-// Webpack specific imports.
+/**
+ * Main entrypoint location for webpack config.
+ *
+ * @since 2.0.0
+ */
+
 const merge = require('webpack-merge');
-const path = require('path');
+const { getConfig } = require('./helpers');
 
-// Generate all paths required for Webpack build to work.
-function getConfig(projectDir, proxyUrl, projectPathConfig, assetsPathConfig, outputPathConfig) {
+module.exports = (mode, optionsData = {}) => {
 
-  // Clear all slashes from user config.
-  const projectPathConfigClean = projectPathConfig.replace(/^\/|\/$/g, '');
-  const assetsPathConfigClean = assetsPathConfig.replace(/^\/|\/$/g, '');
-  const outputPathConfigClean = outputPathConfig.replace(/^\/|\/$/g, '');
-
-  // Create absolute path from the projects relative path.
-  const absolutePath = `${projectDir}`;
-
-  return {
-    proxyUrl,
-    absolutePath,
-
-    // Output files absolute location.
-    outputPath: path.resolve(absolutePath, outputPathConfigClean),
-
-    // Output files relative location, added before every output file in manifes.json. Should start and end with "/".
-    publicPath: path.join('/', projectPathConfigClean, outputPathConfigClean, '/'),
-
-    // Source files entries absolute locations.
-    assetsEntry: path.resolve(absolutePath, assetsPathConfigClean, 'application.js'),
-    assetsAdminEntry: path.resolve(absolutePath, assetsPathConfigClean, 'application-admin.js'),
-    blocksEntry: path.resolve(absolutePath, assetsPathConfigClean, 'application-blocks.js'),
-    blocksEditorEntry: path.resolve(absolutePath, assetsPathConfigClean, 'application-blocks-editor.js'),
+  // All config and default setting overrides must be provided using this object.
+  const options = {
+    config: {},
+    entry: {},
+    output: {},
+    plugins: {},
+    module: {},
+    optimization: {},
+    externals: {},
+    resolve: {},
+    ...optionsData,
   };
-}
 
-// Export project specific configs.
-// IF you have multiple builds a flag can be added to the package.json config and use switch case to determin the build config.
-module.exports = (mode, configData) => {
+  // Append project config using getConfig helper.
+  options.config = getConfig(
+    optionsData.config.projectDir,
+    optionsData.config.projectUrl,
+    optionsData.config.projectPath,
+    optionsData.config.assetsPath,
+    optionsData.config.outputPath
+  );
 
-  // Create Theme/Plugin config variable.
-  // Define path to the project from the WordPress root. This is used to output the correct path to the manifest.json.
-  const config = getConfig(
-    configData.projectDir,
-    configData.projectUrl,
-    configData.projectPath,
-    configData.assetsPath,
-    configData.outputPath
-  ); // eslint-disable-line no-use-before-define
-
-  // Other build files.
-  
-  const base = require('./base')(config);
-  const project = require('./project')(config);
-  const development = require('./development')(config);
-  const production = require('./production')(config);
-  const gutenberg = require('./gutenberg')(config);
+  // Get all webpack partials.
+  const base = require('./base')(options);
+  const project = require('./project')(options);
+  const development = require('./development')(options);
+  const production = require('./production')(options);
+  const gutenberg = require('./gutenberg')(options);
 
   // Default output that is going to be merged in any env.
-  const outputDefault = merge(base, gutenberg, project);
+  const outputDefault = merge(project, base, gutenberg);
 
   // Output development setup by default.
   let output = merge(outputDefault, development);

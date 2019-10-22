@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { RichText } from '@wordpress/editor';
 
@@ -13,10 +12,10 @@ export const ListsEditor = (props) => {
 
   const componentClass = 'lists';
 
-  const listsClass = classnames([
-    componentClass,
-    `${blockClass}__lists`,
-  ]);
+  const listsClass = `
+    ${componentClass}
+    ${blockClass}__lists
+  `;
 
   return (
     <RichText

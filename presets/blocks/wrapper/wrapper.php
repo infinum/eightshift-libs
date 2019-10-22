@@ -20,8 +20,8 @@ if ( $has_wrapper ) {
   $style_background_color = isset( $attributes['styleBackgroundColor'] ) && ! empty( $attributes['styleBackgroundColor'] ) ? "{$wrapper_main_class}__bg-color--{$attributes['styleBackgroundColor']}" : '';
 
   // Large.
-  $style_spacing_top_large       = isset( $attributes['styleSpacingTopLarge'] ) && ! empty( $attributes['styleSpacingTopLarge'] ) ? "{$wrapper_main_class}__spacing-top-large--{$attributes['styleSpacingTopLarge']}" : '';
-  $style_spacing_bottom_large    = isset( $attributes['styleSpacingBottomLarge'] ) && ! empty( $attributes['styleSpacingBottomLarge'] ) ? "{$wrapper_main_class}__spacing-bottom-large--{$attributes['styleSpacingBottomLarge']}" : '';
+  $style_spacing_top_large       = isset( $attributes['styleSpacingTopLarge'] ) ? "{$wrapper_main_class}__spacing-top-large--{$attributes['styleSpacingTopLarge']}" : '';
+  $style_spacing_bottom_large    = isset( $attributes['styleSpacingBottomLarge'] ) ? "{$wrapper_main_class}__spacing-bottom-large--{$attributes['styleSpacingBottomLarge']}" : '';
   $style_hide_block_large        = isset( $attributes['styleHideBlockLarge'] ) && $attributes['styleHideBlockLarge'] ? "{$wrapper_main_class}__hide-block-large" : '';
   $style_container_width_large   = isset( $attributes['styleContainerWidthLarge'] ) && ! empty( $attributes['styleContainerWidthLarge'] ) ? "{$wrapper_main_class}__container-width-large--{$attributes['styleContainerWidthLarge']}" : '';
   $style_container_spacing_large = isset( $attributes['styleContainerSpacingLarge'] ) && ! empty( $attributes['styleContainerSpacingLarge'] ) ? "{$wrapper_main_class}__container-spacing-large--{$attributes['styleContainerSpacingLarge']}" : '';
@@ -29,8 +29,8 @@ if ( $has_wrapper ) {
   $style_content_offset_large    = isset( $attributes['styleContentOffsetLarge'] ) && ! empty( $attributes['styleContentOffsetLarge'] ) ? "{$wrapper_main_class}__inner-offset-large--{$attributes['styleContentOffsetLarge']}" : '';
 
   // Desktop.
-  $style_spacing_top_desktop       = isset( $attributes['styleSpacingTopDesktop'] ) && ! empty( $attributes['styleSpacingTopDesktop'] ) ? "{$wrapper_main_class}__spacing-top-desktop--{$attributes['styleSpacingTopDesktop']}" : '';
-  $style_spacing_bottom_desktop    = isset( $attributes['styleSpacingBottomDesktop'] ) && ! empty( $attributes['styleSpacingBottomDesktop'] ) ? "{$wrapper_main_class}__spacing-bottom-desktop--{$attributes['styleSpacingBottomDesktop']}" : '';
+  $style_spacing_top_desktop       = isset( $attributes['styleSpacingTopDesktop'] ) ? "{$wrapper_main_class}__spacing-top-desktop--{$attributes['styleSpacingTopDesktop']}" : '';
+  $style_spacing_bottom_desktop    = isset( $attributes['styleSpacingBottomDesktop'] ) ? "{$wrapper_main_class}__spacing-bottom-desktop--{$attributes['styleSpacingBottomDesktop']}" : '';
   $style_hide_block_desktop        = isset( $attributes['styleHideBlockDesktop'] ) && $attributes['styleHideBlockDesktop'] ? "{$wrapper_main_class}__hide-block-desktop" : '';
   $style_container_width_desktop   = isset( $attributes['styleContainerWidthDesktop'] ) && ! empty( $attributes['styleContainerWidthDesktop'] ) ? "{$wrapper_main_class}__container-width-desktop--{$attributes['styleContainerWidthDesktop']}" : '';
   $style_container_spacing_desktop = isset( $attributes['styleContainerSpacingDesktop'] ) && ! empty( $attributes['styleContainerSpacingDesktop'] ) ? "{$wrapper_main_class}__container-spacing-desktop--{$attributes['styleContainerSpacingDesktop']}" : '';
@@ -38,8 +38,8 @@ if ( $has_wrapper ) {
   $style_content_offset_desktop    = isset( $attributes['styleContentOffsetDesktop'] ) && ! empty( $attributes['styleContentOffsetDesktop'] ) ? "{$wrapper_main_class}__inner-offset-desktop--{$attributes['styleContentOffsetDesktop']}" : '';
 
   // Tablet.
-  $style_spacing_top_tablet       = isset( $attributes['styleSpacingTopTablet'] ) && ! empty( $attributes['styleSpacingTopTablet'] ) ? "{$wrapper_main_class}__spacing-top-tablet--{$attributes['styleSpacingTopTablet']}" : '';
-  $style_spacing_bottom_tablet    = isset( $attributes['styleSpacingBottomTablet'] ) && ! empty( $attributes['styleSpacingBottomTablet'] ) ? "{$wrapper_main_class}__spacing-bottom-tablet--{$attributes['styleSpacingBottomTablet']}" : '';
+  $style_spacing_top_tablet       = isset( $attributes['styleSpacingTopTablet'] ) ? "{$wrapper_main_class}__spacing-top-tablet--{$attributes['styleSpacingTopTablet']}" : '';
+  $style_spacing_bottom_tablet    = isset( $attributes['styleSpacingBottomTablet'] ) ? "{$wrapper_main_class}__spacing-bottom-tablet--{$attributes['styleSpacingBottomTablet']}" : '';
   $style_hide_block_tablet        = isset( $attributes['styleHideBlockTablet'] ) && $attributes['styleHideBlockTablet'] ? "{$wrapper_main_class}__hide-block-tablet" : '';
   $style_container_width_tablet   = isset( $attributes['styleContainerWidthTablet'] ) && ! empty( $attributes['styleContainerWidthTablet'] ) ? "{$wrapper_main_class}__container-width-tablet--{$attributes['styleContainerWidthTablet']}" : '';
   $style_container_spacing_tablet = isset( $attributes['styleContainerSpacingTablet'] ) && ! empty( $attributes['styleContainerSpacingTablet'] ) ? "{$wrapper_main_class}__container-spacing-tablet--{$attributes['styleContainerSpacingTablet']}" : '';
@@ -47,8 +47,8 @@ if ( $has_wrapper ) {
   $style_content_offset_tablet    = isset( $attributes['styleContentOffsetTablet'] ) && ! empty( $attributes['styleContentOffsetTablet'] ) ? "{$wrapper_main_class}__inner-offset-tablet--{$attributes['styleContentOffsetTablet']}" : '';
 
   // Mobile.
-  $style_spacing_top_mobile       = isset( $attributes['styleSpacingTopMobile'] ) && ! empty( $attributes['styleSpacingTopMobile'] ) ? "{$wrapper_main_class}__spacing-top-mobile--{$attributes['styleSpacingTopMobile']}" : '';
-  $style_spacing_bottom_mobile    = isset( $attributes['styleSpacingBottomMobile'] ) && ! empty( $attributes['styleSpacingBottomMobile'] ) ? "{$wrapper_main_class}__spacing-bottom-mobile--{$attributes['styleSpacingBottomMobile']}" : '';
+  $style_spacing_top_mobile       = isset( $attributes['styleSpacingTopMobile'] ) ? "{$wrapper_main_class}__spacing-top-mobile--{$attributes['styleSpacingTopMobile']}" : '';
+  $style_spacing_bottom_mobile    = isset( $attributes['styleSpacingBottomMobile'] ) ? "{$wrapper_main_class}__spacing-bottom-mobile--{$attributes['styleSpacingBottomMobile']}" : '';
   $style_hide_block_mobile        = isset( $attributes['styleHideBlockMobile'] ) && $attributes['styleHideBlockMobile'] ? "{$wrapper_main_class}__hide-block-mobile" : '';
   $style_container_width_mobile   = isset( $attributes['styleContainerWidthMobile'] ) && ! empty( $attributes['styleContainerWidthMobile'] ) ? "{$wrapper_main_class}__container-width-mobile--{$attributes['styleContainerWidthMobile']}" : '';
   $style_container_spacing_mobile = isset( $attributes['styleContainerSpacingMobile'] ) && ! empty( $attributes['styleContainerSpacingMobile'] ) ? "{$wrapper_main_class}__container-spacing-mobile--{$attributes['styleContainerSpacingMobile']}" : '';
