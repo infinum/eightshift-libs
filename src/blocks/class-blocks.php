@@ -94,6 +94,7 @@ class Blocks implements Service, Renderable_Block {
 
     // Allow reusable block.
     $blocks[] = 'core/block';
+    $blocks[] = 'core/template';
 
     return $blocks;
   }

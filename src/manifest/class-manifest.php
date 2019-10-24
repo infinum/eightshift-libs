@@ -104,6 +104,8 @@ class Manifest implements Service, Manifest_Data {
   /**
    * Return full manifest data with site url prefix.
    *
+   * @param string $key File name key you want to get from manifest.
+   *
    * @throws Exception\Invalid_Manifest Throws error if manifest.json file is missing.
    *
    * @return array
