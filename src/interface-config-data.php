@@ -52,6 +52,13 @@ interface Config_Data {
   public static function get_project_env() : string;
 
   /**
+   * Method returns project primary color generally used for styling mobile browser color and splash screens. check head.php for details.
+   *
+   * @since 2.0.0
+   */
+  public static function get_project_primary_color() : string;
+
+  /**
    * Return project absolute path for theme use get_template_directory() and for plugin use __DIR__.
    *
    * @param string $path Additional path to add to project path.
