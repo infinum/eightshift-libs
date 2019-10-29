@@ -60,6 +60,24 @@ interface Config_Data {
   public static function get_project_env() : string;
 
   /**
+   * Method that returns project REST-API namespace.
+   * 
+   * Used for namespacing projects REST-API routes and fields.
+   *
+   * @since 2.0.0 Added in the project
+   */
+  public static function get_project_routes_namespace() : string;
+
+  /**
+   * Method that returns project REST-API version.
+   * 
+   * Used for versioning projects REST-API routes and fields.
+   *
+   * @since 2.0.0 Added in the project
+   */
+  public static function get_project_routes_version() : string;
+
+  /**
    * Method that returns project primary color.
    *
    * Used for styling the mobile browser color and splash screens. Check head.php for more details.

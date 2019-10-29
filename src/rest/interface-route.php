@@ -2,21 +2,19 @@
 /**
  * File containing Request type interface
  *
- * @package Eightshift_Libs\Routes
+ * @package Eightshift_Libs\Rest
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Routes;
-
-use Eightshift_Libs\Core\Service;
+namespace Eightshift_Libs\Rest;
 
 /**
  * Route interface that adds routes
  *
  * @since 0.1.0
  */
-interface Route extends Service {
+interface Route {
 
   /**
    * Alias for GET transport method.

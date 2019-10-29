@@ -76,7 +76,7 @@ class Blocks implements Service, Renderable_Block {
     remove_filter( 'the_content', 'wpautop' );
 
     // Limits the ussage of only custom project blocks.
-    add_filter( 'allowed_block_types', [ $this, 'get_all_blocks_list' ], 20 );
+    add_filter( 'allowed_block_types', [ $this, 'get_all_blocks_list' ] );
   }
 
   /**
@@ -92,7 +92,7 @@ class Blocks implements Service, Renderable_Block {
       function( $block ) {
         return $block['blockFullName'];
       },
-      $this->get_blocks()
+      $this->get_blocks()['blocks']
     );
 
     // Allow reusable block.
@@ -112,7 +112,7 @@ class Blocks implements Service, Renderable_Block {
    * @since 2.0.0
    */
   public function register_blocks() {
-    $blocks = $this->get_data()['blocks'];
+    $blocks = $this->get_blocks()['blocks'];
 
     if ( empty( $blocks ) ) {
       throw Invalid_Block::missing_blocks_exception();
@@ -146,51 +146,6 @@ class Blocks implements Service, Renderable_Block {
         'render_callback' => [ $this, $block_details['hasWrapper'] ? 'render_wrapper' : 'render' ],
         'attributes' => $this->get_attributes( $block_details ),
       )
-    );
-  }
-
-  /**
-   * Get blocks attributes.
-   * This method combines default, block and wrapper attributes.
-   * Default attributes are hardcoded in this lib.
-   * Block attributes are provided by block manifest.json file.
-   * Wrapper attributes are provided by wrapper manifest.json file and is only available if block has `hasWrapper:true` settings.
-   *
-   * @param array $block_details Block Manifest details.
-   *
-   * @return array
-   */
-  public function get_attributes( array $block_details ) : array {
-
-    $block_name      = $block_details['blockName'];
-    $block_full_name = $block_details['blockFullName'];
-
-    $default_attributes      = [
-      'blockName' => array(
-        'type' => 'string',
-        'default' => $block_name,
-      ),
-      'blockFullName' => array(
-        'type' => 'string',
-        'default' => $block_full_name,
-      ),
-      'blockClass' => array(
-        'type' => 'string',
-        'default' => "block-{$block_name}",
-      ),
-      'blockJsClass' => array(
-        'type' => 'string',
-        'default' => "js-block-{$block_name}",
-      ),
-    ];
-
-    $block_attributes        = $block_details['attributes'];
-    $block_shared_attributes = ( $block_details['hasWrapper'] === true ) ? $this->get_data()['wrapper']['attributes'] : [];
-
-    return array_merge(
-      $default_attributes,
-      $block_attributes,
-      $block_shared_attributes
     );
   }
 
@@ -326,104 +281,6 @@ class Blocks implements Service, Renderable_Block {
   }
 
   /**
-   * Get blocks full data from global settings, blocks and wrapper.
-   * If develop env data is fetched from json otherwise data is stored in transient.
-   *
-   * @return array
-   *
-   * @since 2.0.0
-   */
-  protected function get_data_raw() : array {
-    $settings = $this->get_settings();
-    $wrapper  = $this->get_wrapper();
-
-    $blocks = array_map(
-      function( $block ) use ( $settings ) {
-
-        // Add additional data to the block settings.
-        $block['namespace']     = $settings['namespace'];
-        $block['blockFullName'] = "{$settings['namespace']}/{$block['blockName']}";
-
-        return $block;
-      },
-      $this->get_blocks()
-    );
-
-    return [
-      'settings' => $settings,
-      'wrapper' => $wrapper,
-      'blocks' => $blocks,
-    ];
-  }
-
-  /**
-   * Get Blocks data depending on the env.
-   * If env is develop output only raw data.
-   * If env is staging or production output cached data in transient.
-   *
-   * @return array
-   *
-   * @since 2.0.0
-   */
-  protected function get_data() : array {
-    if ( $this->config->get_project_env() === 'develop' ) {
-      return $this->get_data_raw();
-    }
-
-    $cache_name = $this->config->get_config( static::CACHE_NAME );
-    $data       = \get_transient( $cache_name );
-
-    if ( $data === false ) {
-      $data = $this->get_data_raw();
-      \set_transient( $cache_name, $data );
-    }
-
-    return $data;
-  }
-
-  /**
-   * Throws error if manifest key blockName is missing.
-   *
-   * @throws Exception\Invalid_Block Throws error if block name is missing.
-   *
-   * @return array
-   *
-   * @since 2.0.0
-   */
-  protected function get_blocks() : array {
-
-    return array_map(
-      function( $block_path ){
-        $block = implode( ' ', file( ( $block_path ) ) );
-        $block = json_decode( $block, true );
-
-        if ( ! isset( $block['blockName'] ) ) {
-          throw Invalid_Block::missing_name_exception( $block_path );
-        }
-
-        if ( ! isset( $block['classes'] ) ) {
-          $block['classes'] = [];
-        }
-    
-        if ( ! isset( $block['attributes'] ) ) {
-          $block['attributes'] = [];
-        }
-    
-        if ( ! isset( $block['hasWrapper'] ) ) {
-          $block['hasWrapper'] = true;
-        }
-    
-        if ( ! isset( $block['hasInnerBlocks'] ) ) {
-          $block['hasInnerBlocks'] = false;
-        }
-
-        return $block;
-      },
-      glob( "{$this->get_blocks_custom_path()}/*/manifest.json" )
-    );
-  }
-
-  /**
    * Get wrapper manifest data from wrapper manifest.json file.
    *
    * @throws Exception\Invalid_Block Throws error if wrapper settings manifest.json is missing.
@@ -470,6 +327,150 @@ class Blocks implements Service, Renderable_Block {
     }
 
     return $settings;
+  }
+
+  /**
+   * Get blocks attributes.
+   * This method combines default, block and wrapper attributes.
+   * Default attributes are hardcoded in this lib.
+   * Block attributes are provided by block manifest.json file.
+   * Wrapper attributes are provided by wrapper manifest.json file and is only available if block has `hasWrapper:true` settings.
+   *
+   * @param array $block_details Block Manifest details.
+   *
+   * @return array
+   */
+  protected function get_attributes( array $block_details ) : array {
+
+    $block_name      = $block_details['blockName'];
+    $block_full_name = $block_details['blockFullName'];
+
+    $default_attributes      = [
+      'blockName' => array(
+        'type' => 'string',
+        'default' => $block_name,
+      ),
+      'blockFullName' => array(
+        'type' => 'string',
+        'default' => $block_full_name,
+      ),
+      'blockClass' => array(
+        'type' => 'string',
+        'default' => "block-{$block_name}",
+      ),
+      'blockJsClass' => array(
+        'type' => 'string',
+        'default' => "js-block-{$block_name}",
+      ),
+    ];
+
+    $block_attributes        = $block_details['attributes'];
+    $block_shared_attributes = ( $block_details['hasWrapper'] === true ) ? $this->get_blocks()['wrapper']['attributes'] : [];
+
+    return array_merge(
+      $default_attributes,
+      $block_attributes,
+      $block_shared_attributes
+    );
+  }
+
+    /**
+   * Get Blocks data depending on the env.
+   * If env is develop output only raw data.
+   * If env is staging or production output cached data in transient.
+   *
+   * @return array
+   *
+   * @since 2.0.0
+   */
+  protected function get_blocks() : array {
+    if ( $this->config->get_project_env() === 'develop' ) {
+      return $this->get_blocks_data_full_raw();
+    }
+
+    $cache_name = $this->config->get_config( static::CACHE_NAME );
+    $data       = \get_transient( $cache_name );
+
+    if ( $data === false ) {
+      $data = $this->get_blocks_data_full_raw();
+      \set_transient( $cache_name, $data );
+    }
+
+    return $data;
+  }
+
+  /**
+   * Get blocks full data from global settings, blocks and wrapper.
+   * You should never call this method directly.
+   *
+   * @return array
+   *
+   * @since 2.0.0
+   */
+  private function get_blocks_data_full_raw() : array {
+    $settings = $this->get_settings();
+    $wrapper  = $this->get_wrapper();
+
+    $blocks = array_map(
+      function( $block ) use ( $settings ) {
+
+        // Add additional data to the block settings.
+        $block['namespace']     = $settings['namespace'];
+        $block['blockFullName'] = "{$settings['namespace']}/{$block['blockName']}";
+
+        return $block;
+      },
+      $this->get_blocks_data()
+    );
+
+    return [
+      'settings' => $settings,
+      'wrapper' => $wrapper,
+      'blocks' => $blocks,
+    ];
+  }
+
+  /**
+   * Throws error if manifest key blockName is missing.
+   * You should never call this method directly.
+   *
+   * @throws Exception\Invalid_Block Throws error if block name is missing.
+   *
+   * @return array
+   *
+   * @since 2.0.0
+   */
+  private function get_blocks_data() : array {
+
+    return array_map(
+      function( $block_path ){
+        $block = implode( ' ', file( ( $block_path ) ) );
+        $block = json_decode( $block, true );
+
+        if ( ! isset( $block['blockName'] ) ) {
+          throw Invalid_Block::missing_name_exception( $block_path );
+        }
+
+        if ( ! isset( $block['classes'] ) ) {
+          $block['classes'] = [];
+        }
+    
+        if ( ! isset( $block['attributes'] ) ) {
+          $block['attributes'] = [];
+        }
+    
+        if ( ! isset( $block['hasWrapper'] ) ) {
+          $block['hasWrapper'] = true;
+        }
+    
+        if ( ! isset( $block['hasInnerBlocks'] ) ) {
+          $block['hasInnerBlocks'] = false;
+        }
+
+        return $block;
+      },
+      glob( "{$this->get_blocks_custom_path()}/*/manifest.json" )
+    );
   }
 
   /**
