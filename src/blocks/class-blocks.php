@@ -74,6 +74,9 @@ class Blocks implements Service, Renderable_Block {
 
     // Remove P tags from content.
     remove_filter( 'the_content', 'wpautop' );
+
+    // Limits the ussage of only custom project blocks.
+    add_filter( 'allowed_block_types', [ $this, 'get_all_blocks_list' ], 20 );
   }
 
   /**

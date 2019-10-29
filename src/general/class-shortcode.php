@@ -32,7 +32,7 @@ class Shortcode {
    *
    * @since 1.0.0
    */
-  public function get_shortcode( $tag, array $atts = [], $content = null ) {
+  public function get_shortcode( string $tag, array $atts = [], $content = null ) {
 
     global $shortcode_tags;
 

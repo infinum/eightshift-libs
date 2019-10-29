@@ -122,14 +122,17 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
     $parent_class = $prefix . $suffix['parent_item'];
 
     if ( ! empty( $item->classes ) ) {
-      $user_classes = [];
-      foreach ( $item->classes as $class => $class_name ) {
-        if ( strpos( $class_name, 'js-' ) !== false ) {
-          $user_classes[] = $class_name;
-        } else {
-          $user_classes[] = $prefix . '__item--' . $class_name;
-        }
-      }
+      $user_classes = array_map(
+        function( $class_name ) use ( $prefix ) {
+          if ( strpos( $class_name, 'js-' ) !== false ) {
+            $output = $class_name;
+          } else {
+            $output = $prefix . '__item--' . $class_name;
+          }
+          return $output;
+        },
+        $item->classes
+      );
     }
 
     // Item classes.

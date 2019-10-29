@@ -61,22 +61,21 @@ abstract class Menu implements Service, Menu_Positions {
    * @param  string     $css_class_prefix    This string will prefix all of the menu's classes, BEM syntax friendly.
    * @param  arr|string $css_class_modifiers Provide either a string or array of values to apply extra classes to the <ul> but not the <li's>.
    * @param  bool       $echo                Echo the menu.
-   * @return string                          Outputs html version of menu.
+   *
+   * @return string|false|void Menu output if $echo is false, false if there are no items or no menu was found.
    *
    * @since 2.0.0
    */
-  public static function bem_menu( $location = 'main_menu', $css_class_prefix = 'main-menu', $css_class_modifiers = null, $echo = true ) {
+  public static function bem_menu( string $location = 'main_menu', string $css_class_prefix = 'main-menu', $css_class_modifiers = null, bool $echo = true ) {
 
-      // Check to see if any css modifiers were supplied.
+    // Check to see if any css modifiers were supplied.
+    $modifiers = '';
     if ( $css_class_modifiers ) {
-
       if ( is_array( $css_class_modifiers ) ) {
         $modifiers = implode( ' ', $css_class_modifiers );
       } elseif ( is_string( $css_class_modifiers ) ) {
         $modifiers = $css_class_modifiers;
       }
-    } else {
-      $modifiers = '';
     }
 
     $args = [

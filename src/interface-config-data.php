@@ -14,58 +14,70 @@ namespace Eightshift_Libs\Core;
 /**
  * Interface Config_Data
  *
- * @since 2.0.0
+ * @since 2.0.0 Added in the project
  */
 interface Config_Data {
 
   /**
-   * Method returns project name generally used for naming assets handlers, languages and etc.
+   * Method that returns project name.
+   * 
+   * Generally used for naming assets handlers, languages, etc.
    *
-   * @since 2.0.0
+   * @since 2.0.0 Added in the project
    */
   public static function get_project_name() : string;
 
   /**
-   * Method returns project version generally used for versioning assets handlers.
+   * Method that returns project version.
    *
-   * @since 2.0.0
+   * Generally used for versioning asset handlers while enqueueing them.
+   *
+   * @since 2.0.0 Added in the project
    */
   public static function get_project_version() : string;
 
   /**
-   * Returns project prefix for adding it to all the filters as a prefix because all filters in WordPress live inside a global namespace.
+   * Method that returns project prefix.
+   *
+   * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions. 
    *
    * @return string Full path to asset.
    *
-   * @since 2.0.0 Init
+   * @since 2.0.0 Added in the project
    */
   public static function get_project_prefix() : string;
 
   /**
+   * Returns the project environment variable descriptor.
    *
-   * Returns project env used to define global settings depending on the environment of the project.
+   * Used for defining global settings depending on the environment of the project.
+   * Can be one of, but not limited to, development, staging, production.
    *
-   * @return string Project env state.
+   * @return string Current project environment string.
    *
-   * @since 2.0.0 Init
+   * @since 2.0.0 Added in the project
    */
   public static function get_project_env() : string;
 
   /**
-   * Method returns project primary color generally used for styling mobile browser color and splash screens. check head.php for details.
+   * Method that returns project primary color.
    *
-   * @since 2.0.0
+   * Used for styling the mobile browser color and splash screens. Check head.php for more details.
+   *
+   * @since 2.0.0 Added in the project
    */
   public static function get_project_primary_color() : string;
 
   /**
-   * Return project absolute path for theme use get_template_directory() and for plugin use __DIR__.
+   * Return project absolute path.
+   *
+   * If used in a theme use get_template_directory() and in case it's used in a plugin use __DIR__.
    *
    * @param string $path Additional path to add to project path.
    *
    * @return string
    *
-   * @since 2.0.0
+   * @since 2.0.0 Added in the project
    */
   public static function get_project_path( string $path = '' ) : string;
 
@@ -77,7 +89,7 @@ interface Config_Data {
    *
    * @return string Returns key prefixed with project prefix.
    *
-   * @since 2.0.0
+   * @since 2.0.0 Added in the project
    */
   public static function get_config( string $key ) : string;
 }

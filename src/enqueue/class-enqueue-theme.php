@@ -85,10 +85,6 @@ class Enqueue_Theme implements Service {
   /**
    * Register the JavaScript for the theme area.
    *
-   * First jQuery that is loaded by default by WordPress will be deregistered and then
-   * 'enqueued' with empty string. This is done to avoid multiple jQuery loading, since
-   * one is bundled with webpack and exposed to the global window.
-   *
    * @return void
    *
    * @since 2.0.0

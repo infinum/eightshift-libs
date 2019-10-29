@@ -38,11 +38,11 @@ trait Object_Helper {
    *
    * @param string $string String to check.
    *
-   * @return boolean
+   * @return bool
    *
    * @since 1.0.0
    */
-  public static function is_json( $string ) {
+  public static function is_json( string $string ) : bool {
     json_decode( $string );
     return ( json_last_error() === JSON_ERROR_NONE );
   }
@@ -55,37 +55,31 @@ trait Object_Helper {
    *
    * @since 2.0.0
    */
-  public static function flatten_array( $array = null ) {
-    if ( ! $array || ! is_array( $array ) ) {
-      return false;
-    }
+  public static function flatten_array( array $array ) : array {
+    $output = [];
 
-    $return = array();
     array_walk_recursive(
       $array,
-      function( $a ) use ( &$return ) {
+      function( $a ) use ( &$output ) {
         if ( ! empty( $a ) ) {
-          $return[] = $a;
+          $output[] = $a;
         }
       }
     );
+
     return $return;
   }
 
   /**
-   * Sanitise all values in array.
+   * Sanitize all values in an array.
    *
-   * @param array $array                 Provided array.
-   * @param array $sanitization_function funcition from wp to sanitize.
+   * @param array  $array                 Provided array.
+   * @param string $sanitization_function WordPress function used for sanitization purposes. (https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/).
    * @return array
    *
    * @since 1.0.0
    */
-  public static function sanitize_array( $array = null, $sanitization_function = null ) {
-    if ( ! $array || ! $sanitization_function ) {
-      return false;
-    }
-
+  public static function sanitize_array( array $array, string $sanitization_function ) : array {
     foreach ( $array as $key => $value ) {
       if ( is_array( $value ) ) {
           $value = sanitize_array( $value );
@@ -105,7 +99,7 @@ trait Object_Helper {
    *
    * @since 1.0.0
    */
-  public static function sort_array_by_order_key( $items = null ) {
+  public static function sort_array_by_order_key( array $items ) : array {
     usort(
       $items,
       function( $item1, $item2 ) {
