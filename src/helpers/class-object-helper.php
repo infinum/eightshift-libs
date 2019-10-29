@@ -74,8 +74,12 @@ trait Object_Helper {
    * Sanitize all values in an array.
    *
    * @param array  $array                 Provided array.
-   * @param string $sanitization_function WordPress function used for sanitization purposes. (https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/).
+   * @param string $sanitization_function WordPress function used for sanitization purposes.
+   *
+   * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
+   *
    * @return array
+   *
    *
    * @since 1.0.0
    */
