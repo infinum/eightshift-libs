@@ -2,9 +2,10 @@
 /**
  * File that holds the registrable Route interface.
  *
- * @since   0.2.0
  * @package Eightshift_Libs\Routes
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Routes;
 
@@ -12,6 +13,8 @@ namespace Eightshift_Libs\Routes;
  * Interface Registrable.
  *
  * An object that can be registered.
+ *
+ * @since 0.2.0
  */
 interface Registrable_Route {
 

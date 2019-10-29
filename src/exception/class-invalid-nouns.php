@@ -2,14 +2,17 @@
 /**
  * File containing invalid nouns exception
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Exception;
 
 /**
  * Class Invalid_Nouns.
+ *
+ * @since 0.1.0
  */
 class Invalid_Nouns extends \InvalidArgumentException implements General_Exception {
 

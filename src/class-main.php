@@ -1,22 +1,25 @@
 <?php
 /**
- * File containing the main intro class
+ * File containing the main intro class for your project.
  *
- * @since   0.7.0 Dependency Injection Refactoring
- * @since   0.1.0
  * @package Eightshift_Libs\Core
  */
 
-namespace Eightshift_Libs\Core;
+declare( strict_types=1 );
 
-use Eightshift_Libs\Exception;
+namespace Eightshift_Libs\Core;
 
 use \DI\ContainerBuilder;
 
+use Eightshift_Libs\Exception;
+
 /**
  * The main start class.
+ * This is used to define instantiate all classes used in the lib.
  *
- * This is used to define instantiate all classes used the lib.
+ * @since 2.0.0 Adding project prefix constant to use in lib.
+ * @since 0.7.0 Dependency Injection Refactoring.
+ * @since 0.1.0
  */
 abstract class Main implements Service {
 
@@ -30,39 +33,29 @@ abstract class Main implements Service {
   private $services = [];
 
   /**
-   * Default main action hook that start the whole lib.
-   *
-   * @since 0.1.0
-   */
-  const DEFAULT_REGISTER_ACTION_HOOK = 'after_setup_theme';
-
-  /**
-   * Register the theme/plugin with the WordPress system.
+   * Register the project with the WordPress system.
    *
    * The register_service method will call the register() method in every service class,
    * which holds the actions and filters - effectively replacing the need to manually add
    * them in one place.
    *
-   * @throws Exception\Invalid_Service If a service is not valid.
-   *
    * @return void
    *
+   * @since 2.0.0 Adding hook for project config.
    * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.1.0
    */
   public function register() {
-    add_action( $this->get_register_action_hook(), [ $this, 'register_services' ] );
+    add_action( $this->get_default_register_action_hook(), [ $this, 'register_services' ] );
   }
 
   /**
-   * Returns Theme/Plugin main action hook that start the whole lib.
+   * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.
    *
-   * @return string
-   *
-   * @since 0.1.0
+   * @since 2.0.0
    */
-  public function get_register_action_hook() : string {
-    return self::DEFAULT_REGISTER_ACTION_HOOK;
+  public function get_default_register_action_hook() : string {
+    return 'after_setup_theme';
   }
 
   /**

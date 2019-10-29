@@ -2,14 +2,17 @@
 /**
  * File containing the invalid callback exception class
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Exception;
 
 /**
  * Class Invalid_Callback.
+ *
+ * @since 0.1.0
  */
 class Invalid_Callback extends \InvalidArgumentException implements General_Exception {
 

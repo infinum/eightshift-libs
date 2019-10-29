@@ -4,14 +4,17 @@
  *
  * Used to define the way manifest item is retrieved from the manifest file.
  *
- * @since   0.7.0
  * @package Eightshift_Libs\Manifest
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Manifest;
 
 /**
  * Interface Manifest_Data
+ *
+ * @since 0.7.0
  */
 interface Manifest_Data {
 

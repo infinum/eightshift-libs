@@ -4,187 +4,165 @@
  *
  * It is used to provide manifest.json file location used with Webpack to fetch correct file locations.
  *
- * @since   0.6.0 Added multiple methods for easier extending.
- * @since   0.1.0
  * @package Eightshift_Libs\Manifest
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Manifest;
 
 use Eightshift_Libs\Core\Service;
-use Eightshift_Libs\Exception\Missing_Manifest;
+use Eightshift_Libs\Exception\Invalid_Manifest;
+use Eightshift_Libs\Manifest\Manifest_Data;
+use Eightshift_Libs\Core\Config_Data;
 
 /**
  * Abstract class Manifest class.
  *
+ * @since 2.0.0 Removing global variable setup.
  * @since 0.9.0 Adding Manifest Item filter.
  * @since 0.7.0 Added Manifest_Data Interface.
  * @since 0.1.0 Init.
  */
-abstract class Manifest implements Service, Manifest_Data {
+class Manifest implements Service, Manifest_Data {
 
   /**
-   * Global variable name constant.
+   * Instance variable of project config data.
+   *
+   * @var object
+   *
+   * @since 2.0.0
+   */
+  protected $config;
+
+  /**
+   * Create a new instance that injects config data to get project specific details.
+   *
+   * @param Config_Data $config Inject config which holds data regarding project details.
+   *
+   * @since 2.0.0
+   */
+  public function __construct( Config_Data $config ) {
+      $this->config = $config;
+  }
+
+  /**
+   * Transient cache name constant.
    *
    * @var string
    *
-   * @since 0.6.0
+   * @since 2.0.0
    */
-  const GLOBAL_VARIABLE_NAME = 'ES_ASSETS_MANIFEST';
+  const CACHE_NAME = 'manifest-data';
 
   /**
    * Manifest item filter name constant.
    *
    * @var string
    *
-   * @since 0.9.0
+   * @since 0.9.0 Init.
    */
-  const MANIFEST_ITEM_FILTER_NAME = 'es_manifest_item';
+  const MANIFEST_ITEM_FILTER_NAME = 'manifest-item';
 
   /**
    * Register all hooks.
    *
    * @return void
    *
+   * @since 2.0.0 Changed filter name to manifest.
    * @since 0.9.0 Adding manifest item filter.
    * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.6.0 Init.
    */
   public function register() {
-    add_action( 'init', [ $this, 'register_global_variable' ] );
-    add_filter( $this->get_manifest_item_filter_name(), [ $this, 'get_assets_manifest_item' ] );
-  }
-
-  /**
-   * Define global variable for assets manifest.
-   * Used to cache data inside a global variable so you don't have to fetch manifest.json file on every call.
-   *
-   * @return void
-   *
-   * @since 0.6.0 Init.
-   */
-  public function register_global_variable() {
-    define( $this->get_global_variable_name(), $this->get_raw_data() );
+    add_filter( $this->config->get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
   }
 
   /**
    * Return full path for specific asset from manifest.json.
-   * This is used for cache busting assets.
    *
    * @param string $key File name key you want to get from manifest.
    *
-   * @throws Exception\Missing_Manifest Throws error if manifest key is missing.
+   * @throws Exception\Invalid_Manifest Throws error if manifest key is missing.
    *
    * @return string Full path to asset.
    *
+   * @since 2.0.0 Returned data from manifest and not global variable.
    * @since 0.7.0 Changed to non static method and added Exception for missing key.
    * @since 0.6.0 Init
    */
   public function get_assets_manifest_item( string $key ) : string {
-    if ( ! $key ) {
-      return '';
-    }
-
-    $data = $this->get_decoded_manifest_data();
+    $data = $this->get_assets_manifest_data();
 
     if ( ! isset( $data[ $key ] ) ) {
-      $error_message = sprintf(
-        esc_html__( '%s is missing in manifest.json. Please check if provided key is correct.', 'eightshift-libs' ),
-        $key
-      );
-      throw Missing_Manifest::message( $error_message );
+      throw Invalid_Manifest::missing_manifest_item_exception( $key );
     }
 
-    return $this->get_assets_manifest_output_prefix() . $data[ $key ];
+    return $data[ $key ];
   }
 
   /**
-   * Return json_decoded manifest data, now you can call items by object key to get the value.
+   * Return full manifest data with site url prefix.
    *
-   * @return array Manifest Array Data.
+   * @throws Exception\Invalid_Manifest Throws error if manifest.json file is missing.
    *
-   * @since 0.8.0 Changed to public method.
-   * @since 0.7.0 Changed to non static method.
-   * @since 0.6.0 Init
+   * @return array
+   *
+   * @since 2.0.0
    */
-  public function get_decoded_manifest_data() : array {
-    $data = json_decode( constant( $this->get_global_variable_name() ), true );
+  protected function get_assets_manifest_raw() : array {
+    $path = $this->config->get_project_path() . '/public/manifest.json';
 
-    if ( ! $data ) {
+    if ( ! file_exists( $path ) ) {
+      throw Invalid_Manifest::missing_manifest_exception( $path );
+    }
+
+    $data = json_decode( implode( ' ', file( $path ) ), true );
+    if ( empty( $data ) ) {
       return [];
+    }
+
+    return array_map(
+      function( $manifest_item ) {
+        return "{$this->get_assets_manifest_output_prefix()}{$manifest_item}";
+      },
+      $data
+    );
+  }
+
+  /**
+   * Get Assets Manifest data depending on the env.
+   * If env is develop output only raw data.
+   * If env is staging or production output cached data in transient.
+   *
+   * @return array
+   *
+   * @since 2.0.0
+   */
+  protected function get_assets_manifest_data() : array {
+    if ( $this->config->get_project_env() === 'develop' ) {
+      return $this->get_assets_manifest_raw();
+    }
+
+    $cache_name = $this->config->get_config( static::CACHE_NAME );
+    $data       = \get_transient( $cache_name );
+
+    if ( $data === false ) {
+      $data = $this->get_assets_manifest_raw();
+      \set_transient( $cache_name, $data );
     }
 
     return $data;
   }
 
   /**
-   * Get global variable name to store the cached data into.
-   *
-   * @return string
-   *
-   * @since 0.7.0 Fetching variable name as static.
-   * @since 0.6.0 Init.
-   */
-  protected function get_global_variable_name() : string {
-    return static::GLOBAL_VARIABLE_NAME;
-  }
-
-  /**
-   * Get manifest item filter name for fetching single manifest items.
-   *
-   * @return string
-   *
-   * @since 0.9.0 Init
-   */
-  protected function get_manifest_item_filter_name() : string {
-    return static::MANIFEST_ITEM_FILTER_NAME;
-  }
-
-  /**
-   * Fetches manifest.json data from get_manifest_url() location, parses and returns as a sanitized array.
-   * Generally, you would assign this data to a global variable or some helper that is going to be used in the application to fetch assets data.
-   *
-   * @throws Exception\Missing_Manifest Throws error if manifest is missing.
-   *
-   * @return string
-   *
-   * @since 0.7.0 Fixed Exception msg.
-   * @since 0.1.0
-   */
-  protected function get_raw_data() : string {
-
-    $manifest = $this->get_manifest_url();
-
-    if ( ! file_exists( $manifest ) ) {
-      $error_message = esc_html__( 'manifest.json is missing. Bundle the theme before using it.', 'eightshift-libs' );
-      throw Missing_Manifest::message( $error_message );
-    }
-
-    return implode( ' ', file( $manifest ) );
-  }
-
-  /**
-   * Get manifest.json url location.
-   * If you are using a plugin or a different manifest location provide location with this method.
-   *
-   * @return string
-   *
-   * @since 0.6.0 Changed from abstract method to prefilled.
-   * @since 0.1.0
-   */
-  protected function get_manifest_url() : string {
-    return get_template_directory() . '/public/manifest.json';
-  }
-
-  /**
-   * Retrun string as an assets output prefix.
-   * Override this if you are using lib for a plugin.
+   * This method appends full site url to the relative manifest data item.
    *
    * @return string
    *
    * @since 0.6.0
    */
   protected function get_assets_manifest_output_prefix() : string {
-    return home_url( '/' );
+    return site_url();
   }
 }

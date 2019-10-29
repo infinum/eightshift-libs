@@ -1,18 +1,20 @@
 <?php
 /**
- * File containing general exception interface
+ * Interface containing general exception interface.
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Exception
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Exception;
 
 /**
  * Interface General_Exception.
  *
- * This interface is implemented by all portal exceptions, so that we can
- * catch "internal" exceptions only.
+ * This interface is implemented by all exceptions, so that we can catch "internal" exceptions only.
+ *
+ * @since 1.0.0
  */
 interface General_Exception {
 

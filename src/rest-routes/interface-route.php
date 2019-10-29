@@ -2,9 +2,10 @@
 /**
  * File containing Request type interface
  *
- * @since   0.1.0
  * @package Eightshift_Libs\Routes
  */
+
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Routes;
 
@@ -12,6 +13,8 @@ use Eightshift_Libs\Core\Service;
 
 /**
  * Route interface that adds routes
+ *
+ * @since 0.1.0
  */
 interface Route extends Service {
 
