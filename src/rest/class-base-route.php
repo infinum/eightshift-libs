@@ -9,7 +9,6 @@ declare( strict_types=1 );
 
 namespace Eightshift_Libs\Rest;
 
-use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Libs\Core\Service;
 use Eightshift_Libs\Rest\Route;
 
@@ -18,31 +17,9 @@ use Eightshift_Libs\Rest\Route;
  *
  * @since 2.0.0 Added in the project
  */
-class Base_Route implements Route, Service {
+abstract class Base_Route implements Route, Service {
 
   /**
-   * Instance variable of project config data.
-   *
-   * @var object
-   *
-   * @since 2.0.0 Added in the project
-   */
-  protected $config;
-
-  /**
-   * Create a new instance that injects config data to get project specific details.
-   *
-   * @param Config_Data $config Inject config which holds data regarding project details.
-   *
-   * @since 2.0.0 Added in the project
-   */
-  public function __construct( Config_Data $config ) {
-    $this->config = $config;
-  }
-
-  /**
-   * Register the rest route.
-   *
    * A register method holds register_rest_route funtion to register api route.
    *
    * @return void
@@ -66,20 +43,20 @@ class Base_Route implements Route, Service {
   /**
    * Method that returns project Route namespace.
    *
+   * @return string Project namespace for REST route.
+   *
    * @since 2.0.0 Added in the project
    */
-  protected function get_namespace() : string {
-    return $this->config->get_project_routes_namespace();
-  }
+  abstract protected function get_namespace() : string;
 
   /**
    * Method that returns project route version.
    *
+   * @return string Route version as a string.
+   *
    * @since 2.0.0 Added in the project
    */
-  protected function get_version() : string {
-    return $this->config->get_project_routes_version();
-  }
+  abstract protected function get_version() : string;
 
   /**
    * Get the base url of the route
@@ -88,9 +65,7 @@ class Base_Route implements Route, Service {
    *
    * @since 2.0.0 Added in the project
    */
-  protected function get_route_name() : string {
-    return '';
-  }
+  abstract protected function get_route_name() : string;
 
   /**
    * Get callback arguments array
@@ -99,9 +74,7 @@ class Base_Route implements Route, Service {
    *
    * @since 2.0.0 Added in the project
    */
-  protected function get_callback_arguments() : array {
-    return [];
-  }
+  abstract protected function get_callback_arguments() : array;
 
   /**
    * Override the existing route

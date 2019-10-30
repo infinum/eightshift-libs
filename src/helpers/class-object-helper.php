@@ -80,7 +80,6 @@ trait Object_Helper {
    *
    * @return array
    *
-   *
    * @since 1.0.0
    */
   public static function sanitize_array( array $array, string $sanitization_function ) : array {

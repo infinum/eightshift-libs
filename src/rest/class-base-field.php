@@ -16,12 +16,10 @@ use Eightshift_Libs\Core\Service;
  *
  * @since 2.0.0 Added in the project
  */
-class Base_Field implements Service {
+abstract class Base_Field implements Service {
 
   /**
-   * Register the rest route.
-   *
-   * A register method holds register_rest_route funtion to register api route.
+   * A register method holds register_rest_route funtion to register or override api field.
    *
    * @return void
    *
@@ -48,9 +46,7 @@ class Base_Field implements Service {
    *
    * @since 2.0.0 Added in the project
    */
-  protected function get_object_type() {
-    return '';
-  }
+  abstract protected function get_object_type();
 
   /**
    * Get the name of the field you awant to register or orverride.
@@ -59,9 +55,7 @@ class Base_Field implements Service {
    *
    * @since 2.0.0 Added in the project
    */
-  protected function get_field_name() : string {
-    return '';
-  }
+  abstract protected function get_field_name() : string;
 
   /**
    * Get callback arguments array
@@ -70,7 +64,5 @@ class Base_Field implements Service {
    *
    * @since 2.0.0 Added in the project
    */
-  protected function get_callback_arguments() : array {
-    return [];
-  }
+  abstract protected function get_callback_arguments() : array;
 }

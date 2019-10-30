@@ -345,7 +345,7 @@ class Blocks implements Service, Renderable_Block {
     $block_name      = $block_details['blockName'];
     $block_full_name = $block_details['blockFullName'];
 
-    $default_attributes      = [
+    $default_attributes = [
       'blockName' => array(
         'type' => 'string',
         'default' => $block_name,
@@ -374,7 +374,7 @@ class Blocks implements Service, Renderable_Block {
     );
   }
 
-    /**
+  /**
    * Get Blocks data depending on the env.
    * If env is develop output only raw data.
    * If env is staging or production output cached data in transient.
@@ -443,7 +443,7 @@ class Blocks implements Service, Renderable_Block {
   private function get_blocks_data() : array {
 
     return array_map(
-      function( $block_path ){
+      function( $block_path ) {
         $block = implode( ' ', file( ( $block_path ) ) );
         $block = json_decode( $block, true );
 
@@ -454,15 +454,15 @@ class Blocks implements Service, Renderable_Block {
         if ( ! isset( $block['classes'] ) ) {
           $block['classes'] = [];
         }
-    
+
         if ( ! isset( $block['attributes'] ) ) {
           $block['attributes'] = [];
         }
-    
+
         if ( ! isset( $block['hasWrapper'] ) ) {
           $block['hasWrapper'] = true;
         }
-    
+
         if ( ! isset( $block['hasInnerBlocks'] ) ) {
           $block['hasInnerBlocks'] = false;
         }
@@ -502,7 +502,7 @@ class Blocks implements Service, Renderable_Block {
    * @param array  $attributes           Attributes array to pass in template.
    * @param string $inner_block_content If using inner blocks content pass the data.
    *
-   * @throws Exception\Missing_Wrapper_View_Helper Throws error if render block view is missing.
+   * @throws Exception\Invalid_Block Throws error if render block view is missing.
    *
    * @since 2.0.0
    */
