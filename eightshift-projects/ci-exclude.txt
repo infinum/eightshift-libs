@@ -1,0 +1,2 @@
+/wp-content/themes/eightshift-boilerplate/node_modules
+.git

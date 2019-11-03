@@ -77,6 +77,9 @@ class Blocks implements Service, Renderable_Block {
 
     // Limits the ussage of only custom project blocks.
     add_filter( 'allowed_block_types', [ $this, 'get_all_blocks_list' ] );
+
+    // Create new custom category for custom blocks.
+    add_filter( 'block_categories', [ $this, 'get_custom_category' ] );
   }
 
   /**
@@ -231,6 +234,73 @@ class Blocks implements Service, Renderable_Block {
     $output = ob_get_clean();
     unset( $block_name, $template_path, $attributes, $inner_block_content, $custom_data );
     return $output;
+  }
+
+
+  /**
+   * Create custom category to assign all custom blocks.
+   * This category will show on all blocks list in "Add Block" button.
+   *
+   * @param array $categories Array of all blocks categories.
+   * @return array
+   *
+   * @since 2.0.0
+   */
+  public function get_custom_category( $categories ) {
+    return array_merge(
+      $categories,
+      [
+        [
+          'slug'  => 'eightshift',
+          'title' => esc_html__( 'Eightshift', 'eightshift-libs' ),
+          'icon'  => 'admin-settings',
+        ],
+      ]
+    );
+  }
+
+  /**
+   * Locate and return template part with passed attributes for wrapper.
+   * Used to render php block wrapper view.
+   *
+   * @param string $src                  String with URL path to template.
+   * @param array  $attributes           Attributes array to pass in template.
+   * @param string $inner_block_content If using inner blocks content pass the data.
+   *
+   * @throws Exception\Invalid_Block Throws error if wrapper view template is missing.
+   *
+   * @since 2.0.0
+   */
+  public function render_wrapper_view( string $src, array $attributes, $inner_block_content = null ) {
+    if ( ! file_exists( $src ) ) {
+      throw Invalid_Block::missing_wrapper_view_exception( $src );
+    }
+
+    include $src;
+    unset( $src, $attributes, $inner_block_content );
+  }
+
+  /**
+   * Locate and return template part with passed attributes for block.
+   * Used to render php block view.
+   *
+   * @param string $src                  String with URL path to template.
+   * @param array  $attributes           Attributes array to pass in template.
+   * @param string $inner_block_content If using inner blocks content pass the data.
+   *
+   * @throws Exception\Invalid_Block Throws error if render block view is missing.
+   *
+   * @since 2.0.0
+   */
+  public function render_block_view( string $src, array $attributes, $inner_block_content = null ) {
+    $path = $this->get_blocks_path() . $src;
+
+    if ( ! file_exists( $path ) ) {
+      throw Invalid_Block::missing_render_view_exception( $path );
+    }
+
+    include $path;
+    unset( $src, $attributes, $inner_block_content, $path );
   }
 
   /**
@@ -471,49 +541,5 @@ class Blocks implements Service, Renderable_Block {
       },
       glob( "{$this->get_blocks_custom_path()}/*/manifest.json" )
     );
-  }
-
-  /**
-   * Locate and return template part with passed attributes for wrapper.
-   * Used to render php block wrapper view.
-   *
-   * @param string $src                  String with URL path to template.
-   * @param array  $attributes           Attributes array to pass in template.
-   * @param string $inner_block_content If using inner blocks content pass the data.
-   *
-   * @throws Exception\Invalid_Block Throws error if wrapper view template is missing.
-   *
-   * @since 2.0.0
-   */
-  public function render_wrapper_view( string $src, array $attributes, $inner_block_content = null ) {
-    if ( ! file_exists( $src ) ) {
-      throw Invalid_Block::missing_wrapper_view_exception( $src );
-    }
-
-    include $src;
-    unset( $src, $attributes, $inner_block_content );
-  }
-
-  /**
-   * Locate and return template part with passed attributes for block.
-   * Used to render php block view.
-   *
-   * @param string $src                  String with URL path to template.
-   * @param array  $attributes           Attributes array to pass in template.
-   * @param string $inner_block_content If using inner blocks content pass the data.
-   *
-   * @throws Exception\Invalid_Block Throws error if render block view is missing.
-   *
-   * @since 2.0.0
-   */
-  public function render_block_view( string $src, array $attributes, $inner_block_content = null ) {
-    $path = $this->get_blocks_path() . $src;
-
-    if ( ! file_exists( $path ) ) {
-      throw Invalid_Block::missing_render_view_exception( $path );
-    }
-
-    include $path;
-    unset( $src, $attributes, $inner_block_content, $path );
   }
 }
