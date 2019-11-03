@@ -19,8 +19,6 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
   /**
    * Throws error if blocks are missing.
    *
-   * @param string $block_path Full block path for the missing name.
-   *
    * @return static
    *
    * @since 2.0.0
@@ -47,7 +45,7 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
     return new static(
       sprintf(
         esc_html__( 'Block in this path %s is missing blockName key in its manifest.json.', 'eightshift-libs' ),
-        $name
+        $block_path
       )
     );
   }
@@ -81,7 +79,7 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
    *
    * @since 2.0.0
    */
-  public static function missing_render_view_exception( string $block_name, string $block_path ) {
+  public static function missing_render_view_exception( string $block_path ) {
     return new static(
       sprintf(
         esc_html__( 'Block view is missing in the provided path. Please chech if %s is the right path for your block view.', 'eightshift-libs' ),
@@ -111,7 +109,7 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
   /**
    * Throws error if wrapper settings manifest.json is missing.
    *
-   * @param string $wrapper_manifest_path Full path for the missing manifest.json.
+   * @param string $settings_manifest_path Full path for the missing manifest.json.
    *
    * @return static
    *
@@ -146,8 +144,6 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
 
   /**
    * Throws error if global manifest settings key namespace is missing.
-   *
-   * @param string $block_path Full block path for the missing name.
    *
    * @return static
    *

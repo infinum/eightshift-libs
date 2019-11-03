@@ -4,7 +4,6 @@
  * It provides BEM classes to menues.
  *
  * @package Eightshift_Libs\Menu
- *
  */
 
 declare( strict_types=1 );

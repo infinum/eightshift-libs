@@ -20,7 +20,7 @@ interface Config_Data {
 
   /**
    * Method that returns project name.
-   * 
+   *
    * Generally used for naming assets handlers, languages, etc.
    *
    * @since 2.0.0 Added in the project
@@ -39,7 +39,7 @@ interface Config_Data {
   /**
    * Method that returns project prefix.
    *
-   * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions. 
+   * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.
    *
    * @return string Full path to asset.
    *
@@ -58,6 +58,24 @@ interface Config_Data {
    * @since 2.0.0 Added in the project
    */
   public static function get_project_env() : string;
+
+  /**
+   * Method that returns project REST-API namespace.
+   *
+   * Used for namespacing projects REST-API routes and fields.
+   *
+   * @since 2.0.0 Added in the project
+   */
+  public static function get_project_routes_namespace() : string;
+
+  /**
+   * Method that returns project REST-API version.
+   *
+   * Used for versioning projects REST-API routes and fields.
+   *
+   * @since 2.0.0 Added in the project
+   */
+  public static function get_project_routes_version() : string;
 
   /**
    * Method that returns project primary color.
