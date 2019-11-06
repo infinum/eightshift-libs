@@ -39,4 +39,4 @@ Eightshift WordPress Libs is maintained and sponsored by
 
 ## :scroll: License
 
-Infinum WordPress Libs is Copyright ©2019 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.
+Infinum WordPress Libs is Copyright &copy;2019 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.

@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [2.0.2]
+
+### Fixed
+
+- Renderable_Block Interface - Fixing wrong type hinting for $inner_block_content.
+
 ## [2.0.1]
 
 ### Changed
@@ -90,6 +96,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[2.0.2]: https://github.com/infinum/eightshift-libs/compare/2.0.1...v2.0.2
 [2.0.1]: https://github.com/infinum/eightshift-libs/compare/2.0.0...v2.0.1
 [2.0.0]: https://github.com/infinum/eightshift-libs/compare/0.9.0...v2.0.0
 [0.9.0]: https://github.com/infinum/eightshift-libs/compare/0.8.0...0.9.0
