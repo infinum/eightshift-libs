@@ -7,6 +7,18 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [2.0.1]
+
+### Changed
+
+- Updating readme
+
+## [2.0.0]
+
+- Complete refactor on project organisation.
+- Moving, Babel, Webpack, linters config from boilerplate to eightshift-frontend-libs.
+- Rewritten Gutenberg blocks setup.
+
 ## [0.9.0]
 
 ### Changed
@@ -75,3 +87,18 @@ Init setup
 - Taxonomy Registration.
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
+
+[Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
+
+[2.0.1]: https://github.com/infinum/eightshift-libs/compare/2.0.0...v2.0.1
+[2.0.0]: https://github.com/infinum/eightshift-libs/compare/0.9.0...v2.0.0
+[0.9.0]: https://github.com/infinum/eightshift-libs/compare/0.8.0...0.9.0
+[0.8.0]: https://github.com/infinum/eightshift-libs/compare/0.7.1...0.8.0
+[0.7.1]: https://github.com/infinum/eightshift-libs/compare/0.7.0...0.7.1
+[0.7.0]: https://github.com/infinum/eightshift-libs/compare/0.6.0...0.7.0
+[0.6.0]: https://github.com/infinum/eightshift-libs/compare/0.5.0...0.6.0
+[0.5.0]: https://github.com/infinum/eightshift-libs/compare/0.4.0...0.5.0
+[0.4.0]: https://github.com/infinum/eightshift-libs/compare/0.3.0...0.4.0
+[0.3.0]: https://github.com/infinum/eightshift-libs/compare/0.2.0...0.3.0
+[0.2.0]: https://github.com/infinum/eightshift-libs/compare/0.1.0...0.2.0
+[0.1.0]: https://github.com/infinum/eightshift-libs/compare/cb5398515260043626dc0d7901abf22a2d7bdf9c...0.1.0
