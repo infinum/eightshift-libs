@@ -26,7 +26,7 @@ trait Error_Logger {
    *
    * @return \WP_Error|array \WP_Error instance with error message and status or array.
    */
-  public function rest_response_handler( int $code, string $status, ?string $msg, ?array $data = null ) {
+  public function rest_response_handler( int $code, string $status, $msg, $data = null ) {
     $output = [
       'code'    => $code,
       'status'  => $status,
