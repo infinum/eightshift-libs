@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [2.0.3] - 2019-11-14
+### Added
+- New method in class-main.php to provide env type to DI Container used in Eightshift-libs.
+- Option to cache DI container.
+- .gitattributes file.
+
 ## [2.0.2]
 
 ### Fixed
@@ -96,6 +102,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[2.0.3]: https://github.com/infinum/eightshift-libs/compare/2.0.2...v2.0.3
 [2.0.2]: https://github.com/infinum/eightshift-libs/compare/2.0.1...v2.0.2
 [2.0.1]: https://github.com/infinum/eightshift-libs/compare/2.0.0...v2.0.1
 [2.0.0]: https://github.com/infinum/eightshift-libs/compare/0.9.0...v2.0.0

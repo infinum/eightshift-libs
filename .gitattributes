@@ -1,0 +1,7 @@
+/bin export-ignore
+/tests export-ignore
+/.travis.yml export-ignore
+/CHANGELOG.md export-ignore
+/CODE_OF_CONDUCT.md export-ignore
+/phpcs.xml.dist export-ignore
+/phpunit.xml export-ignore

@@ -131,6 +131,18 @@ abstract class Main implements Service {
   }
 
   /**
+   * Returns the project environment variable descriptor.
+   *
+   * Used to cache DI container depending on the environment of the project.
+   * DI container is cached if "production" string is passed.
+   *
+   * @return string Current project environment string.
+   *
+   * @since 2.0.3 Added in the project
+   */
+  abstract protected function get_env() : string;
+
+  /**
    * Implement PHP-DI.
    * Build and return a DI container.
    * Wire all the dependencies automatically, based on the provided array of class => dependencies from the get_di_items().
@@ -142,6 +154,10 @@ abstract class Main implements Service {
    */
   private function get_di_container( array $services ) {
     $builder = new ContainerBuilder();
+
+    if ( $this->get_env() === 'production' ) {
+      $builder->enableDefinitionCache();
+    }
 
     $definitions = [];
     foreach ( $services as  $service_key => $service_values ) {

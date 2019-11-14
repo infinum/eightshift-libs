@@ -30,6 +30,9 @@ We provide some helpers, abstract classes, interfaces and abstractions on origin
 
 For detail documentation please check on [Eightshift Boilerplate Wiki](https://github.com/infinum/eightshift-boilerplate/wiki)
 
+## Requirement
+To run PHP-DI with caching system enabled your server must have [APC](https://www.php.net/manual/en/book.apc.php) extension instaled. 
+
 ## :mailbox: Who do I talk to?
 
 If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-libs/issues) on github and we will do our best to give you a timely answer.
