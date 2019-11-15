@@ -72,8 +72,8 @@ abstract class Main implements Service {
    *
    * @throws \Exception
    *
-   * @throws Exception\Invalid_Service If a service is not valid.*@since 0.7.0 Dependency Injection Refactoring
    * @since 0.1.0
+   * @since 0.7.0 Dependency Injection Refactoring
    */
   public function register_services() {
 
