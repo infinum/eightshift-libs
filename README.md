@@ -15,6 +15,12 @@ It uses central service instantiator that instatiates all classes that obey sing
 
 We provide some helpers, abstract classes, interfaces and abstractions on original WordPress functionality to help you write more modern code.
 
+## Standalone install
+
+```bash
+composer require infinum/eightshift-libs
+```
+
 ## Provided functionality:
 * Main theme/plugin entrypoint.
 * Post type registration.
