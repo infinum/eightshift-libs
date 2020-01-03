@@ -18,7 +18,7 @@ use Eightshift_Libs\Core\Config_Data;
  *
  * @since 2.0.0
  */
-class Enqueue_Theme implements Service {
+class Enqueue_Theme extends Assets {
 
   /**
    * Instance variable of project config data.
@@ -64,50 +64,52 @@ class Enqueue_Theme implements Service {
   }
 
   /**
-   * Register the Stylesheets for the theme area.
+   * Register the Stylesheets for the front end of the theme.
    *
    * @return void
    *
    * @since 2.0.0
+   * @since 2.0.3 Added methods for overrides.
+   *              Fixed static calls from config class.
    */
   public function enqueue_styles() {
-    $handler = "{$this->config->get_project_prefix()}-theme-styles";
+    $handle = "{$this->config::get_project_prefix()}-theme-styles";
 
     \wp_register_style(
-      $handler,
+      $handle,
       $this->manifest->get_assets_manifest_item( 'application.css' ),
-      [],
-      $this->config->get_project_version()
+      $this->get_frontend_style_dependencies(),
+      $this->config::get_project_version(),
+      $this->get_media()
     );
-    \wp_enqueue_style( $handler );
+
+    \wp_enqueue_style( $handle );
   }
 
   /**
-   * Register the JavaScript for the theme area.
+   * Register the JavaScript for the front end of the theme.
    *
    * @return void
    *
    * @since 2.0.0
+   * @since 2.0.3 Added methods for overrides.
+   *              Fixed static calls from config class.
    */
   public function enqueue_scripts() {
-    $handler = "{$this->config->get_project_prefix()}-scripts";
+    $handle = "{$this->config::get_project_prefix()}-scripts";
 
     \wp_register_script(
-      $handler,
+      $handle,
       $this->manifest->get_assets_manifest_item( 'application.js' ),
-      [],
-      $this->config->get_project_version(),
+      $this->get_frontend_script_dependencies(),
+      $this->config::get_project_version(),
       true
     );
-    \wp_enqueue_script( $handler );
 
-    // Global variables for ajax and translations.
-    \wp_localize_script(
-      $handler,
-      'projectLocalization',
-      [
-        'ajaxurl' => \admin_url( 'admin-ajax.php' ),
-      ]
-    );
+    \wp_enqueue_script( $handle );
+
+    foreach ( $this->get_localizations() as $object_name => $data_array ) {
+      \wp_localize_script( $handle, $object_name, $data_array );
+    }
   }
 }
