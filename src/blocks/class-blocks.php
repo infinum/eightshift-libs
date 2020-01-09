@@ -32,13 +32,13 @@ class Blocks implements Service, Renderable_Block {
   protected $config;
 
   /**
-   * Transient cache name constant.
+   * Full data of blocks, settings and wrapper data.
    *
-   * @var string
+   * @var array
    *
    * @since 2.0.0
    */
-  const CACHE_NAME = 'blocks-data';
+  protected $blocks = [];
 
   /**
    * Block view filter name constant.
@@ -70,7 +70,8 @@ class Blocks implements Service, Renderable_Block {
   public function register() {
 
     // // Register all custom blocks.
-    add_action( 'init', [ $this, 'register_blocks' ] );
+    add_action( 'init', [ $this, 'get_blocks_data_full_raw' ], 10 );
+    add_action( 'init', [ $this, 'register_blocks' ], 11 );
 
     // Remove P tags from content.
     remove_filter( 'the_content', 'wpautop' );
@@ -80,6 +81,40 @@ class Blocks implements Service, Renderable_Block {
 
     // Create new custom category for custom blocks.
     add_filter( 'block_categories', [ $this, 'get_custom_category' ] );
+  }
+
+  /**
+   * Get blocks full data from global settings, blocks and wrapper.
+   * You should never call this method directly insted you should call $this->blocks.
+   *
+   * @return void
+   *
+   * @since 2.0.0
+   */
+  public function get_blocks_data_full_raw() {
+
+    if ( ! $this->blocks ) {
+      $settings = $this->get_settings();
+      $wrapper  = $this->get_wrapper();
+  
+      $blocks = array_map(
+        function( $block ) use ( $settings ) {
+  
+          // Add additional data to the block settings.
+          $block['namespace']     = $settings['namespace'];
+          $block['blockFullName'] = "{$settings['namespace']}/{$block['blockName']}";
+  
+          return $block;
+        },
+        $this->get_blocks_data()
+      );
+
+      $this->blocks = [
+        'settings' => $settings,
+        'wrapper' => $wrapper,
+        'blocks' => $blocks,
+      ];
+    }
   }
 
   /**
@@ -95,7 +130,7 @@ class Blocks implements Service, Renderable_Block {
       function( $block ) {
         return $block['blockFullName'];
       },
-      $this->get_blocks()['blocks']
+      $this->blocks['blocks']
     );
 
     // Allow reusable block.
@@ -115,7 +150,7 @@ class Blocks implements Service, Renderable_Block {
    * @since 2.0.0
    */
   public function register_blocks() {
-    $blocks = $this->get_blocks()['blocks'];
+    $blocks = $this->blocks['blocks'];
 
     if ( empty( $blocks ) ) {
       throw Invalid_Block::missing_blocks_exception();
@@ -435,69 +470,13 @@ class Blocks implements Service, Renderable_Block {
     ];
 
     $block_attributes        = $block_details['attributes'];
-    $block_shared_attributes = ( $block_details['hasWrapper'] === true ) ? $this->get_blocks()['wrapper']['attributes'] : [];
+    $block_shared_attributes = ( $block_details['hasWrapper'] === true ) ? $this->blocks['wrapper']['attributes'] : [];
 
     return array_merge(
       $default_attributes,
       $block_attributes,
       $block_shared_attributes
     );
-  }
-
-  /**
-   * Get Blocks data depending on the env.
-   * If env is develop output only raw data.
-   * If env is staging or production output cached data in transient.
-   *
-   * @return array
-   *
-   * @since 2.0.0
-   */
-  protected function get_blocks() : array {
-    if ( $this->config->get_project_env() === 'develop' ) {
-      return $this->get_blocks_data_full_raw();
-    }
-
-    $cache_name = $this->config->get_config( static::CACHE_NAME );
-    $data       = \get_transient( $cache_name );
-
-    if ( $data === false ) {
-      $data = $this->get_blocks_data_full_raw();
-      \set_transient( $cache_name, $data );
-    }
-
-    return $data;
-  }
-
-  /**
-   * Get blocks full data from global settings, blocks and wrapper.
-   * You should never call this method directly.
-   *
-   * @return array
-   *
-   * @since 2.0.0
-   */
-  private function get_blocks_data_full_raw() : array {
-    $settings = $this->get_settings();
-    $wrapper  = $this->get_wrapper();
-
-    $blocks = array_map(
-      function( $block ) use ( $settings ) {
-
-        // Add additional data to the block settings.
-        $block['namespace']     = $settings['namespace'];
-        $block['blockFullName'] = "{$settings['namespace']}/{$block['blockName']}";
-
-        return $block;
-      },
-      $this->get_blocks_data()
-    );
-
-    return [
-      'settings' => $settings,
-      'wrapper' => $wrapper,
-      'blocks' => $blocks,
-    ];
   }
 
   /**

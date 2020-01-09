@@ -5,7 +5,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
-_No documentation available about unreleased changes as of yet._
+### Updated
+
+- class-block.php - optimisation on loading blocks data. Removed caching blocks in transient.
+- class-manifest.php - optimisation on loading manifest data. Removed caching manifest in transient.
 
 ## [2.0.2]
 
