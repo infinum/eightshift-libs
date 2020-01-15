@@ -48,45 +48,6 @@ interface Config_Data {
   public static function get_project_prefix() : string;
 
   /**
-   * Returns the project environment variable descriptor.
-   *
-   * Used for defining global settings depending on the environment of the project.
-   * Can be one of, but not limited to, development, staging, production.
-   *
-   * @return string Current project environment string.
-   *
-   * @since 2.0.0 Added in the project
-   */
-  public static function get_project_env() : string;
-
-  /**
-   * Method that returns project REST-API namespace.
-   *
-   * Used for namespacing projects REST-API routes and fields.
-   *
-   * @since 2.0.0 Added in the project
-   */
-  public static function get_project_routes_namespace() : string;
-
-  /**
-   * Method that returns project REST-API version.
-   *
-   * Used for versioning projects REST-API routes and fields.
-   *
-   * @since 2.0.0 Added in the project
-   */
-  public static function get_project_routes_version() : string;
-
-  /**
-   * Method that returns project primary color.
-   *
-   * Used for styling the mobile browser color and splash screens. Check head.php for more details.
-   *
-   * @since 2.0.0 Added in the project
-   */
-  public static function get_project_primary_color() : string;
-
-  /**
    * Return project absolute path.
    *
    * If used in a theme use get_template_directory() and in case it's used in a plugin use __DIR__.
