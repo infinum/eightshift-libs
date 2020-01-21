@@ -1,0 +1,50 @@
+{
+  "name": "@eightshift/frontend-libs",
+  "version": "3.0.3",
+  "description": "A collection of useful frontend utility modules. powered by Eightshift",
+  "author": {
+    "name": "Team Eightshift",
+    "email": "team@eightshift.com",
+    "url": "https://eightshift.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/eightshift-frontend-libs.git"
+  },
+  "keywords": [
+    "frontend",
+    "scss",
+    "mixin",
+    "js",
+    "utility",
+    "module",
+    "WordPress"
+  ],
+  "bugs": {
+    "url": "https://github.com/infinum/eightshift-frontend-libs/issues"
+  },
+  "scripts": {
+    "lint": "bash ./bin/lintPhp.sh",
+    "docs": "docpress b && docpress s",
+    "build-docs": "rm -rf docs && docpress b",
+    "deploy-docs": "git subtree push --prefix docs origin gh-pages"
+  },
+  "homepage": "https://github.com/infinum/eightshift-libs#readme",
+  "license": "MIT",
+  "dependencies": {
+    "husky": "^4.0.10"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "devDependencies": {
+    "docpress": "0.8.0"
+  },
+  "docpress": {
+    "github": "infinum/eightshift-libs",
+    "docs": "documentation",
+    "dist": "docs"
+  }
+}

@@ -7,6 +7,16 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [2.0.5]
+
+### Added
+
+- class-base-post-columns.php - New abstract class for adding articles listing columns.
+- class-base-taxonomy-columns.php - New abstract class for adding taxonomy listing columns.
+- class-base-user-columns.php - New abstract class for adding users listing columns.
+- class-plugin-activation-failure.php - New plugin activation exception.
+- Added docpress documentation.
+
 ## [2.0.4]
 
 ### Added

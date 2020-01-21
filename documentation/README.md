@@ -1,0 +1,20 @@
+* [Eightshift Libs](index.md)
+* Installation and setup
+  * [Installation and Requirements](installation/instalation-and-requirements.md)
+* Features
+  * [Intro](features/intro.md)
+  * [Blocks](features/blocks.md)
+  * [Columns](features/columns.md)
+  * [Custom Post Type](features/custom-post-type.md)
+  * [Custom Taxonomy](features/custom-taxonomy.md)
+  * [Enqueue](features/enqueue.md)
+  * [General](features/general.md)
+  * [i18n](features/i18n.md)
+  * [Login](features/login.md)
+  * [Manifest](features/manifest.md)
+  * [Media](features/media.md)
+  * [Menu](features/menu.md)
+  * [Rest](features/rest.md)
+* Helpers
+  * [Object Helpers](helpers/object-helpers.md)
+  * [General Helpers](helpers/general-helpers.md)

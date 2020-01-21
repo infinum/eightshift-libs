@@ -25,7 +25,7 @@
     "source": "https://github.com/infinum/eightshift-libs"
   },
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.1",
     "php-di/php-di": "^6.0"
   },
   "require-dev": {
@@ -45,7 +45,7 @@
     "process-timeout": 2000
   },
   "scripts": {
-    "check-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.0-",
-    "fix-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.0-"
+    "check-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.1-",
+    "fix-cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.1-"
   }
 }
