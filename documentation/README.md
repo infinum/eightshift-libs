@@ -1,8 +1,7 @@
 * [Eightshift Libs](index.md)
 * Installation and setup
   * [Installation and Requirements](installation/instalation-and-requirements.md)
-* Features
-  * [Intro](features/intro.md)
+* [Features](features/intro.md)
   * [Blocks](features/blocks.md)
   * [Columns](features/columns.md)
   * [Custom Post Type](features/custom-post-type.md)
