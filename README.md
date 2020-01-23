@@ -15,8 +15,8 @@ This library is aimed at bringing the modern development tools to the [Eightshif
 **For the full documentation please check this [link](https://infinum.github.io/eightshift-libs).**
 
 ## Maintainers
-Eightshift WordPress Libs is maintained and sponsored by
+Eightshift Libs is maintained and sponsored by
 [Eightshift](https://eightshift.com) and [Infinum](https://infinum.com).
 
 ## License
-Infinum WordPress Libs is Copyright &copy;2020 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.
+Eightshift Libs is Copyright &copy;2020 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.
