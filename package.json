@@ -1,20 +1,23 @@
 {
-  "name": "@eightshift/frontend-libs",
-  "version": "3.0.3",
-  "description": "A collection of useful utility modules. powered by Eightshift",
+  "name": "@infinum/eightshift-libs",
+  "version": "2.0.5",
+  "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
   "author": {
-    "name": "Eightshift Team",
+    "name": "Eightshift team",
     "email": "team@eightshift.com",
-    "url": "https://eightshift.com/"
+    "homepage": "https://eightshift.com/",
+    "role": "Developer / IT Manager"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/infinum/eightshift-frontend-libs.git"
+    "url": "git+https://github.com/infinum/eightshift-libs.git"
   },
   "keywords": [
-    "php",
-    "utility",
-    "module",
+    "composer",
+    "installer",
+    "plugin",
+    "blocks",
+    "Gutenberg",
     "WordPress"
   ],
   "bugs": {
@@ -26,7 +29,7 @@
     "build-docs": "rm -rf docs && docpress b",
     "deploy-docs": "git subtree push --prefix docs origin gh-pages"
   },
-  "homepage": "https://github.com/infinum/eightshift-libs#readme",
+  "homepage": "https://eightshift.com/",
   "license": "MIT",
   "dependencies": {
     "husky": "^4.0.10"
