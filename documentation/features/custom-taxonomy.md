@@ -1,0 +1,3 @@
+# Custom Taxonomy
+
+Content will be added soon...
