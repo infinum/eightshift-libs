@@ -11,11 +11,12 @@
 
 This library is aimed at bringing the modern development tools to the [Eightshift Boilerplate](https://github.com/infinum/eightshift-boilerplate) or [Eightshift Boilerplate Plugin](https://github.com/infinum/eightshift-boilerplate-plugin), but you can use it on any WordPress project.
 
-==============================================================================
 ## Documentaiton
-### For the full documentation please check this [link](https://infinum.github.io/eightshift-libs).
+**For the full documentation please check this [link](https://infinum.github.io/eightshift-libs).**
 
-==============================================================================
-
+## Maintainers
 Eightshift WordPress Libs is maintained and sponsored by
 [Eightshift](https://eightshift.com) and [Infinum](https://infinum.com).
+
+## License
+Infinum WordPress Libs is Copyright &copy;2020 Infinum. It is free software, and may be redistributed under the terms specified in the LICENSE file.

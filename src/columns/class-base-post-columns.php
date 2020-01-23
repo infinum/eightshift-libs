@@ -37,15 +37,6 @@ abstract class Base_Post_Columns implements Service {
   }
 
   /**
-   * Get the slug of the post type where the additional column should appear.
-   *
-   * @return array The name of the post type.
-   *
-   * @since 2.0.5
-   */
-  abstract protected function get_post_type_slug() : array;
-
-  /**
    * Add additional post columns to the columns array.
    *
    * @param array $columns The existing column names array with default post columns (title, author, date etc.).
@@ -67,4 +58,13 @@ abstract class Base_Post_Columns implements Service {
    * @since 2.0.5
    */
   abstract public function render_column_content( string $column_name, int $post_id ) : void;
+
+  /**
+   * Get the slug of the post type where the additional column should appear.
+   *
+   * @return array The name of the post type.
+   *
+   * @since 2.0.5
+   */
+  abstract protected function get_post_type_slug() : array;
 }

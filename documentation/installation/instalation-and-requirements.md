@@ -2,7 +2,7 @@
 
 Implementing this library inside your existing project is simple.
 
-Here is an example of our boilerplate repository that incorporates this library. To see the detailed implementation and how it works in action check the Eightshift Boilerplate repo.
+Here is an example of our boilerplate repository that incorporates this library. To see the detailed implementation and how it works in action check the [Eightshift Boilerplate](https://github.com/infinum/eightshift-boilerplate) repo.
 
 **To incorporate this lib inside your project you need to have:**
 * [Composer](https://getcomposer.org/) installed in your project.
@@ -14,9 +14,9 @@ Here is an example of our boilerplate repository that incorporates this library.
 composer require infinum/eightshift-libs
 ```
 
-2. You need to have autoloader installed and required in the project.
+2. You need to have autoloader installed and required in the project. The best way is to use [classmap autoloading](https://getcomposer.org/doc/04-schema.md#classmap) provided by the Composer. You can check the implementation [here](https://github.com/infinum/eightshift-boilerplate/blob/develop/functions.php#L33)
 
-3. One main project entry point must extend [eightshift libs main entry point file](https://github.com/infinum/eightshift-libs/blob/develop/src/class-main.php). Here you can find an [example](https://github.com/infinum/eightshift-boilerplate/blob/develop/src/class-main.php) how we did it.
+3. The main project entry point must extend [eightshift libs main entry point file](https://github.com/infinum/eightshift-libs/blob/develop/src/class-main.php). Here you can find an [example](https://github.com/infinum/eightshift-boilerplate/blob/develop/src/class-main.php) how we did it.
 
 4. Also, you must run that main class using function.php in your theme or plugin main entry point file. Here you can find an [example](https://github.com/infinum/eightshift-boilerplate/blob/develop/functions.php) how we did it.
 

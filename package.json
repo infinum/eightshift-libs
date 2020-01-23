@@ -1,9 +1,9 @@
 {
   "name": "@eightshift/frontend-libs",
   "version": "3.0.3",
-  "description": "A collection of useful frontend utility modules. powered by Eightshift",
+  "description": "A collection of useful utility modules. powered by Eightshift",
   "author": {
-    "name": "Team Eightshift",
+    "name": "Eightshift Team",
     "email": "team@eightshift.com",
     "url": "https://eightshift.com/"
   },
@@ -12,10 +12,7 @@
     "url": "git+https://github.com/infinum/eightshift-frontend-libs.git"
   },
   "keywords": [
-    "frontend",
-    "scss",
-    "mixin",
-    "js",
+    "php",
     "utility",
     "module",
     "WordPress"
