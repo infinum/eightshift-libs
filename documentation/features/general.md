@@ -1,3 +1,0 @@
-# General
-
-Content will be added soon...

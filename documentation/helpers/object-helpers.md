@@ -1,3 +1,0 @@
-# Object Helpers
-
-Content will be added soon...

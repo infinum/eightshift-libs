@@ -1,3 +1,0 @@
-# Custom Post Type
-
-Content will be added soon...

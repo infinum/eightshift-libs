@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [2.0.6] - 2020-01-27
+
+### Removed
+- Limitations the usage of only custom project blocks.
+- Removing docs to new repository
+
 ## [2.0.5]
 
 ### Added
