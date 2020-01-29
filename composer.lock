@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8bb599edc21bb2449abf7e6faaf8ff7c",
+    "content-hash": "d549885d104169f3ccd3c340f1c78729",
     "packages": [
         {
             "name": "jeremeamia/superclosure",
@@ -486,16 +486,16 @@
         },
         {
             "name": "infinum/coding-standards-wp",
-            "version": "0.4.2",
+            "version": "0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/coding-standards-wp.git",
-                "reference": "f7bfc5c231bf4a0f1910d1a66139bd0e97bae198"
+                "reference": "80a148a17f16d28b9f5ba5bf3ae506b778898fbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/coding-standards-wp/zipball/f7bfc5c231bf4a0f1910d1a66139bd0e97bae198",
-                "reference": "f7bfc5c231bf4a0f1910d1a66139bd0e97bae198",
+                "url": "https://api.github.com/repos/infinum/coding-standards-wp/zipball/80a148a17f16d28b9f5ba5bf3ae506b778898fbd",
+                "reference": "80a148a17f16d28b9f5ba5bf3ae506b778898fbd",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +540,7 @@
                 "standards",
                 "wordpress"
             ],
-            "time": "2020-01-24T14:12:36+00:00"
+            "time": "2020-01-29T07:04:18+00:00"
         },
         {
             "name": "phpcompatibility/php-compatibility",

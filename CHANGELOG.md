@@ -7,6 +7,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [2.0.7] - 2020-01-29
+
+### Added
+- `add_theme_support( 'align-wide' )` in class-blocks.php
+
 ## [2.0.6] - 2020-01-27
 
 ### Removed

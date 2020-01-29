@@ -78,6 +78,19 @@ class Blocks implements Service, Renderable_Block {
 
     // Create new custom category for custom blocks.
     add_filter( 'block_categories', [ $this, 'get_custom_category' ] );
+
+    add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 25 );
+  }
+
+  /**
+   * Register align wide option in editor
+   *
+   * @return void
+   *
+   * @since 2.0.0
+   */
+  public function add_theme_support() {
+    add_theme_support( 'align-wide' );
   }
 
   /**

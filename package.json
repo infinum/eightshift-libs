@@ -1,6 +1,6 @@
 {
   "name": "@infinum/eightshift-libs",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
   "author": {
     "name": "Eightshift team",
@@ -24,27 +24,16 @@
     "url": "https://github.com/infinum/eightshift-frontend-libs/issues"
   },
   "scripts": {
-    "lint": "bash ./bin/lintPhp.sh",
-    "docs": "docpress b && docpress s",
-    "build-docs": "rm -rf docs && docpress b",
-    "deploy-docs": "git subtree push --prefix docs origin gh-pages"
+    "lint": "bash ./bin/lintPhp.sh"
   },
   "homepage": "https://eightshift.com/",
   "license": "MIT",
   "dependencies": {
-    "husky": "^4.0.10"
+    "husky": "^4.2.1"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"
     }
-  },
-  "devDependencies": {
-    "docpress": "0.8.0"
-  },
-  "docpress": {
-    "github": "infinum/eightshift-libs",
-    "docs": "documentation",
-    "dist": "docs"
   }
 }
