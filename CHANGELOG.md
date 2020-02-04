@@ -5,7 +5,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
-_No documentation available about unreleased changes as of yet._
+* Added build_di_container() method to class Main
 
 ## [2.0.7] - 2020-01-29
 
