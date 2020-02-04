@@ -90,6 +90,18 @@ abstract class Main implements Service {
   }
 
   /**
+   * Returns the DI container and allow it to be used in different context (for example in tests outside of WP environment)
+   *
+   * @return object
+   */
+  public function build_di_container() {
+    if ( empty( $this->container ) ) {
+      $this->container = $this->get_di_container($this->get_service_classes_prepared_array());
+    }
+    return $this->container;
+  }
+
+  /**
    * Return array of services with Dependency Injection parameters.
    *
    * @return array
