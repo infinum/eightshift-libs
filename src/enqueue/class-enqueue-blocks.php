@@ -20,6 +20,14 @@ use Eightshift_Libs\Core\Config_Data;
  */
 class Enqueue_Blocks extends Assets {
 
+  const IN_FOOTER = true;
+
+  const BLOCKS_EDITOR_SCRIPT_URI = 'applicationBlocksEditor.js';
+  const BLOCKS_EDITOR_STYLE_URI  = 'applicationBlocksEditor.css';
+
+  const BLOCKS_STYLE_URI  = 'applicationBlocks.css';
+  const BLOCKS_SCRIPT_URI = 'applicationBlocks.js';
+
   /**
    * Instance variable of project config data.
    *
@@ -86,10 +94,10 @@ class Enqueue_Blocks extends Assets {
 
     \wp_register_script(
       $handler,
-      $this->manifest->get_assets_manifest_item( 'applicationBlocksEditor.js' ),
+      $this->manifest->get_assets_manifest_item( static::BLOCKS_EDITOR_SCRIPT_URI ),
       $this->get_admin_script_dependencies(),
       $this->config::get_project_version(),
-      true
+      $this->script_in_footer()
     );
     \wp_enqueue_script( $handler );
   }
@@ -108,7 +116,7 @@ class Enqueue_Blocks extends Assets {
 
     \wp_register_style(
       $handler,
-      $this->manifest->get_assets_manifest_item( 'applicationBlocksEditor.css' ),
+      $this->manifest->get_assets_manifest_item( static::BLOCKS_EDITOR_STYLE_URI ),
       $this->get_admin_style_dependencies(),
       $this->config::get_project_version(),
       $this->get_media()
@@ -131,10 +139,10 @@ class Enqueue_Blocks extends Assets {
 
     \wp_register_style(
       $handler,
-      $this->manifest->get_assets_manifest_item( 'applicationBlocks.css' ),
+      $this->manifest->get_assets_manifest_item( static::BLOCKS_STYLE_URI ),
       $this->get_frontend_style_dependencies(),
       $this->config::get_project_version(),
-      false
+      $this->get_media()
     );
 
     \wp_enqueue_style( $handler );
@@ -154,10 +162,10 @@ class Enqueue_Blocks extends Assets {
 
     \wp_register_script(
       $handler,
-      $this->manifest->get_assets_manifest_item( 'applicationBlocks.js' ),
+      $this->manifest->get_assets_manifest_item( static::BLOCKS_SCRIPT_URI ),
       $this->get_frontend_script_dependencies(),
       $this->config::get_project_version(),
-      true
+      $this->script_in_footer()
     );
 
     \wp_enqueue_script( $handler );

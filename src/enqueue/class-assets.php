@@ -25,6 +25,8 @@ abstract class Assets implements Service {
   const MEDIA_PRINT  = 'print';
   const MEDIA_SCREEN = 'screen';
 
+  const IN_FOOTER = false;
+
   /**
    * Get frontend script dependencies
    *

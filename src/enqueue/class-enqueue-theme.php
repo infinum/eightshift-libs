@@ -20,6 +20,11 @@ use Eightshift_Libs\Core\Config_Data;
  */
 class Enqueue_Theme extends Assets {
 
+  const IN_FOOTER = true;
+
+  const THEME_SCRIPT_URI = 'application.js';
+  const THEME_STYLE_URI  = 'application.css';
+
   /**
    * Instance variable of project config data.
    *
@@ -77,7 +82,7 @@ class Enqueue_Theme extends Assets {
 
     \wp_register_style(
       $handle,
-      $this->manifest->get_assets_manifest_item( 'application.css' ),
+      $this->manifest->get_assets_manifest_item( static::THEME_STYLE_URI ),
       $this->get_frontend_style_dependencies(),
       $this->config::get_project_version(),
       $this->get_media()
@@ -100,10 +105,10 @@ class Enqueue_Theme extends Assets {
 
     \wp_register_script(
       $handle,
-      $this->manifest->get_assets_manifest_item( 'application.js' ),
+      $this->manifest->get_assets_manifest_item( static::THEME_SCRIPT_URI ),
       $this->get_frontend_script_dependencies(),
       $this->config::get_project_version(),
-      true
+      $this->script_in_footer()
     );
 
     \wp_enqueue_script( $handle );

@@ -21,6 +21,12 @@ use Eightshift_Libs\Core\Config_Data;
  * @since 2.0.0
  */
 class Enqueue_Admin extends Assets {
+
+  const IN_FOOTER = true;
+
+  const ADMIN_SCRIPT_URI = 'applicationAdmin.js';
+  const ADMIN_STYLE_URI  = 'applicationAdmin.css';
+
   /**
    * Instance variable of project config data.
    *
@@ -80,7 +86,7 @@ class Enqueue_Admin extends Assets {
 
     \wp_register_style(
       $handle,
-      $this->manifest->get_assets_manifest_item( 'applicationAdmin.css' ),
+      $this->manifest->get_assets_manifest_item( static::ADMIN_STYLE_URI ),
       $this->get_admin_style_dependencies(),
       $this->config::get_project_version(),
       $this->get_media()
@@ -104,10 +110,10 @@ class Enqueue_Admin extends Assets {
 
     \wp_register_script(
       $handle,
-      $this->manifest->get_assets_manifest_item( 'applicationAdmin.js' ),
+      $this->manifest->get_assets_manifest_item( static::ADMIN_SCRIPT_URI ),
       $this->get_admin_script_dependencies(),
       $this->config::get_project_version(),
-      true
+      $this->script_in_footer()
     );
 
     \wp_enqueue_script( $handle );
