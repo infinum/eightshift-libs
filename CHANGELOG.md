@@ -7,6 +7,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 _No documentation available about unreleased changes as of yet._
 
+## [2.0.3]
+
+### Added
+
+- Add enqueue abstract class that can be extended in the project.
+
 ## [2.0.2]
 
 ### Fixed
