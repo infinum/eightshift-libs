@@ -21,7 +21,7 @@ class Component_Exception extends \InvalidArgumentException implements General_E
    *
    * @return static
    */
-  public static function not_string_or_variable( $variable ) {
+  public static function throw_not_string_or_variable( $variable ) {
     return new static(
       sprintf(
         esc_html__( '%s variable is not a string or array but rather %s', 'eightshift-libs' ),
@@ -38,7 +38,7 @@ class Component_Exception extends \InvalidArgumentException implements General_E
    *
    * @return static
    */
-  public static function unable_to_locate_component( string $component ) {
+  public static function throw_unable_to_locate_component( string $component ) {
     return new static(
       sprintf(
         esc_html__( 'Unable to locate component by path: %s', 'eightshift-libs' ),

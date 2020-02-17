@@ -30,7 +30,7 @@ class Components {
     } elseif ( is_string( $variable ) ) {
       $output = $variable;
     } else {
-      Component_Exception::not_string_or_variable( $variable );
+      Component_Exception::throw_not_string_or_variable( $variable );
     }
 
     return $output;
@@ -67,7 +67,7 @@ class Components {
     $template = \locate_template( $component_path );
 
     if ( empty( $template ) ) {
-      Component_Exception::unable_to_locate_component( $component_path );
+      Component_Exception::throw_unable_to_locate_component( $component_path );
     }
     ob_start();
     require $template;
