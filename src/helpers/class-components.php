@@ -9,6 +9,8 @@ declare( strict_types=1 );
 
 namespace Eightshift_Libs\Helpers;
 
+use Eightshift_Libs\Exception\Component_Exception;
+
 /**
  * Helpers for components
  */
@@ -17,16 +19,18 @@ class Components {
   /**
    * Makes sure the output is string. Useful for converting an array of components into a string.
    *
-   * @param  array|string $array_or_string Variable we need to convert into a string.
+   * @param  array|string $variable Variable we need to convert into a string.
    * @return string
+   *
+   * @throws Component_Exception When $variable is not a string or array
    */
-  public static function ensure_string( $array_or_string ) : string {
-    $output = '';
-
-    if ( is_array( $array_or_string ) ) {
-      $output = implode( '', $array_or_string );
-    } elseif ( is_string( $array_or_string ) ) {
-      $output = $array_or_string;
+  public static function ensure_string( $variable ) : string {
+    if ( is_array( $variable ) ) {
+      $output = implode( '', $variable );
+    } elseif ( is_string( $variable ) ) {
+      $output = $variable;
+    } else {
+      Component_Exception::not_string_or_variable( $variable );
     }
 
     return $output;
@@ -55,13 +59,15 @@ class Components {
 
     // Detect if user passed component name or path.
     if ( strpos( $component, '.php' ) !== false ) {
-      $template = \locate_template( $component );
+      $component_path = $component;
     } else {
-      $template = \locate_template( "src/blocks/components/$component/$component.php" );
+      $component_path = "src/blocks/components/$component/$component.php";
     }
 
+    $template = \locate_template( $component_path );
+
     if ( empty( $template ) ) {
-      throw new \Exception( "Unable to locate component: \"{$component}\"" );
+      Component_Exception::unable_to_locate_component( $component_path );
     }
     ob_start();
     require $template;
