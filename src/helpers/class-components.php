@@ -11,8 +11,6 @@ namespace Eightshift_Libs\Helpers;
 
 /**
  * Helpers for components
- *
- * @since 4.0.0
  */
 class Components {
 
@@ -57,9 +55,9 @@ class Components {
 
     // Detect if user passed component name or path.
     if ( strpos( $component, '.php' ) !== false ) {
-      $template = locate_template( $component );
+      $template = \locate_template( $component );
     } else {
-      $template = locate_template( "src/blocks/components/$component/$component.php" );
+      $template = \locate_template( "src/blocks/components/$component/$component.php" );
     }
 
     if ( empty( $template ) ) {
