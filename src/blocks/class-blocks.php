@@ -109,10 +109,13 @@ class Blocks implements Service, Renderable_Block {
   
       $blocks = array_map(
         function( $block ) use ( $settings ) {
-  
+
           // Add additional data to the block settings.
-          $block['namespace']     = $settings['namespace'];
-          $block['blockFullName'] = "{$settings['namespace']}/{$block['blockName']}";
+          $namespace = $block['namespace'] ?? '';
+
+          // Check if namespace is defined in block or in global manifest settings.
+          $block['namespace']     = ! empty( $namespace ) ? $namespace : $settings['namespace'];
+          $block['blockFullName'] = "{$block['namespace']}/{$block['blockName']}";
   
           return $block;
         },
