@@ -184,6 +184,13 @@ class Enqueue_Blocks extends Assets {
     return [ "{$this->config::get_project_prefix()}-block-style" ];
   }
 
+    /**
+     * List of admin script dependencies
+     *
+     * @return array List of all the admin dependencies.
+     *
+     * @since 2.0.3
+     */
   protected function get_admin_script_dependencies() : array {
     return [
       'jquery',
