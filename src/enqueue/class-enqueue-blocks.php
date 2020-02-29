@@ -18,7 +18,15 @@ use Eightshift_Libs\Core\Config_Data;
  *
  * @since 1.0.0
  */
-class Enqueue_Blocks implements Service {
+class Enqueue_Blocks extends Assets {
+
+  const IN_FOOTER = true;
+
+  const BLOCKS_EDITOR_SCRIPT_URI = 'applicationBlocksEditor.js';
+  const BLOCKS_EDITOR_STYLE_URI  = 'applicationBlocksEditor.css';
+
+  const BLOCKS_STYLE_URI  = 'applicationBlocks.css';
+  const BLOCKS_SCRIPT_URI = 'applicationBlocks.js';
 
   /**
    * Instance variable of project config data.
@@ -76,30 +84,20 @@ class Enqueue_Blocks implements Service {
    * Enqueue blocks script for editor only.
    *
    * @since 1.0.0
+   * @since 2.0.3 Added methods for overrides.
+   *              Fixed static calls from config class.
    *
    * @return void
    */
   public function enqueue_block_editor_script() {
-    $handler = "{$this->config->get_project_prefix()}-block-editor-scripts";
+    $handler = "{$this->config::get_project_prefix()}-block-editor-scripts";
 
     \wp_register_script(
       $handler,
-      $this->manifest->get_assets_manifest_item( 'applicationBlocksEditor.js' ),
-      array(
-        'jquery',
-        'wp-components',
-        'wp-blocks',
-        'wp-element',
-        'wp-editor',
-        'wp-date',
-        'wp-data',
-        'wp-i18n',
-        'wp-viewport',
-        'wp-blob',
-        'wp-url',
-      ),
-      $this->config->get_project_version(),
-      true
+      $this->manifest->get_assets_manifest_item( static::BLOCKS_EDITOR_SCRIPT_URI ),
+      $this->get_admin_script_dependencies(),
+      $this->config::get_project_version(),
+      $this->script_in_footer()
     );
     \wp_enqueue_script( $handler );
   }
@@ -108,20 +106,22 @@ class Enqueue_Blocks implements Service {
    * Enqueue blocks style for editor only.
    *
    * @since 1.0.0
+   * @since 2.0.3 Added methods for overrides.
+   *              Fixed static calls from config class.
    *
    * @return void
    */
   public function enqueue_block_editor_style() {
-    $handler    = "{$this->config->get_project_prefix()}-block-editor-style";
-    $dependency = "{$this->config->get_project_prefix()}-block-style";
+    $handler = "{$this->config::get_project_prefix()}-block-editor-style";
 
     \wp_register_style(
       $handler,
-      $this->manifest->get_assets_manifest_item( 'applicationBlocksEditor.css' ),
-      [ $dependency ],
-      $this->config->get_project_version(),
-      false
+      $this->manifest->get_assets_manifest_item( static::BLOCKS_EDITOR_STYLE_URI ),
+      $this->get_admin_style_dependencies(),
+      $this->config::get_project_version(),
+      $this->get_media()
     );
+
     \wp_enqueue_style( $handler );
   }
 
@@ -129,19 +129,22 @@ class Enqueue_Blocks implements Service {
    * Enqueue blocks style for editor and frontend.
    *
    * @since 1.0.0
+   * @since 2.0.3 Added methods for overrides.
+   *              Fixed static calls from config class.
    *
    * @return void
    */
   public function enqueue_block_style() {
-    $handler = "{$this->config->get_project_prefix()}-block-style";
+    $handler = "{$this->config::get_project_prefix()}-block-style";
 
     \wp_register_style(
       $handler,
-      $this->manifest->get_assets_manifest_item( 'applicationBlocks.css' ),
-      [],
-      $this->config->get_project_version(),
-      false
+      $this->manifest->get_assets_manifest_item( static::BLOCKS_STYLE_URI ),
+      $this->get_frontend_style_dependencies(),
+      $this->config::get_project_version(),
+      $this->get_media()
     );
+
     \wp_enqueue_style( $handler );
   }
 
@@ -149,19 +152,58 @@ class Enqueue_Blocks implements Service {
    * Enqueue blocks script for frontend only.
    *
    * @since 1.0.0
+   * @since 2.0.3 Added methods for overrides.
+   *              Fixed static calls from config class.
    *
    * @return void
    */
   public function enqueue_block_script() {
-    $handler = "{$this->config->get_project_prefix()}-block-scripts";
+    $handler = "{$this->config::get_project_prefix()}-block-scripts";
 
     \wp_register_script(
       $handler,
-      $this->manifest->get_assets_manifest_item( 'applicationBlocks.js' ),
-      [],
-      $this->config->get_project_version(),
-      true
+      $this->manifest->get_assets_manifest_item( static::BLOCKS_SCRIPT_URI ),
+      $this->get_frontend_script_dependencies(),
+      $this->config::get_project_version(),
+      $this->script_in_footer()
     );
+
     \wp_enqueue_script( $handler );
+  }
+
+  /**
+   * Get style dependencies
+   *
+   * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+   *
+   * @return array List of all the style dependencies.
+   *
+   * @since 2.0.3
+   */
+  protected function get_admin_style_dependencies() : array {
+    return [ "{$this->config::get_project_prefix()}-block-style" ];
+  }
+
+    /**
+     * List of admin script dependencies
+     *
+     * @return array List of all the admin dependencies.
+     *
+     * @since 2.0.3
+     */
+  protected function get_admin_script_dependencies() : array {
+    return [
+      'jquery',
+      'wp-components',
+      'wp-blocks',
+      'wp-element',
+      'wp-editor',
+      'wp-date',
+      'wp-data',
+      'wp-i18n',
+      'wp-viewport',
+      'wp-blob',
+      'wp-url',
+    ];
   }
 }

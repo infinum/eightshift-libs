@@ -43,6 +43,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - class-block.php - optimisation on loading blocks data. Removed caching blocks in transient.
 - class-manifest.php - optimisation on loading manifest data. Removed caching manifest in transient.
 
+## [2.0.3]
+
+### Added
+
+- Add enqueue abstract class that can be extended in the project.
+
 ## [2.0.2]
 
 ### Fixed
