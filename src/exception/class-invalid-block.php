@@ -118,7 +118,7 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
   public static function missing_wrapper_manifest_exception( string $settings_manifest_path ) {
     return new static(
       sprintf(
-        esc_html__( 'Global blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs' ),
+        esc_html__( 'Wrapper blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs' ),
         $settings_manifest_path
       )
     );

@@ -50,6 +50,15 @@ class Blocks implements Service, Renderable_Block {
   const BLOCK_VIEW_FILTER_NAME = 'block-view-data';
 
   /**
+   * Block attributes override filter name constant.
+   *
+   * @var string
+   *
+   * @since 2.0.0
+   */
+  const BLOCK_ATTRIBUTES_FILTER_NAME = 'block-attributes-override';
+
+  /**
    * Create a new instance that injects config data to get project specific details.
    *
    * @param Config_Data $config Inject config which holds data regarding project details.
@@ -482,14 +491,24 @@ class Blocks implements Service, Renderable_Block {
       ),
     ];
 
-    $block_attributes        = $block_details['attributes'];
-    $block_shared_attributes = ( $block_details['hasWrapper'] === true ) ? $this->blocks['wrapper']['attributes'] : [];
+    $block_attributes         = $block_details['attributes'];
+    $block_wrapper_attributes = ( $block_details['hasWrapper'] === true ) ? $this->blocks['wrapper']['attributes'] : [];
 
-    return array_merge(
+    $output = array_merge(
       $default_attributes,
-      $block_attributes,
-      $block_shared_attributes
+      $block_wrapper_attributes,
+      $block_attributes
     );
+
+    $filter_name = $this->config->get_config( static::BLOCK_ATTRIBUTES_FILTER_NAME );
+
+    if ( has_filter( $filter_name ) ) {
+      $override_attributes = apply_filters( $filter_name, $output );
+
+      $output = array_merge( $output, $override_attributes );
+    }
+
+    return $output;
   }
 
   /**
