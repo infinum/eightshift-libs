@@ -74,7 +74,8 @@ class Components {
 
     ob_start();
 
-    // If attribute['parentClass'] is set, wrap component with parentClass__$component.
+    // Wrap component with parent BEM selector if parent's class is provided. Used
+    // for setting specific styles for components rendered inside other components.
     if ( isset( $attributes['parentClass'] ) ) {
       echo wp_kses_post( "<div class=\"{$attributes['parentClass']}__{$component}\">" );
     }
