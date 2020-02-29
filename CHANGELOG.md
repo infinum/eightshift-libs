@@ -7,6 +7,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 * Added build_di_container() method to class Main
 * Added class-components.php helper class for easier component rendering
+* Added ability to wrap components with parent class on render
 
 ## [2.0.7] - 2020-01-29
 
