@@ -63,13 +63,15 @@ class Components {
 
     // Detect if user passed component name or path.
     if ( strpos( $component, '.php' ) !== false ) {
-      $template = locate_template( $component );
+      $component_path = $component;
     } else {
-      $template = locate_template( "src/blocks/components/$component/$component.php" );
+      $component_path = "src/blocks/components/$component/$component.php";
     }
 
+    $template = \locate_template( $component_path );
+
     if ( empty( $template ) ) {
-      throw new \Exception( "Unable to locate component: \"{$component}\"" );
+      Component_Exception::throw_unable_to_locate_component( $component_path );
     }
 
     ob_start();
