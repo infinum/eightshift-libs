@@ -11,6 +11,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 * class-main.php - Added build_di_container() method.
 * class-blocks.php - Added custom filter `block-attributes-override` to be able to override attributes depending on the post type.
 * class-invalid-block.php - Fixed error msg.
+* class-shortcode.php - moved from general namespace to helpers.
 
 ## [2.0.7] - 2020-01-29
 
