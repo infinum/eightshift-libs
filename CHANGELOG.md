@@ -5,14 +5,23 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
-* Added build_di_container() method to class Main
-* Added class-components.php helper class for easier component rendering
-* Added ability to wrap components with parent class on render
+## [2.1.0] - 2020-03-04
+
+### Added
+* build_di_container() method to class Main.
+* class-components.php helper class for easier component rendering
+* ability to wrap components with parent class on render
 * class-main.php - Added build_di_container() method.
 * class-blocks.php - Added custom filter `block-attributes-override` to be able to override attributes depending on the post type.
-* class-invalid-block.php - Fixed error msg.
+
+### Moved
 * class-shortcode.php - moved from general namespace to helpers.
+
+### Changed
 * class-base-post-columns.php was renamed to class-base-post-type-columns.php.
+
+### Fixed
+* class-invalid-block.php - Fixed error msg.
 
 ## [2.0.7] - 2020-01-29
 
@@ -144,6 +153,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[2.1.0]: https://github.com/infinum/eightshift-libs/compare/2.0.7...v2.1.0
 [2.0.7]: https://github.com/infinum/eightshift-libs/compare/2.0.6...v2.0.7
 [2.0.6]: https://github.com/infinum/eightshift-libs/compare/2.0.5...v2.0.6
 [2.0.5]: https://github.com/infinum/eightshift-libs/compare/2.0.4...v2.0.5
