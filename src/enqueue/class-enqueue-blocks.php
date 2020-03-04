@@ -9,7 +9,6 @@ declare( strict_types=1 );
 
 namespace Eightshift_Libs\Enqueue;
 
-use Eightshift_Libs\Core\Service;
 use Eightshift_Libs\Manifest\Manifest_Data;
 use Eightshift_Libs\Core\Config_Data;
 
@@ -19,8 +18,6 @@ use Eightshift_Libs\Core\Config_Data;
  * @since 1.0.0
  */
 class Enqueue_Blocks extends Assets {
-
-  const IN_FOOTER = true;
 
   const BLOCKS_EDITOR_SCRIPT_URI = 'applicationBlocksEditor.js';
   const BLOCKS_EDITOR_STYLE_URI  = 'applicationBlocksEditor.css';
