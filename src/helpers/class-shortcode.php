@@ -3,7 +3,7 @@
  * The Shortcode specific functionality.
  *
  * @since   1.0.0
- * @package Eightshift_Libs\General
+ * @package Eightshift_Libs\Helpers
  */
 
 declare( strict_types=1 );
