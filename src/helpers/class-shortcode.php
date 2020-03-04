@@ -1,15 +1,14 @@
 <?php
 /**
  * The Shortcode specific functionality.
- * Used in admin or theme side.
  *
  * @since   1.0.0
- * @package Eightshift_Libs\General
+ * @package Eightshift_Libs\Helpers
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\General;
+namespace Eightshift_Libs\Helpers;
 
 /**
  * Class Shortcode

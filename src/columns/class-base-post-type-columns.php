@@ -1,6 +1,6 @@
 <?php
 /**
- * Post columns abstract class file
+ * Post Type columns abstract class file
  *
  * @since 2.0.5
  * @package Eightshift_Libs\Columns
@@ -13,11 +13,11 @@ namespace Eightshift_Libs\Columns;
 use Eightshift_Libs\Core\Service;
 
 /**
- * Abstract class Base_Post_Columns.
+ * Abstract class Base_Post_Type_Columns.
  *
  * This abstract class can be extended to add (custom) post columns in the post screen.
  */
-abstract class Base_Post_Columns implements Service {
+abstract class Base_Post_Type_Columns implements Service {
 
   /**
    * Register the post columns and content in them.
