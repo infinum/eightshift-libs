@@ -5,6 +5,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+## [2.1.1] - 2020-03-05
+
 ### Fixed
 * Missing enqueue method to load scripts in footer.
 * Wrong namespace in components helpers.
@@ -59,8 +61,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Updated
 
-- class-block.php - optimisation on loading blocks data. Removed caching blocks in transient.
-- class-manifest.php - optimisation on loading manifest data. Removed caching manifest in transient.
+- class-block.php - optimization on loading blocks data. Removed caching blocks in transient.
+- class-manifest.php - optimization on loading manifest data. Removed caching manifest in transient.
 
 ## [2.0.3]
 
@@ -82,7 +84,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [2.0.0]
 
-- Complete refactor on project organisation.
+- Complete refactor on project organization.
 - Moving, Babel, Webpack, linters config from boilerplate to eightshift-frontend-libs.
 - Rewritten Gutenberg blocks setup.
 
@@ -97,7 +99,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Removed
 
 - Removing type hinting void for php 7.0.
-- Removing Blocks folder and adding eigthshift-blocks lib.
+- Removing Blocks folder and adding eightshift-blocks lib.
 
 ## [0.7.0]
 
@@ -157,6 +159,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[2.1.1]: https://github.com/infinum/eightshift-libs/compare/2.1.0...v2.1.1
 [2.1.0]: https://github.com/infinum/eightshift-libs/compare/2.0.7...v2.1.0
 [2.0.7]: https://github.com/infinum/eightshift-libs/compare/2.0.6...v2.0.7
 [2.0.6]: https://github.com/infinum/eightshift-libs/compare/2.0.5...v2.0.6
