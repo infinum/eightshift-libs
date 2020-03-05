@@ -5,6 +5,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+### Fixed
+* Missing enqueue method to load scripts in footer.
+* Wrong namespace in components helpers.
+
 ## [2.1.0] - 2020-03-04
 
 ### Added
