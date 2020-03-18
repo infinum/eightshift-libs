@@ -27,6 +27,15 @@ use Eightshift_Libs\Core\Config_Data;
 class Manifest implements Service, Manifest_Data {
 
   /**
+   * Manifest item filter name constant.
+   *
+   * @var string
+   *
+   * @since 0.9.0 Init.
+   */
+  const MANIFEST_ITEM_FILTER_NAME = 'manifest-item';
+
+  /**
    * Instance variable of project config data.
    *
    * @var object
@@ -52,27 +61,18 @@ class Manifest implements Service, Manifest_Data {
    * @since 2.0.0
    */
   public function __construct( Config_Data $config ) {
-      $this->config = $config;
+    $this->config = $config;
   }
 
   /**
-   * Manifest item filter name constant.
-   *
-   * @var string
-   *
-   * @since 0.9.0 Init.
-   */
-  const MANIFEST_ITEM_FILTER_NAME = 'manifest-item';
-
-  /**
    * Register all hooks.
-   *
-   * @return void
    *
    * @since 2.0.0 Changed filter name to manifest.
    * @since 0.9.0 Adding manifest item filter.
    * @since 0.8.0 Removing type hinting void for php 7.0.
    * @since 0.6.0 Init.
+   *
+   * @return void
    */
   public function register() {
     add_action( 'init', [ $this, 'get_assets_manifest_raw' ] );
@@ -85,9 +85,9 @@ class Manifest implements Service, Manifest_Data {
    *
    * @throws Exception\Invalid_Manifest Throws error if manifest.json file is missing.
    *
-   * @return array
-   *
    * @since 2.0.0
+   *
+   * @return array
    */
   public function get_assets_manifest_raw() {
     $path = $this->config->get_project_path() . '/public/manifest.json';
@@ -116,11 +116,11 @@ class Manifest implements Service, Manifest_Data {
    *
    * @throws Exception\Invalid_Manifest Throws error if manifest key is missing.
    *
-   * @return string Full path to asset.
-   *
    * @since 2.0.0 Returned data from manifest and not global variable.
    * @since 0.7.0 Changed to non static method and added Exception for missing key.
    * @since 0.6.0 Init
+   *
+   * @return string Full path to asset.
    */
   public function get_assets_manifest_item( string $key ) : string {
     $manifest = $this->manifest;
@@ -133,11 +133,22 @@ class Manifest implements Service, Manifest_Data {
   }
 
   /**
+   * Config getter
+   *
+   * @since 2.2.0 Added config getter.
+   *
+   * @return Config_Data|object
+   */
+  public function get_config() {
+  	return $this->config;
+  }
+
+  /**
    * This method appends full site url to the relative manifest data item.
    *
-   * @return string
-   *
    * @since 0.6.0
+   *
+   * @return string
    */
   protected function get_assets_manifest_output_prefix() : string {
     return site_url();

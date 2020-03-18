@@ -26,15 +26,6 @@ class Enqueue_Blocks extends Assets {
   const BLOCKS_SCRIPT_URI = 'applicationBlocks.js';
 
   /**
-   * Instance variable of project config data.
-   *
-   * @var object
-   *
-   * @since 2.0.0
-   */
-  protected $config;
-
-  /**
    * Instance variable of manifest data.
    *
    * @var object
@@ -46,14 +37,12 @@ class Enqueue_Blocks extends Assets {
   /**
    * Create a new admin instance.
    *
-   * @param Config_Data   $config Inject config which holds data regarding project details.
    * @param Manifest_Data $manifest Inject manifest which holds data about assets from manifest.json.
    *
    * @since 2.0.0 Adding Config as a new DI.
-   * @since 2.0.0
+   * @since 2.2.0 removed Config from the dependency.
    */
-  public function __construct( Config_Data $config, Manifest_Data $manifest ) {
-    $this->config   = $config;
+  public function __construct( Manifest_Data $manifest ) {
     $this->manifest = $manifest;
   }
 
@@ -83,17 +72,18 @@ class Enqueue_Blocks extends Assets {
    * @since 1.0.0
    * @since 2.0.3 Added methods for overrides.
    *              Fixed static calls from config class.
+   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */
   public function enqueue_block_editor_script() {
-    $handler = "{$this->config::get_project_prefix()}-block-editor-scripts";
+    $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-editor-scripts";
 
     \wp_register_script(
       $handler,
       $this->manifest->get_assets_manifest_item( static::BLOCKS_EDITOR_SCRIPT_URI ),
       $this->get_admin_script_dependencies(),
-      $this->config::get_project_version(),
+      $this->manifest->get_config()->get_project_version(),
       $this->script_in_footer()
     );
     \wp_enqueue_script( $handler );
@@ -105,17 +95,18 @@ class Enqueue_Blocks extends Assets {
    * @since 1.0.0
    * @since 2.0.3 Added methods for overrides.
    *              Fixed static calls from config class.
+   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */
   public function enqueue_block_editor_style() {
-    $handler = "{$this->config::get_project_prefix()}-block-editor-style";
+    $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-editor-style";
 
     \wp_register_style(
       $handler,
       $this->manifest->get_assets_manifest_item( static::BLOCKS_EDITOR_STYLE_URI ),
       $this->get_admin_style_dependencies(),
-      $this->config::get_project_version(),
+      $this->manifest->get_config()->get_project_version(),
       $this->get_media()
     );
 
@@ -128,17 +119,18 @@ class Enqueue_Blocks extends Assets {
    * @since 1.0.0
    * @since 2.0.3 Added methods for overrides.
    *              Fixed static calls from config class.
+   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */
   public function enqueue_block_style() {
-    $handler = "{$this->config::get_project_prefix()}-block-style";
+    $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-style";
 
     \wp_register_style(
       $handler,
       $this->manifest->get_assets_manifest_item( static::BLOCKS_STYLE_URI ),
       $this->get_frontend_style_dependencies(),
-      $this->config::get_project_version(),
+      $this->manifest->get_config()->get_project_version(),
       $this->get_media()
     );
 
@@ -151,17 +143,18 @@ class Enqueue_Blocks extends Assets {
    * @since 1.0.0
    * @since 2.0.3 Added methods for overrides.
    *              Fixed static calls from config class.
+   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */
   public function enqueue_block_script() {
-    $handler = "{$this->config::get_project_prefix()}-block-scripts";
+    $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-scripts";
 
     \wp_register_script(
       $handler,
       $this->manifest->get_assets_manifest_item( static::BLOCKS_SCRIPT_URI ),
       $this->get_frontend_script_dependencies(),
-      $this->config::get_project_version(),
+      $this->manifest->get_config()->get_project_version(),
       $this->script_in_footer()
     );
 
@@ -176,9 +169,10 @@ class Enqueue_Blocks extends Assets {
    * @return array List of all the style dependencies.
    *
    * @since 2.0.3
+   * @since 2.2.0 Removed config dependency.
    */
   protected function get_admin_style_dependencies() : array {
-    return [ "{$this->config::get_project_prefix()}-block-style" ];
+    return [ "{$this->manifest->get_config()->get_project_prefix()}-block-style" ];
   }
 
     /**
