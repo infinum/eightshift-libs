@@ -5,6 +5,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+### Changed
+* Removed config dependency from the Asset classes and exposed config through Manifest. 
+
 ## [2.1.1] - 2020-03-05
 
 ### Fixed

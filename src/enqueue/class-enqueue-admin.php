@@ -25,15 +25,6 @@ class Enqueue_Admin extends Assets {
   const ADMIN_STYLE_URI  = 'applicationAdmin.css';
 
   /**
-   * Instance variable of project config data.
-   *
-   * @var object
-   *
-   * @since 2.0.0
-   */
-  protected $config;
-
-  /**
    * Instance variable of manifest data.
    *
    * @var object
@@ -45,23 +36,21 @@ class Enqueue_Admin extends Assets {
   /**
    * Create a new admin instance.
    *
-   * @param Config_Data   $config Inject config which holds data regarding project details.
    * @param Manifest_Data $manifest Inject manifest which holds data about assets from manifest.json.
    *
    * @since 2.0.0 Adding Config as a new DI.
-   * @since 2.0.0
+   * @since 2.2.0 removed Config from the dependency.
    */
-  public function __construct( Config_Data $config, Manifest_Data $manifest ) {
-    $this->config   = $config;
+  public function __construct( Manifest_Data $manifest ) {
     $this->manifest = $manifest;
   }
 
   /**
    * Register all the hooks
    *
-   * @return void
-   *
    * @since 2.0.0
+   *
+   * @return void
    */
   public function register() {
     add_action( 'login_enqueue_scripts', [ $this, 'enqueue_styles' ] );
@@ -72,20 +61,21 @@ class Enqueue_Admin extends Assets {
   /**
    * Register the Stylesheets for the admin area.
    *
-   * @return void
-   *
    * @since 2.0.0
    * @since 2.0.3 Added methods for overrides.
    *              Fixed static calls from config class.
+   * @since 2.2.0 Removed config dependency.
+   *
+   * @return void
    */
   public function enqueue_styles() {
-    $handle = "{$this->config::get_project_prefix()}-styles";
+    $handle = "{$this->manifest->get_config()->get_project_prefix()}-styles";
 
     \wp_register_style(
       $handle,
       $this->manifest->get_assets_manifest_item( static::ADMIN_STYLE_URI ),
       $this->get_admin_style_dependencies(),
-      $this->config::get_project_version(),
+      $this->manifest->get_config()->get_project_version(),
       $this->get_media()
     );
 
@@ -96,20 +86,21 @@ class Enqueue_Admin extends Assets {
   /**
    * Register the JavaScript for the admin area.
    *
-   * @return void
-   *
    * @since 2.0.0
    * @since 2.0.3 Added methods for overrides.
    *              Fixed static calls from config class.
+   * @since 2.2.0 Removed config dependency.
+   *
+   * @return void
    */
   public function enqueue_scripts() {
-    $handle = "{$this->config::get_project_prefix()}-scripts";
+    $handle = "{$this->manifest->get_config()->get_project_prefix()}-scripts";
 
     \wp_register_script(
       $handle,
       $this->manifest->get_assets_manifest_item( static::ADMIN_SCRIPT_URI ),
       $this->get_admin_script_dependencies(),
-      $this->config::get_project_version(),
+      $this->manifest->get_config()->get_project_version(),
       $this->script_in_footer()
     );
 
