@@ -89,6 +89,28 @@ class Blocks implements Service, Renderable_Block {
     add_filter( 'block_categories', [ $this, 'get_custom_category' ] );
 
     add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 25 );
+
+    add_action( 'after_setup_theme', [ $this, 'change_editor_color_pallete' ], 11 );
+  }
+
+  /**
+   * Changes the default Gutenberg color pallete. Add your colors below.
+   *
+   * @return void
+   */
+  public function change_editor_color_pallete() {
+    add_theme_support( 'editor-color-palette', array(
+      array(
+        'name' => esc_html__( 'mine', 'eightshift-libs' ),
+        'slug' => 'mine',
+        'color' => '#333333',
+      ),
+      array(
+        'name' => esc_html__( 'Primary', 'eightshift-libs' ),
+        'slug' => 'primary',
+        'color' => '#FF86D6',
+      ),
+    ) );
   }
 
   /**
