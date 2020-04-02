@@ -108,7 +108,7 @@ class Blocks implements Service, Renderable_Block {
       array(
         'name' => esc_html__( 'Primary', 'eightshift-libs' ),
         'slug' => 'primary',
-        'color' => '#FF86D6',
+        'color' => '#C3151B',
       ),
     ) );
   }
