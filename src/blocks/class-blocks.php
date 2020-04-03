@@ -95,6 +95,12 @@ class Blocks implements Service, Renderable_Block {
 
   /**
    * Changes the default Gutenberg color pallete. Add your colors below.
+   * 
+   * !IMPORTANT - Regarding Eightshift custom blocks:
+   * - Color (when selected) should be added as element's modifier class like so:
+   *   block-class--white
+   * - You need an perform an additional step of styling (coloring) your attribute
+   *   based on color's slug class modifier in the block's `block-style.scss`
    *
    * @return void
    */
