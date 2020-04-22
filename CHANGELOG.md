@@ -7,6 +7,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Changed
 * Removed config dependency from the Asset classes and exposed config through Manifest. 
+* `editor-color-pallete` - Add theme support for editor color pallete.
 
 ## [2.1.1] - 2020-03-05
 

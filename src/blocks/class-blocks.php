@@ -89,6 +89,34 @@ class Blocks implements Service, Renderable_Block {
     add_filter( 'block_categories', [ $this, 'get_custom_category' ] );
 
     add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 25 );
+
+    add_action( 'after_setup_theme', [ $this, 'change_editor_color_pallete' ], 11 );
+  }
+
+  /**
+   * Changes the default Gutenberg color pallete. Add your colors below.
+   * 
+   * !IMPORTANT - Regarding Eightshift custom blocks:
+   * - Color (when selected) should be added as element's modifier class like so:
+   *   block-class--white
+   * - You need an perform an additional step of styling (coloring) your attribute
+   *   based on color's slug class modifier in the block's `block-style.scss`
+   *
+   * @return void
+   */
+  public function change_editor_color_pallete() {
+    add_theme_support( 'editor-color-palette', array(
+      array(
+        'name' => esc_html__( 'mine', 'eightshift-libs' ),
+        'slug' => 'mine',
+        'color' => '#333333',
+      ),
+      array(
+        'name' => esc_html__( 'Primary', 'eightshift-libs' ),
+        'slug' => 'primary',
+        'color' => '#C3151B',
+      ),
+    ) );
   }
 
   /**
