@@ -5,48 +5,48 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
-### Changed
+## Changed
 * Removed config dependency from the Asset classes and exposed config through Manifest. 
-* `editor-color-pallete` - Add theme support for editor color pallete built from global manifest.json.
+* `editor-color-palette` - Add theme support for editor color palette built from global manifest.json.
 
 ## [2.1.1] - 2020-03-05
 
-### Fixed
+## Fixed
 * Missing enqueue method to load scripts in footer.
 * Wrong namespace in components helpers.
 
 ## [2.1.0] - 2020-03-04
 
-### Added
+## Added
 * build_di_container() method to class Main.
 * class-components.php helper class for easier component rendering
 * ability to wrap components with parent class on render
 * class-main.php - Added build_di_container() method.
 * class-blocks.php - Added custom filter `block-attributes-override` to be able to override attributes depending on the post type.
 
-### Moved
+## Moved
 * class-shortcode.php - moved from general namespace to helpers.
 
-### Changed
+## Changed
 * class-base-post-columns.php was renamed to class-base-post-type-columns.php.
 
-### Fixed
+## Fixed
 * class-invalid-block.php - Fixed error msg.
 
 ## [2.0.7] - 2020-01-29
 
-### Added
+## Added
 - `add_theme_support( 'align-wide' )` in class-blocks.php
 
 ## [2.0.6] - 2020-01-27
 
-### Removed
+## Removed
 - Limitations the usage of only custom project blocks.
 - Removing docs to new repository
 
 ## [2.0.5]
 
-### Added
+## Added
 
 - class-base-post-columns.php - New abstract class for adding articles listing columns.
 - class-base-taxonomy-columns.php - New abstract class for adding taxonomy listing columns.
@@ -56,33 +56,33 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [2.0.4]
 
-### Added
+## Added
 
 - has-activation-interface.php - New interface used in plugin activation.
 - has-deactivation-interface.php - New interface used in plugin deactivation.
 
 ## [2.0.3]
 
-### Updated
+## Updated
 
 - class-block.php - optimization on loading blocks data. Removed caching blocks in transient.
 - class-manifest.php - optimization on loading manifest data. Removed caching manifest in transient.
 
 ## [2.0.3]
 
-### Added
+## Added
 
 - Add enqueue abstract class that can be extended in the project.
 
 ## [2.0.2]
 
-### Fixed
+## Fixed
 
 - Renderable_Block Interface - Fixing wrong type hinting for $inner_block_content.
 
 ## [2.0.1]
 
-### Changed
+## Changed
 
 - Updating readme
 
@@ -94,20 +94,20 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [0.9.0]
 
-### Changed
+## Changed
 
 - Renaming assets to manifest folder.
 
 ## [0.8.0]
 
-### Removed
+## Removed
 
 - Removing type hinting void for php 7.0.
 - Removing Blocks folder and adding eightshift-blocks lib.
 
 ## [0.7.0]
 
-### Added
+## Added
 
 - Added DI instead of SL inside the class-main.php.
 - Changed methods used for fetching the manifest items inside Manifest.php to non static methods.
@@ -115,37 +115,37 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [0.6.0]
 
-### Changed
+## Changed
 
 - Updating Manifest.php with new methods
 
 ## [0.5.0]
 
-### Changed
+## Changed
 
 - Changed $content to $inner_block_content for better naming.
 - Unsetting variables in block render.
 
 ## [0.4.0]
 
-### Changed
+## Changed
 
 - Changing wrapper block view path.
 
 ## [0.3.0]
 
-### Added
+## Added
 
 - Separating Wrapper_Block and General_Block.
 
 ## [0.2.0]
 
-### Added
+## Added
 
 - Interface for registrable field and route
 - Changelog
 
-### Changed
+## Changed
 
 - Interface name for rest route
 
@@ -153,7 +153,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 Init setup
 
-### Added
+## Added
 
 - Main theme/plugin entrypoint.
 - Post Type Registration.

@@ -90,16 +90,16 @@ class Blocks implements Service, Renderable_Block {
 
     add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 25 );
 
-    add_action( 'after_setup_theme', [ $this, 'change_editor_color_pallete' ], 11 );
+    add_action( 'after_setup_theme', [ $this, 'change_editor_color_palette' ], 11 );
   }
 
   /**
-   * Create custom project color pallete.
+   * Create custom project color palette.
    * This colors are fetched from the main manifest.json file located in src>blocks folder.
    *
    * @return void
    */
-  public function change_editor_color_pallete() {
+  public function change_editor_color_palette() {
 
     $colors = $this->get_settings()['globalVariables']['colors'] ?? [];
 
