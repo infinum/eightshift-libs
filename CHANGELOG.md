@@ -5,6 +5,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+## [2.2.0] - 2020-05-06
+
 ## Changed
 * Removed config dependency from the Asset classes and exposed config through Manifest. 
 * `editor-color-palette` - Add theme support for editor color palette built from global manifest.json.
@@ -163,6 +165,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[2.2.0]: https://github.com/infinum/eightshift-libs/compare/2.1.1...v2.2.0
 [2.1.1]: https://github.com/infinum/eightshift-libs/compare/2.1.0...v2.1.1
 [2.1.0]: https://github.com/infinum/eightshift-libs/compare/2.0.7...v2.1.0
 [2.0.7]: https://github.com/infinum/eightshift-libs/compare/2.0.6...v2.0.7
