@@ -12,8 +12,8 @@ namespace Eightshift_Libs\Blocks;
 
 use Eightshift_Libs\Core\Config_Data;
 use Eightshift_Libs\Core\Service;
-use Eightshift_Libs\Blocks\Renderable_Block;
 use Eightshift_Libs\Exception\Invalid_Block;
+use Eightshift_Libs\Exception\Invalid_Manifest;
 
 /**
  * Class Blocks
@@ -132,7 +132,7 @@ class Blocks implements Service, Renderable_Block {
     if ( ! $this->blocks ) {
       $settings = $this->get_settings();
       $wrapper  = $this->get_wrapper();
-  
+
       $blocks = array_map(
         function( $block ) use ( $settings ) {
 
@@ -142,7 +142,7 @@ class Blocks implements Service, Renderable_Block {
           // Check if namespace is defined in block or in global manifest settings.
           $block['namespace']     = ! empty( $namespace ) ? $namespace : $settings['namespace'];
           $block['blockFullName'] = "{$block['namespace']}/{$block['blockName']}";
-  
+
           return $block;
         },
         $this->get_blocks_data()
@@ -543,7 +543,8 @@ class Blocks implements Service, Renderable_Block {
     return array_map(
       function( $block_path ) {
         $block = implode( ' ', file( ( $block_path ) ) );
-        $block = json_decode( $block, true );
+
+        $block = $this->parse_manifest( $block );
 
         if ( ! isset( $block['blockName'] ) ) {
           throw Invalid_Block::missing_name_exception( $block_path );
@@ -569,5 +570,59 @@ class Blocks implements Service, Renderable_Block {
       },
       glob( "{$this->get_blocks_custom_path()}/*/manifest.json" )
     );
+  }
+
+  /**
+   * Helper method to check the validity of JSON string
+   *
+   * @link https://stackoverflow.com/a/15198925/629127
+   *
+   * @param string $string JSON string to validate.
+   * @return array Parsed JSON string into an array.
+   *
+   * @since 2.0.0
+   */
+  private function parse_manifest( string $string ) : array {
+
+    $result = json_decode( $string, true );
+
+    switch ( json_last_error() ) {
+      case JSON_ERROR_NONE:
+          $error = '';
+          break;
+      case JSON_ERROR_DEPTH:
+          $error = esc_html__( 'The maximum stack depth has been exceeded.', 'eightshift-libs' );
+          break;
+      case JSON_ERROR_STATE_MISMATCH:
+          $error = esc_html__( 'Invalid or malformed JSON.', 'eightshift-libs' );
+          break;
+      case JSON_ERROR_CTRL_CHAR:
+          $error = esc_html__( 'Control character error, possibly incorrectly encoded.', 'eightshift-libs' );
+          break;
+      case JSON_ERROR_SYNTAX:
+          $error = esc_html__( 'Syntax error, malformed JSON.', 'eightshift-libs' );
+          break;
+      case JSON_ERROR_UTF8:
+          $error = esc_html__( 'Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs' );
+          break;
+      case JSON_ERROR_RECURSION:
+          $error = esc_html__( 'One or more recursive references in the value to be encoded.', 'eightshift-libs' );
+          break;
+      case JSON_ERROR_INF_OR_NAN:
+          $error = esc_html__( 'One or more NAN or INF values in the value to be encoded.', 'eightshift-libs' );
+          break;
+      case JSON_ERROR_UNSUPPORTED_TYPE:
+          $error = esc_html__( 'A value of a type that cannot be encoded was given.', 'eightshift-libs' );
+          break;
+      default:
+          $error = esc_html__( 'Unknown JSON error occured.', 'eightshift-libs' );
+          break;
+    }
+
+    if ( $error !== '' ) {
+      throw Invalid_Manifest::manifest_structure_exception( $error );
+    }
+
+    return $result;
   }
 }
