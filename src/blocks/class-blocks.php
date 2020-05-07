@@ -579,6 +579,7 @@ class Blocks implements Service, Renderable_Block {
    *
    * @param string $string JSON string to validate.
    * @return array Parsed JSON string into an array.
+   * @throws Invalid_Manifest Error in the case json file has errors.
    *
    * @since 2.0.0
    */
@@ -589,34 +590,34 @@ class Blocks implements Service, Renderable_Block {
     switch ( json_last_error() ) {
       case JSON_ERROR_NONE:
           $error = '';
-          break;
+            break;
       case JSON_ERROR_DEPTH:
           $error = esc_html__( 'The maximum stack depth has been exceeded.', 'eightshift-libs' );
-          break;
+            break;
       case JSON_ERROR_STATE_MISMATCH:
           $error = esc_html__( 'Invalid or malformed JSON.', 'eightshift-libs' );
-          break;
+            break;
       case JSON_ERROR_CTRL_CHAR:
           $error = esc_html__( 'Control character error, possibly incorrectly encoded.', 'eightshift-libs' );
-          break;
+            break;
       case JSON_ERROR_SYNTAX:
           $error = esc_html__( 'Syntax error, malformed JSON.', 'eightshift-libs' );
-          break;
+            break;
       case JSON_ERROR_UTF8:
           $error = esc_html__( 'Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs' );
-          break;
+            break;
       case JSON_ERROR_RECURSION:
           $error = esc_html__( 'One or more recursive references in the value to be encoded.', 'eightshift-libs' );
-          break;
+            break;
       case JSON_ERROR_INF_OR_NAN:
           $error = esc_html__( 'One or more NAN or INF values in the value to be encoded.', 'eightshift-libs' );
-          break;
+            break;
       case JSON_ERROR_UNSUPPORTED_TYPE:
           $error = esc_html__( 'A value of a type that cannot be encoded was given.', 'eightshift-libs' );
-          break;
+            break;
       default:
           $error = esc_html__( 'Unknown JSON error occured.', 'eightshift-libs' );
-          break;
+            break;
     }
 
     if ( $error !== '' ) {

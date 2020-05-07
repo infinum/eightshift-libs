@@ -10,23 +10,23 @@ declare( strict_types=1 );
 namespace Eightshift_Libs\Exception;
 
 /**
- * Class Missing_Template.
+ * Class Component_Exception.
  */
 class Component_Exception extends \InvalidArgumentException implements General_Exception {
 
   /**
    * Throws exception if ensure_string argument is invalid.
    *
-   * @param string $variable Variable that's of invalid type
+   * @param string $variable Variable that's of invalid type.
    *
    * @return static
    */
   public static function throw_not_string_or_variable( $variable ) {
     return new static(
       sprintf(
-        esc_html__( '%s variable is not a string or array but rather %s', 'eightshift-libs' ),
+        esc_html__( '%1$s variable is not a string or array but rather %2$s', 'eightshift-libs' ),
         $variable,
-        gettype($variable)
+        gettype( $variable )
       )
     );
   }
@@ -34,8 +34,7 @@ class Component_Exception extends \InvalidArgumentException implements General_E
   /**
    * Throws exception if ensure_string argument is invalid.
    *
-   * @param string $variable Variable that's of invalid type
-   *
+   * @param string $component Missing component name.
    * @return static
    */
   public static function throw_unable_to_locate_component( string $component ) {
