@@ -34,4 +34,8 @@
   <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassAfterLastUsed">
     <severity>0</severity>
   </rule>
+
+  <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
+    <severity>0</severity>
+  </rule>
 </ruleset>
