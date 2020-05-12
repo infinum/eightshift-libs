@@ -22,7 +22,7 @@ class Components {
    * @param  array|string $variable Variable we need to convert into a string.
    * @return string
    *
-   * @throws Component_Exception When $variable is not a string or array
+   * @throws Component_Exception When $variable is not a string or array.
    */
   public static function ensure_string( $variable ) : string {
     if ( is_array( $variable ) ) {
@@ -48,10 +48,10 @@ class Components {
 
   /**
    * Renders a components and (optionally) passes some attributes to it.
-   * 
-   * Note about "parentClass" attribute: If provided, the component will be wrapped with a 
+   *
+   * Note about "parentClass" attribute: If provided, the component will be wrapped with a
    * parent BEM selector. For example, if $attributes['parentClass'] === 'header' and $component === 'logo'
-   * are set, the component will be wrapped with a <div class="header__logo"></div>
+   * are set, the component will be wrapped with a <div class="header__logo"></div>.
    *
    * @param  string $component  Component's name or full path (ending with .php).
    * @param  array  $attributes Array of attributes that's implicitly passed to component.

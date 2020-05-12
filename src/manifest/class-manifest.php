@@ -140,7 +140,7 @@ class Manifest implements Service, Manifest_Data {
    * @return Config_Data|object
    */
   public function get_config() {
-  	return $this->config;
+    return $this->config;
   }
 
   /**

@@ -33,6 +33,13 @@ abstract class Main implements Service {
   private $services = [];
 
   /**
+   * DI container instance.
+   *
+   * @var object
+   */
+  private $container;
+
+  /**
    * Register the project with the WordPress system.
    *
    * The register_service method will call the register() method in every service class,
@@ -93,10 +100,11 @@ abstract class Main implements Service {
    * Returns the DI container and allow it to be used in different context (for example in tests outside of WP environment)
    *
    * @return object
+   * @throws \Exception Exception thrown by the DI container.
    */
   public function build_di_container() {
     if ( empty( $this->container ) ) {
-      $this->container = $this->get_di_container($this->get_service_classes_prepared_array());
+      $this->container = $this->get_di_container( $this->get_service_classes_prepared_array() );
     }
     return $this->container;
   }
@@ -106,6 +114,7 @@ abstract class Main implements Service {
    *
    * @return array
    *
+   * @throws \Exception Exception thrown by the DI container.
    * @since 0.7.0 Init
    */
   private function get_service_classes_with_di() : array {
@@ -149,6 +158,8 @@ abstract class Main implements Service {
    *
    * @param array $services Array of service.
    * @return object
+   *
+   * @throws \Exception Exception thrown by the DI container.
    *
    * @since 0.7.0 Init.
    */

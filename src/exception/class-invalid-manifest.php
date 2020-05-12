@@ -51,4 +51,19 @@ class Invalid_Manifest extends \InvalidArgumentException implements General_Exce
       )
     );
   }
+
+  /**
+   * Throws error if manifest.json file has errors
+   *
+   * Errors like trailing commas or malformed json file.
+   *
+   * @param string $error Error message.
+   *
+   * @return static
+   *
+   * @since 2.0.0
+   */
+  public static function manifest_structure_exception( string $error ) {
+    return new static( $error );
+  }
 }

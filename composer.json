@@ -26,7 +26,8 @@
   },
   "require": {
     "php": ">=7.1",
-    "php-di/php-di": "^6.0"
+    "php-di/php-di": "^6.0",
+    "ext-json": "*"
   },
   "require-dev": {
     "infinum/coding-standards-wp": "^0.4.1",
