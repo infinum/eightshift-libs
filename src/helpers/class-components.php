@@ -90,4 +90,37 @@ class Components {
 
     return ob_get_clean();
   }
+
+  /**
+   * Create responsive selectors used for responsive attributes.
+   *
+   * @param array   $items        Array of brakepoints.
+   * @param string  $selector     Selector for this brakepoint.
+   * @param string  $parent       Parent block selector.
+   * @param boolean $use_modifier If false you can use this selector for visibility.
+   * @return string
+   *
+   * Example:
+   * Components::responsive_selectors($attributes['width'], 'width', $block_class);
+   *
+   * Output:
+   * block-column__width-large--4
+   */
+  public static function responsive_selectors( array $items, string $selector, string $parent, $use_modifier = true ) {
+    $output = [];
+
+    foreach ( $items as $item_key => $item_value ) {
+      if ( empty( $item_value ) ) {
+        continue;
+      }
+
+      if ( $use_modifier ) {
+        $output[] = "{$parent}__{$selector}-{$item_key}--{$item_value}";
+      } else {
+        $output[] = "{$parent}__{$selector}-{$item_key}";
+      }
+    }
+
+    return static::classnames( $output );
+  }
 }
