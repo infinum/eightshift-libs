@@ -110,7 +110,7 @@ class Components {
     $output = [];
 
     foreach ( $items as $item_key => $item_value ) {
-      if ( empty( $item_value ) ) {
+      if ( empty( $item_value ) || $item_value === false ) {
         continue;
       }
 
