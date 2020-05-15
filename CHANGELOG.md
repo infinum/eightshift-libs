@@ -5,6 +5,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+### Added 
+- New helper method for making responsive selectors.
+
 ## [2.2.1] - 2020-05-13
 
 ### Removed
