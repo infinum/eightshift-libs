@@ -94,8 +94,8 @@ class Components {
   /**
    * Create responsive selectors used for responsive attributes.
    *
-   * @param array   $items        Array of brakepoints.
-   * @param string  $selector     Selector for this brakepoint.
+   * @param array   $items        Array of breakpoints.
+   * @param string  $selector     Selector for this breakpoint.
    * @param string  $parent       Parent block selector.
    * @param boolean $use_modifier If false you can use this selector for visibility.
    * @return string
