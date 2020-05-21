@@ -115,6 +115,7 @@ abstract class Main implements Service {
    * @return array
    *
    * @throws \Exception Exception thrown by the DI container.
+   *
    * @since 0.7.0 Init
    */
   private function get_service_classes_with_di() : array {
@@ -136,16 +137,19 @@ abstract class Main implements Service {
    *
    * @return array
    *
+   * @since 2.2.3 Made the dependency check inside the foreach more flat.
    * @since 0.7.0 Init.
    */
   private function get_service_classes_prepared_array() : array {
     $output = [];
+
     foreach ( $this->get_service_classes() as $class => $dependencies ) {
-      if ( gettype( $dependencies ) !== 'array' ) {
-        $output[ $dependencies ] = [];
-      } else {
+      if ( is_array( $dependencies ) ) {
         $output[ $class ] = $dependencies;
+        continue;
       }
+
+      $output[ $dependencies ] = [];
     }
 
     return $output;
