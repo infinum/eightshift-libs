@@ -5,6 +5,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+### Changed
+
+- Made get_service_classes_prepared_array() more flat.
+
 ## [2.2.2] - 2020-05-15
 
 ### Added 
