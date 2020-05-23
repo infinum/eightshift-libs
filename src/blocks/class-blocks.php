@@ -101,11 +101,20 @@ class Blocks implements Service, Renderable_Block {
    */
   public function change_editor_color_palette() {
 
-    $colors = $this->get_settings()['globalVariables']['colors'] ?? [];
+    $colors = $this->get_colors_from_settings();
 
     if ( $colors ) {
       \add_theme_support( 'editor-color-palette', $colors );
     }
+  }
+
+  /**
+   * Function to read and return all colors as defined in block global settings
+   *
+   * @return array
+   */
+  public function get_colors_from_settings() {
+    return $this->get_settings()['globalVariables']['colors'] ?? [];
   }
 
   /**
