@@ -7,7 +7,7 @@ on:
         branches: [master]
 
 jobs:
-    phpcs_check:
+    phpcs:
         name: PHPCS check on PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
         strategy:
