@@ -1,0 +1,79 @@
+name: Continuous integration checks
+
+on:
+    pull_request:
+        branches: [master, develop]
+    push:
+        branches: [master]
+
+jobs:
+    phpcs_check:
+        name: PHPCS check on PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [7.2, 7.3, 7.4]
+
+        steps:
+            # Checkout repository
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            # Setup PHP versions, run checks
+            - name: PHP setup
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php }}
+                coverage: pcov
+
+            - name: Get composer cache directory
+              id: composer-cache
+              run: |
+                echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache composer dependencies
+              uses: actions/cache@v1
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                restore-keys: |
+                  ${{ runner.os }}-composer-
+
+            - name: Install composer packages
+              run: composer install --no-progress
+
+            - name: Check coding standards using PHPCS
+              run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}-
+
+    phpstan:
+        name: PHPStan check
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: PHP setup
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: 7.2
+                coverage: pcov
+
+            - name: Get composer cache directory
+              id: composer-cache
+              run: |
+                echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache composer dependencies
+              uses: actions/cache@v1
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                restore-keys: |
+                  ${{ runner.os }}-composer-
+
+            - name: Install composer packages
+              run: composer install --no-progress
+
+            - name: Analyse code using phpstan
+              run: composer analyze
