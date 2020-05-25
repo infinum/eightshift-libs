@@ -5,11 +5,17 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
-- Returns all colors from settings
+## [2.3.0] - 2020-05-25
+
+### Added
+- Github actions.
+- Phpstan.
 
 ### Changed
-
-- Made get_service_classes_prepared_array() more flat.
+- `class-blocks.php` returns all colors from settings.
+- corrections from Phpstan.
+- Made `get_service_classes_prepared_array()` more flat.
+- `composer.json` updated packages, fixing scripts names.
 
 ## [2.2.2] - 2020-05-15
 
@@ -184,6 +190,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[2.3.0]: https://github.com/infinum/eightshift-libs/compare/2.2.2...v2.3.0
 [2.2.2]: https://github.com/infinum/eightshift-libs/compare/2.2.1...v2.2.2
 [2.2.1]: https://github.com/infinum/eightshift-libs/compare/2.2.0...v2.2.1
 [2.2.0]: https://github.com/infinum/eightshift-libs/compare/2.1.1...v2.2.0
