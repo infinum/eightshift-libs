@@ -5,6 +5,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+- Returns all colors from settings
+
 ### Changed
 
 - Made get_service_classes_prepared_array() more flat.
