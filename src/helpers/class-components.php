@@ -63,12 +63,12 @@ class Components {
   public static function render( string $component, array $attributes = [], string $parentPath = '' ) {
 
     if ( empty( $parentPath ) ) {
-      $parentPath = get_template_directory_uri();
+      $parentPath = \get_template_directory_uri();
     }
 
     // Detect if user passed component name or path.
     if ( strpos( $component, '.php' ) !== false ) {
-      $component_path = $component;
+      $component_path = "{$parentPath}/$component";
     } else {
       $component_path = "{$parentPath}/src/blocks/components/{$component}/{$component}.php";
     }
@@ -82,7 +82,7 @@ class Components {
     // Wrap component with parent BEM selector if parent's class is provided. Used
     // for setting specific styles for components rendered inside other components.
     if ( isset( $attributes['parentClass'] ) ) {
-      echo wp_kses_post( "<div class=\"{$attributes['parentClass']}__{$component}\">" );
+      echo \wp_kses_post( "<div class=\"{$attributes['parentClass']}__{$component}\">" );
     }
 
     require $component_path;
