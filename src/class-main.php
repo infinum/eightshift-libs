@@ -210,7 +210,7 @@ abstract class Main implements Service {
    *
    * @throws Exception\Invalid_Service If the service is not valid.
    *
-   * @return Service
+   * @return Registrable
    *
    * @since 0.1.0
    */

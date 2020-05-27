@@ -14,7 +14,7 @@ namespace Eightshift_Libs\Exception;
  *
  * @since 2.0.0
  */
-class Invalid_Block extends \InvalidArgumentException implements General_Exception {
+final class Invalid_Block extends \InvalidArgumentException implements General_Exception {
 
   /**
    * Throws error if blocks are missing.
