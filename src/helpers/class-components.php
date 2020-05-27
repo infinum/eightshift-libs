@@ -73,7 +73,7 @@ class Components {
       $component_path = "{$parentPath}/src/blocks/components/{$component}/{$component}.php";
     }
 
-    if ( file_exists( $component_path ) ) {
+    if ( ! file_exists( $component_path ) ) {
       Component_Exception::throw_unable_to_locate_component( $component_path );
     }
 
