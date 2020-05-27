@@ -130,7 +130,7 @@ class Blocks implements Service, Renderable_Block {
 
   /**
    * Get blocks full data from global settings, blocks and wrapper.
-   * You should never call this method directly insted you should call $this->blocks.
+   * You should never call this method directly instead you should call $this->blocks.
    *
    * @return void
    *
@@ -217,7 +217,6 @@ class Blocks implements Service, Renderable_Block {
   /**
    * Method used to really register Gutenberg blocks.
    * It uses native register_block_type method from WP.
-   * Render method is provided depending on the hasWrapper key.
    *
    * @param array $block_details Full Block Manifest details.
    *
@@ -226,10 +225,10 @@ class Blocks implements Service, Renderable_Block {
    * @since 2.0.0
    */
   public function register_block( array $block_details ) {
-    register_block_type(
+    \register_block_type(
       $block_details['blockFullName'],
       array(
-        'render_callback' => [ $this, $block_details['hasWrapper'] ? 'render_wrapper' : 'render' ],
+        'render_callback' => [ $this, 'render' ],
         'attributes' => $this->get_attributes( $block_details ),
       )
     );
@@ -237,7 +236,6 @@ class Blocks implements Service, Renderable_Block {
 
   /**
    * Provides block registration callback method for render when using wrapper option.
-   * If block is using `hasWrapper:true` setting view method is first routed through wrapper component view and then in block view.
    *
    * @param array  $attributes          Array of attributes as defined in block's manifest.json.
    * @param string $inner_block_content Block's content if using inner blocks.
@@ -249,7 +247,7 @@ class Blocks implements Service, Renderable_Block {
    *
    * @since 2.0.0
    */
-  public function render_wrapper( array $attributes, $inner_block_content ) : string {
+  public function render( array $attributes, $inner_block_content ) : string {
 
     // Block details is unavailable in this method so we are fetching block name via attributes.
     $block_name = $attributes['blockName'] ?? '';
@@ -279,48 +277,6 @@ class Blocks implements Service, Renderable_Block {
   }
 
   /**
-   * Provides block registration render normal callback method.
-   * If block is using `hasWrapper:false` setting view method is provides in block.
-   *
-   * @param array  $attributes          Array of attributes as defined in block's manifest.json.
-   * @param string $inner_block_content Block's content if using inner blocks.
-   *
-   * @throws Invalid_Block Throws error if block view is missing.
-   *
-   * @return string Html template for block.
-   *
-   * @since 2.0.0
-   */
-  public function render( array $attributes, $inner_block_content ) : string {
-
-    // Block details is unavailable in this method so we are fetching block name via attributes.
-    $block_name = $attributes['blockName'] ?? '';
-
-    // Get block view path.
-    $template_path = $this->get_block_view_path( $block_name );
-
-    // Check if actual block exists.
-    if ( ! file_exists( $template_path ) ) {
-      throw Invalid_Block::missing_view_exception( $block_name, $template_path );
-    }
-
-    // Add custom data to block using filter hook.
-    $filter_name = $this->config->get_config( static::BLOCK_VIEW_FILTER_NAME );
-    $custom_data = '';
-    if ( has_filter( $filter_name ) ) {
-      $custom_data = apply_filters( $filter_name, [ $this, '' ] );
-    }
-
-    // If everything is ok, return the contents of the template (return, NOT echo).
-    ob_start();
-    include $template_path;
-    $output = ob_get_clean();
-    unset( $block_name, $template_path, $attributes, $inner_block_content, $custom_data );
-    return (string) $output;
-  }
-
-
-  /**
    * Create custom category to assign all custom blocks.
    * This category will show on all blocks list in "Add Block" button.
    *
@@ -335,7 +291,7 @@ class Blocks implements Service, Renderable_Block {
       [
         [
           'slug'  => 'eightshift',
-          'title' => esc_html__( 'Eightshift', 'eightshift-libs' ),
+          'title' => \esc_html__( 'Eightshift', 'eightshift-libs' ),
           'icon'  => 'admin-settings',
         ],
       ]
@@ -491,7 +447,6 @@ class Blocks implements Service, Renderable_Block {
    * This method combines default, block and wrapper attributes.
    * Default attributes are hardcoded in this lib.
    * Block attributes are provided by block manifest.json file.
-   * Wrapper attributes are provided by wrapper manifest.json file and is only available if block has `hasWrapper:true` settings.
    *
    * @param array $block_details Block Manifest details.
    *
@@ -499,41 +454,35 @@ class Blocks implements Service, Renderable_Block {
    */
   protected function get_attributes( array $block_details ) : array {
 
-    $block_name      = $block_details['blockName'];
-    $block_full_name = $block_details['blockFullName'];
-
-    $default_attributes = [
-      'blockName' => array(
-        'type' => 'string',
-        'default' => $block_name,
-      ),
-      'blockFullName' => array(
-        'type' => 'string',
-        'default' => $block_full_name,
-      ),
-      'blockClass' => array(
-        'type' => 'string',
-        'default' => "block-{$block_name}",
-      ),
-      'blockJsClass' => array(
-        'type' => 'string',
-        'default' => "js-block-{$block_name}",
-      ),
-    ];
-
-    $block_attributes         = $block_details['attributes'];
-    $block_wrapper_attributes = ( $block_details['hasWrapper'] === true ) ? $this->blocks['wrapper']['attributes'] : [];
+    $block_name = $block_details['blockName'];
 
     $output = array_merge(
-      $default_attributes,
-      $block_wrapper_attributes,
-      $block_attributes
+      [
+        'blockName' => array(
+          'type' => 'string',
+          'default' => $block_name,
+        ),
+        'blockFullName' => array(
+          'type' => 'string',
+          'default' => $block_details['blockFullName'],
+        ),
+        'blockClass' => array(
+          'type' => 'string',
+          'default' => "block-{$block_name}",
+        ),
+        'blockJsClass' => array(
+          'type' => 'string',
+          'default' => "js-block-{$block_name}",
+        ),
+      ],
+      $this->blocks['wrapper']['attributes'],
+      $block_details['attributes']
     );
 
     $filter_name = $this->config->get_config( static::BLOCK_ATTRIBUTES_FILTER_NAME );
 
-    if ( has_filter( $filter_name ) ) {
-      $override_attributes = apply_filters( $filter_name, $output );
+    if ( \has_filter( $filter_name ) ) {
+      $override_attributes = \apply_filters( $filter_name, $output );
 
       $output = array_merge( $output, $override_attributes );
     }
@@ -569,10 +518,6 @@ class Blocks implements Service, Renderable_Block {
 
         if ( ! isset( $block['attributes'] ) ) {
           $block['attributes'] = [];
-        }
-
-        if ( ! isset( $block['hasWrapper'] ) ) {
-          $block['hasWrapper'] = true;
         }
 
         if ( ! isset( $block['hasInnerBlocks'] ) ) {
