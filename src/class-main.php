@@ -144,7 +144,7 @@ abstract class Main implements Service {
     $output = [];
 
     foreach ( $this->get_service_classes() as $class => $dependencies ) {
-      if ( is_array( $dependencies ) ) {
+      if ( is_array( $dependencies ) ) { /** @phpstan-ignore-line */
         $output[ $class ] = $dependencies;
         continue;
       }

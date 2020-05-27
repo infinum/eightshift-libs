@@ -25,6 +25,8 @@ class Components {
    * @throws Component_Exception When $variable is not a string or array.
    */
   public static function ensure_string( $variable ) : string {
+    $output = '';
+
     if ( is_array( $variable ) ) {
       $output = implode( '', $variable );
     } elseif ( is_string( $variable ) ) {
@@ -88,7 +90,7 @@ class Components {
       echo '</div>';
     }
 
-    return ob_get_clean();
+    return (string) ob_get_clean();
   }
 
   /**
@@ -110,7 +112,7 @@ class Components {
     $output = [];
 
     foreach ( $items as $item_key => $item_value ) {
-      if ( empty( $item_value ) || $item_value === false ) {
+      if ( empty( $item_value ) || $item_value == false ) {
         continue;
       }
 

@@ -5,10 +5,17 @@ parameters:
     level: max
     inferPrivatePropertyTypeFromConstructor: true
     checkMissingIterableValueType: false
+    treatPhpDocTypesAsCertain: false
     paths:
         - src/
     excludes_analyse:
         - src/Core/CompiledContainer.php
+        - src/menu/class-bem-menu-walker.php
     autoload_files:
         - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
     ignoreErrors:
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::get\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::get_config\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::get_project_path\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::get_assets_manifest_item\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::get_project_name\(\)#'
