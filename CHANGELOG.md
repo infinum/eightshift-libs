@@ -5,6 +5,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+### Removed
+- `class-blocks.php` - removed normal blocks view and made wrapper view as default.
+- `class-blocks.php` - removed hasWrapper key.
+
+### Changed
+- `class-components.php` - changes on `responsive_selectors` method because of a bug in rendering bool.
+
 ## [2.3.0] - 2020-05-25
 
 ### Added
