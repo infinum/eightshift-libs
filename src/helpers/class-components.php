@@ -55,22 +55,22 @@ class Components {
    *
    * @param  string $component  Component's name or full path (ending with .php).
    * @param  array  $attributes Array of attributes that's implicitly passed to component.
-   * @param  string $parentPath If parent path is provides it will be appended to the file location, if not get_template_directory_uri() will be used as a default parent path.
+   * @param  string $parent_path If parent path is provides it will be appended to the file location, if not get_template_directory_uri() will be used as a default parent path.
    * @return string
    *
    * @throws \Exception When we're unable to find the component by $component.
    */
-  public static function render( string $component, array $attributes = [], string $parentPath = '' ) {
+  public static function render( string $component, array $attributes = [], string $parent_path = '' ) {
 
-    if ( empty( $parentPath ) ) {
-      $parentPath = \get_template_directory_uri();
+    if ( empty( $parent_path ) ) {
+      $parent_path = \get_template_directory();
     }
 
     // Detect if user passed component name or path.
     if ( strpos( $component, '.php' ) !== false ) {
-      $component_path = "{$parentPath}/$component";
+      $component_path = "{$parent_path}/$component";
     } else {
-      $component_path = "{$parentPath}/src/blocks/components/{$component}/{$component}.php";
+      $component_path = "{$parent_path}/src/blocks/components/{$component}/{$component}.php";
     }
 
     if ( ! file_exists( $component_path ) ) {
