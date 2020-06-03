@@ -32,7 +32,7 @@ abstract class Base_Taxonomy implements Service {
       function() {
         register_taxonomy(
           $this->get_taxonomy_slug(),
-          [ $this->get_post_type_slug() ],
+          $this->get_post_type_slug(),
           $this->get_taxonomy_arguments()
         );
       }
@@ -49,13 +49,13 @@ abstract class Base_Taxonomy implements Service {
   abstract protected function get_taxonomy_slug() : string;
 
   /**
-   * Get the post type slug to use the taxonomy.
+   * Get the post type slug(s) that use the taxonomy.
    *
-   * @return string Custom post type slug.
+   * @return string|array Custom post type slug or an array of slugs.
    *
    * @since 0.1.0
    */
-  abstract protected function get_post_type_slug() : string;
+  abstract protected function get_post_type_slug();
 
   /**
    * Get the arguments that configure the custom taxonomy.
