@@ -25,7 +25,7 @@ class I18n implements Service {
   /**
    * Instance variable of project config data.
    *
-   * @var object
+   * @var Config_Data
    *
    * @since 2.0.0
    */
