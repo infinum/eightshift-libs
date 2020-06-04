@@ -14,7 +14,7 @@ namespace Eightshift_Libs\Exception;
  *
  * @since 0.1.0
  */
-class Failed_To_Load_View extends \RuntimeException implements General_Exception {
+final class Failed_To_Load_View extends \RuntimeException implements General_Exception {
 
   /**
    * Create a new instance of the exception if the view file itself created

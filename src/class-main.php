@@ -210,7 +210,7 @@ abstract class Main implements Service {
    *
    * @throws Exception\Invalid_Service If the service is not valid.
    *
-   * @return Service
+   * @return Registrable
    *
    * @since 0.1.0
    */
@@ -232,7 +232,7 @@ abstract class Main implements Service {
    *
    * A list of classes which contain hooks.
    *
-   * @return array<string> Array of fully qualified class names.
+   * @return array<class-string, string|string[]> Array of fully qualified service class names.
    *
    * @since 0.1.0
    */

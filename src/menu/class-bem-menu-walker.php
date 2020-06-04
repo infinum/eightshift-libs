@@ -17,15 +17,35 @@ namespace Eightshift_Libs\Menu;
  * @since 1.0.0
  */
 class Bem_Menu_Walker extends \Walker_Nav_Menu {
+  /**
+   * CSS class prefix string - unique for a theme.
+   *
+   * @var string
+   */
+  public $css_class_prefix;
+
+  /**
+   * Menu item CSS suffixes.
+   *
+   * @var string[]
+   */
+  public $item_css_class_suffixes;
+
+  /**
+   * Database fields to use.
+   *
+   * @var array
+   */
+  public $db_fields;
 
   /**
    * Constructor function
    *
-   * @param array $css_class_prefix load menu prefixes for class.
+   * @param string $css_class_prefix load menu prefix for class.
    *
    * @since 1.0.0
    */
-  public function __construct( $css_class_prefix ) {
+  public function __construct( string $css_class_prefix ) {
 
     $this->css_class_prefix = $css_class_prefix;
 
@@ -43,16 +63,16 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
   }
 
   /**
-   * Dispaly element for wlaker
+   * Display element for walker
    *
-   * @param array   $element element.
-   * @param array   $children_elements children_elements.
-   * @param array   $max_depth max_depth.
-   * @param integer $depth depth.
-   * @param array   $args args.
-   * @param array   $output output.
-   * @return element
+   * @param object $element element.
+   * @param array  $children_elements children_elements.
+   * @param int    $max_depth max_depth.
+   * @param int    $depth depth.
+   * @param array  $args args.
+   * @param string $output output.
    *
+   * @return void Parent Display element
    * @since 1.0.0
    */
   public function display_element( $element, &$children_elements, $max_depth, $depth = 0, $args, &$output ) {
@@ -63,16 +83,16 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
       $args[0]->has_children = ! empty( $children_elements[ $element->$id_field ] );
     }
 
-    return parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
-
+    parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
   }
 
   /**
    * Start level
    *
-   * @param array   $output output.
-   * @param integer $depth depth.
-   * @param array   $args args.
+   * @param string $output output.
+   * @param int    $depth depth.
+   * @param array  $args args.
+   *
    * @return void
    *
    * @since 1.0.0
@@ -100,11 +120,12 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
   /**
    * Add main/sub classes to li's and links.
    *
-   * @param array   $output output.
-   * @param array   $item item.
-   * @param integer $depth depth.
-   * @param array   $args args.
-   * @param integer $id id.
+   * @param string $output output.
+   * @param object $item item.
+   * @param int    $depth depth.
+   * @param array  $args args.
+   * @param int    $id id.
+   *
    * @return void
    *
    * @since 1.0.0
@@ -176,7 +197,7 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
     $attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) . '"' : '';
     $attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) . '"' : '';
 
-    // Creatre link markup.
+    // Create link markup.
     $item_output  = $args->before;
     $item_output .= '<a' . $attributes . ' ' . $link_class_output . '><span ' . $link_text_class_output . '>';
     $item_output .= $args->link_before;
