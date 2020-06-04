@@ -144,7 +144,7 @@ abstract class Main implements Service {
     $output = [];
 
     foreach ( $this->get_service_classes() as $class => $dependencies ) {
-      if ( is_array( $dependencies ) ) { /** @phpstan-ignore-line phpcs:ignore */
+      if ( is_array( $dependencies ) ) {
         $output[ $class ] = $dependencies;
         continue;
       }
@@ -232,7 +232,7 @@ abstract class Main implements Service {
    *
    * A list of classes which contain hooks.
    *
-   * @return array<string> Array of fully qualified class names.
+   * @return array<class-string, string|string[]> Array of fully qualified service class names.
    *
    * @since 0.1.0
    */
