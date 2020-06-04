@@ -5,7 +5,7 @@
  * @package Eightshift_Libs\Exception
  */
 
- declare( strict_types=1 );
+declare( strict_types=1 );
 
 namespace Eightshift_Libs\Exception;
 
@@ -25,7 +25,7 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
    */
   public static function missing_blocks_exception() {
     return new static(
-      esc_html__( 'There are no blocks added in your project.', 'eightshift-libs' ),
+      esc_html__( 'There are no blocks added in your project.', 'eightshift-libs' )
     );
   }
 
