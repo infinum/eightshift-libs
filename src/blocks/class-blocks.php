@@ -18,14 +18,14 @@ use Eightshift_Libs\Exception\Invalid_Manifest;
 /**
  * Class Blocks
  *
- * @since 2.0.0
+ * @since 2.0.0
  */
 class Blocks implements Service, Renderable_Block {
 
   /**
    * Instance variable of project config data.
    *
-   * @var object
+   * @var Config_Data
    *
    * @since 2.0.0
    */

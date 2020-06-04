@@ -27,7 +27,7 @@ class Enqueue_Admin extends Assets {
   /**
    * Instance variable of manifest data.
    *
-   * @var object
+   * @var Manifest_Data
    *
    * @since 2.0.0
    */

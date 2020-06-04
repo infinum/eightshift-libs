@@ -15,7 +15,7 @@ use Eightshift_Libs\Menu\Menu_Positions;
 /**
  * Class Menu
  *
- * @since 2.0.0
+ * @since 2.0.0
  */
 abstract class Menu implements Service, Menu_Positions {
 
@@ -24,7 +24,7 @@ abstract class Menu implements Service, Menu_Positions {
    *
    * @return void
    *
-   * @since 2.0.0
+   * @since 2.0.0
    */
   public function register() {
     add_action( 'after_setup_theme', [ $this, 'register_menu_positions' ], 11 );
@@ -35,7 +35,7 @@ abstract class Menu implements Service, Menu_Positions {
    *
    * @return void
    *
-   * @since 2.0.0
+   * @since 2.0.0
    */
   public function register_menu_positions() {
     \register_nav_menus(
@@ -48,7 +48,7 @@ abstract class Menu implements Service, Menu_Positions {
    *
    * @return array Of menu positions with name and slug.
    *
-   * @since 2.0.0
+   * @since 2.0.0
    */
   public function get_menu_positions() : array {
     return [];
@@ -64,7 +64,7 @@ abstract class Menu implements Service, Menu_Positions {
    *
    * @return string|false|void Menu output if $echo is false, false if there are no items or no menu was found.
    *
-   * @since 2.0.0
+   * @since 2.0.0
    */
   public static function bem_menu( string $location = 'main_menu', string $css_class_prefix = 'main-menu', $css_class_modifiers = null, bool $echo = true ) {
 

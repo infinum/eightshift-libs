@@ -9,6 +9,7 @@ declare( strict_types=1 );
 
 namespace Eightshift_Libs\Core;
 
+use \DI\Container;
 use \DI\ContainerBuilder;
 
 use Eightshift_Libs\Exception;
@@ -35,7 +36,7 @@ abstract class Main implements Service {
   /**
    * DI container instance.
    *
-   * @var object
+   * @var Container
    */
   private $container;
 
@@ -99,7 +100,7 @@ abstract class Main implements Service {
   /**
    * Returns the DI container and allow it to be used in different context (for example in tests outside of WP environment)
    *
-   * @return object
+   * @return Container
    * @throws \Exception Exception thrown by the DI container.
    */
   public function build_di_container() {
@@ -161,7 +162,7 @@ abstract class Main implements Service {
    * Wire all the dependencies automatically, based on the provided array of class => dependencies from the get_di_items().
    *
    * @param array $services Array of service.
-   * @return object
+   * @return Container
    *
    * @throws \Exception Exception thrown by the DI container.
    *

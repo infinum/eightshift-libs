@@ -38,7 +38,7 @@ class Manifest implements Service, Manifest_Data {
   /**
    * Instance variable of project config data.
    *
-   * @var object
+   * @var Config_Data
    *
    * @since 2.0.0
    */
