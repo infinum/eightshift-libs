@@ -11,6 +11,3 @@ parameters:
     excludes_analyse:
         - src/Core/CompiledContainer.php
         - src/menu/class-bem-menu-walker.php
-    ignoreErrors:
-        # FIXME @dingo-d help me!!
-        - '#^Call to an undefined method Eightshift_Libs\\Manifest\\Manifest_Data::get_config\(\)\.$#'
