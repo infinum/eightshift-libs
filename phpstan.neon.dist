@@ -18,7 +18,7 @@ parameters:
         - '#^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$#'
         # TODO Convince Authors that this is important.
         - '#^Unsafe usage of new static\(\)\.$#'
-        # Mess from core vs. out value objects
+        # Mess from core vs. our value objects
         -
             message: "#^Parameter \\#5 \\$args \\(WP_Nav_Menu_Args\\) of method Eightshift_Libs\\\\Menu\\\\Bem_Menu_Walker\\:\\:display_element\\(\\) should be compatible with parameter \\$args \\(array\\) of method Walker\\:\\:display_element\\(\\)$#"
             count: 1
