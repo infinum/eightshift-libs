@@ -19,12 +19,16 @@ namespace Eightshift_Libs\Menu;
 class Bem_Menu_Walker extends \Walker_Nav_Menu {
 
   /**
-   * @var string CSS class prefix.
+   * CSS class prefix.
+   *
+   * @var string
    */
   protected $css_class_prefix;
 
   /**
-   * @var array List of CSS class suffixes.
+   * List of CSS class suffixes.
+   *
+   * @var array
    */
   protected $item_css_class_suffixes;
 
