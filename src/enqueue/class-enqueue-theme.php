@@ -27,7 +27,7 @@ class Enqueue_Theme extends Assets {
    *
    * @var Manifest_Data
    *
-   * @since 2.0.0
+   * @since 2.0.0
    */
   protected $manifest;
 
@@ -46,7 +46,7 @@ class Enqueue_Theme extends Assets {
   /**
    * Register all the hooks
    *
-   * @since 2.0.0
+   * @since 2.0.0
    *
    * @return void
    */
@@ -58,7 +58,7 @@ class Enqueue_Theme extends Assets {
   /**
    * Register the Stylesheets for the front end of the theme.
    *
-   * @since 2.0.0
+   * @since 2.0.0
    * @since 2.0.3 Added methods for overrides.
    *              Fixed static calls from config class.
    * @since 2.2.0 Removed config dependency.
@@ -82,7 +82,7 @@ class Enqueue_Theme extends Assets {
   /**
    * Register the JavaScript for the front end of the theme.
    *
-   * @since 2.0.0
+   * @since 2.0.0
    * @since 2.0.3 Added methods for overrides.
    *              Fixed static calls from config class.
    * @since 2.2.0 Removed config dependency.
