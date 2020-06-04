@@ -148,7 +148,7 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
    */
   public static function missing_namespace_exception() {
     return new static(
-      esc_html__( 'Global Blocks settings manifest.json is missing a key called namespace. This key prefixes all block names.', 'eightshift-libs' ),
+      esc_html__( 'Global Blocks settings manifest.json is missing a key called namespace. This key prefixes all block names.', 'eightshift-libs' )
     );
   }
 }
