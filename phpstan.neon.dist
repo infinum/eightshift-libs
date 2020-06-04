@@ -11,4 +11,27 @@ parameters:
         - src/Core/CompiledContainer.php
     autoload_files:
         - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+        - tests/phpstan/class-wp-nav-menu-item.php
+        - tests/phpstan/class-wp-nav-menu-args.php
     ignoreErrors:
+        # Uses func_get_args()
+        - '#^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$#'
+        # TODO Convince Authors that this is important.
+        - '#^Unsafe usage of new static\(\)\.$#'
+        # Mess from core vs. out value objects
+        -
+            message: "#^Parameter \\#5 \\$args \\(WP_Nav_Menu_Args\\) of method Eightshift_Libs\\\\Menu\\\\Bem_Menu_Walker\\:\\:display_element\\(\\) should be compatible with parameter \\$args \\(array\\) of method Walker\\:\\:display_element\\(\\)$#"
+            count: 1
+            path: src/menu/class-bem-menu-walker.php
+        -
+            message: "#^Cannot access offset 0 on WP_Nav_Menu_Args\\.$#"
+            count: 1
+            path: src/menu/class-bem-menu-walker.php
+        -
+            message: "#^Result of && is always false\\.$#"
+            count: 1
+            path: src/menu/class-bem-menu-walker.php
+        -
+            message: "#^Parameter \\#2 \\$item \\(WP_Nav_Menu_Item\\) of method Eightshift_Libs\\\\Menu\\\\Bem_Menu_Walker\\:\\:start_el\\(\\) should be compatible with parameter \\$item \\(WP_Post\\) of method Walker_Nav_Menu\\:\\:start_el\\(\\)$#"
+            count: 1
+            path: src/menu/class-bem-menu-walker.php

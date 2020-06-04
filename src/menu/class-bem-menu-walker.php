@@ -19,9 +19,19 @@ namespace Eightshift_Libs\Menu;
 class Bem_Menu_Walker extends \Walker_Nav_Menu {
 
   /**
+   * @var string
+   */
+  protected $css_class_prefix;
+
+  /**
+   * @var array
+   */
+  protected $item_css_class_suffixes;
+
+  /**
    * Constructor function
    *
-   * @param array $css_class_prefix load menu prefixes for class.
+   * @param string $css_class_prefix load menu prefixes for class.
    *
    * @since 1.0.0
    */
@@ -45,13 +55,13 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
   /**
    * Dispaly element for wlaker
    *
-   * @param array   $element element.
-   * @param array   $children_elements children_elements.
-   * @param array   $max_depth max_depth.
-   * @param integer $depth depth.
-   * @param array   $args args.
-   * @param array   $output output.
-   * @return element
+   * @param object            $element element.
+   * @param array             $children_elements children_elements.
+   * @param int               $max_depth max_depth.
+   * @param int               $depth depth.
+   * @param \WP_Nav_Menu_Args $args args.
+   * @param string            $output output.
+   * @return string
    *
    * @since 1.0.0
    */
@@ -59,25 +69,26 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
 
     $id_field = $this->db_fields['id'];
 
-    if ( is_object( $args[0] ) ) {
-      $args[0]->has_children = ! empty( $children_elements[ $element->$id_field ] );
+    $this->has_children = ! empty( $children_elements[ $element->$id_field ] );
+    if ( isset( $args[0] ) && is_array( $args[0] ) ) {
+        // Back-compat.
+        $args[0]['has_children'] = $this->has_children;
     }
 
     return parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
-
   }
 
   /**
    * Start level
    *
-   * @param array   $output output.
+   * @param string  $output output.
    * @param integer $depth depth.
-   * @param array   $args args.
+   * @param object  $args Not used.
    * @return void
    *
    * @since 1.0.0
    */
-  public function start_lvl( &$output, $depth = 1, $args = [] ) {
+  public function start_lvl( &$output, $depth = 1, $args = null ) {
 
     $real_depth = $depth + 1;
 
@@ -100,16 +111,16 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
   /**
    * Add main/sub classes to li's and links.
    *
-   * @param array   $output output.
-   * @param array   $item item.
-   * @param integer $depth depth.
-   * @param array   $args args.
-   * @param integer $id id.
+   * @param string            $output output.
+   * @param \WP_Nav_Menu_Item $item item.
+   * @param integer           $depth depth.
+   * @param \WP_Nav_Menu_Args $args args.
+   * @param integer           $id id.
    * @return void
    *
    * @since 1.0.0
    */
-  public function start_el( &$output, $item, $depth = 0, $args = [], $id = 0 ) {
+  public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
 
     global $wp_query;
 
@@ -137,7 +148,7 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
     // Item classes.
     $item_classes = [
       'item_class'            => 0 === $depth ? $prefix . $suffix['item'] : '',
-      'parent_class'          => $args->has_children ? $parent_class : '',
+      'parent_class'          => $this->has_children ? $parent_class : '',
       'active_page_class'     => in_array( 'current-menu-item', $item->classes, true ) ? $prefix . $suffix['active_item'] : '',
       'active_parent_class'   => in_array( 'current-menu-parent', $item->classes, true ) ? $prefix . $suffix['parent_of_active_item'] : '',
       'active_ancestor_class' => in_array( 'current-page-ancestor', $item->classes, true ) ? $prefix . $suffix['ancestor_of_active_item'] : '',

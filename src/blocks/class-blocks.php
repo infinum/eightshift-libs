@@ -191,7 +191,7 @@ class Blocks implements Service, Renderable_Block {
   /**
    * Method used to register all custom blocks with data fetched from blocks manifest.json.
    *
-   * @throws Exception\Invalid_Block Throws error if blocks are missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if blocks are missing.
    *
    * @return void
    *
@@ -240,8 +240,8 @@ class Blocks implements Service, Renderable_Block {
    * @param array  $attributes          Array of attributes as defined in block's manifest.json.
    * @param string $inner_block_content Block's content if using inner blocks.
    *
-   * @throws Exception\Invalid_Block Throws error if block wrapper view is missing.
-   * @throws Exception\Invalid_Block Throws error if block view is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if block wrapper view is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if block view is missing.
    *
    * @return string Html template for block.
    *
@@ -306,7 +306,7 @@ class Blocks implements Service, Renderable_Block {
    * @param array  $attributes           Attributes array to pass in template.
    * @param string $inner_block_content If using inner blocks content pass the data.
    *
-   * @throws Exception\Invalid_Block Throws error if wrapper view template is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if wrapper view template is missing.
    *
    * @since 2.0.0
    */
@@ -327,7 +327,7 @@ class Blocks implements Service, Renderable_Block {
    * @param array  $attributes           Attributes array to pass in template.
    * @param string $inner_block_content If using inner blocks content pass the data.
    *
-   * @throws Exception\Invalid_Block Throws error if render block view is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if render block view is missing.
    *
    * @since 2.0.0
    */
@@ -392,7 +392,7 @@ class Blocks implements Service, Renderable_Block {
   /**
    * Get wrapper manifest data from wrapper manifest.json file.
    *
-   * @throws Exception\Invalid_Block Throws error if wrapper settings manifest.json is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if wrapper settings manifest.json is missing.
    *
    * @return array
    *
@@ -414,8 +414,8 @@ class Blocks implements Service, Renderable_Block {
   /**
    * Get blocks global settings manifest data from settings manifest.json file.
    *
-   * @throws Exception\Invalid_Block Throws error if global settings manifest.json is missing.
-   * @throws Exception\Invalid_Block Throws error if global manifest settings key namespace is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if global settings manifest.json is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if global manifest settings key namespace is missing.
    *
    * @return array
    *
@@ -490,7 +490,7 @@ class Blocks implements Service, Renderable_Block {
    * Throws error if manifest key blockName is missing.
    * You should never call this method directly.
    *
-   * @throws Exception\Invalid_Block Throws error if block name is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Block Throws error if block name is missing.
    *
    * @return array
    *

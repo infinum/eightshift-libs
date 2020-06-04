@@ -83,11 +83,11 @@ class Manifest implements Service, Manifest_Data {
    * Return full manifest data with site url prefix.
    * You should never call this method directly insted you should call $this->manifest.
    *
-   * @throws Exception\Invalid_Manifest Throws error if manifest.json file is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Manifest Throws error if manifest.json file is missing.
    *
    * @since 2.0.0
    *
-   * @return array
+   * @return void
    */
   public function get_assets_manifest_raw() {
     $path = $this->config->get_project_path() . '/public/manifest.json';
@@ -98,7 +98,7 @@ class Manifest implements Service, Manifest_Data {
 
     $data = json_decode( implode( ' ', file( $path ) ), true );
     if ( empty( $data ) ) {
-      return [];
+      return;
     }
 
     $this->manifest = array_map(
@@ -114,7 +114,7 @@ class Manifest implements Service, Manifest_Data {
    *
    * @param string $key File name key you want to get from manifest.
    *
-   * @throws Exception\Invalid_Manifest Throws error if manifest key is missing.
+   * @throws \Eightshift_Libs\Exception\Invalid_Manifest Throws error if manifest key is missing.
    *
    * @since 2.0.0 Returned data from manifest and not global variable.
    * @since 0.7.0 Changed to non static method and added Exception for missing key.

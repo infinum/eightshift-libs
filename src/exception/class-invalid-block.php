@@ -25,10 +25,7 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
    */
   public static function missing_blocks_exception() {
     return new static(
-      sprintf(
-        esc_html__( 'There are no blocks added in your project.', 'eightshift-libs' ),
-        $name
-      )
+      esc_html__( 'There are no blocks added in your project.', 'eightshift-libs' ),
     );
   }
 
@@ -151,10 +148,7 @@ class Invalid_Block extends \InvalidArgumentException implements General_Excepti
    */
   public static function missing_namespace_exception() {
     return new static(
-      sprintf(
-        esc_html__( 'Global Blocks settings manifest.json is missing a key called namespace. This key prefixes all block names.', 'eightshift-libs' ),
-        $name
-      )
+      esc_html__( 'Global Blocks settings manifest.json is missing a key called namespace. This key prefixes all block names.', 'eightshift-libs' ),
     );
   }
 }

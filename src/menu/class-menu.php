@@ -57,10 +57,10 @@ abstract class Menu implements Service, Menu_Positions {
   /**
    * Bem_menu returns an instance of the Bem_Menu_Walker class with the following arguments
    *
-   * @param  string     $location            This must be the same as what is set in wp-admin/settings/menus for menu location and registrated in register_menu_positions function.
-   * @param  string     $css_class_prefix    This string will prefix all of the menu's classes, BEM syntax friendly.
-   * @param  arr|string $css_class_modifiers Provide either a string or array of values to apply extra classes to the <ul> but not the <li's>.
-   * @param  bool       $echo                Echo the menu.
+   * @param  string       $location            This must be the same as what is set in wp-admin/settings/menus for menu location and registrated in register_menu_positions function.
+   * @param  string       $css_class_prefix    This string will prefix all of the menu's classes, BEM syntax friendly.
+   * @param  array|string $css_class_modifiers Provide either a string or array of values to apply extra classes to the <ul> but not the <li's>.
+   * @param  bool         $echo                Echo the menu.
    *
    * @return string|false|void Menu output if $echo is false, false if there are no items or no menu was found.
    *
