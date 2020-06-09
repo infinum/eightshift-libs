@@ -25,7 +25,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class Generate_Rest_Route extends Command {
 
-  protected static $defaultName = 'generate:route'; // phpcs:ignore
+  /**
+   * Command name property
+   *
+   * @var string Command name.
+   */
+  protected static $defaultName = 'generate:route'; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
 
   /**
    * Configures the current command
@@ -37,7 +42,7 @@ class Generate_Rest_Route extends Command {
       ->setDescription( 'Generate a custom REST class' )
       ->setHelp( 'This command will create a template class for the custom WordPress REST API endpoint.' )
       ->addArgument( 'endpoint-name', InputArgument::REQUIRED, 'Pass the slug of your endpoint. Example: my-endpoint' )
-      ->addArgument( 'verb', InputArgument::REQUIRED, 'Pass the desired HTTP verb. Can be one of: \'GET\', \'POST\', \'PATCH\', \'PUT\', or \'DELETE\'' );
+      ->addArgument( 'method', InputArgument::REQUIRED, 'Pass the desired HTTP transport method (verb). Can be one of: \'GET\', \'POST\', \'PATCH\', \'PUT\', or \'DELETE\'' );
   }
 
   /**
@@ -53,24 +58,24 @@ class Generate_Rest_Route extends Command {
     $io = new SymfonyStyle( $input, $output );
 
     $endpoint_slug = $input->getArgument( 'endpoint-name' );
-    $http_verb     = $input->getArgument( 'verb' );
+    $method        = $input->getArgument( 'method' );
 
     if ( empty( $endpoint_slug ) ) {
       throw new Exception( 'Endpoint slug empty' );
     }
 
-    if ( ! in_array( $http_verb, [ 'GET', 'POST', 'PATCH', 'PUT', 'DELETE' ], true ) ) {
+    if ( ! in_array( $method, [ 'GET', 'POST', 'PATCH', 'PUT', 'DELETE' ], true ) ) {
       throw new Exception(
-        sprintf( 'HTTP verb must be one of: \'GET\', \'POST\', \'PATCH\', \'PUT\', or \'DELETE\'. %s provided.', $http_verb )
+        sprintf( 'HTTP verb must be one of: \'GET\', \'POST\', \'PATCH\', \'PUT\', or \'DELETE\'. %s provided.', $method )
       );
     }
 
     $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
     $class    = explode( '_', str_replace( '-', '_', str_replace( ' ', '_', strtolower( $endpoint_slug ) ) ) );
 
-    $class_name = implode( '_', array_map( function( $item ) { // phpcs:ignore
+    $class_name = implode( '_', array_map( function( $item ) { // phpcs:ignore PEAR.Functions.FunctionCallSignature
         return ucfirst( $item );
-    }, $class ) ); // phpcs:ignore
+    }, $class ) ); // phpcs:ignore PEAR.Functions.FunctionCallSignature
 
     $verb_mapping = [
       'GET'    => 'READABLE',
@@ -80,14 +85,14 @@ class Generate_Rest_Route extends Command {
       'DELETE' => 'DELETABLE',
     ];
 
-    $class_boilerplate = $this->get_class_boilerplate( $class_name, $endpoint, $verb_mapping[ $http_verb ] );
+    $class_boilerplate = $this->get_class_boilerplate( $class_name, $endpoint, $verb_mapping[ $method ] );
 
     $rest_dir  = dirname( __FILE__, 2 ) . '/rest';
     $directory = $rest_dir . "/class-{$endpoint}.php";
 
-    $fp = fopen( $directory, 'wb' ); // phpcs:ignore
-    fwrite( $fp, $class_boilerplate ); // phpcs:ignore
-    fclose( $fp ); // phpcs:ignore
+    $fp = fopen( $directory, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+    fwrite( $fp, $class_boilerplate ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+    fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
     $io->success( "File class-{$endpoint}.php successfully created in {$rest_dir} directory." );
 
