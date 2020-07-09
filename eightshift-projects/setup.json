@@ -1,0 +1,11 @@
+{
+  "core": "5.4.2",
+  "plugins": {
+    "core": {
+      "contact-form-7": "5.1.7"
+    },
+    "github": {
+      "infinum/eightshift-gdpr": "1.0.1"
+    }
+  }
+}
