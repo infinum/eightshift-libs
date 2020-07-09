@@ -49,3 +49,18 @@ if [[ ! -z "$plugins" ]]; then
       echo "-------------------------------------"
   done
 fi
+
+# Check if themes key exists in config.
+themes=$(jq "select(.themes) | .themes" $setupFile);
+
+if [[ ! -z "$themes" ]]; then
+
+  # Instale themes.
+  for k in $(jq "$themes | keys | .[]" $setupFile); do
+      name=$(jq -r "$k" $setupFile);
+      version=$(jq -r "$themes[$k]" $setupFile);
+
+      wp theme install $name --version=$version --force;
+      echo "-------------------------------------"
+  done
+fi

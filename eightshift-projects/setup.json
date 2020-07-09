@@ -7,5 +7,8 @@
     "github": {
       "infinum/eightshift-gdpr": "1.0.1"
     }
+  },
+  "themes": {
+    "twentysixteen": "1.2"
   }
 }
