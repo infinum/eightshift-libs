@@ -32,13 +32,6 @@ class Bem_Menu_Walker extends \Walker_Nav_Menu {
   public $item_css_class_suffixes;
 
   /**
-   * Database fields to use.
-   *
-   * @var array
-   */
-  public $db_fields;
-
-  /**
    * Constructor function
    *
    * @param string $css_class_prefix load menu prefix for class.
