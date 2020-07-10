@@ -5,6 +5,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+## [2.4.1] - 2020-07-10
+
 ### Changed
 - `class-bem-menu-walker.php` - removed declaration of db_fields.
 
@@ -202,6 +204,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[2.4.1]: https://github.com/infinum/eightshift-libs/compare/2.4.0...v2.4.1
 [2.4.0]: https://github.com/infinum/eightshift-libs/compare/2.3.0...v2.4.0
 [2.3.0]: https://github.com/infinum/eightshift-libs/compare/2.2.2...v2.3.0
 [2.2.2]: https://github.com/infinum/eightshift-libs/compare/2.2.1...v2.2.2
