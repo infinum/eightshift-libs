@@ -37,7 +37,7 @@ class Generate_Rest_Route extends Command {
    *
    * @inheritDoc
    */
-  protected function configure() {
+  protected function configure() : void {
     $this
       ->setDescription( 'Generate a custom REST class' )
       ->setHelp( 'This command will create a template class for the custom WordPress REST API endpoint.' )
@@ -57,8 +57,19 @@ class Generate_Rest_Route extends Command {
   protected function execute( InputInterface $input, OutputInterface $output ) : int {
     $io = new SymfonyStyle( $input, $output );
 
+    /**
+     * Passed endpoint name argument
+     *
+     * @var string
+     */
     $endpoint_slug = $input->getArgument( 'endpoint-name' );
-    $method        = $input->getArgument( 'method' );
+
+    /**
+     * Passed method argument
+     *
+     * @var string
+     */
+    $method = $input->getArgument( 'method' );
 
     if ( empty( $endpoint_slug ) ) {
       throw new Exception( 'Endpoint slug empty' );
@@ -91,8 +102,13 @@ class Generate_Rest_Route extends Command {
     $directory = $rest_dir . "/class-{$endpoint}.php";
 
     $fp = fopen( $directory, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
-    fwrite( $fp, $class_boilerplate ); // phpcs:ignore WordPress.WP.AlternativeFunctions
-    fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+
+    if ( $fp !== false ) {
+        fwrite( $fp, $class_boilerplate ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+    } else {
+        $io->error( "File class-{$endpoint}.php couldn't be created in {$rest_dir} directory. There was an error." );
+    }
 
     $io->success( "File class-{$endpoint}.php successfully created in {$rest_dir} directory." );
 
