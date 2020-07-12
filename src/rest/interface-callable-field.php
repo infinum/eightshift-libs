@@ -21,7 +21,7 @@ interface Callable_Field {
    *
    * @param object|array $object      Post or custom post type object of the request.
    * @param string       $attr        Rest field/attr string identifier from the second parameter of your register_rest_field() declaration.
-   * @param object       $request     Full request payload – as a WP_REST_Request object.
+   * @param object       $request     Full request payload - as a WP_REST_Request object.
    * @param string       $object_type The object type which the field is registered against. Typically first parameter of your register_rest_field() declaration.
    *
    * @return mixed If response generated an error, WP_Error, if response

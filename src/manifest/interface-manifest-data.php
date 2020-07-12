@@ -11,12 +11,23 @@ declare( strict_types=1 );
 
 namespace Eightshift_Libs\Manifest;
 
+use Eightshift_Libs\Core\Config_Data;
+
 /**
  * Interface Manifest_Data
  *
  * @since 0.7.0
  */
 interface Manifest_Data {
+
+  /**
+   * Config getter
+   *
+   * @since 2.2.0 Added config getter.
+   *
+   * @return Config_Data
+   */
+  public function get_config();
 
   /**
    * Return full path for specific asset from manifest.json
