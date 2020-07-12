@@ -38,7 +38,7 @@ class Manifest implements Service, Manifest_Data {
   /**
    * Instance variable of project config data.
    *
-   * @var object
+   * @var Config_Data
    *
    * @since 2.0.0
    */
@@ -75,30 +75,31 @@ class Manifest implements Service, Manifest_Data {
    * @return void
    */
   public function register() {
-    add_action( 'init', [ $this, 'get_assets_manifest_raw' ] );
+    add_action( 'init', [ $this, 'set_assets_manifest_raw' ] );
     add_filter( $this->config->get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
   }
 
   /**
-   * Return full manifest data with site url prefix.
-   * You should never call this method directly insted you should call $this->manifest.
+   * Set the manifest data with site url prefix.
+   * You should never call this method directly instead you should call $this->manifest.
    *
-   * @throws Exception\Invalid_Manifest Throws error if manifest.json file is missing.
+   * @throws Invalid_Manifest Throws error if manifest.json file is missing.
+   *
+   * @return void Sets the manifest variable.
    *
    * @since 2.0.0
-   *
-   * @return array
    */
-  public function get_assets_manifest_raw() {
+  public function set_assets_manifest_raw() : void {
     $path = $this->config->get_project_path() . '/public/manifest.json';
 
     if ( ! file_exists( $path ) ) {
       throw Invalid_Manifest::missing_manifest_exception( $path );
     }
 
-    $data = json_decode( implode( ' ', file( $path ) ), true );
+    $data = json_decode( implode( ' ', (array) file( $path ) ), true );
+
     if ( empty( $data ) ) {
-      return [];
+      return;
     }
 
     $this->manifest = array_map(
@@ -114,7 +115,7 @@ class Manifest implements Service, Manifest_Data {
    *
    * @param string $key File name key you want to get from manifest.
    *
-   * @throws Exception\Invalid_Manifest Throws error if manifest key is missing.
+   * @throws Invalid_Manifest Throws error if manifest key is missing.
    *
    * @since 2.0.0 Returned data from manifest and not global variable.
    * @since 0.7.0 Changed to non static method and added Exception for missing key.
