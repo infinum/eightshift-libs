@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Eightshift_Libs\Commands;
 
-use Exception;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,7 +52,7 @@ class Generate_Rest_Route extends Command {
    * @param OutputInterface $output Output values.
    *
    * @return int
-   * @throws Exception Validation exceptions.
+   * @throws RuntimeException Validation exceptions.
    */
   protected function execute( InputInterface $input, OutputInterface $output ) : int {
     $io = new SymfonyStyle( $input, $output );
@@ -72,11 +72,11 @@ class Generate_Rest_Route extends Command {
     $method = $input->getArgument( 'method' );
 
     if ( empty( $endpoint_slug ) ) {
-      throw new Exception( 'Endpoint slug empty' );
+      throw new RuntimeException( 'Endpoint slug empty' );
     }
 
     if ( ! in_array( $method, [ 'GET', 'POST', 'PATCH', 'PUT', 'DELETE' ], true ) ) {
-      throw new Exception(
+      throw new RuntimeException(
         sprintf( 'HTTP verb must be one of: \'GET\', \'POST\', \'PATCH\', \'PUT\', or \'DELETE\'. %s provided.', $method )
       );
     }
@@ -96,12 +96,27 @@ class Generate_Rest_Route extends Command {
       'DELETE' => 'DELETABLE',
     ];
 
-    $class_boilerplate = $this->get_class_boilerplate( $class_name, $endpoint, $verb_mapping[ $method ] );
+    // Read the template contents, and replace the placeholders with provided variables.
+    $template_file = file_get_contents( __DIR__ . '/templates/class-route.tmpl.php' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
-    $rest_dir  = dirname( __FILE__, 2 ) . '/rest';
-    $directory = $rest_dir . "/class-{$endpoint}.php";
+    if ( $template_file === false ) {
+        throw new RuntimeException( 'The template "/templates/class-route.tmpl.php seems to be missing.' );
+    }
 
-    $fp = fopen( $directory, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+    $class_boilerplate = str_replace( '%CLASS_NAME%', $class_name, $template_file );
+    $class_boilerplate = str_replace( '%ENDPOINT%', $endpoint, $class_boilerplate );
+    $class_boilerplate = str_replace( '%VERB%', $verb_mapping[ $method ], $class_boilerplate );
+
+    $rest_dir = dirname( __FILE__, 2 ) . '/rest';
+    $file     = $rest_dir . "/class-{$endpoint}.php";
+
+    if ( file_exists( $file ) ) {
+        throw new RuntimeException(
+          sprintf( 'The file "%s" can\'t be generated because it already exists.', "class-{$endpoint}.php" )
+        );
+    }
+
+    $fp = fopen( $file, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
     if ( $fp !== false ) {
         fwrite( $fp, $class_boilerplate ); // phpcs:ignore WordPress.WP.AlternativeFunctions
@@ -113,112 +128,5 @@ class Generate_Rest_Route extends Command {
     $io->success( "File class-{$endpoint}.php successfully created in {$rest_dir} directory." );
 
     return 0;
-  }
-
-  /**
-   * Class boilerplate
-   *
-   * @param string $class_name Name of the REST class to create.
-   * @param string $endpoint   Name of the endpoint of the REST class.
-   * @param string $verb       HTTP verb.
-   *
-   * @return string Class boilerplate contents.
-   */
-  private function get_class_boilerplate( string $class_name, string $endpoint, string $verb ) {
-    return <<<EOT
-<?php
-/**
- * The class register route for $class_name endpoint
- *
- * @package Eightshift_Boilerplate\Rest
- */
-
-namespace Eightshift_Boilerplate\Rest;
-
-use Eightshift_Libs\Rest\Base_Route;
-use Eightshift_Libs\Rest\Callable_Route;
-use Eightshift_Libs\Core\Config_Data;
-
-/**
- * Class Example_Route
- */
-class $class_name extends Base_Route implements Callable_Route {
-
-  /**
-   * Route slug
-   *
-   * @var string
-   */
-  const ENDPOINT_SLUG = '/$endpoint';
-
-  /**
-   * Instance variable of project config data.
-   *
-   * @var object
-   */
-  protected \$config;
-
-  /**
-   * Create a new instance that injects classes
-   *
-   * @param Config_Data \$config Inject config which holds data regarding project details.
-   */
-  public function __construct( Config_Data \$config ) {
-    \$this->config = \$config;
-  }
-
-  /**
-   * Method that returns project Route namespace.
-   *
-   * @return string Project namespace for REST route.
-   */
-  protected function get_namespace() : string {
-    return \$this->config->get_project_routes_namespace();
-  }
-
-  /**
-   * Method that returns project route version.
-   *
-   * @return string Route version as a string.
-   */
-  protected function get_version() : string {
-    return \$this->config->get_project_routes_version();
-  }
-
-  /**
-   * Get the base url of the route
-   *
-   * @return string The base URL for route you are adding.
-   */
-  protected function get_route_name() : string {
-    return static::ENDPOINT_SLUG;
-  }
-
-  /**
-   * Get callback arguments array
-   *
-   * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
-   */
-  protected function get_callback_arguments() : array {
-    return [
-      'methods'  => static::$verb,
-      'callback' => [ \$this, 'route_callback' ],
-    ];
-  }
-
-  /**
-   * Method that returns rest response
-   *
-   * @param  \WP_REST_Request \$request Data got from endpoint url.
-   *
-   * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-   *                                is already an instance, WP_HTTP_Response, otherwise
-   *                                returns a new WP_REST_Response instance.
-   */
-  public function route_callback( \WP_REST_Request \$request ) {
-    return rest_ensure_response();
-  }
-}
-EOT;
   }
 }
