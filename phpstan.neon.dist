@@ -11,3 +11,4 @@ parameters:
     excludes_analyse:
         - src/Core/CompiledContainer.php
         - src/menu/class-bem-menu-walker.php
+        - src/commands/templates/*
