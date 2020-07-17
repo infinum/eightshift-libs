@@ -2,12 +2,12 @@
 /**
  * File that holds the renderable interface.
  *
- * @package Eightshiftlibs\Core
+ * @package EightshiftLibs\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Core;
+namespace EightshiftLibs\Core;
 
 /**
  * Interface Renderable.

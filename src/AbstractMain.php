@@ -2,25 +2,24 @@
 /**
  * File containing the main intro class for your project.
  *
- * @package Eightshiftlibs\Core
+ * @package EightshiftLibs\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Core;
+namespace EightshiftLibs\Core;
 
-use \DI\Container;
-use \DI\ContainerBuilder;
+use function DI\create;
+use function DI\get;
+use DI\Container;
+use DI\ContainerBuilder;
 
-use Eightshiftlibs\Exception\FinalInvalidService;
+use EightshiftLibs\Exception\FinalInvalidService;
 
 /**
  * The main start class.
  * This is used to define instantiate all classes used in the lib.
  *
- * @since 2.0.0 Adding project prefix constant to use in lib.
- * @since 0.7.0 Dependency Injection Refactoring.
- * @since 0.1.0
  */
 abstract class AbstractMain implements ServiceInterface {
 
@@ -29,7 +28,6 @@ abstract class AbstractMain implements ServiceInterface {
    *
    * @var Service[]
    *
-   * @since 0.1.0
    */
   private $services = [];
 
@@ -49,18 +47,14 @@ abstract class AbstractMain implements ServiceInterface {
    *
    * @return void
    *
-   * @since 2.0.0 Adding hook for project config.
-   * @since 0.8.0 Removing type hinting void for php 7.0.
-   * @since 0.1.0
    */
   public function register() {
-    add_action( $this->get_default_register_action_hook(), [ $this, 'register_services' ] );
+    \add_action( $this->get_default_register_action_hook(), [ $this, 'register_services' ] );
   }
 
   /**
    * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.
    *
-   * @since 2.0.0
    */
   public function get_default_register_action_hook() : string {
     return 'after_setup_theme';
@@ -73,8 +67,6 @@ abstract class AbstractMain implements ServiceInterface {
    *
    * @return void
    *
-   * @since 0.7.0 Dependency Injection Refactoring
-   * @since 0.1.0
    */
   public function register_services() {
 
@@ -117,7 +109,6 @@ abstract class AbstractMain implements ServiceInterface {
    *
    * @throws \Exception Exception thrown by the DI container.
    *
-   * @since 0.7.0 Init
    */
   private function get_service_classes_with_di() : array {
     $services = $this->get_service_classes_prepared_array();
@@ -138,8 +129,6 @@ abstract class AbstractMain implements ServiceInterface {
    *
    * @return array
    *
-   * @since 2.2.3 Made the dependency check inside the foreach more flat.
-   * @since 0.7.0 Init.
    */
   private function get_service_classes_prepared_array() : array {
     $output = [];
@@ -166,7 +155,6 @@ abstract class AbstractMain implements ServiceInterface {
    *
    * @throws \Exception Exception thrown by the DI container.
    *
-   * @since 0.7.0 Init.
    */
   private function get_di_container( array $services ) {
     $builder = new ContainerBuilder();
@@ -177,7 +165,7 @@ abstract class AbstractMain implements ServiceInterface {
         continue;
       }
 
-      $definitions[ $service_key ] = \DI\create()->constructor( ...$this->get_di_dependencies( $service_values ) );
+      $definitions[ $service_key ] = create()->constructor( ...$this->get_di_dependencies( $service_values ) );
     }
 
     return $builder->addDefinitions( $definitions )->build();
@@ -190,13 +178,12 @@ abstract class AbstractMain implements ServiceInterface {
    * @param array $dependencies Array of classes/parameters to push in constructor.
    * @return array
    *
-   * @since 0.7.0 Init
    */
   private function get_di_dependencies( array $dependencies ) : array {
     return array_map(
       function( $dependency ) {
         if ( class_exists( $dependency ) ) {
-          return \DI\get( $dependency );
+          return get( $dependency );
         }
         return $dependency;
       },
@@ -213,7 +200,6 @@ abstract class AbstractMain implements ServiceInterface {
    *
    * @return Registrable
    *
-   * @since 0.1.0
    */
   private function instantiate_service( $class ) {
     if ( ! class_exists( $class ) ) {
@@ -235,7 +221,6 @@ abstract class AbstractMain implements ServiceInterface {
    *
    * @return array<class-string, string|string[]> Array of fully qualified service class names.
    *
-   * @since 0.1.0
    */
   abstract protected function get_service_classes() : array;
 }

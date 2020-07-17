@@ -2,12 +2,12 @@
 /**
  * The file that defines a project config details like prefix, absolute path and etc.
  *
- * @package Eightshiftlibs\Core
+ * @package EightshiftLibs\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Core;
+namespace EightshiftLibs\Core;
 
 /**
  * The project config class.
