@@ -7,7 +7,7 @@
 
 declare( strict_types=1 );
 
-namespace EightshiftlibsCore;
+namespace Eightshiftlibs\Core;
 
 use \DI\Container;
 use \DI\ContainerBuilder;
