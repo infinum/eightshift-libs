@@ -2,12 +2,12 @@
 /**
  * File that holds the Securable Route interface.
  *
- * @package Eightshiftlibs\Rest
+ * @package EightshiftLibs\Rest
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Rest;
+namespace EightshiftLibs\Rest;
 
 /**
  * Interface Securable.

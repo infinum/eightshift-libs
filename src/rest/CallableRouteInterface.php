@@ -2,12 +2,12 @@
 /**
  * File containing Rest/Api callable interface
  *
- * @package Eightshiftlibs\Rest
+ * @package EightshiftLibs\Rest
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Rest;
+namespace EightshiftLibs\Rest;
 
 /**
  * Route interface that adds routes

@@ -3,15 +3,15 @@
  * The Language specific functionality.
  *
  * @since   1.0.0
- * @package Eightshiftlibs\I18n
+ * @package EightshiftLibs\I18n
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\I18n;
+namespace EightshiftLibs\I18n;
 
-use Eightshiftlibs\Core\ServiceInterface;
-use Eightshiftlibs\Core\ConfigDataInterface;
+use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Core\ConfigDataInterface;
 
 /**
  * Class i18n

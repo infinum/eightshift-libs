@@ -3,14 +3,14 @@
  * Post Type columns abstract class file
  *
  * @since 2.0.5
- * @package Eightshiftlibs\Columns
+ * @package EightshiftLibs\Columns
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Columns;
+namespace EightshiftLibs\Columns;
 
-use Eightshiftlibs\Core\ServiceInterface;
+use EightshiftLibs\Core\ServiceInterface;
 
 /**
  * Abstract class AbstractBasePostTypeColumns.

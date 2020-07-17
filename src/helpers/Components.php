@@ -2,14 +2,14 @@
 /**
  * Helpers for components
  *
- * @package Eightshiftlibs\Helpers
+ * @package EightshiftLibs\Helpers
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Helpers;
+namespace EightshiftLibs\Helpers;
 
-use Eightshiftlibs\Exception\FinalComponentException;
+use EightshiftLibs\Exception\FinalComponentException;
 
 /**
  * Helpers for components

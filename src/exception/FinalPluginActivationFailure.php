@@ -3,12 +3,12 @@
  * File containing the plugin activation failure exception class
  *
  * @since 2.0.5
- * @package Eightshiftlibs\Exception
+ * @package EightshiftLibs\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Exception;
+namespace EightshiftLibs\Exception;
 
 /**
  * Class Plugin_Activation_Failure.

@@ -4,17 +4,17 @@
  *
  * It is used to provide manifest.json file location used with Webpack to fetch correct file locations.
  *
- * @package Eightshiftlibs\Manifest
+ * @package EightshiftLibs\Manifest
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Manifest;
+namespace EightshiftLibs\Manifest;
 
-use Eightshiftlibs\Core\ServiceInterface;
-use Eightshiftlibs\Exception\FinalInvalidManifest;
-use Eightshiftlibs\Manifest\ManifestDataInterface;
-use Eightshiftlibs\Core\ConfigDataInterface;
+use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Exception\FinalInvalidManifest;
+use EightshiftLibs\Manifest\ManifestDataInterface;
+use EightshiftLibs\Core\ConfigDataInterface;
 
 /**
  * Abstract class Manifest class.

@@ -3,12 +3,12 @@
  * File that holds the renderable Block interface.
  *
  * @since   1.0.0
- * @package Eightshiftlibs\Blocks
+ * @package EightshiftLibs\Blocks
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Blocks;
+namespace EightshiftLibs\Blocks;
 
 /**
  * Interface Renderable Block.

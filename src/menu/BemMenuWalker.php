@@ -3,12 +3,12 @@
  * Custom Menu Walker specific functionality.
  * It provides BEM classes to menues.
  *
- * @package Eightshiftlibs\Menu
+ * @package EightshiftLibs\Menu
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Menu;
+namespace EightshiftLibs\Menu;
 
 /**
  * Bem Menu Walker

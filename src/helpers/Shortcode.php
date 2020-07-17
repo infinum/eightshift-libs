@@ -3,12 +3,12 @@
  * The Shortcode specific functionality.
  *
  * @since   1.0.0
- * @package Eightshiftlibs\Helpers
+ * @package EightshiftLibs\Helpers
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Helpers;
+namespace EightshiftLibs\Helpers;
 
 /**
  * Class Shortcode

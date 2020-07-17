@@ -2,14 +2,14 @@
 /**
  * Enqueue class used to define all script and style enqueues for Gutenberg blocks.
  *
- * @package Eightshiftlibs\Enqueue
+ * @package EightshiftLibs\Enqueue
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Enqueue;
+namespace EightshiftLibs\Enqueue;
 
-use Eightshiftlibs\Manifest\ManifestDataInterface;
+use EightshiftLibs\Manifest\ManifestDataInterface;
 
 /**
  * Enqueue_Blocks class.

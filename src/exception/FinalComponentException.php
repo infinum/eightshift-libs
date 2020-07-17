@@ -2,12 +2,12 @@
 /**
  * File containing the failure exception class when trying to locate a template that doesn't exist.
  *
- * @package Eightshiftlibs\Exception
+ * @package EightshiftLibs\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Exception;
+namespace EightshiftLibs\Exception;
 
 /**
  * Class Component_Exception.

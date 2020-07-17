@@ -2,12 +2,12 @@
 /**
  * File containing Rest/Api field callable interface
  *
- * @package Eightshiftlibs\Rest
+ * @package EightshiftLibs\Rest
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Rest;
+namespace EightshiftLibs\Rest;
 
 /**
  * Field interface that adds/extends fields in routes.

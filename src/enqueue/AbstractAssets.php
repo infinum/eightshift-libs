@@ -2,14 +2,14 @@
 /**
  * The Assets abstract class.
  *
- * @package Eightshiftlibs\Enqueue
+ * @package EightshiftLibs\Enqueue
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Enqueue;
+namespace EightshiftLibs\Enqueue;
 
-use Eightshiftlibs\Core\ServiceInterface;
+use EightshiftLibs\Core\ServiceInterface;
 
 /**
  * Class Assets
@@ -17,7 +17,7 @@ use Eightshiftlibs\Core\ServiceInterface;
  * This abstract class holds helper methods that can be used and overwritten in
  * user defined classes that extend the enqueue classes in their project.
  *
- * @package Eightshiftlibs\Enqueue
+ * @package EightshiftLibs\Enqueue
  */
 abstract class AbstractAssets implements ServiceInterface {
 

@@ -4,14 +4,14 @@
  *
  * Original author: https://github.com/schlessera/wcbtn-2018-api/blob/master/src/CustomPostType/LabelGenerator.php
  *
- * @package Eightshiftlibs\CustomPostType
+ * @package EightshiftLibs\CustomPostType
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\CustomPostType;
+namespace EightshiftLibs\CustomPostType;
 
-use Eightshiftlibs\Exception\Invalid_Nouns;
+use EightshiftLibs\Exception\Invalid_Nouns;
 
 /**
  * Class that generates lables for custom post type.

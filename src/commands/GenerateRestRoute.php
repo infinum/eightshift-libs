@@ -2,12 +2,12 @@
 /**
  * File holding the REST route generation command
  *
- * @package Eightshiftlibs\Commands
+ * @package EightshiftLibs\Commands
  */
 
 declare(strict_types=1);
 
-namespace Eightshiftlibs\Commands;
+namespace EightshiftLibs\Commands;
 
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -21,7 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * Symfony command generator class used for REST route generation.
  *
- * @package Eightshiftlibs\Commands
+ * @package EightshiftLibs\Commands
  */
 class GenerateRestRoute extends Command {
 

@@ -2,12 +2,12 @@
 /**
  * File containing the invalid callback exception class
  *
- * @package Eightshiftlibs\Exception
+ * @package EightshiftLibs\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Exception;
+namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Callback.

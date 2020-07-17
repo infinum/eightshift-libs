@@ -2,12 +2,12 @@
 /**
  * File containing invalid Gutenberg Block exceptions
  *
- * @package Eightshiftlibs\Exception
+ * @package EightshiftLibs\Exception
  */
 
  declare( strict_types=1 );
 
-namespace Eightshiftlibs\Exception;
+namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Block.

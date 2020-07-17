@@ -2,14 +2,14 @@
 /**
  * File that holds base abstract class for custom taxonomy registration.
  *
- * @package Eightshiftlibs\Custom_Taxonomy
+ * @package EightshiftLibs\Custom_Taxonomy
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\CustomTaxonomy;
+namespace EightshiftLibs\CustomTaxonomy;
 
-use Eightshiftlibs\Core\ServiceInterface;
+use EightshiftLibs\Core\ServiceInterface;
 
 /**
  * Abstract class AbstractBaseTaxonomy class.

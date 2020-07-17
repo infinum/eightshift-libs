@@ -2,12 +2,12 @@
 /**
  * File containing the failure exception class when assets aren't bundled or missing.
  *
- * @package Eightshiftlibs\Exception
+ * @package EightshiftLibs\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Exception;
+namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Manifest.

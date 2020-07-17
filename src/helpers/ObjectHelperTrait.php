@@ -3,12 +3,12 @@
  * The object helper specific functionality inside classes.
  * Used in admin or theme side but only inside a class.
  *
- * @package Eightshiftlibs\Helpers
+ * @package EightshiftLibs\Helpers
  */
 
 declare( strict_types=1 );
 
-namespace Eightshiftlibs\Helpers;
+namespace EightshiftLibs\Helpers;
 
 /**
  * Class Object Helper
