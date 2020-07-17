@@ -16,7 +16,7 @@ namespace Eightshift_Libs\Menu;
  *
  * @since 1.0.0
  */
-class Bem_Menu_Walker extends \Walker_Nav_Menu {
+class BemMenuWalker extends \Walker_Nav_Menu {
   /**
    * CSS class prefix string - unique for a theme.
    *
