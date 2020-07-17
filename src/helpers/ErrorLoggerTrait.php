@@ -2,12 +2,12 @@
 /**
  * The object helper specific functionality for errors.
  *
- * @package Eightshift_Libs\Helpers
+ * @package Eightshiftlibs\Helpers
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Helpers;
+namespace Eightshiftlibs\Helpers;
 
 /**
  * Error logger trait.

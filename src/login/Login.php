@@ -2,14 +2,14 @@
 /**
  * The login page specific functionality.
  *
- * @package Eightshift_Libs\Login
+ * @package Eightshiftlibs\Login
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Login;
+namespace Eightshiftlibs\Login;
 
-use Eightshift_Libs\Core\ServiceInterface;
+use Eightshiftlibs\Core\ServiceInterface;
 
 /**
  * Class Login

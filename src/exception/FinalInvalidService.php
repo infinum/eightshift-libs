@@ -2,12 +2,12 @@
 /**
  * File containing the invalid service exception class
  *
- * @package Eightshift_Libs\Exception
+ * @package Eightshiftlibs\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Exception;
+namespace Eightshiftlibs\Exception;
 
 /**
  * Class Invalid_Service.

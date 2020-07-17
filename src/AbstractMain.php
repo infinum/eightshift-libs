@@ -2,17 +2,17 @@
 /**
  * File containing the main intro class for your project.
  *
- * @package Eightshift_Libs\Core
+ * @package Eightshiftlibs\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Core;
+namespace EightshiftlibsCore;
 
 use \DI\Container;
 use \DI\ContainerBuilder;
 
-use Eightshift_Libs\Exception\FinalInvalidService;
+use Eightshiftlibs\Exception\FinalInvalidService;
 
 /**
  * The main start class.
@@ -22,7 +22,7 @@ use Eightshift_Libs\Exception\FinalInvalidService;
  * @since 0.7.0 Dependency Injection Refactoring.
  * @since 0.1.0
  */
-abstract class Main implements ServiceInterface {
+abstract class AbstractMain implements ServiceInterface {
 
   /**
    * Array of instantiated services.

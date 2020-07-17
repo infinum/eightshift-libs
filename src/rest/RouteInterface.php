@@ -2,12 +2,12 @@
 /**
  * File containing Request type interface
  *
- * @package Eightshift_Libs\Rest
+ * @package Eightshiftlibs\Rest
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Rest;
+namespace Eightshiftlibs\Rest;
 
 /**
  * Route interface that adds routes

@@ -7,7 +7,7 @@
 
 namespace Eightshift_Boilerplate\Rest;
 
-use Eightshift_Libs\Core\ConfigDataInterface;
+use Eightshiftlibs\Core\ConfigDataInterface;
 
 /**
  * Class Example_Route

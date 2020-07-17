@@ -2,14 +2,14 @@
 /**
  * File that holds base abstract class for custom post type registration.
  *
- * @package Eightshift_Libs\CustomPostType
+ * @package Eightshiftlibs\CustomPostType
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\CustomPostType;
+namespace Eightshiftlibs\CustomPostType;
 
-use Eightshift_Libs\Core\ServiceInterface;
+use Eightshiftlibs\Core\ServiceInterface;
 
 /**
  * Abstract class AbstractBasePostType class.

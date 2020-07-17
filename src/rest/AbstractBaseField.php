@@ -2,14 +2,14 @@
 /**
  * The class file that holds abstract class for REST fields registration.
  *
- * @package Eightshift_Libs\Rest
+ * @package Eightshiftlibs\Rest
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Rest;
+namespace Eightshiftlibs\Rest;
 
-use Eightshift_Libs\Core\ServiceInterface;
+use Eightshiftlibs\Core\ServiceInterface;
 
 /**
  * Abstract base field class

@@ -3,14 +3,14 @@
  * The Media specific functionality.
  *
  * @since   1.0.0
- * @package Eightshift_Libs\Media
+ * @package Eightshiftlibs\Media
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Media;
+namespace Eightshiftlibs\Media;
 
-use Eightshift_Libs\Core\ServiceInterface;
+use Eightshiftlibs\Core\ServiceInterface;
 
 /**
  * Class Media

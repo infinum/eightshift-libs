@@ -3,12 +3,12 @@
  * * File that holds Has_Deactivation interface
  *
  * @since 1.0.0
- * @package Eightshift_Libs\Core
+ * @package Eightshiftlibs\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Core;
+namespace Eightshiftlibs\Core;
 
 /**
  * Interface Has_Deactivation.
@@ -17,7 +17,7 @@ namespace Eightshift_Libs\Core;
  *
  * @since 1.0.0
  */
-interface Has_Deactivation {
+interface HasDeactivationInterface {
   /**
    * Deactivate the service.
    *

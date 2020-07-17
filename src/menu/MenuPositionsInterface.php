@@ -4,12 +4,12 @@
  *
  * Used to define available menu positions in your project.
  *
- * @package Eightshift_Libs\Menu
+ * @package Eightshiftlibs\Menu
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Menu;
+namespace Eightshiftlibs\Menu;
 
 /**
  * Interface MenuPositionsInterface

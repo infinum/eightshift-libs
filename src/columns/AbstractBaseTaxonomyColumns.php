@@ -3,14 +3,14 @@
  * Taxonomy columns abstract class file
  *
  * @since 2.0.5
- * @package Eightshift_Libs\Columns
+ * @package Eightshiftlibs\Columns
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Columns;
+namespace Eightshiftlibs\Columns;
 
-use Eightshift_Libs\Core\ServiceInterface;
+use Eightshiftlibs\Core\ServiceInterface;
 
 /**
  * Abstract class AbstractBaseTaxonomyColumns.

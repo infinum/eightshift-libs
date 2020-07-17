@@ -2,14 +2,14 @@
 /**
  * The Theme/Frontend Enqueue specific functionality.
  *
- * @package Eightshift_Libs\Enqueue
+ * @package Eightshiftlibs\Enqueue
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Enqueue;
+namespace Eightshiftlibs\Enqueue;
 
-use Eightshift_Libs\Manifest\ManifestDataInterface;
+use Eightshiftlibs\Manifest\ManifestDataInterface;
 
 /**
  * Class Enqueue

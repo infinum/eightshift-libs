@@ -2,12 +2,12 @@
 /**
  * File containing failed to load view class
  *
- * @package Eightshift_Libs\Exception
+ * @package Eightshiftlibs\Exception
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Exception;
+namespace Eightshiftlibs\Exception;
 
 /**
  * Class Failed_To_Load_View.

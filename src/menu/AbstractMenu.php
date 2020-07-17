@@ -2,15 +2,15 @@
 /**
  * The Menu specific functionality.
  *
- * @package Eightshift_Libs\Menu
+ * @package Eightshiftlibs\Menu
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Menu;
+namespace Eightshiftlibs\Menu;
 
-use Eightshift_Libs\Core\ServiceInterface;
-use Eightshift_Libs\Menu\MenuPositionsInterface;
+use Eightshiftlibs\Core\ServiceInterface;
+use Eightshiftlibs\Menu\MenuPositionsInterface;
 
 /**
  * Class Menu

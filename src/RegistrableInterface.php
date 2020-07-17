@@ -2,12 +2,12 @@
 /**
  * File that holds the registrable interface.
  *
- * @package Eightshift_Libs\Core
+ * @package Eightshiftlibs\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Core;
+namespace Eightshiftlibs\Core;
 
 /**
  * Interface Registrable.

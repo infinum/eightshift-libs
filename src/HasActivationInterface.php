@@ -3,12 +3,12 @@
  * File that holds Has_Activation interface
  *
  * @since 1.0.0
- * @package Eightshift_Libs\Core
+ * @package Eightshiftlibs\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Core;
+namespace Eightshiftlibs\Core;
 
 /**
  * Interface Has_Activation.

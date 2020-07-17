@@ -4,12 +4,12 @@
  *
  * Used to define the way Config item is retrieved from the Config file.
  *
- * @package Eightshift_Libs\Core
+ * @package Eightshiftlibs\Core
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Core;
+namespace Eightshiftlibs\Core;
 
 /**
  * Interface ConfigDataInterface
