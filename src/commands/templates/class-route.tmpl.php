@@ -7,12 +7,12 @@
 
 namespace Eightshift_Boilerplate\Rest;
 
-use Eightshift_Libs\Core\Config_Data;
+use Eightshift_Libs\Core\ConfigDataInterface;
 
 /**
  * Class Example_Route
  */
-class %CLASS_NAME% extends Base_Route implements Callable_Route {
+class %CLASS_NAME% extends AbstractBaseRoute implements CallableRouteInterface {
 
   /**
    * Route slug
@@ -31,9 +31,9 @@ class %CLASS_NAME% extends Base_Route implements Callable_Route {
   /**
    * Create a new instance that injects classes
    *
-   * @param Config_Data $config Inject config which holds data regarding project details.
+   * @param ConfigDataInterface $config Inject config which holds data regarding project details.
    */
-  public function __construct( Config_Data $config ) {
+  public function __construct( ConfigDataInterface $config ) {
     $this->config = $config;
   }
 

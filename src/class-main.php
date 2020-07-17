@@ -12,7 +12,7 @@ namespace Eightshift_Libs\Core;
 use \DI\Container;
 use \DI\ContainerBuilder;
 
-use Eightshift_Libs\Exception;
+use Eightshift_Libs\Exception\FinalInvalidService;
 
 /**
  * The main start class.
@@ -22,7 +22,7 @@ use Eightshift_Libs\Exception;
  * @since 0.7.0 Dependency Injection Refactoring.
  * @since 0.1.0
  */
-abstract class Main implements Service {
+abstract class Main implements ServiceInterface {
 
   /**
    * Array of instantiated services.
@@ -88,7 +88,7 @@ abstract class Main implements Service {
     array_walk(
       $this->services,
       function( $class ) {
-        if ( ! $class instanceof Registrable ) {
+        if ( ! $class instanceof RegistrableInterface ) {
           return;
         }
 
@@ -217,12 +217,12 @@ abstract class Main implements Service {
    */
   private function instantiate_service( $class ) {
     if ( ! class_exists( $class ) ) {
-      throw Exception\Invalid_Service::from_service( $class );
+      throw FinalInvalidService::from_service( $class );
     }
 
     $service = new $class();
-    if ( ! $service instanceof Registrable ) {
-      throw Exception\Invalid_Service::from_service( $service );
+    if ( ! $service instanceof RegistrableInterface ) {
+      throw FinalInvalidService::from_service( $service );
     }
 
     return $service;
