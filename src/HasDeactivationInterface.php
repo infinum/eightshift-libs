@@ -2,7 +2,6 @@
 /**
  * * File that holds Has_Deactivation interface
  *
- * @since 1.0.0
  * @package EightshiftLibs\Core
  */
 
@@ -14,8 +13,6 @@ namespace EightshiftLibs\Core;
  * Interface Has_Deactivation.
  *
  * An object that can be deactivated.
- *
- * @since 1.0.0
  */
 interface HasDeactivationInterface {
   /**

@@ -11,8 +11,6 @@ namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Nouns.
- *
- * @since 0.1.0
  */
 final class FinalInvalidNouns extends \InvalidArgumentException implements GeneralExceptionInterface {
 
@@ -23,8 +21,6 @@ final class FinalInvalidNouns extends \InvalidArgumentException implements Gener
    * @param string $key Asset handle that is not valid.
    *
    * @return static
-   *
-   * @since 0.1.0
    */
   public static function from_key( string $key ) {
     $message = sprintf(

@@ -13,8 +13,6 @@ use EightshiftLibs\Manifest\ManifestDataInterface;
 
 /**
  * Class Enqueue
- *
- * @since 2.0.0
  */
 class EnqueueTheme extends AbstractAssets {
 
@@ -25,8 +23,6 @@ class EnqueueTheme extends AbstractAssets {
    * Instance variable of manifest data.
    *
    * @var ManifestDataInterface
-   *
-   * @since 2.0.0
    */
   protected $manifest;
 
@@ -34,9 +30,6 @@ class EnqueueTheme extends AbstractAssets {
    * Create a new admin instance.
    *
    * @param ManifestDataInterface $manifest Inject manifest which holds data about assets from manifest.json.
-   *
-   * @since 2.0.0
-   * @since 2.2.0 removed Config from the dependency.
    */
   public function __construct( ManifestDataInterface $manifest ) {
     $this->manifest = $manifest;
@@ -44,8 +37,6 @@ class EnqueueTheme extends AbstractAssets {
 
   /**
    * Register all the hooks
-   *
-   * @since 2.0.0
    *
    * @return void
    */
@@ -56,11 +47,6 @@ class EnqueueTheme extends AbstractAssets {
 
   /**
    * Register the Stylesheets for the front end of the theme.
-   *
-   * @since 2.0.0
-   * @since 2.0.3 Added methods for overrides.
-   *              Fixed static calls from config class.
-   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */
@@ -80,11 +66,6 @@ class EnqueueTheme extends AbstractAssets {
 
   /**
    * Register the JavaScript for the front end of the theme.
-   *
-   * @since 2.0.0
-   * @since 2.0.3 Added methods for overrides.
-   *              Fixed static calls from config class.
-   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */

@@ -11,8 +11,6 @@ namespace EightshiftLibs\Rest;
 
 /**
  * Route interface that adds routes
- *
- * @since 0.1.0
  */
 interface RouteInterface {
 
@@ -20,8 +18,6 @@ interface RouteInterface {
    * Alias for GET transport method.
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const READABLE = 'GET';
 
@@ -29,8 +25,6 @@ interface RouteInterface {
    * Alias for POST transport method.
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const CREATABLE = 'POST';
 
@@ -38,8 +32,6 @@ interface RouteInterface {
    * Alias for PATCH transport method.
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const EDITABLE = 'PATCH';
 
@@ -47,8 +39,6 @@ interface RouteInterface {
    * Alias for PUT transport method.
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const UPDATEABLE = 'PUT';
 
@@ -56,8 +46,6 @@ interface RouteInterface {
    * Alias for DELETE transport method.
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const DELETABLE = 'DELETE';
 }

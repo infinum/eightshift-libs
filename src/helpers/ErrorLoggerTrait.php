@@ -11,8 +11,6 @@ namespace EightshiftLibs\Helpers;
 
 /**
  * Error logger trait.
- *
- * @since 1.0.0
  */
 trait ErrorLoggerTrait {
 

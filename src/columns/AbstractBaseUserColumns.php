@@ -2,7 +2,6 @@
 /**
  * User columns abstract class file
  *
- * @since 2.0.5
  * @package EightshiftLibs\Columns
  */
 
@@ -23,8 +22,6 @@ abstract class AbstractBaseUserColumns implements ServiceInterface {
    * Register the user columns and content in them.
    *
    * @return void
-   *
-   * @since 2.0.5
    */
   public function register() : void {
     add_filter( 'manage_users_columns', [ $this, 'add_column_name' ] );
@@ -38,8 +35,6 @@ abstract class AbstractBaseUserColumns implements ServiceInterface {
    * @param array $columns The existing column names array with default user columns (title, author, date etc.).
    *
    * @return array         Modified column names array.
-   *
-   * @since 2.0.5
    */
   abstract public function add_column_name( array $columns ) : array;
 
@@ -51,8 +46,6 @@ abstract class AbstractBaseUserColumns implements ServiceInterface {
    * @param int    $user_id     ID of the currently-listed user.
    *
    * @return string             Output based on the column name.
-   *
-   * @since 2.0.5
    */
   abstract public function render_column_content( string $output, string $column_name, int $user_id ) : string;
 
@@ -62,8 +55,6 @@ abstract class AbstractBaseUserColumns implements ServiceInterface {
    * @param  array $columns Array of columns.
    *
    * @return array          Modified array of columns.
-   *
-   * @since 2.0.5
    */
   abstract public function sort_added_columns( array $columns ) : array;
 }

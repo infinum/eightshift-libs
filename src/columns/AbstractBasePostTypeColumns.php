@@ -2,7 +2,6 @@
 /**
  * Post Type columns abstract class file
  *
- * @since 2.0.5
  * @package EightshiftLibs\Columns
  */
 
@@ -23,8 +22,6 @@ abstract class AbstractBasePostTypeColumns implements ServiceInterface {
    * Register the post columns and content in them.
    *
    * @return void
-   *
-   * @since 2.0.5
    */
   public function register() : void {
     array_map(
@@ -42,8 +39,6 @@ abstract class AbstractBasePostTypeColumns implements ServiceInterface {
    * @param array $columns The existing column names array with default post columns (title, author, date etc.).
    *
    * @return array         Modified column names array.
-   *
-   * @since 2.0.5
    */
   abstract public function add_column_name( array $columns ) : array;
 
@@ -54,8 +49,6 @@ abstract class AbstractBasePostTypeColumns implements ServiceInterface {
    * @param  int    $post_id     The current post ID.
    *
    * @return void
-   *
-   * @since 2.0.5
    */
   abstract public function render_column_content( string $column_name, int $post_id ) : void;
 
@@ -63,8 +56,6 @@ abstract class AbstractBasePostTypeColumns implements ServiceInterface {
    * Get the slug of the post type where the additional column should appear.
    *
    * @return array The name of the post type.
-   *
-   * @since 2.0.5
    */
   abstract protected function get_post_type_slug() : array;
 }

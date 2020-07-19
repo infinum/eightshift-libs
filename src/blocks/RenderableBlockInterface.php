@@ -2,7 +2,6 @@
 /**
  * File that holds the renderable Block interface.
  *
- * @since   1.0.0
  * @package EightshiftLibs\Blocks
  */
 
@@ -14,9 +13,6 @@ namespace EightshiftLibs\Blocks;
  * Interface Renderable Block.
  *
  * An object that can be rendered.
- *
- * @since 2.0.2 Fixing wrong type hinting for $inner_block_content.
- * @since 1.0.0
  */
 interface RenderableBlockInterface {
 
@@ -27,9 +23,8 @@ interface RenderableBlockInterface {
    * @param string $inner_block_content Block's content if using inner blocks.
    *
    * @throws \Exception On missing attributes OR missing template.
-   * @return string
    *
-   * @since 1.0.0
+   * @return string
    */
   public function render( array $attributes, $inner_block_content ) : string;
 }

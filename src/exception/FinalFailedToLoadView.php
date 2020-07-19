@@ -11,8 +11,6 @@ namespace EightshiftLibs\Exception;
 
 /**
  * Class Failed_To_Load_View.
- *
- * @since 0.1.0
  */
 final class FinalFailedToLoadView extends \RuntimeException implements GeneralExceptionInterface {
 
@@ -25,8 +23,6 @@ final class FinalFailedToLoadView extends \RuntimeException implements GeneralEx
    * @param \Exception $exception Exception that was thrown by the view file.
    *
    * @return static
-   *
-   * @since 0.1.0
    */
   public static function view_exception( $uri, $exception ) {
     $message = sprintf(

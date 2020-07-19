@@ -12,8 +12,6 @@ namespace EightshiftLibs\Helpers;
 
 /**
  * Class Object Helper
- *
- * @since 1.0.0
  */
 trait ObjectHelperTrait {
 
@@ -21,9 +19,8 @@ trait ObjectHelperTrait {
    * Check if XML is valid file used for svg.
    *
    * @param xml $xml Full xml document.
-   * @return boolean
    *
-   * @since 1.0.0
+   * @return boolean
    */
   public function is_valid_xml( $xml ) {
     libxml_use_internal_errors( true );
@@ -39,8 +36,6 @@ trait ObjectHelperTrait {
    * @param string $string String to check.
    *
    * @return bool
-   *
-   * @since 1.0.0
    */
   public static function is_json( string $string ) : bool {
     json_decode( $string );
@@ -51,9 +46,8 @@ trait ObjectHelperTrait {
    * Flatten multidimensional array.
    *
    * @param  array $array Multidimensional array.
+   * 
    * @return array
-   *
-   * @since 2.0.0
    */
   public static function flatten_array( array $array ) : array {
     $output = [];
@@ -79,8 +73,6 @@ trait ObjectHelperTrait {
    * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
    *
    * @return array
-   *
-   * @since 1.0.0
    */
   public static function sanitize_array( array $array, string $sanitization_function ) : array {
     foreach ( $array as $key => $value ) {
@@ -99,8 +91,6 @@ trait ObjectHelperTrait {
    *
    * @param array $items Items array to sort. Must have order key.
    * @return array
-   *
-   * @since 1.0.0
    */
   public static function sort_array_by_order_key( array $items ) : array {
     usort(

@@ -2,7 +2,6 @@
 /**
  * The Shortcode specific functionality.
  *
- * @since   1.0.0
  * @package EightshiftLibs\Helpers
  */
 
@@ -12,8 +11,6 @@ namespace EightshiftLibs\Helpers;
 
 /**
  * Class Shortcode
- *
- * @since 1.0.0
  */
 class Shortcode {
 
@@ -28,8 +25,6 @@ class Shortcode {
    * @param array  $content The shortcode's content. Default is null (none).
    *
    * @return string|bool False on failure, the result of the shortcode on success.
-   *
-   * @since 1.0.0
    */
   public function get_shortcode( string $tag, array $atts = [], $content = null ) {
 

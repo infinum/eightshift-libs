@@ -2,7 +2,6 @@
 /**
  * The Media specific functionality.
  *
- * @since   1.0.0
  * @package EightshiftLibs\Media
  */
 
@@ -16,8 +15,6 @@ use EightshiftLibs\Core\ServiceInterface;
  * Class Media
  *
  * This class handles all media options. Sizes, Types, Features, etc.
- *
- * @since 1.0.0
  */
 class Media implements ServiceInterface {
 
@@ -25,8 +22,6 @@ class Media implements ServiceInterface {
    * Register all the hooks
    *
    * @return void
-   *
-   * @since 1.0.0
    */
   public function register() {
     add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 20 );
@@ -37,8 +32,6 @@ class Media implements ServiceInterface {
    * for full list check: https://developer.wordpress.org/reference/functions/add_theme_support/
    *
    * @return void
-   *
-   * @since 1.0.0
    */
   public function add_theme_support() {
     \add_theme_support( 'title-tag' );

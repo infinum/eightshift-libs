@@ -11,8 +11,6 @@ namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Callback.
- *
- * @since 0.1.0
  */
 final class FinalInvalidCallback extends \InvalidArgumentException implements GeneralExceptionInterface {
 
@@ -23,8 +21,6 @@ final class FinalInvalidCallback extends \InvalidArgumentException implements Ge
    * @param string $callback Class name of the callback that was not recognized.
    *
    * @return static
-   *
-   * @since 0.1.0
    */
   public static function from_callback( $callback ) {
     $message = sprintf(

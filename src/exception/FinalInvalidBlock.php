@@ -11,8 +11,6 @@ namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Block.
- *
- * @since 2.0.0
  */
 final class FinalInvalidBlock extends \InvalidArgumentException implements GeneralExceptionInterface {
 
@@ -20,8 +18,6 @@ final class FinalInvalidBlock extends \InvalidArgumentException implements Gener
    * Throws error if blocks are missing.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_blocks_exception() {
     return new static( esc_html__( 'There are no blocks added in your project.', 'eightshift-libs' ) );
@@ -33,8 +29,6 @@ final class FinalInvalidBlock extends \InvalidArgumentException implements Gener
    * @param string $block_path Full block path for the missing name.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_name_exception( string $block_path ) {
     return new static(
@@ -52,8 +46,6 @@ final class FinalInvalidBlock extends \InvalidArgumentException implements Gener
    * @param string $block_path Full block path for the missing name.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_view_exception( string $block_name, string $block_path ) {
     return new static(
@@ -71,8 +63,6 @@ final class FinalInvalidBlock extends \InvalidArgumentException implements Gener
    * @param string $block_path Full block path for the missing name.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_render_view_exception( string $block_path ) {
     return new static(
@@ -89,8 +79,6 @@ final class FinalInvalidBlock extends \InvalidArgumentException implements Gener
    * @param string $settings_manifest_path Full path for the missing manifest.json.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_settings_manifest_exception( string $settings_manifest_path ) {
     return new static(
@@ -107,8 +95,6 @@ final class FinalInvalidBlock extends \InvalidArgumentException implements Gener
    * @param string $settings_manifest_path Full path for the missing manifest.json.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_wrapper_manifest_exception( string $settings_manifest_path ) {
     return new static(
@@ -125,8 +111,6 @@ final class FinalInvalidBlock extends \InvalidArgumentException implements Gener
    * @param string $wrapper_path Full wrapper path.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_wrapper_view_exception( string $wrapper_path ) {
     return new static(
@@ -141,8 +125,6 @@ final class FinalInvalidBlock extends \InvalidArgumentException implements Gener
    * Throws error if global manifest settings key namespace is missing.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_namespace_exception() {
     return new static(

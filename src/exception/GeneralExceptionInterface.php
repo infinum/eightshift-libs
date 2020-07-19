@@ -13,8 +13,6 @@ namespace EightshiftLibs\Exception;
  * Interface GeneralExceptionInterface.
  *
  * This interface is implemented by all exceptions, so that we can catch "internal" exceptions only.
- *
- * @since 1.0.0
  */
 interface GeneralExceptionInterface {
 

@@ -13,8 +13,6 @@ use EightshiftLibs\Core\ServiceInterface;
 
 /**
  * Abstract base field class
- *
- * @since 2.0.0 Added in the project
  */
 abstract class AbstractBaseField implements ServiceInterface {
 
@@ -22,8 +20,6 @@ abstract class AbstractBaseField implements ServiceInterface {
    * A register method holds register_rest_route funtion to register or override api field.
    *
    * @return void
-   *
-   * @since 2.0.0 Added in the project
    */
   public function register() : void {
     add_action(
@@ -43,8 +39,6 @@ abstract class AbstractBaseField implements ServiceInterface {
    * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
    *
    * @return string|array
-   *
-   * @since 2.0.0 Added in the project
    */
   abstract protected function get_object_type();
 
@@ -52,8 +46,6 @@ abstract class AbstractBaseField implements ServiceInterface {
    * Get the name of the field you awant to register or orverride.
    *
    * @return string The attribute name.
-   *
-   * @since 2.0.0 Added in the project
    */
   abstract protected function get_field_name() : string;
 
@@ -61,8 +53,6 @@ abstract class AbstractBaseField implements ServiceInterface {
    * Get callback arguments array
    *
    * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
-   *
-   * @since 2.0.0 Added in the project
    */
   abstract protected function get_callback_arguments() : array;
 }

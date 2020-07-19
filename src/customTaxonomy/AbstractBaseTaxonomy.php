@@ -13,8 +13,6 @@ use EightshiftLibs\Core\ServiceInterface;
 
 /**
  * Abstract class AbstractBaseTaxonomy class.
- *
- * @since 0.1.0
  */
 abstract class AbstractBaseTaxonomy implements ServiceInterface {
 
@@ -22,9 +20,6 @@ abstract class AbstractBaseTaxonomy implements ServiceInterface {
    * Register custom taxonomy.
    *
    * @return void
-   *
-   * @since 0.8.0 Removing type hinting void for php 7.0.
-   * @since 0.1.0
    */
   public function register() {
     add_action(
@@ -43,8 +38,6 @@ abstract class AbstractBaseTaxonomy implements ServiceInterface {
    * Get the slug of the custom taxonomy
    *
    * @return string Custom taxonomy slug.
-   *
-   * @since 0.1.0
    */
   abstract protected function get_taxonomy_slug() : string;
 
@@ -52,8 +45,6 @@ abstract class AbstractBaseTaxonomy implements ServiceInterface {
    * Get the post type slug to use the taxonomy.
    *
    * @return string Custom post type slug.
-   *
-   * @since 0.1.0
    */
   abstract protected function get_post_type_slug() : string;
 
@@ -61,8 +52,6 @@ abstract class AbstractBaseTaxonomy implements ServiceInterface {
    * Get the arguments that configure the custom taxonomy.
    *
    * @return array Array of arguments.
-   *
-   * @since 0.1.0
    */
   abstract protected function get_taxonomy_arguments() : array;
 }

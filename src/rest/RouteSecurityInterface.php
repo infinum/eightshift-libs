@@ -13,8 +13,6 @@ namespace EightshiftLibs\Rest;
  * Interface Securable.
  *
  * An object that can be registered.
- *
- * @since   2.0.0
  */
 interface RouteSecurityInterface {
 
@@ -24,8 +22,6 @@ interface RouteSecurityInterface {
    * A register method holds authentification_check funtion to for route.
    *
    * @return void
-   *
-   * @since 2.0.0
    */
   public function authentification_check();
 }

@@ -13,8 +13,6 @@ namespace EightshiftLibs\Core;
  * Interface Registrable.
  *
  * An object that can be registered.
- *
- * @since 0.1.0
  */
 interface RegistrableInterface {
 
@@ -27,9 +25,6 @@ interface RegistrableInterface {
    * This is why every class should hold its own hooks.
    *
    * @return void
-   *
-   * @since 0.8.0 Removing type hinting void for php 7.0.
-   * @since 0.1.0
    */
   public function register();
 }

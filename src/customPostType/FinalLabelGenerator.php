@@ -11,12 +11,10 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\CustomPostType;
 
-use EightshiftLibs\Exception\Invalid_Nouns;
+use EightshiftLibs\Exception\FinalInvalidNouns;
 
 /**
  * Class that generates lables for custom post type.
- *
- * @since 0.1.0
  */
 final class FinalLabelGenerator {
 
@@ -24,8 +22,6 @@ final class FinalLabelGenerator {
    * Singular name UC Constant
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const SINGULAR_NAME_UC = 'singular_name_uc';
 
@@ -33,8 +29,6 @@ final class FinalLabelGenerator {
    * Singular name LC Constant
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const SINGULAR_NAME_LC = 'singular_name_lc';
 
@@ -42,8 +36,6 @@ final class FinalLabelGenerator {
    * Plural name UC Constant
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const PLURAL_NAME_UC = 'plural_name_uc';
 
@@ -51,8 +43,6 @@ final class FinalLabelGenerator {
    * Plural name LC Constant
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const PLURAL_NAME_LC = 'plural_name_lc';
 
@@ -60,8 +50,6 @@ final class FinalLabelGenerator {
    * Requiered Nons Constant
    *
    * @var string
-   *
-   * @since 0.1.0
    */
   const REQUIRED_NOUNS = [
     self::SINGULAR_NAME_UC,
@@ -77,15 +65,13 @@ final class FinalLabelGenerator {
    * @param array $nouns Array of nouns to use for the labels.
    *
    * @return string[] array Array of labels.
-   * @throws Invalid_Nouns Invalid nouns exception.
-   *
-   * @since 0.1.0
+   * @throws FinalInvalidNouns Invalid nouns exception.
    */
   public function get_generated_labels( array $nouns ) : array {
 
     foreach ( self::REQUIRED_NOUNS as $noun_key ) {
       if ( ! array_key_exists( $noun_key, $nouns ) ) {
-        throw Invalid_Nouns::from_key( $noun_key );
+        throw FinalInvalidNouns::from_key( $noun_key );
       }
     }
 

@@ -13,8 +13,6 @@ namespace EightshiftLibs\Menu;
 /**
  * Bem Menu Walker
  * Inserts some BEM naming sensibility into WordPress menus
- *
- * @since 1.0.0
  */
 class BemMenuWalker extends \Walker_Nav_Menu {
   /**
@@ -35,8 +33,6 @@ class BemMenuWalker extends \Walker_Nav_Menu {
    * Constructor function
    *
    * @param string $css_class_prefix load menu prefix for class.
-   *
-   * @since 1.0.0
    */
   public function __construct( string $css_class_prefix ) {
 
@@ -66,7 +62,6 @@ class BemMenuWalker extends \Walker_Nav_Menu {
    * @param string $output output.
    *
    * @return void Parent Display element
-   * @since 1.0.0
    */
   public function display_element( $element, &$children_elements, $max_depth, $depth = 0, $args, &$output ) {
 
@@ -87,8 +82,6 @@ class BemMenuWalker extends \Walker_Nav_Menu {
    * @param array  $args args.
    *
    * @return void
-   *
-   * @since 1.0.0
    */
   public function start_lvl( &$output, $depth = 1, $args = [] ) {
 
@@ -120,8 +113,6 @@ class BemMenuWalker extends \Walker_Nav_Menu {
    * @param int    $id id.
    *
    * @return void
-   *
-   * @since 1.0.0
    */
   public function start_el( &$output, $item, $depth = 0, $args = [], $id = 0 ) {
 

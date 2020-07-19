@@ -13,8 +13,6 @@ namespace EightshiftLibs\Core;
 
 /**
  * Interface ConfigDataInterface
- *
- * @since 2.0.0 Added in the project
  */
 interface ConfigDataInterface {
 
@@ -22,8 +20,6 @@ interface ConfigDataInterface {
    * Method that returns project name.
    *
    * Generally used for naming assets handlers, languages, etc.
-   *
-   * @since 2.0.0 Added in the project
    */
   public static function get_project_name() : string;
 
@@ -31,8 +27,6 @@ interface ConfigDataInterface {
    * Method that returns project version.
    *
    * Generally used for versioning asset handlers while enqueueing them.
-   *
-   * @since 2.0.0 Added in the project
    */
   public static function get_project_version() : string;
 
@@ -42,8 +36,6 @@ interface ConfigDataInterface {
    * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.
    *
    * @return string Full path to asset.
-   *
-   * @since 2.0.0 Added in the project
    */
   public static function get_project_prefix() : string;
 
@@ -55,8 +47,6 @@ interface ConfigDataInterface {
    * @param string $path Additional path to add to project path.
    *
    * @return string
-   *
-   * @since 2.0.0 Added in the project
    */
   public static function get_project_path( string $path = '' ) : string;
 
@@ -67,8 +57,6 @@ interface ConfigDataInterface {
    * @param string $key String key to append prefix on.
    *
    * @return string Returns key prefixed with project prefix.
-   *
-   * @since 2.0.0 Added in the project
    */
   public static function get_config( string $key ) : string;
 }

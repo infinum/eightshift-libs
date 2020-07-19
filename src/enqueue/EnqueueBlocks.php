@@ -13,8 +13,6 @@ use EightshiftLibs\Manifest\ManifestDataInterface;
 
 /**
  * Enqueue_Blocks class.
- *
- * @since 1.0.0
  */
 class EnqueueBlocks extends AbstractAssets {
 
@@ -28,8 +26,6 @@ class EnqueueBlocks extends AbstractAssets {
    * Instance variable of manifest data.
    *
    * @var ManifestDataInterface
-   *
-   * @since 2.0.0
    */
   protected $manifest;
 
@@ -37,9 +33,6 @@ class EnqueueBlocks extends AbstractAssets {
    * Create a new admin instance.
    *
    * @param ManifestDataInterface $manifest Inject manifest which holds data about assets from manifest.json.
-   *
-   * @since 2.0.0 Adding Config as a new DI.
-   * @since 2.2.0 removed Config from the dependency.
    */
   public function __construct( ManifestDataInterface $manifest ) {
     $this->manifest = $manifest;
@@ -47,8 +40,6 @@ class EnqueueBlocks extends AbstractAssets {
 
   /**
    * Register all the hooks
-   *
-   * @since 1.0.0
    */
   public function register() {
 
@@ -68,11 +59,6 @@ class EnqueueBlocks extends AbstractAssets {
   /**
    * Enqueue blocks script for editor only.
    *
-   * @since 1.0.0
-   * @since 2.0.3 Added methods for overrides.
-   *              Fixed static calls from config class.
-   * @since 2.2.0 Removed config dependency.
-   *
    * @return void
    */
   public function enqueue_block_editor_script() {
@@ -90,11 +76,6 @@ class EnqueueBlocks extends AbstractAssets {
 
   /**
    * Enqueue blocks style for editor only.
-   *
-   * @since 1.0.0
-   * @since 2.0.3 Added methods for overrides.
-   *              Fixed static calls from config class.
-   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */
@@ -115,11 +96,6 @@ class EnqueueBlocks extends AbstractAssets {
   /**
    * Enqueue blocks style for editor and frontend.
    *
-   * @since 1.0.0
-   * @since 2.0.3 Added methods for overrides.
-   *              Fixed static calls from config class.
-   * @since 2.2.0 Removed config dependency.
-   *
    * @return void
    */
   public function enqueue_block_style() {
@@ -138,11 +114,6 @@ class EnqueueBlocks extends AbstractAssets {
 
   /**
    * Enqueue blocks script for frontend only.
-   *
-   * @since 1.0.0
-   * @since 2.0.3 Added methods for overrides.
-   *              Fixed static calls from config class.
-   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */
@@ -166,9 +137,6 @@ class EnqueueBlocks extends AbstractAssets {
    * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
    *
    * @return array List of all the style dependencies.
-   *
-   * @since 2.0.3
-   * @since 2.2.0 Removed config dependency.
    */
   protected function get_admin_style_dependencies() : array {
     return [ "{$this->manifest->get_config()->get_project_prefix()}-block-style" ];
@@ -178,8 +146,6 @@ class EnqueueBlocks extends AbstractAssets {
      * List of admin script dependencies
      *
      * @return array List of all the admin dependencies.
-     *
-     * @since 2.0.3
      */
   protected function get_admin_script_dependencies() : array {
     return [

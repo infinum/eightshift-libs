@@ -2,7 +2,6 @@
 /**
  * The Language specific functionality.
  *
- * @since   1.0.0
  * @package EightshiftLibs\I18n
  */
 
@@ -17,8 +16,6 @@ use EightshiftLibs\Core\ConfigDataInterface;
  * Class i18n
  *
  * This class handles theme or admin languages.
- *
- * @since 1.0.0
  */
 class I18n implements ServiceInterface {
 
@@ -26,8 +23,6 @@ class I18n implements ServiceInterface {
    * Instance variable of project config data.
    *
    * @var ConfigDataInterface
-   *
-   * @since 2.0.0
    */
   protected $config;
 
@@ -35,8 +30,6 @@ class I18n implements ServiceInterface {
    * Create a new instance.
    *
    * @param ConfigDataInterface $config Inject config which holds data regarding project details.
-   *
-   * @since 2.0.0
    */
   public function __construct( ConfigDataInterface $config ) {
     $this->config = $config;
@@ -46,8 +39,6 @@ class I18n implements ServiceInterface {
    * Register all the hooks
    *
    * @return void
-   *
-   * @since 1.0.0
    */
   public function register() {
     add_action( 'after_setup_theme', [ $this, 'load_theme_textdomain' ] );
@@ -57,8 +48,6 @@ class I18n implements ServiceInterface {
    * Load the plugin text domain for translation.
    *
    * @return void
-   *
-   * @since 1.0.0
    */
   public function load_theme_textdomain() {
     \load_theme_textdomain(

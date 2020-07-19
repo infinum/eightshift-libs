@@ -11,8 +11,6 @@ namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Service.
- *
- * @since 0.1.0
  */
 final class FinalInvalidService extends \InvalidArgumentException implements GeneralExceptionInterface {
 
@@ -23,8 +21,6 @@ final class FinalInvalidService extends \InvalidArgumentException implements Gen
    * @param string $service Class name of the service that was not recognized.
    *
    * @return static
-   *
-   * @since 0.1.0
    */
   public static function from_service( $service ) {
     $message = sprintf(

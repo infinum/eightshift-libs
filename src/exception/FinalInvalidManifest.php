@@ -11,8 +11,6 @@ namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Manifest.
- *
- * @since 0.1.0
  */
 final class FinalInvalidManifest extends \InvalidArgumentException implements GeneralExceptionInterface {
 
@@ -22,8 +20,6 @@ final class FinalInvalidManifest extends \InvalidArgumentException implements Ge
    * @param string $key Missing manifest key.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_manifest_item_exception( string $key ) {
     return new static(
@@ -40,8 +36,6 @@ final class FinalInvalidManifest extends \InvalidArgumentException implements Ge
    * @param string $path Missing manifest.json path.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function missing_manifest_exception( string $path ) {
     return new static(
@@ -60,8 +54,6 @@ final class FinalInvalidManifest extends \InvalidArgumentException implements Ge
    * @param string $error Error message.
    *
    * @return static
-   *
-   * @since 2.0.0
    */
   public static function manifest_structure_exception( string $error ) {
     return new static( $error );

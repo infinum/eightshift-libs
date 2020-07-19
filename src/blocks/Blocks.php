@@ -17,8 +17,6 @@ use EightshiftLibs\Exception\FinalInvalidManifest;
 
 /**
  * Class Blocks
- *
- * @since 2.0.0
  */
 class Blocks implements ServiceInterface, RenderableBlockInterface {
 
@@ -26,8 +24,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Instance variable of project config data.
    *
    * @var ConfigDataInterface
-   *
-   * @since 2.0.0
    */
   protected $config;
 
@@ -35,8 +31,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Full data of blocks, settings and wrapper data.
    *
    * @var array
-   *
-   * @since 2.0.0
    */
   protected $blocks = [];
 
@@ -44,8 +38,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Block view filter name constant.
    *
    * @var string
-   *
-   * @since 2.0.0
    */
   const BLOCK_VIEW_FILTER_NAME = 'block-view-data';
 
@@ -53,8 +45,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Block attributes override filter name constant.
    *
    * @var string
-   *
-   * @since 2.0.0
    */
   const BLOCK_ATTRIBUTES_FILTER_NAME = 'block-attributes-override';
 
@@ -62,8 +52,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Create a new instance that injects config data to get project specific details.
    *
    * @param ConfigDataInterface $config Inject config which holds data regarding project details.
-   *
-   * @since 2.0.0
    */
   public function __construct( ConfigDataInterface $config ) {
     $this->config = $config;
@@ -73,8 +61,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Register all the hooks
    *
    * @return void
-   *
-   * @since 2.0.0
    */
   public function register() {
 
@@ -121,8 +107,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Register align wide option in editor
    *
    * @return void
-   *
-   * @since 2.0.0
    */
   public function add_theme_support() {
     add_theme_support( 'align-wide' );
@@ -133,8 +117,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * You should never call this method directly instead you should call $this->blocks.
    *
    * @return void
-   *
-   * @since 2.0.0
    */
   public function get_blocks_data_full_raw() {
 
@@ -170,8 +152,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
    *
    * @return array
-   *
-   * @since 2.0.0
    */
   public function get_all_blocks_list() : array {
     $blocks = array_map(
@@ -194,8 +174,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @throws FinalInvalidBlock Throws error if blocks are missing.
    *
    * @return void
-   *
-   * @since 2.0.0
    */
   public function register_blocks() {
     $blocks = $this->blocks['blocks'];
@@ -221,8 +199,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @param array $block_details Full Block Manifest details.
    *
    * @return void
-   *
-   * @since 2.0.0
    */
   public function register_block( array $block_details ) {
     \register_block_type(
@@ -244,8 +220,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @throws FinalInvalidBlock Throws error if block view is missing.
    *
    * @return string Html template for block.
-   *
-   * @since 2.0.0
    */
   public function render( array $attributes, $inner_block_content ) : string {
 
@@ -282,8 +256,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    *
    * @param array $categories Array of all blocks categories.
    * @return array
-   *
-   * @since 2.0.0
    */
   public function get_custom_category( $categories ) {
     return array_merge(
@@ -309,8 +281,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @return void Includes an HTML view, or throws an error if the view is missing.
    *
    * @throws FinalInvalidBlock Throws error if wrapper view template is missing.
-   *
-   * @since 2.0.0
    */
   public function render_wrapper_view( string $src, array $attributes, $inner_block_content = null ) : void {
     if ( ! file_exists( $src ) ) {
@@ -332,8 +302,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @return void Includes an HTML view, or throws an error if the view is missing.
    *
    * @throws FinalInvalidBlock Throws error if render block view is missing.
-   *
-   * @since 2.0.0
    */
   public function render_block_view( string $src, array $attributes, $inner_block_content = null ) : void {
     $path = $this->get_blocks_path() . $src;
@@ -351,8 +319,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Prefix path is defined by project config.
    *
    * @return string
-   *
-   * @since 2.0.0
    */
   protected function get_blocks_path() : string {
     return $this->config->get_project_path() . '/src/blocks';
@@ -362,8 +328,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Get blocks custom folder absolute path.
    *
    * @return string
-   *
-   * @since 2.0.0
    */
   protected function get_blocks_custom_path() : string {
     return "{$this->get_blocks_path()}/custom";
@@ -375,8 +339,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @param string $block_name Block Name value to get a path.
    *
    * @return string
-   *
-   * @since 2.0.0
    */
   protected function get_block_view_path( string $block_name ) : string {
     return "{$this->get_blocks_custom_path()}/{$block_name}/{$block_name}.php";
@@ -386,8 +348,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Get wrapper folder full absolute path.
    *
    * @return string
-   *
-   * @since 2.0.0
    */
   protected function get_wrapper_path() : string {
     return "{$this->get_blocks_path()}/wrapper";
@@ -399,8 +359,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @throws FinalInvalidBlock Throws error if wrapper settings manifest.json is missing.
    *
    * @return array
-   *
-   * @since 2.0.0
    */
   protected function get_wrapper() : array {
     $manifest_path = "{$this->get_wrapper_path()}/manifest.json";
@@ -422,8 +380,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @throws FinalInvalidBlock Throws error if global manifest settings key namespace is missing.
    *
    * @return array
-   *
-   * @since 2.0.0
    */
   protected function get_settings() : array {
     $manifest_path = "{$this->get_blocks_path()}/manifest.json";
@@ -497,8 +453,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @throws FinalInvalidBlock Throws error if block name is missing.
    *
    * @return array
-   *
-   * @since 2.0.0
    */
   private function get_blocks_data() : array {
 
@@ -538,8 +492,6 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @param string $string JSON string to validate.
    * @return array Parsed JSON string into an array.
    * @throws FinalInvalidManifest Error in the case json file has errors.
-   *
-   * @since 2.0.0
    */
   private function parse_manifest( string $string ) : array {
 

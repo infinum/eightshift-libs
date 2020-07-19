@@ -15,15 +15,11 @@ use EightshiftLibs\Core\ConfigDataInterface;
 
 /**
  * Interface ManifestDataInterface
- *
- * @since 0.7.0
  */
 interface ManifestDataInterface {
 
   /**
    * Config getter
-   *
-   * @since 2.2.0 Added config getter.
    *
    * @return ConfigDataInterface
    */
@@ -34,9 +30,8 @@ interface ManifestDataInterface {
    * This is used for cache busting assets.
    *
    * @param string $key File name key you want to get from manifest.
-   * @return string Full path to asset.
    *
-   * @since 0.7.0 Init
+   * @return string Full path to asset.
    */
   public function get_assets_manifest_item( string $key ) : string;
 }

@@ -39,8 +39,6 @@ abstract class AbstractAssets implements ServiceInterface {
    * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
    *
    * @return array List of all the script dependencies.
-   *
-   * @since 2.0.3
    */
   protected function get_frontend_script_dependencies() : array {
     return [];
@@ -52,8 +50,6 @@ abstract class AbstractAssets implements ServiceInterface {
    * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
    *
    * @return array List of all the script dependencies.
-   *
-   * @since 2.0.3
    */
   protected function get_admin_script_dependencies() : array {
     return [];
@@ -72,8 +68,6 @@ abstract class AbstractAssets implements ServiceInterface {
    * @link https://developer.wordpress.org/reference/functions/wp_localize_script/
    *
    * @return array Key value pair of different localizations.
-   *
-   * @since 2.0.3
    */
   protected function get_localizations() : array {
     return [];
@@ -85,8 +79,6 @@ abstract class AbstractAssets implements ServiceInterface {
    * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
    *
    * @return array List of all the style dependencies.
-   *
-   * @since 2.0.3
    */
   protected function get_frontend_style_dependencies() : array {
     return [];
@@ -98,8 +90,6 @@ abstract class AbstractAssets implements ServiceInterface {
    * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
    *
    * @return array List of all the style dependencies.
-   *
-   * @since 2.0.3
    */
   protected function get_admin_style_dependencies() : array {
     return [];
@@ -114,8 +104,6 @@ abstract class AbstractAssets implements ServiceInterface {
    * Accepts media types like 'all', 'print' and 'screen',
    * or media queries like '(orientation: portrait)' and '(max-width: 640px)'.
    * Default value: 'all'
-   *
-   * @since 2.0.3
    */
   protected function get_media() : string {
     return static::MEDIA_ALL;
@@ -128,8 +116,6 @@ abstract class AbstractAssets implements ServiceInterface {
    *
    * @return bool Whether to enqueue the script before </body> instead of in the <head>.
    * Default value: true
-   *
-   * @since 2.0.3
    */
   protected function script_in_footer() : bool {
     return static::IN_FOOTER;

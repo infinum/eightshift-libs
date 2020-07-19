@@ -13,8 +13,6 @@ use EightshiftLibs\Core\ServiceInterface;
 
 /**
  * Abstract base route class
- *
- * @since 2.0.0 Added in the project
  */
 abstract class AbstractBaseRoute implements RouteInterface, ServiceInterface {
 
@@ -22,8 +20,6 @@ abstract class AbstractBaseRoute implements RouteInterface, ServiceInterface {
    * A register method holds register_rest_route funtion to register api route.
    *
    * @return void
-   *
-   * @since 2.0.0 Added in the project
    */
   public function register() : void {
     add_action(
@@ -43,8 +39,6 @@ abstract class AbstractBaseRoute implements RouteInterface, ServiceInterface {
    * Method that returns project Route namespace.
    *
    * @return string Project namespace for REST route.
-   *
-   * @since 2.0.0 Added in the project
    */
   abstract protected function get_namespace() : string;
 
@@ -52,8 +46,6 @@ abstract class AbstractBaseRoute implements RouteInterface, ServiceInterface {
    * Method that returns project route version.
    *
    * @return string Route version as a string.
-   *
-   * @since 2.0.0 Added in the project
    */
   abstract protected function get_version() : string;
 
@@ -61,8 +53,6 @@ abstract class AbstractBaseRoute implements RouteInterface, ServiceInterface {
    * Get the base url of the route
    *
    * @return string The base URL for route you are adding.
-   *
-   * @since 2.0.0 Added in the project
    */
   abstract protected function get_route_name() : string;
 
@@ -70,8 +60,6 @@ abstract class AbstractBaseRoute implements RouteInterface, ServiceInterface {
    * Get callback arguments array
    *
    * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
-   *
-   * @since 2.0.0 Added in the project
    */
   abstract protected function get_callback_arguments() : array;
 
@@ -80,8 +68,6 @@ abstract class AbstractBaseRoute implements RouteInterface, ServiceInterface {
    * True overrides, false merges (with newer overriding if duplicate keys exist).
    *
    * @return bool If the route already exists, should we override it?
-   *
-   * @since 2.0.0 Added in the project
    */
   protected function override_route() : bool {
     return false;

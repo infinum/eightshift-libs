@@ -11,8 +11,6 @@ namespace EightshiftLibs\Core;
 
 /**
  * The project config class.
- *
- * @since 2.0.0
  */
 abstract class AbstractConfig implements ConfigDataInterface {
 
@@ -23,8 +21,6 @@ abstract class AbstractConfig implements ConfigDataInterface {
    * @param string $key String key to append prefix on.
    *
    * @return string Returns key prefixed with project prefix.
-   *
-   * @since 2.0.0
    */
   public static function get_config( string $key ) : string {
     $project_prefix = static::get_project_prefix();

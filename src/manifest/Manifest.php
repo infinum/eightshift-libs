@@ -18,11 +18,6 @@ use EightshiftLibs\Core\ConfigDataInterface;
 
 /**
  * Abstract class Manifest class.
- *
- * @since 2.0.0 Removing global variable setup.
- * @since 0.9.0 Adding Manifest Item filter.
- * @since 0.7.0 Added ManifestDataInterface Interface.
- * @since 0.1.0 Init.
  */
 class Manifest implements ServiceInterface, ManifestDataInterface {
 
@@ -30,8 +25,6 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
    * Manifest item filter name constant.
    *
    * @var string
-   *
-   * @since 0.9.0 Init.
    */
   const MANIFEST_ITEM_FILTER_NAME = 'manifest-item';
 
@@ -39,8 +32,6 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
    * Instance variable of project config data.
    *
    * @var ConfigDataInterface
-   *
-   * @since 2.0.0
    */
   protected $config;
 
@@ -48,8 +39,6 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
    * Full data of manifest items.
    *
    * @var array
-   *
-   * @since 2.0.0
    */
   protected $manifest = [];
 
@@ -57,20 +46,13 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
    * Create a new instance that injects config data to get project specific details.
    *
    * @param ConfigDataInterface $config Inject config which holds data regarding project details.
-   *
-   * @since 2.0.0
    */
   public function __construct( ConfigDataInterface $config ) {
     $this->config = $config;
   }
 
   /**
-   * Register all hooks.
-   *
-   * @since 2.0.0 Changed filter name to manifest.
-   * @since 0.9.0 Adding manifest item filter.
-   * @since 0.8.0 Removing type hinting void for php 7.0.
-   * @since 0.6.0 Init.
+   * Register all hooks. Changed filter name to manifest.
    *
    * @return void
    */
@@ -86,8 +68,6 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
    * @throws FinalInvalidManifest Throws error if manifest.json file is missing.
    *
    * @return void Sets the manifest variable.
-   *
-   * @since 2.0.0
    */
   public function set_assets_manifest_raw() : void {
     $path = $this->config->get_project_path() . '/public/manifest.json';
@@ -115,11 +95,7 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
    *
    * @param string $key File name key you want to get from manifest.
    *
-   * @throws FinalInvalidManifest Throws error if manifest key is missing.
-   *
-   * @since 2.0.0 Returned data from manifest and not global variable.
-   * @since 0.7.0 Changed to non static method and added Exception for missing key.
-   * @since 0.6.0 Init
+   * @throws FinalInvalidManifest Throws error if manifest key is missing. Returned data from manifest and not global variable.
    *
    * @return string Full path to asset.
    */
@@ -136,8 +112,6 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
   /**
    * Config getter
    *
-   * @since 2.2.0 Added config getter.
-   *
    * @return ConfigDataInterface|object
    */
   public function get_config() {
@@ -146,8 +120,6 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
 
   /**
    * This method appends full site url to the relative manifest data item.
-   *
-   * @since 0.6.0
    *
    * @return string
    */

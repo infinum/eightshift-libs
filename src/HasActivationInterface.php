@@ -2,7 +2,6 @@
 /**
  * File that holds Has_Activation interface
  *
- * @since 1.0.0
  * @package EightshiftLibs\Core
  */
 
@@ -14,8 +13,6 @@ namespace EightshiftLibs\Core;
  * Interface Has_Activation.
  *
  * An object that can be activated.
- *
- * @since 1.0.0
  */
 interface HasActivationInterface {
   /**

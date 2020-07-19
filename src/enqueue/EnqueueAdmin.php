@@ -15,8 +15,6 @@ use EightshiftLibs\Manifest\ManifestDataInterface;
  * Class EnqueueAdmin
  *
  * This class handles enqueue scripts and styles.
- *
- * @since 2.0.0
  */
 class EnqueueAdmin extends AbstractAssets {
 
@@ -27,8 +25,6 @@ class EnqueueAdmin extends AbstractAssets {
    * Instance variable of manifest data.
    *
    * @var ManifestDataInterface
-   *
-   * @since 2.0.0
    */
   protected $manifest;
 
@@ -36,9 +32,6 @@ class EnqueueAdmin extends AbstractAssets {
    * Create a new admin instance.
    *
    * @param ManifestDataInterface $manifest Inject manifest which holds data about assets from manifest.json.
-   *
-   * @since 2.0.0 Adding Config as a new DI.
-   * @since 2.2.0 removed Config from the dependency.
    */
   public function __construct( ManifestDataInterface $manifest ) {
     $this->manifest = $manifest;
@@ -46,8 +39,6 @@ class EnqueueAdmin extends AbstractAssets {
 
   /**
    * Register all the hooks
-   *
-   * @since 2.0.0
    *
    * @return void
    */
@@ -59,11 +50,6 @@ class EnqueueAdmin extends AbstractAssets {
 
   /**
    * Register the Stylesheets for the admin area.
-   *
-   * @since 2.0.0
-   * @since 2.0.3 Added methods for overrides.
-   *              Fixed static calls from config class.
-   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */
@@ -84,11 +70,6 @@ class EnqueueAdmin extends AbstractAssets {
 
   /**
    * Register the JavaScript for the admin area.
-   *
-   * @since 2.0.0
-   * @since 2.0.3 Added methods for overrides.
-   *              Fixed static calls from config class.
-   * @since 2.2.0 Removed config dependency.
    *
    * @return void
    */

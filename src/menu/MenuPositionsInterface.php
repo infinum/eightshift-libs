@@ -13,8 +13,6 @@ namespace EightshiftLibs\Menu;
 
 /**
  * Interface MenuPositionsInterface
- *
- * @since 2.0.0
  */
 interface MenuPositionsInterface {
 
@@ -22,8 +20,6 @@ interface MenuPositionsInterface {
    * Return all menu poistions
    *
    * @return array Of menu positions with name and slug.
-   *
-   * @since 2.0.0
    */
   public function get_menu_positions() : array;
 }
