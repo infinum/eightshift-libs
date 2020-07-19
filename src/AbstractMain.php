@@ -9,12 +9,10 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Core;
 
-use function DI\create;
-use function DI\get;
 use DI\Container;
 use DI\ContainerBuilder;
-
-use EightshiftLibs\Exception\FinalInvalidService;
+use DI\Definition\Helper\AutowireDefinitionHelper;
+use DI\Definition\Reference;
 
 /**
  * The main start class.
@@ -66,7 +64,6 @@ abstract class AbstractMain implements ServiceInterface {
    * @throws Exception\Invalid_Service If a service is not valid.
    *
    * @return void
-   *
    */
   public function register_services() {
 
@@ -108,7 +105,6 @@ abstract class AbstractMain implements ServiceInterface {
    * @return array
    *
    * @throws \Exception Exception thrown by the DI container.
-   *
    */
   private function get_service_classes_with_di() : array {
     $services = $this->get_service_classes_prepared_array();
@@ -128,7 +124,6 @@ abstract class AbstractMain implements ServiceInterface {
    * Key should be a class name, and value should be an empty array or the dependencies of the class.
    *
    * @return array
-   *
    */
   private function get_service_classes_prepared_array() : array {
     $output = [];
@@ -154,19 +149,21 @@ abstract class AbstractMain implements ServiceInterface {
    * @return Container
    *
    * @throws \Exception Exception thrown by the DI container.
-   *
    */
   private function get_di_container( array $services ) {
-    $builder = new ContainerBuilder();
-
     $definitions = [];
+
     foreach ( $services as  $service_key => $service_values ) {
       if ( gettype( $service_values ) !== 'array' ) {
         continue;
       }
 
-      $definitions[ $service_key ] = create()->constructor( ...$this->get_di_dependencies( $service_values ) );
+      $autowire = new AutowireDefinitionHelper();
+
+      $definitions[ $service_key ] = $autowire->constructor( ...$this->get_di_dependencies( $service_values ) );
     }
+
+    $builder = new ContainerBuilder();
 
     return $builder->addDefinitions( $definitions )->build();
   }
@@ -176,42 +173,19 @@ abstract class AbstractMain implements ServiceInterface {
    * If you pass a class use PHP-DI to prepare if not just output it.
    *
    * @param array $dependencies Array of classes/parameters to push in constructor.
-   * @return array
    *
+   * @return array
    */
   private function get_di_dependencies( array $dependencies ) : array {
     return array_map(
       function( $dependency ) {
         if ( class_exists( $dependency ) ) {
-          return get( $dependency );
+          return new Reference( $dependency );
         }
         return $dependency;
       },
       $dependencies
     );
-  }
-
-  /**
-   * Instantiate a single service.
-   *
-   * @param string $class Service class to instantiate.
-   *
-   * @throws Exception\Invalid_Service If the service is not valid.
-   *
-   * @return Registrable
-   *
-   */
-  private function instantiate_service( $class ) {
-    if ( ! class_exists( $class ) ) {
-      throw FinalInvalidService::from_service( $class );
-    }
-
-    $service = new $class();
-    if ( ! $service instanceof RegistrableInterface ) {
-      throw FinalInvalidService::from_service( $service );
-    }
-
-    return $service;
   }
 
   /**
