@@ -16,6 +16,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - replaced `DI\get` with `new Reference( $dependency );`.
 - changed namespace `Eightshift_Libs` to `EightshiftLibs`.
 
+### Removed
+- removed `instantiate_service()` method.
+
 ## [2.4.1] - 2020-07-10
 
 ### Changed
