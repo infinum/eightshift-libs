@@ -27,9 +27,7 @@
   "require": {
     "php": ">=7.2",
     "ext-json": "*",
-    "php-di/php-di": "^6.0",
-    "symfony/console": "^5.1",
-    "symfony/dependency-injection": "^5.1"
+    "php-di/php-di": "dev-master"
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^0.6",
