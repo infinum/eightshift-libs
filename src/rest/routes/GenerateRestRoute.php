@@ -2,13 +2,14 @@
 /**
  * File holding the REST route generation command
  *
- * @package EightshiftLibs\Commands
+ * @package EightshiftLibs\Rest\Routes
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Commands;
+namespace EightshiftLibs\Rest\Routes;
 
+use EightshiftLibs\Console\ConsoleHelpers;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,9 +22,25 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * Symfony command generator class used for REST route generation.
  *
- * @package EightshiftLibs\Commands
+ * @package EightshiftLibs\Rest\Routes
  */
 class GenerateRestRoute extends Command {
+
+  /**
+   * Project root
+   */
+  protected $root;
+
+  /**
+   * Undocumented function
+   *
+   * @param string $root
+   */
+  public function __construct( string $root ) {
+    parent::__construct();
+
+    $this->root = $root;
+  }
 
   /**
    * Command name property
@@ -57,12 +74,11 @@ class GenerateRestRoute extends Command {
   protected function execute( InputInterface $input, OutputInterface $output ) : int {
     $io = new SymfonyStyle( $input, $output );
 
-    /**
-     * Passed endpoint name argument
-     *
-     * @var string
-     */
     $endpoint_slug = $input->getArgument( 'endpoint-name' );
+
+    if ( empty( $endpoint_slug ) ) {
+      throw new RuntimeException( 'Endpoint slug empty' );
+    }
 
     /**
      * Passed method argument
@@ -71,10 +87,6 @@ class GenerateRestRoute extends Command {
      */
     $method = $input->getArgument( 'method' );
 
-    if ( empty( $endpoint_slug ) ) {
-      throw new RuntimeException( 'Endpoint slug empty' );
-    }
-
     if ( ! in_array( $method, [ 'GET', 'POST', 'PATCH', 'PUT', 'DELETE' ], true ) ) {
       throw new RuntimeException(
         sprintf( 'HTTP verb must be one of: \'GET\', \'POST\', \'PATCH\', \'PUT\', or \'DELETE\'. %s provided.', $method )
@@ -82,11 +94,8 @@ class GenerateRestRoute extends Command {
     }
 
     $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
-    $class    = explode( '_', str_replace( '-', '_', str_replace( ' ', '_', strtolower( $endpoint_slug ) ) ) );
 
-    $class_name = implode( '_', array_map( function( $item ) { // phpcs:ignore PEAR.Functions.FunctionCallSignature
-        return ucfirst( $item );
-    }, $class ) ); // phpcs:ignore PEAR.Functions.FunctionCallSignature
+    $class_name = ConsoleHelpers::get_class_name( $endpoint_slug );
 
     $verb_mapping = [
       'GET'    => 'READABLE',
@@ -97,35 +106,39 @@ class GenerateRestRoute extends Command {
     ];
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $template_file = file_get_contents( __DIR__ . '/templates/class-route.tmpl.php' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+    $template_file = file_get_contents( __DIR__ . '/Route.php' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
     if ( $template_file === false ) {
-        throw new RuntimeException( 'The template "/templates/class-route.tmpl.php seems to be missing.' );
+        throw new RuntimeException( 'The template "/Route.php" seems to be missing.' );
     }
 
-    $class_boilerplate = str_replace( '%CLASS_NAME%', $class_name, $template_file );
-    $class_boilerplate = str_replace( '%ENDPOINT%', $endpoint, $class_boilerplate );
-    $class_boilerplate = str_replace( '%VERB%', $verb_mapping[ $method ], $class_boilerplate );
+    $class = str_replace( 'class Route', "class Route{$class_name}", $template_file );
+    $class = str_replace( "const ENDPOINT_SLUG = '/route'", "const ENDPOINT_SLUG = '/{$endpoint}'", $class );
+    $class = str_replace( "'methods'  => static::READABLE,", "'methods'  => static::{$verb_mapping[ $method ]},", $class );
 
-    $rest_dir = dirname( __FILE__, 2 ) . '/rest';
-    $file     = $rest_dir . "/class-{$endpoint}.php";
+    $rest_dir = $this->root . '/src/rest/routes';
+    $file     = $rest_dir . "/Route{$class_name}.php";
 
     if ( file_exists( $file ) ) {
         throw new RuntimeException(
-          sprintf( 'The file "%s" can\'t be generated because it already exists.', "class-{$endpoint}.php" )
+          sprintf( 'The file "%s" can\'t be generated because it already exists.', "{$endpoint}.php" )
         );
+    }
+
+    if ( ! is_dir( $rest_dir ) ) {
+      mkdir( $rest_dir, 0755, true );
     }
 
     $fp = fopen( $file, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
     if ( $fp !== false ) {
-        fwrite( $fp, $class_boilerplate ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+        fwrite( $fp, $class ); // phpcs:ignore WordPress.WP.AlternativeFunctions
         fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions
     } else {
-        $io->error( "File class-{$endpoint}.php couldn't be created in {$rest_dir} directory. There was an error." );
+        $io->error( "File {$endpoint}.php couldn't be created in {$rest_dir} directory. There was an error." );
     }
 
-    $io->success( "File class-{$endpoint}.php successfully created in {$rest_dir} directory." );
+    $io->success( "File {$endpoint}.php successfully created in {$rest_dir} directory." );
 
     return 0;
   }

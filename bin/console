@@ -1,17 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-use Symfony\Component\Console\Application;
-use EightshiftLibs\Commands\GenerateRestRoute;
+$root = dirname( __FILE__, 2 );
 
-if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
-    echo 'Warning: The console should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
-}
+require $root . '/src/console/console.php';
 
-set_time_limit(0);
-
-require dirname(__DIR__).'/vendor/autoload.php';
-
-$app = new Application();
-$app->add(new GenerateRestRoute());
-$app->run();
+consoleRun( $root );
