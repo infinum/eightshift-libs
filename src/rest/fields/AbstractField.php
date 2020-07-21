@@ -7,7 +7,7 @@
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Rest;
+namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Core\ServiceInterface;
 

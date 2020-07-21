@@ -7,9 +7,10 @@
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Rest;
+namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Rest\RouteInterface;
 
 /**
  * Abstract base route class
