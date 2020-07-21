@@ -12,7 +12,7 @@ namespace EightshiftLibs\Exception;
 /**
  * Class Invalid_Nouns.
  */
-final class FinalInvalidNouns extends \InvalidArgumentException implements GeneralExceptionInterface {
+final class InvalidNouns extends \InvalidArgumentException implements GeneralExceptionInterface {
 
   /**
    * Create a new instance of the exception for an array of nouns that is

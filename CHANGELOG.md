@@ -11,7 +11,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - example: `menu.php` is now `AbstractMenu.php`.
 - example: `interface-manifest-data.php` is now `ManifestDataInterface.php`.
 - example: `trait-error-logger.php` is now `ErrorLoggerTrait.php`.
-- example: `class-component-exception.php` is now `FinalComponentException.php`.
+- example: `class-component-exception.php` is now `ComponentException.php`.
 - replaced `DI\create` with `new AutowireDefinitionHelper();`.
 - replaced `DI\get` with `new Reference( $dependency );`.
 - changed namespace `Eightshift_Libs` to `EightshiftLibs`.

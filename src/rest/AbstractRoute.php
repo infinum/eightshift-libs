@@ -14,7 +14,7 @@ use EightshiftLibs\Core\ServiceInterface;
 /**
  * Abstract base route class
  */
-abstract class AbstractBaseRoute implements RouteInterface, ServiceInterface {
+abstract class AbstractRoute implements RouteInterface, ServiceInterface {
 
   /**
    * A register method holds register_rest_route funtion to register api route.

@@ -12,7 +12,7 @@ namespace EightshiftLibs\Exception;
 /**
  * Class Invalid_Service.
  */
-final class FinalInvalidService extends \InvalidArgumentException implements GeneralExceptionInterface {
+final class InvalidService extends \InvalidArgumentException implements GeneralExceptionInterface {
 
   /**
    * Create a new instance of the exception for a service class name that is

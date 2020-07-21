@@ -12,8 +12,8 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Core\ConfigDataInterface;
 use EightshiftLibs\Core\ServiceInterface;
-use EightshiftLibs\Exception\FinalInvalidBlock;
-use EightshiftLibs\Exception\FinalInvalidManifest;
+use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Exception\InvalidManifest;
 
 /**
  * Class Blocks
@@ -171,7 +171,7 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
   /**
    * Method used to register all custom blocks with data fetched from blocks manifest.json.
    *
-   * @throws FinalInvalidBlock Throws error if blocks are missing.
+   * @throws InvalidBlock Throws error if blocks are missing.
    *
    * @return void
    */
@@ -179,7 +179,7 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
     $blocks = $this->blocks['blocks'];
 
     if ( empty( $blocks ) ) {
-      throw FinalInvalidBlock::missing_blocks_exception();
+      throw InvalidBlock::missing_blocks_exception();
     }
 
     if ( ! empty( $blocks ) ) {
@@ -216,8 +216,8 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * @param array  $attributes          Array of attributes as defined in block's manifest.json.
    * @param string $inner_block_content Block's content if using inner blocks.
    *
-   * @throws FinalInvalidBlock Throws error if block wrapper view is missing.
-   * @throws FinalInvalidBlock Throws error if block view is missing.
+   * @throws InvalidBlock Throws error if block wrapper view is missing.
+   * @throws InvalidBlock Throws error if block view is missing.
    *
    * @return string Html template for block.
    */
@@ -234,12 +234,12 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
 
     // Check if wrapper component exists.
     if ( ! file_exists( $wrapper_path ) ) {
-      throw FinalInvalidBlock::missing_wrapper_view_exception( $wrapper_path );
+      throw InvalidBlock::missing_wrapper_view_exception( $wrapper_path );
     }
 
     // Check if actual block exists.
     if ( ! file_exists( $template_path ) ) {
-      throw FinalInvalidBlock::missing_view_exception( $block_name, $template_path );
+      throw InvalidBlock::missing_view_exception( $block_name, $template_path );
     }
 
     // If everything is ok, return the contents of the template (return, NOT echo).
@@ -280,11 +280,11 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    *
    * @return void Includes an HTML view, or throws an error if the view is missing.
    *
-   * @throws FinalInvalidBlock Throws error if wrapper view template is missing.
+   * @throws InvalidBlock Throws error if wrapper view template is missing.
    */
   public function render_wrapper_view( string $src, array $attributes, $inner_block_content = null ) : void {
     if ( ! file_exists( $src ) ) {
-      throw FinalInvalidBlock::missing_wrapper_view_exception( $src );
+      throw InvalidBlock::missing_wrapper_view_exception( $src );
     }
 
     include $src;
@@ -301,13 +301,13 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    *
    * @return void Includes an HTML view, or throws an error if the view is missing.
    *
-   * @throws FinalInvalidBlock Throws error if render block view is missing.
+   * @throws InvalidBlock Throws error if render block view is missing.
    */
   public function render_block_view( string $src, array $attributes, $inner_block_content = null ) : void {
     $path = $this->get_blocks_path() . $src;
 
     if ( ! file_exists( $path ) ) {
-      throw FinalInvalidBlock::missing_render_view_exception( $path );
+      throw InvalidBlock::missing_render_view_exception( $path );
     }
 
     include $path;
@@ -356,7 +356,7 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
   /**
    * Get wrapper manifest data from wrapper manifest.json file.
    *
-   * @throws FinalInvalidBlock Throws error if wrapper settings manifest.json is missing.
+   * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
    *
    * @return array
    */
@@ -364,7 +364,7 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
     $manifest_path = "{$this->get_wrapper_path()}/manifest.json";
 
     if ( ! file_exists( $manifest_path ) ) {
-      throw FinalInvalidBlock::missing_wrapper_manifest_exception( $manifest_path );
+      throw InvalidBlock::missing_wrapper_manifest_exception( $manifest_path );
     }
 
     $settings = implode( ' ', (array) file( ( $manifest_path ) ) );
@@ -376,8 +376,8 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
   /**
    * Get blocks global settings manifest data from settings manifest.json file.
    *
-   * @throws FinalInvalidBlock Throws error if global settings manifest.json is missing.
-   * @throws FinalInvalidBlock Throws error if global manifest settings key namespace is missing.
+   * @throws InvalidBlock Throws error if global settings manifest.json is missing.
+   * @throws InvalidBlock Throws error if global manifest settings key namespace is missing.
    *
    * @return array
    */
@@ -385,14 +385,14 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
     $manifest_path = "{$this->get_blocks_path()}/manifest.json";
 
     if ( ! file_exists( $manifest_path ) ) {
-      throw FinalInvalidBlock::missing_settings_manifest_exception( $manifest_path );
+      throw InvalidBlock::missing_settings_manifest_exception( $manifest_path );
     }
 
     $settings = implode( ' ', (array) file( ( $manifest_path ) ) );
     $settings = json_decode( $settings, true );
 
     if ( ! isset( $settings['namespace'] ) ) {
-      throw FinalInvalidBlock::missing_namespace_exception();
+      throw InvalidBlock::missing_namespace_exception();
     }
 
     return $settings;
@@ -450,7 +450,7 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    * Throws error if manifest key blockName is missing.
    * You should never call this method directly.
    *
-   * @throws FinalInvalidBlock Throws error if block name is missing.
+   * @throws InvalidBlock Throws error if block name is missing.
    *
    * @return array
    */
@@ -463,7 +463,7 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
         $block = $this->parse_manifest( $block );
 
         if ( ! isset( $block['blockName'] ) ) {
-          throw FinalInvalidBlock::missing_name_exception( $block_path );
+          throw InvalidBlock::missing_name_exception( $block_path );
         }
 
         if ( ! isset( $block['classes'] ) ) {
@@ -491,7 +491,7 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
    *
    * @param string $string JSON string to validate.
    * @return array Parsed JSON string into an array.
-   * @throws FinalInvalidManifest Error in the case json file has errors.
+   * @throws InvalidManifest Error in the case json file has errors.
    */
   private function parse_manifest( string $string ) : array {
 
@@ -531,7 +531,7 @@ class Blocks implements ServiceInterface, RenderableBlockInterface {
     }
 
     if ( $error !== '' ) {
-      throw FinalInvalidManifest::manifest_structure_exception( $error );
+      throw InvalidManifest::manifest_structure_exception( $error );
     }
 
     return $result;

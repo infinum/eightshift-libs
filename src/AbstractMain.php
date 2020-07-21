@@ -37,28 +37,6 @@ abstract class AbstractMain implements ServiceInterface {
   private $container;
 
   /**
-   * Register the project with the WordPress system.
-   *
-   * The register_service method will call the register() method in every service class,
-   * which holds the actions and filters - effectively replacing the need to manually add
-   * them in one place.
-   *
-   * @return void
-   *
-   */
-  public function register() {
-    \add_action( $this->get_default_register_action_hook(), [ $this, 'register_services' ] );
-  }
-
-  /**
-   * Default main action hook that start the whole lib. If you are using this lib in a plugin please change it to plugins_loaded.
-   *
-   */
-  public function get_default_register_action_hook() : string {
-    return 'after_setup_theme';
-  }
-
-  /**
    * Register the individual services with optional dependency injection.
    *
    * @throws Exception\Invalid_Service If a service is not valid.

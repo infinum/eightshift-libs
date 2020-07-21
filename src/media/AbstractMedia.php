@@ -16,16 +16,7 @@ use EightshiftLibs\Core\ServiceInterface;
  *
  * This class handles all media options. Sizes, Types, Features, etc.
  */
-class Media implements ServiceInterface {
-
-  /**
-   * Register all the hooks
-   *
-   * @return void
-   */
-  public function register() {
-    add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 20 );
-  }
+abstract class AbstractMedia implements ServiceInterface {
 
   /**
    * Enable theme support

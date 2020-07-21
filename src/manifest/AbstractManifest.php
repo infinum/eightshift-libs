@@ -12,14 +12,14 @@ declare( strict_types=1 );
 namespace EightshiftLibs\Manifest;
 
 use EightshiftLibs\Core\ServiceInterface;
-use EightshiftLibs\Exception\FinalInvalidManifest;
+use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Manifest\ManifestDataInterface;
 use EightshiftLibs\Core\ConfigDataInterface;
 
 /**
  * Abstract class Manifest class.
  */
-class Manifest implements ServiceInterface, ManifestDataInterface {
+abstract class AbstractManifest implements ServiceInterface, ManifestDataInterface {
 
   /**
    * Manifest item filter name constant.
@@ -65,7 +65,7 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
    * Set the manifest data with site url prefix.
    * You should never call this method directly instead you should call $this->manifest.
    *
-   * @throws FinalInvalidManifest Throws error if manifest.json file is missing.
+   * @throws InvalidManifest Throws error if manifest.json file is missing.
    *
    * @return void Sets the manifest variable.
    */
@@ -73,7 +73,7 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
     $path = $this->config->get_project_path() . '/public/manifest.json';
 
     if ( ! file_exists( $path ) ) {
-      throw FinalInvalidManifest::missing_manifest_exception( $path );
+      throw InvalidManifest::missing_manifest_exception( $path );
     }
 
     $data = json_decode( implode( ' ', (array) file( $path ) ), true );
@@ -95,7 +95,7 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
    *
    * @param string $key File name key you want to get from manifest.
    *
-   * @throws FinalInvalidManifest Throws error if manifest key is missing. Returned data from manifest and not global variable.
+   * @throws InvalidManifest Throws error if manifest key is missing. Returned data from manifest and not global variable.
    *
    * @return string Full path to asset.
    */
@@ -103,7 +103,7 @@ class Manifest implements ServiceInterface, ManifestDataInterface {
     $manifest = $this->manifest;
 
     if ( ! isset( $manifest[ $key ] ) ) {
-      throw FinalInvalidManifest::missing_manifest_item_exception( $key );
+      throw InvalidManifest::missing_manifest_item_exception( $key );
     }
 
     return $manifest[ $key ];

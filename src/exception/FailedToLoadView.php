@@ -12,7 +12,7 @@ namespace EightshiftLibs\Exception;
 /**
  * Class Failed_To_Load_View.
  */
-final class FinalFailedToLoadView extends \RuntimeException implements GeneralExceptionInterface {
+final class FailedToLoadView extends \RuntimeException implements GeneralExceptionInterface {
 
   /**
    * Create a new instance of the exception if the view file itself created

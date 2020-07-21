@@ -12,7 +12,7 @@ namespace EightshiftLibs\Exception;
 /**
  * Class Plugin_Activation_Failure.
  */
-final class FinalPluginActivationFailure extends \RuntimeException implements GeneralExceptionInterface {
+final class PluginActivationFailure extends \RuntimeException implements GeneralExceptionInterface {
 
   /**
    * Create a new instance of the exception in case plugin cannot be activated.

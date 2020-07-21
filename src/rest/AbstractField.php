@@ -14,7 +14,7 @@ use EightshiftLibs\Core\ServiceInterface;
 /**
  * Abstract base field class
  */
-abstract class AbstractBaseField implements ServiceInterface {
+abstract class AbstractField implements ServiceInterface {
 
   /**
    * A register method holds register_rest_route funtion to register or override api field.

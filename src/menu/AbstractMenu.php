@@ -18,15 +18,6 @@ use EightshiftLibs\Menu\MenuPositionsInterface;
 abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface {
 
   /**
-   * Register all the hooks
-   *
-   * @return void
-   */
-  public function register() {
-    add_action( 'after_setup_theme', [ $this, 'register_menu_positions' ], 11 );
-  }
-
-  /**
    * Register All Menu positions
    *
    * @return void

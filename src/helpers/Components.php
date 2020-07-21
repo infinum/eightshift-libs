@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Helpers;
 
-use EightshiftLibs\Exception\FinalComponentException;
+use EightshiftLibs\Exception\ComponentException;
 
 /**
  * Helpers for components
@@ -22,7 +22,7 @@ class Components {
    * @param  array|string $variable Variable we need to convert into a string.
    * @return string
    *
-   * @throws FinalComponentException When $variable is not a string or array.
+   * @throws ComponentException When $variable is not a string or array.
    */
   public static function ensure_string( $variable ) : string {
     $output = '';
@@ -32,7 +32,7 @@ class Components {
     } elseif ( is_string( $variable ) ) {
       $output = $variable;
     } else {
-      FinalComponentException::throw_not_string_or_variable( $variable );
+      ComponentException::throw_not_string_or_variable( $variable );
     }
 
     return $output;
@@ -76,7 +76,7 @@ class Components {
     }
 
     if ( ! file_exists( $component_path ) ) {
-      FinalComponentException::throw_unable_to_locate_component( $component_path );
+      ComponentException::throw_unable_to_locate_component( $component_path );
     }
 
     ob_start();

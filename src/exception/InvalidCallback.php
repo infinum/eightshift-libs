@@ -12,7 +12,7 @@ namespace EightshiftLibs\Exception;
 /**
  * Class Invalid_Callback.
  */
-final class FinalInvalidCallback extends \InvalidArgumentException implements GeneralExceptionInterface {
+final class InvalidCallback extends \InvalidArgumentException implements GeneralExceptionInterface {
 
   /**
    * Create a new instance of the exception for a callback class name that is

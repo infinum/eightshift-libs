@@ -12,7 +12,7 @@ namespace EightshiftLibs\Exception;
 /**
  * Class Invalid_Block.
  */
-final class FinalInvalidBlock extends \InvalidArgumentException implements GeneralExceptionInterface {
+final class InvalidBlock extends \InvalidArgumentException implements GeneralExceptionInterface {
 
   /**
    * Throws error if blocks are missing.
