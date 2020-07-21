@@ -4,17 +4,17 @@
  *
  * Used to define the way Config item is retrieved from the Config file.
  *
- * @package EightshiftLibs\Core
+ * @package EightshiftLibs\Config
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Core;
+namespace EightshiftLibs\Config;
 
 /**
- * Interface ConfigDataInterface
+ * Interface ConfigInterface
  */
-interface ConfigDataInterface {
+interface ConfigInterface {
 
   /**
    * Method that returns project name.

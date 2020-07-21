@@ -2,19 +2,20 @@
 /**
  * The Theme/Frontend Enqueue specific functionality.
  *
- * @package EightshiftLibs\Enqueue
+ * @package EightshiftLibs\Enqueue\Theme
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Enqueue;
+namespace EightshiftLibs\Enqueue\Theme;
 
-use EightshiftLibs\Manifest\ManifestDataInterface;
+use EightshiftLibs\Enqueue\AbstractAssets;
+use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class Enqueue
  */
-class EnqueueTheme extends AbstractAssets {
+abstract class AbstractEnqueueTheme extends AbstractAssets {
 
   const THEME_SCRIPT_URI = 'application.js';
   const THEME_STYLE_URI  = 'application.css';
@@ -22,16 +23,16 @@ class EnqueueTheme extends AbstractAssets {
   /**
    * Instance variable of manifest data.
    *
-   * @var ManifestDataInterface
+   * @var ManifestInterface
    */
   protected $manifest;
 
   /**
    * Create a new admin instance.
    *
-   * @param ManifestDataInterface $manifest Inject manifest which holds data about assets from manifest.json.
+   * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
    */
-  public function __construct( ManifestDataInterface $manifest ) {
+  public function __construct( ManifestInterface $manifest ) {
     $this->manifest = $manifest;
   }
 

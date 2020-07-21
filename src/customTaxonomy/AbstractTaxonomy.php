@@ -2,37 +2,19 @@
 /**
  * File that holds base abstract class for custom taxonomy registration.
  *
- * @package EightshiftLibs\Custom_Taxonomy
+ * @package EightshiftLibs\CustomTaxonomy
  */
 
 declare( strict_types=1 );
 
 namespace EightshiftLibs\CustomTaxonomy;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Abstract class AbstractBaseTaxonomy class.
  */
-abstract class AbstractBaseTaxonomy implements ServiceInterface {
-
-  /**
-   * Register custom taxonomy.
-   *
-   * @return void
-   */
-  public function register() {
-    add_action(
-      'init',
-      function() {
-        register_taxonomy(
-          $this->get_taxonomy_slug(),
-          [ $this->get_post_type_slug() ],
-          $this->get_taxonomy_arguments()
-        );
-      }
-    );
-  }
+abstract class AbstractTaxonomy implements ServiceInterface {
 
   /**
    * Get the slug of the custom taxonomy

@@ -2,21 +2,21 @@
 /**
  * Post Type columns abstract class file
  *
- * @package EightshiftLibs\Columns
+ * @package EightshiftLibs\Columns\PostType
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Columns;
+namespace EightshiftLibs\Columns\PostType;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Abstract class AbstractBasePostTypeColumns.
+ * Abstract class AbstractPostTypeColumns.
  *
  * This abstract class can be extended to add (custom) post columns in the post screen.
  */
-abstract class AbstractBasePostTypeColumns implements ServiceInterface {
+abstract class AbstractPostTypeColumns implements ServiceInterface {
 
   /**
    * Register the post columns and content in them.

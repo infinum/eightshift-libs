@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace EightshiftBoilerplate\Admin;
 
-use EightshiftBoilerplateVendor\EightshiftLibs\Admin\AbstractModifyAdminAppearance;
+use EightshiftLibs\Admin\AbstractModifyAdminAppearance;
 
 /**
  * Class that modifies some administrator appearance

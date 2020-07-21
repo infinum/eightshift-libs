@@ -2,17 +2,17 @@
 /**
  * The file that defines a project config details like prefix, absolute path and etc.
  *
- * @package EightshiftLibs\Core
+ * @package EightshiftLibs\Config
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Core;
+namespace EightshiftLibs\Config;
 
 /**
  * The project config class.
  */
-abstract class AbstractConfig implements ConfigDataInterface {
+abstract class AbstractConfig implements ConfigInterface {
 
   /**
    * Method that returns every string prefixed with project prefix based on project type.

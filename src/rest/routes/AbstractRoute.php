@@ -2,39 +2,20 @@
 /**
  * The class file that holds abstract class for REST routes registration
  *
- * @package EightshiftLibs\Rest
+ * @package EightshiftLibs\Rest\Routes
  */
 
 declare( strict_types=1 );
 
 namespace EightshiftLibs\Rest\Routes;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Rest\RouteInterface;
 
 /**
  * Abstract base route class
  */
 abstract class AbstractRoute implements RouteInterface, ServiceInterface {
-
-  /**
-   * A register method holds register_rest_route funtion to register api route.
-   *
-   * @return void
-   */
-  public function register() : void {
-    add_action(
-      'rest_api_init',
-      function() {
-        register_rest_route(
-          $this->get_namespace() . '/' . $this->get_version(),
-          $this->get_route_name(),
-          $this->get_callback_arguments(),
-          $this->override_route()
-        );
-      }
-    );
-  }
 
   /**
    * Method that returns project Route namespace.

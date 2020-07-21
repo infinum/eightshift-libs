@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Enqueue;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Class Assets

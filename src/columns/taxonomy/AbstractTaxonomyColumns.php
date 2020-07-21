@@ -2,21 +2,21 @@
 /**
  * Taxonomy columns abstract class file
  *
- * @package EightshiftLibs\Columns
+ * @package EightshiftLibs\Columns\Taxonomy
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Columns;
+namespace EightshiftLibs\Columns\Taxonomy;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Abstract class AbstractBaseTaxonomyColumns.
+ * Abstract class AbstractTaxonomyColumns.
  *
  * This abstract class can be extended to add (custom) taxonomy columns in the taxonomy screen.
  */
-abstract class AbstractBaseTaxonomyColumns implements ServiceInterface {
+abstract class AbstractTaxonomyColumns implements ServiceInterface {
 
   /**
    * Register the taxonomy columns and content in them.

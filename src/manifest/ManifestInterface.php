@@ -11,17 +11,17 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Manifest;
 
-use EightshiftLibs\Core\ConfigDataInterface;
+use EightshiftLibs\Config\ConfigInterface;
 
 /**
- * Interface ManifestDataInterface
+ * Interface ManifestInterface
  */
-interface ManifestDataInterface {
+interface ManifestInterface {
 
   /**
    * Config getter
    *
-   * @return ConfigDataInterface
+   * @return ConfigInterface
    */
   public function get_config();
 

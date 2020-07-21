@@ -9,26 +9,12 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\CustomPostType;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Abstract class AbstractBasePostType class.
+ * Abstract class AbstractPostType class.
  */
-abstract class AbstractBasePostType implements ServiceInterface {
-
-  /**
-   * Register custom post type.
-   *
-   * @return void
-   */
-  public function register() {
-    add_action(
-      'init',
-      function() {
-        register_post_type( $this->get_post_type_slug(), $this->get_post_type_arguments() );
-      }
-    );
-  }
+abstract class AbstractPostType implements ServiceInterface {
 
   /**
    * Get the slug to use for the custom post type.

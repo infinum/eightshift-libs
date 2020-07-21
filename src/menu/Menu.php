@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace EightshiftBoilerplate\Menu;
 
-use EightshiftBoilerplateVendor\EightshiftLibs\Menu\AbstractMenu;
+use EightshiftLibs\Menu\AbstractMenu;
 
 /**
  * Class Menu

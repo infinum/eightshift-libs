@@ -2,12 +2,12 @@
 /**
  * File that holds Service interface
  *
- * @package EightshiftLibs\Core
+ * @package EightshiftLibs\Services
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Core;
+namespace EightshiftLibs\Services;
 
 /**
  * Interface Service.

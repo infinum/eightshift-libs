@@ -9,7 +9,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Switching from Classmap to PSR-4 naming.
 - example: `class-media.php` is now `Media.php`.
 - example: `menu.php` is now `AbstractMenu.php`.
-- example: `interface-manifest-data.php` is now `ManifestDataInterface.php`.
+- example: `interface-manifest-data.php` is now `ManifestInterface.php`.
 - example: `trait-error-logger.php` is now `ErrorLoggerTrait.php`.
 - example: `class-component-exception.php` is now `ComponentException.php`.
 - replaced `DI\create` with `new AutowireDefinitionHelper();`.

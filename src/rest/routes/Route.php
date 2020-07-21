@@ -2,38 +2,52 @@
 /**
  * The class register route for $class_name endpoint
  *
- * @package Eightshift_Boilerplate\Rest
+ * @package EightshiftBoilerplate\Rest\Routes
  */
 
-namespace Eightshift_Boilerplate\Rest;
+namespace EightshiftBoilerplate\Rest\Routes;
 
-use EightshiftLibs\Core\ConfigDataInterface;
+use EightshiftLibs\Config\ConfigInterface;
+use EightshiftLibs\Rest\CallableRouteInterface;
+use EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * Class Example_Route
  */
-class %CLASS_NAME% extends AbstractBaseRoute implements CallableRouteInterface {
+class Route extends AbstractRoute implements CallableRouteInterface {
+
+  /**
+   * A register method holds register_rest_route funtion to register api route.
+   *
+   * @return void
+   */
+  public function register() : void {
+    add_action(
+      'rest_api_init',
+      function() {
+        register_rest_route(
+          $this->get_namespace() . '/' . $this->get_version(),
+          $this->get_route_name(),
+          $this->get_callback_arguments(),
+          $this->override_route()
+        );
+      }
+    );
+  }
 
   /**
    * Route slug
    *
    * @var string
    */
-  const ENDPOINT_SLUG = '/%ENDPOINT%';
-
-  /**
-   * Instance variable of project config data.
-   *
-   * @var object
-   */
-  protected $config;
+  const ENDPOINT_SLUG = '/route';
 
   /**
    * Create a new instance that injects classes
    *
-   * @param ConfigDataInterface $config Inject config which holds data regarding project details.
+   * @param ConfigInterface $config Inject config which holds data regarding project details.
    */
-  public function __construct( ConfigDataInterface $config ) {
+  public function __construct( ConfigInterface $config ) {
     $this->config = $config;
   }
 
@@ -71,7 +85,7 @@ class %CLASS_NAME% extends AbstractBaseRoute implements CallableRouteInterface {
    */
   protected function get_callback_arguments(): array {
     return [
-      'methods'  => static::%VERB%,
+      'methods'  => static::READABLE,
       'callback' => [ $this, 'route_callback' ],
     ];
   }

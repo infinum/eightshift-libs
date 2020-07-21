@@ -2,21 +2,22 @@
 /**
  * The Admin Enqueue specific functionality.
  *
- * @package EightshiftLibs\Enqueue
+ * @package EightshiftLibs\Enqueue\Admin
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Enqueue;
+namespace EightshiftLibs\Enqueue\Admin;
 
-use EightshiftLibs\Manifest\ManifestDataInterface;
+use EightshiftLibs\Enqueue\AbstractAssets;
+use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class EnqueueAdmin
  *
  * This class handles enqueue scripts and styles.
  */
-class EnqueueAdmin extends AbstractAssets {
+abstract class AbstractEnqueueAdmin extends AbstractAssets {
 
   const ADMIN_SCRIPT_URI = 'applicationAdmin.js';
   const ADMIN_STYLE_URI  = 'applicationAdmin.css';
@@ -24,18 +25,9 @@ class EnqueueAdmin extends AbstractAssets {
   /**
    * Instance variable of manifest data.
    *
-   * @var ManifestDataInterface
+   * @var ManifestInterface
    */
   protected $manifest;
-
-  /**
-   * Create a new admin instance.
-   *
-   * @param ManifestDataInterface $manifest Inject manifest which holds data about assets from manifest.json.
-   */
-  public function __construct( ManifestDataInterface $manifest ) {
-    $this->manifest = $manifest;
-  }
 
   /**
    * Register all the hooks

@@ -5,23 +5,14 @@
  * A class definition that includes attributes and functions used across both the
  * theme-facing side of the site and the admin area.
  *
- * @package EightshiftBoilerplate\Core
+ * @package EightshiftBoilerplate\Main
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Core;
+namespace EightshiftBoilerplate\Main;
 
-use EightshiftBoilerplateVendor\EightshiftLibs\Core\AbstractMain;
-use EightshiftBoilerplateVendor\EightshiftLibs\Manifest as LibManifest;
-use EightshiftBoilerplateVendor\EightshiftLibs\Enqueue as LibEnqueue;
-use EightshiftBoilerplateVendor\EightshiftLibs\I18n as LibI18n;
-use EightshiftBoilerplateVendor\EightshiftLibs\Login as LibLogin;
-use EightshiftBoilerplateVendor\EightshiftLibs\Blocks as LibBlocks;
-
-use EightshiftBoilerplate\Admin;
-use EightshiftBoilerplate\Menu;
-use EightshiftBoilerplate\Media;
+use EightshiftLibs\Main\AbstractMain;
 
 /**
  * The main start class.
@@ -56,24 +47,6 @@ class Main extends AbstractMain {
    * @return array<string> Array of fully qualified class names.
    */
   protected function get_service_classes() : array {
-    return [
-
-      // Manifest.
-      LibManifest\Manifest::class => [ Config::class ],
-
-      // I18n.
-      LibI18n\I18n::class => [ Config::class ],
-
-      // Enqueue.
-      LibEnqueue\EnqueueAdmin::class => [ LibManifest\Manifest::class ],
-      LibEnqueue\EnqueueTheme::class => [ LibManifest\Manifest::class ],
-      LibEnqueue\EnqueueBlocks::class => [ LibManifest\Manifest::class ],
-
-      // Login.
-      LibLogin\Login::class,
-
-      // Blocks.
-      LibBlocks\Blocks::class => [ Config::class ],
-    ];
+    return [];
   }
 }

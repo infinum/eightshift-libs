@@ -2,21 +2,21 @@
 /**
  * User columns abstract class file
  *
- * @package EightshiftLibs\Columns
+ * @package EightshiftLibs\Columns\User
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Columns;
+namespace EightshiftLibs\Columns\User;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Abstract class AbstractBaseUserColumns.
+ * Abstract class AbstractUserColumns.
  *
  * This abstract class can be extended to add (custom) user columns in the user screen.
  */
-abstract class AbstractBaseUserColumns implements ServiceInterface {
+abstract class AbstractUserColumns implements ServiceInterface {
 
   /**
    * Register the user columns and content in them.

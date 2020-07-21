@@ -61,7 +61,7 @@ trait ObjectHelperTrait {
       }
     );
 
-    return $return;
+    return $output;
   }
 
   /**

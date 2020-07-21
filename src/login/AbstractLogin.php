@@ -9,23 +9,14 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Login;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Class Login
  *
  * This class handles all login page options.
  */
-class AbstractLogin implements ServiceInterface {
-
-  // /**
-  //  * Register all the hooks
-  //  *
-  //  * @return void
-  //  */
-  // public function register() {
-  //   add_filter( 'login_headerurl', [ $this, 'custom_login_url' ] );
-  // }
+abstract class AbstractLogin implements ServiceInterface {
 
   /**
    * Change default logo link with home url.

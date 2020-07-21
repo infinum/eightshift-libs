@@ -7,9 +7,9 @@
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Admin;
+namespace EightshiftLibs\Admin;
 
-use EightshiftLibs\Core\ServiceInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Class that modifies some administrator appearance

@@ -11,15 +11,15 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Manifest;
 
-use EightshiftLibs\Core\ServiceInterface;
 use EightshiftLibs\Exception\InvalidManifest;
-use EightshiftLibs\Manifest\ManifestDataInterface;
-use EightshiftLibs\Core\ConfigDataInterface;
+use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Config\ConfigInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Abstract class Manifest class.
  */
-abstract class AbstractManifest implements ServiceInterface, ManifestDataInterface {
+abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
 
   /**
    * Manifest item filter name constant.
@@ -31,7 +31,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestDataInterfa
   /**
    * Instance variable of project config data.
    *
-   * @var ConfigDataInterface
+   * @var ConfigInterface
    */
   protected $config;
 
@@ -45,9 +45,9 @@ abstract class AbstractManifest implements ServiceInterface, ManifestDataInterfa
   /**
    * Create a new instance that injects config data to get project specific details.
    *
-   * @param ConfigDataInterface $config Inject config which holds data regarding project details.
+   * @param ConfigInterface $config Inject config which holds data regarding project details.
    */
-  public function __construct( ConfigDataInterface $config ) {
+  public function __construct( ConfigInterface $config ) {
     $this->config = $config;
   }
 
@@ -112,7 +112,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestDataInterfa
   /**
    * Config getter
    *
-   * @return ConfigDataInterface|object
+   * @return ConfigInterface|object
    */
   public function get_config() {
     return $this->config;

@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace EightshiftBoilerplate\Media;
 
-use EightshiftBoilerplateVendor\EightshiftLibs\Media\AbstractMedia;
+use EightshiftLibs\Media\AbstractMedia;
 
 /**
  * Class Media
@@ -24,7 +24,6 @@ class Media extends AbstractMedia {
    * @return void
    */
   public function register() {
-    add_action( 'after_setup_theme', [ $this, 'add_custom_image_sizes' ], 20 );
     add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 20 );
   }
 }

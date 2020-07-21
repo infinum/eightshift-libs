@@ -2,17 +2,19 @@
 /**
  * File containing the main intro class for your project.
  *
- * @package EightshiftLibs\Core
+ * @package EightshiftLibs\Main
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Core;
+namespace EightshiftLibs\Main;
 
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\Helper\AutowireDefinitionHelper;
 use DI\Definition\Reference;
+use EightshiftLibs\Services\RegistrableInterface;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * The main start class.
