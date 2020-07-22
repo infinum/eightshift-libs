@@ -66,9 +66,16 @@ class RouteCli extends AbstractCli {
   * --method=<method>
   * : HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.
   *
+  * [--namespace=<namespace>]
+  * : Define your projects namespace. Default: EightshiftBoilerplate.
+  *
+  * [--vendor_prefix=<vendor_prefix>]
+  * : Define your projects vendor prefix. Default: EightshiftBoilerplateVendor.
+  *
   * ## EXAMPLES
   * 
   *     wp boilerplate create_rest_route --endpoint_slug='temp-route' --method='POST'
+  *     wp boilerplate create_rest_route --endpoint_slug='temp-route' --method='post' --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
   */
   public function __invoke( array $args, array $assoc_args ) {
 
@@ -78,14 +85,22 @@ class RouteCli extends AbstractCli {
     // Check if method exists as prop.
     $method = strtoupper( $assoc_args['method'] );
 
-    // Remove unecesery stuff from props.
-    $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
+    // Check if namespace exists as prop.
+    $namespace = $assoc_args['namespace'];
+
+    var_dump($assoc_args);
+
+    // Check if namespace exists as prop.
+    $vendor_prefix = $assoc_args['vendor_prefix'];
 
     // Get full class name.
     $class_name = CliHelpers::get_class_name( $endpoint_slug );
 
     // Read the template contents, and replace the placeholders with provided variables.
     $template_file = CliHelpers::get_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
+
+    // Remove unecesery stuff from props.
+    $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
 
     // Replace stuff in file.
     $class = str_replace( 'RouteExample', "Route{$class_name}", $template_file );

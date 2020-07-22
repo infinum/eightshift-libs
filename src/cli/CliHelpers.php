@@ -139,4 +139,38 @@ class CliHelpers {
     $file = trim( $file,'/' );
     return "/{$file}.php";
   }
+
+  /**
+   * Replace namespace in class
+   *
+   * @param string $namespace     Class nammespace.
+   * @param string $vendor_prefix Class vendor prefix.
+   * @param string $class         Full class as a string
+   *
+   * @return string
+   */
+  public function change_namespace( string $namespace, string $vendor_prefix, string $class ) : string {
+    if ( function_exists( 'add_action' ) ) {
+      return str_replace( "namespace {$vendor_prefix}\EightshiftLibs", "namespace {$namespace}", $class );
+    } else {
+      return str_replace( "namespace EightshiftLibs", "namespace {$namespace}", $class );
+    }
+  }
+
+  /**
+   * Replace namespace in class
+   *
+   * @param string $namespace     Class nammespace.
+   * @param string $vendor_prefix Class vendor prefix.
+   * @param string $class         Full class as a string
+   *
+   * @return string
+   */
+  public function change_use( string $vendor_prefix, string $class ) : string {
+    if ( function_exists( 'add_action' ) ) {
+      return str_replace( "use {$vendor_prefix}", "namespace {$namespace}", $class );
+    } else {
+      return str_replace( "use EightshiftLibs", "namespace {$namespace}", $class );
+    }
+  }
 }

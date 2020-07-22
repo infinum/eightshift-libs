@@ -42,6 +42,8 @@ class Cli {
           [
             'endpoint_slug' => $args[1] ?? 'test',
             'method'        => $args[2] ?? 'get',
+            'namespace'     => $args[3] ?? 'EightshiftBoilerplateNew',
+            'vendor_prefix' => $args[3] ?? 'EightshiftBoilerplateVendorNew',
           ]
         );
         break;
@@ -72,16 +74,16 @@ class Cli {
    * @return void
    */
   public function run_command( $class, array $args = [] ) {
-
-    // Run if in development from library env.
     if ( ! function_exists( 'add_action' ) ) {
+      // Run if in development from library env.
       $class->__invoke(
         [],
         $args
       );
+    } else {
+      // Run if normal WPCLI.
+      $class->register( $this->command_parent_name );
     }
 
-    // Run if normal WPCLI.
-    $class->register( $this->command_parent_name );
   }
 }
