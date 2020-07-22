@@ -1,8 +1,8 @@
 <?php
 /**
- * The class file that holds abstract class for REST routes registration
+ * The class file that holds abstract class for WPCLI
  *
- * @package EightshiftLibs\Rest\Routes
+ * @package EightshiftLibs\Cli
  */
 
 namespace EightshiftLibs\Cli;
@@ -10,28 +10,38 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 
 /**
- * Abstract base route class
+ * Class Cli
  */
 class Cli {
 
   /**
-   * Project root
+   * Project root absolute path
    */
   protected $root;
 
   /**
-   * Undocumented function
+   * Create a new instance that injects classes
    *
-   * @param string $root
+   * @param string $root Absolute path to project root.
    */
   public function __construct( string $root ) {
     $this->root = $root;
   }
 
+  /**
+   * Run all CLI commands
+   *
+   * @return void
+   */
   public function run() {
     $this->route();
   }
 
+  /**
+   * Run Rest route command
+   *
+   * @return void
+   */
   public function route() {
     $route = new RouteCli( $this->root );
 

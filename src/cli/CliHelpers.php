@@ -71,28 +71,33 @@ class CliHelpers {
     $output_file = CliHelpers::get_output_file( $output_file );
     $output_file = "{$output_dir}{$output_file}";
 
+    // Bailout if file already exists.
     if ( file_exists( $output_file ) ) {
       \WP_CLI::error(
         sprintf( 'The file "%s" can\'t be generated because it already exists.', $output_file )
       );
     }
 
+    // Create output dir if it doesn't exist.
     if ( ! is_dir( $output_dir ) ) {
       mkdir( $output_dir, 0755, true );
     }
 
+    // Open a new file on output.
     $fp = fopen( $output_file, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
+    // If there is any error bailout. For example, user permission.
     if ( ! $fp ) {
       \WP_CLI::error(
         sprintf( "File %s couldn't be created. There was an error.", $output_file )
       );
-
     }
 
+    // Write and close.
     fwrite( $fp, $class ); // phpcs:ignore WordPress.WP.AlternativeFunctions
     fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
+    // Return success.
     \WP_CLI::success(
       sprintf( "File %s successfully created.", $output_file )
     );
