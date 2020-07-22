@@ -15,26 +15,47 @@ use EightshiftLibs\Rest\Routes\RouteCli;
 class Cli {
 
   /**
-   * Project root absolute path
+   * Top level commands name.
    */
-  protected $root;
+  protected $command_parent_name;
 
   /**
-   * Create a new instance that injects classes
+   * Run all CLI commands
    *
-   * @param string $root Absolute path to project root.
+   * @param array $args WPCLI eval-file arguments.
+   *
+   * @return void
    */
-  public function __construct( string $root ) {
-    $this->root = $root;
+  public function run_develop( array $args = [] ) {
+
+    $command_name = $args[0] ?? '';
+
+    switch ( $command_name ) {
+      case 'create_rest_route':
+        $this->rest_route(
+          [
+            'endpoint_slug' => $args[1] ?? 'test',
+            'method'        => $args[2] ?? 'get',
+          ]
+        );
+        break;
+      default:
+        \WP_CLI::error( 'First argument must be a valid command name. Your command is missing or not valid.' );
+        break;
+    }
   }
 
   /**
    * Run all CLI commands
    *
+   * @param string $command_parent_name Define top level commands name.
+   *
    * @return void
    */
-  public function run() {
-    $this->route();
+  public function run( string $command_parent_name ) {
+    $this->command_parent_name = $command_parent_name;
+
+    $this->rest_route();
   }
 
   /**
@@ -42,17 +63,15 @@ class Cli {
    *
    * @return void
    */
-  public function route() {
-    $route = new RouteCli( $this->root );
+  public function rest_route( array $args = [] ) {
+    $route = new RouteCli();
 
     if ( function_exists( 'add_action' ) ) {
-      $route->register();
+      $route->register( $this->command_parent_name );
     } else {
-      $route->callback(
-        [
-          'Test',
-          'GET'
-        ]
+      $route->__invoke(
+        [],
+        $args
       );
     }
   }

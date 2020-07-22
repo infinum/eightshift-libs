@@ -5,8 +5,6 @@
  * @package EightshiftLibs\Cli
  */
 
-declare( strict_types=1 );
-
 namespace EightshiftLibs\Cli;
 
 /**
@@ -23,13 +21,16 @@ class CliHelpers {
    * @return string
    */
   public static function get_class_name( string $file_name ) : string {
-    $class    = explode( '_', str_replace( '-', '_', str_replace( ' ', '_', strtolower( $file_name ) ) ) );
+    $class = explode( '_', str_replace( '-', '_', str_replace( ' ', '_', strtolower( $file_name ) ) ) );
 
-    $class_name = implode( '_', array_map( function( $item ) { // phpcs:ignore PEAR.Functions.FunctionCallSignature
+    $class_name = array_map(
+      function( $item ) {
         return ucfirst( $item );
-    }, $class ) ); // phpcs:ignore PEAR.Functions.FunctionCallSignature
+      },
+      $class
+    );
 
-    return $class_name;
+    return implode( '', $class_name );
   }
 
   /**
@@ -55,17 +56,16 @@ class CliHelpers {
   /**
    * Open an updated file and create it on output location.
    *
-   * @param string $root        Absolute path to project root.
    * @param string $output_dir  Absolute path to output from project root dir.
    * @param string $output_file Absolute path to output file.
    * @param string $class       Modified class.
    *
    * @return Error|Success
    */
-  public static function output_write( string $root, string $output_dir, string $output_file, string $class ) {
+  public static function output_write( string $output_dir, string $output_file, string $class ) {
 
     // Set output paths.
-    $output_dir = CliHelpers::get_output_dir( $root, $output_dir );
+    $output_dir = CliHelpers::get_output_dir( $output_dir );
 
     // Set output file path.
     $output_file = CliHelpers::get_output_file( $output_file );
@@ -106,12 +106,17 @@ class CliHelpers {
   /**
    * Get full output dir path.
    *
-   * @param string $root Parent root path.
    * @param string $path Project specific path.
    *
    * @return string
    */
-  public static function get_output_dir( $root, $path ) : string {
+  public static function get_output_dir( $path ) : string {
+    if ( function_exists( 'add_action' ) ) {
+      $root = dirname( __DIR__, 5 );
+    } else {
+      $root = dirname( __DIR__, 2 ) . '/cli-output';
+    }
+
     $root = rtrim( $root, '/' );
     $root = trim( $root,'/' );
 

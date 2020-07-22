@@ -3,10 +3,7 @@
  * Class that registers WPCLI command for Rest Routes.
  * 
  * Command Develop:
- * `wp eval-file bin/cli.php --skip-wordpress`
- * 
- * Command Production:
- * ``
+ * wp eval-file bin/cli.php create_rest_route 'temp' 'post' --skip-wordpress
  *
  * @package EightshiftLibs\Rest\Routes
  */
@@ -43,21 +40,12 @@ class RouteCli extends AbstractCli {
   ];
 
   /**
-   * Create a new instance that injects classes
-   *
-   * @param string $root Absolute path to project root.
-   */
-  public function __construct( string $root ) {
-    $this->root = $root;
-  }
-
-  /**
    * Get WPCLI command name
    *
    * @return string
    */
   public function get_command_name() : string {
-    return 'wds';
+    return 'create_rest_route';
   }
 
   /**
@@ -66,33 +54,29 @@ class RouteCli extends AbstractCli {
    * @return string
    */
   public function get_class_name() : string {
-    return 'RouteCli';
+    return RouteCli::class;
   }
 
   /**
-   * Get WPCLI command callback.
-   *
-   * @param array $args Arguments provided.
-   *
-   * @return void
-   */
-  public function callback( array $args ) {
+  * Generates REST-API Route in your project.
+  *
+  * --endpoint_slug=<endpoint_slug>
+  * : The name of the endpoint slug. Example: test-route.
+  *
+  * --method=<method>
+  * : HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.
+  *
+  * ## EXAMPLES
+  * 
+  *     wp boilerplate create_rest_route --endpoint_slug='temp-route' --method='POST'
+  */
+  public function __invoke( array $args, array $assoc_args ) {
 
     // Check if endpoint slug exists as prop.
-    $endpoint_slug = $args[0] ?? '';
-
-    if ( empty( $endpoint_slug ) ) {
-      \WP_CLI::error( 'Endpoint slug empty' );
-    }
+    $endpoint_slug = $assoc_args['endpoint_slug'];
 
     // Check if method exists as prop.
-    $method = $args[1] ?? '';
-
-    if ( ! in_array( $method, [ 'GET', 'POST', 'PATCH', 'PUT', 'DELETE' ], true ) ) {
-      \WP_CLI::error(
-        sprintf( 'HTTP verb must be one of: \'GET\', \'POST\', \'PATCH\', \'PUT\', or \'DELETE\'. %s provided.', $method )
-      );
-    }
+    $method = strtoupper( $assoc_args['method'] );
 
     // Remove unecesery stuff from props.
     $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
@@ -109,6 +93,6 @@ class RouteCli extends AbstractCli {
     $class = str_replace( "static::READABLE", static::VERB_ENUM[ $method ], $class );
 
     // Output final class to new file/folder and finish.
-    CliHelpers::output_write( $this->root, static::OUTPUT_DIR, "Route{$class_name}", $class );
+    CliHelpers::output_write( static::OUTPUT_DIR, "Route{$class_name}", $class );
   }
 }

@@ -13,9 +13,9 @@ namespace EightshiftLibs\Cli;
 abstract class AbstractCli implements CliInterface {
 
   /**
-   * Project root absolute path
+   * Top level commands name.
    */
-  protected $root;
+  protected $command_parent_name;
 
   /**
    * Output dir relative path.
@@ -29,22 +29,15 @@ abstract class AbstractCli implements CliInterface {
 
   /**
    * Register method for WPCLI command
+   * 
+   * @param string $command_parent_name Define top level commands name.
    *
    * @return void
    */
-  public function register() {
-    \add_action( 'cli_init', [ $this, 'register_command'] );
-  }
+  public function register( string $command_parent_name ) {
+    $this->command_parent_name = $command_parent_name;
 
-  /**
-   * Call internal method for passing arguments
-   *
-   * @param array $args Array of arguments form terminal
-   *
-   * @return void
-   */
-  public function __invoke( array $args ) {
-    \WP_CLI::success( $args[0] );
+    \add_action( 'cli_init', [ $this, 'register_command'] );
   }
 
   /**
@@ -53,6 +46,9 @@ abstract class AbstractCli implements CliInterface {
    * @return void
    */
   public function register_command() {
-    \WP_CLI::add_command( $this->get_command_name(), $this->get_class_name() );
+    \WP_CLI::add_command(
+      $this->command_parent_name . ' ' . $this->get_command_name(),
+      $this->get_class_name()
+    );
   }
 }

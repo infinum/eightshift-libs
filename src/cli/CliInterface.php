@@ -2,9 +2,16 @@
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Services\ServiceInterface;
+interface CliInterface {
 
-interface CliInterface extends ServiceInterface {
+    /**
+   * Register method for WPCLI command
+   * 
+   * @param string $command_parent_name Define top level commands name.
+   *
+   * @return void
+   */
+  public function register( string $command_parent_name );
 
   /**
    * Call internal method for passing arguments
@@ -13,7 +20,7 @@ interface CliInterface extends ServiceInterface {
    *
    * @return void
    */
-  public function __invoke( array $args );
+  public function __invoke( array $args, array $assoc_args );
 
   /**
    * Method that creates actual WPCLI command in terminal.
@@ -35,13 +42,4 @@ interface CliInterface extends ServiceInterface {
    * @return string
    */
   public function get_class_name() : string;
-
-  /**
-   * Get WPCLI command callback.
-   *
-   * @param array $args Arguments provided.
-   *
-   * @return void
-   */
-  public function callback( array $args );
 }
