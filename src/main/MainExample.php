@@ -5,12 +5,12 @@
  * A class definition that includes attributes and functions used across both the
  * theme-facing side of the site and the admin area.
  *
- * @package EightshiftBoilerplate\Main
+ * @package EightshiftLibs\Main
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Main;
+namespace EightshiftLibs\Main;
 
 use EightshiftLibs\Main\AbstractMain;
 
@@ -23,7 +23,7 @@ use EightshiftLibs\Main\AbstractMain;
  * Also maintains the unique identifier of this theme as well as the current
  * version of the theme.
  */
-class Main extends AbstractMain {
+class MainExample extends AbstractMain {
 
   /**
    * Register the project with the WordPress system.
