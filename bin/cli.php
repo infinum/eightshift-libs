@@ -5,6 +5,8 @@ use EightshiftLibs\Cli\Cli;
 
 $root = dirname( __FILE__, 2 );
 
+require "{$root}/vendor/autoload.php";
+
 require $root . '/src/cli/Cli.php';
 
-$cli = ( new Cli( $root ) )->run();
+( new Cli( $root ) )->run();

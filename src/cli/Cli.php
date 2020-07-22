@@ -7,10 +7,6 @@
 
 namespace EightshiftLibs\Cli;
 
-if ( ! function_exists( 'add_action' ) ) {
-  require "{$root}/vendor/autoload.php";
-}
-
 use EightshiftLibs\Rest\Routes\RouteCli;
 
 /**

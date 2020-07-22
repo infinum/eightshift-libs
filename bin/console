@@ -1,8 +1,0 @@
-#!/usr/bin/env php
-<?php
-
-$root = dirname( __FILE__, 2 );
-
-require $root . '/src/console/console.php';
-
-consoleRun( $root );

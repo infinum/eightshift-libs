@@ -12,35 +12,16 @@ use EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
- * Class Example_Route
+ * Class RouteTest
  */
-class Route extends AbstractRoute implements CallableRouteInterface {
-
-  /**
-   * A register method holds register_rest_route funtion to register api route.
-   *
-   * @return void
-   */
-  public function register() : void {
-    add_action(
-      'rest_api_init',
-      function() {
-        register_rest_route(
-          $this->get_namespace() . '/' . $this->get_version(),
-          $this->get_route_name(),
-          $this->get_callback_arguments(),
-          $this->override_route()
-        );
-      }
-    );
-  }
+class RouteTest extends AbstractRoute implements CallableRouteInterface {
 
   /**
    * Route slug
    *
    * @var string
    */
-  const ENDPOINT_SLUG = '/route';
+  const ENDPOINT_SLUG = '/test';
 
   /**
    * Create a new instance that injects classes

@@ -1,53 +1,92 @@
 <?php
+/**
+ * Class that registers WPCLI command for Rest Routes.
+ * 
+ * Command Develop:
+ * `wp eval-file bin/cli.php --skip-wordpress`
+ * 
+ * Command Production:
+ * ``
+ *
+ * @package EightshiftLibs\Rest\Routes
+ */
 
 namespace EightshiftLibs\Rest\Routes;
 
-use EightshiftLibs\Console\ConsoleHelpers;
-use EightshiftLibs\Services\ServiceInterface;
+use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\CliHelpers;
 
-class RouteCli implements ServiceInterface {
+/**
+ * Class RouteCli
+ */
+class RouteCli extends AbstractCli {
 
   /**
-   * Project root
+   * Output dir relative path.
    */
-  protected $root;
+  const OUTPUT_DIR = 'src/rest/routes';
 
   /**
-   * Undocumented function
+   * Output template name.
+   */
+  const TEMPLATE = 'RouteExample';
+
+  /**
+   * Route method enum.
+   */
+  const VERB_ENUM = [
+    'GET'    => 'static::READABLE',
+    'POST'   => 'static::CREATABLE',
+    'PATCH'  => 'static::EDITABLE',
+    'PUT'    => 'static::UPDATEABLE',
+    'DELETE' => 'static::DELETABLE',
+  ];
+
+  /**
+   * Create a new instance that injects classes
    *
-   * @param string $root
+   * @param string $root Absolute path to project root.
    */
   public function __construct( string $root ) {
     $this->root = $root;
   }
 
-  public function register() {
-    \add_action( 'cli_init', [ $this, 'register_command'] );
-  }
-
-  public function __invoke( array $args ) {
-    \WP_CLI::success( $args[0] );
-  }
-
-  function register_command() {
-    \WP_CLI::add_command( 'wds', 'RouteCli' );
+  /**
+   * Get WPCLI command name
+   *
+   * @return string
+   */
+  public function get_command_name() : string {
+    return 'wds';
   }
 
   /**
-   * Returns 'Hello World'
+   * Get WPCLI trigger class name.
    *
-   * @since  0.0.1
-   * @author Scott Anderson
+   * @return string
+   */
+  public function get_class_name() : string {
+    return 'RouteCli';
+  }
+
+  /**
+   * Get WPCLI command callback.
+   *
+   * @param array $args Arguments provided.
+   *
+   * @return void
    */
   public function callback( array $args ) {
 
+    // Check if endpoint slug exists as prop.
     $endpoint_slug = $args[0] ?? '';
 
     if ( empty( $endpoint_slug ) ) {
       \WP_CLI::error( 'Endpoint slug empty' );
     }
 
-    $method   = $args[1] ?? '';
+    // Check if method exists as prop.
+    $method = $args[1] ?? '';
 
     if ( ! in_array( $method, [ 'GET', 'POST', 'PATCH', 'PUT', 'DELETE' ], true ) ) {
       \WP_CLI::error(
@@ -55,52 +94,21 @@ class RouteCli implements ServiceInterface {
       );
     }
 
+    // Remove unecesery stuff from props.
     $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
 
-    $class_name = ConsoleHelpers::get_class_name( $endpoint_slug );
-
-    $verb_mapping = [
-      'GET'    => 'READABLE',
-      'POST'   => 'CREATABLE',
-      'PATCH'  => 'EDITABLE',
-      'PUT'    => 'UPDATEABLE',
-      'DELETE' => 'DELETABLE',
-    ];
+    // Get full class name.
+    $class_name = CliHelpers::get_class_name( $endpoint_slug );
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $template_file = file_get_contents( __DIR__ . '/Route.php' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+    $template_file = CliHelpers::get_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
 
-    if ( $template_file === false ) {
-      \WP_CLI::error( 'The template "/Route.php" seems to be missing.' );
-    }
+    // Replace stuff in file.
+    $class = str_replace( 'RouteExample', "Route{$class_name}", $template_file );
+    $class = str_replace( "/example-route", "/{$endpoint}", $class );
+    $class = str_replace( "static::READABLE", static::VERB_ENUM[ $method ], $class );
 
-    $class = str_replace( 'class Route', "class Route{$class_name}", $template_file );
-    $class = str_replace( "const ENDPOINT_SLUG = '/route'", "const ENDPOINT_SLUG = '/{$endpoint}'", $class );
-    $class = str_replace( "'methods'  => static::READABLE,", "'methods'  => static::{$verb_mapping[ $method ]},", $class );
-
-    $rest_dir = $this->root . '/src/rest/routes';
-    $file     = $rest_dir . "/Route{$class_name}.php";
-
-    if ( file_exists( $file ) ) {
-      \WP_CLI::error(
-        sprintf( 'The file "%s" can\'t be generated because it already exists.', "{$endpoint}.php" )
-      );
-    }
-
-    if ( ! is_dir( $rest_dir ) ) {
-      mkdir( $rest_dir, 0755, true );
-    }
-
-    $fp = fopen( $file, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
-
-    if ( $fp !== false ) {
-        fwrite( $fp, $class ); // phpcs:ignore WordPress.WP.AlternativeFunctions
-        fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions
-    } else {
-      \WP_CLI::success( "File {$endpoint}.php couldn't be created in {$rest_dir} directory. There was an error." );
-    }
-
-    \WP_CLI::success( "File {$endpoint}.php successfully created in {$rest_dir} directory." );
-
+    // Output final class to new file/folder and finish.
+    CliHelpers::output_write( $this->root, static::OUTPUT_DIR, "Route{$class_name}", $class );
   }
 }

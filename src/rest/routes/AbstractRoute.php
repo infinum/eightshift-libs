@@ -18,6 +18,25 @@ use EightshiftLibs\Rest\RouteInterface;
 abstract class AbstractRoute implements RouteInterface, ServiceInterface {
 
   /**
+   * A register method holds register_rest_route funtion to register api route.
+   *
+   * @return void
+   */
+  public function register() : void {
+    add_action(
+      'rest_api_init',
+      function() {
+        register_rest_route(
+          $this->get_namespace() . '/' . $this->get_version(),
+          $this->get_route_name(),
+          $this->get_callback_arguments(),
+          $this->override_route()
+        );
+      }
+    );
+  }
+
+  /**
    * Method that returns project Route namespace.
    *
    * @return string Project namespace for REST route.
