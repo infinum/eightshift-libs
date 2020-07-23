@@ -17,24 +17,6 @@ use EightshiftLibs\Rest\Fields\AbstractField;
 class FieldExample extends AbstractField implements CallableFieldInterface {
 
   /**
-   * A register method holds register_rest_route funtion to register or override api field.
-   *
-   * @return void
-   */
-  public function register() : void {
-    add_action(
-      'rest_api_init',
-      function() {
-        register_rest_field(
-          $this->get_object_type(),
-          $this->get_field_name(),
-          $this->get_callback_arguments()
-        );
-      }
-    );
-  }
-
-  /**
    * Method that returns field object type.
    * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
    *
