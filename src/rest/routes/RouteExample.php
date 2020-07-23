@@ -17,13 +17,6 @@ use EightshiftLibs\Rest\Routes\AbstractRoute;
 class RouteExample extends AbstractRoute implements CallableRouteInterface {
 
   /**
-   * Route slug
-   *
-   * @var string
-   */
-  const ENDPOINT_SLUG = '/example-route';
-
-  /**
    * Create a new instance that injects classes
    *
    * @param ConfigInterface $config Inject config which holds data regarding project details.
@@ -56,7 +49,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface {
    * @return string The base URL for route you are adding.
    */
   protected function get_route_name(): string {
-    return static::ENDPOINT_SLUG;
+    return '/example-route';
   }
 
   /**

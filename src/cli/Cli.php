@@ -10,6 +10,8 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Main\MainCli;
+use EightshiftLibs\Menu\MenuCli;
+use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 
 /**
@@ -44,13 +46,6 @@ class Cli {
     $command_name = $args[0] ?? '';
 
     switch ( $command_name ) {
-      case 'create_main':
-        $this->run_command(
-          new MainCli(),
-          $this->combine_args( $args ),
-        );
-        break;
-
       case 'create_config':
         $this->run_command(
           new ConfigCli(),
@@ -62,6 +57,33 @@ class Cli {
         $this->run_command(
           new I18nCli(),
           $this->combine_args( $args ),
+        );
+        break;
+
+      case 'create_main':
+        $this->run_command(
+          new MainCli(),
+          $this->combine_args( $args ),
+        );
+        break;
+
+      case 'create_menu':
+        $this->run_command(
+          new MenuCli(),
+          $this->combine_args( $args ),
+        );
+        break;
+
+      case 'create_rest_field':
+        $this->run_command(
+          new FieldCli(),
+          $this->combine_args(
+            $args,
+            [
+              'field_name'  => $args[3] ?? 'title',
+              'object_type' => $args[4] ?? 'post',
+            ]
+          ),
         );
         break;
 
@@ -94,10 +116,12 @@ class Cli {
   public function run( string $command_parent_name ) {
     $this->command_parent_name = $command_parent_name;
 
-    $this->run_command( new MainCli() );
     $this->run_command( new ConfigCli() );
     $this->run_command( new I18nCli() );
+    $this->run_command( new MainCli() );
+    $this->run_command( new MenuCli() );
     $this->run_command( new RouteCli() );
+    $this->run_command( new FieldCli() );
   }
 
   /**

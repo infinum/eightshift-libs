@@ -12,9 +12,9 @@ namespace EightshiftLibs\Menu;
 use EightshiftLibs\Menu\AbstractMenu;
 
 /**
- * Class Menu
+ * Class MenuExample
  */
-class Menu extends AbstractMenu {
+class MenuExample extends AbstractMenu {
 
   /**
    * Register all the hooks

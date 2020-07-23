@@ -12,9 +12,9 @@ use EightshiftLibs\Rest\CallableFieldInterface;
 use EightshiftLibs\Rest\Fields\AbstractField;
 
 /**
- * Class Register Field
+ * Class FieldExample
  */
-class Field extends AbstractField implements CallableFieldInterface {
+class FieldExample extends AbstractField implements CallableFieldInterface {
 
   /**
    * A register method holds register_rest_route funtion to register or override api field.
@@ -43,7 +43,7 @@ class Field extends AbstractField implements CallableFieldInterface {
    * @since 2.0.0 Added in the project
    */
   protected function get_object_type() : string {
-    return 'post';
+    return 'example-post-type';
   }
 
   /**
@@ -54,7 +54,7 @@ class Field extends AbstractField implements CallableFieldInterface {
    * @since 2.0.0 Added in the project
    */
   protected function get_field_name() : string {
-    return 'example-field-name';
+    return 'example-field';
   }
 
   /**
