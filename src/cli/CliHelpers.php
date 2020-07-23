@@ -143,34 +143,44 @@ class CliHelpers {
   /**
    * Replace namespace in class
    *
-   * @param string $namespace     Class nammespace.
-   * @param string $vendor_prefix Class vendor prefix.
-   * @param string $class         Full class as a string
+   * @param string $namespace Class nammespace.
+   * @param string $class     Full class as a string
    *
    * @return string
    */
-  public function change_namespace( string $namespace, string $vendor_prefix, string $class ) : string {
-    if ( function_exists( 'add_action' ) ) {
-      return str_replace( "namespace {$vendor_prefix}\EightshiftLibs", "namespace {$namespace}", $class );
-    } else {
-      return str_replace( "namespace EightshiftLibs", "namespace {$namespace}", $class );
-    }
+  public static function change_namespace( string $namespace, string $string ) : string {
+    $class = preg_replace( '/@package (w+|\w+)/', "@package {$namespace}", $string );
+    $class = preg_replace( '/namespace (w+|\w+\\\\){1,2}/', "namespace {$namespace}\\", $class );
+
+    return $class;
   }
 
   /**
-   * Replace namespace in class
+   * Replace use in class.
    *
-   * @param string $namespace     Class nammespace.
    * @param string $vendor_prefix Class vendor prefix.
-   * @param string $class         Full class as a string
+   * @param string $class         Full class as a string.
    *
    * @return string
    */
-  public function change_use( string $vendor_prefix, string $class ) : string {
-    if ( function_exists( 'add_action' ) ) {
-      return str_replace( "use {$vendor_prefix}", "namespace {$namespace}", $class );
-    } else {
-      return str_replace( "use EightshiftLibs", "namespace {$namespace}", $class );
+  public static function change_use( string $vendor_prefix, string $string ) : string {
+    if ( ! function_exists( 'add_action' ) ) {
+      $vendor_prefix = 'EightshiftLibs';
     }
+
+    return preg_replace( '/use (w+|\w+\\\\)/', "use {$vendor_prefix}\\", $string );
+  }
+
+  /**
+   * Change Class full name.
+   *
+   * @param string $template_name Current template.
+   * @param string $new_name      New Class Name.
+   * @param string $class         Full class as a string.
+   *
+   * @return string
+   */
+  public static function change_class_name( string $template_name, string $new_name, string $string ) : string {
+    return str_replace( $template_name, $new_name, $string );
   }
 }

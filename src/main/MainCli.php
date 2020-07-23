@@ -3,7 +3,7 @@
  * Class that registers WPCLI command for Main Services Container.
  * 
  * Command Develop:
- * wp eval-file bin/cli.php create_service_container 'temp' 'post' --skip-wordpress
+ * wp eval-file bin/cli.php create_service_container --skip-wordpress
  *
  * @package EightshiftLibs\Main
  */
@@ -24,9 +24,14 @@ class MainCli extends AbstractCli {
   const OUTPUT_DIR = 'src/main';
 
   /**
-   * Output template name.
+   * Template name.
    */
   const TEMPLATE = 'MainExample';
+
+  /**
+   * Output class name.
+   */
+  const CLASS_NAME = 'Main';
 
   /**
    * Get WPCLI command name
@@ -49,22 +54,27 @@ class MainCli extends AbstractCli {
   /**
   * Generates Main entrypoint file for all other features using Service Container pattern.
   *
+  * --namespace=<namespace>
+  * : Define your projects namespace. Default: EightshiftBoilerplate.
+  *
+  * --vendor_prefix=<vendor_prefix>
+  * : Define your projects vendor prefix. Default: EightshiftBoilerplateVendor.
+  *
   * ## EXAMPLES
-  * 
-  *     wp boilerplate create_service_container
+  *
+  *     wp boilerplate create_service_container --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
   */
   public function __invoke( array $args, array $assoc_args ) {
 
-    // Get full class name.
-    $class_name = CliHelpers::get_class_name( 'main' );
-
     // Read the template contents, and replace the placeholders with provided variables.
-    $template_file = CliHelpers::get_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
+    $class = CliHelpers::get_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
 
     // Replace stuff in file.
-    $class = str_replace( 'MainExample', $class_name, $template_file );
+    $class = CliHelpers::change_class_name( static::TEMPLATE, static::CLASS_NAME, $class );
+    $class = CliHelpers::change_namespace( $assoc_args['namespace'], $class );
+    $class = CliHelpers::change_use( $assoc_args['vendor_prefix'], $class );
 
     // Output final class to new file/folder and finish.
-    CliHelpers::output_write( static::OUTPUT_DIR, $class_name, $class );
+    CliHelpers::output_write( static::OUTPUT_DIR, static::CLASS_NAME, $class );
   }
 }

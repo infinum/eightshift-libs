@@ -21,6 +21,16 @@ class Cli {
   protected $command_parent_name;
 
   /**
+   * Define test output namespace.
+   */
+  const NAMESPACE = 'EightshiftBoilerplate';
+
+    /**
+   * Define test output vendor prefix.
+   */
+  const VENDOR_PREFIX = 'EightshiftBoilerplateVendor';
+
+  /**
    * Run all CLI commands
    *
    * @param array $args WPCLI eval-file arguments.
@@ -33,18 +43,22 @@ class Cli {
 
     switch ( $command_name ) {
       case 'create_service_container':
-        $this->run_command( new MainCli() );
+        $this->run_command(
+          new MainCli(),
+          $this->combine_args( $args ),
+        );
         break;
 
       case 'create_rest_route':
         $this->run_command(
           new RouteCli(),
-          [
-            'endpoint_slug' => $args[1] ?? 'test',
-            'method'        => $args[2] ?? 'get',
-            'namespace'     => $args[3] ?? 'EightshiftBoilerplateNew',
-            'vendor_prefix' => $args[3] ?? 'EightshiftBoilerplateVendorNew',
-          ]
+          $this->combine_args(
+            $args,
+            [
+              'endpoint_slug' => $args[3] ?? 'test',
+              'method'        => $args[4] ?? 'get',
+            ]
+          ),
         );
         break;
 
@@ -84,6 +98,23 @@ class Cli {
       // Run if normal WPCLI.
       $class->register( $this->command_parent_name );
     }
+  }
 
+  /**
+   * Define common attrs.
+   *
+   * @param array $args      Arguments from WPCLI command.
+   * @param array $args_user Arguments from WPCLI command user defined.
+   *
+   * @return array
+   */
+  public function combine_args( array $args = [], array $args_user = [] ) : array {
+    return array_merge(
+      [
+      'namespace'     => $args[1] ?? static::NAMESPACE,
+      'vendor_prefix' => $args[2] ?? static::VENDOR_PREFIX,
+      ],
+      $args_user,
+    );
   }
 }
