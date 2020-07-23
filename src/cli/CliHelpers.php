@@ -147,10 +147,27 @@ class CliHelpers {
    * @param string $class     Full class as a string
    *
    * @return string
+   *
+   * Note: ASCII is used because of composer imposter plugin we are using for prefixing vendors.
+   *
+   * \x6E\x61\x6D\x65\x73\x70\x61\x63\x65 - Corresponds to "namespace".
+   * \x40\x70\x61\x63\x6B\x61\x67\x65 - Corresponds to "@package".
    */
   public static function change_namespace( string $namespace, string $string ) : string {
-    $class = preg_replace( '/@package (w+|\w+)/', "@package {$namespace}", $string );
-    $class = preg_replace( '/namespace (w+|\w+\\\\){1,2}/', "namespace {$namespace}\\", $class );
+
+    // Namespace.
+    $class = preg_replace(
+      '/\x40\x70\x61\x63\x6B\x61\x67\x65 (w+|\w+)/',
+      "\x40\x70\x61\x63\x6B\x61\x67\x65 {$namespace}",
+      $string
+    );
+
+    // @package.
+    $class = preg_replace(
+      '/\x6E\x61\x6D\x65\x73\x70\x61\x63\x65 (w+|\w+\\\\){1,2}/',
+      "\x6E\x61\x6D\x65\x73\x70\x61\x63\x65 {$namespace}\\",
+      $class
+    );
 
     return $class;
   }
@@ -162,13 +179,21 @@ class CliHelpers {
    * @param string $class         Full class as a string.
    *
    * @return string
+   *
+   * Note: ASCII is used because of composer imposter plugin we are using for prefixing vendors.
+   *
+   * \x75\x73\x65 - Corresponds to "use".
    */
   public static function change_use( string $vendor_prefix, string $string ) : string {
     if ( ! function_exists( 'add_action' ) ) {
       $vendor_prefix = 'EightshiftLibs';
     }
 
-    return preg_replace( '/use (w+|\w+\\\\)/', "use {$vendor_prefix}\\", $string );
+    return preg_replace(
+      '/\x75\x73\x65 (w+|\w+\\\\)/',
+      "\x75\x73\x65 {$vendor_prefix}\\",
+      $string
+    );
   }
 
   /**
