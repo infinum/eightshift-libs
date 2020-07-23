@@ -5,14 +5,14 @@
  * A class definition that includes attributes and functions used across both the
  * theme-facing side of the site and the admin area.
  *
- * @package %%NAMESPACE%%\Main
+ * @package EightshiftLibs\Main
  */
 
 declare( strict_types=1 );
 
-namespace %NAMESPACE%\Main;
+namespace EightshiftLibs\Main;
 
-use %VENDOR_PREFIX%\EightshiftLibs\Main\AbstractMain;
+use EightshiftLibs\Main\AbstractMain;
 
 /**
  * The main start class.
