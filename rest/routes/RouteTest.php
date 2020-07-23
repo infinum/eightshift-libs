@@ -2,10 +2,10 @@
 /**
  * The class register route for $class_name endpoint
  *
- * @package EightshiftBoilerplate\Rest\Routes
+ * @package EightshiftLibs\Rest\Routes
  */
 
-namespace EightshiftBoilerplate\Rest\Routes;
+namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Config\ConfigInterface;
 use EightshiftLibs\Rest\CallableRouteInterface;

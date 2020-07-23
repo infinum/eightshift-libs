@@ -1,37 +1,37 @@
 <?php
 /**
- * Class that registers WPCLI command for Main.
+ * Class that registers WPCLI command for I18n.
  * 
  * Command Develop:
- * wp eval-file bin/cli.php create_main --skip-wordpress
+ * wp eval-file bin/cli.php i18n --skip-wordpress
  *
- * @package EightshiftLibs\Main
+ * @package EightshiftLibs\I18n
  */
 
-namespace EightshiftLibs\Main;
+namespace EightshiftLibs\I18n;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\CliHelpers;
 
 /**
- * Class MainCli
+ * Class I18nCli
  */
-class MainCli extends AbstractCli {
+class I18nCli extends AbstractCli {
 
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/main';
+  const OUTPUT_DIR = 'src/i18n';
 
   /**
    * Template name.
    */
-  const TEMPLATE = 'MainExample';
+  const TEMPLATE = 'I18nExample';
 
   /**
    * Output class name.
    */
-  const CLASS_NAME = 'Main';
+  const CLASS_NAME = 'I18n';
 
   /**
    * Get WPCLI command name
@@ -39,7 +39,7 @@ class MainCli extends AbstractCli {
    * @return string
    */
   public function get_command_name() : string {
-    return 'create_main';
+    return 'create_i18n';
   }
 
   /**
@@ -48,11 +48,11 @@ class MainCli extends AbstractCli {
    * @return string
    */
   public function get_class_name() : string {
-    return MainCli::class;
+    return I18nCli::class;
   }
 
   /**
-  * Generates Main class file for all other features using service container pattern.
+  * Generates i18n language class.
   *
   * --namespace=<namespace>
   * : Define your projects namespace. Default: EightshiftBoilerplate.
@@ -62,7 +62,7 @@ class MainCli extends AbstractCli {
   *
   * ## EXAMPLES
   *
-  *     wp boilerplate create_main --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
+  *     wp boilerplate create_i18n --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
   */
   public function __invoke( array $args, array $assoc_args ) {
 

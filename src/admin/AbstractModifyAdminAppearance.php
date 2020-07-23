@@ -2,7 +2,7 @@
 /**
  * Modify WordPress admin behavior
  *
- * @package EightshiftBoilerplate\Admin
+ * @package EightshiftLibs\Admin
  */
 
 declare( strict_types=1 );

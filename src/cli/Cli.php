@@ -7,6 +7,8 @@
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 
@@ -42,9 +44,23 @@ class Cli {
     $command_name = $args[0] ?? '';
 
     switch ( $command_name ) {
-      case 'create_service_container':
+      case 'create_main':
         $this->run_command(
           new MainCli(),
+          $this->combine_args( $args ),
+        );
+        break;
+
+      case 'create_config':
+        $this->run_command(
+          new ConfigCli(),
+          $this->combine_args( $args ),
+        );
+        break;
+
+      case 'create_i18n':
+        $this->run_command(
+          new I18nCli(),
           $this->combine_args( $args ),
         );
         break;
@@ -79,6 +95,8 @@ class Cli {
     $this->command_parent_name = $command_parent_name;
 
     $this->run_command( new MainCli() );
+    $this->run_command( new ConfigCli() );
+    $this->run_command( new I18nCli() );
     $this->run_command( new RouteCli() );
   }
 

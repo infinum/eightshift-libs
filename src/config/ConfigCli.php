@@ -1,37 +1,37 @@
 <?php
 /**
- * Class that registers WPCLI command for Main.
+ * Class that registers WPCLI command for Config.
  * 
  * Command Develop:
- * wp eval-file bin/cli.php create_main --skip-wordpress
+ * wp eval-file bin/cli.php config --skip-wordpress
  *
- * @package EightshiftLibs\Main
+ * @package EightshiftLibs\Config
  */
 
-namespace EightshiftLibs\Main;
+namespace EightshiftLibs\Config;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\CliHelpers;
 
 /**
- * Class MainCli
+ * Class ConfigCli
  */
-class MainCli extends AbstractCli {
+class ConfigCli extends AbstractCli {
 
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/main';
+  const OUTPUT_DIR = 'src/config';
 
   /**
    * Template name.
    */
-  const TEMPLATE = 'MainExample';
+  const TEMPLATE = 'ConfigExample';
 
   /**
    * Output class name.
    */
-  const CLASS_NAME = 'Main';
+  const CLASS_NAME = 'Config';
 
   /**
    * Get WPCLI command name
@@ -39,7 +39,7 @@ class MainCli extends AbstractCli {
    * @return string
    */
   public function get_command_name() : string {
-    return 'create_main';
+    return 'create_config';
   }
 
   /**
@@ -48,11 +48,11 @@ class MainCli extends AbstractCli {
    * @return string
    */
   public function get_class_name() : string {
-    return MainCli::class;
+    return ConfigCli::class;
   }
 
   /**
-  * Generates Main class file for all other features using service container pattern.
+  * Generates project config class.
   *
   * --namespace=<namespace>
   * : Define your projects namespace. Default: EightshiftBoilerplate.
@@ -62,7 +62,7 @@ class MainCli extends AbstractCli {
   *
   * ## EXAMPLES
   *
-  *     wp boilerplate create_main --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
+  *     wp boilerplate create_config --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
   */
   public function __invoke( array $args, array $assoc_args ) {
 

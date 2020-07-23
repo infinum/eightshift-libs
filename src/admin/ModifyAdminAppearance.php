@@ -2,12 +2,12 @@
 /**
  * Modify WordPress admin behavior
  *
- * @package EightshiftBoilerplate\Admin
+ * @package EightshiftLibs\Admin
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Admin;
+namespace EightshiftLibs\Admin;
 
 use EightshiftLibs\Admin\AbstractModifyAdminAppearance;
 

@@ -7,7 +7,7 @@
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Enqueue\Admin;
+namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 use EightshiftLibs\Manifest\ManifestInterface;

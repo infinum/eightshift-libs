@@ -2,12 +2,12 @@
 /**
  * The Menu specific functionality.
  *
- * @package EightshiftBoilerplate\Menu
+ * @package EightshiftLibs\Menu
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Menu;
+namespace EightshiftLibs\Menu;
 
 use EightshiftLibs\Menu\AbstractMenu;
 

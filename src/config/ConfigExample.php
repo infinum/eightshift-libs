@@ -5,12 +5,12 @@
  * A class definition that includes attributes and functions used across both the
  * public side of the site and the admin area.
  *
- * @package EightshiftBoilerplate\Config
+ * @package EightshiftLibs\Config
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Config;
+namespace EightshiftLibs\Config;
 
 use EightshiftLibs\Config\AbstractConfig;
 

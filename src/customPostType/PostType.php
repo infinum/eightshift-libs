@@ -2,10 +2,10 @@
 /**
  * File that holds class for "Projects" custom post type registration.
  *
- * @package EightshiftBoilerplate\Custom_Post_Type
+ * @package EightshiftLibs\Custom_Post_Type
  */
 
-namespace EightshiftBoilerplate\Custom_Post_Type;
+namespace EightshiftLibs\Custom_Post_Type;
 
 use EightshiftLibs\CustomPostType\LabelGenerator;
 use EightshiftLibs\CustomPostType\AbstractPostType;

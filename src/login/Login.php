@@ -2,12 +2,12 @@
 /**
  * The login page specific functionality.
  *
- * @package EightshiftBoilerplate\Login
+ * @package EightshiftLibs\Login
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Login;
+namespace EightshiftLibs\Login;
 
 use EightshiftLibs\Login\AbstractLogin;
 

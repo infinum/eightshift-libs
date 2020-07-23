@@ -2,12 +2,12 @@
 /**
  * The Language specific functionality.
  *
- * @package EightshiftBoilerplate\I18n
+ * @package EightshiftLibs\I18n
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\I18n;
+namespace EightshiftLibs\I18n;
 
 use EightshiftLibs\Config\ConfigInterface;
 use EightshiftLibs\I18n\AbstractI18n;

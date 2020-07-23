@@ -5,11 +5,11 @@
  * @package EightshiftLibs\Rest\Routes
  */
 
-namespace EightshiftBoilerplateVendor\EightshiftLibs\Rest\Routes;
+namespace EightshiftLibs\Rest\Routes;
 
-use EightshiftBoilerplateVendor\EightshiftLibs\Config\ConfigInterface;
-use EightshiftBoilerplateVendor\EightshiftLibs\Rest\CallableRouteInterface;
-use EightshiftBoilerplateVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
+use EightshiftLibs\Config\ConfigInterface;
+use EightshiftLibs\Rest\CallableRouteInterface;
+use EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * Class RouteExample

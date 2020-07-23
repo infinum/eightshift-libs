@@ -9,7 +9,7 @@
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Manifest;
+namespace EightshiftLibs\Manifest;
 
 use EightshiftLibs\Config\ConfigInterface;
 use EightshiftLibs\Manifest\AbstractManifest;

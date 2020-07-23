@@ -2,12 +2,12 @@
 /**
  * The Blog_Taxonomy specific functionality.
  *
- * @package EightshiftBoilerplate\CustomTaxonomy
+ * @package EightshiftLibs\CustomTaxonomy
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\CustomTaxonomy;
+namespace EightshiftLibs\CustomTaxonomy;
 
 use EightshiftLibs\CustomTaxonomy\AbstractTaxonomy;
 

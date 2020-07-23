@@ -2,12 +2,12 @@
 /**
  * The Theme/Frontend Enqueue specific functionality.
  *
- * @package EightshiftBoilerplate\Enqueue\Theme
+ * @package EightshiftLibs\Enqueue\Theme
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftBoilerplate\Enqueue\Theme;
+namespace EightshiftLibs\Enqueue\Theme;
 
 use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftLibs\Manifest\ManifestInterface;
