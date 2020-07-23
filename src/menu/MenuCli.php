@@ -73,6 +73,7 @@ class MenuCli extends AbstractCli {
     $class = CliHelpers::change_class_name( static::TEMPLATE, static::CLASS_NAME, $class );
     $class = CliHelpers::change_namespace( $assoc_args['namespace'], $class );
     $class = CliHelpers::change_use( $assoc_args['vendor_prefix'], $class );
+    $class = CliHelpers::change_text_domain( $assoc_args['namespace'], $class );
 
     // Output final class to new file/folder and finish.
     CliHelpers::output_write( static::OUTPUT_DIR, static::CLASS_NAME, $class );

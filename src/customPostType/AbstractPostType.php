@@ -17,6 +17,23 @@ use EightshiftLibs\Services\ServiceInterface;
 abstract class AbstractPostType implements ServiceInterface {
 
   /**
+   * Register custom post type.
+   *
+   * @return void
+   */
+  public function register() {
+    \add_action(
+      'init',
+      function() {
+        \register_post_type(
+          $this->get_post_type_slug(),
+          $this->get_post_type_arguments()
+        );
+      }
+    );
+  }
+
+  /**
    * Get the slug to use for the custom post type.
    *
    * @return string Custom post type slug.

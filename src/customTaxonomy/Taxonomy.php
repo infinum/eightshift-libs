@@ -84,7 +84,7 @@ class Taxonomy extends AbstractTaxonomy {
   protected function get_taxonomy_arguments() : array {
     return [
       'hierarchical'      => true,
-      'label'             => esc_html__( 'Blog Categories', 'eightshift-boilerplate' ),
+      'label'             => esc_html__( 'Blog Categories', 'eightshift-libs' ),
       'show_ui'           => true,
       'show_admin_column' => true,
       'show_in_nav_menus' => false,

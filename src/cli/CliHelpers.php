@@ -197,6 +197,22 @@ class CliHelpers {
   }
 
   /**
+   * Replace text domain in class.
+   *
+   * @param string $namespace Class nammespace.
+   * @param string $class     Full class as a string.
+   *
+   * @return string
+   */
+  public static function change_text_domain( string $namespace, string $string ) : string {
+    return str_replace(
+      'eightshift-libs',
+      $namespace,
+      $string
+    );
+  }
+
+  /**
    * Change Class full name.
    *
    * @param string $template_name Current template.

@@ -25,7 +25,7 @@ class Config extends AbstractConfig {
    * Generally used for naming assets handlers, languages, etc.
    */
   public static function get_project_name() : string {
-    return 'eightshift-boilerplate';
+    return 'eightshift-libs';
   }
 
   /**

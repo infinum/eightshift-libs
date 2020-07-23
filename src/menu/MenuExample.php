@@ -22,7 +22,7 @@ class MenuExample extends AbstractMenu {
    * @return void
    */
   public function register() {
-    add_action( 'after_setup_theme', [ $this, 'register_menu_positions' ], 11 );
+    \add_action( 'after_setup_theme', [ $this, 'register_menu_positions' ], 11 );
   }
 
   /**
@@ -32,7 +32,7 @@ class MenuExample extends AbstractMenu {
    */
   public function get_menu_positions() : array {
     return [
-      'header_main_nav' => esc_html__( 'Main Menu', 'eightshift-boilerplate' ),
+      'header_main_nav' => \esc_html__( 'Main Menu', 'eightshift-libs' ),
     ];
   }
 }

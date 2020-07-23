@@ -1,36 +1,19 @@
 <?php
 /**
- * File that holds class for "Projects" custom post type registration.
+ * File that holds class for PostTypeExample custom post type registration.
  *
- * @package EightshiftLibs\Custom_Post_Type
+ * @package EightshiftLibs\CustomPostType
  */
 
-namespace EightshiftLibs\Custom_Post_Type;
+namespace EightshiftLibs\CustomPostType;
 
 use EightshiftLibs\CustomPostType\LabelGenerator;
 use EightshiftLibs\CustomPostType\AbstractPostType;
 
 /**
- * Class Projects.
+ * Class PostTypeExample.
  */
-class PostType extends AbstractPostType {
-
-  /**
-   * Register custom post type.
-   *
-   * @return void
-   */
-  public function register() {
-    add_action(
-      'init',
-      function() {
-        register_post_type(
-          $this->get_post_type_slug(),
-          $this->get_post_type_arguments()
-        );
-      }
-    );
-  }
+class PostTypeExample extends AbstractPostType {
 
   /**
    * Post type slug constant.
@@ -91,10 +74,10 @@ class PostType extends AbstractPostType {
   protected function get_post_type_arguments() : array {
 
     $nouns = [
-      LabelGenerator::SINGULAR_NAME_UC => esc_html_x( 'Project', 'Projects post uppercase singular name', 'eightshift-boilerplate' ),
-      LabelGenerator::SINGULAR_NAME_LC => esc_html_x( 'project', 'Projects post lowercase singular name', 'eightshift-boilerplate' ),
-      LabelGenerator::PLURAL_NAME_UC => esc_html_x( 'Projects', 'Projects post uppercase plural name', 'eightshift-boilerplate' ),
-      LabelGenerator::PLURAL_NAME_LC => esc_html_x( 'projects', 'Projects post lowercase plural name', 'eightshift-boilerplate' ),
+      LabelGenerator::SINGULAR_NAME_UC => \esc_html_x( 'Project', 'Projects post uppercase singular name', 'eightshift-libs' ),
+      LabelGenerator::SINGULAR_NAME_LC => \esc_html_x( 'project', 'Projects post lowercase singular name', 'eightshift-libs' ),
+      LabelGenerator::PLURAL_NAME_UC   => \esc_html_x( 'Projects', 'Projects post uppercase plural name', 'eightshift-libs' ),
+      LabelGenerator::PLURAL_NAME_LC   => \esc_html_x( 'projects', 'Projects post lowercase plural name', 'eightshift-libs' ),
     ];
 
     return [
