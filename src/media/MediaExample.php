@@ -12,11 +12,11 @@ namespace EightshiftLibs\Media;
 use EightshiftLibs\Media\AbstractMedia;
 
 /**
- * Class Media
+ * Class MediaExample
  *
  * This class handles all media options. Sizes, Types, Features, etc.
  */
-class Media extends AbstractMedia {
+class MediaExample extends AbstractMedia {
 
   /**
    * Register all the hooks

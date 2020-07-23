@@ -52,16 +52,6 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
   }
 
   /**
-   * Register all hooks. Changed filter name to manifest.
-   *
-   * @return void
-   */
-  public function register() {
-    add_action( 'init', [ $this, 'set_assets_manifest_raw' ] );
-    add_filter( $this->config->get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
-  }
-
-  /**
    * Set the manifest data with site url prefix.
    * You should never call this method directly instead you should call $this->manifest.
    *

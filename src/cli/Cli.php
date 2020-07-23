@@ -10,6 +10,8 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Main\MainCli;
+use EightshiftLibs\Manifest\ManifestCli;
+use EightshiftLibs\Media\MediaCli;
 use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
@@ -67,6 +69,20 @@ class Cli {
         );
         break;
 
+      case 'create_manifest':
+        $this->run_command(
+          new ManifestCli(),
+          $this->combine_args( $args ),
+        );
+        break;
+
+      case 'create_media':
+        $this->run_command(
+          new MediaCli(),
+          $this->combine_args( $args ),
+        );
+        break;
+
       case 'create_menu':
         $this->run_command(
           new MenuCli(),
@@ -119,6 +135,8 @@ class Cli {
     $this->run_command( new ConfigCli() );
     $this->run_command( new I18nCli() );
     $this->run_command( new MainCli() );
+    $this->run_command( new ManifestCli() );
+    $this->run_command( new MediaCli() );
     $this->run_command( new MenuCli() );
     $this->run_command( new RouteCli() );
     $this->run_command( new FieldCli() );

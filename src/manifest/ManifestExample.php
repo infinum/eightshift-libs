@@ -15,9 +15,9 @@ use EightshiftLibs\Config\ConfigInterface;
 use EightshiftLibs\Manifest\AbstractManifest;
 
 /**
- * Abstract class Manifest class.
+ * Class ManifestExample
  */
-class Manifest extends AbstractManifest {
+class ManifestExample extends AbstractManifest {
 
   /**
    * Instance variable of project config data.
@@ -33,5 +33,15 @@ class Manifest extends AbstractManifest {
    */
   public function __construct( ConfigInterface $config ) {
     $this->config = $config;
+  }
+
+  /**
+   * Register all hooks. Changed filter name to manifest.
+   *
+   * @return void
+   */
+  public function register() {
+    \add_action( 'init', [ $this, 'set_assets_manifest_raw' ] );
+    \add_filter( $this->config->get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
   }
 }
