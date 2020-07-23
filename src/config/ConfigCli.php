@@ -3,7 +3,7 @@
  * Class that registers WPCLI command for Config.
  * 
  * Command Develop:
- * wp eval-file bin/cli.php config --skip-wordpress
+ * wp eval-file bin/cli.php create_config --skip-wordpress
  *
  * @package EightshiftLibs\Config
  */

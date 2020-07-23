@@ -3,7 +3,7 @@
  * Class that registers WPCLI command for Rest Routes.
  * 
  * Command Develop:
- * wp eval-file bin/cli.php create_rest_route 'temp' 'post' --skip-wordpress
+ * wp eval-file bin/cli.php create_rest_route --skip-wordpress
  *
  * @package EightshiftLibs\Rest\Routes
  */
@@ -88,7 +88,8 @@ class RouteCli extends AbstractCli {
     $method        = strtoupper( $assoc_args['method'] );
 
     // Get full class name.
-    $class_name = CliHelpers::get_class_name( static::CLASS_NAME . $endpoint_slug );
+    $class_name = CliHelpers::get_class_name( $endpoint_slug );
+    $class_name = static::CLASS_NAME . $class_name;
 
     // Read the template contents, and replace the placeholders with provided variables.
     $class = CliHelpers::get_template( __DIR__ . '/' . static::TEMPLATE . '.php' );

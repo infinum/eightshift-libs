@@ -3,7 +3,7 @@
  * Class that registers WPCLI command for I18n.
  * 
  * Command Develop:
- * wp eval-file bin/cli.php i18n --skip-wordpress
+ * wp eval-file bin/cli.php create_i18n --skip-wordpress
  *
  * @package EightshiftLibs\I18n
  */
