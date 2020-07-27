@@ -88,23 +88,23 @@ class RouteCli extends AbstractCli {
     $method        = strtoupper( $assoc_args['method'] );
 
     // Get full class name.
-    $class_name = CliHelpers::get_class_name( $endpoint_slug );
+    $class_name = $this->get_file_name( $endpoint_slug );
     $class_name = static::CLASS_NAME . $class_name;
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = CliHelpers::get_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
+    $class = $this->get_example_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
 
     // Remove unecesery stuff from props.
     $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
 
     // Replace stuff in file.
-    $class = CliHelpers::change_class_name( static::TEMPLATE, $class_name, $class );
-    $class = CliHelpers::change_namespace( $assoc_args['namespace'], $class );
-    $class = CliHelpers::change_use( $assoc_args['vendor_prefix'], $class );
+    $class = $this->rename_class_name( static::TEMPLATE, $class_name, $class );
+    $class = $this->rename_namespace( $assoc_args, $class );
+    $class = $this->rename_use( $assoc_args, $class );
     $class = str_replace( "/example-route", "/{$endpoint}", $class );
     $class = str_replace( "static::READABLE", static::VERB_ENUM[ $method ], $class );
 
     // Output final class to new file/folder and finish.
-    CliHelpers::output_write( static::OUTPUT_DIR, $class_name, $class );
+    $this->output_write( static::OUTPUT_DIR, $class_name, $class );
   }
 }

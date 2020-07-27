@@ -13,6 +13,11 @@ namespace EightshiftLibs\Cli;
 abstract class AbstractCli implements CliInterface {
 
   /**
+   * CLI helpers trait.
+   */
+  use CliHelpers;
+
+  /**
    * Top level commands name.
    */
   protected $command_parent_name;

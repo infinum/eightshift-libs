@@ -48,71 +48,66 @@ class Cli {
     $command_name = $args[0] ?? '';
 
     switch ( $command_name ) {
+      case 'reset':
+        $this->run_command(
+          new CliReset(),
+          []
+        );
+        break;
+
       case 'create_config':
         $this->run_command(
-          new ConfigCli(),
-          $this->combine_args( $args ),
+          new ConfigCli()
         );
         break;
 
       case 'create_i18n':
         $this->run_command(
-          new I18nCli(),
-          $this->combine_args( $args ),
+          new I18nCli()
         );
         break;
 
       case 'create_main':
         $this->run_command(
-          new MainCli(),
-          $this->combine_args( $args ),
+          new MainCli()
         );
         break;
 
       case 'create_manifest':
         $this->run_command(
-          new ManifestCli(),
-          $this->combine_args( $args ),
+          new ManifestCli()
         );
         break;
 
       case 'create_media':
         $this->run_command(
-          new MediaCli(),
-          $this->combine_args( $args ),
+          new MediaCli()
         );
         break;
 
       case 'create_menu':
         $this->run_command(
-          new MenuCli(),
-          $this->combine_args( $args ),
+          new MenuCli()
         );
         break;
 
       case 'create_rest_field':
         $this->run_command(
           new FieldCli(),
-          $this->combine_args(
-            $args,
-            [
-              'field_name'  => $args[3] ?? 'title',
-              'object_type' => $args[4] ?? 'post',
-            ]
-          ),
+          [
+            'field_name'  => $args[3] ?? 'title',
+            'object_type' => $args[4] ?? 'post',
+          ]
         );
         break;
 
       case 'create_rest_route':
         $this->run_command(
           new RouteCli(),
-          $this->combine_args(
-            $args,
-            [
-              'endpoint_slug' => $args[3] ?? 'test',
-              'method'        => $args[4] ?? 'get',
-            ]
-          ),
+          [
+            'endpoint_slug' => $args[3] ?? 'test',
+            'method'        => $args[4] ?? 'get',
+          ]
         );
         break;
 
@@ -158,23 +153,5 @@ class Cli {
       // Run if normal WPCLI.
       $class->register( $this->command_parent_name );
     }
-  }
-
-  /**
-   * Define common attrs.
-   *
-   * @param array $args      Arguments from WPCLI command.
-   * @param array $args_user Arguments from WPCLI command user defined.
-   *
-   * @return array
-   */
-  public function combine_args( array $args = [], array $args_user = [] ) : array {
-    return array_merge(
-      [
-      'namespace'     => $args[1] ?? static::NAMESPACE,
-      'vendor_prefix' => $args[2] ?? static::VENDOR_PREFIX,
-      ],
-      $args_user,
-    );
   }
 }

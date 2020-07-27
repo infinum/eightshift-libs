@@ -8,9 +8,9 @@
 namespace EightshiftLibs\Cli;
 
 /**
- * CliHelpers class
+ * CliHelpers trait
  */
-class CliHelpers {
+trait CliHelpers {
 
   /**
    * Generate correct class name from provided string.
@@ -20,7 +20,7 @@ class CliHelpers {
    *
    * @return string
    */
-  public static function get_class_name( string $file_name ) : string {
+  public function get_file_name( string $file_name ) : string {
     $class = explode( '_', str_replace( '-', '_', str_replace( ' ', '_', strtolower( $file_name ) ) ) );
 
     $class_name = array_map(
@@ -40,7 +40,7 @@ class CliHelpers {
    *
    * @return string|Error
    */
-  public static function get_template( string $path ) {
+  public function get_example_template( string $path ) {
     // Read the template contents, and replace the placeholders with provided variables.
     $template_file = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
@@ -62,13 +62,13 @@ class CliHelpers {
    *
    * @return Error|Success
    */
-  public static function output_write( string $output_dir, string $output_file, string $class ) {
+  public function output_write( string $output_dir, string $output_file, string $class ) {
 
     // Set output paths.
-    $output_dir = CliHelpers::get_output_dir( $output_dir );
+    $output_dir = $this->get_output_dir( $output_dir );
 
     // Set output file path.
-    $output_file = CliHelpers::get_output_file( $output_file );
+    $output_file = $this->get_output_file( $output_file );
     $output_file = "{$output_dir}{$output_file}";
 
     // Bailout if file already exists.
@@ -110,7 +110,7 @@ class CliHelpers {
    *
    * @return string
    */
-  public static function get_output_dir( $path ) : string {
+  public function get_output_dir( $path ) : string {
     if ( function_exists( 'add_action' ) ) {
       $root = dirname( __DIR__, 5 );
     } else {
@@ -134,7 +134,7 @@ class CliHelpers {
    *
    * @return string
    */
-  public static function get_output_file( $file ) : string {
+  public function get_output_file( $file ) : string {
     $file = rtrim( $file, '/' );
     $file = trim( $file,'/' );
     return "/{$file}.php";
@@ -143,8 +143,8 @@ class CliHelpers {
   /**
    * Replace namespace in class
    *
-   * @param string $namespace Class nammespace.
-   * @param string $class     Full class as a string
+   * @param array  $args  CLI args array.
+   * @param string $class Full class as a string
    *
    * @return string
    *
@@ -153,7 +153,9 @@ class CliHelpers {
    * \x6E\x61\x6D\x65\x73\x70\x61\x63\x65 - Corresponds to "namespace".
    * \x40\x70\x61\x63\x6B\x61\x67\x65 - Corresponds to "@package".
    */
-  public static function change_namespace( string $namespace, string $string ) : string {
+  public function rename_namespace( array $args = [], string $string ) : string {
+
+    $namespace = $this->get_namespace( $args );
 
     // Namespace.
     $class = preg_replace(
@@ -175,8 +177,8 @@ class CliHelpers {
   /**
    * Replace use in class.
    *
-   * @param string $vendor_prefix Class vendor prefix.
-   * @param string $class         Full class as a string.
+   * @param array  $args  CLI args array.
+   * @param string $class Full class as a string.
    *
    * @return string
    *
@@ -184,10 +186,9 @@ class CliHelpers {
    *
    * \x75\x73\x65 - Corresponds to "use".
    */
-  public static function change_use( string $vendor_prefix, string $string ) : string {
-    if ( ! function_exists( 'add_action' ) ) {
-      $vendor_prefix = 'EightshiftLibs';
-    }
+  public function rename_use( array $args = [], string $string ) : string {
+
+    $vendor_prefix = $this->get_vendor_prefix( $args );
 
     return preg_replace(
       '/\x75\x73\x65 (w+|\w+\\\\)/',
@@ -199,12 +200,15 @@ class CliHelpers {
   /**
    * Replace text domain in class.
    *
-   * @param string $namespace Class nammespace.
-   * @param string $class     Full class as a string.
+   * @param array  $args  CLI args array.
+   * @param string $class Full class as a string.
    *
    * @return string
    */
-  public static function change_text_domain( string $namespace, string $string ) : string {
+  public function rename_text_domain( array $args = [], string $string ) : string {
+
+    $namespace = $this->get_namespace( $args );
+
     return str_replace(
       'eightshift-libs',
       $namespace,
@@ -221,7 +225,76 @@ class CliHelpers {
    *
    * @return string
    */
-  public static function change_class_name( string $template_name, string $new_name, string $string ) : string {
+  public function rename_class_name( string $template_name, string $new_name, string $string ) : string {
     return str_replace( $template_name, $new_name, $string );
+  }
+
+  /**
+   * Get composer from project or lib.
+   *
+   * @param array  $args  CLI args array.
+   *
+   * @return array
+   */
+  public function get_composer ( array $args = [] ) : array {
+    if ( ! isset( $args['config_path'] ) ) {
+      if ( function_exists( 'add_action' ) ) {
+        $composer_path = dirname( __DIR__, 5 ) . '/composer.json';
+      } else {
+        $composer_path = dirname( __DIR__, 2 ) . '/composer.json';
+      }
+    } else {
+      $composer_path = $args['config_path'];
+    }
+
+    $composer_file = file_get_contents( $composer_path );
+
+    if ( $composer_file === false ) {
+      \WP_CLI::error(
+        sprintf( 'The composer on "%s" path seems to be missing.', $composer_path )
+      );
+    }
+
+    return json_decode( $composer_file, true );
+  }
+
+  /**
+   * Get composers defined namespace.
+   *
+   * @param array  $args  CLI args array.
+   * @return string
+   */
+  public function get_namespace( array $args = [] ) : string {
+    if( isset( $args['namespace'] ) ) {
+      $namespace = $args['namespace'];
+    }
+
+    if ( empty( $namespace ) ) {
+      $composer = $this->get_composer( $args );
+
+      $namespace = rtrim( array_key_first($composer['autoload']['psr-4']), '\\' );
+    }
+
+    return $namespace;
+  }
+
+  /**
+   * Get composers defined vendor prefix.
+   *
+   * @param array  $args  CLI args array.
+   * @return string
+   */
+  public function get_vendor_prefix( array $args = [] ) : string {
+    if( isset( $args['vendor_prefix'] ) ) {
+      $vendor_prefix = $args['vendor_prefix'];
+    }
+
+    if ( empty( $vendor_prefix ) ) {
+      $composer = $this->get_composer( $args );
+
+      $vendor_prefix = $composer['extra']['imposter']['namespace'] ?? 'EightshiftLibs';
+    }
+
+    return $vendor_prefix;
   }
 }
