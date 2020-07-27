@@ -9,8 +9,7 @@
 declare( strict_types=1 );
 
 namespace EightshiftLibs\Blocks;
-
-use EightshiftLibs\Config\ConfigInterface;
+;
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Services\ServiceInterface;
@@ -19,13 +18,6 @@ use EightshiftLibs\Services\ServiceInterface;
  * Class Blocks
  */
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface {
-
-  /**
-   * Instance variable of project config data.
-   *
-   * @var ConfigInterface
-   */
-  protected $config;
 
   /**
    * Full data of blocks, settings and wrapper data.
@@ -311,9 +303,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
    *
    * @return string
    */
-  protected function get_blocks_path() : string {
-    return $this->config->get_project_path() . '/src/blocks';
-  }
+  abstract protected function get_blocks_path() : string;
 
   /**
    * Get blocks custom folder absolute path.
@@ -426,13 +416,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
       $block_details['attributes']
     );
 
-    $filter_name = $this->config->get_config( static::BLOCK_ATTRIBUTES_FILTER_NAME );
+    // $filter_name = $this->config->get_config( static::BLOCK_ATTRIBUTES_FILTER_NAME );
 
-    if ( \has_filter( $filter_name ) ) {
-      $override_attributes = \apply_filters( $filter_name, $output );
+    // if ( \has_filter( $filter_name ) ) {
+    //   $override_attributes = \apply_filters( $filter_name, $output );
 
-      $output = array_merge( $output, $override_attributes );
-    }
+    //   $output = array_merge( $output, $override_attributes );
+    // }
 
     return $output;
   }

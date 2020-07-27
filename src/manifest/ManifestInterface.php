@@ -19,13 +19,6 @@ use EightshiftLibs\Config\ConfigInterface;
 interface ManifestInterface {
 
   /**
-   * Config getter
-   *
-   * @return ConfigInterface
-   */
-  public function get_config();
-
-  /**
    * Return full path for specific asset from manifest.json
    * This is used for cache busting assets.
    *

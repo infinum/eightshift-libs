@@ -93,17 +93,4 @@ class Config extends AbstractConfig {
   public static function get_project_primary_color() : string {
     return '#900000';
   }
-
-  /**
-   * Return project absolute path.
-   *
-   * If used in a theme use get_template_directory() and in case it's used in a plugin use __DIR__.
-   *
-   * @param string $path Additional path to add to project path.
-   *
-   * @return string
-   */
-  public static function get_project_path( string $path = '' ) : string {
-    return get_template_directory() . $path;
-  }
 }

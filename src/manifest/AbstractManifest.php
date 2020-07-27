@@ -13,7 +13,6 @@ namespace EightshiftLibs\Manifest;
 
 use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftLibs\Config\ConfigInterface;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -29,27 +28,11 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
   const MANIFEST_ITEM_FILTER_NAME = 'manifest-item';
 
   /**
-   * Instance variable of project config data.
-   *
-   * @var ConfigInterface
-   */
-  protected $config;
-
-  /**
    * Full data of manifest items.
    *
    * @var array
    */
   protected $manifest = [];
-
-  /**
-   * Create a new instance that injects config data to get project specific details.
-   *
-   * @param ConfigInterface $config Inject config which holds data regarding project details.
-   */
-  public function __construct( ConfigInterface $config ) {
-    $this->config = $config;
-  }
 
   /**
    * Set the manifest data with site url prefix.
@@ -60,7 +43,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
    * @return void Sets the manifest variable.
    */
   public function set_assets_manifest_raw() : void {
-    $path = $this->config->get_project_path() . '/public/manifest.json';
+    $path = $this->get_manifest_file_path();
 
     if ( ! file_exists( $path ) ) {
       throw InvalidManifest::missing_manifest_exception( $path );
@@ -100,13 +83,11 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
   }
 
   /**
-   * Config getter
+   * Manifest file path getter.
    *
-   * @return ConfigInterface|object
+   * @return string
    */
-  public function get_config() {
-    return $this->config;
-  }
+  abstract public function get_manifest_file_path() : string;
 
   /**
    * This method appends full site url to the relative manifest data item.
@@ -114,6 +95,6 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
    * @return string
    */
   protected function get_assets_manifest_output_prefix() : string {
-    return site_url();
+    return \site_url();
   }
 }

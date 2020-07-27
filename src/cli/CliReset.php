@@ -38,6 +38,15 @@ class CliReset extends AbstractCli {
   }
 
   /**
+   * Get WPCLI command doc.
+   *
+   * @return string
+   */
+  public function get_doc() : array {
+    return [];
+  }
+
+  /**
    * Reset method.
    *
    * @param array $args

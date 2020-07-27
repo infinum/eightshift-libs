@@ -10,22 +10,13 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Blocks;
 
-use EightshiftLibs\Config\ConfigInterface;
+use EightshiftLibs\Config\Config;
 use EightshiftLibs\Blocks\AbstractBlocks;
 
 /**
  * Class Blocks
  */
 class Blocks extends AbstractBlocks {
-
-  /**
-   * Create a new instance that injects config data to get project specific details.
-   *
-   * @param ConfigInterface $config Inject config which holds data regarding project details.
-   */
-  public function __construct( ConfigInterface $config ) {
-    $this->config = $config;
-  }
 
   /**
    * Register all the hooks
@@ -47,5 +38,15 @@ class Blocks extends AbstractBlocks {
     add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 25 );
 
     add_action( 'after_setup_theme', [ $this, 'change_editor_color_palette' ], 11 );
+  }
+
+  /**
+   * Get blocks absolute path.
+   * Prefix path is defined by project config.
+   *
+   * @return string
+   */
+  protected function get_blocks_path() : string {
+    return Config::get_project_path() . '/src/blocks';
   }
 }

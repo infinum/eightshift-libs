@@ -110,7 +110,7 @@ trait CliHelpers {
    *
    * @return string
    */
-  public function get_output_dir( $path ) : string {
+  public function get_output_dir( string $path = '' ) : string {
     if ( function_exists( 'add_action' ) ) {
       $root = dirname( __DIR__, 5 );
     } else {
@@ -300,5 +300,18 @@ trait CliHelpers {
     }
 
     return $vendor_prefix;
+  }
+
+  public function is_dependant( string $string ) {
+    var_dump($this->get_output_dir('main/Main.php'));
+
+    $main = $this->get_output_dir('main/Main.php');
+
+    // Bailout if main file doesn't exists.
+    if ( ! file_exists( $main ) ) {
+      \WP_CLI::error(
+        sprintf( 'The file "%s" can\'t be generated because it already exists.', $main )
+      );
+    }
   }
 }

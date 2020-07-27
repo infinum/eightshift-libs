@@ -22,10 +22,10 @@ class Taxonomy extends AbstractTaxonomy {
    * @return void
    */
   public function register() {
-    add_action(
+    \add_action(
       'init',
       function() {
-        register_taxonomy(
+        \register_taxonomy(
           $this->get_taxonomy_slug(),
           [ $this->get_post_type_slug() ],
           $this->get_taxonomy_arguments()

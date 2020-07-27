@@ -7,7 +7,7 @@
 
 namespace EightshiftLibs\Rest\Routes;
 
-use EightshiftLibs\Config\ConfigInterface;
+use EightshiftLibs\Config\Config;
 use EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftLibs\Rest\Routes\AbstractRoute;
 
@@ -17,21 +17,12 @@ use EightshiftLibs\Rest\Routes\AbstractRoute;
 class RouteExample extends AbstractRoute implements CallableRouteInterface {
 
   /**
-   * Create a new instance that injects classes
-   *
-   * @param ConfigInterface $config Inject config which holds data regarding project details.
-   */
-  public function __construct( ConfigInterface $config ) {
-    $this->config = $config;
-  }
-
-  /**
    * Method that returns project Route namespace.
    *
    * @return string Project namespace for REST route.
    */
   protected function get_namespace(): string {
-    return $this->config->get_project_routes_namespace();
+    return Config::get_project_routes_namespace();
   }
 
   /**
@@ -40,7 +31,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface {
    * @return string Route version as a string.
    */
   protected function get_version(): string {
-    return $this->config->get_project_routes_version();
+    return Config::get_project_routes_version();
   }
 
   /**

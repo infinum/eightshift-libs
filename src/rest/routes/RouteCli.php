@@ -103,6 +103,13 @@ class RouteCli extends AbstractCli {
     // Remove unecesery stuff from props.
     $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
 
+    // var_dump($class);
+
+    if (strpos( $class , 'ConfigInterface $config') !== false) {
+      var_dump('DAAAA');
+      $this->is_dependant('');
+    }
+
     // Replace stuff in file.
     $class = $this->rename_class_name( static::TEMPLATE, $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );

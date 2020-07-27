@@ -11,7 +11,7 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Manifest;
 
-use EightshiftLibs\Config\ConfigInterface;
+use EightshiftLibs\Config\Config;
 use EightshiftLibs\Manifest\AbstractManifest;
 
 /**
@@ -20,28 +20,21 @@ use EightshiftLibs\Manifest\AbstractManifest;
 class ManifestExample extends AbstractManifest {
 
   /**
-   * Instance variable of project config data.
-   *
-   * @var ConfigInterface
-   */
-  protected $config;
-
-  /**
-   * Create a new instance that injects config data to get project specific details.
-   *
-   * @param ConfigInterface $config Inject config which holds data regarding project details.
-   */
-  public function __construct( ConfigInterface $config ) {
-    $this->config = $config;
-  }
-
-  /**
    * Register all hooks. Changed filter name to manifest.
    *
    * @return void
    */
   public function register() {
     \add_action( 'init', [ $this, 'set_assets_manifest_raw' ] );
-    \add_filter( $this->config->get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
+    \add_filter( Config::get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
+  }
+
+  /**
+   * Manifest file path getter.
+   *
+   * @return string
+   */
+  public function get_manifest_file_path() : string {
+    return Config::get_project_path() . '/public/manifest.json';
   }
 }

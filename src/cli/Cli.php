@@ -95,8 +95,8 @@ class Cli {
         $this->run_command(
           new FieldCli(),
           [
-            'field_name'  => $args[3] ?? 'title',
-            'object_type' => $args[4] ?? 'post',
+            'field_name'  => $args[1] ?? 'title',
+            'object_type' => $args[2] ?? 'post',
           ]
         );
         break;
@@ -105,8 +105,8 @@ class Cli {
         $this->run_command(
           new RouteCli(),
           [
-            'endpoint_slug' => $args[3] ?? 'test',
-            'method'        => $args[4] ?? 'get',
+            'endpoint_slug' => $args[1] ?? 'test',
+            'method'        => $args[2] ?? 'get',
           ]
         );
         break;
