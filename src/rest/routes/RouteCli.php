@@ -63,24 +63,30 @@ class RouteCli extends AbstractCli {
   }
 
   /**
-  * Generates REST-API Route in your project.
-  *
-  * --endpoint_slug=<endpoint_slug>
-  * : The name of the endpoint slug. Example: test-route.
-  *
-  * --method=<method>
-  * : HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.
-  *
-    * --namespace=<namespace>
-  * : Define your projects namespace. Default: EightshiftBoilerplate.
-  *
-  * --vendor_prefix=<vendor_prefix>
-  * : Define your projects vendor prefix. Default: EightshiftBoilerplateVendor.
-  *
-  * ## EXAMPLES
-  *
-  *     wp boilerplate create_rest_route --endpoint_slug='temp-route' --method='post' --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
-  */
+   * Get WPCLI command doc.
+   *
+   * @return string
+   */
+  public function get_doc() : array {
+    return [
+      'shortdesc' => 'Generates REST-API Route in your project.',
+      'synopsis' => [
+        [
+          'type'        => 'assoc',
+          'name'        => 'endpoint_slug',
+          'description' => 'The name of the endpoint slug. Example: test-route.',
+          'optional'    => false,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'method',
+          'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
+          'optional'    => false,
+        ],
+      ]
+    ];
+  }
+
   public function __invoke( array $args, array $assoc_args ) {
 
     // Get Props.

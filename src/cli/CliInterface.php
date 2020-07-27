@@ -42,4 +42,11 @@ interface CliInterface {
    * @return string
    */
   public function get_class_name() : string;
+
+  /**
+   * Get WPCLI command doc.
+   *
+   * @return string
+   */
+  public function get_doc() : array;
 }

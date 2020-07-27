@@ -52,18 +52,16 @@ class ConfigCli extends AbstractCli {
   }
 
   /**
-  * Generates project config class.
-  *
-  * --namespace=<namespace>
-  * : Define your projects namespace. Default: EightshiftBoilerplate.
-  *
-  * --vendor_prefix=<vendor_prefix>
-  * : Define your projects vendor prefix. Default: EightshiftBoilerplateVendor.
-  *
-  * ## EXAMPLES
-  *
-  *     wp boilerplate create_config --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
-  */
+   * Get WPCLI command doc.
+   *
+   * @return string
+   */
+  public function get_doc() : array {
+    return [
+      'shortdesc' => 'Generates project config class.',
+    ];
+  }
+
   public function __invoke( array $args, array $assoc_args ) {
 
     // Read the template contents, and replace the placeholders with provided variables.

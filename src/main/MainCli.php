@@ -52,18 +52,16 @@ class MainCli extends AbstractCli {
   }
 
   /**
-  * Generates Main class file for all other features using service container pattern.
-  *
-  * --namespace=<namespace>
-  * : Define your projects namespace. Default: EightshiftBoilerplate.
-  *
-  * --vendor_prefix=<vendor_prefix>
-  * : Define your projects vendor prefix. Default: EightshiftBoilerplateVendor.
-  *
-  * ## EXAMPLES
-  *
-  *     wp boilerplate create_main --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
-  */
+   * Get WPCLI command doc.
+   *
+   * @return string
+   */
+  public function get_doc() : array {
+    return [
+      'shortdesc' => 'Generates Main class file for all other features using service container pattern.',
+    ];
+  }
+
   public function __invoke( array $args, array $assoc_args ) {
 
     // Read the template contents, and replace the placeholders with provided variables.
@@ -72,7 +70,7 @@ class MainCli extends AbstractCli {
     // Replace stuff in file.
     $class = $this->rename_class_name( static::TEMPLATE, static::CLASS_NAME, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
-    $class = $this->rename_use( $assoc_args['vendor_prefix'], $class );
+    $class = $this->rename_use( $assoc_args, $class );
 
     // Output final class to new file/folder and finish.
     $this->output_write( static::OUTPUT_DIR, static::CLASS_NAME, $class );

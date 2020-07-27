@@ -265,6 +265,8 @@ trait CliHelpers {
    * @return string
    */
   public function get_namespace( array $args = [] ) : string {
+    $namespace = '';
+
     if( isset( $args['namespace'] ) ) {
       $namespace = $args['namespace'];
     }
@@ -285,6 +287,8 @@ trait CliHelpers {
    * @return string
    */
   public function get_vendor_prefix( array $args = [] ) : string {
+    $vendor_prefix = '';
+
     if( isset( $args['vendor_prefix'] ) ) {
       $vendor_prefix = $args['vendor_prefix'];
     }

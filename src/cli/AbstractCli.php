@@ -46,6 +46,36 @@ abstract class AbstractCli implements CliInterface {
   }
 
   /**
+   * Define global synopsis for all projects commands.
+   *
+   * @return array
+   */
+  public function get_global_synopsis() : array {
+    return [
+      'synopsis' => [
+        [
+          'type'        => 'assoc',
+          'name'        => 'namespace',
+          'description' => 'Define your projects namespace. Default is read from composer autoload psr-4 key.',
+          'optional'    => true,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'vendor_prefix',
+          'description' => 'Define your projects vendor_prefix. Default is read from composer extra, imposter, namespace key.',
+          'optional'    => true,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'config_path',
+          'description' => 'Define your projects composer apsolute path.',
+          'optional'    => true,
+        ],
+      ],
+    ];
+  }
+
+  /**
    * Method that creates actual WPCLI command in terminal.
    *
    * @return void
@@ -53,7 +83,11 @@ abstract class AbstractCli implements CliInterface {
   public function register_command() {
     \WP_CLI::add_command(
       $this->command_parent_name . ' ' . $this->get_command_name(),
-      $this->get_class_name()
+      $this->get_class_name(),
+      array_merge(
+        $this->get_doc(),
+        $this->get_global_synopsis(),
+      )
     );
   }
 }

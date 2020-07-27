@@ -52,24 +52,30 @@ class FieldCli extends AbstractCli {
   }
 
   /**
-  * Generates REST-API Field in your project.
-  *
-  * --field_name=<field_name>
-  * : The name of the endpoint slug. Example: title.
-  *
-  * --object_type=<object_type>
-  * : Object(s) the field is being registered to. Example: post.
-  *
-    * --namespace=<namespace>
-  * : Define your projects namespace. Default: EightshiftBoilerplate.
-  *
-  * --vendor_prefix=<vendor_prefix>
-  * : Define your projects vendor prefix. Default: EightshiftBoilerplateVendor.
-  *
-  * ## EXAMPLES
-  *
-  *     wp boilerplate create_rest_field --field_name='title' --object_type='post' --namespace='EightshiftBoilerplate' --vendor_prefix='EightshiftBoilerplateVendor'
-  */
+   * Get WPCLI command doc.
+   *
+   * @return string
+   */
+  public function get_doc() : array {
+    return [
+      'shortdesc' => 'Generates REST-API Field in your project.',
+      'synopsis' => [
+        [
+          'type'        => 'assoc',
+          'name'        => 'field_name',
+          'description' => 'The name of the endpoint slug. Example: title.',
+          'optional'    => false,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'object_type',
+          'description' => 'Object(s) the field is being registered to. Example: post.',
+          'optional'    => false,
+        ],
+      ]
+    ];
+  }
+
   public function __invoke( array $args, array $assoc_args ) {
 
     // Get Props.
