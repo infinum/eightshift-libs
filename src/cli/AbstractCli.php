@@ -85,8 +85,8 @@ abstract class AbstractCli implements CliInterface {
       $this->command_parent_name . ' ' . $this->get_command_name(),
       $this->get_class_name(),
       array_merge(
-        $this->get_doc(),
         $this->get_global_synopsis(),
+        $this->get_doc(),
       )
     );
   }

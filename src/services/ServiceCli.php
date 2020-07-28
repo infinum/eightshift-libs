@@ -1,37 +1,31 @@
 <?php
 /**
- * Class that registers WPCLI command for Rest Fields.
+ * Class that registers WPCLI command for Service Example.
  * 
  * Command Develop:
- * wp eval-file bin/cli.php create_rest_field --skip-wordpress
+ * wp eval-file bin/cli.php create_service --skip-wordpress
  *
- * @package EightshiftLibs\Rest\Fields
+ * @package EightshiftLibs\Services
  */
 
-namespace EightshiftLibs\Rest\Fields;
+namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\CliHelpers;
 
 /**
- * Class FieldCli
+ * Class ServiceCli
  */
-class FieldCli extends AbstractCli {
+class ServiceCli extends AbstractCli {
 
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/rest/fields';
+  const OUTPUT_DIR = 'src';
 
   /**
-   * Output template name.
+   * Template name.
    */
-  const TEMPLATE = 'FieldExample';
-
-  /**
-   * Output class name.
-   */
-  const CLASS_NAME = 'Field';
+  const TEMPLATE = 'ServiceExample';
 
   /**
    * Get WPCLI command name
@@ -39,7 +33,7 @@ class FieldCli extends AbstractCli {
    * @return string
    */
   public function get_command_name() : string {
-    return 'create_rest_field';
+    return 'create_service';
   }
 
   /**
@@ -48,7 +42,7 @@ class FieldCli extends AbstractCli {
    * @return string
    */
   public function get_class_name() : string {
-    return FieldCli::class;
+    return ServiceCli::class;
   }
 
   /**
@@ -58,45 +52,46 @@ class FieldCli extends AbstractCli {
    */
   public function get_doc() : array {
     return [
-      'shortdesc' => 'Generates REST-API Field in your project.',
+      'shortdesc' => 'Generates empty generic service class.',
       'synopsis' => [
         [
           'type'        => 'assoc',
-          'name'        => 'field_name',
-          'description' => 'The name of the endpoint slug. Example: title.',
+          'name'        => 'folder',
+          'description' => 'The output folder path relative to src folder. Example: main or main/config',
           'optional'    => false,
         ],
         [
           'type'        => 'assoc',
-          'name'        => 'object_type',
-          'description' => 'Object(s) the field is being registered to. Example: post.',
+          'name'        => 'file_name',
+          'description' => 'The output file name. Example: Main',
           'optional'    => false,
         ],
-      ]
+      ],
     ];
   }
 
   public function __invoke( array $args, array $assoc_args ) {
 
     // Get Props.
-    $field_name  = $this->prepare_slug( $assoc_args['field_name'] );
-    $object_type = $this->prepare_slug( $assoc_args['object_type'] );
+    $folder    = $assoc_args['folder'];
+    $file_name = $this->prepare_slug( $assoc_args['file_name'] );
 
     // Get full class name.
-    $class_name = $this->get_file_name( $field_name );
-    $class_name = static::CLASS_NAME . $class_name;
+    $class_name = $this->get_file_name( $file_name );
 
     // Read the template contents, and replace the placeholders with provided variables.
     $class = $this->get_example_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
 
     // Replace stuff in file.
+    $class = str_replace( "@package EightshiftLibs\Services", $slug, $class );
+
     $class = $this->rename_class_name( static::TEMPLATE, $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
-    $class = str_replace( "example-post-type", $object_type, $class );
-    $class = str_replace( "example-field", $field_name, $class );
+
+    $class = str_replace( "example-slug", $slug, $class );
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR, $class_name, $class );
+    $this->output_write( static::OUTPUT_DIR . '/' . $folder, $class_name, $class );
   }
 }

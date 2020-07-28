@@ -90,7 +90,7 @@ class RouteCli extends AbstractCli {
   public function __invoke( array $args, array $assoc_args ) {
 
     // Get Props.
-    $endpoint_slug = $assoc_args['endpoint_slug'];
+    $endpoint_slug = $this->prepare_slug( $assoc_args['endpoint_slug'] );
     $method        = strtoupper( $assoc_args['method'] );
 
     // Get full class name.
@@ -100,21 +100,11 @@ class RouteCli extends AbstractCli {
     // Read the template contents, and replace the placeholders with provided variables.
     $class = $this->get_example_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
 
-    // Remove unecesery stuff from props.
-    $endpoint = str_replace( '_', '-', str_replace( ' ', '-', strtolower( $endpoint_slug ) ) );
-
-    // var_dump($class);
-
-    if (strpos( $class , 'ConfigInterface $config') !== false) {
-      var_dump('DAAAA');
-      $this->is_dependant('');
-    }
-
     // Replace stuff in file.
     $class = $this->rename_class_name( static::TEMPLATE, $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
-    $class = str_replace( "/example-route", "/{$endpoint}", $class );
+    $class = str_replace( "/example-route", "/{$endpoint_slug}", $class );
     $class = str_replace( "static::READABLE", static::VERB_ENUM[ $method ], $class );
 
     // Output final class to new file/folder and finish.

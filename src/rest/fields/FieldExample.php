@@ -2,7 +2,6 @@
 /**
  * The class register field for example endpoint
  *
- * @since   1.0.0
  * @package EightshiftLibs\Rest\Fields
  */
 
@@ -21,8 +20,6 @@ class FieldExample extends AbstractField implements CallableFieldInterface {
    * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
    *
    * @return string|array
-   *
-   * @since 2.0.0 Added in the project
    */
   protected function get_object_type() : string {
     return 'example-post-type';
@@ -32,8 +29,6 @@ class FieldExample extends AbstractField implements CallableFieldInterface {
    * Get the name of the field you awant to register or orverride.
    *
    * @return string The attribute name.
-   *
-   * @since 2.0.0 Added in the project
    */
   protected function get_field_name() : string {
     return 'example-field';
@@ -43,8 +38,6 @@ class FieldExample extends AbstractField implements CallableFieldInterface {
    * Get callback arguments array
    *
    * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
-   *
-   * @since 2.0.0 Added in the project
    */
   protected function get_callback_arguments() : array {
     return [
@@ -63,10 +56,6 @@ class FieldExample extends AbstractField implements CallableFieldInterface {
    * @return mixed If response generated an error, WP_Error, if response
    *               is already an instance, WP_HTTP_Response, otherwise
    *               returns a new WP_REST_Response instance.
-   *
-   * @since 0.8.0 Removing type hinting void for php 7.0.
-   * @since 0.2.0 Removed type hinting from first argument because it can be object|array.
-   * @since 0.1.0
    */
   public function field_callback( $object, string $attr, $request, string $object_type ) : string {
     return \rest_ensure_response( 'output data' );

@@ -16,7 +16,7 @@ use EightshiftLibs\Login\AbstractLogin;
  *
  * This class handles all login page options.
  */
-class Login extends AbstractLogin {
+class LoginExample extends AbstractLogin {
 
   /**
    * Register all the hooks
@@ -24,6 +24,6 @@ class Login extends AbstractLogin {
    * @return void
    */
   public function register() {
-    add_filter( 'login_headerurl', [ $this, 'custom_login_url' ] );
+    \add_filter( 'login_headerurl', [ $this, 'custom_login_url' ] );
   }
 }

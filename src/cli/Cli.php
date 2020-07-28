@@ -8,13 +8,18 @@
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\CustomPostType\PostTypeCli;
+use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
 use EightshiftLibs\I18n\I18nCli;
+use EightshiftLibs\Login\LoginCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Media\MediaCli;
 use EightshiftLibs\Menu\MenuCli;
+use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
+use EightshiftLibs\Services\ServiceCli;
 
 /**
  * Class Cli
@@ -61,9 +66,42 @@ class Cli {
         );
         break;
 
+      case 'create_post_type':
+        $this->run_command(
+          new PostTypeCli(),
+          [
+            'label'              => $args[1] ?? 'Products',
+            'slug'               => $args[2] ?? 'product',
+            'url'                => $args[3] ?? 'product',
+            'rest_endpoint_slug' => $args[4] ?? 'products',
+            'capability'         => $args[5] ?? 'post',
+            'menu_position'      => $args[6] ?? 40,
+            'menu_icon'          => $args[7] ?? 'admin-settings',
+          ]
+        );
+        break;
+
+      case 'create_taxonomy':
+        $this->run_command(
+          new TaxonomyCli(),
+          [
+            'label'               => $args[1] ?? 'Locations',
+            'taxonomy_slug'      => $args[2] ?? 'location',
+            'rest_endpoint_slug' => $args[2] ?? 'locations',
+            'post_type_slug'     => $args[2] ?? 'post',
+          ]
+        );
+        break;
+
       case 'create_i18n':
         $this->run_command(
           new I18nCli()
+        );
+        break;
+
+      case 'create_login':
+        $this->run_command(
+          new LoginCli()
         );
         break;
 
@@ -91,6 +129,12 @@ class Cli {
         );
         break;
 
+      case 'create_modify_admin_appearance':
+        $this->run_command(
+          new ModifyAdminAppearanceCli()
+        );
+        break;
+
       case 'create_rest_field':
         $this->run_command(
           new FieldCli(),
@@ -107,6 +151,16 @@ class Cli {
           [
             'endpoint_slug' => $args[1] ?? 'test',
             'method'        => $args[2] ?? 'get',
+          ]
+        );
+        break;
+
+      case 'create_service':
+        $this->run_command(
+          new ServiceCli(),
+          [
+            'folder'    => $args[1] ?? 'testFolder',
+            'file_name' => $args[2] ?? 'Test slass',
           ]
         );
         break;
@@ -128,7 +182,9 @@ class Cli {
     $this->command_parent_name = $command_parent_name;
 
     $this->run_command( new ConfigCli() );
+    $this->run_command( new TaxonomyCli() );
     $this->run_command( new I18nCli() );
+    $this->run_command( new LoginCli() );
     $this->run_command( new MainCli() );
     $this->run_command( new ManifestCli() );
     $this->run_command( new MediaCli() );

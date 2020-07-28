@@ -24,8 +24,8 @@ abstract class AbstractModifyAdminAppearance implements ServiceInterface {
    * @var array
    */
   const COLOR_SCHEMES = [
-    'default'   => 'fresh',
-    'staging'   => 'blue',
+    'default'    => 'fresh',
+    'staging'    => 'blue',
     'production' => 'sunrise',
   ];
 

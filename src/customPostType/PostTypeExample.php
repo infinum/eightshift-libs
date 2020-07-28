@@ -7,7 +7,6 @@
 
 namespace EightshiftLibs\CustomPostType;
 
-use EightshiftLibs\CustomPostType\LabelGenerator;
 use EightshiftLibs\CustomPostType\AbstractPostType;
 
 /**
@@ -20,21 +19,21 @@ class PostTypeExample extends AbstractPostType {
    *
    * @var string
    */
-  const POST_TYPE_SLUG = 'projects-type';
+  const POST_TYPE_SLUG = 'example-slug';
 
   /**
    * URL slug for the custom post type.
    *
    * @var string
    */
-  const POST_TYPE_URL_SLUG = 'projects';
+  const POST_TYPE_URL_SLUG = 'example-url-slug';
 
   /**
    * Rest API Endpoint slug constant.
    *
    * @var string
    */
-  const REST_API_ENDPOINT_SLUG = 'projects';
+  const REST_API_ENDPOINT_SLUG = 'example-endpoint-slug';
 
   /**
    * Capability type for projects post type.
@@ -73,16 +72,8 @@ class PostTypeExample extends AbstractPostType {
    */
   protected function get_post_type_arguments() : array {
 
-    $nouns = [
-      LabelGenerator::SINGULAR_NAME_UC => \esc_html_x( 'Project', 'Projects post uppercase singular name', 'eightshift-libs' ),
-      LabelGenerator::SINGULAR_NAME_LC => \esc_html_x( 'project', 'Projects post lowercase singular name', 'eightshift-libs' ),
-      LabelGenerator::PLURAL_NAME_UC   => \esc_html_x( 'Projects', 'Projects post uppercase plural name', 'eightshift-libs' ),
-      LabelGenerator::PLURAL_NAME_LC   => \esc_html_x( 'projects', 'Projects post lowercase plural name', 'eightshift-libs' ),
-    ];
-
     return [
-      'label'              => $nouns[ LabelGenerator::SINGULAR_NAME_UC ],
-      'labels'             => ( new LabelGenerator() )->get_generated_labels( $nouns ),
+      'label'              => \esc_html__( 'Example Name', 'eightshift-libs' ),
       'public'             => true,
       'publicly_queryable' => true,
       'show_ui'            => true,

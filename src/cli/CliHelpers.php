@@ -21,6 +21,11 @@ trait CliHelpers {
    * @return string
    */
   public function get_file_name( string $file_name ) : string {
+
+    if ( strpos( $file_name, ' ' ) !== false) {
+      $file_name = strtolower( $file_name );
+    }
+
     $class = explode( '_', str_replace( '-', '_', str_replace( ' ', '_', strtolower( $file_name ) ) ) );
 
     $class_name = array_map(
@@ -302,9 +307,22 @@ trait CliHelpers {
     return $vendor_prefix;
   }
 
-  public function is_dependant( string $string ) {
-    var_dump($this->get_output_dir('main/Main.php'));
+  /**
+   * Convert user input string to slug safe format. convert _ to -, empty space to - and convert everything to lovercase.
+   *
+   * @param string $string String to convert.
+   *
+   * @return string
+   */
+  public function prepare_slug( string $string ) : string {
+    if ( strpos( $string, ' ' ) !== false) {
+      $string = strtolower( $string );
+    }
 
+    return str_replace( '_', '-', str_replace( ' ', '-', $string ) );
+  }
+
+  public function is_dependant( string $string ) {
     $main = $this->get_output_dir('main/Main.php');
 
     // Bailout if main file doesn't exists.
@@ -314,4 +332,5 @@ trait CliHelpers {
       );
     }
   }
+
 }

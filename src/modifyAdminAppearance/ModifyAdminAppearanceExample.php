@@ -2,12 +2,12 @@
 /**
  * Modify WordPress admin behavior
  *
- * @package EightshiftLibs\Admin
+ * @package EightshiftLibs\ModifyAdminAppearance
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Admin;
+namespace EightshiftLibs\ModifyAdminAppearance;
 
 use EightshiftLibs\Admin\AbstractModifyAdminAppearance;
 
@@ -16,7 +16,7 @@ use EightshiftLibs\Admin\AbstractModifyAdminAppearance;
  *
  * Example: Change color based on environment, remove dashboard widgets etc.
  */
-class ModifyAdminAppearance extends AbstractModifyAdminAppearance {
+class ModifyAdminAppearanceExample extends AbstractModifyAdminAppearance {
 
   /**
    * Register all the hooks
@@ -33,7 +33,7 @@ class ModifyAdminAppearance extends AbstractModifyAdminAppearance {
    * @return string Modified color scheme..
    */
   public function admin_color() : string {
-    return $this->set_admin_color( EB_ENV );
+    return $this->set_admin_color( defined( EB_ENV ) ? EB_ENV : 'default' );
   }
 
 }

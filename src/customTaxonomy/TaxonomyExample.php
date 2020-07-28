@@ -12,9 +12,9 @@ namespace EightshiftLibs\CustomTaxonomy;
 use EightshiftLibs\CustomTaxonomy\AbstractTaxonomy;
 
 /**
- * Class Taxonomy
+ * Class TaxonomyExample
  */
-class Taxonomy extends AbstractTaxonomy {
+class TaxonomyExample extends AbstractTaxonomy {
 
   /**
    * Register custom taxonomy.
@@ -38,26 +38,20 @@ class Taxonomy extends AbstractTaxonomy {
    * Taxonomy slug costant.
    *
    * @var string
-   *
-   * @since 1.0.0
    */
-  const TAXONOMY_SLUG = 'blog-category';
+  const TAXONOMY_SLUG = 'example-slug';
 
   /**
    * Rest API Endpoint slug costant.
    *
    * @var string
-   *
-   * @since 1.0.0
    */
-  const REST_API_ENDPOINT_SLUG = 'blogs-categories';
+  const REST_API_ENDPOINT_SLUG = 'example-endpoint-slug';
 
   /**
    * Get the slug of the custom taxonomy
    *
    * @return string Custom taxonomy slug.
-   *
-   * @since 0.1.0
    */
   protected function get_taxonomy_slug() : string {
     return static::TAXONOMY_SLUG;
@@ -67,8 +61,6 @@ class Taxonomy extends AbstractTaxonomy {
    * Get the post type slug to use the taxonomy.
    *
    * @return string Custom post type slug.
-   *
-   * @since 0.1.0
    */
   protected function get_post_type_slug() : string {
     return 'post';
@@ -78,13 +70,11 @@ class Taxonomy extends AbstractTaxonomy {
    * Get the arguments that configure the custom taxonomy.
    *
    * @return array Array of arguments.
-   *
-   * @since 0.1.0
    */
   protected function get_taxonomy_arguments() : array {
     return [
       'hierarchical'      => true,
-      'label'             => esc_html__( 'Blog Categories', 'eightshift-libs' ),
+      'label'             => \esc_html__( 'Example Name', 'eightshift-libs' ),
       'show_ui'           => true,
       'show_admin_column' => true,
       'show_in_nav_menus' => false,
