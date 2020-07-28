@@ -72,6 +72,8 @@ class ServiceCli extends AbstractCli {
 
   public function __invoke( array $args, array $assoc_args ) {
 
+    // FIX namespace and better handle folder structure.
+
     // Get Props.
     $folder    = $assoc_args['folder'];
     $file_name = $this->prepare_slug( $assoc_args['file_name'] );
@@ -83,13 +85,9 @@ class ServiceCli extends AbstractCli {
     $class = $this->get_example_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
 
     // Replace stuff in file.
-    $class = str_replace( "@package EightshiftLibs\Services", $slug, $class );
-
     $class = $this->rename_class_name( static::TEMPLATE, $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
-
-    $class = str_replace( "example-slug", $slug, $class );
 
     // Output final class to new file/folder and finish.
     $this->output_write( static::OUTPUT_DIR . '/' . $folder, $class_name, $class );
