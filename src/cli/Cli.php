@@ -182,6 +182,7 @@ class Cli {
     $this->command_parent_name = $command_parent_name;
 
     $this->run_command( new ConfigCli() );
+    $this->run_command( new PostTypeCli() );
     $this->run_command( new TaxonomyCli() );
     $this->run_command( new I18nCli() );
     $this->run_command( new LoginCli() );
@@ -189,8 +190,10 @@ class Cli {
     $this->run_command( new ManifestCli() );
     $this->run_command( new MediaCli() );
     $this->run_command( new MenuCli() );
-    $this->run_command( new RouteCli() );
+    $this->run_command( new ModifyAdminAppearanceCli() );
     $this->run_command( new FieldCli() );
+    $this->run_command( new RouteCli() );
+    $this->run_command( new ServiceCli() );
   }
 
   /**
