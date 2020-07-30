@@ -42,133 +42,68 @@ class Cli {
   const VENDOR_PREFIX = 'EightshiftBoilerplateVendor';
 
   /**
+   * Define all classes to register for WPCLI.
+   *
+   * @return array
+   */
+  public function get_public_classes() {
+    return [
+      ConfigCli::class,
+      PostTypeCli::class,
+      TaxonomyCli::class,
+      I18nCli::class,
+      LoginCli::class,
+      MainCli::class,
+      ManifestCli::class,
+      MediaCli::class,
+      MenuCli::class,
+      ModifyAdminAppearanceCli::class,
+      FieldCli::class,
+      RouteCli::class,
+      ServiceCli::class,
+    ];
+  }
+
+  /**
+   * Define all classes to register for development.
+   *
+   * @return array
+   */
+  public function get_develop_classes() {
+    return array_merge(
+      $this->get_public_classes(),
+      [
+        CliReset::class,
+        CliRunAll::class,
+      ],
+    );
+  }
+
+  /**
    * Run all CLI commands
    *
    * @param array $args WPCLI eval-file arguments.
    *
    * @return void
    */
-  public function run_develop( array $args = [] ) {
+  public function load_develop( array $args = [] ) {
 
     $command_name = $args[0] ?? '';
 
-    switch ( $command_name ) {
-      case 'reset':
-        $this->run_command(
-          new CliReset(),
-          []
-        );
-        break;
+    foreach ( $this->get_develop_classes() as $item ) {
+      $class_name = new $item;
 
-      case 'create_config':
+      if ( $class_name->get_command_name() === $command_name ) {
         $this->run_command(
-          new ConfigCli()
+          $class_name,
+          $class_name->get_develop_args( $args )
         );
-        break;
 
-      case 'create_post_type':
-        $this->run_command(
-          new PostTypeCli(),
-          [
-            'label'              => $args[1] ?? 'Products',
-            'slug'               => $args[2] ?? 'product',
-            'url'                => $args[3] ?? 'product',
-            'rest_endpoint_slug' => $args[4] ?? 'products',
-            'capability'         => $args[5] ?? 'post',
-            'menu_position'      => $args[6] ?? 40,
-            'menu_icon'          => $args[7] ?? 'admin-settings',
-          ]
-        );
         break;
-
-      case 'create_taxonomy':
-        $this->run_command(
-          new TaxonomyCli(),
-          [
-            'label'               => $args[1] ?? 'Locations',
-            'taxonomy_slug'      => $args[2] ?? 'location',
-            'rest_endpoint_slug' => $args[2] ?? 'locations',
-            'post_type_slug'     => $args[2] ?? 'post',
-          ]
-        );
-        break;
-
-      case 'create_i18n':
-        $this->run_command(
-          new I18nCli()
-        );
-        break;
-
-      case 'create_login':
-        $this->run_command(
-          new LoginCli()
-        );
-        break;
-
-      case 'create_main':
-        $this->run_command(
-          new MainCli()
-        );
-        break;
-
-      case 'create_manifest':
-        $this->run_command(
-          new ManifestCli()
-        );
-        break;
-
-      case 'create_media':
-        $this->run_command(
-          new MediaCli()
-        );
-        break;
-
-      case 'create_menu':
-        $this->run_command(
-          new MenuCli()
-        );
-        break;
-
-      case 'create_modify_admin_appearance':
-        $this->run_command(
-          new ModifyAdminAppearanceCli()
-        );
-        break;
-
-      case 'create_rest_field':
-        $this->run_command(
-          new FieldCli(),
-          [
-            'field_name'  => $args[1] ?? 'title',
-            'object_type' => $args[2] ?? 'post',
-          ]
-        );
-        break;
-
-      case 'create_rest_route':
-        $this->run_command(
-          new RouteCli(),
-          [
-            'endpoint_slug' => $args[1] ?? 'test',
-            'method'        => $args[2] ?? 'get',
-          ]
-        );
-        break;
-
-      case 'create_service':
-        $this->run_command(
-          new ServiceCli(),
-          [
-            'folder'    => $args[1] ?? 'testFolder',
-            'file_name' => $args[2] ?? 'Test slass',
-          ]
-        );
-        break;
-
-      default:
-        \WP_CLI::error( 'First argument must be a valid command name. Your command is missing or not valid.' );
-        break;
+      }
     }
+
+    // \WP_CLI::error( 'First argument must be a valid command name. Your command is missing or not valid.' );
   }
 
   /**
@@ -178,22 +113,12 @@ class Cli {
    *
    * @return void
    */
-  public function run( string $command_parent_name ) {
+  public function load( string $command_parent_name ) {
     $this->command_parent_name = $command_parent_name;
 
-    $this->run_command( new ConfigCli() );
-    $this->run_command( new PostTypeCli() );
-    $this->run_command( new TaxonomyCli() );
-    $this->run_command( new I18nCli() );
-    $this->run_command( new LoginCli() );
-    $this->run_command( new MainCli() );
-    $this->run_command( new ManifestCli() );
-    $this->run_command( new MediaCli() );
-    $this->run_command( new MenuCli() );
-    $this->run_command( new ModifyAdminAppearanceCli() );
-    $this->run_command( new FieldCli() );
-    $this->run_command( new RouteCli() );
-    $this->run_command( new ServiceCli() );
+    foreach ( $this->get_public_classes() as $item ) {
+      $this->run_command( new $item );
+    }
   }
 
   /**

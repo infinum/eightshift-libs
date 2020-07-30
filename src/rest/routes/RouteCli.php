@@ -58,6 +58,20 @@ class RouteCli extends AbstractCli {
   }
 
   /**
+   * Define default develop props.
+   *
+   * @param array $args WPCLI eval-file arguments.
+   *
+   * @return array
+   */
+  public function get_develop_args( array $args ) : array {
+    return [
+      'endpoint_slug' => $args[1] ?? 'test',
+      'method'        => $args[2] ?? 'get',
+    ];
+  }
+
+  /**
    * Get WPCLI command doc.
    *
    * @return string

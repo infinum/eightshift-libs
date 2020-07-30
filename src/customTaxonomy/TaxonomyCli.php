@@ -46,6 +46,22 @@ class TaxonomyCli extends AbstractCli {
   }
 
   /**
+   * Define default develop props.
+   *
+   * @param array $args WPCLI eval-file arguments.
+   *
+   * @return array
+   */
+  public function get_develop_args( array $args ) : array {
+    return [
+      'label'              => $args[1] ?? 'Locations',
+      'taxonomy_slug'      => $args[2] ?? 'location',
+      'rest_endpoint_slug' => $args[3] ?? 'locations',
+      'post_type_slug'     => $args[4] ?? 'post',
+    ];
+  }
+
+  /**
    * Get WPCLI command doc.
    *
    * @return string

@@ -46,13 +46,6 @@ class CliReset extends AbstractCli {
     return [];
   }
 
-  /**
-   * Reset method.
-   *
-   * @param array $args
-   * @param array $assoc_args
-   * @return void
-   */
   public function __invoke( array $args, array $assoc_args ) {
 
     $output_dir = $this->get_output_dir( '' );

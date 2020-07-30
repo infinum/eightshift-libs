@@ -78,10 +78,11 @@ trait CliHelpers {
    * @param string $output_dir  Absolute path to output from project root dir.
    * @param string $output_file Absolute path to output file.
    * @param string $class       Modified class.
+   * @param string $service     Output string to services container.
    *
    * @return Error|Success
    */
-  public function output_write( string $output_dir, string $output_file, string $class ) {
+  public function output_write( string $output_dir, string $output_file, string $class, string $service = '' ) {
 
     // Set output paths.
     $output_dir = $this->get_output_dir( $output_dir );
@@ -120,6 +121,12 @@ trait CliHelpers {
     \WP_CLI::success(
       sprintf( "File %s successfully created.", $output_file )
     );
+
+    if ( ! empty( $service ) ) {
+      \WP_CLI::log('---------------------------------------------');
+      \WP_CLI::log( \WP_CLI::colorize( "For this class to work please open your services classes container and add this string: %p{$service}%n to the array. Your service classes container should be located in `src/main/Main.php` class. Please also add the corresponding use method at the top of the class. This is used to register your new service class inside PHP Dependency Injection container. If you project is missing Main.php run this command %ccreate_main%n to set it up." ) );
+      \WP_CLI::log('---------------------------------------------');
+    }
   }
 
   /**

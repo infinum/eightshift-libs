@@ -47,6 +47,20 @@ class FieldCli extends AbstractCli {
   }
 
   /**
+   * Define default develop props.
+   *
+   * @param array $args WPCLI eval-file arguments.
+   *
+   * @return array
+   */
+  public function get_develop_args( array $args ) : array {
+    return [
+      'field_name'  => $args[1] ?? 'title',
+      'object_type' => $args[2] ?? 'post',
+    ];
+  }
+
+  /**
    * Get WPCLI command doc.
    *
    * @return string

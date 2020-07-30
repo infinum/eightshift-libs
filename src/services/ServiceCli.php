@@ -25,7 +25,7 @@ class ServiceCli extends AbstractCli {
   /**
    * Template name.
    */
-  const TEMPLATE = 'ServiceExample';
+  const TEMPLATE = 'Service';
 
   /**
    * Get WPCLI command name
@@ -43,6 +43,20 @@ class ServiceCli extends AbstractCli {
    */
   public function get_class_name() : string {
     return ServiceCli::class;
+  }
+
+  /**
+   * Define default develop props.
+   *
+   * @param array $args WPCLI eval-file arguments.
+   *
+   * @return array
+   */
+  public function get_develop_args( array $args ) : array {
+    return [
+      'folder'    => $args[1] ?? 'testFolder',
+      'file_name' => $args[2] ?? 'Test slass',
+    ];
   }
 
   /**

@@ -13,5 +13,5 @@ require "{$root}/vendor/autoload.php";
 
 require $root . '/src/cli/Cli.php';
 
-( new Cli() )->run_develop( $args );
+( new Cli() )->load_develop( $args );
 

@@ -46,6 +46,25 @@ class PostTypeCli extends AbstractCli {
   }
 
   /**
+   * Define default develop props.
+   *
+   * @param array $args WPCLI eval-file arguments.
+   *
+   * @return array
+   */
+  public function get_develop_args( array $args ) : array {
+    return [
+      'label'              => $args[1] ?? 'Products',
+      'slug'               => $args[2] ?? 'product',
+      'url'                => $args[3] ?? 'product',
+      'rest_endpoint_slug' => $args[4] ?? 'products',
+      'capability'         => $args[5] ?? 'post',
+      'menu_position'      => $args[6] ?? 40,
+      'menu_icon'          => $args[7] ?? 'admin-settings',
+    ];
+  }
+
+  /**
    * Get WPCLI command doc.
    *
    * @return string
@@ -141,6 +160,6 @@ class PostTypeCli extends AbstractCli {
     }
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR, $class_name, $class );
+    $this->output_write( static::OUTPUT_DIR, $class_name, $class, "{$class_name}::class" );
   }
 }

@@ -90,4 +90,16 @@ abstract class AbstractCli implements CliInterface {
       )
     );
   }
+
+  /**
+   * Define default develop props.
+   *
+   * @param array $args WPCLI eval-file arguments.
+   *
+   * @return array
+   */
+  public function get_develop_args( array $args ) : array {
+    return $args;
+  }
+
 }
