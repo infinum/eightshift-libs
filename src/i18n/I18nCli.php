@@ -24,11 +24,6 @@ class I18nCli extends AbstractCli {
   const OUTPUT_DIR = 'src/i18n';
 
   /**
-   * Template name.
-   */
-  const TEMPLATE = 'I18nExample';
-
-  /**
    * Output class name.
    */
   const CLASS_NAME = 'I18n';
@@ -65,10 +60,10 @@ class I18nCli extends AbstractCli {
   public function __invoke( array $args, array $assoc_args ) {
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
+    $class = $this->get_example_template( __DIR__, static::CLASS_NAME );
 
     // Replace stuff in file.
-    $class = $this->rename_class_name( static::TEMPLATE, static::CLASS_NAME, $class );
+    $class = $this->rename_class_name( static::CLASS_NAME, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
 

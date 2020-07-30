@@ -9,7 +9,6 @@
 declare( strict_types=1 );
 
 namespace EightshiftLibs\Blocks;
-;
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Services\ServiceInterface;

@@ -41,11 +41,14 @@ trait CliHelpers {
   /**
    * Get template file content and throw error if template is missing.
    *
-   * @param string $path Absolute path to file.
+   * @param string $current_dir Absolute path to dir where example is.
+   * @param string $file_name   File Name of example.
    *
    * @return string|Error
    */
-  public function get_example_template( string $path ) {
+  public function get_example_template( string $current_dir,  string $file_name ) {
+    $path = "{$current_dir}/{$this->get_example_file_name( $file_name )}.php";
+
     // Read the template contents, and replace the placeholders with provided variables.
     $template_file = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
@@ -56,6 +59,17 @@ trait CliHelpers {
     }
 
     return $template_file;
+  }
+
+  /**
+   * Generate example template file/class name.
+   *
+   * @param string $string File name
+   *
+   * @return string
+   */
+  public function get_example_file_name( $string ) : string {
+    return "{$string}Example";
   }
 
   /**
@@ -224,14 +238,26 @@ trait CliHelpers {
   /**
    * Change Class full name.
    *
-   * @param string $template_name Current template.
-   * @param string $new_name      New Class Name.
-   * @param string $class         Full class as a string.
+   * @param string $class_name    Class Name.
+   * @param string $string         Full class as a string.
    *
    * @return string
    */
-  public function rename_class_name( string $template_name, string $new_name, string $string ) : string {
-    return str_replace( $template_name, $new_name, $string );
+  public function rename_class_name( string $class_name, string $string ) : string {
+    return str_replace( $this->get_example_file_name( $class_name ), $class_name, $string );
+  }
+
+  /**
+   * Change Class full name with sufix.
+   *
+   * @param string $template_name Current template.
+   * @param string $new_name      New Class Name.
+   * @param string $string        Full class as a string.
+   *
+   * @return string
+   */
+  public function rename_class_name_with_sufix( string $template_name, string $new_name, string $string ) : string {
+    return str_replace( $this->get_example_file_name( $template_name ), $new_name, $string );
   }
 
   /**

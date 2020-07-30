@@ -24,11 +24,6 @@ class RouteCli extends AbstractCli {
   const OUTPUT_DIR = 'src/rest/routes';
 
   /**
-   * Output template name.
-   */
-  const TEMPLATE = 'RouteExample';
-
-  /**
    * Output class name.
    */
   const CLASS_NAME = 'Route';
@@ -98,10 +93,10 @@ class RouteCli extends AbstractCli {
     $class_name = static::CLASS_NAME . $class_name;
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
+    $class = $this->get_example_template( __DIR__, static::CLASS_NAME );
 
     // Replace stuff in file.
-    $class = $this->rename_class_name( static::TEMPLATE, $class_name, $class );
+    $class = $this->rename_class_name_with_sufix( static::CLASS_NAME, $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = str_replace( "/example-route", "/{$endpoint_slug}", $class );

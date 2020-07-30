@@ -82,10 +82,10 @@ class ServiceCli extends AbstractCli {
     $class_name = $this->get_file_name( $file_name );
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
+    $class = $this->get_example_template( __DIR__, static::TEMPLATE );
 
     // Replace stuff in file.
-    $class = $this->rename_class_name( static::TEMPLATE, $class_name, $class );
+    $class = $this->rename_class_name( $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
 

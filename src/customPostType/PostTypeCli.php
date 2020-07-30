@@ -23,11 +23,6 @@ class PostTypeCli extends AbstractCli {
   const OUTPUT_DIR = 'src/customPostType';
 
   /**
-   * Template name.
-   */
-  const TEMPLATE = 'PostTypeExample';
-
-  /**
    * Output class name.
    */
   const CLASS_NAME = 'PostType';
@@ -121,10 +116,10 @@ class PostTypeCli extends AbstractCli {
     $class_name = static::CLASS_NAME . $class_name;
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__ . '/' . static::TEMPLATE . '.php' );
+    $class = $this->get_example_template( __DIR__, static::CLASS_NAME );
 
     // Replace stuff in file.
-    $class = $this->rename_class_name( static::TEMPLATE, $class_name, $class );
+    $class = $this->rename_class_name_with_sufix( static::CLASS_NAME, $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = $this->rename_text_domain( $assoc_args, $class );
