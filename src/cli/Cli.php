@@ -80,7 +80,7 @@ class Cli {
   }
 
   /**
-   * Run all CLI commands
+   * Run all CLI commands for develop.
    *
    * @param array $args WPCLI eval-file arguments.
    *
@@ -90,20 +90,22 @@ class Cli {
 
     $command_name = $args[0] ?? '';
 
+    if ( empty( $command_name ) ) {
+      \WP_CLI::error( 'First argument must be a valid command name.' );
+    }
+
     foreach ( $this->get_develop_classes() as $item ) {
       $class_name = new $item;
 
       if ( $class_name->get_command_name() === $command_name ) {
-        $this->run_command(
-          $class_name,
-          $class_name->get_develop_args( $args )
+        (new $item)->__invoke(
+          [],
+          $args,
         );
 
         break;
       }
     }
-
-    // \WP_CLI::error( 'First argument must be a valid command name. Your command is missing or not valid.' );
   }
 
   /**
@@ -117,25 +119,7 @@ class Cli {
     $this->command_parent_name = $command_parent_name;
 
     foreach ( $this->get_public_classes() as $item ) {
-      $this->run_command( new $item );
-    }
-  }
-
-  /**
-   * Run simgle command depending on what type of env.
-   *
-   * @return void
-   */
-  public function run_command( $class, array $args = [] ) {
-    if ( ! function_exists( 'add_action' ) ) {
-      // Run if in development from library env.
-      $class->__invoke(
-        [],
-        $args
-      );
-    } else {
-      // Run if normal WPCLI.
-      $class->register( $this->command_parent_name );
+      (new $item)->register( $this->command_parent_name );
     }
   }
 }
