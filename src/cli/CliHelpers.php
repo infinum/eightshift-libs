@@ -124,7 +124,15 @@ trait CliHelpers {
 
     if ( ! empty( $service ) ) {
       \WP_CLI::log('---------------------------------------------');
-      \WP_CLI::log( \WP_CLI::colorize( "For this class to work please open your services classes container and add this string: %p{$service}%n to the array. Your service classes container should be located in `src/main/Main.php` class. Please also add the corresponding use method at the top of the class. This is used to register your new service class inside PHP Dependency Injection container. If you project is missing Main.php run this command %ccreate_main%n to set it up." ) );
+      \WP_CLI::log(
+        \WP_CLI::colorize(
+          "
+          %p{$service}%n
+
+          For this class to work, please open your services class container and add this string: %p{$service}%n to the array. Your service class container should be located in `src/main/Main.php` class. Please also add the corresponding use method at the top of the class. This is used to register your new service class inside the PHP Dependency Injection container. If your project is missing Main.php run this command create_main to set it up.
+          "
+        )
+      );
       \WP_CLI::log('---------------------------------------------');
     }
   }

@@ -2,12 +2,12 @@
 /**
  * The file that is an example class.
  *
- * @package EightshiftLibs\Services
+ * @package EightshiftLibs\ExampleService
  */
 
 declare( strict_types=1 );
 
-namespace EightshiftLibs\Services;
+namespace EightshiftLibs\ExampleService;
 
 use EightshiftLibs\Services\ServiceInterface;
 

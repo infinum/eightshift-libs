@@ -5,17 +5,17 @@
  * Command Develop:
  * wp eval-file bin/cli.php create_service --skip-wordpress
  *
- * @package EightshiftLibs\Services
+ * @package EightshiftLibs\ExampleService
  */
 
-namespace EightshiftLibs\Services;
+namespace EightshiftLibs\ExampleService;
 
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
- * Class ServiceCli
+ * Class ServiceExampleCli
  */
-class ServiceCli extends AbstractCli {
+class ServiceExampleCli extends AbstractCli {
 
   /**
    * Output dir relative path.
@@ -42,7 +42,7 @@ class ServiceCli extends AbstractCli {
    * @return string
    */
   public function get_class_name() : string {
-    return ServiceCli::class;
+    return ServiceExampleCli::class;
   }
 
   /**
@@ -54,8 +54,8 @@ class ServiceCli extends AbstractCli {
    */
   public function get_develop_args( array $args ) : array {
     return [
-      'folder'    => $args[1] ?? 'testFolder',
-      'file_name' => $args[2] ?? 'Test slass',
+      'folder'    => $args[1] ?? 'testFolder/novi',
+      'file_name' => $args[2] ?? 'TestTest',
     ];
   }
 
@@ -103,7 +103,18 @@ class ServiceCli extends AbstractCli {
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
 
+    // Create new namespace from folder structure.
+    $folder_parts = array_map(
+      function( $item ) {
+        return ucfirst( $item );
+      },
+      explode('/', $folder)
+    );
+
+    $new_namespace = "\\" . implode('\\', $folder_parts);
+    $class         = str_replace('\\ExampleService', $new_namespace, $class);
+
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR . '/' . $folder, $class_name, $class );
+    $this->output_write( static::OUTPUT_DIR . '/' . $folder, $class_name, $class, "{$class_name}::class" );
   }
 }

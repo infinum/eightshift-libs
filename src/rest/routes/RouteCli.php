@@ -117,6 +117,6 @@ class RouteCli extends AbstractCli {
     $class = str_replace( "static::READABLE", static::VERB_ENUM[ $method ], $class );
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR, $class_name, $class );
+    $this->output_write( static::OUTPUT_DIR, $class_name, $class, "{$class_name}::class" );
   }
 }

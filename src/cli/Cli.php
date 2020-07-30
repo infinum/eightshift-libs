@@ -10,6 +10,7 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
+use EightshiftLibs\ExampleService\ServiceExampleCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Login\LoginCli;
 use EightshiftLibs\Main\MainCli;
@@ -19,7 +20,6 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
-use EightshiftLibs\Services\ServiceCli;
 
 /**
  * Class Cli
@@ -32,37 +32,32 @@ class Cli {
   protected $command_parent_name;
 
   /**
-   * Define test output namespace.
+   * All classes and commands used only for WPCLI.
    */
-  const NAMESPACE = 'EightshiftBoilerplate';
-
-    /**
-   * Define test output vendor prefix.
-   */
-  const VENDOR_PREFIX = 'EightshiftBoilerplateVendor';
+  const PUBLIC_CLASSES = [
+    ConfigCli::class,
+    PostTypeCli::class,
+    TaxonomyCli::class,
+    I18nCli::class,
+    LoginCli::class,
+    MainCli::class,
+    ManifestCli::class,
+    MediaCli::class,
+    MenuCli::class,
+    ModifyAdminAppearanceCli::class,
+    FieldCli::class,
+    RouteCli::class,
+    ServiceExampleCli::class,
+  ];
 
   /**
-   * Define all classes to register for WPCLI.
-   *
-   * @return array
+   * All classes and commands used only for development.
    */
-  public function get_public_classes() {
-    return [
-      ConfigCli::class,
-      PostTypeCli::class,
-      TaxonomyCli::class,
-      I18nCli::class,
-      LoginCli::class,
-      MainCli::class,
-      ManifestCli::class,
-      MediaCli::class,
-      MenuCli::class,
-      ModifyAdminAppearanceCli::class,
-      FieldCli::class,
-      RouteCli::class,
-      ServiceCli::class,
-    ];
-  }
+  CONST DEVELOP_CLASSES = [
+    CliReset::class,
+    CliRunAll::class,
+    CliShowAll::class,
+  ];
 
   /**
    * Define all classes to register for development.
@@ -71,11 +66,8 @@ class Cli {
    */
   public function get_develop_classes() {
     return array_merge(
-      $this->get_public_classes(),
-      [
-        CliReset::class,
-        CliRunAll::class,
-      ],
+      static::PUBLIC_CLASSES,
+      static::DEVELOP_CLASSES,
     );
   }
 
@@ -98,9 +90,9 @@ class Cli {
       $class_name = new $item;
 
       if ( $class_name->get_command_name() === $command_name ) {
-        (new $item)->__invoke(
+        $class_name->__invoke(
           [],
-          $args,
+          $class_name->get_develop_args( $args )
         );
 
         break;
@@ -118,7 +110,7 @@ class Cli {
   public function load( string $command_parent_name ) {
     $this->command_parent_name = $command_parent_name;
 
-    foreach ( $this->get_public_classes() as $item ) {
+    foreach ( static::PUBLIC_CLASSES as $item ) {
       (new $item)->register( $this->command_parent_name );
     }
   }

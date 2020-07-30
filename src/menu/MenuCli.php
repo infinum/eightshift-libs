@@ -60,16 +60,18 @@ class MenuCli extends AbstractCli {
 
   public function __invoke( array $args, array $assoc_args ) {
 
+    $class_name = static::CLASS_NAME;
+
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__, static::CLASS_NAME );
+    $class = $this->get_example_template( __DIR__, $class_name );
 
     // Replace stuff in file.
-    $class = $this->rename_class_name( static::CLASS_NAME, $class );
+    $class = $this->rename_class_name( $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = $this->rename_text_domain( $assoc_args, $class );
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR, static::CLASS_NAME, $class );
+    $this->output_write( static::OUTPUT_DIR, $class_name, $class, "{$class_name}::class" );
   }
 }

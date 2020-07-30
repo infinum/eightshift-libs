@@ -84,13 +84,4 @@ class Config extends AbstractConfig {
   public static function get_project_routes_version() : string {
     return 'v1';
   }
-
-  /**
-   * Method that returns project primary color.
-   *
-   * Used for styling the mobile browser color and splash screens. Check head.php for more details.
-   */
-  public static function get_project_primary_color() : string {
-    return '#900000';
-  }
 }

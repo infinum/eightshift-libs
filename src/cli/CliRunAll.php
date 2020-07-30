@@ -48,21 +48,20 @@ class CliRunAll extends AbstractCli {
 
   public function __invoke( array $args, array $assoc_args ) {
 
-    $cli   = new Cli();
     $reset = new CliReset();
 
-    $cli->run_command(
-      $reset,
+    $reset->__invoke(
+      [],
       $reset->get_develop_args( $args )
     );
 
     \WP_CLI::log( '--------------------------------------------------' );
 
-    foreach ( $cli->get_public_classes() as $item ) {
+    foreach ( Cli::PUBLIC_CLASSES as $item ) {
       $class_name = new $item;
 
-      $cli->run_command(
-        $class_name,
+      $class_name->__invoke(
+        [],
         $class_name->get_develop_args( $args )
       );
     }

@@ -55,7 +55,7 @@ class TaxonomyCli extends AbstractCli {
   public function get_develop_args( array $args ) : array {
     return [
       'label'              => $args[1] ?? 'Locations',
-      'taxonomy_slug'      => $args[2] ?? 'location',
+      'slug'               => $args[2] ?? 'location',
       'rest_endpoint_slug' => $args[3] ?? 'locations',
       'post_type_slug'     => $args[4] ?? 'post',
     ];
@@ -78,7 +78,7 @@ class TaxonomyCli extends AbstractCli {
         ],
         [
           'type'        => 'assoc',
-          'name'        => 'taxonomy_slug',
+          'name'        => 'slug',
           'description' => 'The name of the custom taxonomy slug. Example: location.',
           'optional'    => false,
         ],
@@ -102,13 +102,13 @@ class TaxonomyCli extends AbstractCli {
 
     // Get Props.
     $label              = $assoc_args['label'];
-    $taxonomy_slug      = $this->prepare_slug( $assoc_args['taxonomy_slug'] );
+    $slug               = $this->prepare_slug( $assoc_args['slug'] );
     $rest_endpoint_slug = $this->prepare_slug( $assoc_args['rest_endpoint_slug'] );
     $post_type_slug     = $this->prepare_slug( $assoc_args['post_type_slug'] );
 
     // Get full class name.
-    $class_name    = $this->get_file_name( $taxonomy_slug );
-    $class_name    = static::CLASS_NAME . $class_name;
+    $class_name = $this->get_file_name( $slug );
+    $class_name = static::CLASS_NAME . $class_name;
 
     // Read the template contents, and replace the placeholders with provided variables.
     $class = $this->get_example_template( __DIR__, static::CLASS_NAME );
@@ -118,12 +118,12 @@ class TaxonomyCli extends AbstractCli {
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = $this->rename_text_domain( $assoc_args, $class );
-    $class = str_replace( "example-slug", $taxonomy_slug, $class );
+    $class = str_replace( "example-slug", $slug, $class );
     $class = str_replace( "example-endpoint-slug", $rest_endpoint_slug, $class );
     $class = str_replace( "'post'", "'{$post_type_slug}'", $class );
     $class = str_replace( "Example Name", $label, $class );
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR, $class_name, $class );
+    $this->output_write( static::OUTPUT_DIR, $class_name, $class, "{$class_name}::class" );
   }
 }
