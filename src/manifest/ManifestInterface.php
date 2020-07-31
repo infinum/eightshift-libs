@@ -11,8 +11,6 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Manifest;
 
-use EightshiftLibs\Config\ConfigInterface;
-
 /**
  * Interface ManifestInterface
  */

@@ -21,13 +21,6 @@ use EightshiftLibs\Services\ServiceInterface;
 abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
 
   /**
-   * Manifest item filter name constant.
-   *
-   * @var string
-   */
-  const MANIFEST_ITEM_FILTER_NAME = 'manifest-item';
-
-  /**
    * Full data of manifest items.
    *
    * @var array
@@ -87,7 +80,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
    *
    * @return string
    */
-  abstract public function get_manifest_file_path() : string;
+  abstract protected function get_manifest_file_path() : string;
 
   /**
    * This method appends full site url to the relative manifest data item.

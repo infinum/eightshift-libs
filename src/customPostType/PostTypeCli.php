@@ -56,7 +56,7 @@ class PostTypeCli extends AbstractCli {
     return [
       'label'              => $args[1] ?? 'Products',
       'slug'               => $args[2] ?? 'product',
-      'url'                => $args[3] ?? 'product',
+      'rewrite_url'        => $args[3] ?? 'product',
       'rest_endpoint_slug' => $args[4] ?? 'products',
       'capability'         => $args[5] ?? 'post',
       'menu_position'      => $args[6] ?? 40,

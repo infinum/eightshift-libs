@@ -20,13 +20,20 @@ use EightshiftLibs\Manifest\AbstractManifest;
 class ManifestExample extends AbstractManifest {
 
   /**
+   * Manifest item filter name constant.
+   *
+   * @var string
+   */
+  const MANIFEST_ITEM = 'manifest-item';
+
+  /**
    * Register all hooks. Changed filter name to manifest.
    *
    * @return void
    */
   public function register() {
     \add_action( 'init', [ $this, 'set_assets_manifest_raw' ] );
-    \add_filter( Config::get_config( static::MANIFEST_ITEM_FILTER_NAME ), [ $this, 'get_assets_manifest_item' ] );
+    \add_filter( Config::get_config( static::MANIFEST_ITEM ), [ $this, 'get_assets_manifest_item' ] );
   }
 
   /**
