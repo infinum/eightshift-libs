@@ -87,7 +87,7 @@ class PostTypeCli extends AbstractCli {
         ],
         [
           'type'        => 'assoc',
-          'name'        => 'url',
+          'name'        => 'rewrite_url',
           'description' => 'The custom post type url. Example: location.',
           'optional'    => false,
         ],
@@ -124,7 +124,7 @@ class PostTypeCli extends AbstractCli {
     // Get Props.
     $label              = $assoc_args['label'];
     $slug               = $this->prepare_slug( $assoc_args['slug'] );
-    $url                = $this->prepare_slug( $assoc_args['url'] );
+    $rewrite_url        = $this->prepare_slug( $assoc_args['rewrite_url'] );
     $rest_endpoint_slug = $this->prepare_slug( $assoc_args['rest_endpoint_slug'] );
     $capability         = $assoc_args['capability'] ?? '';
     $menu_position      = $assoc_args['menu_position'] ?? '';
@@ -143,7 +143,7 @@ class PostTypeCli extends AbstractCli {
     $class = $this->rename_use( $assoc_args, $class );
     $class = $this->rename_text_domain( $assoc_args, $class );
     $class = str_replace( "example-slug", $slug, $class );
-    $class = str_replace( "example-url-slug", $url, $class );
+    $class = str_replace( "example-url-slug", $rewrite_url, $class );
     $class = str_replace( "example-endpoint-slug", $rest_endpoint_slug, $class );
     $class = str_replace( "Example Name", $label, $class );
 
