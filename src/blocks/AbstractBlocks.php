@@ -40,28 +40,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
   const BLOCK_ATTRIBUTES_FILTER_NAME = 'block-attributes-override';
 
   /**
-   * Register all the hooks
-   *
-   * @return void
-   */
-  public function register() {
-
-    // // Register all custom blocks.
-    add_action( 'init', [ $this, 'get_blocks_data_full_raw' ], 10 );
-    add_action( 'init', [ $this, 'register_blocks' ], 11 );
-
-    // Remove P tags from content.
-    remove_filter( 'the_content', 'wpautop' );
-
-    // Create new custom category for custom blocks.
-    add_filter( 'block_categories', [ $this, 'get_custom_category' ] );
-
-    add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 25 );
-
-    add_action( 'after_setup_theme', [ $this, 'change_editor_color_palette' ], 11 );
-  }
-
-  /**
    * Create custom project color palette.
    * This colors are fetched from the main manifest.json file located in src>blocks folder.
    *
@@ -271,29 +249,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
     include $src;
     unset( $src, $attributes, $inner_block_content );
-  }
-
-  /**
-   * Locate and return template part with passed attributes for block.
-   * Used to render php block view.
-   *
-   * @param string $src                  String with URL path to template.
-   * @param array  $attributes           Attributes array to pass in template.
-   * @param string $inner_block_content If using inner blocks content pass the data.
-   *
-   * @return void Includes an HTML view, or throws an error if the view is missing.
-   *
-   * @throws InvalidBlock Throws error if render block view is missing.
-   */
-  public function render_block_view( string $src, array $attributes, $inner_block_content = null ) : void {
-    $path = $this->get_blocks_path() . $src;
-
-    if ( ! file_exists( $path ) ) {
-      throw InvalidBlock::missing_render_view_exception( $path );
-    }
-
-    include $path;
-    unset( $src, $attributes, $inner_block_content, $path );
   }
 
   /**
