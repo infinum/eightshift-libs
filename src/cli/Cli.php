@@ -7,6 +7,7 @@
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
@@ -35,6 +36,7 @@ class Cli {
    * All classes and commands used only for WPCLI.
    */
   const PUBLIC_CLASSES = [
+    BlocksCli::class,
     ConfigCli::class,
     PostTypeCli::class,
     TaxonomyCli::class,
