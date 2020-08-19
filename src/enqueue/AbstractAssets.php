@@ -120,4 +120,18 @@ abstract class AbstractAssets implements ServiceInterface {
   protected function script_in_footer() : bool {
     return static::IN_FOOTER;
   }
+
+  /**
+   * Method that returns assets name used to prefix asset handlers.
+   *
+   * @return string
+   */
+  abstract public function get_assets_prefix() : string;
+
+  /**
+   * Method that returns assets version for versioning asset handlers.
+   *
+   * @return string
+   */
+  abstract public function get_assets_version() : string;
 }

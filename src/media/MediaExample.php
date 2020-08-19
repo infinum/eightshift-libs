@@ -23,7 +23,7 @@ class MediaExample extends AbstractMedia {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
     add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 20 );
   }
 }

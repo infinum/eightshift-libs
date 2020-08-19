@@ -31,7 +31,7 @@ class ManifestExample extends AbstractManifest {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
     \add_action( 'init', [ $this, 'set_assets_manifest_raw' ] );
     \add_filter( Config::get_config( static::MANIFEST_ITEM ), [ $this, 'get_assets_manifest_item' ] );
   }

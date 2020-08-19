@@ -21,6 +21,6 @@ class ServiceExample implements ServiceInterface {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
   }
 }

@@ -31,45 +31,18 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets {
   protected $manifest;
 
   /**
-   * Create a new admin instance.
-   *
-   * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-   */
-  public function __construct( ManifestInterface $manifest ) {
-    $this->manifest = $manifest;
-  }
-
-  /**
-   * Register all the hooks
-   */
-  public function register() {
-
-    // Editor only script.
-    add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_script' ] );
-
-    // Editor only style.
-    add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_style' ], 50 );
-
-    // Editor and frontend style.
-    add_action( 'enqueue_block_assets', [ $this, 'enqueue_block_style' ], 50 );
-
-    // Frontend only script.
-    add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_block_script' ] );
-  }
-
-  /**
    * Enqueue blocks script for editor only.
    *
    * @return void
    */
-  public function enqueue_block_editor_script() {
-    $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-editor-scripts";
+  public function enqueue_block_editor_script() : void {
+    $handler = "{$this->get_assets_prefix()}-block-editor-scripts";
 
     \wp_register_script(
       $handler,
       $this->manifest->get_assets_manifest_item( static::BLOCKS_EDITOR_SCRIPT_URI ),
       $this->get_admin_script_dependencies(),
-      $this->manifest->get_config()->get_project_version(),
+      $this->get_assets_version(),
       $this->script_in_footer()
     );
     \wp_enqueue_script( $handler );
@@ -80,14 +53,14 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets {
    *
    * @return void
    */
-  public function enqueue_block_editor_style() {
-    $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-editor-style";
+  public function enqueue_block_editor_style() : void {
+    $handler = "{$this->get_assets_prefix()}-block-editor-style";
 
     \wp_register_style(
       $handler,
       $this->manifest->get_assets_manifest_item( static::BLOCKS_EDITOR_STYLE_URI ),
       $this->get_admin_style_dependencies(),
-      $this->manifest->get_config()->get_project_version(),
+      $this->get_assets_version(),
       $this->get_media()
     );
 
@@ -99,14 +72,14 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets {
    *
    * @return void
    */
-  public function enqueue_block_style() {
-    $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-style";
+  public function enqueue_block_style() : void {
+    $handler = "{$this->get_assets_prefix()}-block-style";
 
     \wp_register_style(
       $handler,
       $this->manifest->get_assets_manifest_item( static::BLOCKS_STYLE_URI ),
       $this->get_frontend_style_dependencies(),
-      $this->manifest->get_config()->get_project_version(),
+      $this->get_assets_version(),
       $this->get_media()
     );
 
@@ -118,14 +91,14 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets {
    *
    * @return void
    */
-  public function enqueue_block_script() {
-    $handler = "{$this->manifest->get_config()->get_project_prefix()}-block-scripts";
+  public function enqueue_block_script() : void {
+    $handler = "{$this->get_assets_prefix()}-block-scripts";
 
     \wp_register_script(
       $handler,
       $this->manifest->get_assets_manifest_item( static::BLOCKS_SCRIPT_URI ),
       $this->get_frontend_script_dependencies(),
-      $this->manifest->get_config()->get_project_version(),
+      $this->get_assets_version(),
       $this->script_in_footer()
     );
 
@@ -140,7 +113,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets {
    * @return array List of all the style dependencies.
    */
   protected function get_admin_style_dependencies() : array {
-    return [ "{$this->manifest->get_config()->get_project_prefix()}-block-style" ];
+    return [ "{$this->get_assets_prefix()}-block-style" ];
   }
 
     /**

@@ -24,7 +24,7 @@ class I18n extends AbstractI18n {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
     add_action( 'after_setup_theme', [ $this, 'load_theme_textdomain' ] );
   }
 

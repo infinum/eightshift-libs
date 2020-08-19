@@ -31,8 +31,26 @@ class EnqueueThemeExample extends AbstractEnqueueTheme {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
     add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ], 10 );
     add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+  }
+
+  /**
+   * Method that returns assets name used to prefix asset handlers.
+   *
+   * @return string
+   */
+  public function get_assets_prefix() : string {
+    return Config::get_project_name();
+  }
+
+  /**
+   * Method that returns assets version for versioning asset handlers.
+   *
+   * @return string
+   */
+  public function get_assets_version() : string {
+    return Config::get_project_version();
   }
 }

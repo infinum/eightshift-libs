@@ -23,7 +23,7 @@ class LoginExample extends AbstractLogin {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
     \add_filter( 'login_headerurl', [ $this, 'custom_login_url' ] );
   }
 }

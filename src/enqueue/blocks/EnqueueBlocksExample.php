@@ -15,7 +15,7 @@ use EightshiftLibs\Manifest\ManifestInterface;
 /**
  * Enqueue_Blocks class.
  */
-class EnqueueBlocks extends AbstractEnqueueBlocks {
+class EnqueueBlocksExample extends AbstractEnqueueBlocks {
 
   /**
    * Create a new admin instance.
@@ -29,7 +29,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks {
   /**
    * Register all the hooks
    */
-  public function register() {
+  public function register() : void {
 
     // Editor only script.
     add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_script' ] );
@@ -42,5 +42,23 @@ class EnqueueBlocks extends AbstractEnqueueBlocks {
 
     // Frontend only script.
     add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_block_script' ] );
+  }
+
+  /**
+   * Method that returns assets name used to prefix asset handlers.
+   *
+   * @return string
+   */
+  public function get_assets_prefix() : string {
+    return Config::get_project_name();
+  }
+
+  /**
+   * Method that returns assets version for versioning asset handlers.
+   *
+   * @return string
+   */
+  public function get_assets_version() : string {
+    return Config::get_project_version();
   }
 }

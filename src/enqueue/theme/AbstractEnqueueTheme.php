@@ -28,37 +28,18 @@ abstract class AbstractEnqueueTheme extends AbstractAssets {
   protected $manifest;
 
   /**
-   * Create a new admin instance.
-   *
-   * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-   */
-  public function __construct( ManifestInterface $manifest ) {
-    $this->manifest = $manifest;
-  }
-
-  /**
-   * Register all the hooks
-   *
-   * @return void
-   */
-  public function register() {
-    add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ], 10 );
-    add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-  }
-
-  /**
    * Register the Stylesheets for the front end of the theme.
    *
    * @return void
    */
-  public function enqueue_styles() {
-    $handle = "{$this->manifest->get_config()->get_project_prefix()}-theme-styles";
+  public function enqueue_styles() : void {
+    $handle = "{$this->get_assets_prefix()}-theme-styles";
 
     \wp_register_style(
       $handle,
       $this->manifest->get_assets_manifest_item( static::THEME_STYLE_URI ),
       $this->get_frontend_style_dependencies(),
-      $this->manifest->get_config()->get_project_version(),
+      $this->get_assets_version(),
       $this->get_media()
     );
 
@@ -70,14 +51,14 @@ abstract class AbstractEnqueueTheme extends AbstractAssets {
    *
    * @return void
    */
-  public function enqueue_scripts() {
-    $handle = "{$this->manifest->get_config()->get_project_prefix()}-scripts";
+  public function enqueue_scripts() : void {
+    $handle = "{$this->get_assets_prefix()}-scripts";
 
     \wp_register_script(
       $handle,
       $this->manifest->get_assets_manifest_item( static::THEME_SCRIPT_URI ),
       $this->get_frontend_script_dependencies(),
-      $this->manifest->get_config()->get_project_version(),
+      $this->get_assets_version(),
       $this->script_in_footer()
     );
 

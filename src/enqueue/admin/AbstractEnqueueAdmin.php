@@ -34,7 +34,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
     add_action( 'login_enqueue_scripts', [ $this, 'enqueue_styles' ] );
     add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ], 50 );
     add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -45,14 +45,14 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets {
    *
    * @return void
    */
-  public function enqueue_styles() {
-    $handle = "{$this->manifest->get_config()->get_project_prefix()}-styles";
+  public function enqueue_styles() : void {
+    $handle = "{$this->get_assets_prefix()}-styles";
 
     \wp_register_style(
       $handle,
       $this->manifest->get_assets_manifest_item( static::ADMIN_STYLE_URI ),
       $this->get_admin_style_dependencies(),
-      $this->manifest->get_config()->get_project_version(),
+      $this->get_assets_version(),
       $this->get_media()
     );
 
@@ -65,14 +65,14 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets {
    *
    * @return void
    */
-  public function enqueue_scripts() {
-    $handle = "{$this->manifest->get_config()->get_project_prefix()}-scripts";
+  public function enqueue_scripts() : void {
+    $handle = "{$this->get_assets_prefix()}-scripts";
 
     \wp_register_script(
       $handle,
       $this->manifest->get_assets_manifest_item( static::ADMIN_SCRIPT_URI ),
       $this->get_admin_script_dependencies(),
-      $this->manifest->get_config()->get_project_version(),
+      $this->get_assets_version(),
       $this->script_in_footer()
     );
 

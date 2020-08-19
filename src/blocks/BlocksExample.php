@@ -23,7 +23,7 @@ class Blocks extends AbstractBlocks {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
 
     // // Register all custom blocks.
     add_action( 'init', [ $this, 'get_blocks_data_full_raw' ], 10 );

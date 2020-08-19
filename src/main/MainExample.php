@@ -35,7 +35,7 @@ class MainExample extends AbstractMain {
    * @return void
    *
    */
-  public function register() {
+  public function register() : void {
     \add_action( 'after_setup_theme', [ $this, 'register_services' ] );
   }
 

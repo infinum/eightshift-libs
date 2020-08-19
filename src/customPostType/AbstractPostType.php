@@ -21,7 +21,7 @@ abstract class AbstractPostType implements ServiceInterface {
    *
    * @return void
    */
-  public function register() {
+  public function register() : void {
     \add_action(
       'init',
       function() {
