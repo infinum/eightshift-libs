@@ -23,16 +23,20 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface {
    * @return void
    */
   public function register() : void {
-    \add_action(
-      'rest_api_init',
-      function() {
-        \register_rest_route(
-          $this->get_namespace() . '/' . $this->get_version(),
-          $this->get_route_name(),
-          $this->get_callback_arguments(),
-          $this->override_route()
-        );
-      }
+    \add_action( 'rest_api_init', [ $this, 'route_register_callback' ] );
+  }
+
+  /**
+   * Method that register rest route that is used inside rest_api_init hook.
+   *
+   * @return void
+   */
+  protected function route_register_callback() : void {
+    \register_rest_route(
+      $this->get_namespace() . '/' . $this->get_version(),
+      $this->get_route_name(),
+      $this->get_callback_arguments(),
+      $this->override_route()
     );
   }
 

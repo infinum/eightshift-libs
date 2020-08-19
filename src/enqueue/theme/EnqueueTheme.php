@@ -13,9 +13,9 @@ use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
- * Class Enqueue
+ * Class EnqueueThemeExample
  */
-class EnqueueTheme extends AbstractEnqueueTheme {
+class EnqueueThemeExample extends AbstractEnqueueTheme {
 
   /**
    * Create a new admin instance.

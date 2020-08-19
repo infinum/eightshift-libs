@@ -22,15 +22,19 @@ abstract class AbstractField implements ServiceInterface {
    * @return void
    */
   public function register() : void {
-    \add_action(
-      'rest_api_init',
-      function() {
-        \register_rest_field(
-          $this->get_object_type(),
-          $this->get_field_name(),
-          $this->get_callback_arguments()
-        );
-      }
+    \add_action( 'rest_api_init', [ $this, 'field_register_callback' ] );
+  }
+
+  /**
+   * Method that register rest field that is used inside rest_api_init hook.
+   *
+   * @return void
+   */
+  protected function field_register_callback() : void {
+    \register_rest_field(
+      $this->get_object_type(),
+      $this->get_field_name(),
+      $this->get_callback_arguments()
     );
   }
 
