@@ -11,6 +11,9 @@ use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
+use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
+use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
+use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\ExampleService\ServiceExampleCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Login\LoginCli;
@@ -37,6 +40,9 @@ class Cli {
    */
   const PUBLIC_CLASSES = [
     BlocksCli::class,
+    EnqueueAdminCli::class,
+    EnqueueBlocksCli::class,
+    EnqueueThemeCli::class,
     ConfigCli::class,
     PostTypeCli::class,
     TaxonomyCli::class,
