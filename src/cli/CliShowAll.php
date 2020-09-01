@@ -3,9 +3,6 @@
  * Class that registers WPCLI command for Development Show All.
  * Only used for development and can't be called via WPCLI.
  * It will output all commands at the same time but it will not run them!
- * 
- * Command Develop:
- * wp eval-file bin/cli.php show_all --skip-wordpress
  *
  * @package EightshiftLibs\Cli
  */
@@ -24,50 +21,24 @@ class CliShowAll extends AbstractCli {
    *
    * @return string
    */
-  public static function get_command_name() : string {
+  public function get_command_name() : string {
     return 'show_all';
-  }
-
-  /**
-   * Get WPCLI trigger class name.
-   *
-   * @return string
-   */
-  public function get_class_name() : string {
-    return CliShowAll::class;
-  }
-
-  /**
-   * Get WPCLI command doc.
-   *
-   * @return string
-   */
-  public function get_doc() : array {
-    return [];
   }
 
   public function __invoke( array $args, array $assoc_args ) {
 
-    \WP_CLI::log( "COMMANDS FOR WP-CLI:" );
-
-    foreach ( Cli::PUBLIC_CLASSES as $item ) {
-      $class_name = new $item;
-
-      \WP_CLI::log( "wp eval-file bin/cli.php {$class_name->get_command_name()} --skip-wordpress" );
-    }
-
-    \WP_CLI::log( "-----------------------------------------" );
-    
-    \WP_CLI::log( "COMMANDS FOR DEVELOPMENT:" );
-    foreach ( Cli::DEVELOP_CLASSES as $item ) {
-      $class_name = new $item;
-
-      \WP_CLI::log( "wp eval-file bin/cli.php {$class_name->get_command_name()} --skip-wordpress" );
-    }
-
+    \WP_CLI::log( \WP_CLI::colorize( "%mCommands for wp-cli:%n" ) );
+    $this->get_eval_loop( Cli::PUBLIC_CLASSES );
     \WP_CLI::log( "-----------------------------------------" );
 
-    // Return success.
+    \WP_CLI::log( \WP_CLI::colorize( "%mCommands for development:%n" ) );
+    $this->get_eval_loop( Cli::DEVELOP_CLASSES );
+    \WP_CLI::log( "-----------------------------------------" );
+
+    \WP_CLI::log( \WP_CLI::colorize( "%mCommands for setup:%n" ) );
+    $this->get_eval_loop( Cli::SETUP_CLASSES );
+    \WP_CLI::log( "-----------------------------------------" );
+
     \WP_CLI::success( 'All commands are outputed.' );
   }
 }

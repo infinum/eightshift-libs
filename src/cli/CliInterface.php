@@ -32,7 +32,7 @@ interface CliInterface {
    *
    * @return string
    */
-  public static function get_command_name() : string;
+  public function get_command_name() : string;
 
   /**
    * Get WPCLI trigger class name.

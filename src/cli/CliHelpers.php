@@ -78,11 +78,10 @@ trait CliHelpers {
    * @param string $output_dir  Absolute path to output from project root dir.
    * @param string $output_file Absolute path to output file.
    * @param string $class       Modified class.
-   * @param string $service     Output string to services container.
    *
    * @return Error|Success
    */
-  public function output_write( string $output_dir, string $output_file, string $class, string $service = '' ) {
+  public function output_write( string $output_dir, string $output_file, string $class ) {
 
     // Set output paths.
     $output_dir = $this->get_output_dir( $output_dir );
@@ -121,20 +120,6 @@ trait CliHelpers {
     \WP_CLI::success(
       sprintf( "File %s successfully created.", $output_file )
     );
-
-    if ( ! empty( $service ) ) {
-      \WP_CLI::log('---------------------------------------------');
-      \WP_CLI::log(
-        \WP_CLI::colorize(
-          "
-          %p{$service}%n
-
-          For this class to work, please open your services class container and add this string: %p{$service}%n to the array. Your service class container should be located in `src/main/Main.php` class. Please also add the corresponding use method at the top of the class. This is used to register your new service class inside the PHP Dependency Injection container. If your project is missing Main.php run this command create_main to set it up.
-          "
-        )
-      );
-      \WP_CLI::log('---------------------------------------------');
-    }
   }
 
   /**
@@ -372,6 +357,36 @@ trait CliHelpers {
         sprintf( 'The file "%s" can\'t be generated because it already exists.', $main )
       );
     }
+  }
+
+  /**
+   * Loop array of classes and output the commands.
+   *
+   * @param array $items Array of classes.
+   * @param bool  $run   Run or log output.
+   * @return void
+   */
+  public function get_eval_loop( array $items, bool $run = false ) : void {
+    foreach ( $items as $item ) {
+      $reflection_class = new \ReflectionClass( $item );
+      $class            = $reflection_class->newInstanceArgs( [ null ] );
+
+      if ( ! $run ) {
+        \WP_CLI::log( "wp eval-file bin/cli.php {$class->get_command_name()} --skip-wordpress" );
+      } else {
+        \WP_CLI::runcommand( "eval-file bin/cli.php {$class->get_command_name()} --skip-wordpress" );
+      }
+    }
+  }
+
+  /**
+   * Run reset command in develop mode only.
+   *
+   * @return void
+   */
+  public function run_reset() : void {
+    $reset = new CliReset( null );
+    \WP_CLI::runcommand( "eval-file bin/cli.php {$reset->get_command_name()} --skip-wordpress" );
   }
 
 }

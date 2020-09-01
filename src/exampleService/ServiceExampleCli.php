@@ -1,9 +1,6 @@
 <?php
 /**
  * Class that registers WPCLI command for Service Example.
- * 
- * Command Develop:
- * wp eval-file bin/cli.php create_service --skip-wordpress
  *
  * @package EightshiftLibs\ExampleService
  */
@@ -26,24 +23,6 @@ class ServiceExampleCli extends AbstractCli {
    * Template name.
    */
   const TEMPLATE = 'Service';
-
-  /**
-   * Get WPCLI command name
-   *
-   * @return string
-   */
-  public static function get_command_name() : string {
-    return 'create_service';
-  }
-
-  /**
-   * Get WPCLI trigger class name.
-   *
-   * @return string
-   */
-  public function get_class_name() : string {
-    return ServiceExampleCli::class;
-  }
 
   /**
    * Define default develop props.
@@ -115,6 +94,6 @@ class ServiceExampleCli extends AbstractCli {
     $class         = str_replace('\\ExampleService', $new_namespace, $class);
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR . '/' . $folder, $class_name, $class, "{$class_name}::class" );
+    $this->output_write( static::OUTPUT_DIR . '/' . $folder, $class_name, $class );
   }
 }

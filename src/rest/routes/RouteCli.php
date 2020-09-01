@@ -1,9 +1,6 @@
 <?php
 /**
  * Class that registers WPCLI command for Rest Routes.
- * 
- * Command Develop:
- * wp eval-file bin/cli.php create_rest_route --skip-wordpress
  *
  * @package EightshiftLibs\Rest\Routes
  */
@@ -11,7 +8,6 @@
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class RouteCli
@@ -22,11 +18,6 @@ class RouteCli extends AbstractCli {
    * Output dir relative path.
    */
   const OUTPUT_DIR = 'src/rest/routes';
-
-  /**
-   * Output class name.
-   */
-  const CLASS_NAME = 'Route';
 
   /**
    * Route method enum.
@@ -44,17 +35,8 @@ class RouteCli extends AbstractCli {
    *
    * @return string
    */
-  public static function get_command_name() : string {
+  public function get_command_name() : string {
     return 'create_rest_route';
-  }
-
-  /**
-   * Get WPCLI trigger class name.
-   *
-   * @return string
-   */
-  public function get_class_name() : string {
-    return RouteCli::class;
   }
 
   /**
@@ -104,19 +86,19 @@ class RouteCli extends AbstractCli {
 
     // Get full class name.
     $class_name = $this->get_file_name( $endpoint_slug );
-    $class_name = static::CLASS_NAME . $class_name;
+    $class_name = $this->get_class_short_name() . $class_name;
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__, static::CLASS_NAME );
+    $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );
 
     // Replace stuff in file.
-    $class = $this->rename_class_name_with_sufix( static::CLASS_NAME, $class_name, $class );
+    $class = $this->rename_class_name_with_sufix( $this->get_class_short_name(), $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = str_replace( "/example-route", "/{$endpoint_slug}", $class );
     $class = str_replace( "static::READABLE", static::VERB_ENUM[ $method ], $class );
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR, $class_name, $class, "{$class_name}::class" );
+    $this->output_write( static::OUTPUT_DIR, $class_name, $class );
   }
 }

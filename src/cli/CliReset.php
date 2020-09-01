@@ -3,9 +3,6 @@
  * Class that registers WPCLI command for Development Reset.
  * Only used for development and can't be called via WPCLI.
  * It will delete CLI output directory.
- * 
- * Command Develop:
- * wp eval-file bin/cli.php reset --skip-wordpress
  *
  * @package EightshiftLibs\Cli
  */
@@ -24,26 +21,8 @@ class CliReset extends AbstractCli {
    *
    * @return string
    */
-  public static function get_command_name() : string {
+  public function get_command_name() : string {
     return 'reset';
-  }
-
-  /**
-   * Get WPCLI trigger class name.
-   *
-   * @return string
-   */
-  public function get_class_name() : string {
-    return CliReset::class;
-  }
-
-  /**
-   * Get WPCLI command doc.
-   *
-   * @return string
-   */
-  public function get_doc() : array {
-    return [];
   }
 
   public function __invoke( array $args, array $assoc_args ) {
@@ -52,7 +31,6 @@ class CliReset extends AbstractCli {
 
     system( "rm -rf " . escapeshellarg( $output_dir ) );
 
-    // Return success.
     \WP_CLI::success( 'Output directory successfully removed.' );
   }
 }

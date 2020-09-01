@@ -1,9 +1,6 @@
 <?php
 /**
  * Class that registers WPCLI command for Rest Fields.
- * 
- * Command Develop:
- * wp eval-file bin/cli.php create_rest_field --skip-wordpress
  *
  * @package EightshiftLibs\Rest\Fields
  */
@@ -11,7 +8,6 @@
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class FieldCli
@@ -24,26 +20,12 @@ class FieldCli extends AbstractCli {
   const OUTPUT_DIR = 'src/rest/fields';
 
   /**
-   * Output class name.
-   */
-  const CLASS_NAME = 'Field';
-
-  /**
    * Get WPCLI command name
    *
    * @return string
    */
-  public static function get_command_name() : string {
+  public function get_command_name() : string {
     return 'create_rest_field';
-  }
-
-  /**
-   * Get WPCLI trigger class name.
-   *
-   * @return string
-   */
-  public function get_class_name() : string {
-    return FieldCli::class;
   }
 
   /**
@@ -93,19 +75,19 @@ class FieldCli extends AbstractCli {
 
     // Get full class name.
     $class_name = $this->get_file_name( $field_name );
-    $class_name = static::CLASS_NAME . $class_name;
+    $class_name = $this->get_class_short_name() . $class_name;
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__, static::CLASS_NAME );
+    $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );
 
     // Replace stuff in file.
-    $class = $this->rename_class_name_with_sufix( static::CLASS_NAME, $class_name, $class );
+    $class = $this->rename_class_name_with_sufix( $this->get_class_short_name(), $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = str_replace( "example-post-type", $object_type, $class );
     $class = str_replace( "example-field", $field_name, $class );
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR, $class_name, $class, "{$class_name}::class" );
+    $this->output_write( static::OUTPUT_DIR, $class_name, $class );
   }
 }

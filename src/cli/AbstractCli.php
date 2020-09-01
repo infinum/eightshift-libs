@@ -114,4 +114,42 @@ abstract class AbstractCli implements CliInterface {
     return $args;
   }
 
+  /**
+   * Get full class name for current class.
+   *
+   * @return string
+   */
+  public function get_class_name() : string {
+    return get_class($this);
+  }
+
+    /**
+   * Get short class name for current class.
+   *
+   * @return string
+   */
+  public function get_class_short_name() : string {
+    $arr = explode("\\", $this->get_class_name());
+
+    return str_replace('Cli', '', end($arr));
+  }
+
+  /**
+   * Get WPCLI command name
+   *
+   * @return string
+   */
+  public function get_command_name() : string {
+    return 'create_' . strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $this->get_class_short_name() ) );
+  }
+
+  /**
+   * Get WPCLI command doc.
+   *
+   * @return string
+   */
+  public function get_doc() : array {
+    return [];
+  }
+
 }

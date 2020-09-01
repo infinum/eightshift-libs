@@ -56,6 +56,12 @@ class Cli {
     FieldCli::class,
     RouteCli::class,
     ServiceExampleCli::class,
+  ];
+
+  /**
+   * All classes and commands used for project setup.
+   */
+  const SETUP_CLASSES = [
     CliInitTheme::class,
   ];
 
@@ -69,19 +75,6 @@ class Cli {
   ];
 
   /**
-   * All classes for initial theme setup for project.
-   */
-  const INIT_THEME_CLASSES = [
-    BlocksCli::class,
-    EnqueueAdminCli::class,
-    EnqueueBlocksCli::class,
-    EnqueueThemeCli::class,
-    ConfigCli::class,
-    MainCli::class,
-    ManifestCli::class,
-  ];
-
-  /**
    * Define all classes to register for development.
    *
    * @return array
@@ -90,6 +83,19 @@ class Cli {
     return array_merge(
       static::PUBLIC_CLASSES,
       static::DEVELOP_CLASSES,
+      static::SETUP_CLASSES,
+    );
+  }
+
+  /**
+   * Define all classes to register for normal WP.
+   *
+   * @return array
+   */
+  public function get_public_classes() {
+    return array_merge(
+      static::PUBLIC_CLASSES,
+      static::SETUP_CLASSES,
     );
   }
 
@@ -110,9 +116,9 @@ class Cli {
 
     foreach ( $this->get_develop_classes() as $item ) {
       $reflection_class = new \ReflectionClass($item);
-      $class            = $reflection_class->newInstanceArgs( [ '' ] );
+      $class            = $reflection_class->newInstanceArgs( [ null ] );
 
-      if ( $class::get_command_name() === $command_name ) {
+      if ( $class->get_command_name() === $command_name ) {
         $class->__invoke(
           [],
           $class->get_develop_args( $args )
@@ -133,7 +139,7 @@ class Cli {
   public function load( string $command_parent_name ) : void {
     $this->command_parent_name = $command_parent_name;
 
-    foreach ( static::PUBLIC_CLASSES as $item ) {
+    foreach ( $this->get_public_classes() as $item ) {
       $reflection_class = new \ReflectionClass($item);
       $class            = $reflection_class->newInstanceArgs( [ $this->command_parent_name ] );
 

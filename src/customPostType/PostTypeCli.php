@@ -1,9 +1,6 @@
 <?php
 /**
  * Class that registers WPCLI command for Custom Taxonomy.
- * 
- * Command Develop:
- * wp eval-file bin/cli.php create_post_type --skip-wordpress
  *
  * @package EightshiftLibs\CustomPostType
  */
@@ -21,29 +18,6 @@ class PostTypeCli extends AbstractCli {
    * Output dir relative path.
    */
   const OUTPUT_DIR = 'src/customPostType';
-
-  /**
-   * Output class name.
-   */
-  const CLASS_NAME = 'PostType';
-
-  /**
-   * Get WPCLI command name
-   *
-   * @return string
-   */
-  public static function get_command_name() : string {
-    return 'create_post_type';
-  }
-
-  /**
-   * Get WPCLI trigger class name.
-   *
-   * @return string
-   */
-  public function get_class_name() : string {
-    return PostTypeCli::class;
-  }
 
   /**
    * Define default develop props.
@@ -132,13 +106,13 @@ class PostTypeCli extends AbstractCli {
 
     // Get full class name.
     $class_name = $this->get_file_name( $slug );
-    $class_name = static::CLASS_NAME . $class_name;
+    $class_name = $this->get_class_short_name() . $class_name;
 
     // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__, static::CLASS_NAME );
+    $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );
 
     // Replace stuff in file.
-    $class = $this->rename_class_name_with_sufix( static::CLASS_NAME, $class_name, $class );
+    $class = $this->rename_class_name_with_sufix( $this->get_class_short_name(), $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = $this->rename_text_domain( $assoc_args, $class );
@@ -160,6 +134,6 @@ class PostTypeCli extends AbstractCli {
     }
 
     // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR, $class_name, $class, "{$class_name}::class" );
+    $this->output_write( static::OUTPUT_DIR, $class_name, $class );
   }
 }
