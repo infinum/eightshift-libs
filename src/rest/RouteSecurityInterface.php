@@ -23,5 +23,5 @@ interface RouteSecurityInterface {
    *
    * @return void
    */
-  public function authentification_check();
+  public function authentification_check() : void;
 }

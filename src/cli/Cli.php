@@ -100,7 +100,7 @@ class Cli {
    *
    * @return void
    */
-  public function load_develop( array $args = [] ) {
+  public function load_develop( array $args = [] ) : void {
 
     $command_name = $args[0] ?? '';
 
@@ -129,11 +129,14 @@ class Cli {
    *
    * @return void
    */
-  public function load( string $command_parent_name ) {
+  public function load( string $command_parent_name ) : void {
     $this->command_parent_name = $command_parent_name;
 
     foreach ( static::PUBLIC_CLASSES as $item ) {
-      (new $item)->register( $this->command_parent_name );
+      $reflection_class = new \ReflectionClass($item);
+      $class            = $reflection_class->newInstanceArgs( [ $this->command_parent_name ] );
+
+      $class->register();
     }
   }
 }

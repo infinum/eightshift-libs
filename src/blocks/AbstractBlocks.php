@@ -45,7 +45,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
    *
    * @return void
    */
-  public function change_editor_color_palette() {
+  public function change_editor_color_palette() : void {
 
     $colors = $this->get_colors_from_settings();
 
@@ -68,7 +68,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
    *
    * @return void
    */
-  public function add_theme_support() {
+  public function add_theme_support() : void {
     add_theme_support( 'align-wide' );
   }
 
@@ -78,7 +78,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
    *
    * @return void
    */
-  public function get_blocks_data_full_raw() {
+  public function get_blocks_data_full_raw() : void {
 
     if ( ! $this->blocks ) {
       $settings = $this->get_settings();
@@ -135,7 +135,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
    *
    * @return void
    */
-  public function register_blocks() {
+  public function register_blocks() : void {
     $blocks = $this->blocks['blocks'];
 
     if ( empty( $blocks ) ) {
@@ -160,7 +160,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
    *
    * @return void
    */
-  public function register_block( array $block_details ) {
+  public function register_block( array $block_details ) : void {
     \register_block_type(
       $block_details['blockFullName'],
       array(

@@ -6,12 +6,10 @@ interface CliInterface {
 
     /**
    * Register method for WPCLI command
-   * 
-   * @param string $command_parent_name Define top level commands name.
    *
    * @return void
    */
-  public function register( string $command_parent_name );
+  public function register() : void;
 
   /**
    * Call internal method for passing arguments
@@ -27,14 +25,14 @@ interface CliInterface {
    *
    * @return void
    */
-  public function register_command();
+  public function register_command() : void;
 
   /**
    * Get WPCLI command name
    *
    * @return string
    */
-  public function get_command_name() : string;
+  public static function get_command_name() : string;
 
   /**
    * Get WPCLI trigger class name.

@@ -33,15 +33,24 @@ abstract class AbstractCli implements CliInterface {
   const TEMPLATE = '';
 
   /**
+   * Construct Method
+   * 
+   * @param string $command_parent_name Define top level commands name.
+   *
+   * @return void
+   */
+  public function __construct( $command_parent_name ) {
+    $this->command_parent_name = $command_parent_name;
+  }
+
+  /**
    * Register method for WPCLI command
    * 
    * @param string $command_parent_name Define top level commands name.
    *
    * @return void
    */
-  public function register( string $command_parent_name ) {
-    $this->command_parent_name = $command_parent_name;
-
+  public function register() : void {
     \add_action( 'cli_init', [ $this, 'register_command'] );
   }
 
@@ -80,10 +89,13 @@ abstract class AbstractCli implements CliInterface {
    *
    * @return void
    */
-  public function register_command() {
+  public function register_command() : void {
+    $reflection_class = new \ReflectionClass($this->get_class_name());
+    $class            = $reflection_class->newInstanceArgs( [ $this->command_parent_name ] );
+
     \WP_CLI::add_command(
       $this->command_parent_name . ' ' . $this->get_command_name(),
-      $this->get_class_name(),
+      $class,
       array_merge(
         $this->get_global_synopsis(),
         $this->get_doc(),

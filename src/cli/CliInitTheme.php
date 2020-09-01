@@ -22,7 +22,7 @@ class CliInitTheme extends AbstractCli {
    *
    * @return string
    */
-  public function get_command_name() : string {
+  public static function get_command_name() : string {
     return 'init_theme';
   }
 
@@ -51,10 +51,7 @@ class CliInitTheme extends AbstractCli {
     \WP_CLI::log( "COMMANDS FOR WP-CLI:" );
 
     foreach ( Cli::INIT_THEME_CLASSES as $item ) {
-      $class_name = new $item;
-
-
-      \WP_CLI::runcommand( "{$class_name->get_command_name()}" );
+      \WP_CLI::runcommand( "{$this->command_parent_name} {$item::get_command_name()}" );
     }
   }
 }

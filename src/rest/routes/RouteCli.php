@@ -44,7 +44,7 @@ class RouteCli extends AbstractCli {
    *
    * @return string
    */
-  public function get_command_name() : string {
+  public static function get_command_name() : string {
     return 'create_rest_route';
   }
 

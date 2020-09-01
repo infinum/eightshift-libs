@@ -24,7 +24,7 @@ abstract class AbstractMedia implements ServiceInterface {
    *
    * @return void
    */
-  public function add_theme_support() {
+  public function add_theme_support() : void {
     \add_theme_support( 'title-tag' );
     \add_theme_support( 'html5' );
     \add_theme_support( 'post-thumbnails' );
