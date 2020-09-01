@@ -56,6 +56,7 @@ class Cli {
     FieldCli::class,
     RouteCli::class,
     ServiceExampleCli::class,
+    CliInitTheme::class,
   ];
 
   /**
@@ -65,6 +66,19 @@ class Cli {
     CliReset::class,
     CliRunAll::class,
     CliShowAll::class,
+  ];
+
+  /**
+   * All classes for initial theme setup for project.
+   */
+  const INIT_THEME_CLASSES = [
+    BlocksCli::class,
+    EnqueueAdminCli::class,
+    EnqueueBlocksCli::class,
+    EnqueueThemeCli::class,
+    ConfigCli::class,
+    MainCli::class,
+    ManifestCli::class,
   ];
 
   /**
