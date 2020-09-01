@@ -109,12 +109,13 @@ class Cli {
     }
 
     foreach ( $this->get_develop_classes() as $item ) {
-      $class_name = new $item;
+      $reflection_class = new \ReflectionClass($item);
+      $class            = $reflection_class->newInstanceArgs( [ '' ] );
 
-      if ( $class_name->get_command_name() === $command_name ) {
-        $class_name->__invoke(
+      if ( $class::get_command_name() === $command_name ) {
+        $class->__invoke(
           [],
-          $class_name->get_develop_args( $args )
+          $class->get_develop_args( $args )
         );
 
         break;
