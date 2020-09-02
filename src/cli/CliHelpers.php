@@ -131,9 +131,9 @@ trait CliHelpers {
    */
   public function get_output_dir( string $path = '' ) : string {
     if ( function_exists( 'add_action' ) ) {
-      $root = dirname( __DIR__, 5 );
+      $root = $this->get_project_root_path();
     } else {
-      $root = dirname( __DIR__, 2 ) . '/cli-output';
+      $root = $this->get_project_root_path( true ) . '/cli-output';
     }
 
     $root = rtrim( $root, '/' );
@@ -160,7 +160,7 @@ trait CliHelpers {
   }
 
   /**
-   * Replace namespace in class
+   * Replace namespace EightshiftBoilerplateVendor\in class
    *
    * @param array  $args  CLI args array.
    * @param string $class Full class as a string
@@ -270,9 +270,9 @@ trait CliHelpers {
   public function get_composer ( array $args = [] ) : array {
     if ( ! isset( $args['config_path'] ) ) {
       if ( function_exists( 'add_action' ) ) {
-        $composer_path = dirname( __DIR__, 5 ) . '/composer.json';
+        $composer_path = $this->get_project_root_path() . '/composer.json';
       } else {
-        $composer_path = dirname( __DIR__, 2 ) . '/composer.json';
+        $composer_path = $this->get_project_root_path( true ) . '/composer.json';
       }
     } else {
       $composer_path = $args['config_path'];
@@ -389,4 +389,39 @@ trait CliHelpers {
     \WP_CLI::runcommand( "eval-file bin/cli.php {$reset->get_command_name()} --skip-wordpress" );
   }
 
+  /**
+   * Returns projects root folder based on the enviroment.
+   *
+   * @param bool $is_dev Returns path based on the env.
+   *
+   * @return string
+   */
+  public function get_project_root_path( bool $is_dev = false ) : string {
+    $output = dirname( __DIR__, 5 );
+
+    if ( $is_dev ) {
+      $output = dirname( __DIR__, 2 );
+    }
+
+    return $output;
+  }
+
+  /**
+   * Returns Eightshift frontend libs path.
+   *
+   * @param string $path Additional path.
+   * @return string
+   */
+  public function get_frontend_libs_path( string $path = '' ) : string {
+    return "{$this->get_project_root_path()}/node_modules/@eightshift/frontend-libs/{$path}";
+  }
+
+  /**
+   * Returns Eightshift frontend libs blocks init path.
+   *
+   * @return string
+   */
+  public function get_frontend_libs_block_path() : string {
+    return $this->get_frontend_libs_path( 'blocks/init' );
+  }
 }

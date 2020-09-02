@@ -7,7 +7,9 @@
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\Blocks\BlocksBlockCli;
 use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Blocks\BlocksComponentCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
@@ -40,6 +42,8 @@ class Cli {
    */
   const PUBLIC_CLASSES = [
     BlocksCli::class,
+    BlocksComponentCli::class,
+    BlocksBlockCli::class,
     EnqueueAdminCli::class,
     EnqueueBlocksCli::class,
     EnqueueThemeCli::class,

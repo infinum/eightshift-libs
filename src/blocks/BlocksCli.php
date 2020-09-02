@@ -89,8 +89,8 @@ class BlocksCli extends AbstractCli {
    * @return void
    */
   public function blocks_init( bool $all = false ) : void {
-    $root = dirname( __DIR__, 5 );
-    $rootNode = "{$root}/node_modules/@eightshift/frontend-libs/blocks/init";
+    $root     = $this->get_project_root_path();
+    $rootNode = $this->get_frontend_libs_block_path();
 
     system( "cp -R {$rootNode}/assets {$root}/assets");
     system( "cp -R {$rootNode}/storybook {$root}/.storybook");
