@@ -41,9 +41,11 @@ abstract class AbstractModifyAdminAppearance implements ServiceInterface {
   /**
    * Method that changes admin colors based on environment variable
    *
-   * @return string Modified color scheme..
+   * @param string $variable Env state.
+   *
+   * @return string Modified color scheme.
    */
-  public function set_admin_color( $variable ) : string {
+  public function set_admin_color( string $variable ) : string {
     $colors = $this->get_color_schemes();
 
     if ( ! \defined( $variable ) || ! isset( $colors[ $variable ] ) ) {

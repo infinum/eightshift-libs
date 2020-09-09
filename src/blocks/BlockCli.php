@@ -52,10 +52,10 @@ class BlockCli extends AbstractCli {
     // Get Props.
     $block = $assoc_args['block'] ?? '';
 
-    $root     = $this->get_project_root_path();
-    $rootNode = $this->get_frontend_libs_block_path();
+    $root      = $this->get_project_root_path();
+    $root_node = $this->get_frontend_libs_block_path();
 
-    $source_path = "{$rootNode}/src/blocks/custom/{$block}";
+    $source_path      = "{$root_node}/src/blocks/custom/{$block}";
     $destination_path = "{$root}/src/blocks/custom/{$block}";
 
     // Source doesn't exist.
@@ -72,7 +72,7 @@ class BlockCli extends AbstractCli {
       );
     }
 
-    system( "cp -R {$source_path}/. {$destination_path}/");
+    system( "cp -R {$source_path}/. {$destination_path}/" );
 
     \WP_CLI::success( 'Block successfully created.' );
   }

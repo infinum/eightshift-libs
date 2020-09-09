@@ -65,8 +65,6 @@ class ServiceExampleCli extends AbstractCli {
 
   public function __invoke( array $args, array $assoc_args ) {
 
-    // FIX namespace and better handle folder structure.
-
     // Get Props.
     $folder    = $assoc_args['folder'];
     $file_name = $this->prepare_slug( $assoc_args['file_name'] );
@@ -87,11 +85,11 @@ class ServiceExampleCli extends AbstractCli {
       function( $item ) {
         return ucfirst( $item );
       },
-      explode('/', $folder)
+      explode( '/', $folder )
     );
 
-    $new_namespace = "\\" . implode('\\', $folder_parts);
-    $class         = str_replace('\\ExampleService', $new_namespace, $class);
+    $new_namespace = '\\' . implode( '\\', $folder_parts );
+    $class         = str_replace( '\\ExampleService', $new_namespace, $class );
 
     // Output final class to new file/folder and finish.
     $this->output_write( static::OUTPUT_DIR . '/' . $folder, $class_name, $class );

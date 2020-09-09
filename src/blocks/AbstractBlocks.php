@@ -9,6 +9,7 @@
 declare( strict_types=1 );
 
 namespace EightshiftLibs\Blocks;
+
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Services\ServiceInterface;
@@ -369,14 +370,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
       $this->blocks['wrapper']['attributes'],
       $block_details['attributes']
     );
-
-    // $filter_name = $this->config->get_config( static::BLOCK_ATTRIBUTES_FILTER_NAME );
-
-    // if ( \has_filter( $filter_name ) ) {
-    //   $override_attributes = \apply_filters( $filter_name, $output );
-
-    //   $output = array_merge( $output, $override_attributes );
-    // }
 
     return $output;
   }

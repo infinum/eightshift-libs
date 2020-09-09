@@ -68,7 +68,7 @@ class TaxonomyCli extends AbstractCli {
           'description' => 'The position where to assign the new custom taxonomy. Example: post.',
           'optional'    => false,
         ],
-      ]
+      ],
     ];
   }
 
@@ -92,10 +92,10 @@ class TaxonomyCli extends AbstractCli {
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = $this->rename_text_domain( $assoc_args, $class );
-    $class = str_replace( "example-slug", $slug, $class );
-    $class = str_replace( "example-endpoint-slug", $rest_endpoint_slug, $class );
+    $class = str_replace( 'example-slug', $slug, $class );
+    $class = str_replace( 'example-endpoint-slug', $rest_endpoint_slug, $class );
     $class = str_replace( "'post'", "'{$post_type_slug}'", $class );
-    $class = str_replace( "Example Name", $label, $class );
+    $class = str_replace( 'Example Name', $label, $class );
 
     // Output final class to new file/folder and finish.
     $this->output_write( static::OUTPUT_DIR, $class_name, $class );

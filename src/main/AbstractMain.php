@@ -19,7 +19,6 @@ use EightshiftLibs\Services\ServiceInterface;
 /**
  * The main start class.
  * This is used to define instantiate all classes used in the lib.
- *
  */
 abstract class AbstractMain implements ServiceInterface {
 
@@ -27,7 +26,6 @@ abstract class AbstractMain implements ServiceInterface {
    * Array of instantiated services.
    *
    * @var Service[]
-   *
    */
   private $services = [];
 
@@ -174,7 +172,6 @@ abstract class AbstractMain implements ServiceInterface {
    * A list of classes which contain hooks.
    *
    * @return array<class-string, string|string[]> Array of fully qualified service class names.
-   *
    */
   abstract protected function get_service_classes() : array;
 }

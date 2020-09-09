@@ -46,7 +46,7 @@ trait ObjectHelperTrait {
    * Flatten multidimensional array.
    *
    * @param  array $array Multidimensional array.
-   * 
+   *
    * @return array
    */
   public static function flatten_array( array $array ) : array {

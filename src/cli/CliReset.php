@@ -17,7 +17,7 @@ use EightshiftLibs\Cli\AbstractCli;
 class CliReset extends AbstractCli {
 
   /**
-   * Get WPCLI command name
+   * Get WPCLI command name.
    *
    * @return string
    */
@@ -29,7 +29,7 @@ class CliReset extends AbstractCli {
 
     $output_dir = $this->get_output_dir( '' );
 
-    system( "rm -rf " . escapeshellarg( $output_dir ) );
+    system( 'rm -rf ' . escapeshellarg( $output_dir ) );
 
     \WP_CLI::success( 'Output directory successfully removed.' );
   }

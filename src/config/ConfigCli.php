@@ -19,7 +19,7 @@ class ConfigCli extends AbstractCli {
    */
   const OUTPUT_DIR = 'src/config';
 
- /**
+  /**
    * Define default develop props.
    *
    * @param array $args WPCLI eval-file arguments.
@@ -97,11 +97,11 @@ class ConfigCli extends AbstractCli {
     $class = $this->rename_use( $assoc_args, $class );
 
     if ( ! empty( $name ) ) {
-      $class = str_replace( "eightshift-libs", $name, $class );
+      $class = str_replace( 'eightshift-libs', $name, $class );
     }
 
     if ( ! empty( $version ) ) {
-      $class = str_replace( "1.0.0", $version, $class );
+      $class = str_replace( '1.0.0', $version, $class );
     }
 
     if ( ! empty( $prefix ) ) {
@@ -109,11 +109,11 @@ class ConfigCli extends AbstractCli {
     }
 
     if ( ! empty( $env ) ) {
-      $class = str_replace( "EB_ENV", $env, $class );
+      $class = str_replace( 'EB_ENV', $env, $class );
     }
 
     if ( ! empty( $routes_version ) ) {
-      $class = str_replace( "v1", $routes_version, $class );
+      $class = str_replace( 'v1', $routes_version, $class );
     }
 
     // Output final class to new file/folder and finish.

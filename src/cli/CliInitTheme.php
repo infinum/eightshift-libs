@@ -59,9 +59,9 @@ class CliInitTheme extends AbstractCli {
       $class            = $reflection_class->newInstanceArgs( [ null ] );
 
       if ( function_exists( 'add_action' ) ) {
-      \WP_CLI::runcommand( "{$this->command_parent_name} {$class->get_command_name()}" );
-    } else {
-      \WP_CLI::runcommand( "eval-file bin/cli.php {$class->get_command_name()} --skip-wordpress" );
+        \WP_CLI::runcommand( "{$this->command_parent_name} {$class->get_command_name()}" );
+      } else {
+        \WP_CLI::runcommand( "eval-file bin/cli.php {$class->get_command_name()} --skip-wordpress" );
       }
     }
 

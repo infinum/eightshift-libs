@@ -74,7 +74,7 @@ class RouteCli extends AbstractCli {
           'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
           'optional'    => false,
         ],
-      ]
+      ],
     ];
   }
 
@@ -95,8 +95,8 @@ class RouteCli extends AbstractCli {
     $class = $this->rename_class_name_with_sufix( $this->get_class_short_name(), $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
-    $class = str_replace( "/example-route", "/{$endpoint_slug}", $class );
-    $class = str_replace( "static::READABLE", static::VERB_ENUM[ $method ], $class );
+    $class = str_replace( '/example-route', "/{$endpoint_slug}", $class );
+    $class = str_replace( 'static::READABLE', static::VERB_ENUM[ $method ], $class );
 
     // Output final class to new file/folder and finish.
     $this->output_write( static::OUTPUT_DIR, $class_name, $class );

@@ -39,4 +39,16 @@
   <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
     <severity>0</severity>
   </rule>
+
+  <rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+    <severity>0</severity>
+  </rule>
+
+  <rule ref="WordPress.Files.FileName.InvalidClassFileName">
+    <severity>0</severity>
+  </rule>
+
+  <rule ref="WordPress.PHP.DiscouragedPHPFunctions.system_calls_system">
+    <severity>0</severity>
+  </rule>
 </ruleset>

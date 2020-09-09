@@ -19,6 +19,8 @@ abstract class AbstractCli implements CliInterface {
 
   /**
    * Top level commands name.
+   *
+   * @var string
    */
   protected $command_parent_name;
 
@@ -33,8 +35,8 @@ abstract class AbstractCli implements CliInterface {
   const TEMPLATE = '';
 
   /**
-   * Construct Method
-   * 
+   * Construct Method.
+   *
    * @param string $command_parent_name Define top level commands name.
    *
    * @return void
@@ -44,14 +46,12 @@ abstract class AbstractCli implements CliInterface {
   }
 
   /**
-   * Register method for WPCLI command
-   * 
-   * @param string $command_parent_name Define top level commands name.
+   * Register method for WPCLI command.
    *
    * @return void
    */
   public function register() : void {
-    \add_action( 'cli_init', [ $this, 'register_command'] );
+    \add_action( 'cli_init', [ $this, 'register_command' ] );
   }
 
   /**
@@ -90,7 +90,7 @@ abstract class AbstractCli implements CliInterface {
    * @return void
    */
   public function register_command() : void {
-    $reflection_class = new \ReflectionClass($this->get_class_name());
+    $reflection_class = new \ReflectionClass( $this->get_class_name() );
     $class            = $reflection_class->newInstanceArgs( [ $this->command_parent_name ] );
 
     \WP_CLI::add_command(
@@ -98,7 +98,7 @@ abstract class AbstractCli implements CliInterface {
       $class,
       array_merge(
         $this->get_global_synopsis(),
-        $this->get_doc(),
+        $this->get_doc()
       )
     );
   }
@@ -120,18 +120,18 @@ abstract class AbstractCli implements CliInterface {
    * @return string
    */
   public function get_class_name() : string {
-    return get_class($this);
+    return get_class( $this );
   }
 
-    /**
+  /**
    * Get short class name for current class.
    *
    * @return string
    */
   public function get_class_short_name() : string {
-    $arr = explode("\\", $this->get_class_name());
+    $arr = explode( '\\', $this->get_class_name() );
 
-    return str_replace('Cli', '', end($arr));
+    return str_replace( 'Cli', '', end( $arr ) );
   }
 
   /**

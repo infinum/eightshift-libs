@@ -38,7 +38,7 @@ class BlocksCli extends AbstractCli {
     'copyright',
     'page-overlay',
   ];
-  
+
   const BLOCKS = [
     'button',
     'heading',
@@ -89,28 +89,28 @@ class BlocksCli extends AbstractCli {
    * @return void
    */
   public function blocks_init( bool $all = false ) : void {
-    $root     = $this->get_project_root_path();
-    $rootNode = $this->get_frontend_libs_block_path();
+    $root      = $this->get_project_root_path();
+    $root_node = $this->get_frontend_libs_block_path();
 
-    system( "cp -R {$rootNode}/assets {$root}/assets");
-    system( "cp -R {$rootNode}/storybook {$root}/.storybook");
+    system( "cp -R {$root_node}/assets {$root}/assets" );
+    system( "cp -R {$root_node}/storybook {$root}/.storybook" );
 
     if ( $all ) {
-      system( "cp -R {$rootNode}/src/blocks {$root}/src/blocks");
+      system( "cp -R {$root_node}/src/blocks {$root}/src/blocks" );
     } else {
-      system( "cp -R {$rootNode}/src/blocks/assets {$root}/src/blocks/assets/");
-      system( "cp -R {$rootNode}/src/blocks/variations {$root}/src/blocks/variations/");
-      system( "cp -R {$rootNode}/src/blocks/wrapper {$root}/src/blocks/wrapper/");
-      system( "cp -R {$rootNode}/src/blocks/manifest.json {$root}/src/blocks/");
+      system( "cp -R {$root_node}/src/blocks/assets {$root}/src/blocks/assets/" );
+      system( "cp -R {$root_node}/src/blocks/variations {$root}/src/blocks/variations/" );
+      system( "cp -R {$root_node}/src/blocks/wrapper {$root}/src/blocks/wrapper/" );
+      system( "cp -R {$root_node}/src/blocks/manifest.json {$root}/src/blocks/" );
 
-      foreach( static::COMPONENTS as $component ) {
-        system( "mkdir -p {$root}/src/blocks/components/{$component}/");
-        system( "cp -R {$rootNode}/src/blocks/components/{$component}/. {$root}/src/blocks/components/{$component}/");
+      foreach ( static::COMPONENTS as $component ) {
+        system( "mkdir -p {$root}/src/blocks/components/{$component}/" );
+        system( "cp -R {$root_node}/src/blocks/components/{$component}/. {$root}/src/blocks/components/{$component}/" );
       }
 
-      foreach( static::BLOCKS as $block ) {
-        system( "mkdir -p {$root}/src/blocks/custom/{$block}/");
-        system( "cp -R {$rootNode}/src/blocks/custom/{$block}/. {$root}/src/blocks/custom/{$block}/");
+      foreach ( static::BLOCKS as $block ) {
+        system( "mkdir -p {$root}/src/blocks/custom/{$block}/" );
+        system( "cp -R {$root_node}/src/blocks/custom/{$block}/. {$root}/src/blocks/custom/{$block}/" );
       }
     }
 

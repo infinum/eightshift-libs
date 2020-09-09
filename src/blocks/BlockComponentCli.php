@@ -52,10 +52,10 @@ class BlockComponentCli extends AbstractCli {
     // Get Props.
     $component = $assoc_args['component'] ?? '';
 
-    $root     = $this->get_project_root_path();
-    $rootNode = $this->get_frontend_libs_block_path();
+    $root      = $this->get_project_root_path();
+    $root_node = $this->get_frontend_libs_block_path();
 
-    $source_path = "{$rootNode}/src/blocks/components/{$component}";
+    $source_path      = "{$root_node}/src/blocks/components/{$component}";
     $destination_path = "{$root}/src/blocks/components/{$component}";
 
     // Source doesn't exist.
@@ -72,7 +72,7 @@ class BlockComponentCli extends AbstractCli {
       );
     }
 
-    system( "cp -R {$source_path}/. {$destination_path}/");
+    system( "cp -R {$source_path}/. {$destination_path}/" );
 
     \WP_CLI::success( 'Component successfully created.' );
   }
