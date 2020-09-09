@@ -207,13 +207,31 @@ trait CliHelpers {
    */
   public function rename_use( array $args = [], string $string ) : string {
 
-    $vendor_prefix = $this->get_vendor_prefix( $args );
+    $output = $string;
 
-    return preg_replace(
-      '/\x75\x73\x65 (w+|\w+\\\\)/',
-      "\x75\x73\x65 {$vendor_prefix}\\",
-      $string
+    $use     = "\x75\x73\x65";
+    $pattern = "/{$use} (w+|\w+\\\\)";
+
+    $vendor_prefix = $this->get_vendor_prefix( $args );
+    $namespace     = $this->get_namespace( $args );
+
+    // Rename all vendor prefix stuff.
+    $output = preg_replace(
+      "{$pattern}/",
+      "{$use} {$vendor_prefix}\\",
+      $output
     );
+
+    // Leave all project stuff.
+    if ( preg_match( "{$pattern}{$namespace}/", $string ) ) {
+      $output = preg_replace(
+        "{$pattern}{$namespace}/",
+        "{$use} {$namespace}",
+        $output
+      );
+    }
+
+    return $output;
   }
 
   /**
