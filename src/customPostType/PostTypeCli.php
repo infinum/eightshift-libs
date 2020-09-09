@@ -116,21 +116,21 @@ class PostTypeCli extends AbstractCli {
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
     $class = $this->rename_text_domain( $assoc_args, $class );
-    $class = str_replace( "example-slug", $slug, $class );
-    $class = str_replace( "example-url-slug", $rewrite_url, $class );
-    $class = str_replace( "example-endpoint-slug", $rest_endpoint_slug, $class );
-    $class = str_replace( "Example Name", $label, $class );
+    $class = str_replace( 'example-slug', $slug, $class );
+    $class = str_replace( 'example-url-slug', $rewrite_url, $class );
+    $class = str_replace( 'example-endpoint-slug', $rest_endpoint_slug, $class );
+    $class = str_replace( 'Example Name', $label, $class );
 
     if ( ! empty( $capability ) ) {
       $class = str_replace( "'post'", "'{$capability}'", $class );
     }
 
     if ( ! empty( $menu_position ) ) {
-      $class = str_replace( "20", $menu_position, $class );
+      $class = str_replace( '20', $menu_position, $class );
     }
 
     if ( ! empty( $menu_icon ) ) {
-      $class = str_replace( "dashicons-analytics", $menu_icon, $class );
+      $class = str_replace( 'dashicons-analytics', $menu_icon, $class );
     }
 
     // Output final class to new file/folder and finish.
