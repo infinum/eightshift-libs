@@ -24,6 +24,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Changed
 - `class-bem-menu-walker.php` - removed declaration of db_fields.
 
+### Added
+- Setup script for CI deployment for core and plugins
+
 ## [2.4.0] - 2020-07-08
 
 ### Removed
