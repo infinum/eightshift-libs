@@ -1,6 +1,6 @@
 <?php
 /**
- * Class that registers WPCLI command for Blocks Components.
+ * Class that registers WPCLI command for Blocks Block.
  *
  * @package EightshiftLibs\Blocks
  */
@@ -10,14 +10,23 @@ namespace EightshiftLibs\Blocks;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
- * Class BlocksComponentCli
+ * Class BlockCli
  */
-class BlocksComponentCli extends AbstractCli {
+class BlockCli extends AbstractCli {
 
   /**
    * Output dir relative path.
    */
   const OUTPUT_DIR = 'src/blocks';
+
+  /**
+   * Get WPCLI command name
+   *
+   * @return string
+   */
+  public function get_command_name() : string {
+    return 'use_block';
+  }
 
   /**
    * Get WPCLI command doc.
@@ -26,12 +35,12 @@ class BlocksComponentCli extends AbstractCli {
    */
   public function get_doc() : array {
     return [
-      'shortdesc' => 'Generates Blocks Component class.',
+      'shortdesc' => 'Copy Block from library to your project.',
       'synopsis' => [
         [
           'type'        => 'assoc',
-          'name'        => 'component',
-          'description' => 'Specify component name.',
+          'name'        => 'block',
+          'description' => 'Specify block name.',
           'optional'    => true,
         ],
       ],
@@ -41,30 +50,30 @@ class BlocksComponentCli extends AbstractCli {
   public function __invoke( array $args, array $assoc_args ) {
 
     // Get Props.
-    $component = $assoc_args['component'] ?? '';
+    $block = $assoc_args['block'] ?? '';
 
     $root     = $this->get_project_root_path();
     $rootNode = $this->get_frontend_libs_block_path();
 
-    $source_path = "{$rootNode}/src/blocks/components/{$component}";
-    $destination_path = "{$root}/src/blocks/components/{$component}";
+    $source_path = "{$rootNode}/src/blocks/custom/{$block}";
+    $destination_path = "{$root}/src/blocks/custom/{$block}";
 
     // Source doesn't exist.
     if ( ! file_exists( $source_path ) ) {
       \WP_CLI::error(
-        sprintf( 'The component "%s" doesn\'t exist in our library. Please check the docs for all available components', $source_path )
+        sprintf( 'The block "%s" doesn\'t exist in our library. Please check the docs for all available blocks.', $source_path )
       );
     }
 
     // Destination exists.
     if ( file_exists( $destination_path ) ) {
       \WP_CLI::error(
-        sprintf( 'The component in you project exists on this "%s" path. Please check or remove that folder before running this command again.', $destination_path )
+        sprintf( 'The block in you project exists on this "%s" path. Please check or remove that folder before running this command again.', $destination_path )
       );
     }
 
     system( "cp -R {$source_path}/. {$destination_path}/");
 
-    \WP_CLI::success( 'Component successfully created.' );
+    \WP_CLI::success( 'Block successfully created.' );
   }
 }
