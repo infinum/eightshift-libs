@@ -1,18 +1,18 @@
 <?php
 /**
- * Class that registers WPCLI command for Setup.
+ * Class that registers WPCLI command for DbImport.
  *
- * @package EightshiftLibs\Setup
+ * @package EightshiftLibs\Db
  */
 
-namespace EightshiftLibs\Setup;
+namespace EightshiftLibs\Db;
 
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
- * Class SetupCli
+ * Class DbImportCli
  */
-class SetupCli extends AbstractCli {
+class DbImportCli extends AbstractCli {
 
   /**
    * Output dir relative path.
@@ -25,7 +25,7 @@ class SetupCli extends AbstractCli {
    * @return string
    */
   public function get_command_name() : string {
-    return 'init_setup';
+    return 'init_db_import';
   }
 
   /**
@@ -48,7 +48,7 @@ class SetupCli extends AbstractCli {
    */
   public function get_doc() : array {
     return [
-      'shortdesc' => 'Initialize Command for automatic project setup and update.',
+      'shortdesc' => 'Initialize Command for importing db and images from staging or production env.',
       'synopsis' => [
         [
           'type'        => 'assoc',
@@ -70,7 +70,7 @@ class SetupCli extends AbstractCli {
 
     // Get Props.
     $root            = $assoc_args['root'] ?? static::OUTPUT_DIR;
-    $skip_setup_file = $assoc_args['skip_setup_file'] ?? false;
+    $skip_setup_file = $assoc_args['skip_setup_file'] ?? true;
 
     // Read the template contents, and replace the placeholders with provided variables.
     $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );
@@ -80,8 +80,8 @@ class SetupCli extends AbstractCli {
 
     if ( ! $skip_setup_file ) {
       // Get setup.json file.
-      $json = $this->get_example_template( __DIR__, 'setup.json' );
-  
+      $json = $this->get_example_template( dirname( __DIR__, 1 ), 'setup/setup.json' );
+
       // Output json file to project root.
       $this->output_write( $root, 'setup.json', $json );
     }

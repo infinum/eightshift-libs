@@ -10,6 +10,7 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Blocks\BlockComponentCli;
 use EightshiftLibs\Blocks\BlockCli;
+use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
@@ -27,6 +28,8 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
+use EightshiftLibs\Db\DbExportCli;
+use EightshiftLibs\Db\DbImportCli;
 
 /**
  * Class Cli
@@ -64,6 +67,9 @@ class Cli {
     RouteCli::class,
     ServiceExampleCli::class,
     SetupCli::class,
+    DbExportCli::class,
+    DbImportCli::class,
+    BuildCli::class,
   ];
 
   /**
