@@ -89,7 +89,7 @@ class PostTypeCli extends AbstractCli {
           'description' => 'The default menu icon for the custom post types. Example: dashicons-analytics.',
           'optional'    => true,
         ],
-      ]
+      ],
     ];
   }
 

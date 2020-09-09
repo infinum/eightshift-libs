@@ -34,11 +34,15 @@ class Cli {
 
   /**
    * Top level commands name.
+   *
+   * @var string
    */
   protected $command_parent_name;
 
   /**
    * All classes and commands that can be used on development and public WP CLI.
+   *
+   * @var array
    */
   const CLASSES_LIST = [
     BlocksCli::class,
@@ -62,6 +66,8 @@ class Cli {
 
   /**
    * All classes and commands used only for WPCLI.
+   *
+   * @var array
    */
   const PUBLIC_CLASSES = [
     BlockComponentCli::class,
@@ -70,6 +76,8 @@ class Cli {
 
   /**
    * All classes and commands used for project setup.
+   *
+   * @var array
    */
   const SETUP_CLASSES = [
     CliInitTheme::class,
@@ -77,6 +85,8 @@ class Cli {
 
   /**
    * All classes and commands used only for development.
+   *
+   * @var array
    */
   CONST DEVELOP_CLASSES = [
     CliReset::class,
@@ -89,7 +99,7 @@ class Cli {
    *
    * @return array
    */
-  public function get_develop_classes() {
+  public function get_develop_classes() : array {
     return array_merge(
       static::CLASSES_LIST,
       static::DEVELOP_CLASSES,
@@ -102,7 +112,7 @@ class Cli {
    *
    * @return array
    */
-  public function get_public_classes() {
+  public function get_public_classes() : array {
     return array_merge(
       static::CLASSES_LIST,
       static::PUBLIC_CLASSES,

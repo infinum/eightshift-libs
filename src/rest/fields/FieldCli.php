@@ -63,7 +63,7 @@ class FieldCli extends AbstractCli {
           'description' => 'Object(s) the field is being registered to. Example: post.',
           'optional'    => false,
         ],
-      ]
+      ],
     ];
   }
 
@@ -84,8 +84,8 @@ class FieldCli extends AbstractCli {
     $class = $this->rename_class_name_with_sufix( $this->get_class_short_name(), $class_name, $class );
     $class = $this->rename_namespace( $assoc_args, $class );
     $class = $this->rename_use( $assoc_args, $class );
-    $class = str_replace( "example-post-type", $object_type, $class );
-    $class = str_replace( "example-field", $field_name, $class );
+    $class = str_replace( 'example-post-type', $object_type, $class );
+    $class = str_replace( 'example-field', $field_name, $class );
 
     // Output final class to new file/folder and finish.
     $this->output_write( static::OUTPUT_DIR, $class_name, $class );
