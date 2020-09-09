@@ -54,7 +54,7 @@ class ConfigCli extends AbstractCli {
         [
           'type'        => 'assoc',
           'name'        => 'version',
-          'description' => 'Define project name.',
+          'description' => 'Define project version.',
           'optional'    => true,
         ],
         [
@@ -72,7 +72,7 @@ class ConfigCli extends AbstractCli {
         [
           'type'        => 'assoc',
           'name'        => 'routes_version',
-          'description' => 'Define project env.',
+          'description' => 'Define project REST version.',
           'optional'    => true,
         ],
       ],

@@ -22,7 +22,7 @@ trait CliHelpers {
    */
   public function get_file_name( string $file_name ) : string {
 
-    if ( strpos( $file_name, ' ' ) !== false) {
+    if ( strpos( $file_name, ' ' ) !== false ) {
       $file_name = strtolower( $file_name );
     }
 
