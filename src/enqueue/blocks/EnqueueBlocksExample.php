@@ -9,6 +9,7 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Enqueue\Blocks;
 
+use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftLibs\Manifest\ManifestInterface;
 

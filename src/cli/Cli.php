@@ -38,12 +38,10 @@ class Cli {
   protected $command_parent_name;
 
   /**
-   * All classes and commands used only for WPCLI.
+   * All classes and commands that can be used on development and public WP CLI.
    */
-  const PUBLIC_CLASSES = [
+  const CLASSES_LIST = [
     BlocksCli::class,
-    BlockComponentCli::class,
-    BlockCli::class,
     EnqueueAdminCli::class,
     EnqueueBlocksCli::class,
     EnqueueThemeCli::class,
@@ -60,6 +58,14 @@ class Cli {
     FieldCli::class,
     RouteCli::class,
     ServiceExampleCli::class,
+  ];
+
+  /**
+   * All classes and commands used only for WPCLI.
+   */
+  const PUBLIC_CLASSES = [
+    BlockComponentCli::class,
+    BlockCli::class,
   ];
 
   /**
@@ -85,7 +91,7 @@ class Cli {
    */
   public function get_develop_classes() {
     return array_merge(
-      static::PUBLIC_CLASSES,
+      static::CLASSES_LIST,
       static::DEVELOP_CLASSES,
       static::SETUP_CLASSES,
     );
@@ -98,6 +104,7 @@ class Cli {
    */
   public function get_public_classes() {
     return array_merge(
+      static::CLASSES_LIST,
       static::PUBLIC_CLASSES,
       static::SETUP_CLASSES,
     );

@@ -9,6 +9,7 @@ declare( strict_types=1 );
 
 namespace EightshiftLibs\Enqueue\Theme;
 
+use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftLibs\Manifest\ManifestInterface;
 
