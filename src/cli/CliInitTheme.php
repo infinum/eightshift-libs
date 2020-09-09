@@ -15,6 +15,7 @@ use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
+use EightshiftLibs\Menu\MenuCli;
 
 /**
  * Class CliInitTheme
@@ -32,6 +33,7 @@ class CliInitTheme extends AbstractCli {
     ConfigCli::class,
     MainCli::class,
     ManifestCli::class,
+    MenuCli::class,
   ];
 
   /**
