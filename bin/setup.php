@@ -47,7 +47,7 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
   
   // Install core version.
   if ( ! empty( $core ) ) {
-    \WP_CLI::runcommand( "wp core update --version={$core} --force" );
+    \WP_CLI::runcommand( "core update --version={$core} --force" );
     \WP_CLI::log( '--------------------------------------------------' );
   } else {
     \WP_CLI::warning( 'No core version is defined. Skipping.' );
@@ -69,7 +69,7 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
       // Instale core plugins.
       if ( ! empty( $plugins_core ) ) {
         foreach( $plugins_core as $name => $version ) {
-          \WP_CLI::runcommand( "wp plugin install {$name} --version={$version} --force" );
+          \WP_CLI::runcommand( "plugin install {$name} --version={$version} --force" );
           \WP_CLI::log( '--------------------------------------------------' );
         }
       } else {
@@ -85,7 +85,7 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
       // Instale github plugins.
       if ( ! empty( $plugins_github ) ) {
         foreach( $plugins_github as $name => $version ) {
-          \WP_CLI::runcommand( "wp plugin install https://github.com/{$name}/archive/{$version}.zip --force" );
+          \WP_CLI::runcommand( "plugin install https://github.com/{$name}/archive/{$version}.zip --force" );
           \WP_CLI::log( '--------------------------------------------------' );
         }
       } else {
@@ -103,7 +103,7 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
     // Instale themes.
     if ( ! empty( $themes ) ) {
       foreach( $themes as $name => $version ) {
-        \WP_CLI::runcommand( "wp theme install {$name} --version={$version} --force" );
+        \WP_CLI::runcommand( "theme install {$name} --version={$version} --force" );
         \WP_CLI::log( '--------------------------------------------------' );
       }
     } else {
