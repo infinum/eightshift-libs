@@ -209,8 +209,8 @@ trait CliHelpers {
 
     $output = $string;
 
-    $use     = "\x75\x73\x65";
-    $pattern = "/{$use} (w+|\w+\\\\)";
+    $prefix     = "\x75\x73\x65";
+    $pattern = "/{$prefix} (w+|\w+\\\\)";
 
     $vendor_prefix = $this->get_vendor_prefix( $args );
     $namespace     = $this->get_namespace( $args );
@@ -218,7 +218,7 @@ trait CliHelpers {
     // Rename all vendor prefix stuff.
     $output = preg_replace(
       "{$pattern}/",
-      "{$use} {$vendor_prefix}\\",
+      "{$prefix} {$vendor_prefix}\\",
       $output
     );
 
@@ -226,7 +226,7 @@ trait CliHelpers {
     if ( preg_match( "{$pattern}{$namespace}/", $string ) ) {
       $output = preg_replace(
         "{$pattern}{$namespace}/",
-        "{$use} {$namespace}",
+        "{$prefix} {$namespace}",
         $output
       );
     }
