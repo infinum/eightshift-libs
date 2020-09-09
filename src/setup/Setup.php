@@ -43,15 +43,15 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
 
   // Check if core key exists in config.
   if ( ! $skip_core ) {
-  $core = $data['core'] ?? '';
-  
-  // Install core version.
-  if ( ! empty( $core ) ) {
+    $core = $data['core'] ?? '';
+    
+    // Install core version.
+    if ( ! empty( $core ) ) {
     \WP_CLI::runcommand( "core update --version={$core} --force" );
     \WP_CLI::log( '--------------------------------------------------' );
-  } else {
-    \WP_CLI::warning( 'No core version is defined. Skipping.' );
-  }
+    } else {
+      \WP_CLI::warning( 'No core version is defined. Skipping.' );
+    }
   }
 
   // Check if plugins key exists in config.

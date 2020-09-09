@@ -11,6 +11,7 @@ use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Blocks\BlockComponentCli;
 use EightshiftLibs\Blocks\BlockCli;
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
@@ -62,6 +63,7 @@ class Cli {
     FieldCli::class,
     RouteCli::class,
     ServiceExampleCli::class,
+    SetupCli::class,
   ];
 
   /**
