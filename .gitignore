@@ -3,3 +3,4 @@ node_modules
 /docs
 
 composer.lock
+cli-output

@@ -5,6 +5,20 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
+### Changed
+- Switching from Classmap to PSR-4 naming.
+- example: `class-media.php` is now `Media.php`.
+- example: `menu.php` is now `AbstractMenu.php`.
+- example: `interface-manifest-data.php` is now `ManifestInterface.php`.
+- example: `trait-error-logger.php` is now `ErrorLoggerTrait.php`.
+- example: `class-component-exception.php` is now `ComponentException.php`.
+- replaced `DI\create` with `new AutowireDefinitionHelper();`.
+- replaced `DI\get` with `new Reference( $dependency );`.
+- changed namespace `Eightshift_Libs` to `EightshiftLibs`.
+
+### Removed
+- removed `instantiate_service()` method.
+
 ## [2.4.1] - 2020-07-10
 
 ### Changed
