@@ -46,7 +46,7 @@ trait CliHelpers {
    *
    * @return string|Error
    */
-  public function get_example_template( string $current_dir,  string $file_name ) {
+  public function get_example_template( string $current_dir, string $file_name ) {
     $path = "{$current_dir}/{$this->get_example_file_name( $file_name )}.php";
 
     // Read the template contents, and replace the placeholders with provided variables.
@@ -64,7 +64,7 @@ trait CliHelpers {
   /**
    * Generate example template file/class name.
    *
-   * @param string $string File name
+   * @param string $string File name.
    *
    * @return string
    */
@@ -79,9 +79,9 @@ trait CliHelpers {
    * @param string $output_file Absolute path to output file.
    * @param string $class       Modified class.
    *
-   * @return Error|Success
+   * @return void
    */
-  public function output_write( string $output_dir, string $output_file, string $class ) {
+  public function output_write( string $output_dir, string $output_file, string $class ) : void {
 
     // Set output paths.
     $output_dir = $this->get_output_dir( $output_dir );
@@ -108,7 +108,7 @@ trait CliHelpers {
     // If there is any error bailout. For example, user permission.
     if ( ! $fp ) {
       \WP_CLI::error(
-        sprintf( "File %s couldn't be created. There was an error.", $output_file )
+        sprintf( 'File %s couldn\'t be created. There was an error.', $output_file )
       );
     }
 
@@ -118,7 +118,7 @@ trait CliHelpers {
 
     // Return success.
     \WP_CLI::success(
-      sprintf( "File %s successfully created.", $output_file )
+      sprintf( 'File %s successfully created.', $output_file )
     );
   }
 
@@ -137,10 +137,10 @@ trait CliHelpers {
     }
 
     $root = rtrim( $root, '/' );
-    $root = trim( $root,'/' );
+    $root = trim( $root, '/' );
 
     $path = rtrim( $path, '/' );
-    $path = trim( $path,'/' );
+    $path = trim( $path, '/' );
 
     return "/{$root}/{$path}";
   }
@@ -148,14 +148,14 @@ trait CliHelpers {
   /**
    * Get full output dir path.
    *
-   * @param string $root Parent root path.
-   * @param string $path Project specific path.
+   * @param string $file File name.
    *
    * @return string
    */
-  public function get_output_file( $file ) : string {
+  public function get_output_file( string $file ) : string {
     $file = rtrim( $file, '/' );
-    $file = trim( $file,'/' );
+    $file = trim( $file, '/' );
+
     return "/{$file}.php";
   }
 
