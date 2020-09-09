@@ -71,7 +71,10 @@ class SetupCli extends AbstractCli {
     // Output final class to new file/folder and finish.
     $this->output_write( $root . 'bin', $this->get_class_short_name(), $class );
 
+    // Get setup.json file.
     $json = $this->get_example_template( __DIR__, 'setup.json' );
+
+    // Output json file to project root.
     $this->output_write( $root, 'setup.json', $json );
   }
 }

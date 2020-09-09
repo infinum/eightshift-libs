@@ -3,15 +3,15 @@
  * Script used to run project setup and installing all plugins, themes and core.
  *
  * Available commands:
- * - php bin/setup.php
- * - php bin/setup.php --skip-core
- * - php bin/setup.php --skip-plugins
- * - php bin/setup.php --skip-plugins-core
- * - php bin/setup.php --skip-plugins-github
- * - php bin/setup.php --skip-themes
+ * - wp eval-file bin/setup.php
+ * - wp eval-file bin/setup.php --skip-core
+ * - wp eval-file bin/setup.php --skip-plugins
+ * - wp eval-file bin/setup.php --skip-plugins-core
+ * - wp eval-file bin/setup.php --skip-plugins-github
+ * - wp eval-file bin/setup.php --skip-themes
  * 
  * or you can combine multiple parameters:
- * - php bin/setup.php  --skip-core --skip-themes
+ * - wp eval-file bin/setup.php  --skip-core --skip-themes
  *
  */
 function setup( string $project_root_path, array $args = [], string $setup_file = 'setup.json' ) {
