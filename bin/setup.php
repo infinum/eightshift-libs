@@ -14,7 +14,6 @@
  * - php bin/setup.php  --skip-core --skip-themes
  *
  */
-
 function setup( string $project_root_path, array $args = [], string $setup_file = 'setup.json' ) {
 
   // Check if optional parameters exists.
@@ -29,20 +28,17 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
 
   // Check if setup exists.
   if ( ! file_exists( $setup_file ) ) {
-  throw new Exception(
-    sprintf(
+    \WP_CLI::error( sprintf(
       'setup.json is missing at this path: %s.',
       $project_root_path
-    )
-  );
+    ) );
   }
 
   // Parse json file to array.
   $data = json_decode( implode( ' ', (array) file( $setup_file ) ), true );
 
   if ( empty( $data ) ) {
-  echo "{$setup_file} is empty.",
-  die;
+    \WP_CLI::error( "{$setup_file} is empty." );
   }
 
   // Check if core key exists in config.
@@ -51,10 +47,10 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
   
   // Install core version.
   if ( ! empty( $core ) ) {
-    echo shell_exec( "wp core update --version={$core} --force" );
-    echo "-------------------------------------\n";
+    \WP_CLI::runcommand( "wp core update --version={$core} --force" );
+    \WP_CLI::log( '--------------------------------------------------' );
   } else {
-    echo "No core version is defined. Skipping.\n";
+    \WP_CLI::warning( 'No core version is defined. Skipping.' );
   }
   }
 
@@ -73,11 +69,11 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
       // Instale core plugins.
       if ( ! empty( $plugins_core ) ) {
         foreach( $plugins_core as $name => $version ) {
-          echo shell_exec( "wp plugin install {$name} --version={$version} --force" );
-          echo "-------------------------------------\n";
+          \WP_CLI::runcommand( "wp plugin install {$name} --version={$version} --force" );
+          \WP_CLI::log( '--------------------------------------------------' );
         }
       } else {
-        echo "No core plugins are defined. Skipping.\n";
+        \WP_CLI::warning( 'No core plugins are defined. Skipping.' );
       }
     }
 
@@ -89,11 +85,11 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
       // Instale github plugins.
       if ( ! empty( $plugins_github ) ) {
         foreach( $plugins_github as $name => $version ) {
-          echo shell_exec( "wp plugin install https://github.com/{$name}/archive/{$version}.zip --force;" );
-          echo "-------------------------------------\n";
+          \WP_CLI::runcommand( "wp plugin install https://github.com/{$name}/archive/{$version}.zip --force" );
+          \WP_CLI::log( '--------------------------------------------------' );
         }
       } else {
-        echo "No Github plugins are defined. Skipping.\n";
+        \WP_CLI::warning( 'No Github plugins are defined. Skipping.' );
       }
     }
   }
@@ -102,22 +98,22 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
   // Check if themes key exists in config.
   if ( ! $skip_themes ) {
 
-  $themes = $data['themes'] ?? [];
+    $themes = $data['themes'] ?? [];
 
-  // Instale themes.
-  if ( ! empty( $themes ) ) {
-    foreach( $themes as $name => $version ) {
-      echo shell_exec( "wp theme install {$name} --version={$version} --force" );
-      echo "-------------------------------------\n";
+    // Instale themes.
+    if ( ! empty( $themes ) ) {
+      foreach( $themes as $name => $version ) {
+        \WP_CLI::runcommand( "wp theme install {$name} --version={$version} --force" );
+        \WP_CLI::log( '--------------------------------------------------' );
+      }
+    } else {
+      \WP_CLI::warning( 'No themes are defined. Skipping.' );
     }
-  } else {
-    echo "No themes are defined. Skipping.\n";
-  }
   }
 
 
-  echo "Finished!\n";
-  echo "-------------------------------------\n";
+  \WP_CLI::success( 'All commands are finished.' );
+  \WP_CLI::log( '--------------------------------------------------' );
 
 }
 
