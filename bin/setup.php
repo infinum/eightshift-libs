@@ -15,54 +15,38 @@
  *
  */
 
- // Provide optional parameters.
-$args = getopt(
-  null,
-  [
-    "skip-core",
-    "skip-plugins",
-    "skip-plugins-core",
-    "skip-plugins-github",
-    "skip-themes",
-  ]
-);
+function setup( string $project_root_path, array $args = [], string $setup_file = 'setup.json' ) {
 
-// Check if optional parameters exists.
-$skip_core           = isset( $args['skip-core'] );
-$skip_plugins        = isset( $args['skip-plugins'] );
-$skip_plugins_core   = isset( $args['skip-plugins-core'] );
-$skip_plugins_github = isset( $args['skip-plugins-github'] );
-$skip_themes         = isset( $args['skip-themes'] );
+  // Check if optional parameters exists.
+  $skip_core           = isset( $args['skip-core'] );
+  $skip_plugins        = isset( $args['skip-plugins'] );
+  $skip_plugins_core   = isset( $args['skip-plugins-core'] );
+  $skip_plugins_github = isset( $args['skip-plugins-github'] );
+  $skip_themes         = isset( $args['skip-themes'] );
 
- // Define project root.
- $project_root_path = dirname( __FILE__, 2 );
+  // Change execution folder.
+  chdir( $project_root_path );
 
- // Change execution folder.
- chdir( $project_root_path );
- 
- // Define setup.json file path.
- $setup_file = 'setup.json';
-
-// Check if setup exists.
-if ( ! file_exists( $setup_file ) ) {
+  // Check if setup exists.
+  if ( ! file_exists( $setup_file ) ) {
   throw new Exception(
     sprintf(
       'setup.json is missing at this path: %s.',
       $project_root_path
     )
   );
-}
+  }
 
-// Parse json file to array.
-$data = json_decode( implode( ' ', (array) file( $setup_file ) ), true );
+  // Parse json file to array.
+  $data = json_decode( implode( ' ', (array) file( $setup_file ) ), true );
 
-if ( empty( $data ) ) {
+  if ( empty( $data ) ) {
   echo "{$setup_file} is empty.",
   die;
-}
+  }
 
-// Check if core key exists in config.
-if ( ! $skip_core ) {
+  // Check if core key exists in config.
+  if ( ! $skip_core ) {
   $core = $data['core'] ?? '';
   
   // Install core version.
@@ -72,10 +56,10 @@ if ( ! $skip_core ) {
   } else {
     echo "No core version is defined. Skipping.\n";
   }
-}
+  }
 
-// Check if plugins key exists in config.
-if ( ! $skip_plugins ) {
+  // Check if plugins key exists in config.
+  if ( ! $skip_plugins ) {
 
   $plugins = $data['plugins'] ?? [];
 
@@ -113,10 +97,10 @@ if ( ! $skip_plugins ) {
       }
     }
   }
-}
+  }
 
-// Check if themes key exists in config.
-if ( ! $skip_themes ) {
+  // Check if themes key exists in config.
+  if ( ! $skip_themes ) {
 
   $themes = $data['themes'] ?? [];
 
@@ -129,8 +113,12 @@ if ( ! $skip_themes ) {
   } else {
     echo "No themes are defined. Skipping.\n";
   }
+  }
+
+
+  echo "Finished!\n";
+  echo "-------------------------------------\n";
+
 }
 
-
-echo "Finished!\n";
-echo "-------------------------------------\n";
+ 
