@@ -17,7 +17,7 @@ class SetupCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/config';
+  const OUTPUT_DIR = '../../../';
 
   /**
    * Get WPCLI command name
@@ -37,11 +37,7 @@ class SetupCli extends AbstractCli {
    */
   public function get_develop_args( array $args ) : array {
     return [
-      'name'           => $args[1] ?? 'Boilerplate',
-      'version'        => $args[2] ?? '1',
-      'prefix'         => $args[3] ?? 'ebs',
-      'env'            => $args[4] ?? 'EBS_ENV',
-      'routes_version' => $args[5] ?? 'v2',
+      'root' => $args[1] ?? static::OUTPUT_DIR,
     ];
   }
 
@@ -67,12 +63,15 @@ class SetupCli extends AbstractCli {
   public function __invoke( array $args, array $assoc_args ) {
 
     // Get Props.
-    $root = $assoc_args['root'] ?? WP_CLI\Utils\get_home_dir();
+    $root = $assoc_args['root'] ?? static::OUTPUT_DIR;
 
     // Read the template contents, and replace the placeholders with provided variables.
     $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );
 
     // Output final class to new file/folder and finish.
-    $this->output_write( $root, $this->get_class_short_name(), $class );
+    $this->output_write( $root . 'bin', $this->get_class_short_name(), $class );
+
+    $json = $this->get_example_template( __DIR__, 'setup.json' );
+    $this->output_write( $root, 'setup.json', $json );
   }
 }

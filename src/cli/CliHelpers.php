@@ -47,7 +47,11 @@ trait CliHelpers {
    * @return string|Error
    */
   public function get_example_template( string $current_dir, string $file_name ) {
-    $path = "{$current_dir}/{$this->get_example_file_name( $file_name )}.php";
+    if ( strpos( $file_name, '.' ) !== false ) {
+      $path = "{$current_dir}/{$file_name}";
+    } else {
+      $path = "{$current_dir}/{$this->get_example_file_name( $file_name )}.php";
+    }
 
     // Read the template contents, and replace the placeholders with provided variables.
     $template_file = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions
@@ -155,6 +159,11 @@ trait CliHelpers {
   public function get_output_file( string $file ) : string {
     $file = rtrim( $file, '/' );
     $file = trim( $file, '/' );
+
+
+    if ( strpos( $file, '.' ) !== false ) {
+      return "/{$file}";
+    }
 
     return "/{$file}.php";
   }
