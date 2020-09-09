@@ -162,8 +162,8 @@ trait CliHelpers {
   /**
    * Replace namespace EightshiftBoilerplateVendor\in class
    *
-   * @param array  $args  CLI args array.
-   * @param string $class Full class as a string
+   * @param array  $args   CLI args array.
+   * @param string $string Full class as a string.
    *
    * @return string
    *
@@ -196,8 +196,8 @@ trait CliHelpers {
   /**
    * Replace use in class.
    *
-   * @param array  $args  CLI args array.
-   * @param string $class Full class as a string.
+   * @param array  $args   CLI args array.
+   * @param string $string Full class as a string.
    *
    * @return string
    *
@@ -209,7 +209,7 @@ trait CliHelpers {
 
     $output = $string;
 
-    $prefix     = "\x75\x73\x65";
+    $prefix  = "\x75\x73\x65";
     $pattern = "/{$prefix} (w+|\w+\\\\)";
 
     $vendor_prefix = $this->get_vendor_prefix( $args );
@@ -237,8 +237,8 @@ trait CliHelpers {
   /**
    * Replace text domain in class.
    *
-   * @param array  $args  CLI args array.
-   * @param string $class Full class as a string.
+   * @param array  $args   CLI args array.
+   * @param string $string Full class as a string.
    *
    * @return string
    */
@@ -281,7 +281,7 @@ trait CliHelpers {
   /**
    * Get composer from project or lib.
    *
-   * @param array  $args  CLI args array.
+   * @param array $args CLI args array.
    *
    * @return array
    */
