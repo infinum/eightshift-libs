@@ -16,7 +16,7 @@ trait CliHelpers {
    * Generate correct class name from provided string.
    * Remove _, - and empty space. Create a camelcase from string.
    *
-   * @param string $file_name File name from string
+   * @param string $file_name File name from string.
    *
    * @return string
    */
@@ -285,7 +285,7 @@ trait CliHelpers {
    *
    * @return array
    */
-  public function get_composer ( array $args = [] ) : array {
+  public function get_composer( array $args = [] ) : array {
     if ( ! isset( $args['config_path'] ) ) {
       if ( function_exists( 'add_action' ) ) {
         $composer_path = $this->get_project_root_path() . '/composer.json';
@@ -296,7 +296,7 @@ trait CliHelpers {
       $composer_path = $args['config_path'];
     }
 
-    $composer_file = file_get_contents( $composer_path );
+    $composer_file = file_get_contents( $composer_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
     if ( $composer_file === false ) {
       \WP_CLI::error(
@@ -310,20 +310,21 @@ trait CliHelpers {
   /**
    * Get composers defined namespace.
    *
-   * @param array  $args  CLI args array.
+   * @param array $args CLI args array.
+   *
    * @return string
    */
   public function get_namespace( array $args = [] ) : string {
     $namespace = '';
 
-    if( isset( $args['namespace'] ) ) {
+    if ( isset( $args['namespace'] ) ) {
       $namespace = $args['namespace'];
     }
 
     if ( empty( $namespace ) ) {
       $composer = $this->get_composer( $args );
 
-      $namespace = rtrim( array_key_first($composer['autoload']['psr-4']), '\\' );
+      $namespace = rtrim( array_key_first( $composer['autoload']['psr-4'] ), '\\' );
     }
 
     return $namespace;
@@ -332,13 +333,14 @@ trait CliHelpers {
   /**
    * Get composers defined vendor prefix.
    *
-   * @param array  $args  CLI args array.
+   * @param array $args CLI args array.
+   *
    * @return string
    */
   public function get_vendor_prefix( array $args = [] ) : string {
     $vendor_prefix = '';
 
-    if( isset( $args['vendor_prefix'] ) ) {
+    if ( isset( $args['vendor_prefix'] ) ) {
       $vendor_prefix = $args['vendor_prefix'];
     }
 
@@ -359,22 +361,11 @@ trait CliHelpers {
    * @return string
    */
   public function prepare_slug( string $string ) : string {
-    if ( strpos( $string, ' ' ) !== false) {
+    if ( strpos( $string, ' ' ) !== false ) {
       $string = strtolower( $string );
     }
 
     return str_replace( '_', '-', str_replace( ' ', '-', $string ) );
-  }
-
-  public function is_dependant( string $string ) {
-    $main = $this->get_output_dir('main/Main.php');
-
-    // Bailout if main file doesn't exists.
-    if ( ! file_exists( $main ) ) {
-      \WP_CLI::error(
-        sprintf( 'The file "%s" can\'t be generated because it already exists.', $main )
-      );
-    }
   }
 
   /**
