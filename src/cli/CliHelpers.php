@@ -425,6 +425,23 @@ trait CliHelpers {
   }
 
   /**
+   * Returns projects root where config is instaled based on the enviroment.
+   *
+   * @param bool $is_dev Returns path based on the env.
+   *
+   * @return string
+   */
+  public function get_project_config_root_path( bool $is_dev = false ) : string {
+    $output = dirname( __DIR__, 8 );
+
+    if ( $is_dev ) {
+      $output = dirname( __DIR__, 2 );
+    }
+
+    return $output;
+  }
+
+  /**
    * Returns Eightshift frontend libs path.
    *
    * @param string $path Additional path.
@@ -432,6 +449,16 @@ trait CliHelpers {
    */
   public function get_frontend_libs_path( string $path = '' ) : string {
     return "{$this->get_project_root_path()}/node_modules/@eightshift/frontend-libs/{$path}";
+  }
+
+  /**
+   * Returns Eightshift libs path.
+   *
+   * @param string $path Additional path.
+   * @return string
+   */
+  public function get_libs_path( string $path = '' ) : string {
+    return "{$this->get_project_root_path()}/vendor/infinum/eightshift-libs/{$path}";
   }
 
   /**

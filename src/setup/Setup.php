@@ -17,11 +17,11 @@
 function setup( string $project_root_path, array $args = [], string $setup_file = 'setup.json' ) {
 
   // Check if optional parameters exists.
-  $skip_core           = isset( $args['skip-core'] );
-  $skip_plugins        = isset( $args['skip-plugins'] );
-  $skip_plugins_core   = isset( $args['skip-plugins-core'] );
-  $skip_plugins_github = isset( $args['skip-plugins-github'] );
-  $skip_themes         = isset( $args['skip-themes'] );
+  $skip_core           = isset( $args['skip_core'] );
+  $skip_plugins        = isset( $args['skip_plugins'] );
+  $skip_plugins_core   = isset( $args['skip_plugins_core'] );
+  $skip_plugins_github = isset( $args['skip_plugins_github'] );
+  $skip_themes         = isset( $args['skip_themes'] );
 
   // Change execution folder.
   if ( ! is_dir( $project_root_path ) ) {

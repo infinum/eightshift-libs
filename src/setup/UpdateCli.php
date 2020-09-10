@@ -15,30 +15,12 @@ use EightshiftLibs\Cli\AbstractCli;
 class UpdateCli extends AbstractCli {
 
   /**
-   * Output dir relative path.
-   */
-  const OUTPUT_DIR = '../../../';
-
-  /**
    * Get WPCLI command name
    *
    * @return string
    */
   public function get_command_name() : string {
     return 'update';
-  }
-
-  /**
-   * Define default develop props.
-   *
-   * @param array $args WPCLI eval-file arguments.
-   *
-   * @return array
-   */
-  public function get_develop_args( array $args ) : array {
-    return [
-      'root' => $args[1] ?? './',
-    ];
   }
 
   /**
@@ -52,8 +34,32 @@ class UpdateCli extends AbstractCli {
       'synopsis' => [
         [
           'type'        => 'assoc',
-          'name'        => 'root',
-          'description' => 'Define project root relative to initialization file of WP CLI.',
+          'name'        => 'skip_core',
+          'description' => 'If you want to skip core update/instalation provide bool on this attr.',
+          'optional'    => true,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'skip_plugins',
+          'description' => 'If you want to skip all plugins update/instalation provide bool on this attr.',
+          'optional'    => true,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'skip_plugins_core',
+          'description' => 'If you want to skip plugins only from core update/instalation provide bool on this attr.',
+          'optional'    => true,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'skip_plugins_github',
+          'description' => 'If you want to skip plugins only from github update/instalation provide bool on this attr.',
+          'optional'    => true,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'skip_themes',
+          'description' => 'If you want to skip themes update/instalation provide bool on this attr.',
           'optional'    => true,
         ],
       ],
@@ -62,15 +68,17 @@ class UpdateCli extends AbstractCli {
 
   public function __invoke( array $args, array $assoc_args ) {
 
-    // Get Props.
-    $root = $assoc_args['root'] ?? static::OUTPUT_DIR;
+    require $this->get_libs_path( 'src/setup/Setup.php' );
 
-    // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );
-
-    // $reflection_class = new \ReflectionClass( $item );
-    // $class            = $reflection_class->newInstanceArgs( [ null ] );
-
-    \WP_CLI::runcommand( "{$this->command_parent_name} {$class->get_command_name()}" );
+    setup(
+      $this->get_project_config_root_path(),
+      [
+        'skip_core'           => $assoc_args['skip_core'] ?? false,
+        'skip_plugins'        => $assoc_args['skip_plugins'] ?? false,
+        'skip_plugins_core'   => $assoc_args['skip_plugins_core'] ?? false,
+        'skip_plugins_github' => $assoc_args['skip_plugins_github'] ?? false,
+        'skip_themes'         => $assoc_args['skip_themes'] ?? false,
+      ]
+    );
   }
 }
