@@ -14,6 +14,10 @@ function db_export( string $project_root_path, array $args = [] ) {
   $skip_uploads = isset( $args['skip-uploads'] );
 
   // Change execution folder.
+  if ( ! is_dir( $project_root_path ) ) {
+    \WP_CLI::error( "Folder doesn't exist on this path: {$project_root_path}." );
+  }
+
   chdir( $project_root_path );
 
   // Define db export file name.

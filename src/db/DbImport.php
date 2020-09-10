@@ -22,16 +22,15 @@ function db_import( string $project_root_path, array $args = [], string $setup_f
   }
 
   // Change execution folder.
+  if ( ! is_dir( $project_root_path ) ) {
+    \WP_CLI::error( "Folder doesn't exist on this path: {$project_root_path}." );
+  }
+
   chdir( $project_root_path );
 
   // Check if setup exists.
   if ( ! file_exists( $setup_file ) ) {
-    throw new Exception(
-      sprintf(
-        'setup.json is missing at this path: %s.',
-        $setup_file
-      )
-    );
+    \WP_CLI::error( "setup.json is missing at this path: {$setup_file}." );
   }
 
   // Parse json file to array.
@@ -94,36 +93,34 @@ function db_import( string $project_root_path, array $args = [], string $setup_f
   \WP_CLI::log( '--------------------------------------------------' );
 
   // Execute db export.
-  \WP_CLI::log( shell_exec( "db export" ) );
+  \WP_CLI::runcommand( "db export" );
   \WP_CLI::log( "Db exported successfully." );
   \WP_CLI::log( '--------------------------------------------------' );
 
-  // TO FIX. User prompt not working.
-  \WP_CLI::log( "Are you sure you want to reset the 'eightshift_internal' database? [y/n]" );
-  \WP_CLI::log( shell_exec( "db reset" ) );
+  \WP_CLI::runcommand( "db reset" );
   \WP_CLI::log( '--------------------------------------------------' );
 
   // Import new database.
-  \WP_CLI::log( shell_exec( "db import {$export_folder_name}/{$db_file_name}" ) );
+  \WP_CLI::runcommand( "db import {$export_folder_name}/{$db_file_name}" );
   \WP_CLI::log( "Database import done." );
   \WP_CLI::log( '--------------------------------------------------' );
 
   // Search and replace url host.
-  \WP_CLI::log( shell_exec( "search-replace {$from_host} {$to_host} --url={$from_host} --all-tables --network" ) );
+  \WP_CLI::runcommand( "search-replace {$from_host} {$to_host} --url={$from_host} --all-tables --network" );
   \WP_CLI::log( "Database search replace for host successfully finished." );
   \WP_CLI::log( '--------------------------------------------------' );
 
   // Search and replace url sheme.
   if ( $to_scheme !== $from_scheme ) {
-    \WP_CLI::log( shell_exec( "search-replace {$from_scheme}://{$to_host} {$to_scheme}://{$to_host} --all-tables --network" ) );
+    \WP_CLI::runcommand( "search-replace {$from_scheme}://{$to_host} {$to_scheme}://{$to_host} --all-tables --network" );
     \WP_CLI::log( "Database search replace for scheme successfully finished." );
     \WP_CLI::log( '--------------------------------------------------' );
   }
 
   // Clean up.
-  \WP_CLI::log( shell_exec( "cache flush" ) );
-  \WP_CLI::log( shell_exec( "transient delete --all" ) );
-  \WP_CLI::log( shell_exec( "rewrite flush" ) );
+  \WP_CLI::runcommand( "cache flush" );
+  \WP_CLI::runcommand( "transient delete --all" );
+  \WP_CLI::runcommand( "rewrite flush" );
   \WP_CLI::log( "Flushing cache, removing transients and resetting premalinks!" );
   \WP_CLI::log( '--------------------------------------------------' );
 
