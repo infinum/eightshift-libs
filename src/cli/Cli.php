@@ -33,6 +33,7 @@ use EightshiftLibs\Db\DbExportCli;
 use EightshiftLibs\Db\DbImportCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
+use EightshiftLibs\Setup\UpdateCli;
 
 /**
  * Class Cli
@@ -86,6 +87,7 @@ class Cli {
   const PUBLIC_CLASSES = [
     BlockComponentCli::class,
     BlockCli::class,
+    UpdateCli::class,
   ];
 
   /**
