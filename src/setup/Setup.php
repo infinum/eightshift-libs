@@ -1,27 +1,15 @@
 <?php
 /**
  * Script used to run project setup and installing all plugins, themes and core.
- *
- * Available commands:
- * - wp eval-file bin/setup.php
- * - wp eval-file bin/setup.php --skip-core
- * - wp eval-file bin/setup.php --skip-plugins
- * - wp eval-file bin/setup.php --skip-plugins-core
- * - wp eval-file bin/setup.php --skip-plugins-github
- * - wp eval-file bin/setup.php --skip-themes
- * 
- * or you can combine multiple parameters:
- * - wp eval-file bin/setup.php  --skip-core --skip-themes
- *
  */
 function setup( string $project_root_path, array $args = [], string $setup_file = 'setup.json' ) {
 
   // Check if optional parameters exists.
-  $skip_core           = isset( $args['skip_core'] );
-  $skip_plugins        = isset( $args['skip_plugins'] );
-  $skip_plugins_core   = isset( $args['skip_plugins_core'] );
-  $skip_plugins_github = isset( $args['skip_plugins_github'] );
-  $skip_themes         = isset( $args['skip_themes'] );
+  $skip_core           = $args['skip_core'] ?? false;
+  $skip_plugins        = $args['skip_plugins'] ?? false;
+  $skip_plugins_core   = $args['skip_plugins_core'] ?? false;
+  $skip_plugins_github = $args['skip_plugins_github'] ?? false;
+  $skip_themes         = $args['skip_themes'] ?? false;
 
   // Change execution folder.
   if ( ! is_dir( $project_root_path ) ) {

@@ -55,13 +55,7 @@ class SetupCli extends AbstractCli {
           'name'        => 'root',
           'description' => 'Define project root relative to initialization file of WP CLI.',
           'optional'    => true,
-        ],
-        [
-          'type'        => 'assoc',
-          'name'        => 'skip_setup_file',
-          'description' => 'If you already have setup.json file in the root of your project.',
-          'optional'    => true,
-        ],
+        ]
       ],
     ];
   }
@@ -69,21 +63,12 @@ class SetupCli extends AbstractCli {
   public function __invoke( array $args, array $assoc_args ) {
 
     // Get Props.
-    $root            = $assoc_args['root'] ?? static::OUTPUT_DIR;
-    $skip_setup_file = $assoc_args['skip_setup_file'] ?? false;
+    $root = $assoc_args['root'] ?? static::OUTPUT_DIR;
 
-    // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );
+    // Get setup.json file.
+    $json = $this->get_example_template( __DIR__, 'setup.json' );
 
-    // Output final class to new file/folder and finish.
-    $this->output_write( $root . 'bin', $this->get_class_short_name(), $class );
-
-    if ( ! $skip_setup_file ) {
-      // Get setup.json file.
-      $json = $this->get_example_template( __DIR__, 'setup.json' );
-  
-      // Output json file to project root.
-      $this->output_write( $root, 'setup.json', $json );
-    }
+    // Output json file to project root.
+    $this->output_write( $root, 'setup.json', $json );
   }
 }
