@@ -14,12 +14,7 @@ $project_path = "{$project_root_path}/wp-content/themes/eightshift-boilerplate";
 
 // Check if folder exists.
 if ( ! file_exists( $project_path ) ) {
-  throw new Exception(
-    sprintf(
-      'Provided folder path %s is missing.',
-      $project_path
-    )
-  );
+  \WP_CLI::error( "Provided folder path {$project_path} is missing." );
 }
 
 // Change execution folder.
@@ -41,5 +36,5 @@ chdir( $project_path );
 chdir( $project_root_path );
 
 // Run setup scripts for installing plugins, themes, and core.
-\WP_CLI::runcommand( "eval-file bin/setup.php" );
+\WP_CLI::runcommand( "boilerplate update" );
 \WP_CLI::log( '--------------------------------------------------' );

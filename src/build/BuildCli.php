@@ -62,6 +62,18 @@ class BuildCli extends AbstractCli {
           'description' => 'If you already have setup.json file in the root of your project.',
           'optional'    => true,
         ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'project_name',
+          'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name.',
+          'optional'    => false,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'project_type',
+          'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name. Default is themes.',
+          'optional'    => true,
+        ],
       ],
     ];
   }
@@ -74,6 +86,10 @@ class BuildCli extends AbstractCli {
 
     // Read the template contents, and replace the placeholders with provided variables.
     $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );
+
+    // Replace stuff in file.
+    $class = $this->rename_project_name( $assoc_args, $class );
+    $class = $this->rename_project_type( $assoc_args, $class );
 
     // Output final class to new file/folder and finish.
     $this->output_write( $root . 'bin', $this->get_class_short_name(), $class );

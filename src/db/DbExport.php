@@ -1,17 +1,12 @@
 <?php
 /**
  * Script used to export database and images to zip.
- *
- * Available commands:
- * - wp eval-file bin/DbExport.php
- * - wp eval-file bin/DbExport.php --skip-db
- * - wp eval-file bin/DbExport.php --skip-uploads
  */
 function db_export( string $project_root_path, array $args = [] ) {
 
   // Check if optional parameters exists.
-  $skip_db      = isset( $args['skip-db'] );
-  $skip_uploads = isset( $args['skip-uploads'] );
+  $skip_db      = $args['skip_db'] ?? false;
+  $skip_uploads = $args['skip_uploads'] ?? false;
 
   // Change execution folder.
   if ( ! is_dir( $project_root_path ) ) {

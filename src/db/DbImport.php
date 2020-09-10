@@ -2,16 +2,12 @@
 /**
  * Script used to export database and images to zip.
  * Must provide from and to parameters that are defined in setup.json file.
- *
- * Available commands:
- * - wp eval-file bin/DbImport.php --from=staging --to=develop
- * - wp eval-file bin/DbImport.php --from=production --to=develop
  */
 function db_import( string $project_root_path, array $args = [], string $setup_file = 'setup.json' ) {
 
   // Check if mandatory parameters exists.
-  $from = isset( $args['from'] ) ? $args['from'] : '';
-  $to   = isset( $args['to'] ) ? $args['to'] : '';
+  $from = $args['from'] ?? '';
+  $to   = $args['to'] ?? '';
 
   if ( empty( $from ) ) {
     \WP_CLI::error( "--from parameter is mandatory. Please provide one url key from {$setup_file} file." );

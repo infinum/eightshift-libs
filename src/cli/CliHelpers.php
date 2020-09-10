@@ -46,7 +46,9 @@ trait CliHelpers {
    *
    * @return string|Error
    */
-  public function get_example_template( string $current_dir, string $file_name ) {
+  public function get_example_template( string $current_dir, string $file_name ) : string {
+
+    // If you pass file name with extension the version will be used.
     if ( strpos( $file_name, '.' ) !== false ) {
       $path = "{$current_dir}/{$file_name}";
     } else {
@@ -57,9 +59,7 @@ trait CliHelpers {
     $template_file = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
     if ( $template_file === false ) {
-      \WP_CLI::error(
-        sprintf( 'The template "%s" seems to be missing.', $path )
-      );
+      \WP_CLI::error( "The template {$path} seems to be missing." );
     }
 
     return $template_file;
@@ -96,9 +96,7 @@ trait CliHelpers {
 
     // Bailout if file already exists.
     if ( file_exists( $output_file ) ) {
-      \WP_CLI::error(
-        sprintf( 'The file "%s" can\'t be generated because it already exists.', $output_file )
-      );
+      \WP_CLI::error( "The file {$output_file} can\'t be generated because it already exists." );
     }
 
     // Create output dir if it doesn't exist.
@@ -111,9 +109,7 @@ trait CliHelpers {
 
     // If there is any error bailout. For example, user permission.
     if ( ! $fp ) {
-      \WP_CLI::error(
-        sprintf( 'File %s couldn\'t be created. There was an error.', $output_file )
-      );
+      \WP_CLI::error( "File {$output_file} couldn\'t be created. There was an error." );
     }
 
     // Write and close.
@@ -121,9 +117,7 @@ trait CliHelpers {
     fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
     // Return success.
-    \WP_CLI::success(
-      sprintf( 'File %s successfully created.', $output_file )
-    );
+    \WP_CLI::success( "File {$output_file} successfully created." );
   }
 
   /**
@@ -160,7 +154,6 @@ trait CliHelpers {
     $file = rtrim( $file, '/' );
     $file = trim( $file, '/' );
 
-
     if ( strpos( $file, '.' ) !== false ) {
       return "/{$file}";
     }
@@ -169,7 +162,7 @@ trait CliHelpers {
   }
 
   /**
-   * Replace namespace EightshiftBoilerplateVendor\in class
+   * Replace namespace EightshiftBoilerplateVendor\ in class.
    *
    * @param array  $args   CLI args array.
    * @param string $string Full class as a string.
@@ -263,10 +256,56 @@ trait CliHelpers {
   }
 
   /**
+   * Replace project file name.
+   *
+   * @param array  $args   CLI args array.
+   * @param string $string Full class as a string.
+   *
+   * @return string
+   */
+  public function rename_project_name( array $args = [], string $string ) : string {
+
+    $project_type = 'eightshift-boilerplate';
+
+    if ( isset( $args['project_type'] ) ) {
+      $project_type = $args['project_type'];
+    }
+
+    return str_replace(
+      'eightshift-boilerplate',
+      $project_type,
+      $string
+    );
+  }
+
+  /**
+   * Replace project file type.
+   *
+   * @param array  $args   CLI args array.
+   * @param string $string Full class as a string.
+   *
+   * @return string
+   */
+  public function rename_project_type( array $args = [], string $string ) : string {
+
+    $project_type = 'theme';
+
+    if ( isset( $args['project_type'] ) ) {
+      $project_type = "/{$args['project_type']}/";
+    }
+
+    return str_replace(
+      '/themes/',
+      $project_type,
+      $string
+    );
+  }
+
+  /**
    * Change Class full name.
    *
-   * @param string $class_name    Class Name.
-   * @param string $string         Full class as a string.
+   * @param string $class_name Class Name.
+   * @param string $string     Full class as a string.
    *
    * @return string
    */
@@ -308,9 +347,7 @@ trait CliHelpers {
     $composer_file = file_get_contents( $composer_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
     if ( $composer_file === false ) {
-      \WP_CLI::error(
-        sprintf( 'The composer on "%s" path seems to be missing.', $composer_path )
-      );
+      \WP_CLI::error( "The composer on {$composer_path} path seems to be missing." );
     }
 
     return json_decode( $composer_file, true );
@@ -384,7 +421,7 @@ trait CliHelpers {
    * @param bool  $run   Run or log output.
    * @return void
    */
-  public function get_eval_loop( array $items, bool $run = false ) : void {
+  public function get_eval_loop( array $items = [], bool $run = false ) : void {
     foreach ( $items as $item ) {
       $reflection_class = new \ReflectionClass( $item );
       $class            = $reflection_class->newInstanceArgs( [ null ] );

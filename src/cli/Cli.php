@@ -29,8 +29,9 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
-use EightshiftLibs\Db\DbExportCli;
 use EightshiftLibs\Db\DbImportCli;
+use EightshiftLibs\Db\ExportCli;
+use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
@@ -71,7 +72,6 @@ class Cli {
     RouteCli::class,
     ServiceExampleCli::class,
     SetupCli::class,
-    DbExportCli::class,
     DbImportCli::class,
     BuildCli::class,
     ReadmeCli::class,
@@ -88,6 +88,8 @@ class Cli {
     BlockComponentCli::class,
     BlockCli::class,
     UpdateCli::class,
+    ExportCli::class,
+    ImportCli::class,
   ];
 
   /**
