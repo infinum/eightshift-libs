@@ -30,7 +30,6 @@ class BlocksCli extends AbstractCli {
     'paragraph',
     'tracking',
     'video',
-    'google-rich-snippets',
     'header',
     'footer',
     'logo',
