@@ -19,7 +19,7 @@ class FieldCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/rest/fields';
+  const OUTPUT_DIR = 'src/Rest/Fields';
 
   /**
    * Get WPCLI command name

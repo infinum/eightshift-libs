@@ -43,6 +43,6 @@ class I18n extends AbstractI18n {
    * @return string
    */
   public function get_translation_file_path() : string {
-    return Config::get_project_path( '/src/i18n' );
+    return Config::get_project_path( '/src/I18n' );
   }
 }

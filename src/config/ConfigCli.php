@@ -19,7 +19,7 @@ class ConfigCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/config';
+  const OUTPUT_DIR = 'src/Config';
 
   /**
    * Define default develop props.

@@ -19,7 +19,7 @@ class EnqueueThemeCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/enqueue/theme';
+  const OUTPUT_DIR = 'src/Enqueue/Theme';
 
   /**
    * Get WPCLI command doc.

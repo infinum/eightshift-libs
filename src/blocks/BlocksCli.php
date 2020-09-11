@@ -19,7 +19,7 @@ class BlocksCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/blocks';
+  const OUTPUT_DIR = 'src/Blocks';
 
   const COMPONENTS = [
     'button',
@@ -98,21 +98,21 @@ class BlocksCli extends AbstractCli {
     system( "cp -R {$root_node}/storybook {$root}/.storybook" );
 
     if ( $all ) {
-      system( "cp -R {$root_node}/src/blocks {$root}/src/blocks" );
+      system( "cp -R {$root_node}/src/Blocks {$root}/src/Blocks" );
     } else {
-      system( "cp -R {$root_node}/src/blocks/assets {$root}/src/blocks/assets/" );
-      system( "cp -R {$root_node}/src/blocks/variations {$root}/src/blocks/variations/" );
-      system( "cp -R {$root_node}/src/blocks/wrapper {$root}/src/blocks/wrapper/" );
-      system( "cp -R {$root_node}/src/blocks/manifest.json {$root}/src/blocks/" );
+      system( "cp -R {$root_node}/src/Blocks/Assets {$root}/src/Blocks/Assets/" );
+      system( "cp -R {$root_node}/src/Blocks/Variations {$root}/src/Blocks/Variations/" );
+      system( "cp -R {$root_node}/src/blocks/Wrapper {$root}/src/Blocks/Wrapper/" );
+      system( "cp -R {$root_node}/src/Blocks/manifest.json {$root}/src/Blocks/" );
 
       foreach ( static::COMPONENTS as $component ) {
-        system( "mkdir -p {$root}/src/blocks/components/{$component}/" );
-        system( "cp -R {$root_node}/src/blocks/components/{$component}/. {$root}/src/blocks/components/{$component}/" );
+        system( "mkdir -p {$root}/src/Blocks/Components/{$component}/" );
+        system( "cp -R {$root_node}/src/Blocks/Components/{$component}/. {$root}/src/Blocks/Components/{$component}/" );
       }
 
       foreach ( static::BLOCKS as $block ) {
-        system( "mkdir -p {$root}/src/blocks/custom/{$block}/" );
-        system( "cp -R {$root_node}/src/blocks/custom/{$block}/. {$root}/src/blocks/custom/{$block}/" );
+        system( "mkdir -p {$root}/src/Blocks/Custom/{$block}/" );
+        system( "cp -R {$root_node}/src/Blocks/Custom/{$block}/. {$root}/src/Blocks/Custom/{$block}/" );
       }
     }
 

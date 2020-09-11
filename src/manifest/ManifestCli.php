@@ -19,7 +19,7 @@ class ManifestCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/manifest';
+  const OUTPUT_DIR = 'src/Manifest';
 
   /**
    * Get WPCLI command doc.

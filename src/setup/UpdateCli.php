@@ -70,7 +70,7 @@ class UpdateCli extends AbstractCli {
 
   public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
-    require $this->get_libs_path( 'src/setup/Setup.php' );
+    require $this->get_libs_path( 'src/Setup/Setup.php' );
 
     setup(
       $this->get_project_config_root_path(),

@@ -19,7 +19,7 @@ class MainCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/main';
+  const OUTPUT_DIR = 'src/Main';
 
   /**
    * Get WPCLI command doc.

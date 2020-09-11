@@ -19,7 +19,7 @@ class PostTypeCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/customPostType';
+  const OUTPUT_DIR = 'src/CustomPostType';
 
   /**
    * Define default develop props.

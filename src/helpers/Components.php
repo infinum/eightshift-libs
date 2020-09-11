@@ -72,7 +72,7 @@ class Components {
     if ( strpos( $component, '.php' ) !== false ) {
       $component_path = "{$parent_path}/$component";
     } else {
-      $component_path = "{$parent_path}/src/blocks/components/{$component}/{$component}.php";
+      $component_path = "{$parent_path}/src/Blocks/Components/{$component}/{$component}.php";
     }
 
     if ( ! file_exists( $component_path ) ) {

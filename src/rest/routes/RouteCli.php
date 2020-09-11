@@ -19,7 +19,7 @@ class RouteCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/rest/routes';
+  const OUTPUT_DIR = 'src/Rest/Routes';
 
   /**
    * Route method enum.

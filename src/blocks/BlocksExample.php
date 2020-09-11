@@ -47,6 +47,6 @@ class Blocks extends AbstractBlocks {
    * @return string
    */
   protected function get_blocks_path() : string {
-    return Config::get_project_path() . '/src/blocks';
+    return Config::get_project_path() . '/src/Blocks';
   }
 }

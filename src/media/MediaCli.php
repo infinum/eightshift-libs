@@ -19,7 +19,7 @@ class MediaCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/media';
+  const OUTPUT_DIR = 'src/Media';
 
   /**
    * Get WPCLI command doc.

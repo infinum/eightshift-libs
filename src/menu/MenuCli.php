@@ -19,7 +19,7 @@ class MenuCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/menu';
+  const OUTPUT_DIR = 'src/Menu';
 
   /**
    * Get WPCLI command doc.

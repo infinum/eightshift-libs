@@ -19,7 +19,7 @@ class EnqueueBlocksCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/enqueue/blocks';
+  const OUTPUT_DIR = 'src/Enqueue/Blocks';
 
   /**
    * Get WPCLI command doc.

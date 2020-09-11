@@ -19,7 +19,7 @@ class I18nCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/i18n';
+  const OUTPUT_DIR = 'src/I18n';
 
   /**
    * Get WPCLI command doc.

@@ -19,7 +19,7 @@ class BlockCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/blocks';
+  const OUTPUT_DIR = 'src/Blocks';
 
   /**
    * Get WPCLI command name
@@ -57,8 +57,8 @@ class BlockCli extends AbstractCli {
     $root      = $this->get_project_root_path();
     $root_node = $this->get_frontend_libs_block_path();
 
-    $source_path      = "{$root_node}/src/blocks/custom/{$block}";
-    $destination_path = "{$root}/src/blocks/custom/{$block}";
+    $source_path      = "{$root_node}/src/Blocks/Custom/{$block}";
+    $destination_path = "{$root}/src/Blocks/Custom/{$block}";
 
     // Source doesn't exist.
     if ( ! file_exists( $source_path ) ) {

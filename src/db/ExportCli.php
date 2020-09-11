@@ -52,7 +52,7 @@ class ExportCli extends AbstractCli {
 
   public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
-    require $this->get_libs_path( 'src/db/DbExport.php' );
+    require $this->get_libs_path( 'src/Db/DbExport.php' );
 
     db_export(
       $this->get_project_config_root_path(),

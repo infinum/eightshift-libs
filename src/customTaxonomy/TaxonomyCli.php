@@ -19,7 +19,7 @@ class TaxonomyCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/customTaxonomy';
+  const OUTPUT_DIR = 'src/CustomTaxonomy';
 
   /**
    * Define default develop props.

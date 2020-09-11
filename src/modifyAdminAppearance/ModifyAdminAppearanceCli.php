@@ -19,7 +19,7 @@ class ModifyAdminAppearanceCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/modifyAdminAppearance';
+  const OUTPUT_DIR = 'src/ModifyAdminAppearance';
 
   /**
    * Get WPCLI command doc.

@@ -19,7 +19,7 @@ class EnqueueAdminCli extends AbstractCli {
   /**
    * Output dir relative path.
    */
-  const OUTPUT_DIR = 'src/enqueue/admin';
+  const OUTPUT_DIR = 'src/Enqueue/Admin';
 
   /**
    * Get WPCLI command doc.
