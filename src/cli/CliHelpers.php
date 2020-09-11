@@ -383,7 +383,7 @@ trait CliHelpers {
    *
    * @param array $array Array to search.
    *
-   * @return string
+   * @return stringgp
    */
   public function array_key_first_child( array $array ) : string {
     foreach ( $array as $key => $unused ) {
