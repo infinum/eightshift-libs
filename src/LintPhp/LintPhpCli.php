@@ -45,12 +45,10 @@ class LintPhpCli extends AbstractCli {
     $output = shell_exec( 'composer run standards:check' );
     \WP_CLI::log( $output ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 
-    if ( $output !== 0 ) {
-      // error occurred
-      var_dump('error');
+    if ( ! $output ) {
+      \WP_CLI::error( 'Please fix all linting issues before continuing.' );
     }else{
-      var_dump('success');
-        // success
+      \WP_CLI::success( 'Success! You have no linting issues.' );
     }
   }
 }
