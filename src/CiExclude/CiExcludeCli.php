@@ -62,7 +62,7 @@ class CiExcludeCli extends AbstractCli {
           'type'        => 'assoc',
           'name'        => 'project_name',
           'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name.',
-          'optional'    => false,
+          'optional'    => true,
         ],
         [
           'type'        => 'assoc',

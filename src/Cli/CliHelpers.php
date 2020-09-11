@@ -269,6 +269,10 @@ trait CliHelpers {
 
     $project_name = 'eightshift-boilerplate';
 
+    if ( function_exists( 'add_action' ) ) {
+      $project_name = basename( dirname( __DIR__, 5 ) );
+    }
+
     if ( isset( $args['project_name'] ) ) {
       $project_name = $args['project_name'];
     }
@@ -291,6 +295,10 @@ trait CliHelpers {
   public function rename_project_type( array $args = [], string $string ) : string {
 
     $project_type = 'themes';
+
+    if ( function_exists( 'add_action' ) ) {
+      $project_type = basename( dirname( __DIR__, 6 ) );
+    }
 
     if ( isset( $args['project_type'] ) ) {
       $project_type = $args['project_type'];
