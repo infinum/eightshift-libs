@@ -37,6 +37,15 @@ abstract class AbstractMain implements ServiceInterface {
   private $container;
 
   /**
+   * Constructs object and injects autowiring.
+   *
+   * @param ClassLoader $autowiring Autowiring functionality.
+   */
+  public function __construct( $autowiring ) {
+    $this->autowiring = $autowiring;
+  }
+
+  /**
    * Register the individual services with optional dependency injection.
    *
    * @throws Exception\Invalid_Service If a service is not valid.
@@ -78,6 +87,16 @@ abstract class AbstractMain implements ServiceInterface {
   }
 
   /**
+   * Merges the autowired definition list with custom user-defined definition list. You can override
+   * autowired definition lists in $this->get_service_classes().
+   *
+   * @return array<array>
+   */
+  private function get_service_classes_with_autowire() {
+    return array_merge( $this->autowiring->buildServiceClasses(), $this->get_service_classes() );
+  }
+
+  /**
    * Return array of services with Dependency Injection parameters.
    *
    * @return array
@@ -106,7 +125,7 @@ abstract class AbstractMain implements ServiceInterface {
   private function get_service_classes_prepared_array() : array {
     $output = [];
 
-    foreach ( $this->get_service_classes() as $class => $dependencies ) {
+    foreach ( $this->get_service_classes_with_autowire() as $class => $dependencies ) {
       if ( is_array( $dependencies ) ) {
         $output[ $class ] = $dependencies;
         continue;
