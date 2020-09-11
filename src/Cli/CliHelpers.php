@@ -290,14 +290,14 @@ trait CliHelpers {
    */
   public function rename_project_type( array $args = [], string $string ) : string {
 
-    $project_type = 'theme';
+    $project_type = 'themes';
 
     if ( isset( $args['project_type'] ) ) {
-      $project_type = "/{$args['project_type']}/";
+      $project_type = $args['project_type'];
     }
 
     return str_replace(
-      '/themes/',
+      'themes',
       $project_type,
       $string
     );
