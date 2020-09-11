@@ -2,12 +2,12 @@
 /**
  * The file that defines the autowiring process
  *
- * @package Eightshift_Libs\Main
+ * @package EightshiftLibs\Main
  */
 
 declare( strict_types=1 );
 
-namespace Eightshift_Libs\Main;
+namespace EightshiftLibs\Main;
 
 /**
  * The file that defines the autowiring process
@@ -225,9 +225,9 @@ class Autowiring {
    */
   protected function buildFilenameIndex( array $allRelevantClasses ): array {
     $filenameIndex = [];
-    foreach ( $allRelevantClasses as $relevant_class ) {
-      $filename                     = $this->getFilenameFromClass($relevant_class);
-      $filenameIndex[ $filename ][] = $relevant_class;
+    foreach ( $allRelevantClasses as $relevantClass ) {
+      $filename                     = $this->getFilenameFromClass($relevantClass);
+      $filenameIndex[ $filename ][] = $relevantClass;
     }
 
     return $filenameIndex;
@@ -241,11 +241,11 @@ class Autowiring {
    */
   protected function buildClassInterfaceIndex( array $allRelevantClasses ): array {
     $classInterfaceIndex = [];
-    foreach ( $allRelevantClasses as $relevant_class ) {
+    foreach ( $allRelevantClasses as $relevantClass ) {
       $interfaces                             = array_map( function( $reflClass ) {
         return true;
-      }, ( new \ReflectionClass($relevant_class) )->getInterfaces());
-      $classInterfaceIndex[ $relevant_class ] = $interfaces;
+      }, ( new \ReflectionClass($relevantClass) )->getInterfaces());
+      $classInterfaceIndex[ $relevantClass ] = $interfaces;
     }
 
     return $classInterfaceIndex;
