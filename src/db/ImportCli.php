@@ -20,7 +20,7 @@ class ImportCli extends AbstractCli {
    * @return string
    */
   public function get_command_name() : string {
-    return 'import';
+    return 'run_import';
   }
 
   /**

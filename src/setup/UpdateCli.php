@@ -20,7 +20,7 @@ class UpdateCli extends AbstractCli {
    * @return string
    */
   public function get_command_name() : string {
-    return 'update';
+    return 'run_update';
   }
 
   /**

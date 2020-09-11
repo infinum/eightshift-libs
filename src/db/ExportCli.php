@@ -20,7 +20,7 @@ class ExportCli extends AbstractCli {
    * @return string
    */
   public function get_command_name() : string {
-    return 'export';
+    return 'run_export';
   }
 
   /**

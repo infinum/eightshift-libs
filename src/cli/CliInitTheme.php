@@ -37,6 +37,15 @@ class CliInitTheme extends AbstractCli {
   ];
 
   /**
+   * Get WPCLI command name
+   *
+   * @return string
+   */
+  public function get_command_name() : string {
+    return 'init_theme';
+  }
+
+  /**
    * Get WPCLI command doc.
    *
    * @return string
