@@ -15,6 +15,13 @@ namespace Eightshift_Libs\Main;
 class Autowiring {
 
   /**
+   * Array of psr-4 prefixes. Should be provided by Composer's ClassLoader. $ClassLoader->getPsr4Prefixes().
+   *
+   * @var array
+   */
+  protected $psr4Prefixes;
+
+  /**
    * Constructs object and inserts prefixes from composer.
    *
    * @param array $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
@@ -58,11 +65,12 @@ class Autowiring {
       $dependencyTree = array_merge($this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex), $dependencyTree);
     }
 
-    // Build dependency tree for dependencies (things that need to be injected but don't they didn't qualify on their own).
+    // Build dependency tree for dependencies. Things that need to be injected but were skipped because
+    // they were initially irrelevant.
     foreach ($dependencyTree as $dependencies) {
       foreach ($dependencies as $depClass => $subDeps) {
 
-        // No need to build dependencies again if we already have them.
+        // No need to build dependencies for this again if we already have them.
         if (isset($dependencyTree[ $depClass ])) {
           continue;
         }
@@ -88,6 +96,8 @@ class Autowiring {
     $dependencyTree = [];
     $reflClass      = new \ReflectionClass( $relevantClass );
 
+    // If this class has dependencies, we need to figure those out. Otherwise
+    // we just add it to the dependency tree as a class without dependencies.
     if ( ! empty( $reflClass->getConstructor() ) ) {
 
       // Go through each constructor parameter.
@@ -109,7 +119,7 @@ class Autowiring {
 
           $dependencyTree[ $relevantClass ][ $matchedClass ] = [];
         } else {
-          $dependencyTree[ $relevantClass ][ $reflParam->getType()->getName() ] = [];
+          $dependencyTree[ $relevantClass ][ $classname ] = [];
         }
       }
     } else {
@@ -126,7 +136,7 @@ class Autowiring {
    * @param  array  $psr4Prefixes Array of psr-4 compliant namespaces and their accompanying folders.
    * @return array
    */
-  public function getClassesInNamespace( string $namespace, array $psr4Prefixes ): array {
+  protected function getClassesInNamespace( string $namespace, array $psr4Prefixes ): array {
     $classes            = [];
     $namespaceWithSlash = "{$namespace}\\";
     $pathToNamespace    = $psr4Prefixes[ $namespaceWithSlash ][0] ?? '';
@@ -171,6 +181,8 @@ class Autowiring {
    * @param  array  $filenameIndex       Filename index. Maps filenames to class names.
    * @param  array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
    * @return string
+   *
+   * @throws \Exception If things we're looking for are missing inside filename or classInterface index (which shouldn't happen).
    */
   protected function tryToFindMatchingClass( string $filename, string $interfaceName, array $filenameIndex, array $classInterfaceIndex ): string {
 

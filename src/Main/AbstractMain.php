@@ -37,6 +37,13 @@ abstract class AbstractMain implements ServiceInterface {
   private $container;
 
   /**
+   * Autowiring instance.
+   *
+   * @var Autowiring
+   */
+  private $autowiring;
+
+  /**
    * Constructs object and injects autowiring.
    *
    * @param ClassLoader $autowiring Autowiring functionality.
