@@ -31,6 +31,7 @@
     "symfony/console": "^5.1"
   },
   "require-dev": {
+    "codeception/codeception": "^4.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.6",
     "infinum/coding-standards-wp": "^0.4.1",
     "roave/security-advisories": "dev-master",
