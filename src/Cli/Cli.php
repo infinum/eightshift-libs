@@ -35,6 +35,7 @@ use EightshiftLibs\Db\DbImportCli;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 
@@ -79,6 +80,7 @@ class Cli {
     ReadmeCli::class,
     GitIgnoreCli::class,
     CiExcludeCli::class,
+    LintPhpCli::class,
   ];
 
   /**

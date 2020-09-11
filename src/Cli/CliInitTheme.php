@@ -10,14 +10,19 @@ declare( strict_types=1 );
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Build\BuildCli;
+use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
+use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
+use EightshiftLibs\Setup\SetupCli;
 
 /**
  * Class CliInitTheme
@@ -36,6 +41,11 @@ class CliInitTheme extends AbstractCli {
     MainCli::class,
     ManifestCli::class,
     MenuCli::class,
+    BuildCli::class,
+    LintPhpCli::class,
+    GitIgnoreCli::class,
+    SetupCli::class,
+    CiExcludeCli::class,
   ];
 
   /**

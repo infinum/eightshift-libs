@@ -24,7 +24,7 @@
     "url": "https://github.com/infinum/eightshift-frontend-libs/issues"
   },
   "scripts": {
-    "lint": "bash ./bin/lintPhp.sh"
+    "lint": "wp eval-file bin/cli.php run_lint_php --skip-wordpress"
   },
   "homepage": "https://eightshift.com/",
   "license": "MIT",

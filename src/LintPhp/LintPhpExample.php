@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Script used to run project build process.
  *
