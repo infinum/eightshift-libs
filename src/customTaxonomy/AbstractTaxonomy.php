@@ -17,6 +17,28 @@ use EightshiftLibs\Services\ServiceInterface;
 abstract class AbstractTaxonomy implements ServiceInterface {
 
   /**
+   * Register custom taxonomy.
+   *
+   * @return void
+   */
+  public function register() : void {
+    \add_action( 'init', [ $this, 'taxonomy_register_callback' ] );
+  }
+
+  /**
+   * Method that registers taxonomy that is used inside init hook.
+   *
+   * @return void
+   */
+  protected function taxonomy_register_callback() : void {
+    \register_taxonomy(
+      $this->get_taxonomy_slug(),
+      $this->get_post_type_slug(),
+      $this->get_taxonomy_arguments()
+    );
+  }
+
+  /**
    * Get the slug of the custom taxonomy
    *
    * @return string Custom taxonomy slug.
@@ -24,11 +46,11 @@ abstract class AbstractTaxonomy implements ServiceInterface {
   abstract protected function get_taxonomy_slug() : string;
 
   /**
-   * Get the post type slug to use the taxonomy.
+   * Get the post type slug(s) that use the taxonomy.
    *
-   * @return string Custom post type slug.
+   * @return string|array Custom post type slug or an array of slugs.
    */
-  abstract protected function get_post_type_slug() : string;
+  abstract protected function get_post_type_slug();
 
   /**
    * Get the arguments that configure the custom taxonomy.

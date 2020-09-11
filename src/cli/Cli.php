@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Cli
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Blocks\BlocksCli;

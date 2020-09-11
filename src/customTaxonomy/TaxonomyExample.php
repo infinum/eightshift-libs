@@ -17,24 +17,6 @@ use EightshiftLibs\CustomTaxonomy\AbstractTaxonomy;
 class TaxonomyExample extends AbstractTaxonomy {
 
   /**
-   * Register custom taxonomy.
-   *
-   * @return void
-   */
-  public function register() : void {
-    \add_action(
-      'init',
-      function() {
-        \register_taxonomy(
-          $this->get_taxonomy_slug(),
-          [ $this->get_post_type_slug() ],
-          $this->get_taxonomy_arguments()
-        );
-      }
-    );
-  }
-
-  /**
    * Taxonomy slug costant.
    *
    * @var string
@@ -58,11 +40,11 @@ class TaxonomyExample extends AbstractTaxonomy {
   }
 
   /**
-   * Get the post type slug to use the taxonomy.
+   * Get the post type slug(s) that use the taxonomy.
    *
-   * @return string Custom post type slug.
+   * @return string|array Custom post type slug or an array of slugs.
    */
-  protected function get_post_type_slug() : string {
+  protected function get_post_type_slug() {
     return 'post';
   }
 

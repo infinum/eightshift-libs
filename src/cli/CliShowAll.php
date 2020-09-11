@@ -7,6 +7,8 @@
  * @package EightshiftLibs\Cli
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -25,7 +27,7 @@ class CliShowAll extends AbstractCli {
     return 'show_all';
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     \WP_CLI::log( \WP_CLI::colorize( '%mCommands for wp-cli and development:%n' ) );
     $this->get_eval_loop( Cli::CLASSES_LIST );

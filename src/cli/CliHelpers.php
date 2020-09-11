@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Cli
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Cli;
 
 /**
@@ -370,10 +372,25 @@ trait CliHelpers {
     if ( empty( $namespace ) ) {
       $composer = $this->get_composer( $args );
 
-      $namespace = rtrim( array_key_first( $composer['autoload']['psr-4'] ), '\\' );
+      $namespace = rtrim( $this->array_key_first_child( $composer['autoload']['psr-4'] ), '\\' );
     }
 
     return $namespace;
+  }
+
+  /**
+   * Array_key_first polyfill function
+   *
+   * @param array $array Array to search.
+   *
+   * @return stringgp
+   */
+  public function array_key_first_child( array $array ) : string {
+    foreach ( $array as $key => $unused ) {
+      return $key;
+    }
+
+    return '';
   }
 
   /**

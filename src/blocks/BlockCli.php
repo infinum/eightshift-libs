@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Blocks
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -47,7 +49,7 @@ class BlockCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $block = $assoc_args['block'] ?? '';
