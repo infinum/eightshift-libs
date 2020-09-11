@@ -10,7 +10,10 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Blocks\BlockComponentCli;
 use EightshiftLibs\Blocks\BlockCli;
+use EightshiftLibs\Build\BuildCli;
+use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
@@ -26,6 +29,12 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
+use EightshiftLibs\Db\DbImportCli;
+use EightshiftLibs\Db\ExportCli;
+use EightshiftLibs\Db\ImportCli;
+use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\Readme\ReadmeCli;
+use EightshiftLibs\Setup\UpdateCli;
 
 /**
  * Class Cli
@@ -62,6 +71,12 @@ class Cli {
     FieldCli::class,
     RouteCli::class,
     ServiceExampleCli::class,
+    SetupCli::class,
+    DbImportCli::class,
+    BuildCli::class,
+    ReadmeCli::class,
+    GitIgnoreCli::class,
+    CiExcludeCli::class,
   ];
 
   /**
@@ -72,6 +87,9 @@ class Cli {
   const PUBLIC_CLASSES = [
     BlockComponentCli::class,
     BlockCli::class,
+    UpdateCli::class,
+    ExportCli::class,
+    ImportCli::class,
   ];
 
   /**
