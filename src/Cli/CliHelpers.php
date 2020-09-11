@@ -267,15 +267,15 @@ trait CliHelpers {
    */
   public function rename_project_name( array $args = [], string $string ) : string {
 
-    $project_type = 'eightshift-boilerplate';
+    $project_name = 'eightshift-boilerplate';
 
-    if ( isset( $args['project_type'] ) ) {
-      $project_type = $args['project_type'];
+    if ( isset( $args['project_name'] ) ) {
+      $project_name = $args['project_name'];
     }
 
     return str_replace(
       'eightshift-boilerplate',
-      $project_type,
+      $project_name,
       $string
     );
   }
