@@ -42,13 +42,18 @@ class LintPhpCli extends AbstractCli {
   }
 
   public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
-    $output = shell_exec( 'composer run standards:check' );
-    \WP_CLI::log( $output ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+    $output = shell_exec( 'composer run standards:check' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 
-    if ( ! $output ) {
+    \WP_CLI::log( $output );
+
+    var_dump($output);
+
+    die;
+
+    if ( $output ) {
       \WP_CLI::error( 'Please fix all linting issues before continuing.' );
-    }else{
-      \WP_CLI::success( 'Success! You have no linting issues.' );
     }
+
+    \WP_CLI::success( 'Success! You have no linting issues.' );
   }
 }
