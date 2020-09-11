@@ -5,6 +5,8 @@
  * @package EightshiftLibs\CustomPostType
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\CustomPostType;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -93,7 +95,7 @@ class PostTypeCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $label              = $assoc_args['label'];

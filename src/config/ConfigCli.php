@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Config
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Config;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -79,7 +81,7 @@ class ConfigCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $name           = $assoc_args['name'] ?? '';

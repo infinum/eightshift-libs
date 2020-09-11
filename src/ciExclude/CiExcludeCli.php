@@ -5,6 +5,8 @@
  * @package EightshiftLibs\CiExclude
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\CiExclude;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -56,17 +58,33 @@ class CiExcludeCli extends AbstractCli {
           'description' => 'Define project root relative to initialization file of WP CLI.',
           'optional'    => true,
         ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'project_name',
+          'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name.',
+          'optional'    => false,
+        ],
+        [
+          'type'        => 'assoc',
+          'name'        => 'project_type',
+          'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name. Default is themes.',
+          'optional'    => true,
+        ],
       ],
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $root = $assoc_args['root'] ?? static::OUTPUT_DIR;
 
     // Read the template contents, and replace the placeholders with provided variables.
     $class = $this->get_example_template( __DIR__, 'ci-exclude.txt' );
+
+    // Replace stuff in file.
+    $class = $this->rename_project_name( $assoc_args, $class );
+    $class = $this->rename_project_type( $assoc_args, $class );
 
     // Output final class to new file/folder and finish.
     $this->output_write( $root, 'ci-exclude.txt', $class );

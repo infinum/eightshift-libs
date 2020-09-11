@@ -1,6 +1,20 @@
 <?php
 /**
  * Script used to run project setup and installing all plugins, themes and core.
+ *
+ * @package EightshiftLibs
+ */
+
+declare( strict_types=1 );
+
+/**
+ * Update project and setup all plugins, themes and core.
+ *
+ * @param string $project_root_path Root of the project where config is located.
+ * @param array  $args              Optional arguments.
+ * @param string $setup_file        Define setup file name.
+ *
+ * @return void
  */
 function setup( string $project_root_path, array $args = [], string $setup_file = 'setup.json' ) {
 
@@ -57,7 +71,7 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
 
         // Instale core plugins.
         if ( ! empty( $plugins_core ) ) {
-          foreach( $plugins_core as $name => $version ) {
+          foreach ( $plugins_core as $name => $version ) {
             \WP_CLI::runcommand( "plugin install {$name} --version={$version} --force" );
             \WP_CLI::log( '--------------------------------------------------' );
           }
@@ -73,7 +87,7 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
 
         // Instale github plugins.
         if ( ! empty( $plugins_github ) ) {
-          foreach( $plugins_github as $name => $version ) {
+          foreach ( $plugins_github as $name => $version ) {
             \WP_CLI::runcommand( "plugin install https://github.com/{$name}/archive/{$version}.zip --force" );
             \WP_CLI::log( '--------------------------------------------------' );
           }
@@ -91,7 +105,7 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
 
     // Install themes.
     if ( ! empty( $themes ) ) {
-      foreach( $themes as $name => $version ) {
+      foreach ( $themes as $name => $version ) {
         \WP_CLI::runcommand( "theme install {$name} --version={$version} --force" );
         \WP_CLI::log( '--------------------------------------------------' );
       }
@@ -104,5 +118,3 @@ function setup( string $project_root_path, array $args = [], string $setup_file 
   \WP_CLI::log( '--------------------------------------------------' );
 
 }
-
- 

@@ -7,6 +7,8 @@
  * @package EightshiftLibs\Cli
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -25,7 +27,7 @@ class CliReset extends AbstractCli {
     return 'reset';
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     $output_dir = $this->get_output_dir( '' );
 

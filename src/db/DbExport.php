@@ -1,6 +1,19 @@
 <?php
 /**
  * Script used to export database and images to zip.
+ *
+ * @package EightshiftLibs
+ */
+
+declare( strict_types=1 );
+
+/**
+ * Exporting database.
+ *
+ * @param string $project_root_path Root of the project where config is located.
+ * @param array  $args              Optional arguments.
+ *
+ * @return void
  */
 function db_export( string $project_root_path, array $args = [] ) {
 
@@ -44,7 +57,7 @@ function db_export( string $project_root_path, array $args = [] ) {
     $export_files = "{$uploads_folder}";
 
     if ( ! file_exists( $uploads_folder ) ) {
-      $export_files = "";
+      $export_files = '';
     }
   }
 
@@ -53,8 +66,8 @@ function db_export( string $project_root_path, array $args = [] ) {
   }
 
   if ( ! empty( $export_files ) ) {
-    \WP_CLI::log( shell_exec( "tar czf {$export_file_name} {$export_files}" ) );
-    \WP_CLI::log( "Compressing folders success." );
+    \WP_CLI::log( shell_exec( "tar czf {$export_file_name} {$export_files}" ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+    \WP_CLI::log( 'Compressing folders success.' );
     \WP_CLI::log( '--------------------------------------------------' );
   }
 

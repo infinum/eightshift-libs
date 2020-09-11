@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Db
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Db;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -55,12 +57,12 @@ class DbImportCli extends AbstractCli {
           'name'        => 'root',
           'description' => 'Define project root relative to initialization file of WP CLI.',
           'optional'    => true,
-        ]
+        ],
       ],
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $root = $assoc_args['root'] ?? static::OUTPUT_DIR;

@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Rest\Fields
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -67,7 +69,7 @@ class FieldCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $field_name  = $this->prepare_slug( $assoc_args['field_name'] );

@@ -5,6 +5,8 @@
  * @package EightshiftLibs\ExampleService
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\ExampleService;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -63,7 +65,7 @@ class ServiceExampleCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $folder    = $assoc_args['folder'];

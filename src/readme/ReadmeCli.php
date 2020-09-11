@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Readme
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Readme;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -60,7 +62,7 @@ class ReadmeCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $root = $assoc_args['root'] ?? static::OUTPUT_DIR;

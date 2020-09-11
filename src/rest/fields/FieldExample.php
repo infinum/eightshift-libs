@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Rest\Fields
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Rest\CallableFieldInterface;

@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Cli
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Blocks\BlocksCli;
@@ -56,7 +58,7 @@ class CliInitTheme extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     if ( ! function_exists( 'add_action' ) ) {
       $this->run_reset();

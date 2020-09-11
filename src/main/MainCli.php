@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Main
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Main;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -30,7 +32,7 @@ class MainCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Read the template contents, and replace the placeholders with provided variables.
     $class = $this->get_example_template( __DIR__, $this->get_class_short_name() );

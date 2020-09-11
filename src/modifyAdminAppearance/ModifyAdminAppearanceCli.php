@@ -5,6 +5,8 @@
  * @package EightshiftLibs\ModifyAdminAppearance
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\ModifyAdminAppearance;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -30,7 +32,7 @@ class ModifyAdminAppearanceCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     $class_name = $this->get_class_short_name();
 

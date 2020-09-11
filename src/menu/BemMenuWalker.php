@@ -116,8 +116,6 @@ class BemMenuWalker extends \Walker_Nav_Menu {
    */
   public function start_el( &$output, $item, $depth = 0, $args = [], $id = 0 ) {
 
-    global $wp_query;
-
     $indent = ( $depth > 0 ? str_repeat( '    ', $depth ) : '' ); // code indent.
 
     $prefix = $this->css_class_prefix;

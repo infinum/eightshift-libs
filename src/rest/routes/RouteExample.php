@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Rest\Routes
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Config\Config;
@@ -64,7 +66,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface {
    *                                is already an instance, WP_HTTP_Response, otherwise
    *                                returns a new WP_REST_Response instance.
    */
-  public function route_callback( \WP_REST_Request $request ) {
+  public function route_callback( \WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClass
     return \rest_ensure_response();
   }
 }

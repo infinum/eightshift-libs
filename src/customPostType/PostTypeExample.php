@@ -5,6 +5,8 @@
  * @package EightshiftLibs\CustomPostType
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\CustomPostType;
 
 use EightshiftLibs\CustomPostType\AbstractPostType;

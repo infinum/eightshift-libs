@@ -5,6 +5,8 @@
  * @package EightshiftLibs\Rest\Routes
  */
 
+declare( strict_types=1 );
+
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
@@ -78,7 +80,7 @@ class RouteCli extends AbstractCli {
     ];
   }
 
-  public function __invoke( array $args, array $assoc_args ) {
+  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
     // Get Props.
     $endpoint_slug = $this->prepare_slug( $assoc_args['endpoint_slug'] );
