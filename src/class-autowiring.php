@@ -29,7 +29,6 @@ class Autowiring {
    * @return array<array> Array of fully qualified class names.
    */
   public function buildServiceClasses() : array {
-    $start = microtime( true );
     $projectClasses = $this->getClassesInNamespace( 'AutowiringTest', $this->psr4Prefixes );
 
     $dependencyTree = [];
@@ -74,8 +73,6 @@ class Autowiring {
 
     // Convert dependency tree into PHP-DI's definition list.
     $classes = $this->convertDependencyTreeIntoDefinitionList($dependencyTree);
-    $end = microtime( true ) - $start;
-    error_log( 'Lasted: ' . $end . 's' );
     return $classes;
   }
 
@@ -102,7 +99,13 @@ class Autowiring {
         // If the expected type is interface, try guessing based on var name. Otherwise
         // Just inject that class.
         if ( $reflClassForParam->isInterface() ) {
-          $matchedClass = $this->tryToFindMatchingClass( $reflParam->getName(), $classname, $filenameIndex, $classInterfaceIndex);
+          $matchedClass = $this->tryToFindMatchingClass($reflParam->getName(), $classname, $filenameIndex, $classInterfaceIndex);
+
+          // If we're unable to find exactly 1 class for whatever reason, just skip it, the user
+          // will have to define the dependencies manually.
+          if (empty($matchedClass)) {
+            continue;
+          }
 
           $dependencyTree[ $relevantClass ][ $matchedClass ] = [];
         } else {
@@ -126,8 +129,13 @@ class Autowiring {
   public function getClassesInNamespace( string $namespace, array $psr4Prefixes ): array {
     $classes            = [];
     $namespaceWithSlash = "{$namespace}\\";
-    $pathToNamespace    = $psr4Prefixes[ $namespaceWithSlash ][0];
-    $it                 = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator( $pathToNamespace ));
+    $pathToNamespace    = $psr4Prefixes[ $namespaceWithSlash ][0] ?? '';
+
+    if (!is_dir($pathToNamespace)) {
+      return [];
+    }
+
+    $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator( $pathToNamespace ));
     foreach ($it as $file) {
       if ($file->isDir()) {
         continue;
@@ -189,9 +197,9 @@ class Autowiring {
     }
 
     // If we don't have a unique match (i.e. if 2 classes of the same name are implementing the interface we're looking for)
-    // then we need to abort because we don't know how to handle that.
+    // then we need to cancel the match because we don't know how to handle that.
     if ($matches !== 1) {
-      throw new \Exception('Didn\t find exactly 1 match for ' . $filename . ', aborting');
+      $match = '';
     }
 
     return $match;
