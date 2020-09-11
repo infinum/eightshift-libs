@@ -41,6 +41,13 @@ abstract class Main implements Service {
   private $container;
 
   /**
+   * Autowiring instance.
+   *
+   * @var Autowiring
+   */
+  private $autowiring;
+
+  /**
    * Constructs object and injects autowiring.
    *
    * @param ClassLoader $autowiring Autowiring functionality.
