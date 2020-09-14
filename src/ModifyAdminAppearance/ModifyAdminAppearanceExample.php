@@ -24,7 +24,7 @@ class ModifyAdminAppearanceExample extends AbstractModifyAdminAppearance {
    * @return void
    */
   public function register() : void {
-    \add_filter( 'get_user_option_admin_color', [ $this, 'set_admin_color' ], 10, 0 );
+    \add_filter( 'get_user_option_admin_color', [ $this, 'admin_color' ], 10, 0 );
   }
 
   /**
