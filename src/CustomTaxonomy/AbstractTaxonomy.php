@@ -30,7 +30,7 @@ abstract class AbstractTaxonomy implements ServiceInterface {
    *
    * @return void
    */
-  protected function taxonomy_register_callback() : void {
+  public function taxonomy_register_callback() : void {
     \register_taxonomy(
       $this->get_taxonomy_slug(),
       $this->get_post_type_slug(),

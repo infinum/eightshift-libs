@@ -30,7 +30,7 @@ abstract class AbstractField implements ServiceInterface {
    *
    * @return void
    */
-  protected function field_register_callback() : void {
+  public function field_register_callback() : void {
     \register_rest_field(
       $this->get_object_type(),
       $this->get_field_name(),

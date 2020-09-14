@@ -30,7 +30,7 @@ abstract class AbstractPostType implements ServiceInterface {
    *
    * @return void
    */
-  protected function post_type_register_callback() : void {
+  public function post_type_register_callback() : void {
     \register_post_type(
       $this->get_post_type_slug(),
       $this->get_post_type_arguments()

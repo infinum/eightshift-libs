@@ -31,7 +31,7 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface {
    *
    * @return void
    */
-  protected function route_register_callback() : void {
+  public function route_register_callback() : void {
     \register_rest_route(
       $this->get_namespace() . '/' . $this->get_version(),
       $this->get_route_name(),
