@@ -7,7 +7,7 @@
 
 declare( strict_types=1 );
 
-namespace SolplanetVendor\EightshiftLibs\Main;
+namespace EightshiftLibs\Main;
 
 /**
  * The file that defines the autowiring process
