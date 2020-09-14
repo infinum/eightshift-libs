@@ -198,8 +198,8 @@ class Autowiring {
   /**
    * Builds PSR namespace SolplanetVendor\from file's path.
    *
-   * @param  string $filepath            Path to a file.
-   * @param  string $rootNamespace      Root namespace SolplanetVendor\we're getting classes from.
+   * @param  string $filepath          Path to a file.
+   * @param  string $rootNamespace     Root namespace SolplanetVendor\we're getting classes from.
    * @param  string $rootNamespacePath Path to root namespace SolplanetVendor\.
    *
    * @return string
@@ -217,9 +217,9 @@ class Autowiring {
   /**
    * Try to uniquely match the $filename.
    *
-   * @param  string $filename              Filename based on variable name.
-   * @param  string $interfaceName        Interface we're trying to match.
-   * @param  array  $filenameIndex        Filename index. Maps filenames to class names.
+   * @param  string $filename            Filename based on variable name.
+   * @param  string $interfaceName       Interface we're trying to match.
+   * @param  array  $filenameIndex       Filename index. Maps filenames to class names.
    * @param  array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
    * @return string
    *
