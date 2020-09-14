@@ -55,9 +55,9 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 		\wp_register_style(
 			$handle,
 			$this->manifest->getAssetsManifestItem(static::ADMIN_STYLE_URI),
-			$this->get_admin_style_dependencies(),
+			$this->getAdminStyleDependencies(),
 			$this->getAssetsVersion(),
-			$this->get_media()
+			$this->getMedia()
 		);
 
 		\wp_enqueue_style($handle);
