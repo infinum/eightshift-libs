@@ -33,7 +33,7 @@ class ModifyAdminAppearanceExample extends AbstractModifyAdminAppearance {
    * @return string Modified color scheme..
    */
   public function admin_color() : string {
-    return $this->set_admin_color( defined( EB_ENV ) ? EB_ENV : 'default' );
+    return $this->set_admin_color( defined( 'EB_ENV' ) ? EB_ENV : 'default' );
   }
 
 }
