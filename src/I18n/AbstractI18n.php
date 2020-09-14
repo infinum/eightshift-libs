@@ -18,29 +18,29 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractI18n implements ServiceInterface {
 
-  /**
-   * Load the plugin text domain for translation.
-   *
-   * @return void
-   */
-  public function load_theme_textdomain() {
-    \load_theme_textdomain(
-      $this->get_textdomain_name(),
-      $this->get_translation_file_path()
-    );
-  }
+	/**
+	 * Load the plugin text domain for translation.
+	 *
+	 * @return void
+	 */
+	public function loadThemeTextdomain() {
+		\load_theme_textdomain(
+			$this->getTextdomainName(),
+			$this->getTranslationFilePath()
+		);
+	}
 
-  /**
-   * Text domain. Unique identifier for retrieving translated strings.
-   *
-   * @return string
-   */
-  abstract public function get_textdomain_name() : string;
+	/**
+	 * Text domain. Unique identifier for retrieving translated strings.
+	 *
+	 * @return string
+	 */
+	abstract public function getTextdomainName() : string;
 
-  /**
-   * Path to the directory containing the .mo file.
-   *
-   * @return string
-   */
-  abstract public function get_translation_file_path() : string;
+	/**
+	 * Path to the directory containing the .mo file.
+	 *
+	 * @return string
+	 */
+	abstract public function getTranslationFilePath() : string;
 }

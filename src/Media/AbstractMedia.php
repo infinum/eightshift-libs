@@ -1,11 +1,12 @@
 <?php
+
 /**
  * The Media specific functionality.
  *
  * @package EightshiftLibs\Media
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Media;
 
@@ -16,17 +17,19 @@ use EightshiftLibs\Services\ServiceInterface;
  *
  * This class handles all media options. Sizes, Types, Features, etc.
  */
-abstract class AbstractMedia implements ServiceInterface {
+abstract class AbstractMedia implements ServiceInterface
+{
 
-  /**
-   * Enable theme support
-   * for full list check: https://developer.wordpress.org/reference/functions/add_theme_support/
-   *
-   * @return void
-   */
-  public function add_theme_support() : void {
-    \add_theme_support( 'title-tag' );
-    \add_theme_support( 'html5' );
-    \add_theme_support( 'post-thumbnails' );
-  }
+	/**
+	 * Enable theme support
+	 * for full list check: https://developer.wordpress.org/reference/functions/add_theme_support/
+	 *
+	 * @return void
+	 */
+	public function addThemeSupport(): void
+	{
+		\add_theme_support('title-tag');
+		\add_theme_support('html5');
+		\add_theme_support('post-thumbnails');
+	}
 }

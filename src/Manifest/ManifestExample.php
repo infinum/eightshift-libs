@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File containing an abstract class for holding Assets Manifest functionality.
  *
@@ -7,7 +8,7 @@
  * @package EightshiftLibs\Manifest
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Manifest;
 
@@ -17,31 +18,34 @@ use EightshiftLibs\Manifest\AbstractManifest;
 /**
  * Class ManifestExample
  */
-class ManifestExample extends AbstractManifest {
+class ManifestExample extends AbstractManifest
+{
 
-  /**
-   * Manifest item filter name constant.
-   *
-   * @var string
-   */
-  const MANIFEST_ITEM = 'manifest-item';
+	/**
+	 * Manifest item filter name constant.
+	 *
+	 * @var string
+	 */
+	public const MANIFEST_ITEM = 'manifest-item';
 
-  /**
-   * Register all hooks. Changed filter name to manifest.
-   *
-   * @return void
-   */
-  public function register() : void {
-    \add_action( 'init', [ $this, 'set_assets_manifest_raw' ] );
-    \add_filter( Config::get_config( static::MANIFEST_ITEM ), [ $this, 'get_assets_manifest_item' ] );
-  }
+	/**
+	 * Register all hooks. Changed filter name to manifest.
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_action('init', [ $this, 'setAssetsManifestRaw' ]);
+		\add_filter(Config::getConfig(static::MANIFEST_ITEM), [ $this, 'getAssetsManifestItem' ]);
+	}
 
-  /**
-   * Manifest file path getter.
-   *
-   * @return string
-   */
-  public function get_manifest_file_path() : string {
-    return Config::get_project_path() . '/public/manifest.json';
-  }
+	/**
+	 * Manifest file path getter.
+	 *
+	 * @return string
+	 */
+	public function getManifestFilePath(): string
+	{
+		return Config::getProjectPath() . '/public/manifest.json';
+	}
 }

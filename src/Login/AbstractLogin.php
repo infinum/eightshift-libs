@@ -1,11 +1,12 @@
 <?php
+
 /**
  * The login page specific functionality.
  *
  * @package EightshiftLibs\Login
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Login;
 
@@ -16,14 +17,16 @@ use EightshiftLibs\Services\ServiceInterface;
  *
  * This class handles all login page options.
  */
-abstract class AbstractLogin implements ServiceInterface {
+abstract class AbstractLogin implements ServiceInterface
+{
 
-  /**
-   * Change default logo link with home url.
-   *
-   * @return string
-   */
-  public function custom_login_url() : string {
-    return \home_url( '/' );
-  }
+	/**
+	 * Change default logo link with home url.
+	 *
+	 * @return string
+	 */
+	public function customLoginUrl(): string
+	{
+		return \home_url('/');
+	}
 }

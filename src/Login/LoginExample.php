@@ -1,11 +1,12 @@
 <?php
+
 /**
  * The login page specific functionality.
  *
  * @package EightshiftLibs\Login
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Login;
 
@@ -16,14 +17,16 @@ use EightshiftLibs\Login\AbstractLogin;
  *
  * This class handles all login page options.
  */
-class LoginExample extends AbstractLogin {
+class LoginExample extends AbstractLogin
+{
 
-  /**
-   * Register all the hooks
-   *
-   * @return void
-   */
-  public function register() : void {
-    \add_filter( 'login_headerurl', [ $this, 'custom_login_url' ] );
-  }
+	/**
+	 * Register all the hooks
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_filter('login_headerurl', [ $this, 'customLoginUrl' ]);
+	}
 }

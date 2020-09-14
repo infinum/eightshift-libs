@@ -15,91 +15,91 @@ namespace EightshiftLibs\Helpers;
  */
 trait ObjectHelperTrait {
 
-  /**
-   * Check if XML is valid file used for svg.
-   *
-   * @param xml $xml Full xml document.
-   *
-   * @return boolean
-   */
-  public function is_valid_xml( $xml ) {
-    libxml_use_internal_errors( true );
-    $doc = new \DOMDocument( '1.0', 'utf-8' );
-    $doc->loadXML( $xml );
-    $errors = libxml_get_errors();
-    return empty( $errors );
-  }
+	/**
+	 * Check if XML is valid file used for svg.
+	 *
+	 * @param xml $xml Full xml document.
+	 *
+	 * @return boolean
+	 */
+	public function isValidXml( $xml ) {
+		libxml_use_internal_errors( true );
+		$doc = new \DOMDocument( '1.0', 'utf-8' );
+		$doc->loadXML( $xml );
+		$errors = libxml_get_errors();
+		return empty( $errors );
+	}
 
-  /**
-   * Check if json is valid
-   *
-   * @param string $string String to check.
-   *
-   * @return bool
-   */
-  public static function is_json( string $string ) : bool {
-    json_decode( $string );
-    return ( json_last_error() === JSON_ERROR_NONE );
-  }
+	/**
+	 * Check if json is valid
+	 *
+	 * @param string $string String to check.
+	 *
+	 * @return bool
+	 */
+	public static function isJson( string $string ) : bool {
+		json_decode( $string );
+		return ( json_last_error() === JSON_ERROR_NONE );
+	}
 
-  /**
-   * Flatten multidimensional array.
-   *
-   * @param  array $array Multidimensional array.
-   *
-   * @return array
-   */
-  public static function flatten_array( array $array ) : array {
-    $output = [];
+	/**
+	 * Flatten multidimensional array.
+	 *
+	 * @param  array $array Multidimensional array.
+	 *
+	 * @return array
+	 */
+	public static function flattenArray( array $array ) : array {
+		$output = [];
 
-    array_walk_recursive(
-      $array,
-      function( $a ) use ( &$output ) {
-        if ( ! empty( $a ) ) {
-          $output[] = $a;
-        }
-      }
-    );
+		array_walk_recursive(
+			$array,
+			function( $a ) use ( &$output ) {
+				if ( ! empty( $a ) ) {
+					$output[] = $a;
+				}
+			}
+		);
 
-    return $output;
-  }
+		return $output;
+	}
 
-  /**
-   * Sanitize all values in an array.
-   *
-   * @param array  $array                 Provided array.
-   * @param string $sanitization_function WordPress function used for sanitization purposes.
-   *
-   * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
-   *
-   * @return array
-   */
-  public static function sanitize_array( array $array, string $sanitization_function ) : array {
-    foreach ( $array as $key => $value ) {
-      if ( is_array( $value ) ) {
-          $value = sanitize_array( $value );
-      }
+	/**
+	 * Sanitize all values in an array.
+	 *
+	 * @param array  $array                 Provided array.
+	 * @param string $sanitizationFunction WordPress function used for sanitization purposes.
+	 *
+	 * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
+	 *
+	 * @return array
+	 */
+	public static function sanitizeArray( array $array, string $sanitizationFunction ) : array {
+		foreach ( $array as $key => $value ) {
+			if ( is_array( $value ) ) {
+					$value = sanitizeArray( $value );
+			}
 
-      $value = $sanitization_function( $value );
-    }
+			$value = $sanitizationFunction( $value );
+		}
 
-    return $array;
-  }
+		return $array;
+	}
 
-  /**
-   * Sort array by order key. Used to sort terms.
-   *
-   * @param array $items Items array to sort. Must have order key.
-   * @return array
-   */
-  public static function sort_array_by_order_key( array $items ) : array {
-    usort(
-      $items,
-      function( $item1, $item2 ) {
-        return $item1['order'] <=> $item2['order'];
-      }
-    );
+	/**
+	 * Sort array by order key. Used to sort terms.
+	 *
+	 * @param array $items Items array to sort. Must have order key.
+	 * @return array
+	 */
+	public static function sortArrayByOrderKey( array $items ) : array {
+		usort(
+			$items,
+			function( $item1, $item2 ) {
+				return $item1['order'] <=> $item2['order'];
+			}
+		);
 
-    return $items;
-  }
+		return $items;
+	}
 }

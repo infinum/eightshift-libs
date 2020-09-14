@@ -18,48 +18,48 @@ use EightshiftLibs\Manifest\ManifestInterface;
  */
 class EnqueueBlocksExample extends AbstractEnqueueBlocks {
 
-  /**
-   * Create a new admin instance.
-   *
-   * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-   */
-  public function __construct( ManifestInterface $manifest ) {
-    $this->manifest = $manifest;
-  }
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
+	 */
+	public function __construct( ManifestInterface $manifest ) {
+		$this->manifest = $manifest;
+	}
 
-  /**
-   * Register all the hooks
-   */
-  public function register() : void {
+	/**
+	 * Register all the hooks
+	 */
+	public function register() : void {
 
-    // Editor only script.
-    add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_script' ] );
+		// Editor only script.
+		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueueBlockEditorScript' ] );
 
-    // Editor only style.
-    add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_style' ], 50 );
+		// Editor only style.
+		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueueBlockEditorStyle' ], 50 );
 
-    // Editor and frontend style.
-    add_action( 'enqueue_block_assets', [ $this, 'enqueue_block_style' ], 50 );
+		// Editor and frontend style.
+		add_action( 'enqueue_block_assets', [ $this, 'enqueueBlockStyle' ], 50 );
 
-    // Frontend only script.
-    add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_block_script' ] );
-  }
+		// Frontend only script.
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueueBlockScript' ] );
+	}
 
-  /**
-   * Method that returns assets name used to prefix asset handlers.
-   *
-   * @return string
-   */
-  public function get_assets_prefix() : string {
-    return Config::get_project_name();
-  }
+	/**
+	 * Method that returns assets name used to prefix asset handlers.
+	 *
+	 * @return string
+	 */
+	public function getAssetsPrefix() : string {
+		return Config::getProjectName();
+	}
 
-  /**
-   * Method that returns assets version for versioning asset handlers.
-   *
-   * @return string
-   */
-  public function get_assets_version() : string {
-    return Config::get_project_version();
-  }
+	/**
+	 * Method that returns assets version for versioning asset handlers.
+	 *
+	 * @return string
+	 */
+	public function getAssetsVersion() : string {
+		return Config::getProjectVersion();
+	}
 }

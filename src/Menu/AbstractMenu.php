@@ -17,60 +17,60 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface {
 
-  /**
-   * Register All Menu positions
-   *
-   * @return void
-   */
-  public function register_menu_positions() {
-    \register_nav_menus(
-      $this->get_menu_positions()
-    );
-  }
+	/**
+	 * Register All Menu positions
+	 *
+	 * @return void
+	 */
+	public function registerMenuPositions() {
+		\register_nav_menus(
+			$this->getMenuPositions()
+		);
+	}
 
-  /**
-   * Return all menu positions
-   *
-   * @return array Of menu positions with name and slug.
-   */
-  public function get_menu_positions() : array {
-    return [];
-  }
+	/**
+	 * Return all menu positions
+	 *
+	 * @return array Of menu positions with name and slug.
+	 */
+	public function getMenuPositions() : array {
+		return [];
+	}
 
-  /**
-   * Bem_menu returns an instance of the Bem_Menu_Walker class with the following arguments
-   *
-   * @param  string $location            This must be the same as what is set in wp-admin/settings/menus for menu location and registered in register_menu_positions function.
-   * @param  string $css_class_prefix    This string will prefix all of the menu's classes, BEM syntax friendly.
-   * @param  string $css_class_modifiers Provide either a string or array of values to apply extra classes to the <ul> but not the <li's>.
-   * @param  bool   $echo                Echo the menu.
-   *
-   * @return string|false|void Menu output if $echo is false, false if there are no items or no menu was found.
-   */
-  public static function bem_menu( string $location = 'main_menu', string $css_class_prefix = 'main-menu', $css_class_modifiers = null, bool $echo = true ) {
+	/**
+	 * bemMenu returns an instance of the bemMenuWalker class with the following arguments
+	 *
+	 * @param  string $location          This must be the same as what is set in wp-admin/settings/menus for menu location and registered in registerMenuPositions function.
+	 * @param  string $cssClassPrefix    This string will prefix all of the menu's classes, BEM syntax friendly.
+	 * @param  string $cssClassModifiers Provide either a string or array of values to apply extra classes to the <ul> but not the <li's>.
+	 * @param  bool   $echo              Echo the menu.
+	 *
+	 * @return string|false|void Menu output if $echo is false, false if there are no items or no menu was found.
+	 */
+	public static function bemMenu( string $location = 'main_menu', string $cssClassPrefix = 'main-menu', $cssClassModifiers = null, bool $echo = true ) {
 
-    // Check to see if any css modifiers were supplied.
-    $modifiers = '';
-    if ( $css_class_modifiers ) {
-      if ( is_array( $css_class_modifiers ) ) {
-        $modifiers = implode( ' ', $css_class_modifiers );
-      } elseif ( is_string( $css_class_modifiers ) ) {
-        $modifiers = $css_class_modifiers;
-      }
-    }
+		// Check to see if any css modifiers were supplied.
+		$modifiers = '';
+		if ( $cssClassModifiers ) {
+			if ( is_array( $cssClassModifiers ) ) {
+				$modifiers = implode( ' ', $cssClassModifiers );
+			} elseif ( is_string( $cssClassModifiers ) ) {
+				$modifiers = $cssClassModifiers;
+			}
+		}
 
-    $args = [
-      'theme_location' => $location,
-      'container'      => false,
-      'items_wrap'     => '<ul class="' . $css_class_prefix . ' ' . $modifiers . '">%3$s</ul>',
-      'echo'           => $echo,
-      'walker'         => new BemMenuWalker( $css_class_prefix ),
-    ];
+		$args = [
+			'theme_location' => $location,
+			'container'      => false,
+			'items_wrap'     => '<ul class="' . $cssClassPrefix . ' ' . $modifiers . '">%3$s</ul>',
+			'echo'           => $echo,
+			'walker'         => new BemMenuWalker( $cssClassPrefix ),
+		];
 
-    if ( ! \has_nav_menu( $location ) ) {
-      return '';
-    }
+		if ( ! \has_nav_menu( $location ) ) {
+			return '';
+		}
 
-    return \wp_nav_menu( $args );
-  }
+		return \wp_nav_menu( $args );
+	}
 }

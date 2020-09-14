@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class that registers WPCLI command for Development Reset.
  * Only used for development and can't be called via WPCLI.
@@ -7,7 +8,7 @@
  * @package EightshiftLibs\Cli
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
@@ -16,23 +17,26 @@ use EightshiftLibs\Cli\AbstractCli;
 /**
  * Class CliReset
  */
-class CliReset extends AbstractCli {
+class CliReset extends AbstractCli
+{
 
-  /**
-   * Get WPCLI command name.
-   *
-   * @return string
-   */
-  public function get_command_name() : string {
-    return 'reset';
-  }
+	/**
+	 * Get WPCLI command name.
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'reset';
+	}
 
-  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	{
 
-    $output_dir = $this->get_output_dir( '' );
+		$output_dir = $this->getOutputDir('');
 
-    system( 'rm -rf ' . escapeshellarg( $output_dir ) );
+		system('rm -rf ' . escapeshellarg($output_dir));
 
-    \WP_CLI::success( 'Output directory successfully removed.' );
-  }
+		\WP_CLI::success('Output directory successfully removed.');
+	}
 }

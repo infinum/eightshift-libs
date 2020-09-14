@@ -16,66 +16,66 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class BlockCli extends AbstractCli {
 
-  /**
-   * Output dir relative path.
-   */
-  const OUTPUT_DIR = 'src/Blocks';
+	/**
+	 * Output dir relative path.
+	 */
+	public const OUTPUT_DIR = 'src/Blocks';
 
-  /**
-   * Get WPCLI command name
-   *
-   * @return string
-   */
-  public function get_command_name() : string {
-    return 'use_block';
-  }
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName() : string {
+		return 'use_block';
+	}
 
-  /**
-   * Get WPCLI command doc.
-   *
-   * @return string
-   */
-  public function get_doc() : array {
-    return [
-      'shortdesc' => 'Copy Block from library to your project.',
-      'synopsis' => [
-        [
-          'type'        => 'assoc',
-          'name'        => 'block',
-          'description' => 'Specify block name.',
-          'optional'    => true,
-        ],
-      ],
-    ];
-  }
+	/**
+	 * Get WPCLI command doc.
+	 *
+	 * @return string
+	 */
+	public function getDoc() : array {
+		return [
+			'shortdesc' => 'Copy Block from library to your project.',
+			'synopsis' => [
+				[
+					'type'        => 'assoc',
+					'name'        => 'block',
+					'description' => 'Specify block name.',
+					'optional'    => true,
+				],
+			],
+		];
+	}
 
-  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke( array $args, array $assocArgs ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
 
-    // Get Props.
-    $block = $assoc_args['block'] ?? '';
+		// Get Props.
+		$block = $assocArgs['block'] ?? '';
 
-    $root      = $this->get_project_root_path();
-    $root_node = $this->get_frontend_libs_block_path();
+		$root     = $this->getProjectRootPath();
+		$rootNode = $this->getFrontendLibsBlockPath();
 
-    $source_path      = "{$root_node}/src/Blocks/Custom/{$block}";
-    $destination_path = "{$root}/src/Blocks/Custom/{$block}";
+		$sourcePath      = "{$rootNode}/src/Blocks/Custom/{$block}";
+		$destinationPath = "{$root}/src/Blocks/Custom/{$block}";
 
-    // Source doesn't exist.
-    if ( ! file_exists( $source_path ) ) {
-      \WP_CLI::error(
-        sprintf( 'The block "%s" doesn\'t exist in our library. Please check the docs for all available blocks.', $source_path )
-      );
-    }
+		// Source doesn't exist.
+		if ( ! file_exists( $sourcePath ) ) {
+			\WP_CLI::error(
+				sprintf( 'The block "%s" doesn\'t exist in our library. Please check the docs for all available blocks.', $sourcePath )
+			);
+		}
 
-    // Destination exists.
-    if ( file_exists( $destination_path ) ) {
-      \WP_CLI::error(
-        sprintf( 'The block in you project exists on this "%s" path. Please check or remove that folder before running this command again.', $destination_path )
-      );
-    }
+		// Destination exists.
+		if ( file_exists( $destinationPath ) ) {
+			\WP_CLI::error(
+				sprintf( 'The block in you project exists on this "%s" path. Please check or remove that folder before running this command again.', $destinationPath )
+			);
+		}
 
-    system( "cp -R {$source_path}/. {$destination_path}/" );
+		system( "cp -R {$sourcePath}/. {$destinationPath}/" );
 
-    \WP_CLI::success( 'Block successfully created.' );
-  }
+		\WP_CLI::success( 'Block successfully created.' );
+	}
 }

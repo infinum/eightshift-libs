@@ -1,51 +1,53 @@
 <?php
+
 /**
  * File containing Request type interface
  *
  * @package EightshiftLibs\Rest
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Rest;
 
 /**
  * Route interface that adds routes
  */
-interface RouteInterface {
+interface RouteInterface
+{
 
-  /**
-   * Alias for GET transport method.
-   *
-   * @var string
-   */
-  const READABLE = 'GET';
+	/**
+	 * Alias for GET transport method.
+	 *
+	 * @var string
+	 */
+	public const READABLE = 'GET';
 
-  /**
-   * Alias for POST transport method.
-   *
-   * @var string
-   */
-  const CREATABLE = 'POST';
+	/**
+	 * Alias for POST transport method.
+	 *
+	 * @var string
+	 */
+	public const CREATABLE = 'POST';
 
-    /**
+	/**
    * Alias for PATCH transport method.
    *
    * @var string
    */
-  const EDITABLE = 'PATCH';
+	public const EDITABLE = 'PATCH';
 
-  /**
-   * Alias for PUT transport method.
-   *
-   * @var string
-   */
-  const UPDATEABLE = 'PUT';
+	/**
+	 * Alias for PUT transport method.
+	 *
+	 * @var string
+	 */
+	public const UPDATEABLE = 'PUT';
 
-  /**
-   * Alias for DELETE transport method.
-   *
-   * @var string
-   */
-  const DELETABLE = 'DELETE';
+	/**
+	 * Alias for DELETE transport method.
+	 *
+	 * @var string
+	 */
+	public const DELETABLE = 'DELETE';
 }

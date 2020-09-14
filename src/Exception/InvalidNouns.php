@@ -14,20 +14,20 @@ namespace EightshiftLibs\Exception;
  */
 final class InvalidNouns extends \InvalidArgumentException implements GeneralExceptionInterface {
 
-  /**
-   * Create a new instance of the exception for an array of nouns that is
-   * missing a required key.
-   *
-   * @param string $key Asset handle that is not valid.
-   *
-   * @return static
-   */
-  public static function from_key( string $key ) {
-    $message = sprintf(
-      esc_html__( 'The array of nouns passed into the Label_Generator is missing the %s noun.', 'eightshift-libs' ),
-      $key
-    );
+	/**
+	 * Create a new instance of the exception for an array of nouns that is
+	 * missing a required key.
+	 *
+	 * @param string $key Asset handle that is not valid.
+	 *
+	 * @return static
+	 */
+	public static function fromKey( string $key ) {
+		$message = sprintf(
+			esc_html__( 'The array of nouns passed into the Label_Generator is missing the %s noun.', 'eightshift-libs' ),
+			$key
+		);
 
-    return new static( $message );
-  }
+		return new static( $message );
+	}
 }

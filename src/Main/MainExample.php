@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The file that defines the main start class.
  *
@@ -8,7 +9,7 @@
  * @package EightshiftLibs\Main
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Main;
 
@@ -23,29 +24,32 @@ use EightshiftLibs\Main\AbstractMain;
  * Also maintains the unique identifier of this theme as well as the current
  * version of the theme.
  */
-class MainExample extends AbstractMain {
+class MainExample extends AbstractMain
+{
 
-  /**
-   * Register the project with the WordPress system.
-   *
-   * The register_service method will call the register() method in every service class,
-   * which holds the actions and filters - effectively replacing the need to manually add
-   * them in one place.
-   *
-   * @return void
-   */
-  public function register() : void {
-    \add_action( 'after_setup_theme', [ $this, 'register_services' ] );
-  }
+	/**
+	 * Register the project with the WordPress system.
+	 *
+	 * The register_service method will call the register() method in every service class,
+	 * which holds the actions and filters - effectively replacing the need to manually add
+	 * them in one place.
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_action('after_setup_theme', [ $this, 'registerServices' ]);
+	}
 
-  /**
-   * Get the list of services to register.
-   *
-   * A list of classes which contain hooks.
-   *
-   * @return array<string> Array of fully qualified class names.
-   */
-  protected function get_service_classes() : array {
-    return [];
-  }
+	/**
+	 * Get the list of services to register.
+	 *
+	 * A list of classes which contain hooks.
+	 *
+	 * @return array<string> Array of fully qualified class names.
+	 */
+	protected function getServiceClasses(): array
+	{
+		return [];
+	}
 }

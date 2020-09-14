@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The file that defines the project entry point class.
  *
@@ -8,7 +9,7 @@
  * @package EightshiftLibs\Config
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Config;
 
@@ -17,71 +18,78 @@ use EightshiftLibs\Config\AbstractConfig;
 /**
  * The project config class.
  */
-class Config extends AbstractConfig {
+class Config extends AbstractConfig
+{
 
-  /**
-   * Method that returns project name.
-   *
-   * Generally used for naming assets handlers, languages, etc.
-   */
-  public static function get_project_name() : string {
-    return 'eightshift-libs';
-  }
+	/**
+	 * Method that returns project name.
+	 *
+	 * Generally used for naming assets handlers, languages, etc.
+	 */
+	public static function getProjectName(): string
+	{
+		return 'eightshift-libs';
+	}
 
-  /**
-   * Method that returns project version.
-   *
-   * Generally used for versioning asset handlers while enqueueing them.
-   */
-  public static function get_project_version() : string {
-    return '1.0.0';
-  }
+	/**
+	 * Method that returns project version.
+	 *
+	 * Generally used for versioning asset handlers while enqueueing them.
+	 */
+	public static function getProjectVersion(): string
+	{
+		return '1.0.0';
+	}
 
-  /**
-   * Method that returns project prefix.
-   *
-   * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.
-   *
-   * @return string Full path to asset.
-   */
-  public static function get_project_prefix() : string {
-    return 'eb';
-  }
+	/**
+	 * Method that returns project prefix.
+	 *
+	 * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.
+	 *
+	 * @return string Full path to asset.
+	 */
+	public static function getProjectPrefix(): string
+	{
+		return 'eb';
+	}
 
-  /**
-   * Returns the project environment variable descriptor.
-   *
-   * Used for defining global settings depending on the environment of the project.
-   * Can be one of, but not limited to, develop, staging, production.
-   *
-   * Defaults to 'develop' (as to not cache manifest in transient) if not otherwise
-   * defined in wp-config.php
-   *
-   * @return string Current project environment string.
-   */
-  public static function get_project_env() : string {
-    if ( defined( 'EB_ENV' ) ) {
-      return EB_ENV;
-    }
+	/**
+	 * Returns the project environment variable descriptor.
+	 *
+	 * Used for defining global settings depending on the environment of the project.
+	 * Can be one of, but not limited to, develop, staging, production.
+	 *
+	 * Defaults to 'develop' (as to not cache manifest in transient) if not otherwise
+	 * defined in wp-config.php
+	 *
+	 * @return string Current project environment string.
+	 */
+	public static function getProjectEnv(): string
+	{
+		if (defined('EB_ENV')) {
+			return EB_ENV;
+		}
 
-    return 'develop';
-  }
+		return 'develop';
+	}
 
-  /**
-   * Method that returns project REST-API namespace.
-   *
-   * Used for namespacing projects REST-API routes and fields.
-   */
-  public static function get_project_routes_namespace() : string {
-    return static::get_project_name();
-  }
+	/**
+	 * Method that returns project REST-API namespace.
+	 *
+	 * Used for namespacing projects REST-API routes and fields.
+	 */
+	public static function getProjectRoutesNamespace(): string
+	{
+		return static::getProjectName();
+	}
 
-  /**
-   * Method that returns project REST-API version.
-   *
-   * Used for versioning projects REST-API routes and fields.
-   */
-  public static function get_project_routes_version() : string {
-    return 'v1';
-  }
+	/**
+	 * Method that returns project REST-API version.
+	 *
+	 * Used for versioning projects REST-API routes and fields.
+	 */
+	public static function getProjectRoutesVersion(): string
+	{
+		return 'v1';
+	}
 }

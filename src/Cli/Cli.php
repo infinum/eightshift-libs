@@ -1,11 +1,12 @@
 <?php
+
 /**
  * The class file that holds abstract class for WPCLI
  *
  * @package EightshiftLibs\Cli
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
@@ -42,151 +43,156 @@ use EightshiftLibs\Setup\UpdateCli;
 /**
  * Class Cli
  */
-class Cli {
+class Cli
+{
 
-  /**
-   * Top level commands name.
-   *
-   * @var string
-   */
-  protected $command_parent_name;
+	/**
+	 * Top level commands name.
+	 *
+	 * @var string
+	 */
+	protected $commandParentName;
 
-  /**
-   * All classes and commands that can be used on development and public WP CLI.
-   *
-   * @var array
-   */
-  const CLASSES_LIST = [
-    BlocksCli::class,
-    EnqueueAdminCli::class,
-    EnqueueBlocksCli::class,
-    EnqueueThemeCli::class,
-    ConfigCli::class,
-    PostTypeCli::class,
-    TaxonomyCli::class,
-    I18nCli::class,
-    LoginCli::class,
-    MainCli::class,
-    ManifestCli::class,
-    MediaCli::class,
-    MenuCli::class,
-    ModifyAdminAppearanceCli::class,
-    FieldCli::class,
-    RouteCli::class,
-    ServiceExampleCli::class,
-    SetupCli::class,
-    DbImportCli::class,
-    BuildCli::class,
-    ReadmeCli::class,
-    GitIgnoreCli::class,
-    CiExcludeCli::class,
-    LintPhpCli::class,
-  ];
+	/**
+	 * All classes and commands that can be used on development and public WP CLI.
+	 *
+	 * @var array
+	 */
+	public const CLASSES_LIST = [
+		BlocksCli::class,
+		EnqueueAdminCli::class,
+		EnqueueBlocksCli::class,
+		EnqueueThemeCli::class,
+		ConfigCli::class,
+		PostTypeCli::class,
+		TaxonomyCli::class,
+		I18nCli::class,
+		LoginCli::class,
+		MainCli::class,
+		ManifestCli::class,
+		MediaCli::class,
+		MenuCli::class,
+		ModifyAdminAppearanceCli::class,
+		FieldCli::class,
+		RouteCli::class,
+		ServiceExampleCli::class,
+		SetupCli::class,
+		DbImportCli::class,
+		BuildCli::class,
+		ReadmeCli::class,
+		GitIgnoreCli::class,
+		CiExcludeCli::class,
+		LintPhpCli::class,
+	];
 
-  /**
-   * All classes and commands used only for WPCLI.
-   *
-   * @var array
-   */
-  const PUBLIC_CLASSES = [
-    BlockComponentCli::class,
-    BlockCli::class,
-    UpdateCli::class,
-    ExportCli::class,
-    ImportCli::class,
-  ];
+	/**
+	 * All classes and commands used only for WPCLI.
+	 *
+	 * @var array
+	 */
+	public const PUBLIC_CLASSES = [
+		BlockComponentCli::class,
+		BlockCli::class,
+		UpdateCli::class,
+		ExportCli::class,
+		ImportCli::class,
+	];
 
-  /**
-   * All classes and commands used for project setup.
-   *
-   * @var array
-   */
-  const SETUP_CLASSES = [
-    CliInitTheme::class,
-  ];
+	/**
+	 * All classes and commands used for project setup.
+	 *
+	 * @var array
+	 */
+	public const SETUP_CLASSES = [
+		CliInitTheme::class,
+	];
 
-  /**
-   * All classes and commands used only for development.
-   *
-   * @var array
-   */
-  const DEVELOP_CLASSES = [
-    CliReset::class,
-    CliRunAll::class,
-    CliShowAll::class,
-  ];
+	/**
+	 * All classes and commands used only for development.
+	 *
+	 * @var array
+	 */
+	public const DEVELOP_CLASSES = [
+		CliReset::class,
+		CliRunAll::class,
+		CliShowAll::class,
+	];
 
-  /**
-   * Define all classes to register for development.
-   *
-   * @return array
-   */
-  public function get_develop_classes() : array {
-    return array_merge(
-      static::CLASSES_LIST,
-      static::DEVELOP_CLASSES,
-      static::SETUP_CLASSES
-    );
-  }
+	/**
+	 * Define all classes to register for development.
+	 *
+	 * @return array
+	 */
+	public function getDevelopClasses(): array
+	{
+		return array_merge(
+			static::CLASSES_LIST,
+			static::DEVELOP_CLASSES,
+			static::SETUP_CLASSES
+		);
+	}
 
-  /**
-   * Define all classes to register for normal WP.
-   *
-   * @return array
-   */
-  public function get_public_classes() : array {
-    return array_merge(
-      static::CLASSES_LIST,
-      static::PUBLIC_CLASSES,
-      static::SETUP_CLASSES
-    );
-  }
+	/**
+	 * Define all classes to register for normal WP.
+	 *
+	 * @return array
+	 */
+	public function getPublicClasses(): array
+	{
+		return array_merge(
+			static::CLASSES_LIST,
+			static::PUBLIC_CLASSES,
+			static::SETUP_CLASSES
+		);
+	}
 
-  /**
-   * Run all CLI commands for develop.
-   *
-   * @param array $args WPCLI eval-file arguments.
-   *
-   * @return void
-   */
-  public function load_develop( array $args = [] ) : void {
+	/**
+	 * Run all CLI commands for develop.
+	 *
+	 * @param array $args WPCLI eval-file arguments.
+	 *
+	 * @return void
+	 */
+	public function loadDevelop(array $args = [] ): void
+	{
 
-    $command_name = $args[0] ?? '';
+		$commandName = $args[0] ?? '';
 
-    if ( empty( $command_name ) ) {
-      \WP_CLI::error( 'First argument must be a valid command name.' );
-    }
+		if (empty($commandName)) {
+			\WP_CLI::error('First argument must be a valid command name.');
+		}
 
-    foreach ( $this->get_develop_classes() as $item ) {
-      $reflection_class = new \ReflectionClass( $item );
-      $class            = $reflection_class->newInstanceArgs( [ null ] );
+		foreach ($this->getDevelopClasses() as $item) {
+			$reflectionClass = new \ReflectionClass($item);
+			$class           = $reflectionClass->newInstanceArgs([ null ]);
 
-      if ( $class->get_command_name() === $command_name ) {
-        $class->__invoke(
-          [],
-          $class->get_develop_args( $args )
-        );
+			if ($class->getCommandName() === $commandName) {
+				$class->__invoke(
+					[],
+					$class->getDevelopArgs($args)
+				);
 
-        break;
-      }
-    }
-  }
+				break;
+			}
+		}
+	}
 
-  /**
-   * Run all CLI commands for normal WPCLI.
-   *
-   * @param string $command_parent_name Define top level commands name.
-   *
-   * @return void
-   */
-  public function load( string $command_parent_name ) : void {
-    $this->command_parent_name = $command_parent_name;
+	/**
+	 * Run all CLI commands for normal WPCLI.
+	 *
+	 * @param string $commandParentName Define top level commands name.
+	 *
+	 * @return void
+	 */
+	public function load(string $commandParentName ): void
+	{
+		$this->commandParentName = $commandParentName;
 
-    foreach ( $this->get_public_classes() as $item ) {
-      $reflection_class = new \ReflectionClass( $item );
-      $class            = $reflection_class->newInstanceArgs( [ $this->command_parent_name ] );
+		foreach ($this->getPublicClasses() as $item) {
+			$reflectionClass = new \ReflectionClass($item);
+			$class           = $reflectionClass->newInstanceArgs([ $this->commandParentName ]);
 
-      $class->register();
-    }
-  }
+			$class->register();
+		}
+	}
 }

@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Class that registers WPCLI command for Service Example.
  *
  * @package EightshiftLibs\ExampleService
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\ExampleService;
 
@@ -14,86 +15,90 @@ use EightshiftLibs\Cli\AbstractCli;
 /**
  * Class ServiceExampleCli
  */
-class ServiceExampleCli extends AbstractCli {
+class ServiceExampleCli extends AbstractCli
+{
 
-  /**
-   * Output dir relative path.
-   */
-  const OUTPUT_DIR = 'src';
+	/**
+	 * Output dir relative path.
+	 */
+	public const OUTPUT_DIR = 'src';
 
-  /**
-   * Template name.
-   */
-  const TEMPLATE = 'Service';
+	/**
+	 * Template name.
+	 */
+	public const TEMPLATE = 'Service';
 
-  /**
-   * Define default develop props.
-   *
-   * @param array $args WPCLI eval-file arguments.
-   *
-   * @return array
-   */
-  public function get_develop_args( array $args ) : array {
-    return [
-      'folder'    => $args[1] ?? 'testFolder/novi',
-      'file_name' => $args[2] ?? 'TestTest',
-    ];
-  }
+	/**
+	 * Define default develop props.
+	 *
+	 * @param array $args WPCLI eval-file arguments.
+	 *
+	 * @return array
+	 */
+	public function getDevelopArgs(array $args ): array
+	{
+		return [
+			'folder'    => $args[1] ?? 'testFolder/novi',
+			'file_name' => $args[2] ?? 'TestTest',
+		];
+	}
 
-  /**
-   * Get WPCLI command doc.
-   *
-   * @return string
-   */
-  public function get_doc() : array {
-    return [
-      'shortdesc' => 'Generates empty generic service class.',
-      'synopsis' => [
-        [
-          'type'        => 'assoc',
-          'name'        => 'folder',
-          'description' => 'The output folder path relative to src folder. Example: main or main/config',
-          'optional'    => false,
-        ],
-        [
-          'type'        => 'assoc',
-          'name'        => 'file_name',
-          'description' => 'The output file name. Example: Main',
-          'optional'    => false,
-        ],
-      ],
-    ];
-  }
+	/**
+	 * Get WPCLI command doc.
+	 *
+	 * @return string
+	 */
+	public function getDoc(): array
+	{
+		return [
+			'shortdesc' => 'Generates empty generic service class.',
+			'synopsis' => [
+				[
+					'type'        => 'assoc',
+					'name'        => 'folder',
+					'description' => 'The output folder path relative to src folder. Example: main or main/config',
+					'optional'    => false,
+				],
+				[
+					'type'        => 'assoc',
+					'name'        => 'file_name',
+					'description' => 'The output file name. Example: Main',
+					'optional'    => false,
+				],
+			],
+		];
+	}
 
-  public function __invoke( array $args, array $assoc_args ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	{
 
-    // Get Props.
-    $folder    = $assoc_args['folder'];
-    $file_name = $this->prepare_slug( $assoc_args['file_name'] );
+		// Get Props.
+		$folder   = $assocArgs['folder'];
+		$fileName = $this->prepareSlug($assocArgs['file_name']);
 
-    // Get full class name.
-    $class_name = $this->get_file_name( $file_name );
+		// Get full class name.
+		$className = $this->getFileName($fileName);
 
-    // Read the template contents, and replace the placeholders with provided variables.
-    $class = $this->get_example_template( __DIR__, static::TEMPLATE );
+		// Read the template contents, and replace the placeholders with provided variables.
+		$class = $this->getExampleTemplate(__DIR__, static::TEMPLATE);
 
-    // Replace stuff in file.
-    $class = $this->rename_class_name( $class_name, $class );
-    $class = $this->rename_namespace( $assoc_args, $class );
-    $class = $this->rename_use( $assoc_args, $class );
+		// Replace stuff in file.
+		$class = $this->renameClassName($className, $class);
+		$class = $this->renameNamespace($assocArgs, $class);
+		$class = $this->renameUse($assocArgs, $class);
 
-    // Create new namespace from folder structure.
-    $folder_parts = array_map(
-      function( $item ) {
-        return ucfirst( $item );
-      },
-      explode( '/', $folder )
-    );
+		// Create new namespace from folder structure.
+		$folderParts = array_map(
+			function ($item ) {
+				return ucfirst($item);
+			},
+			explode('/', $folder)
+		);
 
-    $new_namespace = '\\' . implode( '\\', $folder_parts );
-    $class         = str_replace( '\\ExampleService', $new_namespace, $class );
+		$newNamespace = '\\' . implode('\\', $folderParts);
+		$class        = str_replace('\\ExampleService', $newNamespace, $class);
 
-    // Output final class to new file/folder and finish.
-    $this->output_write( static::OUTPUT_DIR . '/' . $folder, $class_name, $class );
-  }
+		// Output final class to new file/folder and finish.
+		$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $className, $class);
+	}
 }

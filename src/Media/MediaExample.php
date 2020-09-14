@@ -1,11 +1,12 @@
 <?php
+
 /**
  * The Media specific functionality.
  *
  * @package EightshiftLibs\Media
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Media;
 
@@ -16,14 +17,16 @@ use EightshiftLibs\Media\AbstractMedia;
  *
  * This class handles all media options. Sizes, Types, Features, etc.
  */
-class MediaExample extends AbstractMedia {
+class MediaExample extends AbstractMedia
+{
 
-  /**
-   * Register all the hooks
-   *
-   * @return void
-   */
-  public function register() : void {
-    add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 20 );
-  }
+	/**
+	 * Register all the hooks
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		add_action('after_setup_theme', [ $this, 'addThemeSupport' ], 20);
+	}
 }

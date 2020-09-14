@@ -14,26 +14,26 @@ namespace EightshiftLibs\Helpers;
  */
 class Shortcode {
 
-  /**
-   * Call a shortcode function by tag name.
-   *
-   * @author J.D. Grimes
-   * @link https://codesymphony.co/dont-do_shortcode/
-   *
-   * @param string $tag     The shortcode whose function to call.
-   * @param array  $atts    The attributes to pass to the shortcode function. Optional.
-   * @param array  $content The shortcode's content. Default is null (none).
-   *
-   * @return string|bool False on failure, the result of the shortcode on success.
-   */
-  public function get_shortcode( string $tag, array $atts = [], $content = null ) {
+	/**
+	 * Call a shortcode function by tag name.
+	 *
+	 * @author J.D. Grimes
+	 * @link https://codesymphony.co/dont-do_shortcode/
+	 *
+	 * @param string $tag     The shortcode whose function to call.
+	 * @param array  $atts    The attributes to pass to the shortcode function. Optional.
+	 * @param array  $content The shortcode's content. Default is null (none).
+	 *
+	 * @return string|bool False on failure, the result of the shortcode on success.
+	 */
+	public function getShortcode( string $tag, array $atts = [], $content = null ) {
 
-    global $shortcode_tags;
+		global $shortcodeTags;
 
-    if ( ! isset( $shortcode_tags[ $tag ] ) ) {
-      return false;
-    }
+		if ( ! isset( $shortcodeTags[ $tag ] ) ) {
+			return false;
+		}
 
-    return \call_user_func( $shortcode_tags[ $tag ], $atts, $content, $tag );
-  }
+		return \call_user_func( $shortcodeTags[ $tag ], $atts, $content, $tag );
+	}
 }

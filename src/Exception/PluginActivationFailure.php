@@ -14,14 +14,14 @@ namespace EightshiftLibs\Exception;
  */
 final class PluginActivationFailure extends \RuntimeException implements GeneralExceptionInterface {
 
-  /**
-   * Create a new instance of the exception in case plugin cannot be activated.
-   *
-   * @param string $message Error message to show on plugin activation failure.
-   *
-   * @return static
-   */
-  public static function activation_message( $message ) {
-    return new static( $message );
-  }
+	/**
+	 * Create a new instance of the exception in case plugin cannot be activated.
+	 *
+	 * @param string $message Error message to show on plugin activation failure.
+	 *
+	 * @return static
+	 */
+	public static function activationMessage( $message ) {
+		return new static( $message );
+	}
 }
