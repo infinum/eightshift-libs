@@ -36,7 +36,7 @@ class ManifestExample extends AbstractManifest
 	public function register(): void
 	{
 		\add_action('init', [ $this, 'setAssetsManifestRaw' ]);
-		\add_filter(Config::getConfig(static::MANIFEST_ITEM), [ $this, 'getAssetsManifestItem' ]);
+		\add_filter(static::MANIFEST_ITEM, [ $this, 'getAssetsManifestItem' ]);
 	}
 
 	/**
