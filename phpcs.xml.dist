@@ -34,6 +34,18 @@
         <exclude-pattern>*/src/LintPhp/LintPhpCli.php</exclude-pattern>
     </rule>
 
+    <rule ref="WordPress.WP.AlternativeFunctions.file_system_read_fopen">
+        <exclude-pattern>*/src/Cli/*</exclude-pattern>
+    </rule>
+
+    <rule ref="WordPress.WP.AlternativeFunctions.file_system_read_fwrite">
+        <exclude-pattern>*/src/Cli/*</exclude-pattern>
+    </rule>
+
+    <rule ref="WordPress.WP.AlternativeFunctions.file_system_read_fclose">
+        <exclude-pattern>*/src/Cli/*</exclude-pattern>
+    </rule>
+
     <rule ref="Generic.Files.LineLength">
         <exclude name="Generic.Files.LineLength.TooLong"/>
     </rule>
