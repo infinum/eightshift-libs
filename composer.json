@@ -34,7 +34,8 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "infinum/coding-standards-wp": "dev-feature/wpcs-update-bc",
     "roave/security-advisories": "dev-master",
-    "szepeviktor/phpstan-wordpress": "^0.6"
+    "szepeviktor/phpstan-wordpress": "^0.6",
+    "wp-cli/wp-cli": "^2.4"
   },
   "autoload": {
     "psr-4": {
