@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Cli\AbstractCli;
-
 /**
  * Class CliShowAll
  */
@@ -32,7 +30,6 @@ class CliShowAll extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli and development:%n'));
 		$this->getEvalLoop(Cli::CLASSES_LIST);
 		\WP_CLI::log('-----------------------------------------');

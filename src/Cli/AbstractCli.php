@@ -29,11 +29,15 @@ abstract class AbstractCli implements CliInterface
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = '';
 
 	/**
 	 * Output template name.
+	 *
+	 * @var string
 	 */
 	public const TEMPLATE = '';
 
@@ -41,26 +45,24 @@ abstract class AbstractCli implements CliInterface
 	 * Construct Method.
 	 *
 	 * @param string $commandParentName Define top level commands name.
-	 *
-	 * @return void
 	 */
-	public function __construct($commandParentName)
+	public function __construct(string $commandParentName)
 	{
 		$this->commandParentName = $commandParentName;
 	}
 
 	/**
-	 * Register method for WPCLI command.
+	 * Register method for WPCLI command
 	 *
 	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('cli_init', [ $this, 'registerCommand' ]);
+		\add_action('cli_init', [$this, 'registerCommand']);
 	}
 
 	/**
-	 * Define global synopsis for all projects commands.
+	 * Define global synopsis for all projects commands
 	 *
 	 * @return array
 	 */
@@ -69,38 +71,39 @@ abstract class AbstractCli implements CliInterface
 		return [
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'namespace',
+					'type' => 'assoc',
+					'name' => 'namespace',
 					'description' => 'Define your project namespace. Default is read from composer autoload psr-4 key.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'vendor_prefix',
+					'type' => 'assoc',
+					'name' => 'vendor_prefix',
 					'description' => 'Define your project vendor_prefix. Default is read from composer extra, imposter, namespace key.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'config_path',
+					'type' => 'assoc',
+					'name' => 'config_path',
 					'description' => 'Define your project composer absolute path.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
 	}
 
 	/**
-	 * Method that creates actual WPCLI command in terminal.
-	 *
-	 * @throws \ReflectionException Exception in the case the class is missing.
+	 * Method that creates actual WPCLI command in terminal
 	 *
 	 * @return void
+	 * @throws \ReflectionException Exception in the case the class is missing.
+	 *
+	 * @throws \Exception Error in case the WP_CLI::add_command fails.
 	 */
 	public function registerCommand(): void
 	{
 		$reflectionClass = new \ReflectionClass($this->getClassName());
-		$class           = $reflectionClass->newInstanceArgs([ $this->commandParentName ]);
+		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 		\WP_CLI::add_command(
 			$this->commandParentName . ' ' . $this->getCommandName(),
@@ -113,7 +116,7 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Define default develop props.
+	 * Define default develop props
 	 *
 	 * @param array $args WPCLI eval-file arguments.
 	 *
@@ -125,7 +128,7 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Get full class name for current class.
+	 * Get full class name for current class
 	 *
 	 * @return string
 	 */
@@ -135,7 +138,7 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Get short class name for current class.
+	 * Get short class name for current class
 	 *
 	 * @return string
 	 */
@@ -157,9 +160,9 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{

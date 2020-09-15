@@ -56,7 +56,7 @@ interface CliInterface
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array;
 }

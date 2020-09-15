@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Cli\AbstractCli;
-
 /**
  * Class CliReset
  */

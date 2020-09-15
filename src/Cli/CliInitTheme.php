@@ -32,7 +32,9 @@ class CliInitTheme extends AbstractCli
 {
 
 	/**
-	 * All classes for initial theme setup for project.
+	 * All classes for initial theme setup for project
+	 *
+	 * @var array
 	 */
 	public const INIT_THEME_CLASSES = [
 		BlocksCli::class,
@@ -74,15 +76,14 @@ class CliInitTheme extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
-		if (! function_exists('add_action')) {
+		if (!function_exists('add_action')) {
 			$this->runReset();
 			\WP_CLI::log('--------------------------------------------------');
 		}
 
 		foreach (static::INIT_THEME_CLASSES as $item) {
 			$reflectionClass = new \ReflectionClass($item);
-			$class           = $reflectionClass->newInstanceArgs([ null ]);
+			$class = $reflectionClass->newInstanceArgs([null]);
 
 			if (function_exists('add_action')) {
 				\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()}");
