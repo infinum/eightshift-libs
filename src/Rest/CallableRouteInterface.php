@@ -25,5 +25,5 @@ interface CallableRouteInterface
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
 	 */
-	public function routeCallback(\WP_REST_Request $request );
+	public function routeCallback(\WP_REST_Request $request);
 }

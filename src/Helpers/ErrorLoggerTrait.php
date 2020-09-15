@@ -1,18 +1,20 @@
 <?php
+
 /**
  * The object helper specific functionality for errors.
  *
  * @package EightshiftLibs\Helpers
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
 /**
  * Error logger trait.
  */
-trait ErrorLoggerTrait {
+trait ErrorLoggerTrait
+{
 
 	/**
 	 * Ensure correct response for rest using handler function.
@@ -24,7 +26,8 @@ trait ErrorLoggerTrait {
 	 *
 	 * @return \WP_Error|array \WP_Error instance with error message and status or array.
 	 */
-	public function restResponseHandler( int $code, string $status, $msg, $data = null ) {
+	public function restResponseHandler(int $code, string $status, $msg, $data = null)
+	{
 		$output = [
 			'code'    => $code,
 			'status'  => $status,
@@ -32,14 +35,14 @@ trait ErrorLoggerTrait {
 			'data'    => $data,
 		];
 
-		if ( $code === 404 ) {
-			return \rest_ensure_response( new \WP_Error( $output ) );
+		if ($code === 404) {
+			return \rest_ensure_response(new \WP_Error($output));
 		}
 
-		if ( $code === 200 ) {
-			return \rest_ensure_response( wp_send_json_success( $output, $code ) );
+		if ($code === 200) {
+			return \rest_ensure_response(wp_send_json_success($output, $code));
 		}
 
-		return \rest_ensure_response( wp_send_json_error( $output, $code ) );
+		return \rest_ensure_response(wp_send_json_error($output, $code));
 	}
 }

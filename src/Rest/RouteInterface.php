@@ -31,10 +31,10 @@ interface RouteInterface
 	public const CREATABLE = 'POST';
 
 	/**
-   * Alias for PATCH transport method.
-   *
-   * @var string
-   */
+	 * Alias for PATCH transport method.
+	 *
+	 * @var string
+	 */
 	public const EDITABLE = 'PATCH';
 
 	/**

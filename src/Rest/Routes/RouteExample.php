@@ -72,7 +72,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
 	 */
-	public function routeCallback(\WP_REST_Request $request ) // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClass
+	public function routeCallback(\WP_REST_Request $request)
 	{
 		return \rest_ensure_response();
 	}

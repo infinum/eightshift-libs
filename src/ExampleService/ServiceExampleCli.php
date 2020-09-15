@@ -35,7 +35,7 @@ class ServiceExampleCli extends AbstractCli
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs(array $args ): array
+	public function getDevelopArgs(array $args): array
 	{
 		return [
 			'folder'    => $args[1] ?? 'testFolder/novi',
@@ -69,7 +69,13 @@ class ServiceExampleCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	/**
+	 * Generate the service class
+	 *
+	 * @param array $args      Array of arguments form terminal.
+	 * @param array $assocArgs Array of associative arguments form terminal.
+	 */
+	public function __invoke(array $args, array $assocArgs)
 	{
 
 		// Get Props.
@@ -89,7 +95,7 @@ class ServiceExampleCli extends AbstractCli
 
 		// Create new namespace from folder structure.
 		$folderParts = array_map(
-			function ($item ) {
+			function ($item) {
 				return ucfirst($item);
 			},
 			explode('/', $folder)

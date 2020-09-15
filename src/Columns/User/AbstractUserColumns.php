@@ -39,7 +39,7 @@ abstract class AbstractUserColumns implements ServiceInterface
 	 *
 	 * @return array         Modified column names array.
 	 */
-	abstract public function addColumnName(array $columns ): array;
+	abstract public function addColumnName(array $columns): array;
 
 	/**
 	 * Render the user column content in the custom user column
@@ -50,7 +50,7 @@ abstract class AbstractUserColumns implements ServiceInterface
 	 *
 	 * @return string             Output based on the column name.
 	 */
-	abstract public function renderColumnContent(string $output, string $columnName, int $userId ): string;
+	abstract public function renderColumnContent(string $output, string $columnName, int $userId): string;
 
 	/**
 	 * Make user columns sortable
@@ -59,5 +59,5 @@ abstract class AbstractUserColumns implements ServiceInterface
 	 *
 	 * @return array          Modified array of columns.
 	 */
-	abstract public function sortAddedColumns(array $columns ): array;
+	abstract public function sortAddedColumns(array $columns): array;
 }

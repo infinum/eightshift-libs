@@ -35,7 +35,13 @@ class MenuCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	/**
+	 * Generate the Menu class
+	 *
+	 * @param array $args      Array of arguments form terminal.
+	 * @param array $assocArgs Array of associative arguments form terminal.
+	 */
+	public function __invoke(array $args, array $assocArgs)
 	{
 
 		$className = $this->getClassShortName();

@@ -1,18 +1,20 @@
 <?php
+
 /**
  * The Shortcode specific functionality.
  *
  * @package EightshiftLibs\Helpers
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
 /**
  * Class Shortcode
  */
-class Shortcode {
+class Shortcode
+{
 
 	/**
 	 * Call a shortcode function by tag name.
@@ -26,14 +28,15 @@ class Shortcode {
 	 *
 	 * @return string|bool False on failure, the result of the shortcode on success.
 	 */
-	public function getShortcode( string $tag, array $atts = [], $content = null ) {
+	public function getShortcode(string $tag, array $atts = [], $content = null)
+	{
 
 		global $shortcodeTags;
 
-		if ( ! isset( $shortcodeTags[ $tag ] ) ) {
+		if (! isset($shortcodeTags[ $tag ])) {
 			return false;
 		}
 
-		return \call_user_func( $shortcodeTags[ $tag ], $atts, $content, $tag );
+		return \call_user_func($shortcodeTags[ $tag ], $atts, $content, $tag);
 	}
 }

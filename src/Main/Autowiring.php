@@ -36,7 +36,7 @@ class Autowiring
 	 * @param array  $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
 	 * @param string $namespace    Projects namespace.
 	 */
-	public function __construct(array $psr4Prefixes, string $namespace )
+	public function __construct(array $psr4Prefixes, string $namespace)
 	{
 		$this->psr4Prefixes = $psr4Prefixes;
 		$this->namespace    = $namespace;
@@ -44,6 +44,8 @@ class Autowiring
 
 	/**
 	 * Autowiring.
+	 *
+	 * @throws \ReflectionException Exception thrown in case class is missing.
 	 *
 	 * @return array<array> Array of fully qualified class names.
 	 */
@@ -75,20 +77,25 @@ class Autowiring
 			}
 
 			// Build the dependency tree.
-			$dependencyTree = array_merge($this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex), $dependencyTree);
+			$dependencyTree = array_merge(
+				$this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex),
+				$dependencyTree
+			);
 		}
 
 		// Build dependency tree for dependencies. Things that need to be injected but were skipped because
 		// they were initially irrelevant.
 		foreach ($dependencyTree as $dependencies) {
 			foreach ($dependencies as $depClass => $subDeps) {
-
 				// No need to build dependencies for this again if we already have them.
 				if (isset($dependencyTree[$depClass])) {
 					continue;
 				}
 
-				$dependencyTree = array_merge($this->buildDependencyTree($depClass, $filenameIndex, $classInterfaceIndex), $dependencyTree);
+				$dependencyTree = array_merge(
+					$this->buildDependencyTree($depClass, $filenameIndex, $classInterfaceIndex),
+					$dependencyTree
+				);
 			}
 		}
 
@@ -105,7 +112,7 @@ class Autowiring
 	 *
 	 * @return boolean
 	 */
-	protected function isServiceClass(array $interfaces = [] ): bool
+	protected function isServiceClass(array $interfaces = []): bool
 	{
 		foreach ($interfaces as $interface) {
 			$items = explode('\\', $interface);
@@ -120,12 +127,15 @@ class Autowiring
 	/**
 	 * Builds the dependency tree for a single class ($relevantClass)
 	 *
-	 * @param  string $relevantClass       Class we're building dependency tree for.
-	 * @param  array  $filenameIndex       Filename index. Maps filenames to class names.
-	 * @param  array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
+	 * @param string $relevantClass Class we're building dependency tree for.
+	 * @param array  $filenameIndex Filename index. Maps filenames to class names.
+	 * @param array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
+	 *
+	 * @throws \ReflectionException Exception thrown in case class is missing.
+	 *
 	 * @return array
 	 */
-	protected function buildDependencyTree(string $relevantClass, array $filenameIndex, array $classInterfaceIndex )
+	protected function buildDependencyTree(string $relevantClass, array $filenameIndex, array $classInterfaceIndex)
 	{
 		$dependencyTree = [];
 		$reflClass      = new \ReflectionClass($relevantClass);
@@ -133,10 +143,8 @@ class Autowiring
 		// If this class has dependencies, we need to figure those out. Otherwise
 		// we just add it to the dependency tree as a class without dependencies.
 		if (! empty($reflClass->getConstructor())) {
-
 			// Go through each constructor parameter.
 			foreach ($reflClass->getConstructor()->getParameters() as $reflParam) {
-
 				if ($reflParam->getType() === null) {
 					continue;
 				}
@@ -174,7 +182,7 @@ class Autowiring
 	 * @param  array  $psr4Prefixes Array of psr-4 compliant namespaces and their accompanying folders.
 	 * @return array
 	 */
-	protected function getClassesInNamespace(string $namespace, array $psr4Prefixes ): array
+	protected function getClassesInNamespace(string $namespace, array $psr4Prefixes): array
 	{
 		$classes            = [];
 		$namespaceWithSlash = "{$namespace}\\";
@@ -198,15 +206,15 @@ class Autowiring
 	}
 
 	/**
-	 * Builds PSR namespace SolplanetVendor\from file's path.
+	 * Builds PSR namespace Vendor\from file's path.
 	 *
 	 * @param  string $filepath          Path to a file.
-	 * @param  string $rootNamespace     Root namespace SolplanetVendor\we're getting classes from.
-	 * @param  string $rootNamespacePath Path to root namespace SolplanetVendor\.
+	 * @param  string $rootNamespace     Root namespace Vendor\we're getting classes from.
+	 * @param  string $rootNamespacePath Path to root namespace Vendor\.
 	 *
 	 * @return string
 	 */
-	protected function getNamespaceFromFilepath(string $filepath, string $rootNamespace, string $rootNamespacePath ): string
+	protected function getNamespaceFromFilepath(string $filepath, string $rootNamespace, string $rootNamespacePath): string
 	{
 		return $rootNamespace . str_replace(
 			[$rootNamespacePath, DIRECTORY_SEPARATOR, '.php'],
@@ -227,7 +235,7 @@ class Autowiring
 	 *
 	 * @throws \Exception If things we're looking for are missing inside filename or classInterface index (which shouldn't happen).
 	 */
-	protected function tryToFindMatchingClass(string $filename, string $interfaceName, array $filenameIndex, array $classInterfaceIndex ): string
+	protected function tryToFindMatchingClass(string $filename, string $interfaceName, array $filenameIndex, array $classInterfaceIndex): string
 	{
 
 		// If there's no matches in filename index by variable, we need to skip it, this dependency's definition.
@@ -244,15 +252,16 @@ class Autowiring
 				throw new \Exception("Class {$classInFilename} not found in classInterfaceIndex, aborting.");
 			}
 
-			// If the current class implements the interface we're looking for, great! We still need to go through all other
-			// classes to make sure we don't get more than 1 match.
+			// If the current class implements the interface we're looking for, great!
+			// We still need to go through all other classes to make sure we don't get more than 1 match.
 			if (isset($classInterfaceIndex[$classInFilename][$interfaceName])) {
 				$match = $classInFilename;
 				$matches++;
 			}
 		}
 
-		// If we don't have a unique match (i.e. if 2 classes of the same name are implementing the interface we're looking for)
+		// If we don't have a unique match
+		// (i.e. if 2 classes of the same name are implementing the interface we're looking for)
 		// then we need to cancel the match because we don't know how to handle that.
 		if ($matches !== 1) {
 			$match = '';
@@ -264,10 +273,11 @@ class Autowiring
 	/**
 	 * Builds the PSR-4 filename index. Maps filenames to class names.
 	 *
-	 * @param  array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader ($loader->getPsr4Prefixes()).
+	 * @param  array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader
+	 *                                   ($loader->getPsr4Prefixes()).
 	 * @return array
 	 */
-	protected function buildFilenameIndex(array $allRelevantClasses ): array
+	protected function buildFilenameIndex(array $allRelevantClasses): array
 	{
 		$filenameIndex = [];
 		foreach ($allRelevantClasses as $relevantClass) {
@@ -282,15 +292,16 @@ class Autowiring
 	/**
 	 * Builds the PSR-4 class => [$interfaces] index. Maps classes to interfaces they implement.
 	 *
-	 * @param array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader ($loader->getPsr4Prefixes()).
+	 * @param array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader
+	 *                                  ($loader->getPsr4Prefixes()).
 	 * @return array
 	 */
-	protected function buildClassInterfaceIndex(array $allRelevantClasses ): array
+	protected function buildClassInterfaceIndex(array $allRelevantClasses): array
 	{
 		$classInterfaceIndex = [];
 		foreach ($allRelevantClasses as $relevantClass) {
 			$interfaces = array_map(
-				function() {
+				function () {
 					return true;
 				},
 				(new \ReflectionClass($relevantClass))->getInterfaces()
@@ -310,7 +321,7 @@ class Autowiring
 	 * @param  string $classname Fully qualified classname.
 	 * @return string
 	 */
-	protected function getFilenameFromClass(string $classname ): string
+	protected function getFilenameFromClass(string $classname): string
 	{
 		return lcfirst(trim(substr($classname, strrpos($classname, '\\') + 1)));
 	}
@@ -321,7 +332,7 @@ class Autowiring
 	 * @param  array $dependencyTree Dependency tree.
 	 * @return array
 	 */
-	protected function convertDependencyTreeIntoDefinitionList(array $dependencyTree )
+	protected function convertDependencyTreeIntoDefinitionList(array $dependencyTree)
 	{
 		$classes = [];
 		foreach ($dependencyTree as $className => $dependencies) {

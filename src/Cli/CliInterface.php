@@ -28,7 +28,7 @@ interface CliInterface
 	 *
 	 * @return void
 	 */
-	public function __invoke(array $args, array $assocArgs );
+	public function __invoke(array $args, array $assocArgs);
 
 	/**
 	 * Method that creates actual WPCLI command in terminal.

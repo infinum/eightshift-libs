@@ -45,9 +45,15 @@ class LintPhpCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	/**
+	 * Lints the project
+	 *
+	 * @param array $args      Array of arguments form terminal.
+	 * @param array $assocArgs Array of associative arguments form terminal.
+	 */
+	public function __invoke(array $args, array $assocArgs)
 	{
-		$output = shell_exec('composer run standards:check'); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+		$output = shell_exec('composer run standards:check');
 
 		\WP_CLI::log($output);
 

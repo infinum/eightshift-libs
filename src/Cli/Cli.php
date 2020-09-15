@@ -153,7 +153,7 @@ class Cli
 	 *
 	 * @return void
 	 */
-	public function loadDevelop(array $args = [] ): void
+	public function loadDevelop(array $args = []): void
 	{
 
 		$commandName = $args[0] ?? '';
@@ -184,7 +184,7 @@ class Cli
 	 *
 	 * @return void
 	 */
-	public function load(string $commandParentName ): void
+	public function load(string $commandParentName): void
 	{
 		$this->commandParentName = $commandParentName;
 

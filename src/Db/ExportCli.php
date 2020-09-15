@@ -54,7 +54,13 @@ class ExportCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	/**
+	 * Exports the database
+	 *
+	 * @param array $args      Array of arguments form terminal.
+	 * @param array $assocArgs Array of associative arguments form terminal.
+	 */
+	public function __invoke(array $args, array $assocArgs)
 	{
 
 		require $this->getLibsPath('src/Db/DbExport.php');

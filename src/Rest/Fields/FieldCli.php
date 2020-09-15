@@ -40,7 +40,7 @@ class FieldCli extends AbstractCli
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs(array $args ): array
+	public function getDevelopArgs(array $args): array
 	{
 		return [
 			'field_name'  => $args[1] ?? 'title',
@@ -51,7 +51,7 @@ class FieldCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -74,7 +74,13 @@ class FieldCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	/**
+	 * Generate the REST API field class
+	 *
+	 * @param array $args      Array of arguments form terminal.
+	 * @param array $assocArgs Array of associative arguments form terminal.
+	 */
+	public function __invoke(array $args, array $assocArgs)
 	{
 
 		// Get Props.
@@ -89,7 +95,7 @@ class FieldCli extends AbstractCli
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameClassNameWithSufix($this->getClassShortName(), $className, $class);
+		$class = $this->renameClassNameWithSuffix($this->getClassShortName(), $className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
 		$class = str_replace('example-post-type', $objectType, $class);

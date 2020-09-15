@@ -30,7 +30,15 @@ class CliShowAll extends AbstractCli
 		return 'show_all';
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	/**
+	 * Shows all commands
+	 *
+	 * @param array $args Array of arguments form terminal.
+	 * @param array $assocArgs Array of associative arguments form terminal.
+	 *
+	 * @throws \ReflectionException Exception in the case a class is missing.
+	 */
+	public function __invoke(array $args, array $assocArgs)
 	{
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli and development:%n'));

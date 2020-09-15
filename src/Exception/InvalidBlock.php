@@ -22,7 +22,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 * @return static
 	 */
 	public static function missingBlocksException()
-{
+	{
 		return new static(esc_html__('There are no blocks added in your project.', 'eightshift-libs'));
 	}
 
@@ -33,9 +33,11 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingNameException(string $blockPath )  {
+	public static function missingNameException(string $blockPath)
+	{
 		return new static(
 			sprintf(
+				/* translators: %s will be replaced with the path where the block should be. */
 				esc_html__('Block in this path %s is missing blockName key in its manifest.json.', 'eightshift-libs'),
 				$blockPath
 			)
@@ -50,9 +52,11 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingViewException(string $blockName, string $blockPath )  {
+	public static function missingViewException(string $blockName, string $blockPath)
+	{
 		return new static(
 			sprintf(
+				/* translators: %1$s is going to be replaced with the template name, %2$s with the template path. */
 				esc_html__('Block with this name %1$s is missing view template. Template name should be called %1$s.php, and it should be located in this path %2$s', 'eightshift-libs'),
 				$blockName,
 				$blockPath
@@ -67,10 +71,12 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingRenderViewException(string $blockPath )   {
+	public static function missingRenderViewException(string $blockPath)
+	{
 		return new static(
 			sprintf(
-				esc_html__('Block view is missing in the provided path. Please chech if %s is the right path for your block view.', 'eightshift-libs'),
+				/* translators: %s will be replaced with the block path. */
+				esc_html__('Block view is missing in the provided path. Please check if %s is the right path for your block view.', 'eightshift-libs'),
 				$blockPath
 			)
 		);
@@ -83,9 +89,11 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingSettingsManifestException(string $settings_manifest_path )     {
+	public static function missingSettingsManifestException(string $settings_manifest_path)
+	{
 		return new static(
 			sprintf(
+				/* translators: %s will be replaced with the location of the manifest for the block. */
 				esc_html__('Global blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
 				$settings_manifest_path
 			)
@@ -99,9 +107,11 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingWrapperManifestException(string $settings_manifest_path )  {
+	public static function missingWrapperManifestException(string $settings_manifest_path)
+	{
 		return new static(
 			sprintf(
+				/* translators: %s will be replaced with the manifest path location. */
 				esc_html__('Wrapper blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
 				$settings_manifest_path
 			)
@@ -115,9 +125,11 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingWrapperViewException(string $wrapper_path )    {
+	public static function missingWrapperViewException(string $wrapper_path)
+	{
 		return new static(
 			sprintf(
+				/* translators: %s will be replaced with the view template path location. */
 				esc_html__('Wrapper view is missing. Template should be located in this path %s', 'eightshift-libs'),
 				$wrapper_path
 			)
@@ -129,7 +141,8 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingNamespaceException()    {
+	public static function missingNamespaceException()
+	{
 		return new static(
 			esc_html__('Global Blocks settings manifest.json is missing a key called namespace. This key prefixes all block names.', 'eightshift-libs')
 		);

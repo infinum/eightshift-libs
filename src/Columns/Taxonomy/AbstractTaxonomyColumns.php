@@ -28,7 +28,7 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 	public function register(): void
 	{
 		array_map(
-			function ($taxonomy ) {
+			function ($taxonomy) {
 				add_filter("manage_edit-{$taxonomy}_columns", [ $this, 'addColumnName' ]);
 				add_filter("manage_{$taxonomy}_custom_column", [ $this, 'renderColumnContent' ], 10, 3);
 			},
@@ -43,7 +43,7 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 	 *
 	 * @return array         Modified column names array.
 	 */
-	abstract public function addColumnName(array $columns ): array;
+	abstract public function addColumnName(array $columns): array;
 
 	/**
 	 * Render the taxonomy column content in the custom taxonomy column
@@ -54,7 +54,7 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 	 *
 	 * @return string The contetnt to display in the custom column.
 	 */
-	abstract public function renderColumnContent(string $string, string $columnName, int $termId ): string;
+	abstract public function renderColumnContent(string $string, string $columnName, int $termId): string;
 
 	/**
 	 * Get the slug of the taxonomy where the additional column should appear.

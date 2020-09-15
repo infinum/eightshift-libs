@@ -28,5 +28,5 @@ interface RenderableBlockInterface
 	 *
 	 * @return string
 	 */
-	public function render(array $attributes, $innerBlockContent ): string;
+	public function render(array $attributes, $innerBlockContent): string;
 }
