@@ -189,7 +189,7 @@ class Autowiring
 			if ($file->isDir()) {
 				continue;
 			}
-			if (preg_match('/\.(php)$/', $file->getFileName()) && preg_match('/^[A-Z]{1,}.*$/m', $file->getFileName())) {
+			if (preg_match('/[A-Z]{1}.*.php/', $file->getFileName())) {
 				$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespace, $pathToNamespace);
 			}
 		}
