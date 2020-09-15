@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class BlockComponentCli
@@ -19,7 +20,9 @@ class BlockComponentCli extends AbstractCli
 {
 
 	/**
-	 * Output dir relative path.
+	 * Output dir relative path
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = 'src/Blocks';
 
@@ -34,7 +37,7 @@ class BlockComponentCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
 	 * @return array
 	 */
@@ -44,10 +47,10 @@ class BlockComponentCli extends AbstractCli
 			'shortdesc' => 'Copy Component from library to your project.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'component',
+					'type' => 'assoc',
+					'name' => 'component',
 					'description' => 'Specify component name.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
@@ -55,29 +58,34 @@ class BlockComponentCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
 		$component = $assocArgs['component'] ?? '';
 
-		$root     = $this->getProjectRootPath();
+		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$sourcePath      = "{$rootNode}/src/Blocks/Components/{$component}";
+		$sourcePath = "{$rootNode}/src/Blocks/Components/{$component}";
 		$destinationPath = "{$root}/src/Blocks/Components/{$component}";
 
 		// Source doesn't exist.
-		if (! file_exists($sourcePath)) {
+		if (!file_exists($sourcePath)) {
 			\WP_CLI::error(
-				/* translators: %s will be replaced with the path. */
-				sprintf('The component "%s" doesn\'t exist in our library. Please check the docs for all available components', $sourcePath)
+			/* translators: %s will be replaced with the path. */
+				sprintf(
+					'The component "%s" doesn\'t exist in our library. Please check the docs for all available components',
+					$sourcePath
+				)
 			);
 		}
 
 		// Destination exists.
 		if (file_exists($destinationPath)) {
 			\WP_CLI::error(
-				/* translators: %s will be replaced with the path. */
-				sprintf('The component in you project exists on this "%s" path. Please check or remove that folder before running this command again.', $destinationPath)
+			/* translators: %s will be replaced with the path. */
+				sprintf(
+					'The component in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
+					$destinationPath
+				)
 			);
 		}
 
