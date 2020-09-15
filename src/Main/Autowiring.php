@@ -1,18 +1,20 @@
 <?php
+
 /**
  * The file that defines the autowiring process
  *
  * @package EightshiftLibs\Main
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Main;
 
 /**
  * The file that defines the autowiring process
  */
-class Autowiring {
+class Autowiring
+{
 
 	/**
 	 * Array of psr-4 prefixes. Should be provided by Composer's ClassLoader. $ClassLoader->getPsr4Prefixes().
@@ -22,12 +24,22 @@ class Autowiring {
 	protected $psr4Prefixes;
 
 	/**
+	 * Project namespace
+	 *
+	 * @var string
+	 */
+	protected $namespace;
+
+	/**
 	 * Constructs object and inserts prefixes from composer.
 	 *
-	 * @param array $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
+	 * @param array  $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
+	 * @param string $namespace    Projects namespace.
 	 */
-	public function __construct( array $psr4Prefixes ) {
+	public function __construct(array $psr4Prefixes, string $namespace )
+	{
 		$this->psr4Prefixes = $psr4Prefixes;
+		$this->namespace    = $namespace;
 	}
 
 	/**
@@ -35,28 +47,29 @@ class Autowiring {
 	 *
 	 * @return array<array> Array of fully qualified class names.
 	 */
-	public function buildServiceClasses() : array {
-		$projectClasses = $this->getClassesInNamespace( 'AutowiringTest', $this->psr4Prefixes );
+	public function buildServiceClasses(): array
+	{
+		$projectClasses = $this->getClassesInNamespace($this->namespace, $this->psr4Prefixes);
 
 		$dependencyTree = [];
 		$filenameIndex  = [];
 
 		// Prepare the filename index.
-		$filenameIndex       = $this->buildFilenameIndex( $projectClasses );
-		$classInterfaceIndex = $this->buildClassInterfaceIndex( $projectClasses );
+		$filenameIndex       = $this->buildFilenameIndex($projectClasses);
+		$classInterfaceIndex = $this->buildClassInterfaceIndex($projectClasses);
 
-		foreach ( $projectClasses as $projectClass ) {
-			$reflClass = new \ReflectionClass( $projectClass );
+		foreach ($projectClasses as $projectClass) {
+			$reflClass = new \ReflectionClass($projectClass);
 
 			// Skip abstract classes, interfaces & traits.
-			if ( $reflClass->isAbstract() || $reflClass->isInterface() || $reflClass->isTrait() ) {
+			if ($reflClass->isAbstract() || $reflClass->isInterface() || $reflClass->isTrait()) {
 				continue;
 			}
 
 			// Skip irrelevant classes.
 			if (
-				! $reflClass->implementsInterface( 'Eightshift_Libs\Core\Service' )
-				&& ( empty( $reflClass->getConstructor() ) || empty( $reflClass->getConstructor()->getParameters() ) )
+				! $this->isServiceClass($reflClass->getInterfaceNames())
+				&& (empty($reflClass->getConstructor()) || empty($reflClass->getConstructor()->getParameters()))
 			) {
 				continue;
 			}
@@ -71,7 +84,7 @@ class Autowiring {
 			foreach ($dependencies as $depClass => $subDeps) {
 
 				// No need to build dependencies for this again if we already have them.
-				if (isset($dependencyTree[ $depClass ])) {
+				if (isset($dependencyTree[$depClass])) {
 					continue;
 				}
 
@@ -81,7 +94,27 @@ class Autowiring {
 
 		// Convert dependency tree into PHP-DI's definition list.
 		$classes = $this->convertDependencyTreeIntoDefinitionList($dependencyTree);
+
 		return $classes;
+	}
+
+	/**
+	 * Check if provided class is part of a service classes. Check if it contains ServiceInterface.
+	 *
+	 * @param array $interfaces List of class interfaces.
+	 *
+	 * @return boolean
+	 */
+	protected function isServiceClass(array $interfaces = [] ): bool
+	{
+		foreach ($interfaces as $interface) {
+			$items = explode('\\', $interface);
+			if (end($items) !== 'ServiceInterface') {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -92,23 +125,28 @@ class Autowiring {
 	 * @param  array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
 	 * @return array
 	 */
-	protected function buildDependencyTree(string $relevantClass, array $filenameIndex, array $classInterfaceIndex) {
+	protected function buildDependencyTree(string $relevantClass, array $filenameIndex, array $classInterfaceIndex )
+	{
 		$dependencyTree = [];
-		$reflClass      = new \ReflectionClass( $relevantClass );
+		$reflClass      = new \ReflectionClass($relevantClass);
 
 		// If this class has dependencies, we need to figure those out. Otherwise
 		// we just add it to the dependency tree as a class without dependencies.
-		if ( ! empty( $reflClass->getConstructor() ) ) {
+		if (! empty($reflClass->getConstructor())) {
 
 			// Go through each constructor parameter.
-			foreach ( $reflClass->getConstructor()->getParameters() as $reflParam ) {
+			foreach ($reflClass->getConstructor()->getParameters() as $reflParam) {
+
+				if ($reflParam->getType() === null) {
+					continue;
+				}
 
 				$classname         = $reflParam->getType()->getName();
-				$reflClassForParam = new \ReflectionClass( $classname );
+				$reflClassForParam = new \ReflectionClass($classname);
 
 				// If the expected type is interface, try guessing based on var name. Otherwise
 				// Just inject that class.
-				if ( $reflClassForParam->isInterface() ) {
+				if ($reflClassForParam->isInterface()) {
 					$matchedClass = $this->tryToFindMatchingClass($reflParam->getName(), $classname, $filenameIndex, $classInterfaceIndex);
 
 					// If we're unable to find exactly 1 class for whatever reason, just skip it, the user
@@ -117,13 +155,13 @@ class Autowiring {
 						continue;
 					}
 
-					$dependencyTree[ $relevantClass ][ $matchedClass ] = [];
+					$dependencyTree[$relevantClass][$matchedClass] = [];
 				} else {
-					$dependencyTree[ $relevantClass ][ $classname ] = [];
+					$dependencyTree[$relevantClass][$classname] = [];
 				}
 			}
 		} else {
-			$dependencyTree[ $relevantClass ] = [];
+			$dependencyTree[$relevantClass] = [];
 		}
 
 		return $dependencyTree;
@@ -136,38 +174,43 @@ class Autowiring {
 	 * @param  array  $psr4Prefixes Array of psr-4 compliant namespaces and their accompanying folders.
 	 * @return array
 	 */
-	protected function getClassesInNamespace( string $namespace, array $psr4Prefixes ): array {
+	protected function getClassesInNamespace(string $namespace, array $psr4Prefixes ): array
+	{
 		$classes            = [];
 		$namespaceWithSlash = "{$namespace}\\";
-		$pathToNamespace    = $psr4Prefixes[ $namespaceWithSlash ][0] ?? '';
+		$pathToNamespace    = $psr4Prefixes[$namespaceWithSlash][0] ?? '';
 
-		if (!is_dir($pathToNamespace)) {
+		if (! is_dir($pathToNamespace)) {
 			return [];
 		}
 
-		$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator( $pathToNamespace ));
+		$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($pathToNamespace));
 		foreach ($it as $file) {
 			if ($file->isDir()) {
 				continue;
 			}
-			$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespace, $pathToNamespace);
+			if (preg_match('/[A-Z]{1}.*.php/', $file->getFileName())) {
+				$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespace, $pathToNamespace);
+			}
 		}
 
 		return $classes;
 	}
 
 	/**
-	 * Builds PSR namespace from file's path.
+	 * Builds PSR namespace SolplanetVendor\from file's path.
 	 *
 	 * @param  string $filepath          Path to a file.
-	 * @param  string $rootNamespace     Root namespace we're getting classes from.
-	 * @param  string $rootNamespacePath Path to root namespace
+	 * @param  string $rootNamespace     Root namespace SolplanetVendor\we're getting classes from.
+	 * @param  string $rootNamespacePath Path to root namespace SolplanetVendor\.
+	 *
 	 * @return string
 	 */
-	protected function getNamespaceFromFilepath(string $filepath, string $rootNamespace, string $rootNamespacePath): string {
+	protected function getNamespaceFromFilepath(string $filepath, string $rootNamespace, string $rootNamespacePath ): string
+	{
 		return $rootNamespace . str_replace(
-			[ $rootNamespacePath, DIRECTORY_SEPARATOR, '.php' ],
-			[ '', '\\', '' ],
+			[$rootNamespacePath, DIRECTORY_SEPARATOR, '.php'],
+			['', '\\', ''],
 			$filepath
 		);
 	}
@@ -184,25 +227,26 @@ class Autowiring {
 	 *
 	 * @throws \Exception If things we're looking for are missing inside filename or classInterface index (which shouldn't happen).
 	 */
-	protected function tryToFindMatchingClass( string $filename, string $interfaceName, array $filenameIndex, array $classInterfaceIndex ): string {
+	protected function tryToFindMatchingClass(string $filename, string $interfaceName, array $filenameIndex, array $classInterfaceIndex ): string
+	{
 
 		// If there's no matches in filename index by variable, we need to skip it, this dependency's definition.
 		// list need sto be build manually.
-		if ( ! isset( $filenameIndex[ $filename ] ) ) {
-			throw new \Exception(sprintf('File %s not found filenameIndex, aborting', $filename));
+		if (! isset($filenameIndex[$filename])) {
+			throw new \Exception("File {$filename} not found filenameIndex, aborting");
 		}
 
 		// Lets go through each file that's called $filename and check which interfaces that class
 		// implements (if any).
 		$matches = 0;
-		foreach ( $filenameIndex[ $filename ] as $classInFilename) {
-			if ( ! isset( $classInterfaceIndex[ $classInFilename ] ) ) {
-				throw new \Exception(sprintf('Class %s not found in classInterfaceIndex, aborting.', $classInFilename));
+		foreach ($filenameIndex[$filename] as $classInFilename) {
+			if (! isset($classInterfaceIndex[$classInFilename])) {
+				throw new \Exception("Class {$classInFilename} not found in classInterfaceIndex, aborting.");
 			}
 
 			// If the current class implements the interface we're looking for, great! We still need to go through all other
 			// classes to make sure we don't get more than 1 match.
-			if ( isset($classInterfaceIndex[ $classInFilename ][ $interfaceName ] ) ) {
+			if (isset($classInterfaceIndex[$classInFilename][$interfaceName])) {
 				$match = $classInFilename;
 				$matches++;
 			}
@@ -220,32 +264,39 @@ class Autowiring {
 	/**
 	 * Builds the PSR-4 filename index. Maps filenames to class names.
 	 *
-	 * @param  array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader ( $loader->getPsr4Prefixes() ).
+	 * @param  array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader ($loader->getPsr4Prefixes()).
 	 * @return array
 	 */
-	protected function buildFilenameIndex( array $allRelevantClasses ): array {
+	protected function buildFilenameIndex(array $allRelevantClasses ): array
+	{
 		$filenameIndex = [];
-		foreach ( $allRelevantClasses as $relevantClass ) {
-			$filename                     = $this->getFilenameFromClass($relevantClass);
-			$filenameIndex[ $filename ][] = $relevantClass;
+		foreach ($allRelevantClasses as $relevantClass) {
+			$filename = $this->getFilenameFromClass($relevantClass);
+
+			$filenameIndex[$filename][] = $relevantClass;
 		}
 
 		return $filenameIndex;
 	}
 
 	/**
-	 * Builds the PSR-4 class => [ $interfaces ] index. Maps classes to interfaces they implement.
+	 * Builds the PSR-4 class => [$interfaces] index. Maps classes to interfaces they implement.
 	 *
-	 * @param array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader ( $loader->getPsr4Prefixes() ).
+	 * @param array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader ($loader->getPsr4Prefixes()).
 	 * @return array
 	 */
-	protected function buildClassInterfaceIndex( array $allRelevantClasses ): array {
+	protected function buildClassInterfaceIndex(array $allRelevantClasses ): array
+	{
 		$classInterfaceIndex = [];
-		foreach ( $allRelevantClasses as $relevantClass ) {
-			$interfaces                             = array_map( function( $reflClass ) {
-				return true;
-			}, ( new \ReflectionClass($relevantClass) )->getInterfaces());
-			$classInterfaceIndex[ $relevantClass ] = $interfaces;
+		foreach ($allRelevantClasses as $relevantClass) {
+			$interfaces = array_map(
+				function() {
+					return true;
+				},
+				(new \ReflectionClass($relevantClass))->getInterfaces()
+			);
+
+			$classInterfaceIndex[$relevantClass] = $interfaces;
 		}
 
 		return $classInterfaceIndex;
@@ -259,8 +310,9 @@ class Autowiring {
 	 * @param  string $classname Fully qualified classname.
 	 * @return string
 	 */
-	protected function getFilenameFromClass( string $classname): string {
-		return lcfirst( trim( substr( $classname, strrpos( $classname, '\\' ) + 1 ) ) );
+	protected function getFilenameFromClass(string $classname ): string
+	{
+		return lcfirst(trim(substr($classname, strrpos($classname, '\\') + 1)));
 	}
 
 	/**
@@ -269,13 +321,14 @@ class Autowiring {
 	 * @param  array $dependencyTree Dependency tree.
 	 * @return array
 	 */
-	protected function convertDependencyTreeIntoDefinitionList( array $dependencyTree ) {
+	protected function convertDependencyTreeIntoDefinitionList(array $dependencyTree )
+	{
 		$classes = [];
-		foreach ( $dependencyTree as $className => $dependencies ) {
-			if ( empty( $dependencies ) ) {
+		foreach ($dependencyTree as $className => $dependencies) {
+			if (empty($dependencies)) {
 				$classes[] = $className;
 			} else {
-				$classes[ $className ] = $this->convertDependencyTreeIntoDefinitionList( $dependencies );
+				$classes[$className] = $this->convertDependencyTreeIntoDefinitionList($dependencies);
 			}
 		}
 
