@@ -12,19 +12,18 @@ declare(strict_types=1);
  * Exporting database.
  *
  * @param string $projectRootPath Root of the project where config is located.
- * @param array  $args              Optional arguments.
+ * @param array  $args Optional arguments.
  *
  * @return void
  */
 function dbExport(string $projectRootPath, array $args = [])
 {
-
 	// Check if optional parameters exists.
-	$skipDb      = $args['skip_db'] ?? false;
+	$skipDb = $args['skip_db'] ?? false;
 	$skipUploads = $args['skip_uploads'] ?? false;
 
 	// Change execution folder.
-	if (! is_dir($projectRootPath)) {
+	if (!is_dir($projectRootPath)) {
 		\WP_CLI::error("Folder doesn't exist on this path: {$projectRootPath}.");
 	}
 
@@ -45,7 +44,7 @@ function dbExport(string $projectRootPath, array $args = [])
 	}
 
 	// Execute db export.
-	if (! $skipDb) {
+	if (!$skipDb) {
 		\WP_CLI::runcommand("db export {$dbFileName}");
 		\WP_CLI::log("Exported db to {$projectRootPath} folder.");
 
@@ -58,7 +57,7 @@ function dbExport(string $projectRootPath, array $args = [])
 	if ($skipDb) {
 		$exportFiles = "{$uploadsFolder}";
 
-		if (! file_exists($uploadsFolder)) {
+		if (!file_exists($uploadsFolder)) {
 			$exportFiles = '';
 		}
 	}
@@ -67,8 +66,8 @@ function dbExport(string $projectRootPath, array $args = [])
 		$exportFiles = "{$dbFileName}";
 	}
 
-	if (! empty($exportFiles)) {
-		\WP_CLI::log(shell_exec("tar czf {$exportFileName} {$exportFiles}"));
+	if (!empty($exportFiles)) {
+		\WP_CLI::log((string)shell_exec("tar czf {$exportFileName} {$exportFiles}"));
 		\WP_CLI::log('Compressing folders success.');
 		\WP_CLI::log('--------------------------------------------------');
 	}
