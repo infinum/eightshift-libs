@@ -27,9 +27,9 @@ abstract class AbstractUserColumns implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		add_filter('manage_users_columns', [ $this, 'addColumnName' ]);
-		add_filter('manage_users_custom_column', [ $this, 'renderColumnContent' ], 10, 3);
-		add_filter('manage_users_sortable_columns', [ $this, 'sortAddedColumns' ], 10);
+		add_filter('manage_users_columns', [$this, 'addColumnName']);
+		add_filter('manage_users_custom_column', [$this, 'renderColumnContent'], 10, 3);
+		add_filter('manage_users_sortable_columns', [$this, 'sortAddedColumns'], 10);
 	}
 
 	/**
@@ -37,16 +37,16 @@ abstract class AbstractUserColumns implements ServiceInterface
 	 *
 	 * @param array $columns The existing column names array with default user columns (title, author, date etc.).
 	 *
-	 * @return array         Modified column names array.
+	 * @return array Modified column names array.
 	 */
 	abstract public function addColumnName(array $columns): array;
 
 	/**
 	 * Render the user column content in the custom user column
 	 *
-	 * @param string $output      Custom column output. Default empty.
+	 * @param string $output Custom column output. Default empty.
 	 * @param string $columnName Column name.
-	 * @param int    $userId     ID of the currently-listed user.
+	 * @param int    $userId ID of the currently-listed user.
 	 *
 	 * @return string             Output based on the column name.
 	 */
@@ -55,9 +55,9 @@ abstract class AbstractUserColumns implements ServiceInterface
 	/**
 	 * Make user columns sortable
 	 *
-	 * @param  array $columns Array of columns.
+	 * @param array $columns Array of columns.
 	 *
-	 * @return array          Modified array of columns.
+	 * @return array Modified array of columns.
 	 */
 	abstract public function sortAddedColumns(array $columns): array;
 }

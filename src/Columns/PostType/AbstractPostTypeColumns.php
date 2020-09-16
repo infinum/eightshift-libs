@@ -27,13 +27,12 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		array_map(
-			function ($post_type) {
-				add_filter("manage_{$post_type}_posts_columns", [ $this, 'addColumnName' ]);
-				add_action("manage_{$post_type}_posts_custom_column", [ $this, 'renderColumnContent' ], 10, 2);
-			},
-			$this->getPostTypeSlug()
-		);
+		$postTypes = $this->getPostTypeSlug();
+
+		foreach ($postTypes as $postType) {
+			add_filter("manage_{$postType}_posts_columns", [$this, 'addColumnName']);
+			add_action("manage_{$postType}_posts_custom_column", [$this, 'renderColumnContent'], 10, 2);
+		}
 	}
 
 	/**
@@ -41,15 +40,15 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	 *
 	 * @param array $columns The existing column names array with default post columns (title, author, date etc.).
 	 *
-	 * @return array         Modified column names array.
+	 * @return array Modified column names array.
 	 */
 	abstract public function addColumnName(array $columns): array;
 
 	/**
 	 * Render the post column content in the custom post column
 	 *
-	 * @param  string $columnName The name of the column to display.
-	 * @param  int    $postId     The current post ID.
+	 * @param string $columnName The name of the column to display.
+	 * @param int    $postId The current post ID.
 	 *
 	 * @return void
 	 */
