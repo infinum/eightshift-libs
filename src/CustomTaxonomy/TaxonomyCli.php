@@ -20,6 +20,8 @@ class TaxonomyCli extends AbstractCli
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = 'src/CustomTaxonomy';
 
@@ -33,17 +35,17 @@ class TaxonomyCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'label'              => $args[1] ?? 'Locations',
-			'slug'               => $args[2] ?? 'location',
+			'label' => $args[1] ?? 'Locations',
+			'slug' => $args[2] ?? 'location',
 			'rest_endpoint_slug' => $args[3] ?? 'locations',
-			'post_type_slug'     => $args[4] ?? 'post',
+			'post_type_slug' => $args[4] ?? 'post',
 		];
 	}
 
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -51,28 +53,28 @@ class TaxonomyCli extends AbstractCli
 			'shortdesc' => 'Generates custom taxonomy class file.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'label',
+					'type' => 'assoc',
+					'name' => 'label',
 					'description' => 'The label of the custom taxonomy to show in WP admin.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'slug',
+					'type' => 'assoc',
+					'name' => 'slug',
 					'description' => 'The name of the custom taxonomy slug. Example: location.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'rest_endpoint_slug',
+					'type' => 'assoc',
+					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom taxonomy REST-API endpoint slug. Example: locations.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'post_type_slug',
+					'type' => 'assoc',
+					'name' => 'post_type_slug',
 					'description' => 'The position where to assign the new custom taxonomy. Example: post.',
-					'optional'    => false,
+					'optional' => false,
 				],
 			],
 		];
@@ -80,12 +82,11 @@ class TaxonomyCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
-		$label            = $assocArgs['label'];
-		$slug             = $this->prepareSlug($assocArgs['slug']);
+		$label = $assocArgs['label'];
+		$slug = $this->prepareSlug($assocArgs['slug']);
 		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug']);
-		$postTypeSlug     = $this->prepareSlug($assocArgs['post_type_slug']);
+		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug']);
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
