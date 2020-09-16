@@ -26,13 +26,14 @@ final class InvalidPath extends \InvalidArgumentException implements GeneralExce
 	 *
 	 * @return static
 	 */
-    public static function fromUri(string $uri)
-    {
-        $message = sprintf(
-            esc_html__('The URI "%s" is not accessible or readable.', 'eightshift-libs'),
-            $uri
-        );
+	public static function fromUri(string $uri)
+	{
+		$message = sprintf(
+			/* translators: %s will be replaced by path. */
+			esc_html__('The URI "%s" is not accessible or readable.', 'eightshift-libs'),
+			$uri
+		);
 
-        return new static($message);
-    }
+		return new static($message);
+	}
 }

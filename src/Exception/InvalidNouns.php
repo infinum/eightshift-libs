@@ -27,7 +27,7 @@ final class InvalidNouns extends \InvalidArgumentException implements GeneralExc
 	public static function fromKey(string $key)
 	{
 		$message = sprintf(
-			/* translators: %s is replaced with name of the noun. */
+		/* translators: %s is replaced with name of the noun. */
 			esc_html__('The array of nouns passed into the Label_Generator is missing the %s noun.', 'eightshift-libs'),
 			$key
 		);

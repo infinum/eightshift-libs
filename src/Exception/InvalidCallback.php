@@ -24,14 +24,12 @@ final class InvalidCallback extends \InvalidArgumentException implements General
 	 *
 	 * @return static
 	 */
-	public static function fromCallback($callback)
+	public static function fromCallback(string $callback)
 	{
 		$message = sprintf(
-			/* translators: %s is replaced with callback name. */
+		/* translators: %s is replaced with callback name. */
 			esc_html__('The callback %s is not recognized and cannot be registered.', 'eightshift-libs'),
-			is_object($callback)
-				? get_class($callback)
-				: (string) $callback
+			$callback
 		);
 
 		return new static($message);

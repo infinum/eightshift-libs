@@ -24,14 +24,12 @@ final class InvalidService extends \InvalidArgumentException implements GeneralE
 	 *
 	 * @return static
 	 */
-	public static function fromService($service)
+	public static function fromService(string $service)
 	{
 		$message = sprintf(
-			/* translators: %s is replaced with name of the service. */
+		/* translators: %s is replaced with name of the service. */
 			esc_html__('The service %s is not recognized and cannot be registered.', 'eightshift-libs'),
-			is_object($service)
-				? get_class($service)
-				: (string) $service
+			$service
 		);
 
 		return new static($message);
