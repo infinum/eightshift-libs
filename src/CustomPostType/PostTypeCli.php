@@ -20,6 +20,8 @@ class PostTypeCli extends AbstractCli
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = 'src/CustomPostType';
 
@@ -33,13 +35,13 @@ class PostTypeCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'label'              => $args[1] ?? 'Products',
-			'slug'               => $args[2] ?? 'product',
-			'rewrite_url'        => $args[3] ?? 'product',
+			'label' => $args[1] ?? 'Products',
+			'slug' => $args[2] ?? 'product',
+			'rewrite_url' => $args[3] ?? 'product',
 			'rest_endpoint_slug' => $args[4] ?? 'products',
-			'capability'         => $args[5] ?? 'post',
-			'menu_position'      => $args[6] ?? 40,
-			'menu_icon'          => $args[7] ?? 'admin-settings',
+			'capability' => $args[5] ?? 'post',
+			'menu_position' => $args[6] ?? 40,
+			'menu_icon' => $args[7] ?? 'admin-settings',
 		];
 	}
 
@@ -54,46 +56,46 @@ class PostTypeCli extends AbstractCli
 			'shortdesc' => 'Generates custom post type class file.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'label',
+					'type' => 'assoc',
+					'name' => 'label',
 					'description' => 'The label of the custom taxonomy to show in WP admin.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'slug',
+					'type' => 'assoc',
+					'name' => 'slug',
 					'description' => 'The custom post type slug. Example: location.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'rewrite_url',
+					'type' => 'assoc',
+					'name' => 'rewrite_url',
 					'description' => 'The custom post type url. Example: location.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'rest_endpoint_slug',
+					'type' => 'assoc',
+					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom post type REST-API endpoint slug. Example: locations.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'capability',
+					'type' => 'assoc',
+					'name' => 'capability',
 					'description' => 'The default capability for the custom post types. Example: post.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'menu_position',
+					'type' => 'assoc',
+					'name' => 'menu_position',
 					'description' => 'The default menu position for the custom post types. Example: 20.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'menu_icon',
+					'type' => 'assoc',
+					'name' => 'menu_icon',
 					'description' => 'The default menu icon for the custom post types. Example: dashicons-analytics.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
@@ -101,15 +103,14 @@ class PostTypeCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
-		$label            = $assocArgs['label'];
-		$slug             = $this->prepareSlug($assocArgs['slug']);
-		$rewriteUrl       = $this->prepareSlug($assocArgs['rewrite_url']);
+		$label = $assocArgs['label'];
+		$slug = $this->prepareSlug($assocArgs['slug']);
+		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url']);
 		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug']);
-		$capability       = $assocArgs['capability'] ?? '';
-		$menuPosition     = $assocArgs['menu_position'] ?? '';
-		$menuIcon         = $assocArgs['menu_icon'] ?? '';
+		$capability = $assocArgs['capability'] ?? '';
+		$menuPosition = $assocArgs['menu_position'] ?? '';
+		$menuIcon = $assocArgs['menu_icon'] ?? '';
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
@@ -128,15 +129,15 @@ class PostTypeCli extends AbstractCli
 		$class = str_replace('example-endpoint-slug', $restEndpointSlug, $class);
 		$class = str_replace('Example Name', $label, $class);
 
-		if (! empty($capability)) {
+		if (!empty($capability)) {
 			$class = str_replace("'post'", "'{$capability}'", $class);
 		}
 
-		if (! empty($menuPosition)) {
+		if (!empty($menuPosition)) {
 			$class = str_replace('20', $menuPosition, $class);
 		}
 
-		if (! empty($menuIcon)) {
+		if (!empty($menuIcon)) {
 			$class = str_replace('dashicons-analytics', $menuIcon, $class);
 		}
 
