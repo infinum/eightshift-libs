@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Main;
 
-use EightshiftLibs\Main\AbstractMain;
-
 /**
  * The main start class.
  *
@@ -38,7 +36,7 @@ class MainExample extends AbstractMain
 	 */
 	public function register(): void
 	{
-		\add_action('after_setup_theme', [ $this, 'registerServices' ]);
+		\add_action('after_setup_theme', [$this, 'registerServices']);
 	}
 
 	/**
