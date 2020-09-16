@@ -25,7 +25,7 @@ abstract class AbstractI18n implements ServiceInterface
 	 *
 	 * @return void
 	 */
-	public function loadThemeTextdomain()
+	public function loadThemeTextdomain(): void
 	{
 		\load_theme_textdomain(
 			$this->getTextdomainName(),
