@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
@@ -39,9 +38,9 @@ class EnqueueAdminExample extends AbstractEnqueueAdmin
 	 */
 	public function register(): void
 	{
-		add_action('login_enqueue_scripts', [ $this, 'enqueueStyles' ]);
-		add_action('admin_enqueue_scripts', [ $this, 'enqueueStyles' ], 50);
-		add_action('admin_enqueue_scripts', [ $this, 'enqueueScripts' ]);
+		add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
+		add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
+		add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
 
 	/**

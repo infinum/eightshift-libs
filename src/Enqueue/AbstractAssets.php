@@ -26,8 +26,8 @@ abstract class AbstractAssets implements ServiceInterface
 	/**
 	 * Media style const
 	 */
-	public const MEDIA_ALL    = 'all';
-	public const MEDIA_PRINT  = 'print';
+	public const MEDIA_ALL = 'all';
+	public const MEDIA_PRINT = 'print';
 	public const MEDIA_SCREEN = 'screen';
 
 	/**

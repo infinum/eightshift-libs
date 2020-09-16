@@ -22,7 +22,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 {
 
 	public const ADMIN_SCRIPT_URI = 'applicationAdmin.js';
-	public const ADMIN_STYLE_URI  = 'applicationAdmin.css';
+	public const ADMIN_STYLE_URI = 'applicationAdmin.css';
 
 	/**
 	 * Instance variable of manifest data.
@@ -38,9 +38,9 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 */
 	public function register(): void
 	{
-		add_action('login_enqueue_scripts', [ $this, 'enqueueStyles' ]);
-		add_action('admin_enqueue_scripts', [ $this, 'enqueueStyles' ], 50);
-		add_action('admin_enqueue_scripts', [ $this, 'enqueueScripts' ]);
+		add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
+		add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
+		add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
 
 	/**

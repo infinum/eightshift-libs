@@ -20,6 +20,8 @@ class EnqueueBlocksCli extends AbstractCli
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = 'src/Enqueue/Blocks';
 
@@ -37,7 +39,6 @@ class EnqueueBlocksCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
