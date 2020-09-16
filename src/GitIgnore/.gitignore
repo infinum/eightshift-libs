@@ -20,9 +20,6 @@ wp-includes
 /xmlrpc.php
 
 # Content
-!wp-content/plugins/
-
-# Theme
 wp-content/*
 !wp-content/mu-plugins/
 !wp-content/plugins/
