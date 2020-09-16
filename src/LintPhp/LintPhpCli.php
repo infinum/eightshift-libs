@@ -36,7 +36,7 @@ class LintPhpCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -47,7 +47,7 @@ class LintPhpCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		$output = shell_exec('composer run standards:check');
+		$output = (string)shell_exec('composer run standards:check');
 
 		\WP_CLI::log($output);
 
