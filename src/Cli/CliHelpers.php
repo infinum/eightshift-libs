@@ -24,7 +24,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function getFileName(string $fileName ): string
+	public function getFileName(string $fileName): string
 	{
 
 		if (strpos($fileName, ' ') !== false) {
@@ -34,7 +34,7 @@ trait CliHelpers
 		$class = explode('_', str_replace('-', '_', str_replace(' ', '_', strtolower($fileName))));
 
 		$className = array_map(
-			function ($item ) {
+			function ($item) {
 				return ucfirst($item);
 			},
 			$class
@@ -51,7 +51,7 @@ trait CliHelpers
 	 *
 	 * @return string|Error
 	 */
-	public function getExampleTemplate(string $currentDir, string $fileName ): string
+	public function getExampleTemplate(string $currentDir, string $fileName): string
 	{
 
 		// If you pass file name with extension the version will be used.
@@ -78,7 +78,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function getExampleFileName($string ): string
+	public function getExampleFileName($string): string
 	{
 		return "{$string}Example";
 	}
@@ -92,7 +92,7 @@ trait CliHelpers
 	 *
 	 * @return void
 	 */
-	public function outputWrite(string $outputDir, string $outputFile, string $class ): void
+	public function outputWrite(string $outputDir, string $outputFile, string $class): void
 	{
 
 		// Set output paths.
@@ -108,7 +108,7 @@ trait CliHelpers
 		}
 
 		// Create output dir if it doesn't exist.
-		if ( ! is_dir($outputDir)) {
+		if (! is_dir($outputDir)) {
 			mkdir($outputDir, 0755, true);
 		}
 
@@ -116,7 +116,7 @@ trait CliHelpers
 		$fp = fopen($outputFile, 'wb'); // phpcs:ignore WordPress.WP.AlternativeFunctions
 
 		// If there is any error bailout. For example, user permission.
-		if ( ! $fp) {
+		if (! $fp) {
 			\WP_CLI::error("File {$outputFile} couldn\'t be created. There was an error.");
 		}
 
@@ -135,7 +135,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function getOutputDir(string $path = '' ): string
+	public function getOutputDir(string $path = ''): string
 	{
 		if (function_exists('add_action')) {
 			$root = $this->getProjectRootPath();
@@ -159,7 +159,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function getOutputFile(string $file ): string
+	public function getOutputFile(string $file): string
 	{
 		$file = rtrim($file, '/');
 		$file = trim($file, '/');
@@ -184,7 +184,7 @@ trait CliHelpers
 	 * \x6E\x61\x6D\x65\x73\x70\x61\x63\x65 - Corresponds to "namespace".
 	 * \x40\x70\x61\x63\x6B\x61\x67\x65 - Corresponds to "@package".
 	 */
-	public function renameNamespace(array $args = [], string $string ): string
+	public function renameNamespace(array $args = [], string $string = ''): string
 	{
 
 		$namespace = $this->getNamespace($args);
@@ -218,7 +218,7 @@ trait CliHelpers
 	 *
 	 * \x75\x73\x65 - Corresponds to "use".
 	 */
-	public function renameUse(array $args = [], string $string ): string
+	public function renameUse(array $args = [], string $string = ''): string
 	{
 
 		$output = $string;
@@ -256,7 +256,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function renameTextDomain(array $args = [], string $string ): string
+	public function renameTextDomain(array $args = [], string $string = ''): string
 	{
 
 		$namespace = $this->getNamespace($args);
@@ -276,7 +276,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function renameProjectName(array $args = [], string $string ): string
+	public function renameProjectName(array $args = [], string $string = ''): string
 	{
 
 		$projectName = 'eightshift-boilerplate';
@@ -304,7 +304,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function renameProjectType(array $args = [], string $string ): string
+	public function renameProjectType(array $args = [], string $string = ''): string
 	{
 
 		$projectType = 'themes';
@@ -332,13 +332,13 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function renameClassName(string $className, string $string ): string
+	public function renameClassName(string $className, string $string): string
 	{
 		return str_replace($this->getExampleFileName($className), $className, $string);
 	}
 
 	/**
-	 * Change Class full name with sufix.
+	 * Change Class full name with suffix.
 	 *
 	 * @param string $templateName Current template.
 	 * @param string $newName      New Class Name.
@@ -346,7 +346,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function renameClassNameWithSufix(string $templateName, string $newName, string $string ): string
+	public function renameClassNameWithSuffix(string $templateName, string $newName, string $string): string
 	{
 		return str_replace($this->getExampleFileName($templateName), $newName, $string);
 	}
@@ -358,9 +358,9 @@ trait CliHelpers
 	 *
 	 * @return array
 	 */
-	public function getComposer(array $args = [] ): array
+	public function getComposer(array $args = []): array
 	{
-		if ( ! isset($args['config_path'])) {
+		if (! isset($args['config_path'])) {
 			if (function_exists('add_action')) {
 				$composerPath = $this->getProjectRootPath() . '/composer.json';
 			} else {
@@ -370,7 +370,7 @@ trait CliHelpers
 			$composerPath = $args['config_path'];
 		}
 
-		$composerFile = file_get_contents($composerPath); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$composerFile = file_get_contents($composerPath);
 
 		if ($composerFile === false) {
 			\WP_CLI::error("The composer on {$composerPath} path seems to be missing.");
@@ -386,7 +386,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function getNamespace(array $args = [] ): string
+	public function getNamespace(array $args = []): string
 	{
 		$namespace = '';
 
@@ -410,7 +410,7 @@ trait CliHelpers
 	 *
 	 * @return stringgp
 	 */
-	public function arrayKeyFirstChild(array $array ): string
+	public function arrayKeyFirstChild(array $array): string
 	{
 		foreach ($array as $key => $unused) {
 			return $key;
@@ -426,7 +426,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function getVendorPrefix(array $args = [] ): string
+	public function getVendorPrefix(array $args = []): string
 	{
 		$vendorPrefix = '';
 
@@ -444,13 +444,15 @@ trait CliHelpers
 	}
 
 	/**
-	 * Convert user input string to slug safe format. convert _ to -, empty space to - and convert everything to lovercase.
+	 * Convert user input string to slug safe format.
+	 *
+	 * Convert _ to -, empty space to - and convert everything to lowercase.
 	 *
 	 * @param string $string String to convert.
 	 *
 	 * @return string
 	 */
-	public function prepareSlug(string $string ): string
+	public function prepareSlug(string $string): string
 	{
 		if (strpos($string, ' ') !== false) {
 			$string = strtolower($string);
@@ -464,15 +466,18 @@ trait CliHelpers
 	 *
 	 * @param array $items Array of classes.
 	 * @param bool  $run   Run or log output.
+	 *
+	 * @throws \ReflectionException Exception if the class cannot be found.
+	 *
 	 * @return void
 	 */
-	public function getEvalLoop(array $items = [], bool $run = false ): void
+	public function getEvalLoop(array $items = [], bool $run = false): void
 	{
 		foreach ($items as $item) {
 			$reflectionClass = new \ReflectionClass($item);
 			$class           = $reflectionClass->newInstanceArgs([ null ]);
 
-			if ( ! $run) {
+			if (! $run) {
 				\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
 			} else {
 				\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
@@ -492,13 +497,13 @@ trait CliHelpers
 	}
 
 	/**
-	 * Returns projects root folder based on the enviroment.
+	 * Returns projects root folder based on the environment.
 	 *
 	 * @param bool $isDev Returns path based on the env.
 	 *
 	 * @return string
 	 */
-	public function getProjectRootPath(bool $isDev = false ): string
+	public function getProjectRootPath(bool $isDev = false): string
 	{
 		$output = dirname(__DIR__, 5);
 
@@ -510,13 +515,13 @@ trait CliHelpers
 	}
 
 	/**
-	 * Returns projects root where config is instaled based on the enviroment.
+	 * Returns projects root where config is installed based on the environment.
 	 *
 	 * @param bool $isDev Returns path based on the env.
 	 *
 	 * @return string
 	 */
-	public function getProjectConfigRootPath(bool $isDev = false ): string
+	public function getProjectConfigRootPath(bool $isDev = false): string
 	{
 		$output = dirname(__DIR__, 8);
 
@@ -533,7 +538,7 @@ trait CliHelpers
 	 * @param string $path Additional path.
 	 * @return string
 	 */
-	public function getFrontendLibsPath(string $path = '' ): string
+	public function getFrontendLibsPath(string $path = ''): string
 	{
 		return "{$this->getProjectRootPath()}/node_modules/@eightshift/frontend-libs/{$path}";
 	}
@@ -544,7 +549,7 @@ trait CliHelpers
 	 * @param string $path Additional path.
 	 * @return string
 	 */
-	public function getLibsPath(string $path = '' ): string
+	public function getLibsPath(string $path = ''): string
 	{
 		return "{$this->getProjectRootPath()}/vendor/infinum/eightshift-libs/{$path}";
 	}

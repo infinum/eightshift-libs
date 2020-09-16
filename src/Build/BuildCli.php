@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Class that registers WPCLI command for BuildCli.
  *
  * @package EightshiftLibs\Build
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Build;
 
@@ -14,7 +15,8 @@ use EightshiftLibs\Cli\AbstractCli;
 /**
  * Class BuildCli
  */
-class BuildCli extends AbstractCli {
+class BuildCli extends AbstractCli
+{
 
 	/**
 	 * Output dir relative path.
@@ -26,7 +28,8 @@ class BuildCli extends AbstractCli {
 	 *
 	 * @return string
 	 */
-	public function getCommandName() : string {
+	public function getCommandName(): string
+	{
 		return 'init_build';
 	}
 
@@ -37,7 +40,8 @@ class BuildCli extends AbstractCli {
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs( array $args ) : array {
+	public function getDevelopArgs(array $args): array
+	{
 		return [
 			'root' => $args[1] ?? './',
 		];
@@ -46,9 +50,10 @@ class BuildCli extends AbstractCli {
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function getDoc() : array {
+	public function getDoc(): array
+	{
 		return [
 			'shortdesc' => 'Initialize Command for building your project with one command, generally used on CI deployments.',
 			'synopsis' => [
@@ -80,29 +85,30 @@ class BuildCli extends AbstractCli {
 		];
 	}
 
-	public function __invoke( array $args, array $assocArgs ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	{
 
 		// Get Props.
 		$root          = $assocArgs['root'] ?? static::OUTPUT_DIR;
 		$skipSetupFile = $assocArgs['skip_setup_file'] ?? true;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate( __DIR__, $this->getClassShortName() );
+		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameProjectName( $assocArgs, $class );
-		$class = $this->renameProjectType( $assocArgs, $class );
-		$class = $this->renameTextDomain( $assocArgs, $class );
+		$class = $this->renameProjectName($assocArgs, $class);
+		$class = $this->renameProjectType($assocArgs, $class);
+		$class = $this->renameTextDomain($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite( $root . 'bin', $this->getClassShortName(), $class );
+		$this->outputWrite($root . 'bin', $this->getClassShortName(), $class);
 
-		if ( ! $skipSetupFile ) {
+		if (! $skipSetupFile) {
 			// Get setup.json file.
-			$json = $this->getExampleTemplate( dirname( __DIR__, 1 ), 'setup/setup.json' );
+			$json = $this->getExampleTemplate(dirname(__DIR__, 1), 'setup/setup.json');
 
 			// Output json file to project root.
-			$this->outputWrite( $root, 'setup.json', $json );
+			$this->outputWrite($root, 'setup.json', $json);
 		}
 	}
 }

@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Class that registers WPCLI command for Custom Taxonomy.
  *
  * @package EightshiftLibs\CustomPostType
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\CustomPostType;
 
@@ -14,7 +15,8 @@ use EightshiftLibs\Cli\AbstractCli;
 /**
  * Class PostTypeCli
  */
-class PostTypeCli extends AbstractCli {
+class PostTypeCli extends AbstractCli
+{
 
 	/**
 	 * Output dir relative path.
@@ -28,7 +30,8 @@ class PostTypeCli extends AbstractCli {
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs( array $args ) : array {
+	public function getDevelopArgs(array $args): array
+	{
 		return [
 			'label'              => $args[1] ?? 'Products',
 			'slug'               => $args[2] ?? 'product',
@@ -43,9 +46,10 @@ class PostTypeCli extends AbstractCli {
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function getDoc() : array {
+	public function getDoc(): array
+	{
 		return [
 			'shortdesc' => 'Generates custom post type class file.',
 			'synopsis' => [
@@ -95,47 +99,48 @@ class PostTypeCli extends AbstractCli {
 		];
 	}
 
-	public function __invoke( array $args, array $assocArgs ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	{
 
 		// Get Props.
 		$label            = $assocArgs['label'];
-		$slug             = $this->prepareSlug( $assocArgs['slug'] );
-		$rewriteUrl       = $this->prepareSlug( $assocArgs['rewrite_url'] );
-		$restEndpointSlug = $this->prepareSlug( $assocArgs['rest_endpoint_slug'] );
+		$slug             = $this->prepareSlug($assocArgs['slug']);
+		$rewriteUrl       = $this->prepareSlug($assocArgs['rewrite_url']);
+		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug']);
 		$capability       = $assocArgs['capability'] ?? '';
 		$menuPosition     = $assocArgs['menu_position'] ?? '';
 		$menuIcon         = $assocArgs['menu_icon'] ?? '';
 
 		// Get full class name.
-		$className = $this->getFileName( $slug );
+		$className = $this->getFileName($slug);
 		$className = $this->getClassShortName() . $className;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate( __DIR__, $this->getClassShortName() );
+		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameClassNameWithSufix( $this->getClassShortName(), $className, $class );
-		$class = $this->renameNamespace( $assocArgs, $class );
-		$class = $this->renameUse( $assocArgs, $class );
-		$class = $this->renameTextDomain( $assocArgs, $class );
-		$class = str_replace( 'example-slug', $slug, $class );
-		$class = str_replace( 'example-url-slug', $rewriteUrl, $class );
-		$class = str_replace( 'example-endpoint-slug', $restEndpointSlug, $class );
-		$class = str_replace( 'Example Name', $label, $class );
+		$class = $this->renameClassNameWithSuffix($this->getClassShortName(), $className, $class);
+		$class = $this->renameNamespace($assocArgs, $class);
+		$class = $this->renameUse($assocArgs, $class);
+		$class = $this->renameTextDomain($assocArgs, $class);
+		$class = str_replace('example-slug', $slug, $class);
+		$class = str_replace('example-url-slug', $rewriteUrl, $class);
+		$class = str_replace('example-endpoint-slug', $restEndpointSlug, $class);
+		$class = str_replace('Example Name', $label, $class);
 
-		if ( ! empty( $capability ) ) {
-			$class = str_replace( "'post'", "'{$capability}'", $class );
+		if (! empty($capability)) {
+			$class = str_replace("'post'", "'{$capability}'", $class);
 		}
 
-		if ( ! empty( $menuPosition ) ) {
-			$class = str_replace( '20', $menuPosition, $class );
+		if (! empty($menuPosition)) {
+			$class = str_replace('20', $menuPosition, $class);
 		}
 
-		if ( ! empty( $menuIcon ) ) {
-			$class = str_replace( 'dashicons-analytics', $menuIcon, $class );
+		if (! empty($menuIcon)) {
+			$class = str_replace('dashicons-analytics', $menuIcon, $class);
 		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite( static::OUTPUT_DIR, $className, $class );
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
 	}
 }

@@ -1,11 +1,12 @@
 <?php
+
 /**
  * The Blog_Taxonomy specific functionality.
  *
  * @package EightshiftLibs\CustomTaxonomy
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\CustomTaxonomy;
 
@@ -14,7 +15,8 @@ use EightshiftLibs\CustomTaxonomy\AbstractTaxonomy;
 /**
  * Class TaxonomyExample
  */
-class TaxonomyExample extends AbstractTaxonomy {
+class TaxonomyExample extends AbstractTaxonomy
+{
 
 	/**
 	 * Taxonomy slug costant.
@@ -35,7 +37,8 @@ class TaxonomyExample extends AbstractTaxonomy {
 	 *
 	 * @return string Custom taxonomy slug.
 	 */
-	protected function getTaxonomySlug() : string {
+	protected function getTaxonomySlug(): string
+	{
 		return static::TAXONOMY_SLUG;
 	}
 
@@ -44,7 +47,8 @@ class TaxonomyExample extends AbstractTaxonomy {
 	 *
 	 * @return string|array Custom post type slug or an array of slugs.
 	 */
-	protected function getPostTypeSlug() {
+	protected function getPostTypeSlug()
+	{
 		return 'post';
 	}
 
@@ -53,10 +57,11 @@ class TaxonomyExample extends AbstractTaxonomy {
 	 *
 	 * @return array Array of arguments.
 	 */
-	protected function getTaxonomyArguments() : array {
+	protected function getTaxonomyArguments(): array
+	{
 		return [
 			'hierarchical'      => true,
-			'label'             => \esc_html__( 'Example Name', 'eightshift-libs' ),
+			'label'             => \esc_html__('Example Name', 'eightshift-libs'),
 			'show_ui'           => true,
 			'show_admin_column' => true,
 			'show_in_nav_menus' => false,

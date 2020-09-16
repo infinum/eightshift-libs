@@ -1,18 +1,20 @@
 <?php
+
 /**
  * File containing the plugin activation failure exception class
  *
  * @package EightshiftLibs\Exception
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
 /**
  * Class Plugin_Activation_Failure.
  */
-final class PluginActivationFailure extends \RuntimeException implements GeneralExceptionInterface {
+final class PluginActivationFailure extends \RuntimeException implements GeneralExceptionInterface
+{
 
 	/**
 	 * Create a new instance of the exception in case plugin cannot be activated.
@@ -21,7 +23,8 @@ final class PluginActivationFailure extends \RuntimeException implements General
 	 *
 	 * @return static
 	 */
-	public static function activationMessage( $message ) {
-		return new static( $message );
+	public static function activationMessage($message)
+	{
+		return new static($message);
 	}
 }

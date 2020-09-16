@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Class that registers WPCLI command for Config.
  *
  * @package EightshiftLibs\Config
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Config;
 
@@ -14,7 +15,8 @@ use EightshiftLibs\Cli\AbstractCli;
 /**
  * Class ConfigCli
  */
-class ConfigCli extends AbstractCli {
+class ConfigCli extends AbstractCli
+{
 
 	/**
 	 * Output dir relative path.
@@ -28,7 +30,8 @@ class ConfigCli extends AbstractCli {
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs( array $args ) : array {
+	public function getDevelopArgs(array $args): array
+	{
 		return [
 			'name'           => $args[1] ?? 'Boilerplate',
 			'version'        => $args[2] ?? '1',
@@ -41,9 +44,10 @@ class ConfigCli extends AbstractCli {
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function getDoc() : array {
+	public function getDoc(): array
+	{
 		return [
 			'shortdesc' => 'Generates project config class.',
 			'synopsis' => [
@@ -81,7 +85,8 @@ class ConfigCli extends AbstractCli {
 		];
 	}
 
-	public function __invoke( array $args, array $assocArgs ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	{
 
 		// Get Props.
 		$name          = $assocArgs['name'] ?? '';
@@ -91,34 +96,34 @@ class ConfigCli extends AbstractCli {
 		$routesVersion = $assocArgs['routes_version'] ?? '';
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate( __DIR__, $this->getClassShortName() );
+		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameClassName( $this->getClassShortName(), $class );
-		$class = $this->renameNamespace( $assocArgs, $class );
-		$class = $this->renameUse( $assocArgs, $class );
+		$class = $this->renameClassName($this->getClassShortName(), $class);
+		$class = $this->renameNamespace($assocArgs, $class);
+		$class = $this->renameUse($assocArgs, $class);
 
-		if ( ! empty( $name ) ) {
-			$class = str_replace( 'eightshift-libs', $name, $class );
+		if (! empty($name)) {
+			$class = str_replace('eightshift-libs', $name, $class);
 		}
 
-		if ( ! empty( $version ) ) {
-			$class = str_replace( '1.0.0', $version, $class );
+		if (! empty($version)) {
+			$class = str_replace('1.0.0', $version, $class);
 		}
 
-		if ( ! empty( $prefix ) ) {
-			$class = str_replace( "'eb'", "'{$prefix}'", $class );
+		if (! empty($prefix)) {
+			$class = str_replace("'eb'", "'{$prefix}'", $class);
 		}
 
-		if ( ! empty( $env ) ) {
-			$class = str_replace( 'EB_ENV', $env, $class );
+		if (! empty($env)) {
+			$class = str_replace('EB_ENV', $env, $class);
 		}
 
-		if ( ! empty( $routesVersion ) ) {
-			$class = str_replace( 'v1', $routesVersion, $class );
+		if (! empty($routesVersion)) {
+			$class = str_replace('v1', $routesVersion, $class);
 		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite( static::OUTPUT_DIR, $this->getClassShortName(), $class );
+		$this->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $class);
 	}
 }

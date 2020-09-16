@@ -26,5 +26,5 @@ interface ManifestInterface
 	 *
 	 * @return string Full path to asset.
 	 */
-	public function getAssetsManifestItem(string $key ): string;
+	public function getAssetsManifestItem(string $key): string;
 }

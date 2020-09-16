@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File containing an abstract class for holding Assets Manifest functionality.
  *
@@ -7,7 +8,7 @@
  * @package EightshiftLibs\Manifest
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Manifest;
 
@@ -18,7 +19,8 @@ use EightshiftLibs\Services\ServiceInterface;
 /**
  * Abstract class Manifest class.
  */
-abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
+abstract class AbstractManifest implements ServiceInterface, ManifestInterface
+{
 
 	/**
 	 * Full data of manifest items.
@@ -35,21 +37,22 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
 	 *
 	 * @return void Sets the manifest variable.
 	 */
-	public function setAssetsManifestRaw() : void {
+	public function setAssetsManifestRaw(): void
+	{
 		$path = $this->getManifestFilePath();
 
-		if ( ! file_exists( $path ) ) {
-			throw InvalidManifest::missingManifestException( $path );
+		if (! file_exists($path)) {
+			throw InvalidManifest::missingManifestException($path);
 		}
 
-		$data = json_decode( implode( ' ', (array) file( $path ) ), true );
+		$data = json_decode(implode(' ', (array) file($path)), true);
 
-		if ( empty( $data ) ) {
+		if (empty($data)) {
 			return;
 		}
 
 		$this->manifest = array_map(
-			function( $manifest_item ) {
+			function ($manifest_item) {
 				return "{$this->getAssetsManifestOutputPrefix()}{$manifest_item}";
 			},
 			$data
@@ -61,15 +64,17 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
 	 *
 	 * @param string $key File name key you want to get from manifest.
 	 *
-	 * @throws InvalidManifest Throws error if manifest key is missing. Returned data from manifest and not global variable.
+	 * @throws InvalidManifest Throws error if manifest key is missing.
+	 *                         Returns data from manifest and not global variable.
 	 *
 	 * @return string Full path to asset.
 	 */
-	public function getAssetsManifestItem( string $key ) : string {
+	public function getAssetsManifestItem(string $key): string
+	{
 		$manifest = $this->manifest;
 
-		if ( ! isset( $manifest[ $key ] ) ) {
-			throw InvalidManifest::missingManifestItemException( $key );
+		if (! isset($manifest[ $key ])) {
+			throw InvalidManifest::missingManifestItemException($key);
 		}
 
 		return $manifest[ $key ];
@@ -80,14 +85,15 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface {
 	 *
 	 * @return string
 	 */
-	abstract protected function getManifestFilePath() : string;
+	abstract protected function getManifestFilePath(): string;
 
 	/**
 	 * This method appends full site url to the relative manifest data item.
 	 *
 	 * @return string
 	 */
-	protected function getAssetsManifestOutputPrefix() : string {
+	protected function getAssetsManifestOutputPrefix(): string
+	{
 		return \site_url();
 	}
 }

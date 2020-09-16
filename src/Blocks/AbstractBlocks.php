@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Blocks is the base class for Gutenberg blocks registration.
  * It provides the ability to register custom blocks using manifest.json.
@@ -6,7 +7,7 @@
  * @package EightshiftLibs\Blocks
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
@@ -17,7 +18,8 @@ use EightshiftLibs\Services\ServiceInterface;
 /**
  * Class Blocks
  */
-abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface {
+abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
+{
 
 	/**
 	 * Full data of blocks, settings and wrapper data.
@@ -46,12 +48,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return void
 	 */
-	public function changeEditorColorPalette() : void {
+	public function changeEditorColorPalette(): void
+	{
 
 		$colors = $this->getColorsFromSettings();
 
-		if ( $colors ) {
-			\add_theme_support( 'editor-color-palette', $colors );
+		if ($colors) {
+			\add_theme_support('editor-color-palette', $colors);
 		}
 	}
 
@@ -60,7 +63,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return array
 	 */
-	public function getColorsFromSettings() {
+	public function getColorsFromSettings()
+	{
 		return $this->getSettings()['globalVariables']['colors'] ?? [];
 	}
 
@@ -69,8 +73,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return void
 	 */
-	public function addThemeSupport() : void {
-		add_theme_support( 'align-wide' );
+	public function addThemeSupport(): void
+	{
+		add_theme_support('align-wide');
 	}
 
 	/**
@@ -79,20 +84,21 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return void
 	 */
-	public function getBlocksDataFullRaw() : void {
+	public function getBlocksDataFullRaw(): void
+	{
 
-		if ( ! $this->blocks ) {
+		if (! $this->blocks) {
 			$settings = $this->getSettings();
 			$wrapper  = $this->getWrapper();
 
 			$blocks = array_map(
-				function( $block ) use ( $settings ) {
+				function ($block) use ($settings) {
 
 					// Add additional data to the block settings.
 					$namespace = $block['namespace'] ?? '';
 
 					// Check if namespace is defined in block or in global manifest settings.
-					$block['namespace']     = ! empty( $namespace ) ? $namespace : $settings['namespace'];
+					$block['namespace']     = ! empty($namespace) ? $namespace : $settings['namespace'];
 					$block['blockFullName'] = "{$block['namespace']}/{$block['blockName']}";
 
 					return $block;
@@ -114,9 +120,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return array
 	 */
-	public function getAllBlocksList() : array {
+	public function getAllBlocksList(): array
+	{
 		$blocks = array_map(
-			function( $block ) {
+			function ($block) {
 				return $block['blockFullName'];
 			},
 			$this->blocks['blocks']
@@ -136,20 +143,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return void
 	 */
-	public function registerBlocks() : void {
+	public function registerBlocks(): void
+	{
 		$blocks = $this->blocks['blocks'];
 
-		if ( empty( $blocks ) ) {
+		if (empty($blocks)) {
 			throw InvalidBlock::missingBlocksException();
 		}
 
-		if ( ! empty( $blocks ) ) {
-			\array_map(
-				function( $block ) {
-					$this->registerBlock( $block );
-				},
-				$blocks
-			);
+		foreach ($blocks as $block) {
+			$this->registerBlock($block);
 		}
 	}
 
@@ -161,12 +164,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return void
 	 */
-	public function registerBlock( array $blockDetails ) : void {
+	public function registerBlock(array $blockDetails): void
+	{
 		\register_block_type(
 			$blockDetails['blockFullName'],
 			array(
 				'render_callback' => [ $this, 'render' ],
-				'attributes' => $this->getAttributes( $blockDetails ),
+				'attributes' => $this->getAttributes($blockDetails),
 			)
 		);
 	}
@@ -182,32 +186,33 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return string Html template for block.
 	 */
-	public function render( array $attributes, $innerBlockContent ) : string {
+	public function render(array $attributes, $innerBlockContent): string
+	{
 
 		// Block details is unavailable in this method so we are fetching block name via attributes.
 		$blockName = $attributes['blockName'] ?? '';
 
 		// Get block view path.
-		$templatePath = $this->getBlockViewPath( $blockName );
+		$templatePath = $this->getBlockViewPath($blockName);
 
 		// Get block wrapper view path.
 		$wrapperPath = "{$this->getWrapperPath()}/wrapper.php";
 
 		// Check if wrapper component exists.
-		if ( ! file_exists( $wrapperPath ) ) {
-			throw InvalidBlock::missingWrapperViewException( $wrapperPath );
+		if (! file_exists($wrapperPath)) {
+			throw InvalidBlock::missingWrapperViewException($wrapperPath);
 		}
 
 		// Check if actual block exists.
-		if ( ! file_exists( $templatePath ) ) {
-			throw InvalidBlock::missingViewException( $blockName, $templatePath );
+		if (! file_exists($templatePath)) {
+			throw InvalidBlock::missingViewException($blockName, $templatePath);
 		}
 
 		// If everything is ok, return the contents of the template (return, NOT echo).
 		ob_start();
 		include $wrapperPath;
 		$output = ob_get_clean();
-		unset( $blockName, $templatePath, $wrapperPath, $attributes, $innerBlockContent );
+		unset($blockName, $templatePath, $wrapperPath, $attributes, $innerBlockContent);
 		return (string) $output;
 	}
 
@@ -218,13 +223,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param array $categories Array of all blocks categories.
 	 * @return array
 	 */
-	public function getCustomCategory( $categories ) {
+	public function getCustomCategory($categories)
+	{
 		return array_merge(
 			$categories,
 			[
 				[
 					'slug'  => 'eightshift',
-					'title' => \esc_html__( 'Eightshift', 'eightshift-libs' ),
+					'title' => \esc_html__('Eightshift', 'eightshift-libs'),
 					'icon'  => 'admin-settings',
 				],
 			]
@@ -237,19 +243,21 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param string $src                  String with URL path to template.
 	 * @param array  $attributes           Attributes array to pass in template.
-	 * @param string $innerBlockContent If using inner blocks content pass the data.
+	 * @param string $innerBlockContent    If using inner blocks content pass the data.
 	 *
 	 * @return void Includes an HTML view, or throws an error if the view is missing.
 	 *
 	 * @throws InvalidBlock Throws error if wrapper view template is missing.
 	 */
-	public function renderWrapperView( string $src, array $attributes, $innerBlockContent = null ) : void {
-		if ( ! file_exists( $src ) ) {
-			throw InvalidBlock::missingWrapperViewException( $src );
+	public function renderWrapperView(string $src, array $attributes, $innerBlockContent = null): void
+	{
+		if (! file_exists($src)) {
+			throw InvalidBlock::missingWrapperViewException($src);
 		}
 
 		include $src;
-		unset( $src, $attributes, $innerBlockContent );
+
+		unset($src, $attributes, $innerBlockContent);
 	}
 
 	/**
@@ -258,14 +266,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return string
 	 */
-	abstract protected function getBlocksPath() : string;
+	abstract protected function getBlocksPath(): string;
 
 	/**
 	 * Get blocks custom folder absolute path.
 	 *
 	 * @return string
 	 */
-	protected function getBlocksCustomPath() : string {
+	protected function getBlocksCustomPath(): string
+	{
 		return "{$this->getBlocksPath()}/custom";
 	}
 
@@ -276,7 +285,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return string
 	 */
-	protected function getBlockViewPath( string $blockName ) : string {
+	protected function getBlockViewPath(string $blockName): string
+	{
 		return "{$this->getBlocksCustomPath()}/{$blockName}/{$blockName}.php";
 	}
 
@@ -285,7 +295,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return string
 	 */
-	protected function getWrapperPath() : string {
+	protected function getWrapperPath(): string
+	{
 		return "{$this->getBlocksPath()}/wrapper";
 	}
 
@@ -296,15 +307,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return array
 	 */
-	protected function getWrapper() : array {
+	protected function getWrapper(): array
+	{
 		$manifestPath = "{$this->getWrapperPath()}/manifest.json";
 
-		if ( ! file_exists( $manifestPath ) ) {
-			throw InvalidBlock::missingWrapperManifestException( $manifestPath );
+		if (! file_exists($manifestPath)) {
+			throw InvalidBlock::missingWrapperManifestException($manifestPath);
 		}
 
-		$settings = implode( ' ', (array) file( ( $manifestPath ) ) );
-		$settings = json_decode( $settings, true );
+		$settings = implode(' ', (array) file(( $manifestPath )));
+		$settings = json_decode($settings, true);
 
 		return $settings;
 	}
@@ -317,17 +329,18 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return array
 	 */
-	protected function getSettings() : array {
+	protected function getSettings(): array
+	{
 		$manifestPath = "{$this->getBlocksPath()}/manifest.json";
 
-		if ( ! file_exists( $manifestPath ) ) {
-			throw InvalidBlock::missingSettingsManifestException( $manifestPath );
+		if (! file_exists($manifestPath)) {
+			throw InvalidBlock::missingSettingsManifestException($manifestPath);
 		}
 
-		$settings = implode( ' ', (array) file( ( $manifestPath ) ) );
-		$settings = json_decode( $settings, true );
+		$settings = implode(' ', (array) file(( $manifestPath )));
+		$settings = json_decode($settings, true);
 
-		if ( ! isset( $settings['namespace'] ) ) {
+		if (! isset($settings['namespace'])) {
 			throw InvalidBlock::missingNamespaceException();
 		}
 
@@ -344,11 +357,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return array
 	 */
-	protected function getAttributes( array $blockDetails ) : array {
+	protected function getAttributes(array $blockDetails): array
+	{
 
 		$blockName = $blockDetails['blockName'];
 
-		$output = array_merge(
+		return array_merge(
 			[
 				'blockName' => array(
 					'type' => 'string',
@@ -370,8 +384,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$this->blocks['wrapper']['attributes'],
 			$blockDetails['attributes']
 		);
-
-		return $output;
 	}
 
 	/**
@@ -382,23 +394,24 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return array
 	 */
-	private function getBlocksData() : array {
+	private function getBlocksData(): array
+	{
 
 		return array_map(
-			function( string $block_path ) {
-				$block = implode( ' ', (array) file( ( $block_path ) ) );
+			function (string $block_path) {
+				$block = implode(' ', (array) file(( $block_path )));
 
-				$block = $this->parseManifest( $block );
+				$block = $this->parseManifest($block);
 
-				if ( ! isset( $block['blockName'] ) ) {
-					throw InvalidBlock::missingNameException( $block_path );
+				if (! isset($block['blockName'])) {
+					throw InvalidBlock::missingNameException($block_path);
 				}
 
-				if ( ! isset( $block['classes'] ) ) {
+				if (! isset($block['classes'])) {
 					$block['classes'] = [];
 				}
 
-				if ( ! isset( $block['attributes'] ) ) {
+				if (! isset($block['attributes'])) {
 					$block['attributes'] = [];
 				}
 

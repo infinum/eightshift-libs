@@ -30,9 +30,8 @@ class CliReset extends AbstractCli
 		return 'reset';
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		$output_dir = $this->getOutputDir('');
 
 		system('rm -rf ' . escapeshellarg($output_dir));

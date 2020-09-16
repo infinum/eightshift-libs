@@ -51,7 +51,7 @@ class RouteCli extends AbstractCli
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs(array $args ): array
+	public function getDevelopArgs(array $args): array
 	{
 		return [
 			'endpoint_slug' => $args[1] ?? 'test',
@@ -62,7 +62,7 @@ class RouteCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -85,7 +85,7 @@ class RouteCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 
 		// Get Props.
@@ -100,7 +100,7 @@ class RouteCli extends AbstractCli
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameClassNameWithSufix($this->getClassShortName(), $className, $class);
+		$class = $this->renameClassNameWithSuffix($this->getClassShortName(), $className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
 		$class = str_replace('/example-route', "/{$endpointSlug}", $class);

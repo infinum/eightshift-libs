@@ -24,7 +24,7 @@ abstract class AbstractConfig implements ConfigInterface
 	 *
 	 * @return string Returns key prefixed with project prefix.
 	 */
-	public static function getConfig(string $key ): string
+	public static function getConfig(string $key): string
 	{
 		$projectPrefix = static::getProjectPrefix();
 		$projectPrefix = str_replace(' ', '-', $projectPrefix);
@@ -43,7 +43,7 @@ abstract class AbstractConfig implements ConfigInterface
 	 *
 	 * @return string
 	 */
-	public static function getProjectPath(string $path = '' ): string
+	public static function getProjectPath(string $path = ''): string
 	{
 		$locations = [
 			\trailingslashit(\get_stylesheet_directory()) . $path,

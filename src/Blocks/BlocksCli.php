@@ -65,7 +65,7 @@ class BlocksCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 
 		$className = $this->getClassShortName();
@@ -93,7 +93,7 @@ class BlocksCli extends AbstractCli
 	 *
 	 * @return void
 	 */
-	public function blocksInit(bool $all = false ): void
+	public function blocksInit(bool $all = false): void
 	{
 		$root     = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();

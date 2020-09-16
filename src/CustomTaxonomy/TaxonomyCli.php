@@ -30,7 +30,7 @@ class TaxonomyCli extends AbstractCli
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs(array $args ): array
+	public function getDevelopArgs(array $args): array
 	{
 		return [
 			'label'              => $args[1] ?? 'Locations',
@@ -78,7 +78,7 @@ class TaxonomyCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 
 		// Get Props.
@@ -95,7 +95,7 @@ class TaxonomyCli extends AbstractCli
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameClassNameWithSufix($this->getClassShortName(), $className, $class);
+		$class = $this->renameClassNameWithSuffix($this->getClassShortName(), $className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
 		$class = $this->renameTextDomain($assocArgs, $class);

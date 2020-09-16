@@ -40,7 +40,7 @@ class CiExcludeCli extends AbstractCli
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs(array $args ): array
+	public function getDevelopArgs(array $args): array
 	{
 		return [
 			'root' => $args[1] ?? './',
@@ -50,7 +50,7 @@ class CiExcludeCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -79,7 +79,7 @@ class CiExcludeCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 
 		// Get Props.

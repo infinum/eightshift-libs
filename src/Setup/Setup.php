@@ -17,7 +17,7 @@ declare(strict_types=1);
  *
  * @return void
  */
-function setup(string $projectRootPath, array $args = [], string $setupFile = 'setup.json' )
+function setup(string $projectRootPath, array $args = [], string $setupFile = 'setup.json')
 {
 
 	// Check if optional parameters exists.

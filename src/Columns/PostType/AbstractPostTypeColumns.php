@@ -28,7 +28,7 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	public function register(): void
 	{
 		array_map(
-			function ($post_type ) {
+			function ($post_type) {
 				add_filter("manage_{$post_type}_posts_columns", [ $this, 'addColumnName' ]);
 				add_action("manage_{$post_type}_posts_custom_column", [ $this, 'renderColumnContent' ], 10, 2);
 			},
@@ -43,7 +43,7 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	 *
 	 * @return array         Modified column names array.
 	 */
-	abstract public function addColumnName(array $columns ): array;
+	abstract public function addColumnName(array $columns): array;
 
 	/**
 	 * Render the post column content in the custom post column
@@ -53,7 +53,7 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	 *
 	 * @return void
 	 */
-	abstract public function renderColumnContent(string $columnName, int $postId ): void;
+	abstract public function renderColumnContent(string $columnName, int $postId): void;
 
 	/**
 	 * Get the slug of the post type where the additional column should appear.

@@ -18,7 +18,7 @@ declare(strict_types=1);
   *
   * @return void
   */
-function dbImport(string $projectRootPath, array $args = [], string $setupFile = 'setup.json' )
+function dbImport(string $projectRootPath, array $args = [], string $setupFile = 'setup.json')
 {
 
 	// Check if mandatory parameters exists.
@@ -34,14 +34,14 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 	}
 
 	// Change execution folder.
-	if ( ! is_dir($projectRootPath)) {
+	if (! is_dir($projectRootPath)) {
 		\WP_CLI::error("Folder doesn't exist on this path: {$projectRootPath}.");
 	}
 
 	chdir($projectRootPath);
 
 	// Check if setup exists.
-	if ( ! file_exists($setupFile)) {
+	if (! file_exists($setupFile)) {
 		\WP_CLI::error("setup.json is missing at this path: {$setupFile}.");
 	}
 
@@ -61,7 +61,7 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 	}
 
 	// Die if from key is missing and not valid.
-	if ( ! isset($urls[ $from ]) || empty($urls[ $from ])) {
+	if (! isset($urls[ $from ]) || empty($urls[ $from ])) {
 		\WP_CLI::error("{$from} key is missing or empty in urls.");
 	} else {
 		$from        = \wp_parse_url($urls[ $from ]);
@@ -70,7 +70,7 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 	}
 
 	// Die if to key is missing and not valid.
-	if ( ! isset($urls[ $to ]) || empty($urls[ $to ])) {
+	if (! isset($urls[ $to ]) || empty($urls[ $to ])) {
 		\WP_CLI::error("{$to} key is missing or empty in urls.");
 	} else {
 		$to        = \wp_parse_url($urls[ $to ]);
@@ -89,7 +89,7 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 
 	// Remove old db export folder if it exists.
 	if (file_exists($exportFolderName)) {
-		\WP_CLI::log(shell_exec("rm -rf {$exportFolderName}")); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+		\WP_CLI::log(shell_exec("rm -rf {$exportFolderName}"));
 		\WP_CLI::log("Removed old temp {$exportFolderName} folder.");
 		\WP_CLI::log('--------------------------------------------------');
 	}
@@ -100,7 +100,7 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 	\WP_CLI::log('--------------------------------------------------');
 
 	// Export files to new temp folder.
-	\WP_CLI::log(shell_exec("tar zxf {$exportFileName} -C {$exportFolderName}")); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+	\WP_CLI::log(shell_exec("tar zxf {$exportFileName} -C {$exportFolderName}"));
 	\WP_CLI::log("Exported {$exportFileName} to {$exportFolderName} folder.");
 	\WP_CLI::log('--------------------------------------------------');
 

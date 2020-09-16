@@ -16,7 +16,7 @@ declare(strict_types=1);
  *
  * @return void
  */
-function dbExport(string $projectRootPath, array $args = [] )
+function dbExport(string $projectRootPath, array $args = [])
 {
 
 	// Check if optional parameters exists.
@@ -68,7 +68,7 @@ function dbExport(string $projectRootPath, array $args = [] )
 	}
 
 	if (! empty($exportFiles)) {
-		\WP_CLI::log(shell_exec("tar czf {$exportFileName} {$exportFiles}")); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+		\WP_CLI::log(shell_exec("tar czf {$exportFileName} {$exportFiles}"));
 		\WP_CLI::log('Compressing folders success.');
 		\WP_CLI::log('--------------------------------------------------');
 	}
