@@ -38,7 +38,7 @@ class ServiceExampleCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'folder'    => $args[1] ?? 'testFolder/novi',
+			'folder' => $args[1] ?? 'testFolder/new',
 			'file_name' => $args[2] ?? 'TestTest',
 		];
 	}
@@ -46,7 +46,7 @@ class ServiceExampleCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -54,16 +54,16 @@ class ServiceExampleCli extends AbstractCli
 			'shortdesc' => 'Generates empty generic service class.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'folder',
+					'type' => 'assoc',
+					'name' => 'folder',
 					'description' => 'The output folder path relative to src folder. Example: main or main/config',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'file_name',
+					'type' => 'assoc',
+					'name' => 'file_name',
 					'description' => 'The output file name. Example: Main',
-					'optional'    => false,
+					'optional' => false,
 				],
 			],
 		];
@@ -71,9 +71,8 @@ class ServiceExampleCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
-		$folder   = $assocArgs['folder'];
+		$folder = $assocArgs['folder'];
 		$fileName = $this->prepareSlug($assocArgs['file_name']);
 
 		// Get full class name.
@@ -96,7 +95,7 @@ class ServiceExampleCli extends AbstractCli
 		);
 
 		$newNamespace = '\\' . implode('\\', $folderParts);
-		$class        = str_replace('\\ExampleService', $newNamespace, $class);
+		$class = str_replace('\\ExampleService', $newNamespace, $class);
 
 		// Output final class to new file/folder and finish.
 		$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $className, $class);
