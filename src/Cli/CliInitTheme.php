@@ -72,15 +72,7 @@ class CliInitTheme extends AbstractCli
 		];
 	}
 
-	/**
-	 * Initializes a theme
-	 *
-	 * @param array $args Array of arguments form terminal.
-	 * @param array $assocArgs Array of associative arguments form terminal.
-	 *
-	 * @throws \ReflectionException Exception if the class doesn't exist.
-	 */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 
 		if (! function_exists('add_action')) {

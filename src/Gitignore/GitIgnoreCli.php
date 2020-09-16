@@ -67,13 +67,7 @@ class GitIgnoreCli extends AbstractCli
 		];
 	}
 
-	/**
-	 * Generate the gitignore class
-	 *
-	 * @param array $args      Array of arguments form terminal.
-	 * @param array $assocArgs Array of associative arguments form terminal.
-	 */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 
 		// Get Props.

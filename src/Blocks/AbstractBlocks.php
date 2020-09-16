@@ -151,12 +151,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			throw InvalidBlock::missingBlocksException();
 		}
 
-		\array_map(
-			function ($block) {
-				$this->registerBlock($block);
-			},
-			$blocks
-		);
+		foreach ($blocks as $block) {
+			$this->registerBlock($block);
+		}
 	}
 
 	/**
