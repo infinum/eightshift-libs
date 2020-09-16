@@ -20,11 +20,11 @@ trait ObjectHelperTrait
 	/**
 	 * Check if XML is valid file used for svg.
 	 *
-	 * @param xml $xml Full xml document.
+	 * @param string $xml Full xml document.
 	 *
 	 * @return boolean
 	 */
-	public function isValidXml($xml)
+	public function isValidXml(string $xml)
 	{
 		libxml_use_internal_errors(true);
 		$doc = new \DOMDocument('1.0', 'utf-8');
@@ -43,13 +43,13 @@ trait ObjectHelperTrait
 	public static function isJson(string $string): bool
 	{
 		json_decode($string);
-		return ( json_last_error() === JSON_ERROR_NONE );
+		return (json_last_error() === JSON_ERROR_NONE);
 	}
 
 	/**
 	 * Flatten multidimensional array.
 	 *
-	 * @param  array $array Multidimensional array.
+	 * @param array $array Multidimensional array.
 	 *
 	 * @return array
 	 */
@@ -60,7 +60,7 @@ trait ObjectHelperTrait
 		array_walk_recursive(
 			$array,
 			function ($a) use (&$output) {
-				if (! empty($a)) {
+				if (!empty($a)) {
 					$output[] = $a;
 				}
 			}
@@ -72,24 +72,29 @@ trait ObjectHelperTrait
 	/**
 	 * Sanitize all values in an array.
 	 *
-	 * @param array  $array                 Provided array.
-	 * @param string $sanitizationFunction WordPress function used for sanitization purposes.
-	 *
 	 * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
+	 *
+	 * @param array  $array Provided array.
+	 * @param string $sanitizationFunction WordPress function used for sanitization purposes.
 	 *
 	 * @return array
 	 */
 	public static function sanitizeArray(array $array, string $sanitizationFunction): array
 	{
+		$sanitized = [];
+
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {
-					$value = sanitizeArray($value);
+				$sanitizedValue = self::sanitizeArray($value, $sanitizationFunction);
+				$sanitized[$key] = $sanitizedValue;
+
+				continue;
 			}
 
-			$value = $sanitizationFunction($value);
+			$sanitized[$key] = $sanitizationFunction($value);
 		}
 
-		return $array;
+		return $sanitized;
 	}
 
 	/**
