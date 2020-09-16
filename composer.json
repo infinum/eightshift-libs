@@ -27,6 +27,7 @@
   "require": {
     "php": ">=7.2",
     "ext-json": "*",
+    "ext-libxml": "*",
     "php-di/php-di": "^6.2.2"
   },
   "require-dev": {
