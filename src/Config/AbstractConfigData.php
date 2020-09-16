@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Config;
 
+use EightshiftLibs\Exception\InvalidPath;
+
 /**
  * The project config class.
  */
-abstract class AbstractConfig implements ConfigInterface
+abstract class AbstractConfigData implements ConfigDataInterface
 {
 
 	/**
@@ -41,7 +43,9 @@ abstract class AbstractConfig implements ConfigInterface
 	 *
 	 * @param string $path Additional path to add to project path.
 	 *
-	 * @return string
+	 * @throws InvalidPath If an invalid URI was passed.
+	 *
+	 * @return string Valid URI.
 	 */
 	public static function getProjectPath(string $path = ''): string
 	{
@@ -56,5 +60,11 @@ abstract class AbstractConfig implements ConfigInterface
 				return $location;
 			}
 		}
+
+		if (!is_readable($path)) {
+			throw InvalidPath::fromUri($path);
+		}
+
+		return $path;
 	}
 }

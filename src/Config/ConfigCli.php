@@ -33,10 +33,10 @@ class ConfigCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'name'           => $args[1] ?? 'Boilerplate',
-			'version'        => $args[2] ?? '1',
-			'prefix'         => $args[3] ?? 'ebs',
-			'env'            => $args[4] ?? 'EBS_ENV',
+			'name' => $args[1] ?? 'Boilerplate',
+			'version' => $args[2] ?? '1',
+			'prefix' => $args[3] ?? 'ebs',
+			'env' => $args[4] ?? 'EBS_ENV',
 			'routes_version' => $args[5] ?? 'v2',
 		];
 	}
@@ -52,34 +52,34 @@ class ConfigCli extends AbstractCli
 			'shortdesc' => 'Generates project config class.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'name',
+					'type' => 'assoc',
+					'name' => 'name',
 					'description' => 'Define project name.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'version',
+					'type' => 'assoc',
+					'name' => 'version',
 					'description' => 'Define project version.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'prefix',
+					'type' => 'assoc',
+					'name' => 'prefix',
 					'description' => 'Define project prefix.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'env',
+					'type' => 'assoc',
+					'name' => 'env',
 					'description' => 'Define project env.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'routes_version',
+					'type' => 'assoc',
+					'name' => 'routes_version',
 					'description' => 'Define project REST version.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
@@ -87,12 +87,11 @@ class ConfigCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
-		$name          = $assocArgs['name'] ?? '';
-		$version       = $assocArgs['version'] ?? '';
-		$prefix        = $assocArgs['prefix'] ?? '';
-		$env           = $assocArgs['env'] ?? '';
+		$name = $assocArgs['name'] ?? '';
+		$version = $assocArgs['version'] ?? '';
+		$prefix = $assocArgs['prefix'] ?? '';
+		$env = $assocArgs['env'] ?? '';
 		$routesVersion = $assocArgs['routes_version'] ?? '';
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -103,23 +102,23 @@ class ConfigCli extends AbstractCli
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
 
-		if (! empty($name)) {
+		if (!empty($name)) {
 			$class = str_replace('eightshift-libs', $name, $class);
 		}
 
-		if (! empty($version)) {
+		if (!empty($version)) {
 			$class = str_replace('1.0.0', $version, $class);
 		}
 
-		if (! empty($prefix)) {
+		if (!empty($prefix)) {
 			$class = str_replace("'eb'", "'{$prefix}'", $class);
 		}
 
-		if (! empty($env)) {
+		if (!empty($env)) {
 			$class = str_replace('EB_ENV', $env, $class);
 		}
 
-		if (! empty($routesVersion)) {
+		if (!empty($routesVersion)) {
 			$class = str_replace('v1', $routesVersion, $class);
 		}
 

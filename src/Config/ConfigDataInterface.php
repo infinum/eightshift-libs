@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace EightshiftLibs\Config;
 
 /**
- * Interface ConfigInterface
+ * Interface ConfigDataInterface
  */
-interface ConfigInterface
+interface ConfigDataInterface
 {
 
 	/**
