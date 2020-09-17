@@ -130,6 +130,8 @@ class Autowiring
 	 * @param array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
 	 *
 	 * @throws \ReflectionException Exception thrown in case class is missing.
+	 * @throws \Exception If things we're looking for are missing
+	 *                    inside filename or classInterface index (which shouldn't happen).
 	 *
 	 * @return array
 	 */
@@ -151,8 +153,13 @@ class Autowiring
 					continue;
 				}
 
-				$classname = $reflParam->getType()->getName();
-				$reflClassForParam = new \ReflectionClass($classname);
+				$reflClassForParam = $reflParam->getClass();
+
+				if ($reflClassForParam === null) {
+					continue;
+				}
+
+				$classname = $reflClassForParam->getName();
 
 				// If the expected type is interface, try guessing based on var name. Otherwise
 				// Just inject that class.
@@ -187,6 +194,7 @@ class Autowiring
 	 *
 	 * @param string $namespace Name of namespace.
 	 * @param array  $psr4Prefixes Array of psr-4 compliant namespaces and their accompanying folders.
+	 *
 	 * @return array
 	 */
 	private function getClassesInNamespace(string $namespace, array $psr4Prefixes): array
@@ -243,9 +251,10 @@ class Autowiring
 	 * @param string $interfaceName Interface we're trying to match.
 	 * @param array  $filenameIndex Filename index. Maps filenames to class names.
 	 * @param array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
-	 * @return string
 	 *
 	 * @throws \Exception If things we're looking for are missing inside filename or classInterface index (which shouldn't happen).
+	 *
+	 * @return string
 	 */
 	private function tryToFindMatchingClass(
 		string $filename,
@@ -292,6 +301,7 @@ class Autowiring
 	 *
 	 * @param array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader
 	 *                                   ($loader->getPsr4Prefixes()).
+	 *
 	 * @return array
 	 */
 	private function buildFilenameIndex(array $allRelevantClasses): array
