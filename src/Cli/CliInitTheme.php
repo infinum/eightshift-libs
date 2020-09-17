@@ -85,10 +85,12 @@ class CliInitTheme extends AbstractCli
 			$reflectionClass = new \ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([null]);
 
-			if (function_exists('\add_action')) {
-				\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()}");
-			} else {
-				\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+			if (method_exists($class, 'getCommandName')) {
+				if (function_exists('\add_action')) {
+					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()}");
+				} else {
+					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+				}
 			}
 		}
 

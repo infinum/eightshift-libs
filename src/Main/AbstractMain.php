@@ -14,7 +14,6 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\Helper\AutowireDefinitionHelper;
 use DI\Definition\Reference;
-use EightshiftLibs\Services\RegistrableInterface;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -75,7 +74,7 @@ abstract class AbstractMain implements ServiceInterface
 		array_walk(
 			$this->services,
 			function ($class) {
-				if (!$class instanceof RegistrableInterface) {
+				if (!$class instanceof ServiceInterface) {
 					return;
 				}
 

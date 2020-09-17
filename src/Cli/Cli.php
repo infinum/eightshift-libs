@@ -14,6 +14,7 @@ use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli};
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
@@ -165,13 +166,15 @@ class Cli
 			$reflectionClass = new \ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([null]);
 
-			if ($class->getCommandName() === $commandName) {
-				$class->__invoke(
-					[],
-					$class->getDevelopArgs($args)
-				);
+			if (method_exists($class, 'getCommandName') && method_exists($class, 'getDevelopArgs') && method_exists($class, '__invoke')) {
+				if ($class->getCommandName() === $commandName) {
+					$class->__invoke(
+						[],
+						$class->getDevelopArgs($args)
+					);
 
-				break;
+					break;
+				}
 			}
 		}
 	}
@@ -193,7 +196,9 @@ class Cli
 			$reflectionClass = new \ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			$class->register();
+			if ($class instanceof ServiceInterface) {
+				$class->register();
+			}
 		}
 	}
 }

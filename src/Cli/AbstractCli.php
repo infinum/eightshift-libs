@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use http\Exception\RuntimeException;
+
 /**
  * Class AbstractCli
  */
@@ -95,13 +97,16 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @return void
-	 * @throws \ReflectionException Exception in the case the class is missing.
+	 * @throws \RuntimeException Error in case the WP_CLI::add_command fails.
 	 *
-	 * @throws \Exception Error in case the WP_CLI::add_command fails.
+	 * @return void
 	 */
 	public function registerCommand(): void
 	{
+		if (! class_exists($this->getClassName())) {
+			throw new \RuntimeException('Class doesn\'t exist');
+		}
+
 		$reflectionClass = new \ReflectionClass($this->getClassName());
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
@@ -140,13 +145,21 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Get short class name for current class
 	 *
+	 * @throws \RuntimeException Exception in the case the class name is missing.
+	 *
 	 * @return string
 	 */
 	public function getClassShortName(): string
 	{
 		$arr = explode('\\', $this->getClassName());
 
-		return str_replace('Cli', '', end($arr));
+		$lastElement = end($arr);
+
+		if (empty($lastElement)) {
+			throw new \RuntimeException('No class name given.');
+		}
+
+		return str_replace('Cli', '', $lastElement);
 	}
 
 	/**
@@ -156,7 +169,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getCommandName(): string
 	{
-		return 'create_' . strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
+		return 'create_' . strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
 	}
 
 	/**

@@ -71,7 +71,7 @@ trait CliHelpers
 			\WP_CLI::error("The template {$path} seems to be missing.");
 		}
 
-		return $templateFile;
+		return (string)$templateFile;
 	}
 
 	/**
@@ -186,6 +186,8 @@ trait CliHelpers
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
 	 *
+	 * @throws ExitException Exception in case of WP-CLI error.
+	 *
 	 * @return string
 	 */
 	public function renameNamespace(array $args = [], string $string = ''): string
@@ -206,7 +208,7 @@ trait CliHelpers
 			$class
 		);
 
-		return $class;
+		return (string)$class;
 	}
 
 	/**
@@ -249,7 +251,7 @@ trait CliHelpers
 			);
 		}
 
-		return $output;
+		return (string)$output;
 	}
 
 	/**
@@ -486,10 +488,12 @@ trait CliHelpers
 			$reflectionClass = new \ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([null]);
 
-			if (!$run) {
-				\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
-			} else {
-				\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+			if (method_exists($class, 'getCommandName')) {
+				if (!$run) {
+					\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+				} else {
+					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+				}
 			}
 		}
 	}

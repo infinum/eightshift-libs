@@ -75,7 +75,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	) {
 		$id_field = $this->db_fields['id'];
 
-		if (is_object($args[0]) && property_exists($args[0], 'has_children')) {
+		if (isset($args[0]-> has_children)) {
 			$args[0]->has_children = !empty($children_elements[$element->$id_field]);
 		}
 
