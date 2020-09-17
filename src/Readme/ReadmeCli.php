@@ -20,6 +20,8 @@ class ReadmeCli extends AbstractCli
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = '../../../';
 
@@ -50,7 +52,7 @@ class ReadmeCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -58,10 +60,10 @@ class ReadmeCli extends AbstractCli
 			'shortdesc' => 'Initialize Command for building your projects readme.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'root',
+					'type' => 'assoc',
+					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
@@ -69,7 +71,6 @@ class ReadmeCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
