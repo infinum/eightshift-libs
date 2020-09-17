@@ -38,9 +38,9 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 */
 	public function register(): void
 	{
-		add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
-		add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
-		add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
+		\add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
 
 	/**

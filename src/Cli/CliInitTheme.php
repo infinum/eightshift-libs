@@ -76,7 +76,7 @@ class CliInitTheme extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		if (!function_exists('add_action')) {
+		if (!function_exists('\add_action')) {
 			$this->runReset();
 			\WP_CLI::log('--------------------------------------------------');
 		}
@@ -85,7 +85,7 @@ class CliInitTheme extends AbstractCli
 			$reflectionClass = new \ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([null]);
 
-			if (function_exists('add_action')) {
+			if (function_exists('\add_action')) {
 				\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()}");
 			} else {
 				\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");

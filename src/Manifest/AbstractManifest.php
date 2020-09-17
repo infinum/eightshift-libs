@@ -32,9 +32,9 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 * Set the manifest data with site url prefix.
 	 * You should never call this method directly instead you should call $this->manifest.
 	 *
+	 * @return void Sets the manifest variable.
 	 * @throws InvalidManifest Throws error if manifest.json file is missing.
 	 *
-	 * @return void Sets the manifest variable.
 	 */
 	public function setAssetsManifestRaw(): void
 	{
@@ -63,10 +63,10 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 *
 	 * @param string $key File name key you want to get from manifest.
 	 *
+	 * @return string Full path to asset.
 	 * @throws InvalidManifest Throws error if manifest key is missing.
 	 *                         Returns data from manifest and not global variable.
 	 *
-	 * @return string Full path to asset.
 	 */
 	public function getAssetsManifestItem(string $key): string
 	{

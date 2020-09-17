@@ -141,7 +141,7 @@ trait CliHelpers
 	 */
 	public function getOutputDir(string $path = ''): string
 	{
-		if (function_exists('add_action')) {
+		if (function_exists('\add_action')) {
 			$root = $this->getProjectRootPath();
 		} else {
 			$root = $this->getProjectRootPath(true) . '/cli-output';
@@ -285,7 +285,7 @@ trait CliHelpers
 	{
 		$projectName = 'eightshift-boilerplate';
 
-		if (function_exists('add_action')) {
+		if (function_exists('\add_action')) {
 			$projectName = basename(dirname(__DIR__, 5));
 		}
 
@@ -312,7 +312,7 @@ trait CliHelpers
 	{
 		$projectType = 'themes';
 
-		if (function_exists('add_action')) {
+		if (function_exists('\add_action')) {
 			$projectType = basename(dirname(__DIR__, 6));
 		}
 
@@ -366,7 +366,7 @@ trait CliHelpers
 	public function getComposer(array $args = []): array
 	{
 		if (!isset($args['config_path'])) {
-			if (function_exists('add_action')) {
+			if (function_exists('\add_action')) {
 				$composerPath = $this->getProjectRootPath() . '/composer.json';
 			} else {
 				$composerPath = $this->getProjectRootPath(true) . '/composer.json';

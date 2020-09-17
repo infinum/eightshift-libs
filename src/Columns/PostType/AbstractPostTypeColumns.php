@@ -30,8 +30,8 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 		$postTypes = $this->getPostTypeSlug();
 
 		foreach ($postTypes as $postType) {
-			add_filter("manage_{$postType}_posts_columns", [$this, 'addColumnName']);
-			add_action("manage_{$postType}_posts_custom_column", [$this, 'renderColumnContent'], 10, 2);
+			\add_filter("manage_{$postType}_posts_columns", [$this, 'addColumnName']);
+			\add_action("manage_{$postType}_posts_custom_column", [$this, 'renderColumnContent'], 10, 2);
 		}
 	}
 

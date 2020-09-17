@@ -30,8 +30,8 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 		$taxonomies = $this->getTaxonomySlug();
 
 		foreach ($taxonomies as $taxonomy) {
-			add_filter("manage_edit-{$taxonomy}_columns", [$this, 'addColumnName']);
-			add_filter("manage_{$taxonomy}_custom_column", [$this, 'renderColumnContent'], 10, 3);
+			\add_filter("manage_edit-{$taxonomy}_columns", [$this, 'addColumnName']);
+			\add_filter("manage_{$taxonomy}_custom_column", [$this, 'renderColumnContent'], 10, 3);
 		}
 	}
 

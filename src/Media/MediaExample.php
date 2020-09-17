@@ -27,6 +27,6 @@ class MediaExample extends AbstractMedia
 	 */
 	public function register(): void
 	{
-		add_action('after_setup_theme', [ $this, 'addThemeSupport' ], 20);
+		\add_action('after_setup_theme', [ $this, 'addThemeSupport' ], 20);
 	}
 }

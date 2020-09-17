@@ -92,7 +92,7 @@ class BlocksCli extends AbstractCli
 		// Output final class to new file/folder and finish.
 		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
 
-		if (function_exists('add_action')) {
+		if (function_exists('\add_action')) {
 			$this->blocksInit();
 		}
 	}
