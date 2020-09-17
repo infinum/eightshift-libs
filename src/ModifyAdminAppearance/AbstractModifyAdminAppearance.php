@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Admin;
+namespace EightshiftLibs\ModifyAdminAppearance;
 
 use EightshiftLibs\Services\ServiceInterface;
 
@@ -26,15 +26,15 @@ abstract class AbstractModifyAdminAppearance implements ServiceInterface
 	 * @var array
 	 */
 	public const COLOR_SCHEMES = [
-		'default'    => 'fresh',
-		'staging'    => 'blue',
+		'default' => 'fresh',
+		'staging' => 'blue',
 		'production' => 'sunrise',
 	];
 
 	/**
 	 * List of admin color schemes.
 	 *
-	 * @var array
+	 * @return array
 	 */
 	public function getColorSchemes(): array
 	{
@@ -52,10 +52,10 @@ abstract class AbstractModifyAdminAppearance implements ServiceInterface
 	{
 		$colors = $this->getColorSchemes();
 
-		if (! isset($colors[ $env ])) {
+		if (!isset($colors[$env])) {
 			return $colors['default'];
 		}
 
-		return $colors[ $env ];
+		return $colors[$env];
 	}
 }
