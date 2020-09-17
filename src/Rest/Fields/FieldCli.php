@@ -20,6 +20,8 @@ class FieldCli extends AbstractCli
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = 'src/Rest/Fields';
 
@@ -43,7 +45,7 @@ class FieldCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'field_name'  => $args[1] ?? 'title',
+			'field_name' => $args[1] ?? 'title',
 			'object_type' => $args[2] ?? 'post',
 		];
 	}
@@ -59,16 +61,16 @@ class FieldCli extends AbstractCli
 			'shortdesc' => 'Generates REST-API Field in your project.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'field_name',
+					'type' => 'assoc',
+					'name' => 'field_name',
 					'description' => 'The name of the endpoint slug. Example: title.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'object_type',
+					'type' => 'assoc',
+					'name' => 'object_type',
 					'description' => 'Object(s) the field is being registered to. Example: post.',
-					'optional'    => false,
+					'optional' => false,
 				],
 			],
 		];
@@ -76,9 +78,8 @@ class FieldCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
-		$fieldName  = $this->prepareSlug($assocArgs['field_name']);
+		$fieldName = $this->prepareSlug($assocArgs['field_name']);
 		$objectType = $this->prepareSlug($assocArgs['object_type']);
 
 		// Get full class name.

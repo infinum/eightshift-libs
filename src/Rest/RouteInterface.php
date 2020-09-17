@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest;
 
 /**
- * Route interface that adds routes
+ * Interface that adds aliases of HTTP verbs.
  */
 interface RouteInterface
 {

@@ -19,13 +19,13 @@ abstract class AbstractField implements ServiceInterface
 {
 
 	/**
-	 * A register method holds register_rest_route funtion to register or override api field.
+	 * A register method holds register_rest_route function to register or override api field.
 	 *
 	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('rest_api_init', [ $this, 'fieldRegisterCallback' ]);
+		\add_action('rest_api_init', [$this, 'fieldRegisterCallback']);
 	}
 
 	/**
@@ -43,7 +43,8 @@ abstract class AbstractField implements ServiceInterface
 	}
 
 	/**
-	 * Method that returns field object type.
+	 * Method that returns field object type
+	 *
 	 * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
 	 *
 	 * @return string|array
@@ -51,7 +52,7 @@ abstract class AbstractField implements ServiceInterface
 	abstract protected function getObjectType();
 
 	/**
-	 * Get the name of the field you awant to register or orverride.
+	 * Get the name of the field you want to register or override
 	 *
 	 * @return string The attribute name.
 	 */
