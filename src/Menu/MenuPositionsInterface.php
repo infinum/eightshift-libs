@@ -19,7 +19,7 @@ interface MenuPositionsInterface
 {
 
 	/**
-	 * Return all menu poistions
+	 * Return all menu positions
 	 *
 	 * @return array Of menu positions with name and slug.
 	 */
