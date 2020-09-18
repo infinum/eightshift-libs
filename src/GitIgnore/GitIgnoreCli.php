@@ -20,6 +20,8 @@ class GitIgnoreCli extends AbstractCli
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = '../../../';
 
@@ -58,10 +60,10 @@ class GitIgnoreCli extends AbstractCli
 			'shortdesc' => 'Initialize Command for building your projects gitignore.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'root',
+					'type' => 'assoc',
+					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
@@ -69,7 +71,6 @@ class GitIgnoreCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 

@@ -11,19 +11,19 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest;
 
 /**
- * Interface Securable.
+ * Rest security interface
  *
- * An object that can be registered.
+ * An object that defines the authentication checks for REST API routes.
  */
 interface RouteSecurityInterface
 {
 
 	/**
-	 * Register the rest route.
+	 * Authenticate the access of the endpoint
 	 *
-	 * A register method holds authentificationCheck funtion to for route.
+	 * A register method holds authenticationCheck function for the route.
 	 *
 	 * @return void
 	 */
-	public function authentificationCheck(): void;
+	public function authenticationCheck(): void;
 }

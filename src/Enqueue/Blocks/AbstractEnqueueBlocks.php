@@ -20,9 +20,9 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 {
 
 	public const BLOCKS_EDITOR_SCRIPT_URI = 'applicationBlocksEditor.js';
-	public const BLOCKS_EDITOR_STYLE_URI  = 'applicationBlocksEditor.css';
+	public const BLOCKS_EDITOR_STYLE_URI = 'applicationBlocksEditor.css';
 
-	public const BLOCKS_STYLE_URI  = 'applicationBlocks.css';
+	public const BLOCKS_STYLE_URI = 'applicationBlocks.css';
 	public const BLOCKS_SCRIPT_URI = 'applicationBlocks.js';
 
 	/**
@@ -120,7 +120,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	protected function getAdminStyleDependencies(): array
 	{
-		return [ "{$this->getAssetsPrefix()}-block-style" ];
+		return ["{$this->getAssetsPrefix()}-block-style"];
 	}
 
 	/**

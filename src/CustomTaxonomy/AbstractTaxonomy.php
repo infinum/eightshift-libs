@@ -25,7 +25,7 @@ abstract class AbstractTaxonomy implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_action('init', [ $this, 'taxonomyRegisterCallback' ]);
+		\add_action('init', [$this, 'taxonomyRegisterCallback']);
 	}
 
 	/**

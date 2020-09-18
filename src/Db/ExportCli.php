@@ -31,7 +31,7 @@ class ExportCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -39,16 +39,16 @@ class ExportCli extends AbstractCli
 			'shortdesc' => 'Run database export with images.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'skip_db',
+					'type' => 'assoc',
+					'name' => 'skip_db',
 					'description' => 'If you want to skip exporting database.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'skip_uploads',
+					'type' => 'assoc',
+					'name' => 'skip_uploads',
 					'description' => 'If you want to skip exporting images.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
@@ -56,13 +56,12 @@ class ExportCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		require $this->getLibsPath('src/Db/DbExport.php');
 
 		dbExport(
 			$this->getProjectConfigRootPath(),
 			[
-				'skip_db'      => $assocArgs['skip_db'] ?? false,
+				'skip_db' => $assocArgs['skip_db'] ?? false,
 				'skip_uploads' => $assocArgs['skip_uploads'] ?? false,
 			]
 		);

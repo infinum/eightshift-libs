@@ -25,7 +25,7 @@ abstract class AbstractPostType implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_action('init', [ $this, 'postTypeRegisterCallback' ]);
+		\add_action('init', [$this, 'postTypeRegisterCallback']);
 	}
 
 	/**

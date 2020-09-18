@@ -10,12 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Blocks\BlocksCli;
-use EightshiftLibs\Blocks\BlockComponentCli;
-use EightshiftLibs\Blocks\BlockCli;
+use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli};
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
@@ -32,13 +31,12 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
-use EightshiftLibs\Db\DbImportCli;
-use EightshiftLibs\Db\ExportCli;
-use EightshiftLibs\Db\ImportCli;
+use EightshiftLibs\Db\{DbImportCli, ExportCli, ImportCli};
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
+use WP_CLI\ExitException;
 
 /**
  * Class Cli
@@ -151,11 +149,13 @@ class Cli
 	 *
 	 * @param array $args WPCLI eval-file arguments.
 	 *
+	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
+	 * @throws \ReflectionException Exception if the class doesn't exist.
+	 *
 	 * @return void
 	 */
 	public function loadDevelop(array $args = []): void
 	{
-
 		$commandName = $args[0] ?? '';
 
 		if (empty($commandName)) {
@@ -164,15 +164,17 @@ class Cli
 
 		foreach ($this->getDevelopClasses() as $item) {
 			$reflectionClass = new \ReflectionClass($item);
-			$class           = $reflectionClass->newInstanceArgs([ null ]);
+			$class = $reflectionClass->newInstanceArgs([null]);
 
-			if ($class->getCommandName() === $commandName) {
-				$class->__invoke(
-					[],
-					$class->getDevelopArgs($args)
-				);
+			if (method_exists($class, 'getCommandName') && method_exists($class, 'getDevelopArgs') && method_exists($class, '__invoke')) {
+				if ($class->getCommandName() === $commandName) {
+					$class->__invoke(
+						[],
+						$class->getDevelopArgs($args)
+					);
 
-				break;
+					break;
+				}
 			}
 		}
 	}
@@ -182,6 +184,8 @@ class Cli
 	 *
 	 * @param string $commandParentName Define top level commands name.
 	 *
+	 * @throws \ReflectionException Exception if the class doesn't exist.
+	 *
 	 * @return void
 	 */
 	public function load(string $commandParentName): void
@@ -190,9 +194,11 @@ class Cli
 
 		foreach ($this->getPublicClasses() as $item) {
 			$reflectionClass = new \ReflectionClass($item);
-			$class           = $reflectionClass->newInstanceArgs([ $this->commandParentName ]);
+			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			$class->register();
+			if ($class instanceof ServiceInterface) {
+				$class->register();
+			}
 		}
 	}
 }

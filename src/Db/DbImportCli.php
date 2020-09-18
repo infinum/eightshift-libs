@@ -50,7 +50,7 @@ class DbImportCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -58,10 +58,10 @@ class DbImportCli extends AbstractCli
 			'shortdesc' => 'Initialize Command for importing db and images from staging or production env.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'root',
+					'type' => 'assoc',
+					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
@@ -69,7 +69,6 @@ class DbImportCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 

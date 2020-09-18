@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Media;
 
-use EightshiftLibs\Media\AbstractMedia;
-
 /**
  * Class MediaExample
  *
@@ -27,6 +25,6 @@ class MediaExample extends AbstractMedia
 	 */
 	public function register(): void
 	{
-		add_action('after_setup_theme', [ $this, 'addThemeSupport' ], 20);
+		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 20);
 	}
 }

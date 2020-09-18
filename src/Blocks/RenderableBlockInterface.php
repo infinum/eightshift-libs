@@ -21,12 +21,11 @@ interface RenderableBlockInterface
 	/**
 	 * Provides block registration render callback method.
 	 *
-	 * @param array  $attributes        Array of attributes as defined in block's manifest.json.
+	 * @param array  $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
-	 * @throws \Exception On missing attributes OR missing template.
-	 *
 	 * @return string
+	 * @throws \Exception On missing attributes OR missing template.
 	 */
-	public function render(array $attributes, $innerBlockContent): string;
+	public function render(array $attributes, string $innerBlockContent): string;
 }

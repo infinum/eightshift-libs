@@ -27,13 +27,12 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		array_map(
-			function ($taxonomy) {
-				add_filter("manage_edit-{$taxonomy}_columns", [ $this, 'addColumnName' ]);
-				add_filter("manage_{$taxonomy}_custom_column", [ $this, 'renderColumnContent' ], 10, 3);
-			},
-			$this->getTaxonomySlug()
-		);
+		$taxonomies = $this->getTaxonomySlug();
+
+		foreach ($taxonomies as $taxonomy) {
+			\add_filter("manage_edit-{$taxonomy}_columns", [$this, 'addColumnName']);
+			\add_filter("manage_{$taxonomy}_custom_column", [$this, 'renderColumnContent'], 10, 3);
+		}
 	}
 
 	/**
@@ -41,25 +40,25 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 	 *
 	 * @param array $columns The existing column names array with default taxonomy columns (title, author, date etc.).
 	 *
-	 * @return array         Modified column names array.
+	 * @return array Modified column names array.
 	 */
 	abstract public function addColumnName(array $columns): array;
 
 	/**
 	 * Render the taxonomy column content in the custom taxonomy column
 	 *
-	 * @param  string $string      Blank string.
-	 * @param  string $columnName Name of the column.
-	 * @param  int    $termId     Term ID.
+	 * @param string $string Blank string.
+	 * @param string $columnName Name of the column.
+	 * @param int    $termId Term ID.
 	 *
-	 * @return string The contetnt to display in the custom column.
+	 * @return string The content to display in the custom column.
 	 */
 	abstract public function renderColumnContent(string $string, string $columnName, int $termId): string;
 
 	/**
-	 * Get the slug of the taxonomy where the additional column should appear.
+	 * Get the array of slugs of the taxonomies where the additional column should appear.
 	 *
-	 * @return array The name of the taxonomy.
+	 * @return array Array containing the names of the taxonomies.
 	 */
 	abstract protected function getTaxonomySlug(): array;
 }

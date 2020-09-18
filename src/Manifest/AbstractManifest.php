@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Manifest;
 
 use EightshiftLibs\Exception\InvalidManifest;
-use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -41,11 +40,11 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	{
 		$path = $this->getManifestFilePath();
 
-		if (! file_exists($path)) {
+		if (!file_exists($path)) {
 			throw InvalidManifest::missingManifestException($path);
 		}
 
-		$data = json_decode(implode(' ', (array) file($path)), true);
+		$data = json_decode(implode(' ', (array)file($path)), true);
 
 		if (empty($data)) {
 			return;
@@ -73,11 +72,11 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	{
 		$manifest = $this->manifest;
 
-		if (! isset($manifest[ $key ])) {
+		if (!isset($manifest[$key])) {
 			throw InvalidManifest::missingManifestItemException($key);
 		}
 
-		return $manifest[ $key ];
+		return $manifest[$key];
 	}
 
 	/**

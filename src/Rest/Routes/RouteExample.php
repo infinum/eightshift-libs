@@ -12,7 +12,6 @@ namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Config\Config;
 use EightshiftLibs\Rest\CallableRouteInterface;
-use EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * Class RouteExample
@@ -58,8 +57,8 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface
 	protected function getCallbackArguments(): array
 	{
 		return [
-			'methods'  => static::READABLE,
-			'callback' => [ $this, 'routeCallback' ],
+			'methods' => static::READABLE,
+			'callback' => [$this, 'routeCallback'],
 		];
 	}
 
@@ -68,12 +67,14 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface
 	 *
 	 * @param \WP_REST_Request $request Data got from endpoint url.
 	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+	 * @return \WP_REST_Response|mixed If response generated an error, WP_Error, if response
 	 *                                is already an instance, WP_HTTP_Response, otherwise
 	 *                                returns a new WP_REST_Response instance.
 	 */
 	public function routeCallback(\WP_REST_Request $request)
 	{
-		return \rest_ensure_response();
+		$response = json_decode($request->get_body(), true);
+
+		return \rest_ensure_response($response);
 	}
 }

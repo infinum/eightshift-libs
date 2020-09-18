@@ -19,7 +19,9 @@ class BuildCli extends AbstractCli
 {
 
 	/**
-	 * Output dir relative path.
+	 * Output dir relative path
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = '../../../';
 
@@ -34,7 +36,7 @@ class BuildCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
+	 * Define default develop props
 	 *
 	 * @param array $args WPCLI eval-file arguments.
 	 *
@@ -58,28 +60,28 @@ class BuildCli extends AbstractCli
 			'shortdesc' => 'Initialize Command for building your project with one command, generally used on CI deployments.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'root',
+					'type' => 'assoc',
+					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'skip_setup_file',
+					'type' => 'assoc',
+					'name' => 'skip_setup_file',
 					'description' => 'If you already have setup.json file in the root of your project.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'project_name',
+					'type' => 'assoc',
+					'name' => 'project_name',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'project_type',
+					'type' => 'assoc',
+					'name' => 'project_type',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name. Default is themes.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
@@ -87,9 +89,8 @@ class BuildCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
-		$root          = $assocArgs['root'] ?? static::OUTPUT_DIR;
+		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 		$skipSetupFile = $assocArgs['skip_setup_file'] ?? true;
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -103,7 +104,7 @@ class BuildCli extends AbstractCli
 		// Output final class to new file/folder and finish.
 		$this->outputWrite($root . 'bin', $this->getClassShortName(), $class);
 
-		if (! $skipSetupFile) {
+		if (!$skipSetupFile) {
 			// Get setup.json file.
 			$json = $this->getExampleTemplate(dirname(__DIR__, 1), 'setup/setup.json');
 

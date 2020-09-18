@@ -21,10 +21,11 @@ class Components
 	/**
 	 * Makes sure the output is string. Useful for converting an array of components into a string.
 	 *
-	 * @param  array|string $variable Variable we need to convert into a string.
-	 * @return string
+	 * @param array|string $variable Variable we need to convert into a string.
 	 *
 	 * @throws ComponentException When $variable is not a string or array.
+	 *
+	 * @return string
 	 */
 	public static function ensureString($variable): string
 	{
@@ -44,7 +45,8 @@ class Components
 	/**
 	 * Converts an array of classes into a string which can be echoed.
 	 *
-	 * @param  array $classes Array of classes.
+	 * @param array $classes Array of classes.
+	 *
 	 * @return string
 	 */
 	public static function classnames(array $classes): string
@@ -59,17 +61,17 @@ class Components
 	 * parent BEM selector. For example, if $attributes['parentClass'] === 'header' and $component === 'logo'
 	 * are set, the component will be wrapped with a <div class="header__logo"></div>.
 	 *
-	 * @param  string $component  Component's name or full path (ending with .php).
-	 * @param  array  $attributes Array of attributes that's implicitly passed to component.
-	 * @param  string $parentPath If parent path is provides it will be appended to the file location.
+	 * @param string $component Component's name or full path (ending with .php).
+	 * @param array  $attributes Array of attributes that's implicitly passed to component.
+	 * @param string $parentPath If parent path is provides it will be appended to the file location.
 	 *                            If not get_template_directory_uri() will be used as a default parent path.
-	 * @return string
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
+	 *
+	 * @return string
 	 */
 	public static function render(string $component, array $attributes = [], string $parentPath = '')
 	{
-
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
 		}
@@ -81,7 +83,7 @@ class Components
 			$componentPath = "{$parentPath}/src/Blocks/Components/{$component}/{$component}.php";
 		}
 
-		if (! file_exists($componentPath)) {
+		if (!file_exists($componentPath)) {
 			ComponentException::throwUnableToLocateComponent($componentPath);
 		}
 
@@ -99,25 +101,26 @@ class Components
 			echo '</div>';
 		}
 
-		return (string) ob_get_clean();
+		return (string)ob_get_clean();
 	}
 
 	/**
 	 * Create responsive selectors used for responsive attributes.
-	 *
-	 * @param array   $items       Array of breakpoints.
-	 * @param string  $selector    Selector for this breakpoint.
-	 * @param string  $parent      Parent block selector.
-	 * @param boolean $useModifier If false you can use this selector for visibility.
-	 * @return string
 	 *
 	 * Example:
 	 * Components::responsiveSelectors($attributes['width'], 'width', $block_class);
 	 *
 	 * Output:
 	 * block-column__width-large--4
+	 *
+	 * @param array   $items Array of breakpoints.
+	 * @param string  $selector Selector for this breakpoint.
+	 * @param string  $parent Parent block selector.
+	 * @param boolean $useModifier If false you can use this selector for visibility.
+	 *
+	 * @return string
 	 */
-	public static function responsiveSelectors(array $items, string $selector, string $parent, $useModifier = true)
+	public static function responsiveSelectors(array $items, string $selector, string $parent, bool $useModifier = true)
 	{
 		$output = [];
 

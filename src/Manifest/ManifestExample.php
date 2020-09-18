@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Manifest;
 
 use EightshiftLibs\Config\Config;
-use EightshiftLibs\Manifest\AbstractManifest;
 
 /**
  * Class ManifestExample
@@ -35,8 +34,8 @@ class ManifestExample extends AbstractManifest
 	 */
 	public function register(): void
 	{
-		\add_action('init', [ $this, 'setAssetsManifestRaw' ]);
-		\add_filter(static::MANIFEST_ITEM, [ $this, 'getAssetsManifestItem' ]);
+		\add_action('init', [$this, 'setAssetsManifestRaw']);
+		\add_filter(static::MANIFEST_ITEM, [$this, 'getAssetsManifestItem']);
 	}
 
 	/**

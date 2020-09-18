@@ -19,10 +19,17 @@ class BlocksCli extends AbstractCli
 {
 
 	/**
-	 * Output dir relative path.
+	 * Output dir relative path
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = 'src/Blocks';
 
+	/**
+	 * List of components
+	 *
+	 * @var array
+	 */
 	public const COMPONENTS = [
 		'button',
 		'heading',
@@ -42,6 +49,11 @@ class BlocksCli extends AbstractCli
 		'page-overlay',
 	];
 
+	/**
+	 * List of blocks
+	 *
+	 * @var array
+	 */
 	public const BLOCKS = [
 		'button',
 		'heading',
@@ -54,9 +66,9 @@ class BlocksCli extends AbstractCli
 	];
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -67,7 +79,6 @@ class BlocksCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -81,13 +92,13 @@ class BlocksCli extends AbstractCli
 		// Output final class to new file/folder and finish.
 		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
 
-		if (function_exists('add_action')) {
+		if (function_exists('\add_action')) {
 			$this->blocksInit();
 		}
 	}
 
 	/**
-	 * Copy blocks from Eightshift-frontend-libs to project.
+	 * Copy blocks from Eightshift-frontend-libs to project
 	 *
 	 * @param bool $all Copy all from Eightshift-frontend-libs to project or selective from the list.
 	 *
@@ -95,7 +106,7 @@ class BlocksCli extends AbstractCli
 	 */
 	public function blocksInit(bool $all = false): void
 	{
-		$root     = $this->getProjectRootPath();
+		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
 		system("cp -R {$rootNode}/assets {$root}/assets");
@@ -111,7 +122,9 @@ class BlocksCli extends AbstractCli
 
 			foreach (static::COMPONENTS as $component) {
 				system("mkdir -p {$root}/src/Blocks/Components/{$component}/");
-				system("cp -R {$rootNode}/src/Blocks/Components/{$component}/. {$root}/src/Blocks/Components/{$component}/");
+				system(
+					"cp -R {$rootNode}/src/Blocks/Components/{$component}/. {$root}/src/Blocks/Components/{$component}/"
+				);
 			}
 
 			foreach (static::BLOCKS as $block) {

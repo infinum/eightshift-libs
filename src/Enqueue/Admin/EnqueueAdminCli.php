@@ -26,7 +26,7 @@ class EnqueueAdminCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -37,7 +37,6 @@ class EnqueueAdminCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.

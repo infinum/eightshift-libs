@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Config;
 
-use EightshiftLibs\Config\AbstractConfig;
-
 /**
  * The project config class.
  */
-class Config extends AbstractConfig
+class Config extends AbstractConfigData
 {
 
 	/**
@@ -77,6 +75,8 @@ class Config extends AbstractConfig
 	 * Method that returns project REST-API namespace.
 	 *
 	 * Used for namespacing projects REST-API routes and fields.
+	 *
+	 * @return string Project name.
 	 */
 	public static function getProjectRoutesNamespace(): string
 	{
@@ -87,6 +87,8 @@ class Config extends AbstractConfig
 	 * Method that returns project REST-API version.
 	 *
 	 * Used for versioning projects REST-API routes and fields.
+	 *
+	 * @return string Project route version.
 	 */
 	public static function getProjectRoutesVersion(): string
 	{
