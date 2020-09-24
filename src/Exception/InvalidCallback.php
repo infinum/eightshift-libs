@@ -1,18 +1,20 @@
 <?php
+
 /**
  * File containing the invalid callback exception class
  *
  * @package EightshiftLibs\Exception
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Callback.
  */
-final class InvalidCallback extends \InvalidArgumentException implements GeneralExceptionInterface {
+final class InvalidCallback extends \InvalidArgumentException implements GeneralExceptionInterface
+{
 
 	/**
 	 * Create a new instance of the exception for a callback class name that is
@@ -22,14 +24,14 @@ final class InvalidCallback extends \InvalidArgumentException implements General
 	 *
 	 * @return static
 	 */
-	public static function fromCallback( $callback ) {
+	public static function fromCallback(string $callback)
+	{
 		$message = sprintf(
-			esc_html__( 'The callback %s is not recognized and cannot be registered.', 'eightshift-libs' ),
-			is_object( $callback )
-				? get_class( $callback )
-				: (string) $callback
+		/* translators: %s is replaced with callback name. */
+			esc_html__('The callback %s is not recognized and cannot be registered.', 'eightshift-libs'),
+			$callback
 		);
 
-		return new static( $message );
+		return new static($message);
 	}
 }

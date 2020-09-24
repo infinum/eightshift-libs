@@ -36,7 +36,7 @@ class LintPhpCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -45,9 +45,9 @@ class LintPhpCli extends AbstractCli
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		$output = shell_exec('composer run standards:check'); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+		$output = (string)shell_exec('composer run standards:check');
 
 		\WP_CLI::log($output);
 

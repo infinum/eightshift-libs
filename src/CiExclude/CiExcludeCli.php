@@ -19,7 +19,9 @@ class CiExcludeCli extends AbstractCli
 {
 
 	/**
-	 * Output dir relative path.
+	 * Output dir relative path
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = '../../../';
 
@@ -40,7 +42,7 @@ class CiExcludeCli extends AbstractCli
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs(array $args ): array
+	public function getDevelopArgs(array $args): array
 	{
 		return [
 			'root' => $args[1] ?? './',
@@ -48,9 +50,9 @@ class CiExcludeCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -58,30 +60,29 @@ class CiExcludeCli extends AbstractCli
 			'shortdesc' => 'Initialize Command for building your projects CI exclude file.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'root',
+					'type' => 'assoc',
+					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'project_name',
+					'type' => 'assoc',
+					'name' => 'project_name',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'project_type',
+					'type' => 'assoc',
+					'name' => 'project_type',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name. Default is themes.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 

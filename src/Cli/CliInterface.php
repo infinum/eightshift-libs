@@ -21,14 +21,16 @@ interface CliInterface
 	public function register(): void;
 
 	/**
-	 * Call internal method for passing arguments.
+	 * Make every class implementing this interface invokable.
 	 *
-	 * @param array $args       Array of arguments form terminal.
+	 * This is done because we are using WP-CLI commands to do our bidding.
+	 *
+	 * @param array $args      Array of arguments form terminal.
 	 * @param array $assocArgs Array of arguments form terminal associative.
 	 *
 	 * @return void
 	 */
-	public function __invoke(array $args, array $assocArgs );
+	public function __invoke(array $args, array $assocArgs);
 
 	/**
 	 * Method that creates actual WPCLI command in terminal.
@@ -54,7 +56,7 @@ interface CliInterface
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array;
 }

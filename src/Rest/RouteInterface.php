@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest;
 
 /**
- * Route interface that adds routes
+ * Interface that adds aliases of HTTP verbs.
  */
 interface RouteInterface
 {
@@ -31,10 +31,10 @@ interface RouteInterface
 	public const CREATABLE = 'POST';
 
 	/**
-   * Alias for PATCH transport method.
-   *
-   * @var string
-   */
+	 * Alias for PATCH transport method.
+	 *
+	 * @var string
+	 */
 	public const EDITABLE = 'PATCH';
 
 	/**

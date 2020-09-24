@@ -1,16 +1,16 @@
 <?php
+
 /**
  * The Admin Enqueue specific functionality.
  *
  * @package EightshiftLibs\Enqueue\Admin
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
@@ -18,14 +18,16 @@ use EightshiftLibs\Manifest\ManifestInterface;
  *
  * This class handles enqueue scripts and styles.
  */
-class EnqueueAdminExample extends AbstractEnqueueAdmin {
+class EnqueueAdminExample extends AbstractEnqueueAdmin
+{
 
 	/**
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 */
-	public function __construct( ManifestInterface $manifest ) {
+	public function __construct(ManifestInterface $manifest)
+	{
 		$this->manifest = $manifest;
 	}
 
@@ -34,10 +36,11 @@ class EnqueueAdminExample extends AbstractEnqueueAdmin {
 	 *
 	 * @return void
 	 */
-	public function register() : void {
-		add_action( 'login_enqueue_scripts', [ $this, 'enqueueStyles' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueueStyles' ], 50 );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueueScripts' ] );
+	public function register(): void
+	{
+		\add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
 
 	/**
@@ -45,7 +48,8 @@ class EnqueueAdminExample extends AbstractEnqueueAdmin {
 	 *
 	 * @return string
 	 */
-	public function getAssetsPrefix() : string {
+	public function getAssetsPrefix(): string
+	{
 		return Config::getProjectName();
 	}
 
@@ -54,7 +58,8 @@ class EnqueueAdminExample extends AbstractEnqueueAdmin {
 	 *
 	 * @return string
 	 */
-	public function getAssetsVersion() : string {
+	public function getAssetsVersion(): string
+	{
 		return Config::getProjectVersion();
 	}
 }

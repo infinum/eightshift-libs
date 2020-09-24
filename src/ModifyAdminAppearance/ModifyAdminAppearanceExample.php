@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\ModifyAdminAppearance;
 
-use EightshiftLibs\Admin\AbstractModifyAdminAppearance;
-
 /**
  * Class that modifies some administrator appearance
  *
@@ -27,7 +25,7 @@ class ModifyAdminAppearanceExample extends AbstractModifyAdminAppearance
 	 */
 	public function register(): void
 	{
-		\add_filter('get_user_option_admin_color', [ $this, 'adminColor' ], 10, 0);
+		\add_filter('get_user_option_admin_color', [$this, 'adminColor'], 10, 0);
 	}
 
 	/**

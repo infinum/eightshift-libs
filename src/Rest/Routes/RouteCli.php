@@ -20,17 +20,21 @@ class RouteCli extends AbstractCli
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = 'src/Rest/Routes';
 
 	/**
 	 * Route method enum.
+	 *
+	 * @var array
 	 */
 	public const VERB_ENUM = [
-		'GET'    => 'static::READABLE',
-		'POST'   => 'static::CREATABLE',
-		'PATCH'  => 'static::EDITABLE',
-		'PUT'    => 'static::UPDATEABLE',
+		'GET' => 'static::READABLE',
+		'POST' => 'static::CREATABLE',
+		'PATCH' => 'static::EDITABLE',
+		'PUT' => 'static::UPDATEABLE',
 		'DELETE' => 'static::DELETABLE',
 	];
 
@@ -51,18 +55,18 @@ class RouteCli extends AbstractCli
 	 *
 	 * @return array
 	 */
-	public function getDevelopArgs(array $args ): array
+	public function getDevelopArgs(array $args): array
 	{
 		return [
 			'endpoint_slug' => $args[1] ?? 'test',
-			'method'        => $args[2] ?? 'get',
+			'method' => $args[2] ?? 'get',
 		];
 	}
 
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -70,27 +74,26 @@ class RouteCli extends AbstractCli
 			'shortdesc' => 'Generates REST-API Route in your project.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'endpoint_slug',
+					'type' => 'assoc',
+					'name' => 'endpoint_slug',
 					'description' => 'The name of the endpoint slug. Example: test-route.',
-					'optional'    => false,
+					'optional' => false,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'method',
+					'type' => 'assoc',
+					'name' => 'method',
 					'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
-					'optional'    => false,
+					'optional' => false,
 				],
 			],
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		// Get Props.
 		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug']);
-		$method        = strtoupper($assocArgs['method']);
+		$method = strtoupper($assocArgs['method']);
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
@@ -100,11 +103,11 @@ class RouteCli extends AbstractCli
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameClassNameWithSufix($this->getClassShortName(), $className, $class);
+		$class = $this->renameClassNameWithSuffix($this->getClassShortName(), $className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
 		$class = str_replace('/example-route', "/{$endpointSlug}", $class);
-		$class = str_replace('static::READABLE', static::VERB_ENUM[ $method ], $class);
+		$class = str_replace('static::READABLE', static::VERB_ENUM[$method], $class);
 
 		// Output final class to new file/folder and finish.
 		$this->outputWrite(static::OUTPUT_DIR, $className, $class);

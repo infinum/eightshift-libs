@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Modify WordPress admin behavior
  *
  * @package EightshiftLibs\Admin
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
-namespace EightshiftLibs\Admin;
+namespace EightshiftLibs\ModifyAdminAppearance;
 
 use EightshiftLibs\Services\ServiceInterface;
 
@@ -16,7 +17,8 @@ use EightshiftLibs\Services\ServiceInterface;
  *
  * Example: Change color based on environment, remove dashboard widgets etc.
  */
-abstract class AbstractModifyAdminAppearance implements ServiceInterface {
+abstract class AbstractModifyAdminAppearance implements ServiceInterface
+{
 
 	/**
 	 * List of admin color schemes.
@@ -24,17 +26,18 @@ abstract class AbstractModifyAdminAppearance implements ServiceInterface {
 	 * @var array
 	 */
 	public const COLOR_SCHEMES = [
-		'default'    => 'fresh',
-		'staging'    => 'blue',
+		'default' => 'fresh',
+		'staging' => 'blue',
 		'production' => 'sunrise',
 	];
 
 	/**
 	 * List of admin color schemes.
 	 *
-	 * @var array
+	 * @return array
 	 */
-	public function getColorSchemes() : array {
+	public function getColorSchemes(): array
+	{
 		return self::COLOR_SCHEMES;
 	}
 
@@ -45,13 +48,14 @@ abstract class AbstractModifyAdminAppearance implements ServiceInterface {
 	 *
 	 * @return string Modified color scheme.
 	 */
-	public function setAdminColor( string $env ) : string {
+	public function setAdminColor(string $env): string
+	{
 		$colors = $this->getColorSchemes();
 
-		if ( ! isset( $colors[ $env ] ) ) {
+		if (!isset($colors[$env])) {
 			return $colors['default'];
 		}
 
-		return $colors[ $env ];
+		return $colors[$env];
 	}
 }

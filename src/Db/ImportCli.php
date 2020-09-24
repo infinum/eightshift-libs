@@ -31,7 +31,7 @@ class ImportCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getDoc(): array
 	{
@@ -39,31 +39,30 @@ class ImportCli extends AbstractCli
 			'shortdesc' => 'Run database import based on enviroments.',
 			'synopsis' => [
 				[
-					'type'        => 'assoc',
-					'name'        => 'from',
+					'type' => 'assoc',
+					'name' => 'from',
 					'description' => 'Set from what enviroment you have exported the data.',
-					'optional'    => true,
+					'optional' => true,
 				],
 				[
-					'type'        => 'assoc',
-					'name'        => 'to',
+					'type' => 'assoc',
+					'name' => 'to',
 					'description' => 'Set to what enviroment you want to import the data.',
-					'optional'    => true,
+					'optional' => true,
 				],
 			],
 		];
 	}
 
-	public function __invoke(array $args, array $assocArgs ) // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-
 		require $this->getLibsPath('src/Db/DbImport.php');
 
 		dbImport(
 			$this->getProjectConfigRootPath(),
 			[
 				'from' => $assocArgs['from'] ?? '',
-				'to'   => $assocArgs['to'] ?? '',
+				'to' => $assocArgs['to'] ?? '',
 			]
 		);
 	}

@@ -20,7 +20,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 {
 
 	public const THEME_SCRIPT_URI = 'application.js';
-	public const THEME_STYLE_URI  = 'application.css';
+	public const THEME_STYLE_URI = 'application.css';
 
 	/**
 	 * Instance variable of manifest data.

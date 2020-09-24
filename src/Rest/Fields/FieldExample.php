@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Rest\CallableFieldInterface;
-use EightshiftLibs\Rest\Fields\AbstractField;
 
 /**
  * Class FieldExample
@@ -20,18 +19,19 @@ class FieldExample extends AbstractField implements CallableFieldInterface
 {
 
 	/**
-	 * Method that returns field object type.
+	 * Method that returns field object type
+	 *
 	 * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
 	 *
 	 * @return string|array
 	 */
-	protected function getObjectType(): string
+	protected function getObjectType()
 	{
 		return 'example-post-type';
 	}
 
 	/**
-	 * Get the name of the field you awant to register or orverride.
+	 * Get the name of the field you want to register or override
 	 *
 	 * @return string The attribute name.
 	 */
@@ -48,23 +48,25 @@ class FieldExample extends AbstractField implements CallableFieldInterface
 	protected function getCallbackArguments(): array
 	{
 		return [
-			'get_callback' => [ $this, 'fieldCallback' ],
+			'get_callback' => [$this, 'fieldCallback'],
 		];
 	}
 
 	/**
 	 * Method that returns rest response
 	 *
-	 * @param object|array $object     Post or custom post type object of the request.
-	 * @param string       $attr       Rest field/attr string identifier from the second parameter of your register_rest_field() declaration.
-	 * @param object       $request    Full request payload – as a WP_REST_Request object.
-	 * @param string       $objectType The object type which the field is registered against. Typically first parameter of your register_rest_field() declaration.
+	 * @param object|array $object Post or custom post type object of the request.
+	 * @param string       $attr Rest field/attr string identifier from the second parameter
+	 *                           of your register_rest_field() declaration.
+	 * @param object       $request Full request payload – as a WP_REST_Request object.
+	 * @param string       $objectType The object type which the field is registered against.
+	 *                                 Typically first parameter of your register_rest_field() declaration.
 	 *
 	 * @return mixed If response generated an error, WP_Error, if response
 	 *               is already an instance, WP_HTTP_Response, otherwise
 	 *               returns a new WP_REST_Response instance.
 	 */
-	public function fieldCallback($object, string $attr, $request, string $objectType )
+	public function fieldCallback($object, string $attr, object $request, string $objectType)
 	{
 		return \rest_ensure_response('output data');
 	}

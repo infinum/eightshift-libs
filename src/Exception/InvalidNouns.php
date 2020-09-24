@@ -1,18 +1,20 @@
 <?php
+
 /**
  * File containing invalid nouns exception
  *
  * @package EightshiftLibs\Exception
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Nouns.
  */
-final class InvalidNouns extends \InvalidArgumentException implements GeneralExceptionInterface {
+final class InvalidNouns extends \InvalidArgumentException implements GeneralExceptionInterface
+{
 
 	/**
 	 * Create a new instance of the exception for an array of nouns that is
@@ -22,12 +24,14 @@ final class InvalidNouns extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function fromKey( string $key ) {
+	public static function fromKey(string $key)
+	{
 		$message = sprintf(
-			esc_html__( 'The array of nouns passed into the Label_Generator is missing the %s noun.', 'eightshift-libs' ),
+		/* translators: %s is replaced with name of the noun. */
+			esc_html__('The array of nouns passed into the Label_Generator is missing the %s noun.', 'eightshift-libs'),
 			$key
 		);
 
-		return new static( $message );
+		return new static($message);
 	}
 }

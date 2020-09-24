@@ -1,11 +1,12 @@
 <?php
+
 /**
  * The Language specific functionality.
  *
  * @package EightshiftLibs\I18n
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\I18n;
 
@@ -16,14 +17,16 @@ use EightshiftLibs\Services\ServiceInterface;
  *
  * This class handles theme or admin languages.
  */
-abstract class AbstractI18n implements ServiceInterface {
+abstract class AbstractI18n implements ServiceInterface
+{
 
 	/**
 	 * Load the plugin text domain for translation.
 	 *
 	 * @return void
 	 */
-	public function loadThemeTextdomain() {
+	public function loadThemeTextdomain(): void
+	{
 		\load_theme_textdomain(
 			$this->getTextdomainName(),
 			$this->getTranslationFilePath()
@@ -35,12 +38,12 @@ abstract class AbstractI18n implements ServiceInterface {
 	 *
 	 * @return string
 	 */
-	abstract public function getTextdomainName() : string;
+	abstract public function getTextdomainName(): string;
 
 	/**
 	 * Path to the directory containing the .mo file.
 	 *
 	 * @return string
 	 */
-	abstract public function getTranslationFilePath() : string;
+	abstract public function getTranslationFilePath(): string;
 }

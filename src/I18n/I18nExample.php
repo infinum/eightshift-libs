@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\I18n;
 
 use EightshiftLibs\Config\Config;
-use EightshiftLibs\I18n\AbstractI18n;
 
 /**
  * Class i18n
@@ -28,7 +27,7 @@ class I18n extends AbstractI18n
 	 */
 	public function register(): void
 	{
-		add_action('after_setup_theme', [ $this, 'loadThemeTextdomain' ]);
+		\add_action('after_setup_theme', [$this, 'loadThemeTextdomain']);
 	}
 
 	/**

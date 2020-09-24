@@ -1,25 +1,27 @@
 <?php
 
 /**
- * Class that registers WPCLI command for DbImport.
+ * Class that registers WPCLI command for GitIgnoreCli.
  *
- * @package EightshiftLibs\Db
+ * @package EightshiftLibs\GitIgnore
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Db;
+namespace EightshiftLibs\GitIgnore;
 
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
- * Class DbImportCli
+ * Class GitIgnoreCli
  */
-class DbImportCli extends AbstractCli
+class GitIgnoreCli extends AbstractCli
 {
 
 	/**
 	 * Output dir relative path.
+	 *
+	 * @var string
 	 */
 	public const OUTPUT_DIR = '../../../';
 
@@ -30,7 +32,7 @@ class DbImportCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_db_import';
+		return 'init_gitignore';
 	}
 
 	/**
@@ -55,7 +57,7 @@ class DbImportCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for importing db and images from staging or production env.',
+			'shortdesc' => 'Initialize Command for building your projects gitignore.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -72,10 +74,10 @@ class DbImportCli extends AbstractCli
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
-		// Get setup.json file.
-		$json = $this->getExampleTemplate(dirname(__DIR__, 1), 'setup/setup.json');
+		// Read the template contents, and replace the placeholders with provided variables.
+		$class = $this->getExampleTemplate(__DIR__, '.gitignore');
 
-		// Output json file to project root.
-		$this->outputWrite($root, 'setup.json', $json);
+		// Output final class to new file/folder and finish.
+		$this->outputWrite($root, '.gitignore', $class);
 	}
 }

@@ -25,11 +25,11 @@ class MenuExample extends AbstractMenu
 	 */
 	public function register(): void
 	{
-		\add_action('after_setup_theme', [ $this, 'registerMenuPositions' ], 11);
+		\add_action('after_setup_theme', [$this, 'registerMenuPositions'], 11);
 	}
 
 	/**
-	 * Return all menu poistions
+	 * Return all menu positions
 	 *
 	 * @return array Menu positions with slug => name structure.
 	 */

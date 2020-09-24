@@ -1,29 +1,31 @@
 <?php
+
 /**
  * The Theme/Frontend Enqueue specific functionality.
  *
  * @package EightshiftLibs\Enqueue\Theme
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue\Theme;
 
 use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class EnqueueThemeExample
  */
-class EnqueueThemeExample extends AbstractEnqueueTheme {
+class EnqueueThemeExample extends AbstractEnqueueTheme
+{
 
 	/**
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 */
-	public function __construct( ManifestInterface $manifest ) {
+	public function __construct(ManifestInterface $manifest)
+	{
 		$this->manifest = $manifest;
 	}
 
@@ -32,9 +34,10 @@ class EnqueueThemeExample extends AbstractEnqueueTheme {
 	 *
 	 * @return void
 	 */
-	public function register() : void {
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueueStyles' ], 10 );
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueueScripts' ] );
+	public function register(): void
+	{
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueStyles'], 10);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
 
 	/**
@@ -42,7 +45,8 @@ class EnqueueThemeExample extends AbstractEnqueueTheme {
 	 *
 	 * @return string
 	 */
-	public function getAssetsPrefix() : string {
+	public function getAssetsPrefix(): string
+	{
 		return Config::getProjectName();
 	}
 
@@ -51,7 +55,8 @@ class EnqueueThemeExample extends AbstractEnqueueTheme {
 	 *
 	 * @return string
 	 */
-	public function getAssetsVersion() : string {
+	public function getAssetsVersion(): string
+	{
 		return Config::getProjectVersion();
 	}
 }

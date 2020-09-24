@@ -1,18 +1,20 @@
 <?php
+
 /**
  * File containing the invalid service exception class
  *
  * @package EightshiftLibs\Exception
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
 /**
  * Class Invalid_Service.
  */
-final class InvalidService extends \InvalidArgumentException implements GeneralExceptionInterface {
+final class InvalidService extends \InvalidArgumentException implements GeneralExceptionInterface
+{
 
 	/**
 	 * Create a new instance of the exception for a service class name that is
@@ -22,14 +24,14 @@ final class InvalidService extends \InvalidArgumentException implements GeneralE
 	 *
 	 * @return static
 	 */
-	public static function fromService( $service ) {
+	public static function fromService(string $service)
+	{
 		$message = sprintf(
-			esc_html__( 'The service %s is not recognized and cannot be registered.', 'eightshift-libs' ),
-			is_object( $service )
-				? get_class( $service )
-				: (string) $service
+		/* translators: %s is replaced with name of the service. */
+			esc_html__('The service %s is not recognized and cannot be registered.', 'eightshift-libs'),
+			$service
 		);
 
-		return new static( $message );
+		return new static($message);
 	}
 }

@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Core;
+namespace EightshiftLibs\Plugin;
 
 /**
  * Interface Has_Deactivation.

@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace EightshiftLibs\Config;
 
 /**
- * Interface ConfigInterface
+ * Interface ConfigDataInterface
  */
-interface ConfigInterface
+interface ConfigDataInterface
 {
 
 	/**
@@ -50,7 +50,7 @@ interface ConfigInterface
 	 *
 	 * @return string
 	 */
-	public static function getProjectPath(string $path = '' ): string;
+	public static function getProjectPath(string $path = ''): string;
 
 	/**
 	 * Method that returns every string prefixed with project prefix based on project type.
@@ -60,5 +60,5 @@ interface ConfigInterface
 	 *
 	 * @return string Returns key prefixed with project prefix.
 	 */
-	public static function getConfig(string $key ): string;
+	public static function getConfig(string $key): string;
 }

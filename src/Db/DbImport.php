@@ -9,21 +9,20 @@
 
 declare(strict_types=1);
 
- /**
-  * Importing database.
-  *
-  * @param string $projectRootPath Root of the project where config is located.
-  * @param array  $args              Optional arguments.
-  * @param string $setupFile        Define setup file name.
-  *
-  * @return void
-  */
-function dbImport(string $projectRootPath, array $args = [], string $setupFile = 'setup.json' )
+/**
+ * Importing database.
+ *
+ * @param string $projectRootPath Root of the project where config is located.
+ * @param array  $args Optional arguments.
+ * @param string $setupFile Define setup file name.
+ *
+ * @return void
+ */
+function dbImport(string $projectRootPath, array $args = [], string $setupFile = 'setup.json')
 {
-
 	// Check if mandatory parameters exists.
 	$from = $args['from'] ?? '';
-	$to   = $args['to'] ?? '';
+	$to = $args['to'] ?? '';
 
 	if (empty($from)) {
 		\WP_CLI::error("--from parameter is mandatory. Please provide one url key from {$setupFile} file.");
@@ -34,19 +33,19 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 	}
 
 	// Change execution folder.
-	if ( ! is_dir($projectRootPath)) {
+	if (!is_dir($projectRootPath)) {
 		\WP_CLI::error("Folder doesn't exist on this path: {$projectRootPath}.");
 	}
 
 	chdir($projectRootPath);
 
 	// Check if setup exists.
-	if ( ! file_exists($setupFile)) {
+	if (!file_exists($setupFile)) {
 		\WP_CLI::error("setup.json is missing at this path: {$setupFile}.");
 	}
 
 	// Parse json file to array.
-	$data = json_decode(implode(' ', (array) file($setupFile)), true);
+	$data = json_decode(implode(' ', (array)file($setupFile)), true);
 
 	// Check if $data is empty.
 	if (empty($data)) {
@@ -60,21 +59,27 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 		\WP_CLI::error('Urls key is missing or empty.');
 	}
 
+	$fromHost = '';
+	$fromScheme = '';
+
 	// Die if from key is missing and not valid.
-	if ( ! isset($urls[ $from ]) || empty($urls[ $from ])) {
+	if (!isset($urls[$from]) || empty($urls[$from])) {
 		\WP_CLI::error("{$from} key is missing or empty in urls.");
 	} else {
-		$from        = \wp_parse_url($urls[ $from ]);
-		$fromHost   = $from['host'];
+		$from = \wp_parse_url($urls[$from]);
+		$fromHost = $from['host'];
 		$fromScheme = $from['scheme'];
 	}
 
+	$toHost = '';
+	$toScheme = '';
+
 	// Die if to key is missing and not valid.
-	if ( ! isset($urls[ $to ]) || empty($urls[ $to ])) {
+	if (!isset($urls[$to]) || empty($urls[$to])) {
 		\WP_CLI::error("{$to} key is missing or empty in urls.");
 	} else {
-		$to        = \wp_parse_url($urls[ $to ]);
-		$toHost   = $to['host'];
+		$to = \wp_parse_url($urls[$to]);
+		$toHost = $to['host'];
 		$toScheme = $to['scheme'];
 	}
 
@@ -89,7 +94,7 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 
 	// Remove old db export folder if it exists.
 	if (file_exists($exportFolderName)) {
-		\WP_CLI::log(shell_exec("rm -rf {$exportFolderName}")); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+		\WP_CLI::log((string)shell_exec("rm -rf {$exportFolderName}"));
 		\WP_CLI::log("Removed old temp {$exportFolderName} folder.");
 		\WP_CLI::log('--------------------------------------------------');
 	}
@@ -100,7 +105,7 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 	\WP_CLI::log('--------------------------------------------------');
 
 	// Export files to new temp folder.
-	\WP_CLI::log(shell_exec("tar zxf {$exportFileName} -C {$exportFolderName}")); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+	\WP_CLI::log((string)shell_exec("tar zxf {$exportFileName} -C {$exportFolderName}"));
 	\WP_CLI::log("Exported {$exportFileName} to {$exportFolderName} folder.");
 	\WP_CLI::log('--------------------------------------------------');
 

@@ -22,7 +22,8 @@ abstract class AbstractMedia implements ServiceInterface
 
 	/**
 	 * Enable theme support
-	 * for full list check: https://developer.wordpress.org/reference/functions/add_theme_support/
+	 *
+	 * For full list check: https://developer.wordpress.org/reference/functions/add_theme_support/
 	 *
 	 * @return void
 	 */

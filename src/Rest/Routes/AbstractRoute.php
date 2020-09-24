@@ -20,17 +20,17 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 {
 
 	/**
-	 * A register method holds register_rest_route funtion to register api route.
+	 * A register method holds register_rest_route function to register api route
 	 *
 	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('rest_api_init', [ $this, 'routeRegisterCallback' ]);
+		\add_action('rest_api_init', [$this, 'routeRegisterCallback']);
 	}
 
 	/**
-	 * Method that register rest route that is used inside rest_api_init hook.
+	 * Method that registers rest route that is used inside rest_api_init hook
 	 *
 	 * @return void
 	 */
@@ -45,14 +45,14 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	}
 
 	/**
-	 * Method that returns project Route namespace.
+	 * Method that returns project Route namespace
 	 *
 	 * @return string Project namespace for REST route.
 	 */
 	abstract protected function getNamespace(): string;
 
 	/**
-	 * Method that returns project route version.
+	 * Method that returns project route version
 	 *
 	 * @return string Route version as a string.
 	 */
@@ -74,6 +74,7 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 
 	/**
 	 * Override the existing route
+	 *
 	 * True overrides, false merges (with newer overriding if duplicate keys exist).
 	 *
 	 * @return bool If the route already exists, should we override it?

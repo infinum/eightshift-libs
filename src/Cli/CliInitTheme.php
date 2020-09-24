@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Class that registers WPCLI command initial setup of theme project.
  *
  * @package EightshiftLibs\Cli
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
@@ -27,10 +28,13 @@ use EightshiftLibs\Setup\SetupCli;
 /**
  * Class CliInitTheme
  */
-class CliInitTheme extends AbstractCli {
+class CliInitTheme extends AbstractCli
+{
 
 	/**
-	 * All classes for initial theme setup for project.
+	 * All classes for initial theme setup for project
+	 *
+	 * @var array
 	 */
 	public const INIT_THEME_CLASSES = [
 		BlocksCli::class,
@@ -53,41 +57,45 @@ class CliInitTheme extends AbstractCli {
 	 *
 	 * @return string
 	 */
-	public function getCommandName() : string {
+	public function getCommandName(): string
+	{
 		return 'init_theme';
 	}
 
 	/**
 	 * Get WPCLI command doc.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function getDoc() : array {
+	public function getDoc(): array
+	{
 		return [
 			'shortdesc' => 'Generates initial setup for WordPress theme project.',
 		];
 	}
 
-	public function __invoke( array $args, array $assocArgs ) { // phpcs:ignore Squiz.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
-
-		if ( ! function_exists( 'add_action' ) ) {
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	{
+		if (!function_exists('\add_action')) {
 			$this->runReset();
-			\WP_CLI::log( '--------------------------------------------------' );
+			\WP_CLI::log('--------------------------------------------------');
 		}
 
-		foreach ( static::INIT_THEME_CLASSES as $item ) {
-			$reflectionClass = new \ReflectionClass( $item );
-			$class           = $reflectionClass->newInstanceArgs( [ null ] );
+		foreach (static::INIT_THEME_CLASSES as $item) {
+			$reflectionClass = new \ReflectionClass($item);
+			$class = $reflectionClass->newInstanceArgs([null]);
 
-			if ( function_exists( 'add_action' ) ) {
-				\WP_CLI::runcommand( "{$this->commandParentName} {$class->getCommandName()}" );
-			} else {
-				\WP_CLI::runcommand( "eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress" );
+			if (method_exists($class, 'getCommandName')) {
+				if (function_exists('\add_action')) {
+					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()}");
+				} else {
+					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+				}
 			}
 		}
 
-		\WP_CLI::log( '--------------------------------------------------' );
+		\WP_CLI::log('--------------------------------------------------');
 
-		\WP_CLI::success( 'All commands are finished.' );
+		\WP_CLI::success('All commands are finished.');
 	}
 }

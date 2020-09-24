@@ -1,11 +1,12 @@
 <?php
+
 /**
  * File containing the main intro class for your project.
  *
  * @package EightshiftLibs\Main
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Main;
 
@@ -13,19 +14,20 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\Helper\AutowireDefinitionHelper;
 use DI\Definition\Reference;
-use EightshiftLibs\Services\RegistrableInterface;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * The main start class.
+ *
  * This is used to define instantiate all classes used in the lib.
  */
-abstract class AbstractMain implements ServiceInterface {
+abstract class AbstractMain implements ServiceInterface
+{
 
 	/**
 	 * Array of instantiated services.
 	 *
-	 * @var Service[]
+	 * @var array
 	 */
 	private $services = [];
 
@@ -46,23 +48,24 @@ abstract class AbstractMain implements ServiceInterface {
 	/**
 	 * Constructs object and injects autowiring.
 	 *
-	 * @param ClassLoader $autowiring Autowiring functionality.
+	 * @param Autowiring $autowiring Autowiring functionality.
 	 */
-	public function __construct( $autowiring ) {
+	public function __construct(Autowiring $autowiring)
+	{
 		$this->autowiring = $autowiring;
 	}
 
 	/**
 	 * Register the individual services with optional dependency injection.
 	 *
-	 * @throws Exception\Invalid_Service If a service is not valid.
+	 * @throws \Exception Exception thrown by DI container.
 	 *
 	 * @return void
 	 */
-	public function registerServices() {
-
+	public function registerServices()
+	{
 		// Bail early so we don't instantiate services twice.
-		if ( ! empty( $this->services ) ) {
+		if (!empty($this->services)) {
 			return;
 		}
 
@@ -70,8 +73,8 @@ abstract class AbstractMain implements ServiceInterface {
 
 		array_walk(
 			$this->services,
-			function( $class ) {
-				if ( ! $class instanceof RegistrableInterface ) {
+			function ($class) {
+				if (!$class instanceof ServiceInterface) {
 					return;
 				}
 
@@ -81,26 +84,33 @@ abstract class AbstractMain implements ServiceInterface {
 	}
 
 	/**
-	 * Returns the DI container and allow it to be used in different context (for example in tests outside of WP environment)
+	 * Returns the DI container
+	 *
+	 * Allows it to be used in different context (for example in tests outside of WP environment).
 	 *
 	 * @return Container
 	 * @throws \Exception Exception thrown by the DI container.
 	 */
-	public function buildDiContainer() {
-		if ( empty( $this->container ) ) {
-			$this->container = $this->getDiContainer( $this->getServiceClassesPreparedArray() );
+	public function buildDiContainer()
+	{
+		if (empty($this->container)) {
+			$this->container = $this->getDiContainer($this->getServiceClassesPreparedArray());
 		}
 		return $this->container;
 	}
 
 	/**
-	 * Merges the autowired definition list with custom user-defined definition list. You can override
-	 * autowired definition lists in $this->getServiceClasses().
+	 * Merges the autowired definition list with custom user-defined definition list.
 	 *
-	 * @return array<array>
+	 * You can override autowired definition lists in $this->getServiceClasses().
+	 *
+	 * @throws \ReflectionException Exception thrown in case class is missing.
+	 *
+	 * @return array
 	 */
-	private function getServiceClassesWithAutowire() {
-		return array_merge( $this->autowiring->buildServiceClasses(), $this->getServiceClasses() );
+	private function getServiceClassesWithAutowire(): array
+	{
+		return array_merge($this->autowiring->buildServiceClasses(), $this->getServiceClasses());
 	}
 
 	/**
@@ -110,16 +120,17 @@ abstract class AbstractMain implements ServiceInterface {
 	 *
 	 * @throws \Exception Exception thrown by the DI container.
 	 */
-	private function getServiceClassesWithDi() : array {
+	private function getServiceClassesWithDi(): array
+	{
 		$services = $this->getServiceClassesPreparedArray();
 
-		$container = $this->getDiContainer( $services );
+		$container = $this->getDiContainer($services);
 
 		return array_map(
-			function( $class ) use ( $container ) {
-				return $container->get( $class );
+			function ($class) use ($container) {
+				return $container->get($class);
 			},
-			array_keys( $services )
+			array_keys($services)
 		);
 	}
 
@@ -127,18 +138,21 @@ abstract class AbstractMain implements ServiceInterface {
 	 * Get services classes array and prepare it for dependency injection.
 	 * Key should be a class name, and value should be an empty array or the dependencies of the class.
 	 *
+	 * @throws \ReflectionException Exception thrown in case class is missing.
+	 *
 	 * @return array
 	 */
-	private function getServiceClassesPreparedArray() : array {
+	private function getServiceClassesPreparedArray(): array
+	{
 		$output = [];
 
-		foreach ( $this->getServiceClassesWithAutowire() as $class => $dependencies ) {
-			if ( is_array( $dependencies ) ) {
-				$output[ $class ] = $dependencies;
+		foreach ($this->getServiceClassesWithAutowire() as $class => $dependencies) {
+			if (is_array($dependencies)) {
+				$output[$class] = $dependencies;
 				continue;
 			}
 
-			$output[ $dependencies ] = [];
+			$output[$dependencies] = [];
 		}
 
 		return $output;
@@ -146,30 +160,34 @@ abstract class AbstractMain implements ServiceInterface {
 
 	/**
 	 * Implement PHP-DI.
+	 *
 	 * Build and return a DI container.
-	 * Wire all the dependencies automatically, based on the provided array of class => dependencies from the get_di_items().
+	 * Wire all the dependencies automatically, based on the provided array of
+	 * class => dependencies from the get_di_items().
 	 *
 	 * @param array $services Array of service.
-	 * @return Container
 	 *
 	 * @throws \Exception Exception thrown by the DI container.
+	 *
+	 * @return Container
 	 */
-	private function getDiContainer( array $services ) {
+	private function getDiContainer(array $services)
+	{
 		$definitions = [];
 
-		foreach ( $services as  $serviceKey => $serviceValues ) {
-			if ( gettype( $serviceValues ) !== 'array' ) {
+		foreach ($services as $serviceKey => $serviceValues) {
+			if (gettype($serviceValues) !== 'array') {
 				continue;
 			}
 
 			$autowire = new AutowireDefinitionHelper();
 
-			$definitions[ $serviceKey ] = $autowire->constructor( ...$this->getDiDependencies( $serviceValues ) );
+			$definitions[$serviceKey] = $autowire->constructor(...$this->getDiDependencies($serviceValues));
 		}
 
 		$builder = new ContainerBuilder();
 
-		return $builder->addDefinitions( $definitions )->build();
+		return $builder->addDefinitions($definitions)->build();
 	}
 
 	/**
@@ -180,11 +198,12 @@ abstract class AbstractMain implements ServiceInterface {
 	 *
 	 * @return array
 	 */
-	private function getDiDependencies( array $dependencies ) : array {
+	private function getDiDependencies(array $dependencies): array
+	{
 		return array_map(
-			function( $dependency ) {
-				if ( class_exists( $dependency ) ) {
-					return new Reference( $dependency );
+			function ($dependency) {
+				if (class_exists($dependency)) {
+					return new Reference($dependency);
 				}
 				return $dependency;
 			},
@@ -199,5 +218,5 @@ abstract class AbstractMain implements ServiceInterface {
 	 *
 	 * @return array<class-string, string|string[]> Array of fully qualified service class names.
 	 */
-	abstract protected function getServiceClasses() : array;
+	abstract protected function getServiceClasses(): array;
 }

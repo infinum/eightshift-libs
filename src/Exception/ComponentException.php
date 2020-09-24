@@ -1,18 +1,20 @@
 <?php
+
 /**
  * File containing the failure exception class when trying to locate a template that doesn't exist.
  *
  * @package EightshiftLibs\Exception
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
 /**
  * Class Component_Exception.
  */
-final class ComponentException extends \InvalidArgumentException implements GeneralExceptionInterface {
+final class ComponentException extends \InvalidArgumentException implements GeneralExceptionInterface
+{
 
 	/**
 	 * Throws exception if ensure_string argument is invalid.
@@ -21,12 +23,14 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 	 *
 	 * @return static
 	 */
-	public static function throwNotStringOrVariable( $variable ) {
+	public static function throwNotStringOrVariable(string $variable)
+	{
 		return new static(
 			sprintf(
-				esc_html__( '%1$s variable is not a string or array but rather %2$s', 'eightshift-libs' ),
+			/* translators: %1$s is replaced with the name of the variable, and %2$s with its type. */
+				esc_html__('%1$s variable is not a string or array but rather %2$s', 'eightshift-libs'),
 				$variable,
-				gettype( $variable )
+				gettype($variable)
 			)
 		);
 	}
@@ -37,10 +41,12 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 	 * @param string $component Missing component name.
 	 * @return static
 	 */
-	public static function throwUnableToLocateComponent( string $component ) {
+	public static function throwUnableToLocateComponent(string $component)
+	{
 		return new static(
 			sprintf(
-				esc_html__( 'Unable to locate component by path: %s', 'eightshift-libs' ),
+			/* translators: %s is replaced with the path of the component. */
+				esc_html__('Unable to locate component by path: %s', 'eightshift-libs'),
 				$component
 			)
 		);

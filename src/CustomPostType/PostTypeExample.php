@@ -77,23 +77,22 @@ class PostTypeExample extends AbstractPostType
 	 */
 	protected function getPostTypeArguments(): array
 	{
-
 		return [
-			'label'              => \esc_html__('Example Name', 'eightshift-libs'),
-			'public'             => true,
+			'label' => \esc_html__('Example Name', 'eightshift-libs'),
+			'public' => true,
 			'publicly_queryable' => true,
-			'show_ui'            => true,
-			'show_in_menu'       => true,
-			'query_var'          => true,
-			'capability_type'    => self::POST_CAPABILITY_TYPE,
-			'has_archive'        => true,
-			'rewrite'            => [ 'slug' => static::POST_TYPE_URL_SLUG ],
-			'hierarchical'       => false,
-			'menu_icon'          => static::MENU_ICON,
-			'menu_position'      => static::MENU_POSITION,
-			'supports'           => [ 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ],
-			'show_in_rest'       => true,
-			'rest_base'          => static::REST_API_ENDPOINT_SLUG,
+			'show_ui' => true,
+			'show_in_menu' => true,
+			'query_var' => true,
+			'capability_type' => self::POST_CAPABILITY_TYPE,
+			'has_archive' => true,
+			'rewrite' => ['slug' => static::POST_TYPE_URL_SLUG],
+			'hierarchical' => false,
+			'menu_icon' => static::MENU_ICON,
+			'menu_position' => static::MENU_POSITION,
+			'supports' => ['title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments'],
+			'show_in_rest' => true,
+			'rest_base' => static::REST_API_ENDPOINT_SLUG,
 		];
 	}
 }
