@@ -30,9 +30,9 @@ class CliReset extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		$output_dir = $this->getOutputDir('');
+		$outputDir = $this->getOutputDir('');
 
-		system('rm -rf ' . escapeshellarg($output_dir));
+		system('rm -rf ' . escapeshellarg($outputDir));
 
 		\WP_CLI::success('Output directory successfully removed.');
 	}

@@ -159,10 +159,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		\register_block_type(
 			$blockDetails['blockFullName'],
-			array(
+			[
 				'render_callback' => [$this, 'render'],
 				'attributes' => $this->getAttributes($blockDetails),
-			)
+			]
 		);
 	}
 
@@ -359,22 +359,22 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		return array_merge(
 			[
-				'blockName' => array(
+				'blockName' => [
 					'type' => 'string',
 					'default' => $blockName,
-				),
-				'blockFullName' => array(
+				],
+				'blockFullName' => [
 					'type' => 'string',
 					'default' => $blockDetails['blockFullName'],
-				),
-				'blockClass' => array(
+				],
+				'blockClass' => [
 					'type' => 'string',
 					'default' => "block-{$blockName}",
-				),
-				'blockJsClass' => array(
+				],
+				'blockJsClass' => [
 					'type' => 'string',
 					'default' => "js-block-{$blockName}",
-				),
+				],
 			],
 			$this->blocks['wrapper']['attributes'],
 			$blockDetails['attributes']
@@ -391,13 +391,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	private function getBlocksData(): array
 	{
 		return array_map(
-			function (string $block_path) {
-				$block = implode(' ', (array)file(($block_path)));
+			function (string $blockPath) {
+				$block = implode(' ', (array)file(($blockPath)));
 
 				$block = $this->parseManifest($block);
 
 				if (!isset($block['blockName'])) {
-					throw InvalidBlock::missingNameException($block_path);
+					throw InvalidBlock::missingNameException($blockPath);
 				}
 
 				if (!isset($block['classes'])) {

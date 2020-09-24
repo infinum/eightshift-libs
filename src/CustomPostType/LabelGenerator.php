@@ -71,13 +71,13 @@ final class LabelGenerator
 	 */
 	public function getGeneratedLabels(array $nouns): array
 	{
-		foreach (self::REQUIRED_NOUNS as $noun_key) {
-			if (!array_key_exists($noun_key, $nouns)) {
-				throw InvalidNouns::fromKey($noun_key);
+		foreach (self::REQUIRED_NOUNS as $nounKey) {
+			if (!array_key_exists($nounKey, $nouns)) {
+				throw InvalidNouns::fromKey($nounKey);
 			}
 		}
 
-		$label_templates = [
+		$labelTemplates = [
 			/* Translators: %1$s uc singular, %2$s lc singular, %3$s uc plural, %4$s lc plural. */
 			'name' => esc_html_x('%3$s', 'Post Type General Name', 'eightshift-libs'), /* phpcs:disable */
 			/* Translators: %1$s uc singular, %2$s lc singular, %3$s uc plural, %4$s lc plural. */
@@ -144,7 +144,7 @@ final class LabelGenerator
 					$nouns[self::PLURAL_NAME_LC]
 				);
 			},
-			$label_templates
+			$labelTemplates
 		);
 	}
 }

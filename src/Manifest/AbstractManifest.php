@@ -51,8 +51,8 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 		}
 
 		$this->manifest = array_map(
-			function ($manifest_item) {
-				return "{$this->getAssetsManifestOutputPrefix()}{$manifest_item}";
+			function ($manifestItem) {
+				return "{$this->getAssetsManifestOutputPrefix()}{$manifestItem}";
 			},
 			$data
 		);

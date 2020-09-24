@@ -91,17 +91,17 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	/**
 	 * Throws error if global settings manifest.json is missing.
 	 *
-	 * @param string $settings_manifest_path Full path for the missing manifest.json.
+	 * @param string $settingsManifestPath Full path for the missing manifest.json.
 	 *
 	 * @return static
 	 */
-	public static function missingSettingsManifestException(string $settings_manifest_path)
+	public static function missingSettingsManifestException(string $settingsManifestPath)
 	{
 		return new static(
 			sprintf(
 			/* translators: %s will be replaced with the location of the manifest for the block. */
 				esc_html__('Global blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
-				$settings_manifest_path
+				$settingsManifestPath
 			)
 		);
 	}
@@ -109,17 +109,17 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	/**
 	 * Throws error if wrapper settings manifest.json is missing.
 	 *
-	 * @param string $settings_manifest_path Full path for the missing manifest.json.
+	 * @param string $settingsManifestPath Full path for the missing manifest.json.
 	 *
 	 * @return static
 	 */
-	public static function missingWrapperManifestException(string $settings_manifest_path)
+	public static function missingWrapperManifestException(string $settingsManifestPath)
 	{
 		return new static(
 			sprintf(
 			/* translators: %s will be replaced with the manifest path location. */
 				esc_html__('Wrapper blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
-				$settings_manifest_path
+				$settingsManifestPath
 			)
 		);
 	}
@@ -127,17 +127,17 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	/**
 	 * Throws error if block wrapper view is missing.
 	 *
-	 * @param string $wrapper_path Full wrapper path.
+	 * @param string $wrapperPath Full wrapper path.
 	 *
 	 * @return static
 	 */
-	public static function missingWrapperViewException(string $wrapper_path)
+	public static function missingWrapperViewException(string $wrapperPath)
 	{
 		return new static(
 			sprintf(
 			/* translators: %s will be replaced with the view template path location. */
 				esc_html__('Wrapper view is missing. Template should be located in this path %s', 'eightshift-libs'),
-				$wrapper_path
+				$wrapperPath
 			)
 		);
 	}

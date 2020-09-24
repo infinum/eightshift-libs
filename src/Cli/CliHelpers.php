@@ -117,19 +117,18 @@ trait CliHelpers
 		}
 
 		// Open a new file on output.
-		$fp = fopen($outputFile, 'wb');
-
 		// If there is any error bailout. For example, user permission.
-		if (!$fp) {
-			\WP_CLI::error("File {$outputFile} couldn\'t be created. There was an error.");
+		if (($fp = fopen($outputFile, "wp")) !== false) { 
+
+			// Write and close.
+			fwrite($fp, $class);
+			fclose($fp);
+
+			// Return success.
+			\WP_CLI::success("File {$outputFile} successfully created.");
 		}
 
-		// Write and close.
-		fwrite($fp, $class);
-		fclose($fp);
-
-		// Return success.
-		\WP_CLI::success("File {$outputFile} successfully created.");
+		\WP_CLI::error("File {$outputFile} couldn\'t be created. There was an error.");
 	}
 
 	/**
@@ -205,7 +204,7 @@ trait CliHelpers
 		$class = preg_replace(
 			'/\x6E\x61\x6D\x65\x73\x70\x61\x63\x65 (w+|\w+\\\\){1,2}/',
 			"\x6E\x61\x6D\x65\x73\x70\x61\x63\x65 {$namespace}\\",
-			$class
+			(string)$class
 		);
 
 		return (string)$class;
@@ -247,7 +246,7 @@ trait CliHelpers
 			$output = preg_replace(
 				"{$pattern}{$namespace}/",
 				"{$prefix} {$namespace}",
-				$output
+				(string) $output
 			);
 		}
 
@@ -383,7 +382,7 @@ trait CliHelpers
 			\WP_CLI::error("The composer on {$composerPath} path seems to be missing.");
 		}
 
-		return json_decode($composerFile, true);
+		return json_decode((string)$composerFile, true);
 	}
 
 	/**

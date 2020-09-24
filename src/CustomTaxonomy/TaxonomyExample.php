@@ -69,10 +69,10 @@ class TaxonomyExample extends AbstractTaxonomy
 			'show_in_rest' => true,
 			'query_var' => true,
 			'rest_base' => static::REST_API_ENDPOINT_SLUG,
-			'rewrite' => array(
+			'rewrite' => [
 				'hierarchical' => true,
 				'with_front' => false,
-			),
+			],
 		];
 	}
 }
