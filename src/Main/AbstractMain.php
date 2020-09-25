@@ -218,5 +218,8 @@ abstract class AbstractMain implements ServiceInterface
 	 *
 	 * @return array<class-string, string|string[]> Array of fully qualified service class names.
 	 */
-	abstract protected function getServiceClasses(): array;
+	protected function getServiceClasses(): array
+	{
+		return [];
+	}
 }
