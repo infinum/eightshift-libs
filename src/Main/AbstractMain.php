@@ -21,7 +21,7 @@ use EightshiftLibs\Services\ServiceInterface;
  *
  * This is used to define instantiate all classes used in the lib.
  */
-abstract class AbstractMain implements ServiceInterface
+abstract class AbstractMain extends Autowiring implements ServiceInterface
 {
 
 	/**
@@ -39,20 +39,15 @@ abstract class AbstractMain implements ServiceInterface
 	private $container;
 
 	/**
-	 * Autowiring instance.
+	 * Constructs object and inserts prefixes from composer.
 	 *
-	 * @var Autowiring
+	 * @param array  $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
+	 * @param string $namespace Projects namespace.
 	 */
-	private $autowiring;
-
-	/**
-	 * Constructs object and injects autowiring.
-	 *
-	 * @param Autowiring $autowiring Autowiring functionality.
-	 */
-	public function __construct(Autowiring $autowiring)
+	public function __construct(array $psr4Prefixes, string $namespace)
 	{
-		$this->autowiring = $autowiring;
+		$this->psr4Prefixes = $psr4Prefixes;
+		$this->namespace = $namespace;
 	}
 
 	/**
@@ -110,7 +105,7 @@ abstract class AbstractMain implements ServiceInterface
 	 */
 	private function getServiceClassesWithAutowire(): array
 	{
-		return array_merge($this->autowiring->buildServiceClasses(), $this->getServiceClasses());
+		return array_merge($this->buildServiceClasses(), $this->getServiceClasses());
 	}
 
 	/**

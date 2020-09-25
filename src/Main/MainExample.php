@@ -38,16 +38,4 @@ class MainExample extends AbstractMain
 	{
 		\add_action('after_setup_theme', [$this, 'registerServices']);
 	}
-
-	/**
-	 * Get the list of services to register.
-	 *
-	 * A list of classes which contain hooks.
-	 *
-	 * @return array<string> Array of fully qualified class names.
-	 */
-	protected function getServiceClasses(): array
-	{
-		return [];
-	}
 }

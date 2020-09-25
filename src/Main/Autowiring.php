@@ -31,18 +31,6 @@ class Autowiring
 	protected $namespace;
 
 	/**
-	 * Constructs object and inserts prefixes from composer.
-	 *
-	 * @param array  $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
-	 * @param string $namespace Projects namespace.
-	 */
-	public function __construct(array $psr4Prefixes, string $namespace)
-	{
-		$this->psr4Prefixes = $psr4Prefixes;
-		$this->namespace = $namespace;
-	}
-
-	/**
 	 * Autowiring.
 	 *
 	 * @throws \ReflectionException Exception thrown in case class is missing.
@@ -65,14 +53,6 @@ class Autowiring
 
 			// Skip abstract classes, interfaces & traits.
 			if ($reflClass->isAbstract() || $reflClass->isInterface() || $reflClass->isTrait()) {
-				continue;
-			}
-
-			// Skip irrelevant classes.
-			if (
-				!$this->isServiceClass($reflClass->getInterfaceNames())
-				&& (empty($reflClass->getConstructor()) || empty($reflClass->getConstructor()->getParameters()))
-			) {
 				continue;
 			}
 
@@ -101,25 +81,6 @@ class Autowiring
 
 		// Convert dependency tree into PHP-DI's definition list.
 		return $this->convertDependencyTreeIntoDefinitionList($dependencyTree);
-	}
-
-	/**
-	 * Check if provided class is part of a service classes. Check if it contains ServiceInterface.
-	 *
-	 * @param array $interfaces List of class interfaces.
-	 *
-	 * @return boolean
-	 */
-	private function isServiceClass(array $interfaces = []): bool
-	{
-		foreach ($interfaces as $interface) {
-			$items = explode('\\', $interface);
-			if (end($items) !== 'ServiceInterface') {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	/**
