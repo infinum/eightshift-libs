@@ -118,7 +118,8 @@ trait CliHelpers
 
 		// Open a new file on output.
 		// If there is any error bailout. For example, user permission.
-		if (($fp = fopen($outputFile, "wp")) !== false) { 
+		if ((fopen($outputFile, "wp")) !== false) {
+			$fp = fopen($outputFile, "wp");
 
 			// Write and close.
 			fwrite($fp, $class);

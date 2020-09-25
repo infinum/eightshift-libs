@@ -59,6 +59,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface
 		return [
 			'methods' => static::READABLE,
 			'callback' => [$this, 'routeCallback'],
+			'permission_callback' => '__return_true'
 		];
 	}
 
