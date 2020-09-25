@@ -196,7 +196,7 @@ class Cli
 			$reflectionClass = new \ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if ($class instanceof ServiceInterface) {
+			if ($class instanceof CliInterface) {
 				$class->register();
 			}
 		}
