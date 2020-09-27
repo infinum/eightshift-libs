@@ -83,7 +83,7 @@ class CliInitTheme extends AbstractCli
 
 		foreach (static::INIT_THEME_CLASSES as $item) {
 			$reflectionClass = new \ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs([null]);
+			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 			if (method_exists($class, 'getCommandName')) {
 				if (function_exists('\add_action')) {
