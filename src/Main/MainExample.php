@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Main;
 
+use EightshiftLibs\Main\AbstractMain;
+
 /**
  * The main start class.
  *

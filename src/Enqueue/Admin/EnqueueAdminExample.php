@@ -12,6 +12,7 @@ namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
 /**
  * Class EnqueueAdminExample

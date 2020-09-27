@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Media;
 
+use EightshiftLibs\Media\AbstractMedia;
+
 /**
  * Class MediaExample
  *

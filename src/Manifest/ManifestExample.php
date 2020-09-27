@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Manifest;
 
 use EightshiftLibs\Config\Config;
+use EightshiftLibs\Manifest\AbstractManifest;
 
 /**
  * Class ManifestExample

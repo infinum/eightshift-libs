@@ -12,6 +12,7 @@ namespace EightshiftLibs\Enqueue\Blocks;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 
 /**
  * Enqueue_Blocks class.

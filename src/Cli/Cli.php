@@ -164,7 +164,7 @@ class Cli
 
 		foreach ($this->getDevelopClasses() as $item) {
 			$reflectionClass = new \ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs([null]);
+			$class = $reflectionClass->newInstanceArgs(['null']);
 
 			if (method_exists($class, 'getCommandName') && method_exists($class, 'getDevelopArgs') && method_exists($class, '__invoke')) {
 				if ($class->getCommandName() === $commandName) {

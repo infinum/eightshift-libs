@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\ModifyAdminAppearance;
 
+use EightshiftLibs\ModifyAdminAppearance\AbstractModifyAdminAppearance;
+
 /**
  * Class that modifies some administrator appearance
  *

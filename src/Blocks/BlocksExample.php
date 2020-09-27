@@ -14,7 +14,6 @@ namespace EightshiftLibs\Blocks;
 use EightshiftLibs\Config\Config;
 use EightshiftLibs\Blocks\AbstractBlocks;
 
-
 /**
  * Class Blocks
  */

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Config;
 
+use EightshiftLibs\Config\AbstractConfigData;
+
 /**
  * The project config class.
  */

@@ -12,6 +12,7 @@ namespace EightshiftLibs\Enqueue\Theme;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
 /**
  * Class EnqueueThemeExample

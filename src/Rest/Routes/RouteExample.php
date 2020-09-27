@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Config\Config;
+use EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftLibs\Rest\CallableRouteInterface;
 
 /**

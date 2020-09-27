@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\I18n;
 
 use EightshiftLibs\Config\Config;
+use EightshiftLibs\I18n\AbstractI18n;
 
 /**
  * Class i18n
