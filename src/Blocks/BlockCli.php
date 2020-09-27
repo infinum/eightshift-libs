@@ -64,16 +64,28 @@ class BlockCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$sourcePath = "{$rootNode}/src/Blocks/custom/{$name}";
+		$sourcePathFolder = "{$rootNode}/src/Blocks/custom/";
+		$sourcePath = "{$sourcePathFolder}{$name}";
 		$destinationPath = "{$root}/src/Blocks/custom/{$name}";
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
+			$nameList = '';
+			foreach (array_diff(scandir($sourcePathFolder), ['..', '.']) as $item) {
+				$nameList .= "- {$item} \n";
+			}
+
+			\WP_CLI::log(
+				"Please check the docs for all available blocks."
+			);
+			\WP_CLI::log(
+				"You can find all available blocks on this link: https://infinum.github.io/eightshift-docs/storybook/."
+			);
+			\WP_CLI::log(
+				"Or here is the list of all available block names: \n{$nameList}"
+			);
 			\WP_CLI::error(
-				sprintf(
-					'The block "%s" doesn\'t exist in our library. Please check the docs for all available blocks.',
-					$sourcePath
-				)
+				"The block '{$sourcePath}' doesn\'t exist in our library."
 			);
 		}
 

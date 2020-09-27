@@ -64,17 +64,29 @@ class BlockComponentCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$sourcePath = "{$rootNode}/src/Blocks/components/{$name}";
+
+		$sourcePathFolder = "{$rootNode}/src/Blocks/components/";
+		$sourcePath = "{$sourcePathFolder}{$name}";
 		$destinationPath = "{$root}/src/Blocks/components/{$name}";
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
+			$nameList = '';
+			foreach (array_diff(scandir($sourcePathFolder), ['..', '.']) as $item) {
+				$nameList .= "- {$item} \n";
+			}
+
+			\WP_CLI::log(
+				"Please check the docs for all available components."
+			);
+			\WP_CLI::log(
+				"You can find all available components on this link: https://infinum.github.io/eightshift-docs/storybook/."
+			);
+			\WP_CLI::log(
+				"Or here is the list of all available component names: \n{$nameList}"
+			);
 			\WP_CLI::error(
-			/* translators: %s will be replaced with the path. */
-				sprintf(
-					'The component "%s" doesn\'t exist in our library. Please check the docs for all available components',
-					$sourcePath
-				)
+				"The component '{$sourcePath}' doesn\'t exist in our library."
 			);
 		}
 
