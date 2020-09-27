@@ -37,7 +37,6 @@ class CliInitTheme extends AbstractCli
 	 * @var array
 	 */
 	public const INIT_THEME_CLASSES = [
-		BlocksCli::class,
 		EnqueueAdminCli::class,
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
@@ -50,6 +49,7 @@ class CliInitTheme extends AbstractCli
 		GitIgnoreCli::class,
 		SetupCli::class,
 		CiExcludeCli::class,
+		BlocksCli::class,
 	];
 
 	/**

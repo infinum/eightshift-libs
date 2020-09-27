@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Config\Config;
+use EightshiftLibs\Blocks\AbstractBlocks;
+
 
 /**
  * Class Blocks
