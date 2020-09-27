@@ -47,17 +47,25 @@ class LintPhpCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		$files = (string)shell_exec('STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep \\\\.php`');
+		$files = (string)shell_exec('git diff --cached --name-only');
 
-		var_dump($files);
-		$output = (string)shell_exec('composer run standards:check');
+		preg_match_all('/.*.php/', $files, $matches);
 
+		if (!$matches[0]) {
+			\WP_CLI::warning('There are no files stashed to check using WPCS linter.');
+		}
 
+		$output = '';
+
+		foreach ($matches[0] as $file) {
+			$output .= (string)shell_exec("composer run standards:check {$file}");
+		}
 
 		\WP_CLI::log($output);
 
 		if (preg_match('/ERROR/', $output) || preg_match('/WARNING/', $output)) {
 			\WP_CLI::error('Please fix all linting issues before continuing.');
+			die;
 		}
 
 		\WP_CLI::success('Success! You have no linting issues.');
