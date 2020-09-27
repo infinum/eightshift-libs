@@ -149,7 +149,7 @@ trait CliHelpers
 		if (function_exists('\add_action')) {
 			$root = $this->getProjectRootPath();
 		} else {
-			$root = $this->getProjectRootPath(true) . '/cli-output';
+			$root = $this->getProjectRootPath(true) . '/cliOutput';
 		}
 
 		$root = rtrim($root, '/');

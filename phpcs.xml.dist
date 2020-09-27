@@ -31,6 +31,7 @@
     <rule ref="WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec">
         <exclude-pattern>*/src/Db/*</exclude-pattern>
         <exclude-pattern>*/src/Build/*</exclude-pattern>
+        <exclude-pattern>*/cliOutput/bin/Build.php</exclude-pattern>
         <exclude-pattern>*/src/LintPhp/LintPhpCli.php</exclude-pattern>
     </rule>
 

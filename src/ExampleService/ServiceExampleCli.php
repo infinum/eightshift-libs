@@ -38,7 +38,7 @@ class ServiceExampleCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'folder' => $args[1] ?? 'testFolder/new',
+			'folder' => $args[1] ?? 'TestFolder/NewIService',
 			'file_name' => $args[2] ?? 'TestTest',
 		];
 	}
