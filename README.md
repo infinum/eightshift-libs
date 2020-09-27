@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Eightshift Libs" src="https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/package/logo.svg?raw=true&sanitize=true"/>
+	<img alt="Eightshift Libs" src="https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/package/logo.svg?raw=true&sanitize=true"/>
 </p>
 
 [![Travis](https://img.shields.io/travis/infinum/eightshift-libs.svg?style=for-the-badge)](https://travis-ci.org/infinum/eightshift-libs)

@@ -1,58 +1,58 @@
 {
-  "name": "infinum/eightshift-libs",
-  "version": "3.0.0",
-  "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
-  "keywords": [
-    "composer",
-    "installer",
-    "plugin",
-    "blocks",
-    "Gutenberg",
-    "WordPress"
-  ],
-  "homepage": "https://eightshift.com/",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Eightshift team",
-      "email": "team@eightshift.com",
-      "homepage": "https://eightshift.com/",
-      "role": "Developer / IT Manager"
-    }
-  ],
-  "support": {
-    "issues": "https://github.com/infinum/eightshift-libs/issues",
-    "source": "https://github.com/infinum/eightshift-libs"
-  },
-  "require": {
-    "php": ">=7.2",
-    "ext-json": "*",
-    "ext-libxml": "*",
-    "php-di/php-di": "^6.2.2"
-  },
-  "require-dev": {
-    "codeception/codeception": "^4.1",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-    "infinum/coding-standards-wp": "^1.0.1",
-    "roave/security-advisories": "dev-master",
-    "szepeviktor/phpstan-wordpress": "^0.6",
-    "wp-cli/wp-cli": "^2.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "EightshiftLibs\\": "src/"
-    }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "config": {
-    "sort-packages": true,
-    "optimize-autoloader": true,
-    "process-timeout": 2000
-  },
-  "scripts": {
-    "analyze": "@php ./vendor/bin/phpstan analyze",
-    "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
-    "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
-  }
+	"name": "infinum/eightshift-libs",
+	"version": "3.0.0",
+	"description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
+	"keywords": [
+		"composer",
+		"installer",
+		"plugin",
+		"blocks",
+		"Gutenberg",
+		"WordPress"
+	],
+	"homepage": "https://eightshift.com/",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Eightshift team",
+			"email": "team@eightshift.com",
+			"homepage": "https://eightshift.com/",
+			"role": "Developer / IT Manager"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/infinum/eightshift-libs/issues",
+		"source": "https://github.com/infinum/eightshift-libs"
+	},
+	"require": {
+		"php": ">=7.2",
+		"ext-json": "*",
+		"ext-libxml": "*",
+		"php-di/php-di": "^6.2.2"
+	},
+	"require-dev": {
+		"codeception/codeception": "^4.1",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+		"infinum/coding-standards-wp": "^1.0.1",
+		"roave/security-advisories": "dev-master",
+		"szepeviktor/phpstan-wordpress": "^0.6",
+		"wp-cli/wp-cli": "^2.4"
+	},
+	"autoload": {
+		"psr-4": {
+			"EightshiftLibs\\": "src/"
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"config": {
+		"sort-packages": true,
+		"optimize-autoloader": true,
+		"process-timeout": 2000
+	},
+	"scripts": {
+		"analyze": "@php ./vendor/bin/phpstan analyze",
+		"standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
+		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
+	}
 }

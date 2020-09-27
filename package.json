@@ -1,39 +1,39 @@
 {
-  "name": "@infinum/eightshift-libs",
-  "version": "3.0.0",
-  "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
-  "author": {
-    "name": "Eightshift team",
-    "email": "team@eightshift.com",
-    "homepage": "https://eightshift.com/",
-    "role": "Developer / IT Manager"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/infinum/eightshift-libs.git"
-  },
-  "keywords": [
-    "composer",
-    "installer",
-    "plugin",
-    "blocks",
-    "Gutenberg",
-    "WordPress"
-  ],
-  "bugs": {
-    "url": "https://github.com/infinum/eightshift-frontend-libs/issues"
-  },
-  "scripts": {
-    "lint": "wp eval-file bin/cli.php run_lint_php --skip-wordpress"
-  },
-  "homepage": "https://eightshift.com/",
-  "license": "MIT",
-  "dependencies": {
-    "husky": "^4.2.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint"
-    }
-  }
+	"name": "@infinum/eightshift-libs",
+	"version": "3.0.0",
+	"description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
+	"author": {
+		"name": "Eightshift team",
+		"email": "team@eightshift.com",
+		"homepage": "https://eightshift.com/",
+		"role": "Developer / IT Manager"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/infinum/eightshift-libs.git"
+	},
+	"keywords": [
+		"composer",
+		"installer",
+		"plugin",
+		"blocks",
+		"Gutenberg",
+		"WordPress"
+	],
+	"bugs": {
+		"url": "https://github.com/infinum/eightshift-frontend-libs/issues"
+	},
+	"scripts": {
+		"lint": "wp eval-file bin/cli.php run_lint_php --skip-wordpress"
+	},
+	"homepage": "https://eightshift.com/",
+	"license": "MIT",
+	"dependencies": {
+		"husky": "^4.2.3"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run lint"
+		}
+	}
 }
