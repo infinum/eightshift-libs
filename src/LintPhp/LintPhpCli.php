@@ -47,7 +47,12 @@ class LintPhpCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
+		$files = (string)shell_exec('STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep \\\\.php`');
+
+		var_dump($files);
 		$output = (string)shell_exec('composer run standards:check');
+
+
 
 		\WP_CLI::log($output);
 

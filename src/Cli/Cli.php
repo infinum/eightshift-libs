@@ -14,7 +14,6 @@ use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli};
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
-use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
@@ -31,7 +30,7 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
-use EightshiftLibs\Db\{DbImportCli, ExportCli, ImportCli};
+use EightshiftLibs\Db\{ExportCli, ImportCli};
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\Readme\ReadmeCli;
@@ -74,12 +73,11 @@ class Cli
 		FieldCli::class,
 		RouteCli::class,
 		ServiceExampleCli::class,
-		SetupCli::class,
-		DbImportCli::class,
 		BuildCli::class,
 		ReadmeCli::class,
 		GitIgnoreCli::class,
 		CiExcludeCli::class,
+		SetupCli::class,
 		LintPhpCli::class,
 	];
 

@@ -106,9 +106,12 @@ trait CliHelpers
 		$outputFile = $this->getOutputFile($outputFile);
 		$outputFile = "{$outputDir}{$outputFile}";
 
+		\WP_CLI::log(($outputFile));
+
 		// Bailout if file already exists.
 		if (file_exists($outputFile)) {
 			\WP_CLI::error("The file {$outputFile} can\'t be generated because it already exists.");
+			return;
 		}
 
 		// Create output dir if it doesn't exist.
@@ -118,8 +121,8 @@ trait CliHelpers
 
 		// Open a new file on output.
 		// If there is any error bailout. For example, user permission.
-		if ((fopen($outputFile, "wp")) !== false) {
-			$fp = fopen($outputFile, "wp");
+		if (fopen($outputFile, "wb") !== false) {
+			$fp = fopen($outputFile, "wb");
 
 			// Write and close.
 			fwrite($fp, $class);
@@ -127,9 +130,11 @@ trait CliHelpers
 
 			// Return success.
 			\WP_CLI::success("File {$outputFile} successfully created.");
+			return;
 		}
 
 		\WP_CLI::error("File {$outputFile} couldn\'t be created. There was an error.");
+		return;
 	}
 
 	/**
@@ -486,7 +491,7 @@ trait CliHelpers
 	{
 		foreach ($items as $item) {
 			$reflectionClass = new \ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs([null]);
+			$class = $reflectionClass->newInstanceArgs(['null']);
 
 			if (method_exists($class, 'getCommandName')) {
 				if (!$run) {
