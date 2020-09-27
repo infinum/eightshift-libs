@@ -37,12 +37,12 @@ class CliInitTheme extends AbstractCli
 	 * @var array
 	 */
 	public const INIT_THEME_CLASSES = [
-		EnqueueAdminCli::class,
-		EnqueueBlocksCli::class,
-		EnqueueThemeCli::class,
 		ConfigCli::class,
 		MainCli::class,
 		ManifestCli::class,
+		EnqueueAdminCli::class,
+		EnqueueBlocksCli::class,
+		EnqueueThemeCli::class,
 		MenuCli::class,
 		BuildCli::class,
 		LintPhpCli::class,
