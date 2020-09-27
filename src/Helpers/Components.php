@@ -80,7 +80,7 @@ class Components
 		if (strpos($component, '.php') !== false) {
 			$componentPath = "{$parentPath}/$component";
 		} else {
-			$componentPath = "{$parentPath}/src/Blocks/Components/{$component}/{$component}.php";
+			$componentPath = "{$parentPath}/src/Blocks/components/{$component}/{$component}.php";
 		}
 
 		if (!file_exists($componentPath)) {

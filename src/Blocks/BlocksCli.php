@@ -115,21 +115,21 @@ class BlocksCli extends AbstractCli
 		if ($all) {
 			system("cp -R {$rootNode}/src/Blocks {$root}/src/Blocks");
 		} else {
-			system("cp -R {$rootNode}/src/Blocks/Assets {$root}/src/Blocks/Assets/");
-			system("cp -R {$rootNode}/src/Blocks/Variations {$root}/src/Blocks/Variations/");
-			system("cp -R {$rootNode}/src/blocks/Wrapper {$root}/src/Blocks/Wrapper/");
+			system("cp -R {$rootNode}/src/Blocks/assets {$root}/src/Blocks/assets/");
+			system("cp -R {$rootNode}/src/Blocks/variations {$root}/src/Blocks/variations/");
+			system("cp -R {$rootNode}/src/blocks/wrapper {$root}/src/Blocks/wrapper/");
 			system("cp -R {$rootNode}/src/Blocks/manifest.json {$root}/src/Blocks/");
 
 			foreach (static::COMPONENTS as $component) {
-				system("mkdir -p {$root}/src/Blocks/Components/{$component}/");
+				system("mkdir -p {$root}/src/Blocks/components/{$component}/");
 				system(
-					"cp -R {$rootNode}/src/Blocks/Components/{$component}/. {$root}/src/Blocks/Components/{$component}/"
+					"cp -R {$rootNode}/src/Blocks/components/{$component}/. {$root}/src/Blocks/components/{$component}/"
 				);
 			}
 
 			foreach (static::BLOCKS as $block) {
-				system("mkdir -p {$root}/src/Blocks/Custom/{$block}/");
-				system("cp -R {$rootNode}/src/Blocks/Custom/{$block}/. {$root}/src/Blocks/Custom/{$block}/");
+				system("mkdir -p {$root}/src/Blocks/custom/{$block}/");
+				system("cp -R {$rootNode}/src/Blocks/custom/{$block}/. {$root}/src/Blocks/custom/{$block}/");
 			}
 		}
 

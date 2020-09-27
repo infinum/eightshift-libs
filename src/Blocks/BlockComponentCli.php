@@ -48,9 +48,9 @@ class BlockComponentCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'component',
+					'name' => 'name',
 					'description' => 'Specify component name.',
-					'optional' => true,
+					'optional' => false,
 				],
 			],
 		];
@@ -59,13 +59,13 @@ class BlockComponentCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$component = $assocArgs['component'] ?? '';
+		$name = $assocArgs['name'] ?? '';
 
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$sourcePath = "{$rootNode}/src/Blocks/Components/{$component}";
-		$destinationPath = "{$root}/src/Blocks/Components/{$component}";
+		$sourcePath = "{$rootNode}/src/Blocks/components/{$name}";
+		$destinationPath = "{$root}/src/Blocks/components/{$name}";
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {

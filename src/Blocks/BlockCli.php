@@ -48,9 +48,9 @@ class BlockCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'block',
+					'name' => 'name',
 					'description' => 'Specify block name.',
-					'optional' => true,
+					'optional' => false,
 				],
 			],
 		];
@@ -59,13 +59,13 @@ class BlockCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$block = $assocArgs['block'] ?? '';
+		$name = $assocArgs['name'] ?? '';
 
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$sourcePath = "{$rootNode}/src/Blocks/Custom/{$block}";
-		$destinationPath = "{$root}/src/Blocks/Custom/{$block}";
+		$sourcePath = "{$rootNode}/src/Blocks/custom/{$name}";
+		$destinationPath = "{$root}/src/Blocks/custom/{$name}";
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
