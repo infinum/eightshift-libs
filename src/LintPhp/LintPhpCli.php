@@ -47,7 +47,7 @@ class LintPhpCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		$files = (string)shell_exec('git diff --cached --name-only');
+		$files = (string)shell_exec('git diff --cached --name-only --diff-filter=ACMR HEAD');
 
 		preg_match_all('/.*.php/', $files, $matches);
 
