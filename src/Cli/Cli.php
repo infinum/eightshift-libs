@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli};
+use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli, BlockWrapperCli};
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
@@ -88,6 +88,7 @@ class Cli
 	 */
 	public const PUBLIC_CLASSES = [
 		BlockComponentCli::class,
+		BlockWrapperCli::class,
 		BlockCli::class,
 		UpdateCli::class,
 		ExportCli::class,

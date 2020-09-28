@@ -50,12 +50,13 @@ trait CliHelpers
 	 *
 	 * @param string $currentDir Absolute path to dir where example is.
 	 * @param string $fileName File Name of example.
+	 * @param bool   $skipExisting Skip existing file.
 	 *
 	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
-	public function getExampleTemplate(string $currentDir, string $fileName): string
+	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipExisting = false): string
 	{
 		// If you pass file name with extension the version will be used.
 		if (strpos($fileName, '.') !== false) {
@@ -67,7 +68,7 @@ trait CliHelpers
 		// Read the template contents, and replace the placeholders with provided variables.
 		$templateFile = file_get_contents($path);
 
-		if ($templateFile === false) {
+		if ($templateFile === false && $skipExisting === false) {
 			\WP_CLI::error("The template {$path} seems to be missing.");
 		}
 
@@ -92,12 +93,13 @@ trait CliHelpers
 	 * @param string $outputDir Absolute path to output from project root dir.
 	 * @param string $outputFile Absolute path to output file.
 	 * @param string $class Modified class.
+	 * @param bool   $skipExisting Skip existing file.
 	 *
 	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return void
 	 */
-	public function outputWrite(string $outputDir, string $outputFile, string $class): void
+	public function outputWrite(string $outputDir, string $outputFile, string $class, bool $skipExisting = false): void
 	{
 		// Set output paths.
 		$outputDir = $this->getOutputDir($outputDir);
@@ -106,10 +108,8 @@ trait CliHelpers
 		$outputFile = $this->getOutputFile($outputFile);
 		$outputFile = "{$outputDir}{$outputFile}";
 
-		\WP_CLI::log(($outputFile));
-
 		// Bailout if file already exists.
-		if (file_exists($outputFile)) {
+		if (file_exists($outputFile) && $skipExisting === false) {
 			\WP_CLI::error("The file {$outputFile} can\'t be generated because it already exists.");
 			return;
 		}
@@ -129,7 +129,11 @@ trait CliHelpers
 			fclose($fp);
 
 			// Return success.
-			\WP_CLI::success("File {$outputFile} successfully created.");
+			if ($skipExisting) {
+				\WP_CLI::success("File {$outputFile} successfully renamed.");
+			} else {
+				\WP_CLI::success("File {$outputFile} successfully created.");
+			}
 			return;
 		}
 
@@ -264,20 +268,36 @@ trait CliHelpers
 	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
+	 * @param string $name Name of lib to rename.
 	 *
 	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
-	public function renameTextDomain(array $args = [], string $string = ''): string
+	public function renameTextDomain(array $args = [], string $string = '', string $name = 'eightshift-libs'): string
 	{
 		$namespace = $this->getNamespace($args);
 
 		return str_replace(
-			'eightshift-libs',
+			$name,
 			$namespace,
 			$string
 		);
+	}
+
+	/**
+	 * Replace text domain in class for frontend libs
+	 *
+	 * @param array  $args CLI args array.
+	 * @param string $string Full class as a string.
+	 *
+	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
+	 *
+	 * @return string
+	 */
+	public function renameTextDomainFrontendLibs(array $args = [], string $string = ''): string
+	{
+		return $this->renameTextDomain($args, $string, 'eightshift-boilerplate');
 	}
 
 	/**
@@ -582,5 +602,29 @@ trait CliHelpers
 	public function getFrontendLibsBlockPath(): string
 	{
 		return $this->getFrontendLibsPath('blocks/init');
+	}
+
+	/**
+	 * Full blocks files list used for renaming
+	 *
+	 * @param string $name Block name.
+	 *
+	 * @return array
+	 */
+	public function getFullBlocksFiles(string $name): array
+	{
+		return [
+			"{$name}.php",
+			"{$name}-block.js",
+			"{$name}-hooks.js",
+			"{$name}-transforms.js",
+			"{$name}.js",
+			"docs/story.js",
+			"components/{$name}-editor.js",
+			"components/{$name}-toolbar.js",
+			"components/{$name}-options.js",
+			"components/{$name}-responsive-tab-content.js",
+			"components/{$name}-responsive-tab-content-simple.js",
+		];
 	}
 }

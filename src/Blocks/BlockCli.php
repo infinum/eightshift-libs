@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI\ExitException;
 
 /**
  * Class BlockCli
@@ -24,7 +23,7 @@ class BlockCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks';
+	public const OUTPUT_DIR = 'src/Blocks/custom';
 
 	/**
 	 * Get WPCLI command name
@@ -64,9 +63,10 @@ class BlockCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$sourcePathFolder = "{$rootNode}/src/Blocks/custom/";
+		$path = static::OUTPUT_DIR . '/' . $name;
+		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
 		$sourcePath = "{$sourcePathFolder}{$name}";
-		$destinationPath = "{$root}/src/Blocks/custom/{$name}";
+		$destinationPath = $root . '/' . $path;
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
@@ -101,6 +101,27 @@ class BlockCli extends AbstractCli
 
 		system("cp -R {$sourcePath}/. {$destinationPath}/");
 
-		\WP_CLI::success('Block successfully created.');
+		\WP_CLI::success('Block successfully moved to your project.');
+
+		\WP_CLI::log('--------------------------------------------------');
+
+		foreach ($this->getFullBlocksFiles($name) as $file) {
+			// Set output file path.
+			$class = $this->getExampleTemplate($destinationPath, $file, true);
+
+			if (!empty($class)) {
+				$class = $this->renameProjectName($assocArgs, $class);
+				$class = $this->renameNamespace($assocArgs, $class);
+				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
+				$class = $this->renameUse($assocArgs, $class);
+	
+				// Output final class to new file/folder and finish.
+				$this->outputWrite($path, $file, $class, true);
+			}
+		}
+
+		\WP_CLI::log('--------------------------------------------------');
+
+		\WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Blocks Components.
+ * Class that registers WPCLI command for Blocks Wrapper.
  *
  * @package EightshiftLibs\Blocks
  */
@@ -13,9 +13,9 @@ namespace EightshiftLibs\Blocks;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
- * Class BlockComponentCli
+ * Class BlockWrapperCli
  */
-class BlockComponentCli extends AbstractCli
+class BlockWrapperCli extends AbstractCli
 {
 
 	/**
@@ -23,7 +23,7 @@ class BlockComponentCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks/components';
+	public const OUTPUT_DIR = 'src/Blocks/wrapper';
 
 	/**
 	 * Get WPCLI command name
@@ -32,7 +32,7 @@ class BlockComponentCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_component';
+		return 'use_wrapper';
 	}
 
 	/**
@@ -43,22 +43,14 @@ class BlockComponentCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy Component from library to your project.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'name',
-					'description' => 'Specify component name.',
-					'optional' => false,
-				],
-			],
+			'shortdesc' => 'Copy Wrapper from library to your project.',
 		];
 	}
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$name = $assocArgs['name'] ?? '';
+		$name = 'wrapper';
 
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
@@ -68,33 +60,12 @@ class BlockComponentCli extends AbstractCli
 		$sourcePath = "{$sourcePathFolder}{$name}";
 		$destinationPath = $root . '/' . $path;
 
-		// Source doesn't exist.
-		if (!file_exists($sourcePath)) {
-			$nameList = '';
-			foreach (array_diff(scandir($sourcePathFolder), ['..', '.']) as $item) {
-				$nameList .= "- {$item} \n";
-			}
-
-			\WP_CLI::log(
-				"Please check the docs for all available components."
-			);
-			\WP_CLI::log(
-				"You can find all available components on this link: https://infinum.github.io/eightshift-docs/storybook/."
-			);
-			\WP_CLI::log(
-				"Or here is the list of all available component names: \n{$nameList}"
-			);
-			\WP_CLI::error(
-				"The component '{$sourcePath}' doesn\'t exist in our library."
-			);
-		}
-
 		// Destination exists.
 		if (file_exists($destinationPath)) {
 			\WP_CLI::error(
 			/* translators: %s will be replaced with the path. */
 				sprintf(
-					'The component in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
+					'The wrapper exists in your project on this "%s" path. Please check or remove that folder before running this command again.',
 					$destinationPath
 				)
 			);
@@ -102,7 +73,7 @@ class BlockComponentCli extends AbstractCli
 
 		system("cp -R {$sourcePath}/. {$destinationPath}/");
 
-		\WP_CLI::success('Compoent successfully moved to your project.');
+		\WP_CLI::success('Wrapper successfully moved to your project.');
 
 		\WP_CLI::log('--------------------------------------------------');
 
