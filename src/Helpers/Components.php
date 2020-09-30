@@ -125,7 +125,7 @@ class Components
 		$output = [];
 
 		foreach ($items as $itemKey => $itemValue) {
-			if (empty($itemValue) && $itemValue !== 0) {
+			if (empty($itemValue) || $itemValue === false) {
 				continue;
 			}
 
