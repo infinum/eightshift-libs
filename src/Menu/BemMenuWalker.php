@@ -156,7 +156,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 			// Item classes.
 			$itemClasses = [
 				'item_class' => 0 === $depth ? $prefix . $suffix['item'] : '',
-				'parent_class' => isset($args) && $args->has_children ? $parent_class : '',
+				'parent_class' => isset($args->has_children) && $args->has_children ? $parent_class : '',
 				'active_page_class' => in_array(
 					'current-menu-item',
 					$item->classes,
@@ -180,6 +180,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 
 
 		// Convert array to string excluding any empty values.
+		$itemClasses = \apply_filters('walker_nav_menu_item_classes', $itemClasses, $item, $depth, $args);
 		$class_string = !empty($itemClasses) ? implode('  ', array_filter($itemClasses)) : '';
 
 		// Add the classes to the wrapping <li>.
@@ -218,6 +219,6 @@ class BemMenuWalker extends \Walker_Nav_Menu
 		$item_output .= !empty($args->after) ? $args->after : '';
 		$item_output .= '</span></a>';
 
-		$output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
+		$output .= apply_filters('walker_nav_menu_link_element', $item_output, $item, $depth, $args);
 	}
 }
