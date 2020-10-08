@@ -40,7 +40,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	{
 		$path = $this->getManifestFilePath();
 
-		if (!file_exists($path)) {
+		if (!file_exists($path) && ! defined('WP_CLI')) {
 			throw InvalidManifest::missingManifestException($path);
 		}
 
@@ -72,7 +72,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	{
 		$manifest = $this->manifest;
 
-		if (!isset($manifest[$key])) {
+		if (!isset($manifest[$key]) && ! defined('WP_CLI')) {
 			throw InvalidManifest::missingManifestItemException($key);
 		}
 
