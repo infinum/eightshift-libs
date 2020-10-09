@@ -20,6 +20,7 @@ class Components
 
 	/**
 	 * Makes sure the output is string. Useful for converting an array of components into a string.
+	 * If you pass an associative array it will output strings with keys, used for generating data-attributes from array.
 	 *
 	 * @param array|string $variable Variable we need to convert into a string.
 	 *
@@ -32,7 +33,16 @@ class Components
 		$output = '';
 
 		if (is_array($variable)) {
-			$output = implode('', $variable);
+			$isAssociative = array_values($variable) === $variable;
+
+			if ($isAssociative) {
+				$output = implode('', $variable);
+			} else {
+				foreach ($variable as $key => $value) {
+					$output .= $key . '="' . htmlspecialchars($value) . '" ';
+				}
+			}
+
 		} elseif (is_string($variable)) {
 			$output = $variable;
 		} else {
