@@ -28,7 +28,8 @@
 		"php": ">=7.2",
 		"ext-json": "*",
 		"ext-libxml": "*",
-		"php-di/php-di": "^6.2.2"
+		"php-di/php-di": "^6.2.2",
+		"php-di/invoker": "2.0"
 	},
 	"require-dev": {
 		"codeception/codeception": "^4.1",
