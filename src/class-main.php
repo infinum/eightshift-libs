@@ -205,30 +205,6 @@ abstract class Main implements Service {
   }
 
   /**
-   * Instantiate a single service.
-   *
-   * @param string $class Service class to instantiate.
-   *
-   * @throws Exception\Invalid_Service If the service is not valid.
-   *
-   * @return Registrable
-   *
-   * @since 0.1.0
-   */
-  private function instantiate_service( $class ) {
-    if ( ! class_exists( $class ) ) {
-      throw Exception\Invalid_Service::from_service( $class );
-    }
-
-    $service = new $class();
-    if ( ! $service instanceof Registrable ) {
-      throw Exception\Invalid_Service::from_service( $service );
-    }
-
-    return $service;
-  }
-
-  /**
    * Get the list of services to register.
    *
    * A list of classes which contain hooks.
