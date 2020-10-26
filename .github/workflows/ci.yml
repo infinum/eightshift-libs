@@ -41,10 +41,10 @@ jobs:
                   ${{ runner.os }}-composer-
 
             - name: Install composer packages
-              run: composer install --no-progress
+              run: composer update --no-progress
 
             - name: Check coding standards using PHPCS
-              run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}-
+              run: composer run-script standards:check -- --runtime-set testVersion ${{ matrix.php }}-
 
     phpstan:
         name: PHPStan check
@@ -73,7 +73,7 @@ jobs:
                   ${{ runner.os }}-composer-
 
             - name: Install composer packages
-              run: composer install --no-progress
+              run: composer update --no-progress
 
             - name: Analyse code using phpstan
-              run: composer analyze
+              run: composer run-script analyze
