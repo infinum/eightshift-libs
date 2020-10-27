@@ -135,7 +135,7 @@ class Components
 		$output = [];
 
 		foreach ($items as $itemKey => $itemValue) {
-			if (empty($itemValue) || $itemValue === false) {
+			if ((gettype($itemValue) === 'string' && $itemValue === '') || gettype($itemValue) === 'boolean' && $itemValue === false ) {
 				continue;
 			}
 
