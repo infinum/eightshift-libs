@@ -39,16 +39,21 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockEditorScript(): void
 	{
-		$handler = "{$this->getAssetsPrefix()}-block-editor-scripts";
+		$handle = "{$this->getAssetsPrefix()}-block-editor-scripts";
 
 		\wp_register_script(
-			$handler,
+			$handle,
 			$this->manifest->getAssetsManifestItem(static::BLOCKS_EDITOR_SCRIPT_URI),
 			$this->getAdminScriptDependencies(),
 			$this->getAssetsVersion(),
 			$this->scriptInFooter()
 		);
-		\wp_enqueue_script($handler);
+
+		\wp_enqueue_script($handle);
+
+		foreach ($this->getLocalizations() as $objectName => $dataArray) {
+			\wp_localize_script($handle, $objectName, $dataArray);
+		}
 	}
 
 	/**
@@ -98,17 +103,22 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockScript(): void
 	{
-		$handler = "{$this->getAssetsPrefix()}-block-scripts";
+		$handle = "{$this->getAssetsPrefix()}-block-scripts";
 
 		\wp_register_script(
-			$handler,
+			$handle,
 			$this->manifest->getAssetsManifestItem(static::BLOCKS_SCRIPT_URI),
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			$this->scriptInFooter()
 		);
 
-		\wp_enqueue_script($handler);
+		\wp_enqueue_script($handle);
+
+
+		foreach ($this->getLocalizations() as $objectName => $dataArray) {
+			\wp_localize_script($handle, $objectName, $dataArray);
+		}
 	}
 
 	/**
