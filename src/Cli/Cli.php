@@ -20,7 +20,7 @@ use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
-use EightshiftLibs\ExampleService\ServiceExampleCli;
+use EightshiftLibs\Services\ServiceExampleCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Login\LoginCli;
 use EightshiftLibs\Main\MainCli;

@@ -3,12 +3,12 @@
 /**
  * Class that registers WPCLI command for Service Example.
  *
- * @package EightshiftLibs\ExampleService
+ * @package EightshiftLibs\Services
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\ExampleService;
+namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
 
@@ -38,7 +38,7 @@ class ServiceExampleCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'folder' => $args[1] ?? 'TestFolder/NewIService',
+			'folder' => $args[1] ?? 'TestFolder/TMP',
 			'file_name' => $args[2] ?? 'TestTest',
 		];
 	}
@@ -56,7 +56,7 @@ class ServiceExampleCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'folder',
-					'description' => 'The output folder path relative to src folder. Example: main or main/config',
+					'description' => 'The output folder path relative to src folder. Example: main or `main` or `config` or nested `main/config`',
 					'optional' => false,
 				],
 				[
@@ -76,13 +76,14 @@ class ServiceExampleCli extends AbstractCli
 		$fileName = $this->prepareSlug($assocArgs['file_name']);
 
 		// Get full class name.
-		$className = $this->getFileName($fileName);
+		$className = $this->getClassShortName();
+		$classNameNew = $this->getFileName($fileName);
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, static::TEMPLATE);
 
 		// Replace stuff in file.
-		$class = $this->renameClassName($className, $class);
+		$class = str_replace($className, $classNameNew, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
 
@@ -95,9 +96,9 @@ class ServiceExampleCli extends AbstractCli
 		);
 
 		$newNamespace = '\\' . implode('\\', $folderParts);
-		$class = str_replace('\\ExampleService', $newNamespace, $class);
+		$class = str_replace('\\Services;', "{$newNamespace};", $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $className, $class);
+		$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $classNameNew, $class);
 	}
 }
