@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Rest Fields.
+ * Class that registers WPCLI command for Custom Acf Meta Fields.
  *
- * @package EightshiftLibs\Rest\Fields
+ * @package EightshiftLibs\CustomMeta
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Rest\Fields;
+namespace EightshiftLibs\CustomMeta;
 
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
- * Class FieldCli
+ * Class AcfMetaCli
  */
-class FieldCli extends AbstractCli
+class AcfMetaCli extends AbstractCli
 {
 
 	/**
@@ -23,17 +23,7 @@ class FieldCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Rest/Fields';
-
-	/**
-	 * Get WPCLI command name
-	 *
-	 * @return string
-	 */
-	public function getCommandName(): string
-	{
-		return 'create_rest_field';
-	}
+	public const OUTPUT_DIR = 'src/CustomMeta';
 
 	/**
 	 * Define default develop props.
@@ -45,8 +35,7 @@ class FieldCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'field_name' => $args[1] ?? 'title',
-			'object_type' => $args[2] ?? 'post',
+			'name' => $args[1] ?? 'title',
 		];
 	}
 
@@ -58,18 +47,12 @@ class FieldCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates REST-API Field in your project.',
+			'shortdesc' => 'Generates custom ACF meta fields class file.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'field_name',
-					'description' => 'The name of the endpoint slug. Example: title.',
-					'optional' => false,
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'object_type',
-					'description' => 'Object(s) the field is being registered to. Example: post.',
+					'name' => 'name',
+					'description' => 'The name of the custom meta slug. Example: title.',
 					'optional' => false,
 				],
 			],
@@ -79,9 +62,8 @@ class FieldCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['field_name']);
-		$objectType = $this->prepareSlug($assocArgs['object_type']);
-
+		$fieldName = $this->prepareSlug($assocArgs['name']);
+		
 		// Get full class name.
 		$className = $this->getFileName($fieldName);
 		$className = $className . $this->getClassShortName();
@@ -93,8 +75,9 @@ class FieldCli extends AbstractCli
 		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
-		$class = str_replace('example-post-type', $objectType, $class);
-		$class = str_replace('example-field', $fieldName, $class);
+
+		error_log( print_r( ( $class ), true ) );
+		
 
 		// Output final class to new file/folder and finish.
 		$this->outputWrite(static::OUTPUT_DIR, $className, $class);

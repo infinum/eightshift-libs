@@ -14,6 +14,8 @@ use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli, BlockWrapperC
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\View\EscapedViewCli;
+use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
@@ -35,6 +37,7 @@ use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
+use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use WP_CLI\ExitException;
 
 /**
@@ -79,6 +82,9 @@ class Cli
 		CiExcludeCli::class,
 		SetupCli::class,
 		LintPhpCli::class,
+		AcfMetaCli::class,
+		EscapedViewCli::class,
+		ThemeOptionsCli::class
 	];
 
 	/**

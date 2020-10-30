@@ -368,7 +368,7 @@ trait CliHelpers
 	}
 
 	/**
-	 * Change Class full name with suffix
+	 * Change Class full name with prefix
 	 *
 	 * @param string $templateName Current template.
 	 * @param string $newName New Class Name.
@@ -376,7 +376,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function renameClassNameWithSuffix(string $templateName, string $newName, string $string): string
+	public function renameClassNameWithPrefix(string $templateName, string $newName, string $string): string
 	{
 		return str_replace($this->getExampleFileName($templateName), $newName, $string);
 	}

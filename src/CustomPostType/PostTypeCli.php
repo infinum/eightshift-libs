@@ -114,13 +114,13 @@ class PostTypeCli extends AbstractCli
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
-		$className = $this->getClassShortName() . $className;
+		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameClassNameWithSuffix($this->getClassShortName(), $className, $class);
+		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
 		$class = $this->renameTextDomain($assocArgs, $class);
