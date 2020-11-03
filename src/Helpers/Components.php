@@ -115,6 +115,27 @@ class Components
 	}
 
 	/**
+	 * Get manifest json. Generally used for getting block/components manifest.
+	 *
+	 * @param string $path Absolute path to manifest folder.
+	 *
+	 * @throws \Exception When we're unable to find the component by $component.
+	 *
+	 * @return array
+	 */
+	public static function getManifest(string $path): array
+	{
+
+		$manifest = "{$path}/manifest.json";
+
+		if (!file_exists($manifest)) {
+			ComponentException::throwUnableToLocateComponent($manifest);
+		}
+
+		return json_decode(implode(' ', (array)file($manifest)), true);
+	}
+
+	/**
 	 * Create responsive selectors used for responsive attributes.
 	 *
 	 * Example:
