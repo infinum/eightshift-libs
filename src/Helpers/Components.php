@@ -180,22 +180,25 @@ class Components
 	 */
 	public static function checkAttr(string $key, array $attributes, array $manifest)
 	{
-		$defaultType = $manifest['attributes'][$key]['type'];
+		$manifestKey = $manifest['attributes'][$key];
+		$defaultType = $manifestKey['type'];
+
+		$defaultValue = '';
 
 		switch ($defaultType) {
 			case 'boolean':
-				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : false;
+				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : false;
 				break;
 			case 'array':
 			case 'object':
-				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : [];
+				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : [];
 				break;
 			default:
-				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : '';
+				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : '';
 				break;
 		}
 
-		return isset($attributes[$key]) ? $attributes[$key] : $default;
+		return isset($attributes[$key]) ? $attributes[$key] : $defaultValue;
 	}
 
 	/**
