@@ -42,7 +42,6 @@ class Components
 					$output .= $key . '="' . htmlspecialchars($value) . '" ';
 				}
 			}
-
 		} elseif (is_string($variable)) {
 			$output = $variable;
 		} else {
@@ -156,7 +155,7 @@ class Components
 		$output = [];
 
 		foreach ($items as $itemKey => $itemValue) {
-			if ((gettype($itemValue) === 'string' && $itemValue === '') || gettype($itemValue) === 'boolean' && $itemValue === false ) {
+			if ((gettype($itemValue) === 'string' && $itemValue === '') || gettype($itemValue) === 'boolean' && $itemValue === false) {
 				continue;
 			}
 
@@ -168,5 +167,20 @@ class Components
 		}
 
 		return static::classnames($output);
+	}
+
+	/**
+	 * Check if attribute exist in attributes list and add default value if not.
+	 *
+	 * @param string $key Key to check.
+	 * @param array  $atributes Array of attributes.
+	 * @param array  $manifest Array of default attributes from manifest.json.
+	 *
+	 * @return string
+	 */
+	public static function checkAttr(string $key, array $atributes, array $manifest): string
+	{
+		$default = isset($manifest['keyibutes'][$key]['default']) ?? '';
+		return isset($atributes[$key]) ? $atributes[$key] : $default;
 	}
 }
