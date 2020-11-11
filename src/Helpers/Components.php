@@ -190,9 +190,6 @@ class Components
 			case 'object':
 				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : [];
 				break;
-			case 'int':
-				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : 0;
-				break;
 			default:
 				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : '';
 				break;
