@@ -44,10 +44,10 @@ class CliInitTheme extends AbstractCli
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
 		MenuCli::class,
-		BuildCli::class,
-		LintPhpCli::class,
+		//BuildCli::class,
+		//LintPhpCli::class,
 		GitIgnoreCli::class,
-		SetupCli::class,
+		//SetupCli::class,
 		CiExcludeCli::class,
 		BlocksCli::class,
 	];
