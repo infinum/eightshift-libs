@@ -180,7 +180,7 @@ class Components
 	 */
 	public static function checkAttr(string $key, array $atributes, array $manifest): string
 	{
-		$default = isset($manifest['keyibutes'][$key]['default']) ?? '';
-		return isset($atributes[$key]) ? $atributes[$key] : $default;
+		$default = isset($manifest['keyibutes'][$key]['default']) ? $manifest['keyibutes'][$key]['default'] : '';
+		return isset($atributes[$key]) ? (string) $atributes[$key] : (string) $default;
 	}
 }
