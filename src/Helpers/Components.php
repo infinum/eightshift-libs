@@ -173,14 +173,50 @@ class Components
 	 * Check if attribute exist in attributes list and add default value if not.
 	 *
 	 * @param string $key Key to check.
-	 * @param array  $atributes Array of attributes.
+	 * @param array  $attributes Array of attributes.
+	 * @param array  $manifest Array of default attributes from manifest.json.
+	 *
+	 * @return mixed
+	 */
+	public static function checkAttr(string $key, array $attributes, array $manifest)
+	{
+		$defaultType = $manifest['attributes'][$key]['type'];
+
+		switch ($defaultType) {
+			case 'boolean':
+				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : false;
+				break;
+			case 'array':
+			case 'object':
+				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : [];
+				break;
+			case 'int':
+				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : 0;
+				break;
+			default:
+				$default = isset($manifest['attributes'][$key]['default']) ? $manifest['attributes'][$key]['default'] : '';
+				break;
+		}
+
+		return isset($attributes[$key]) ? $attributes[$key] : $default;
+	}
+
+	/**
+	 * Retun BEM selector for html class and check all conditions from checkAttr method.
+	 *
+	 * @param string $block BEM Block selector.
+	 * @param string $element BEM Element selector.
+	 * @param string $key Key to check.
+	 * @param array  $attributes Array of attributes.
 	 * @param array  $manifest Array of default attributes from manifest.json.
 	 *
 	 * @return string
 	 */
-	public static function checkAttr(string $key, array $atributes, array $manifest): string
+	public static function selector(string $block, string $element, string $key, array $attributes, array $manifest): string
 	{
-		$default = isset($manifest['keyibutes'][$key]['default']) ? $manifest['keyibutes'][$key]['default'] : '';
-		return isset($atributes[$key]) ? (string) $atributes[$key] : (string) $default;
+
+		$modifier = self::checkAttr($key, $attributes, $manifest);
+	
+		return $modifier ? "{$block}__{$element}--{$modifier}"  : '';
 	}
 }
