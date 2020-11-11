@@ -40,7 +40,7 @@ class BlocksCli extends AbstractCli
 		'header',
 		'heading',
 		'image',
-		'layout-three-colums',
+		'layout-three-columns',
 		'link',
 		'lists',
 		'logo',
