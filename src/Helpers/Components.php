@@ -229,9 +229,15 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function selectorB(string $block, string $element, string $modifier): string
+	public static function selectorB(string $block, string $element, string $modifier = ''): string
 	{
-		return $block ? "{$block}__{$element}--{$modifier}"  : '';
+		$fullModifier = '';
+
+		if ($modifier) {
+			$fullModifier = "--{$modifier}";
+		}
+
+		return $block ? "{$block}__{$element}{$fullModifier}"  : '';
 	}
 
 	/**
@@ -243,9 +249,15 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function selectorE(string $block, string $element, string $modifier): string
+	public static function selectorE(string $block, string $element, string $modifier = ''): string
 	{
-		return $element ? "{$block}__{$element}--{$modifier}"  : '';
+		$fullModifier = '';
+
+		if ($modifier) {
+			$fullModifier = "--{$modifier}";
+		}
+
+		return $element ? "{$block}__{$element}{$fullModifier}"  : '';
 	}
 
 	/**
@@ -257,8 +269,14 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function selectorM(string $block, string $element, string $modifier): string
+	public static function selectorM(string $block, string $element, string $modifier = ''): string
 	{
-		return $modifier ? "{$block}__{$element}--{$modifier}"  : '';
+		$fullModifier = '';
+
+		if ($modifier) {
+			$fullModifier = "--{$modifier}";
+		}
+
+		return $modifier ? "{$block}__{$element}{$fullModifier}"  : '';
 	}
 }
