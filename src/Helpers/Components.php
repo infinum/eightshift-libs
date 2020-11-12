@@ -201,24 +201,6 @@ class Components
 		return isset($attributes[$key]) ? $attributes[$key] : $defaultValue;
 	}
 
-	/**
-	 * Retun BEM selector for html class and check all conditions from checkAttr method.
-	 *
-	 * @param string $block BEM Block selector.
-	 * @param string $element BEM Element selector.
-	 * @param string $key Key to check.
-	 * @param array  $attributes Array of attributes.
-	 * @param array  $manifest Array of default attributes from manifest.json.
-	 *
-	 * @return string
-	 */
-	public static function selector(string $block, string $element, string $key, array $attributes, array $manifest): string
-	{
-
-		$modifier = self::checkAttr($key, $attributes, $manifest);
-	
-		return self::selectorM($block, $element, $modifier);
-	}
 
 	/**
 	 * Retun BEM selector for html class and check if Block element is set.
@@ -229,15 +211,20 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function selectorB(string $block, string $element, string $modifier = ''): string
+	public static function selectorB(string $block, string $element = '', string $modifier = ''): string
 	{
 		$fullModifier = '';
+		$fullElement = '';
+
+		if ($element) {
+			$fullElement = "__{$element}";
+		}
 
 		if ($modifier) {
 			$fullModifier = "--{$modifier}";
 		}
 
-		return $block ? "{$block}__{$element}{$fullModifier}"  : '';
+		return $block ? "{$block}{$fullElement}{$fullModifier}"  : '';
 	}
 
 	/**
@@ -269,14 +256,27 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function selectorM(string $block, string $element, string $modifier = ''): string
+	public static function selectorM(string $block, string $element, string $modifier): string
 	{
-		$fullModifier = '';
+		return $modifier ? "{$block}__{$element}--{$modifier}"  : '';
+	}
 
-		if ($modifier) {
-			$fullModifier = "--{$modifier}";
-		}
+	/**
+	 * Retun BEM selector for html class and check all conditions from checkAttr method.
+	 *
+	 * @param string $block BEM Block selector.
+	 * @param string $element BEM Element selector.
+	 * @param string $key Key to check.
+	 * @param array  $attributes Array of attributes.
+	 * @param array  $manifest Array of default attributes from manifest.json.
+	 *
+	 * @return string
+	 */
+	public static function selector(string $block, string $element, string $key, array $attributes, array $manifest): string
+	{
 
-		return $modifier ? "{$block}__{$element}{$fullModifier}"  : '';
+		$modifier = self::checkAttr($key, $attributes, $manifest);
+	
+		return self::selectorM($block, $element, $modifier);
 	}
 }
