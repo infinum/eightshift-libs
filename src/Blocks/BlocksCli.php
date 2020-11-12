@@ -32,6 +32,7 @@ class BlocksCli extends AbstractCli
 	 */
 	public const COMPONENTS = [
 		'button',
+		'card',
 		'copyright',
 		'drawer',
 		'footer',
@@ -56,6 +57,7 @@ class BlocksCli extends AbstractCli
 	 */
 	public const BLOCKS = [
 		'button',
+		'card',
 		'column',
 		'columns',
 		'group',
