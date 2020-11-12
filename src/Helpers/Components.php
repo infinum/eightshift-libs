@@ -217,6 +217,48 @@ class Components
 
 		$modifier = self::checkAttr($key, $attributes, $manifest);
 	
+		return self::selectorM($block, $element, $modifier);
+	}
+
+	/**
+	 * Retun BEM selector for html class and check if Block element is set.
+	 *
+	 * @param string $block BEM Block selector.
+	 * @param string $element BEM Element selector.
+	 * @param string $modifier BEM Modifier selector.
+	 *
+	 * @return string
+	 */
+	public static function selectorB(string $block, string $element, string $modifier): string
+	{
+		return $block ? "{$block}__{$element}--{$modifier}"  : '';
+	}
+
+	/**
+	 * Retun BEM selector for html class and check if element is set.
+	 *
+	 * @param string $block BEM Block selector.
+	 * @param string $element BEM Element selector.
+	 * @param string $modifier BEM Modifier selector.
+	 *
+	 * @return string
+	 */
+	public static function selectorE(string $block, string $element, string $modifier): string
+	{
+		return $element ? "{$block}__{$element}--{$modifier}"  : '';
+	}
+
+	/**
+	 * Retun BEM selector for html class and check if Modifier element is set.
+	 *
+	 * @param string $block BEM Block selector.
+	 * @param string $element BEM Element selector.
+	 * @param string $modifier BEM Modifier selector.
+	 *
+	 * @return string
+	 */
+	public static function selectorM(string $block, string $element, string $modifier): string
+	{
 		return $modifier ? "{$block}__{$element}--{$modifier}"  : '';
 	}
 }
