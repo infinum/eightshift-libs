@@ -279,4 +279,19 @@ class Components
 	
 		return self::selectorM($block, $element, $modifier);
 	}
+
+	/**
+	 * Retun BEM selector for html class and check if Custom condition is set.
+	 *
+	 * @param bool   $condition Check condition.
+	 * @param string $block BEM Block selector.
+	 * @param string $element BEM Element selector.
+	 * @param string $modifier BEM Modifier selector.
+	 *
+	 * @return string
+	 */
+	public static function selectorCustom(bool $condition, string $block, string $element = '', string $modifier = ''): string
+	{
+		return $condition ? self::selectorB($block, $element, $modifier) : '';
+	}
 }
