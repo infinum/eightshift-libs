@@ -76,9 +76,6 @@ class AcfMetaCli extends AbstractCli
 		$class = $this->renameNamespace($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
 
-		error_log( print_r( ( $class ), true ) );
-		
-
 		// Output final class to new file/folder and finish.
 		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
 	}
