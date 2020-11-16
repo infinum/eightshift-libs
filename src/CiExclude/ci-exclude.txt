@@ -1,5 +1,11 @@
-/wp-content/themes/eightshift-boilerplate/node_modules
 .git
+.gitignore
+license.txt
+wp-config-sample.php
+readme.html
+README.md
+/bin
+/wp-content/themes/eightshift-boilerplate/node_modules
 /wp-content/themes/eightshift-boilerplate/.github
 /wp-content/themes/eightshift-boilerplate/bin
 /wp-content/themes/eightshift-boilerplate/.eslintignore
