@@ -3,12 +3,12 @@
 /**
  * File that holds class for AcfMetaExample custom meta registration.
  *
- * @package EightshiftLibs\CustomMeta
+ * @package EightshiftBoilerplate\CustomMeta
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\CustomMeta;
+namespace EightshiftBoilerplate\CustomMeta;
 
 use EightshiftLibs\CustomMeta\AbstractAcfMeta;
 

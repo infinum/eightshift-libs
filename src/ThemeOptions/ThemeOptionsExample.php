@@ -3,12 +3,12 @@
 /**
  * Class that adds ThemeOptionsExample capability.
  *
- * @package EightshiftLibs\ThemeOptions
+ * @package EightshiftBoilerplate\ThemeOptions
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\ThemeOptions;
+namespace EightshiftBoilerplate\ThemeOptions;
 
 use EightshiftLibs\Services\ServiceInterface;
 

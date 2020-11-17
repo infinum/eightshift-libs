@@ -3,14 +3,14 @@
 /**
  * The Language specific functionality.
  *
- * @package EightshiftLibs\I18n
+ * @package EightshiftBoilerplate\I18n
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\I18n;
+namespace EightshiftBoilerplate\I18n;
 
-use EightshiftLibs\Config\Config;
+use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\I18n\AbstractI18n;
 
 /**

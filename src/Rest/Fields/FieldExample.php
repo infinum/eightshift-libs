@@ -3,12 +3,12 @@
 /**
  * The class register field for example endpoint
  *
- * @package EightshiftLibs\Rest\Fields
+ * @package EightshiftBoilerplate\Rest\Fields
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Rest\Fields;
+namespace EightshiftBoilerplate\Rest\Fields;
 
 use EightshiftLibs\Rest\Fields\AbstractField;
 use EightshiftLibs\Rest\CallableFieldInterface;

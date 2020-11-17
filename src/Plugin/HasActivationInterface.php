@@ -3,7 +3,7 @@
 /**
  * File that holds Has_Activation interface
  *
- * @package EightshiftLibs\Core
+ * @package EightshiftLibs\Plugin
  */
 
 declare(strict_types=1);

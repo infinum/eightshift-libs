@@ -187,11 +187,6 @@ trait CliHelpers
 	/**
 	 * Replace namespace EightshiftBoilerplateVendor\ in class
 	 *
-	 * Note: ASCII is used because of composer imposter plugin we are using for prefixing vendors.
-	 *
-	 * \x6E\x61\x6D\x65\x73\x70\x61\x63\x65 - Corresponds to "namespace".
-	 * \x40\x70\x61\x63\x6B\x61\x67\x65 - Corresponds to "@package".
-	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
 	 *
@@ -202,30 +197,39 @@ trait CliHelpers
 	public function renameNamespace(array $args = [], string $string = ''): string
 	{
 		$namespace = $this->getNamespace($args);
+		$vendorPrefix = $this->getVendorPrefix($args);
 
-		// Namespace.
-		$class = preg_replace(
-			'/\x40\x70\x61\x63\x6B\x61\x67\x65 (w+|\w+)/',
-			"\x40\x70\x61\x63\x6B\x61\x67\x65 {$namespace}",
-			$string
-		);
+		if (function_exists('\add_action')) {
+			$output = str_replace(
+				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
+				"namespace {$namespace}\\",
+				$string
+			);
+	
+			$output = str_replace(
+				"@package {$vendorPrefix}\EightshiftBoilerplate\\",
+				"@package {$namespace}\\",
+				$string
+			);
+		} else {
+			$output = str_replace(
+				'namespace EightshiftBoilerplate\\',
+				"namespace {$namespace}\\",
+				$string
+			);
+	
+			$output = str_replace(
+				'@package EightshiftBoilerplate\\',
+				"@package {$namespace}\\",
+				$string
+			);
+		}
 
-		// @package.
-		$class = preg_replace(
-			'/\x6E\x61\x6D\x65\x73\x70\x61\x63\x65 (w+|\w+\\\\){1,2}/',
-			"\x6E\x61\x6D\x65\x73\x70\x61\x63\x65 {$namespace}\\",
-			(string)$class
-		);
-
-		return (string)$class;
+		return (string)$output;
 	}
 
 	/**
 	 * Replace use in class
-	 *
-	 * Note: ASCII is used because of composer imposter plugin we are using for prefixing vendors.
-	 *
-	 * \x75\x73\x65 - Corresponds to "use".
 	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
@@ -238,25 +242,26 @@ trait CliHelpers
 	{
 		$output = $string;
 
-		$prefix = "\x75\x73\x65";
-		$pattern = "/{$prefix} (w+|\w+\\\\)";
-
 		$vendorPrefix = $this->getVendorPrefix($args);
 		$namespace = $this->getNamespace($args);
 
-		// Rename all vendor prefix stuff.
-		$output = preg_replace(
-			"{$pattern}/",
-			"{$prefix} {$vendorPrefix}\\",
-			$output
-		);
+		if (function_exists('\add_action')) {
+			$output = str_replace(
+				"use {$vendorPrefix}\EightshiftBoilerplate\\",
+				"use {$namespace}\\",
+				$string
+			);
 
-		// Leave all project stuff.
-		if (preg_match("{$pattern}{$namespace}/", $string)) {
-			$output = preg_replace(
-				"{$pattern}{$namespace}/",
-				"{$prefix} {$namespace}",
-				(string) $output
+			$output = str_replace(
+				"use EightshiftBoilerplateVendor\\",
+				"use {$vendorPrefix}\\",
+				$string
+			);
+		} else {
+			$output = str_replace(
+				'use EightshiftBoilerplate\\',
+				"use {$namespace}\\",
+				$string
 			);
 		}
 
@@ -268,18 +273,17 @@ trait CliHelpers
 	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
-	 * @param string $name Name of lib to rename.
 	 *
 	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
-	public function renameTextDomain(array $args = [], string $string = '', string $name = 'eightshift-libs'): string
+	public function renameTextDomain(array $args = [], string $string = ''): string
 	{
 		$namespace = $this->getNamespace($args);
 
 		return str_replace(
-			$name,
+			'eightshift-libs',
 			$namespace,
 			$string
 		);
@@ -297,7 +301,13 @@ trait CliHelpers
 	 */
 	public function renameTextDomainFrontendLibs(array $args = [], string $string = ''): string
 	{
-		return $this->renameTextDomain($args, $string, 'eightshift-boilerplate');
+		$namespace = $this->getNamespace($args);
+
+		return str_replace(
+			'eightshift-boilerplate',
+			$namespace,
+			$string
+		);
 	}
 
 	/**

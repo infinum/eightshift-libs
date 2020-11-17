@@ -6,12 +6,12 @@
  * A class definition that includes attributes and functions used across both the
  * theme-facing side of the site and the admin area.
  *
- * @package EightshiftLibs\Main
+ * @package EightshiftBoilerplate\Main
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Main;
+namespace EightshiftBoilerplate\Main;
 
 use EightshiftLibs\Main\AbstractMain;
 

@@ -41,7 +41,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"EightshiftLibs\\": "src/"
+			"EightshiftLibs\\": "src/",
+			"EightshiftBoilerplate\\": "src/"
 		}
 	},
 	"minimum-stability": "dev",
