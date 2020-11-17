@@ -196,6 +196,7 @@ trait CliHelpers
 	 */
 	public function renameNamespace(array $args = [], string $string = ''): string
 	{
+		$output = $string;
 		$namespace = $this->getNamespace($args);
 		$vendorPrefix = $this->getVendorPrefix($args);
 
@@ -203,25 +204,25 @@ trait CliHelpers
 			$output = str_replace(
 				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
 				"namespace {$namespace}\\",
-				$string
+				$output
 			);
-	
+
 			$output = str_replace(
 				"@package {$vendorPrefix}\EightshiftBoilerplate\\",
 				"@package {$namespace}\\",
-				$string
+				$output
 			);
 		} else {
 			$output = str_replace(
 				'namespace EightshiftBoilerplate\\',
 				"namespace {$namespace}\\",
-				$string
+				$output
 			);
 	
 			$output = str_replace(
 				'@package EightshiftBoilerplate\\',
 				"@package {$namespace}\\",
-				$string
+				$output
 			);
 		}
 
@@ -245,23 +246,26 @@ trait CliHelpers
 		$vendorPrefix = $this->getVendorPrefix($args);
 		$namespace = $this->getNamespace($args);
 
+		$prefix = 'use';
+
 		if (function_exists('\add_action')) {
 			$output = str_replace(
-				"use {$vendorPrefix}\EightshiftBoilerplate\\",
-				"use {$namespace}\\",
-				$string
+				"{$prefix} EightshiftBoilerplateVendor\\",
+				"{$prefix} {$vendorPrefix}\\",
+				$output
 			);
 
 			$output = str_replace(
-				"use EightshiftBoilerplateVendor\\",
-				"use {$vendorPrefix}\\",
-				$string
+				"{$prefix} {$vendorPrefix}\EightshiftBoilerplate\\",
+				"{$prefix} {$namespace}\\",
+				$output
 			);
+
 		} else {
 			$output = str_replace(
-				'use EightshiftBoilerplate\\',
-				"use {$namespace}\\",
-				$string
+				"{$prefix} EightshiftBoilerplate\\",
+				"{$prefix} {$namespace}\\",
+				$output
 			);
 		}
 
