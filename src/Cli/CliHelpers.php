@@ -654,6 +654,33 @@ trait CliHelpers
 	 */
 	public function getSkipExisting(array $args): bool
 	{
-		return $args['skip_existing'] ?? false;
+		return (bool) $args['skip_existing'] ?? false;
+	}
+
+	/**
+	 * Prepate Command Dosc for output
+	 *
+	 * @param array $docs Command docs array.
+	 * @param array $docsGlobal Global docs array.
+	 *
+	 * @return array
+	 */
+	public function prepareCommandDocs($docs, $docsGlobal): array
+	{
+		$shortdesc = $docs['shortdesc'] ?? '';
+
+		if (! $shortdesc) {
+			throw new \RuntimeException('CLI Short description is missing.');
+		}
+
+		$synopsis = $docs['synopsis'] ?? [];
+
+		return [
+			'shortdesc' => $shortdesc,
+			'synopsis' => array_merge(
+				$docsGlobal['synopsis'],
+				$synopsis,
+			)
+		];
 	}
 }

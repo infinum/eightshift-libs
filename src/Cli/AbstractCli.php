@@ -119,10 +119,7 @@ abstract class AbstractCli implements CliInterface
 		\WP_CLI::add_command(
 			$this->commandParentName . ' ' . $this->getCommandName(),
 			$class,
-			array_merge(
-				$this->getGlobalSynopsis(),
-				$this->getDoc()
-			)
+			$this->prepareCommandDocs($this->getDoc(), $this->getGlobalSynopsis())
 		);
 	}
 
@@ -176,15 +173,5 @@ abstract class AbstractCli implements CliInterface
 	public function getCommandName(): string
 	{
 		return 'create_' . strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
-	}
-
-	/**
-	 * Get WPCLI command doc
-	 *
-	 * @return array
-	 */
-	public function getDoc(): array
-	{
-		return [];
 	}
 }
