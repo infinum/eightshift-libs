@@ -260,7 +260,6 @@ trait CliHelpers
 				"{$prefix} {$namespace}\\",
 				$output
 			);
-
 		} else {
 			$output = str_replace(
 				"{$prefix} EightshiftBoilerplate\\",
