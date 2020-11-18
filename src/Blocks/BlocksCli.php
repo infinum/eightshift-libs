@@ -77,21 +77,12 @@ class BlocksCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Generates Blocks class.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'all',
-					'description' => 'Copy all blocks and component in your project.',
-					'optional' => true,
-				],
-			],
 		];
 	}
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$className = $this->getClassShortName();
-		$all = $assocArgs['all'] ?? 'false';
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $className);
@@ -103,7 +94,7 @@ class BlocksCli extends AbstractCli
 		$class = $this->renameUse($assocArgs, $class);
 
 		if (function_exists('\add_action')) {
-			$this->blocksInit((bool) $all);
+			$this->blocksInit();
 		}
 
 		// Output final class to new file/folder and finish.
@@ -113,11 +104,9 @@ class BlocksCli extends AbstractCli
 	/**
 	 * Copy blocks from Eightshift-frontend-libs to project
 	 *
-	 * @param bool $all Copy all from Eightshift-frontend-libs to project or selective from the list.
-	 *
 	 * @return void
 	 */
-	public function blocksInit(bool $all = false): void
+	public function blocksInit(): void
 	{
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
@@ -141,22 +130,18 @@ class BlocksCli extends AbstractCli
 		system("cp -R {$rootNode}/assets/. {$folders['assetsGlobal']}/");
 		system("cp -R {$rootNode}/storybook/. {$folders['storybook']}/");
 
-		if ($all) {
-			system("cp -R {$rootNode}/src/Blocks/. {$folders['blocks']}/");
-		} else {
-			system("cp -R {$rootNode}/src/Blocks/assets/. {$folders['assets']}/");
-			system("cp -R {$rootNode}/src/Blocks/variations/. {$folders['variations']}/");
-			system("cp -R {$rootNode}/src/Blocks/manifest.json {$folders['blocks']}/");
+		system("cp -R {$rootNode}/src/Blocks/assets/. {$folders['assets']}/");
+		system("cp -R {$rootNode}/src/Blocks/variations/. {$folders['variations']}/");
+		system("cp -R {$rootNode}/src/Blocks/manifest.json {$folders['blocks']}/");
 
-			\WP_CLI::runcommand("{$this->commandParentName} use_wrapper");
+		\WP_CLI::runcommand("{$this->commandParentName} use_wrapper");
 
-			foreach (static::COMPONENTS as $component) {
-				\WP_CLI::runcommand("{$this->commandParentName} use_component --name={$component}");
-			}
+		foreach (static::COMPONENTS as $component) {
+			\WP_CLI::runcommand("{$this->commandParentName} use_component --name={$component}");
+		}
 
-			foreach (static::BLOCKS as $block) {
-				\WP_CLI::runcommand("{$this->commandParentName} use_block --name='{$block}'");
-			}
+		foreach (static::BLOCKS as $block) {
+			\WP_CLI::runcommand("{$this->commandParentName} use_block --name='{$block}'");
 		}
 
 		\WP_CLI::success('Blocks successfully set.');
