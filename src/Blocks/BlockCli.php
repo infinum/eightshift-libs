@@ -118,7 +118,7 @@ class BlockCli extends AbstractCli
 				$class = $this->renameProjectName($assocArgs, $class);
 				$class = $this->renameNamespace($assocArgs, $class);
 				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-				$class = $this->renameUse($assocArgs, $class);
+				$class = $this->renameUseFrontendLibs($assocArgs, $class);
 	
 				// Output final class to new file/folder and finish.
 				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);

@@ -276,6 +276,40 @@ trait CliHelpers
 	}
 
 	/**
+	 * Replace use in frontent libs views.
+	 *
+	 * @param array  $args CLI args array.
+	 * @param string $string Full class as a string.
+	 *
+	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
+	 *
+	 * @return string
+	 */
+	public function renameUseFrontendLibs(array $args = [], string $string = ''): string
+	{
+		$output = $string;
+
+		$vendorPrefix = $this->getVendorPrefix($args);
+		$namespace = $this->getNamespace($args);
+
+		$prefix = 'use';
+
+		$output = str_replace(
+			"{$prefix} EightshiftBoilerplateVendor\\",
+			"{$prefix} {$vendorPrefix}\\",
+			$output
+		);
+
+		$output = str_replace(
+			"{$prefix} EightshiftBoilerplate\\",
+			"{$prefix} {$namespace}\\",
+			$output
+		);
+
+		return (string)$output;
+	}
+
+	/**
 	 * Replace text domain in class
 	 *
 	 * @param array  $args CLI args array.
