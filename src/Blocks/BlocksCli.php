@@ -103,7 +103,7 @@ class BlocksCli extends AbstractCli
 		$class = $this->renameUse($assocArgs, $class);
 
 		if (function_exists('\add_action')) {
-			$this->blocksInit($all);
+			$this->blocksInit((bool) $all);
 		}
 
 		// Output final class to new file/folder and finish.
