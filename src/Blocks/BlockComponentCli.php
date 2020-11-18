@@ -60,6 +60,9 @@ class BlockComponentCli extends AbstractCli
 		// Get Props.
 		$name = $assocArgs['name'] ?? '';
 
+		// Set optional arguments.
+		$skipExisting = $this->getSkipExisting($assocArgs);
+
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
@@ -90,7 +93,7 @@ class BlockComponentCli extends AbstractCli
 		}
 
 		// Destination exists.
-		if (file_exists($destinationPath)) {
+		if (file_exists($destinationPath) && $skipExisting === false) {
 			\WP_CLI::error(
 			/* translators: %s will be replaced with the path. */
 				sprintf(

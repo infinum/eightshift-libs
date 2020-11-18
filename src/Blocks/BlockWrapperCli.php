@@ -52,6 +52,9 @@ class BlockWrapperCli extends AbstractCli
 		// Get Props.
 		$name = 'wrapper';
 
+		// Set optional arguments.
+		$skipExisting = $this->getSkipExisting($assocArgs);
+
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
@@ -61,7 +64,7 @@ class BlockWrapperCli extends AbstractCli
 		$destinationPath = $root . '/' . $path;
 
 		// Destination exists.
-		if (file_exists($destinationPath)) {
+		if (file_exists($destinationPath) && $skipExisting === false) {
 			\WP_CLI::error(
 			/* translators: %s will be replaced with the path. */
 				sprintf(

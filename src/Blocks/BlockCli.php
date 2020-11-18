@@ -60,6 +60,9 @@ class BlockCli extends AbstractCli
 		// Get Props.
 		$name = $assocArgs['name'] ?? '';
 
+		// Set optional arguments.
+		$skipExisting = $this->getSkipExisting($assocArgs);
+
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
@@ -90,7 +93,7 @@ class BlockCli extends AbstractCli
 		}
 
 		// Destination exists.
-		if (file_exists($destinationPath)) {
+		if (file_exists($destinationPath) && $skipExisting === false) {
 			\WP_CLI::error(
 				sprintf(
 					'The block in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
