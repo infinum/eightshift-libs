@@ -94,6 +94,10 @@ class CliInitTheme extends AbstractCli
 
 		\WP_CLI::log('--------------------------------------------------');
 
+		\WP_CLI::log((string)shell_exec('npm run start'));
+
+		\WP_CLI::log('--------------------------------------------------');
+
 		\WP_CLI::success('All commands are finished.');
 	}
 }
