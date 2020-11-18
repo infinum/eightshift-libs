@@ -118,6 +118,8 @@ class BlocksCli extends AbstractCli
 			'storybook' => "{$root}/.storybook",
 			'blocks' => "{$root}/src/Blocks",
 			'assets' => "{$root}/src/Blocks/assets",
+			'components' => "{$root}/src/Blocks/components",
+			'custom' => "{$root}/src/Blocks/custom",
 			'variations' => "{$root}/src/Blocks/variations",
 		];
 
