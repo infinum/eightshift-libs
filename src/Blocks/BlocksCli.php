@@ -90,14 +90,15 @@ class BlocksCli extends AbstractCli
 		// Replace stuff in file.
 		$class = $this->renameClassName($className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
+		$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
 		$class = $this->renameUse($assocArgs, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
 
 		if (function_exists('\add_action')) {
 			$this->blocksInit();
 		}
+
+		// Output final class to new file/folder and finish.
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
 	}
 
 	/**
@@ -112,27 +113,38 @@ class BlocksCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		system("cp -R {$rootNode}/assets {$root}/assets");
-		system("cp -R {$rootNode}/storybook {$root}/.storybook");
+		$folders = [
+			'assetsGlobal' => "{$root}/assets",
+			'storybook' => "{$root}/.storybook",
+			'blocks' => "{$root}/src/Blocks",
+			'assets' => "{$root}/src/Blocks/assets",
+			'variations' => "{$root}/src/Blocks/variations",
+		];
+
+		foreach ($folders as $folder) {
+			if (!file_exists($folder)) {
+				system("mkdir -p {$folder}");
+			}
+		}
+
+		system("cp -R {$rootNode}/assets/. {$folders['assetsGlobal']}/");
+		system("cp -R {$rootNode}/storybook/. {$folders['storybook']}/");
 
 		if ($all) {
-			system("cp -R {$rootNode}/src/Blocks {$root}/src/Blocks");
+			system("cp -R {$rootNode}/src/Blocks/. {$folders['blocks']}/");
 		} else {
-			system("cp -R {$rootNode}/src/Blocks/assets {$root}/src/Blocks/assets/");
-			system("cp -R {$rootNode}/src/Blocks/variations {$root}/src/Blocks/variations/");
-			system("cp -R {$rootNode}/src/blocks/wrapper {$root}/src/Blocks/wrapper/");
-			system("cp -R {$rootNode}/src/Blocks/manifest.json {$root}/src/Blocks/");
+			system("cp -R {$rootNode}/src/Blocks/assets/. {$folders['assets']}/");
+			system("cp -R {$rootNode}/src/Blocks/variations/. {$folders['variations']}/");
+			system("cp -R {$rootNode}/src/Blocks/manifest.json {$folders['blocks']}/");
+
+			\WP_CLI::runcommand("{$this->commandParentName} use_wrapper");
 
 			foreach (static::COMPONENTS as $component) {
-				system("mkdir -p {$root}/src/Blocks/components/{$component}/");
-				system(
-					"cp -R {$rootNode}/src/Blocks/components/{$component}/. {$root}/src/Blocks/components/{$component}/"
-				);
+				\WP_CLI::runcommand("{$this->commandParentName} use_component --name={$component}");
 			}
 
 			foreach (static::BLOCKS as $block) {
-				system("mkdir -p {$root}/src/Blocks/custom/{$block}/");
-				system("cp -R {$rootNode}/src/Blocks/custom/{$block}/. {$root}/src/Blocks/custom/{$block}/");
+				\WP_CLI::runcommand("{$this->commandParentName} use_block --name='{$block}'");
 			}
 		}
 

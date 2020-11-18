@@ -55,9 +55,9 @@ class BlockWrapperCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$path = static::OUTPUT_DIR . '/' . $name;
+		$path = static::OUTPUT_DIR;
 		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
-		$sourcePath = "{$sourcePathFolder}{$name}";
+		$sourcePath = "{$sourcePathFolder}";
 		$destinationPath = $root . '/' . $path;
 
 		// Destination exists.
@@ -69,6 +69,8 @@ class BlockWrapperCli extends AbstractCli
 					$destinationPath
 				)
 			);
+		} else {
+			system("mkdir -p {$destinationPath}/");
 		}
 
 		system("cp -R {$sourcePath}/. {$destinationPath}/");

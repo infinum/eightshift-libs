@@ -97,6 +97,8 @@ class BlockCli extends AbstractCli
 					$destinationPath
 				)
 			);
+		} else {
+			system("mkdir -p {$destinationPath}/");
 		}
 
 		system("cp -R {$sourcePath}/. {$destinationPath}/");
