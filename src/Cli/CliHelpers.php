@@ -308,7 +308,7 @@ trait CliHelpers
 		$namespace = $this->getNamespace($args);
 
 		return str_replace(
-			'eightshift-boilerplate',
+			'eightshift-frontend-libs',
 			$namespace,
 			$string
 		);
