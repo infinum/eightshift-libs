@@ -49,6 +49,6 @@ class ThemeOptionsCli extends AbstractCli
 		$class = $this->renameTextDomain($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
 	}
 }

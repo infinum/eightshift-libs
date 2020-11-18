@@ -97,6 +97,6 @@ class FieldCli extends AbstractCli
 		$class = str_replace('example-field', $fieldName, $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
 	}
 }

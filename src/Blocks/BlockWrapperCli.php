@@ -90,7 +90,7 @@ class BlockWrapperCli extends AbstractCli
 				$class = $this->renameUse($assocArgs, $class);
 	
 				// Output final class to new file/folder and finish.
-				$this->outputWrite($path, $file, $class, true);
+				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
 			}
 		}
 

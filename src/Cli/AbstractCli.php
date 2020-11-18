@@ -90,6 +90,12 @@ abstract class AbstractCli implements CliInterface
 					'description' => 'Define your project composer absolute path.',
 					'optional' => true,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'skip_existing',
+					'description' => 'If this value is set to true CLI commands will not fail it they find an existing files in your project',
+					'optional' => true,
+				],
 			],
 		];
 	}

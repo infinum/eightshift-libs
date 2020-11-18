@@ -99,6 +99,6 @@ class ServiceExampleCli extends AbstractCli
 		$class = str_replace('\\Services;', "{$newNamespace};", $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $classNameNew, $class);
+		$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $classNameNew, $class, $assocArgs);
 	}
 }

@@ -78,6 +78,6 @@ class GitIgnoreCli extends AbstractCli
 		$class = $this->getExampleTemplate(__DIR__, '.gitignore');
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, '.gitignore', $class);
+		$this->outputWrite($root, '.gitignore', $class, $assocArgs);
 	}
 }

@@ -93,6 +93,8 @@ class BuildCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 		$skipSetupFile = $assocArgs['skip_setup_file'] ?? true;
 
+		var_dump($assocArgs['skip_existing']);
+
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
@@ -102,14 +104,14 @@ class BuildCli extends AbstractCli
 		$class = $this->renameTextDomain($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root . 'bin', $this->getClassShortName(), $class);
+		$this->outputWrite($root . 'bin', $this->getClassShortName(), $class, $assocArgs);
 
 		if (!$skipSetupFile) {
 			// Get setup.json file.
 			$json = $this->getExampleTemplate(dirname(__DIR__, 1), 'setup/setup.json');
 
 			// Output json file to project root.
-			$this->outputWrite($root, 'setup.json', $json);
+			$this->outputWrite($root, 'setup.json', $json, $assocArgs);
 		}
 	}
 }

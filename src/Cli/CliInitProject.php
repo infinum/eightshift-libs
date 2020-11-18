@@ -11,19 +11,22 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
+use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
+use EightshiftLibs\Setup\SetupCli;
 
 /**
- * Class CliInitTheme
+ * Class CliInitProject
  */
-class CliInitTheme extends AbstractCli
+class CliInitProject extends AbstractCli
 {
 
 	/**
@@ -31,7 +34,7 @@ class CliInitTheme extends AbstractCli
 	 *
 	 * @var array
 	 */
-	public const INIT_THEME_CLASSES = [
+	public const INIT_PROJECT_CLASSES = [
 		ConfigCli::class,
 		MainCli::class,
 		ManifestCli::class,
@@ -39,6 +42,9 @@ class CliInitTheme extends AbstractCli
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
 		MenuCli::class,
+		GitIgnoreCli::class,
+		SetupCli::class,
+		CiExcludeCli::class,
 		BlocksCli::class,
 	];
 
@@ -49,7 +55,7 @@ class CliInitTheme extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_theme';
+		return 'init_project';
 	}
 
 	/**
@@ -60,7 +66,7 @@ class CliInitTheme extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for WordPress theme project.',
+			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project, for example: gitinore file for the full WordPress project, continuous integration exclude files, etc.',
 		];
 	}
 
@@ -71,7 +77,7 @@ class CliInitTheme extends AbstractCli
 			\WP_CLI::log('--------------------------------------------------');
 		}
 
-		foreach (static::INIT_THEME_CLASSES as $item) {
+		foreach (static::INIT_PROJECT_CLASSES as $item) {
 			$reflectionClass = new \ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 

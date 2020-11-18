@@ -46,6 +46,6 @@ class MainCli extends AbstractCli
 		$class = $this->renameUse($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $class);
+		$this->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $class, $assocArgs);
 	}
 }

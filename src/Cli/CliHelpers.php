@@ -93,14 +93,18 @@ trait CliHelpers
 	 * @param string $outputDir Absolute path to output from project root dir.
 	 * @param string $outputFile Absolute path to output file.
 	 * @param string $class Modified class.
-	 * @param bool   $skipExisting Skip existing file.
+	 * @param array  $args Optional arguments.
 	 *
 	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return void
 	 */
-	public function outputWrite(string $outputDir, string $outputFile, string $class, bool $skipExisting = false): void
+	public function outputWrite(string $outputDir, string $outputFile, string $class, array $args = []): void
 	{
+
+		// Set optional arguments.
+		$skipExisting = $this->getSkipExisting($args);
+
 		// Set output paths.
 		$outputDir = $this->getOutputDir($outputDir);
 
@@ -639,5 +643,17 @@ trait CliHelpers
 			"components/{$name}-responsive-tab-content.js",
 			"components/{$name}-responsive-tab-content-simple.js",
 		];
+	}
+
+	/**
+	 * Check and prepare default value for skip_existing arg.
+	 *
+	 * @param array $args Optional arguments.
+	 *
+	 * @return boolean
+	 */
+	public function getSkipExisting(array $args): bool
+	{
+		return $args['skip_existing'] ?? false;
 	}
 }

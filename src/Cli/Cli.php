@@ -108,6 +108,7 @@ class Cli
 	 */
 	public const SETUP_CLASSES = [
 		CliInitTheme::class,
+		CliInitProject::class,
 	];
 
 	/**
