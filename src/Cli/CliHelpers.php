@@ -685,4 +685,21 @@ trait CliHelpers
 			)
 		];
 	}
+
+	/**
+	 * Manualy prepare arguments to pass to runcommand method.
+	 *
+	 * @param array $args Arrya of arguments.
+	 *
+	 * @return string
+	 */
+	public function prepareArgsManual(array $args): string
+	{
+		$output = '';
+		foreach ($args as $key => $value) {
+			$output .= "--{$key}='{$value}' ";
+		}
+
+		return $output;
+	}
 }

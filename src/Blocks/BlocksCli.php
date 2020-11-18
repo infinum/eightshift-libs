@@ -94,7 +94,7 @@ class BlocksCli extends AbstractCli
 		$class = $this->renameUse($assocArgs, $class);
 
 		if (function_exists('\add_action')) {
-			$this->blocksInit();
+			$this->blocksInit($assocArgs);
 		}
 
 		// Output final class to new file/folder and finish.
@@ -104,9 +104,11 @@ class BlocksCli extends AbstractCli
 	/**
 	 * Copy blocks from Eightshift-frontend-libs to project
 	 *
+	 * @param array $args Arguments array.
+	 *
 	 * @return void
 	 */
-	public function blocksInit(): void
+	public function blocksInit(array $args): void
 	{
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
@@ -134,14 +136,14 @@ class BlocksCli extends AbstractCli
 		system("cp -R {$rootNode}/src/Blocks/variations/. {$folders['variations']}/");
 		system("cp -R {$rootNode}/src/Blocks/manifest.json {$folders['blocks']}/");
 
-		\WP_CLI::runcommand("{$this->commandParentName} use_wrapper");
+		\WP_CLI::runcommand("{$this->commandParentName} use_wrapper {$this->prepareArgsManual($args)}");
 
 		foreach (static::COMPONENTS as $component) {
-			\WP_CLI::runcommand("{$this->commandParentName} use_component --name={$component}");
+			\WP_CLI::runcommand("{$this->commandParentName} use_component --name='{$component}' {$this->prepareArgsManual($args)}");
 		}
 
 		foreach (static::BLOCKS as $block) {
-			\WP_CLI::runcommand("{$this->commandParentName} use_block --name='{$block}'");
+			\WP_CLI::runcommand("{$this->commandParentName} use_block --name='{$block}' {$this->prepareArgsManual($args)}");
 		}
 
 		\WP_CLI::success('Blocks successfully set.');

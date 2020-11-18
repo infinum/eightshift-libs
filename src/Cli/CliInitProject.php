@@ -83,9 +83,9 @@ class CliInitProject extends AbstractCli
 
 			if (method_exists($class, 'getCommandName')) {
 				if (function_exists('\add_action')) {
-					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()}");
+					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
 				} else {
-					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
 				}
 			}
 		}
