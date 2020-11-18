@@ -93,8 +93,6 @@ class BuildCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 		$skipSetupFile = $assocArgs['skip_setup_file'] ?? true;
 
-		var_dump($assocArgs['skip_existing']);
-
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 

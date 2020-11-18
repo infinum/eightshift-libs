@@ -663,6 +663,8 @@ trait CliHelpers
 	 * @param array $docs Command docs array.
 	 * @param array $docsGlobal Global docs array.
 	 *
+	 * @throws \RuntimeException Error in case the shortdesc is missing in command docs.
+	 *
 	 * @return array
 	 */
 	public function prepareCommandDocs($docs, $docsGlobal): array
@@ -679,7 +681,7 @@ trait CliHelpers
 			'shortdesc' => $shortdesc,
 			'synopsis' => array_merge(
 				$docsGlobal['synopsis'],
-				$synopsis,
+				$synopsis
 			)
 		];
 	}
