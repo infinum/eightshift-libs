@@ -77,12 +77,21 @@ class BlocksCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Generates Blocks class.',
+			'synopsis' => [
+				[
+					'type' => 'assoc',
+					'name' => 'all',
+					'description' => 'Copy all blocks and component in your project.',
+					'optional' => true,
+				],
+			],
 		];
 	}
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$className = $this->getClassShortName();
+		$all = $assocArgs['all'] ?? 'false';
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $className);
@@ -94,7 +103,7 @@ class BlocksCli extends AbstractCli
 		$class = $this->renameUse($assocArgs, $class);
 
 		if (function_exists('\add_action')) {
-			$this->blocksInit();
+			$this->blocksInit($all);
 		}
 
 		// Output final class to new file/folder and finish.
