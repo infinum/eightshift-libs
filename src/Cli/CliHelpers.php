@@ -674,8 +674,6 @@ trait CliHelpers
 			"components/{$name}-editor.js",
 			"components/{$name}-toolbar.js",
 			"components/{$name}-options.js",
-			"components/{$name}-responsive-tab-content.js",
-			"components/{$name}-responsive-tab-content-simple.js",
 		];
 	}
 
