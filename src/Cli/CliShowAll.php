@@ -28,6 +28,18 @@ class CliShowAll extends AbstractCli
 		return 'show_all';
 	}
 
+	/**
+	 * Get WPCLI command doc.
+	 *
+	 * @return array
+	 */
+	public function getDoc(): array
+	{
+		return [
+			'shortdesc' => 'DEVELOP - Used to show all commands.',
+		];
+	}
+
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli and development:%n'));

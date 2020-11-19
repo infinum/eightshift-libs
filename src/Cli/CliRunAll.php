@@ -28,6 +28,18 @@ class CliRunAll extends AbstractCli
 		return 'run_all';
 	}
 
+	/**
+	 * Get WPCLI command doc.
+	 *
+	 * @return array
+	 */
+	public function getDoc(): array
+	{
+		return [
+			'shortdesc' => 'DEVELOP - Used to run all commands.',
+		];
+	}
+
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$this->runReset();

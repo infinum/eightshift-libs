@@ -42,10 +42,10 @@ class CliInitProject extends AbstractCli
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
 		MenuCli::class,
+		BlocksCli::class,
 		GitIgnoreCli::class,
 		SetupCli::class,
 		CiExcludeCli::class,
-		BlocksCli::class,
 	];
 
 	/**

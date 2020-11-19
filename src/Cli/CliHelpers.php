@@ -688,7 +688,7 @@ trait CliHelpers
 	 */
 	public function getSkipExisting(array $args): bool
 	{
-		return (bool) $args['skip_existing'] ?? false;
+		return (bool) isset($args['skip_existing']) ? $args['skip_existing'] : false;
 	}
 
 	/**

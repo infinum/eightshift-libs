@@ -14,6 +14,7 @@ use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli, BlockWrapperC
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\View\EscapedViewCli;
 use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
@@ -76,7 +77,7 @@ class Cli
 		FieldCli::class,
 		RouteCli::class,
 		ServiceExampleCli::class,
-		// BuildCli::class,
+		BuildCli::class,
 		ReadmeCli::class,
 		GitIgnoreCli::class,
 		CiExcludeCli::class,
@@ -84,7 +85,8 @@ class Cli
 		// LintPhpCli::class,
 		AcfMetaCli::class,
 		EscapedViewCli::class,
-		ThemeOptionsCli::class
+		ThemeOptionsCli::class,
+		ConfigProjectCli::class,
 	];
 
 	/**
