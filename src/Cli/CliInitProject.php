@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Config\ConfigCli;
@@ -46,6 +47,7 @@ class CliInitProject extends AbstractCli
 		GitIgnoreCli::class,
 		SetupCli::class,
 		CiExcludeCli::class,
+		BuildCli::class,
 	];
 
 	/**
