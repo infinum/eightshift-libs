@@ -50,14 +50,16 @@ trait CliHelpers
 	 *
 	 * @param string $currentDir Absolute path to dir where example is.
 	 * @param string $fileName File Name of example.
-	 * @param bool   $skipExisting Skip existing file.
+	 * @param bool   $skipMissing Skip existing file.
 	 *
 	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
-	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipExisting = false): string
+	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): string
 	{
+		$templateFile = '';
+
 		// If you pass file name with extension the version will be used.
 		if (strpos($fileName, '.') !== false) {
 			$path = "{$currentDir}/{$fileName}";
@@ -66,10 +68,14 @@ trait CliHelpers
 		}
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$templateFile = file_get_contents($path);
-
-		if ($templateFile === false && $skipExisting === false) {
-			\WP_CLI::error("The template {$path} seems to be missing.");
+		if (file_exists($path)) {
+			$templateFile = file_get_contents($path);
+		} else {
+			if ($skipMissing) {
+				$templateFile = '';
+			} else {
+				\WP_CLI::error("The template {$path} seems to be missing.");
+			}
 		}
 
 		return (string)$templateFile;
@@ -686,7 +692,7 @@ trait CliHelpers
 	 */
 	public function getSkipExisting(array $args): bool
 	{
-		return (bool) isset($args['skip_existing']) ? $args['skip_existing'] : false;
+		return isset($args['skip_existing']) ? (bool) $args['skip_existing'] : false;
 	}
 
 	/**
