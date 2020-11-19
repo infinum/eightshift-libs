@@ -80,8 +80,6 @@ class ConfigProjectCli extends AbstractCli
 		$env = $assocArgs['env'] ?? '';
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
-		var_dump($root);
-
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
