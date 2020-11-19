@@ -38,9 +38,13 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 */
 	public function setAssetsManifestRaw(): void
 	{
+		if(defined('WP_CLI')) {
+			return;
+		}
+
 		$path = $this->getManifestFilePath();
 
-		if (!file_exists($path) && ! defined('WP_CLI')) {
+		if (!file_exists($path)) {
 			throw InvalidManifest::missingManifestException($path);
 		}
 
@@ -70,9 +74,13 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 */
 	public function getAssetsManifestItem(string $key): string
 	{
+		if(defined('WP_CLI')) {
+			return '';
+		}
+
 		$manifest = $this->manifest;
 
-		if (!isset($manifest[$key]) && ! defined('WP_CLI')) {
+		if (!isset($manifest[$key])) {
 			throw InvalidManifest::missingManifestItemException($key);
 		}
 
