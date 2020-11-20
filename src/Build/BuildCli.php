@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Build;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class BuildCli
@@ -87,13 +88,21 @@ class BuildCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		try {
+			$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		// Replace stuff in file.
 		$class = $this->renameProjectName($assocArgs, $class);
 		$class = $this->renameProjectType($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root . 'bin', 'build.sh', $class, $assocArgs);
+		try {
+			$this->outputWrite($root . 'bin', 'build.sh', $class, $assocArgs);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

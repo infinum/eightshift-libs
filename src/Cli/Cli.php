@@ -35,7 +35,6 @@ use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\{ExportCli, ImportCli};
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
-use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;

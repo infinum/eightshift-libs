@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\ModifyAdminAppearance;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class ModifyAdminAppearanceCli
@@ -40,14 +41,33 @@ class ModifyAdminAppearanceCli extends AbstractCli
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $className);
+		try {
+			$class = $this->getExampleTemplate(__DIR__, $className);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		// Replace stuff in file.
 		$class = $this->renameClassName($className, $class);
-		$class = $this->renameNamespace($assocArgs, $class);
-		$class = $this->renameUse($assocArgs, $class);
+
+		try {
+			$class = $this->renameNamespace($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
+		try {
+			$class = $this->renameUse($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		try {
+			$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\GitIgnore;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class GitIgnoreCli
@@ -75,9 +76,17 @@ class GitIgnoreCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, '.gitignore');
+		try {
+			$class = $this->getExampleTemplate(__DIR__, '.gitignore');
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, '.gitignore', $class, $assocArgs);
+		try {
+			$this->outputWrite($root, '.gitignore', $class, $assocArgs);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

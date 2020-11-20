@@ -26,10 +26,7 @@ class AcfMetaExample extends AbstractAcfMeta
 	public function fields(): void
 	{
 		if (function_exists('acf_add_local_field_group')) {
-			\acf_add_local_field_group(
-				[
-				]
-			);
+			\acf_add_local_field_group([]);
 		}
 	}
 }

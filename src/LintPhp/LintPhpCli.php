@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\LintPhp;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class LintPhpCli
@@ -64,8 +65,11 @@ class LintPhpCli extends AbstractCli
 		\WP_CLI::log($output);
 
 		if (preg_match('/ERROR/', $output) || preg_match('/WARNING/', $output)) {
-			\WP_CLI::error('Please fix all linting issues before continuing.');
-			die;
+			try {
+				\WP_CLI::error('Please fix all linting issues before continuing.');
+			} catch (ExitException $e) {
+				exit("{$e->getCode()}: {$e->getMessage()}");
+			}
 		}
 
 		\WP_CLI::success('Success! You have no linting issues.');

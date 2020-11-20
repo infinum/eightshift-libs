@@ -43,21 +43,45 @@ class CliShowAll extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli and development:%n'));
-		$this->getEvalLoop(Cli::CLASSES_LIST);
+
+		try {
+			$this->getEvalLoop(Cli::CLASSES_LIST);
+		} catch (\ReflectionException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli only:%n'));
-		$this->getEvalLoop(Cli::PUBLIC_CLASSES);
+
+		try {
+			$this->getEvalLoop(Cli::PUBLIC_CLASSES);
+		} catch (\ReflectionException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for development:%n'));
-		$this->getEvalLoop(Cli::DEVELOP_CLASSES);
+
+		try {
+			$this->getEvalLoop(Cli::DEVELOP_CLASSES);
+		} catch (\ReflectionException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for project setup:%n'));
-		$this->getEvalLoop(Cli::SETUP_CLASSES);
+
+		try {
+			$this->getEvalLoop(Cli::SETUP_CLASSES);
+		} catch (\ReflectionException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		\WP_CLI::log('-----------------------------------------');
 
-		\WP_CLI::success('All commands are outputed.');
+		\WP_CLI::success('All commands are outputted.');
 	}
 }

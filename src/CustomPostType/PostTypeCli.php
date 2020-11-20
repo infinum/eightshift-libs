@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\CustomPostType;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class PostTypeCli
@@ -117,13 +118,34 @@ class PostTypeCli extends AbstractCli
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		try {
+			$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		// Replace stuff in file.
 		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
-		$class = $this->renameNamespace($assocArgs, $class);
-		$class = $this->renameUse($assocArgs, $class);
-		$class = $this->renameTextDomain($assocArgs, $class);
+
+		try {
+			$class = $this->renameNamespace($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
+		try {
+			$class = $this->renameUse($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
+		try {
+			$class = $this->renameTextDomain($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
+
 		$class = str_replace('example-slug', $slug, $class);
 		$class = str_replace('example-url-slug', $rewriteUrl, $class);
 		$class = str_replace('example-endpoint-slug', $restEndpointSlug, $class);
@@ -142,6 +164,10 @@ class PostTypeCli extends AbstractCli
 		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		try {
+			$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

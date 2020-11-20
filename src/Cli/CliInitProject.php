@@ -13,7 +13,6 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
-use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
@@ -68,7 +67,7 @@ class CliInitProject extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project, for example: gitinore file for the full WordPress project, continuous integration exclude files, etc.',
+			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project, for example: gitignore file for the full WordPress project, continuous integration exclude files, etc.',
 		];
 	}
 
@@ -80,7 +79,12 @@ class CliInitProject extends AbstractCli
 		}
 
 		foreach (static::INIT_PROJECT_CLASSES as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			try {
+				$reflectionClass = new \ReflectionClass($item);
+			} catch (\ReflectionException $e) {
+				exit("{$e->getCode()}: {$e->getMessage()}");
+			}
+
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 			if (method_exists($class, 'getCommandName')) {

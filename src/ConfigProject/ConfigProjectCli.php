@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\ConfigProject;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class ConfigProjectCli
@@ -81,17 +82,29 @@ class ConfigProjectCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		try {
+			$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		// Replace stuff in file.
-		$class = $this->renameTextDomain($assocArgs, $class);
+		try {
+			$class = $this->renameTextDomain($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		if (!empty($env)) {
 			$class = str_replace('EB_ENV', $env, $class);
 		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, 'wp-config-project.php', $class, $assocArgs);
+		try {
+			$this->outputWrite($root, 'wp-config-project.php', $class, $assocArgs);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		\WP_CLI::success("Please do the following steps manually to complete the setup:");
 		\WP_CLI::success("1. In wp-config.php - Make sure to define your env const {$env} to 'develop' like so: <?php define( '{$env}', 'develop' ); ?>`");

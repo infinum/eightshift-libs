@@ -31,7 +31,7 @@ define('AUTOSAVE_INTERVAL', 240);
 // Disable automatic updating of plugins.
 define('AUTOMATIC_UPDATER_DISABLED', true);
 
-// Enable debug and error loging.
+// Enable debug and error logging.
 define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', true);
 
@@ -45,7 +45,7 @@ if (EB_ENV === 'develop') {
 	// Enable direct upload from admin.
 	define('FS_METHOD', 'direct');
 
-	// Enable debug and error loging.
+	// Enable debug and error logging.
 	define('WP_DEBUG_DISPLAY', true);
 } else {
 	// Disable plugins / themes updates from admin.
@@ -54,6 +54,6 @@ if (EB_ENV === 'develop') {
 	// Force login to admin with ssl.
 	define('FORCE_SSL_LOGIN', true);
 
-	// Enable debug and error loging.
+	// Enable debug and error logging.
 	define('WP_DEBUG_DISPLAY', false);
 }

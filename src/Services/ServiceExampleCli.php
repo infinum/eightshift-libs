@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class ServiceExampleCli
@@ -80,12 +81,27 @@ class ServiceExampleCli extends AbstractCli
 		$classNameNew = $this->getFileName($fileName);
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, static::TEMPLATE);
+		try {
+			$class = $this->getExampleTemplate(__DIR__, static::TEMPLATE);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		// Replace stuff in file.
 		$class = str_replace($className, $classNameNew, $class);
-		$class = $this->renameNamespace($assocArgs, $class);
-		$class = $this->renameUse($assocArgs, $class);
+
+		try {
+			$class = $this->renameNamespace($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
+		try {
+			$class = $this->renameUse($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 
 		// Create new namespace from folder structure.
 		$folderParts = array_map(
@@ -99,6 +115,10 @@ class ServiceExampleCli extends AbstractCli
 		$class = str_replace('\\Services;', "{$newNamespace};", $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $classNameNew, $class, $assocArgs);
+		try {
+			$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $classNameNew, $class, $assocArgs);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

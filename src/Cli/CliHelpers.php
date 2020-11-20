@@ -148,7 +148,6 @@ trait CliHelpers
 		}
 
 		\WP_CLI::error("File {$outputFile} couldn\'t be created. There was an error.");
-		return;
 	}
 
 	/**
@@ -200,7 +199,7 @@ trait CliHelpers
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
 	 *
-	 * @throws ExitException Exception in case of WP-CLI error.
+	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
@@ -228,7 +227,7 @@ trait CliHelpers
 				"namespace {$namespace}\\",
 				$output
 			);
-	
+
 			$output = str_replace(
 				'@package EightshiftBoilerplate\\',
 				"@package {$namespace}\\",
@@ -282,7 +281,7 @@ trait CliHelpers
 	}
 
 	/**
-	 * Replace use in frontent libs views.
+	 * Replace use in frontend libs views.
 	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
@@ -696,7 +695,7 @@ trait CliHelpers
 	}
 
 	/**
-	 * Prepate Command Dosc for output
+	 * Prepare Command Doc for output
 	 *
 	 * @param array $docs Command docs array.
 	 * @param array $docsGlobal Global docs array.
@@ -705,7 +704,7 @@ trait CliHelpers
 	 *
 	 * @return array
 	 */
-	public function prepareCommandDocs($docs, $docsGlobal): array
+	public function prepareCommandDocs(array $docs, array $docsGlobal): array
 	{
 		$shortdesc = $docs['shortdesc'] ?? '';
 
@@ -725,9 +724,9 @@ trait CliHelpers
 	}
 
 	/**
-	 * Manualy prepare arguments to pass to runcommand method.
+	 * Manually prepare arguments to pass to runcommand method.
 	 *
-	 * @param array $args Arrya of arguments.
+	 * @param array $args Array of arguments.
 	 *
 	 * @return string
 	 */

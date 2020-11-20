@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Readme;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class ReadmeCli
@@ -75,9 +76,17 @@ class ReadmeCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, 'README-project.md');
+		try {
+			$class = $this->getExampleTemplate(__DIR__, 'README-project.md');
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, 'README-project.md', $class, $assocArgs);
+		try {
+			$this->outputWrite($root, 'README-project.md', $class, $assocArgs);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

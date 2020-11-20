@@ -45,7 +45,13 @@ class CliRunAll extends AbstractCli
 		$this->runReset();
 
 		\WP_CLI::log('--------------------------------------------------');
-		$this->getEvalLoop(Cli::CLASSES_LIST, true);
+
+		try {
+			$this->getEvalLoop(Cli::CLASSES_LIST, true);
+		} catch (\ReflectionException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		\WP_CLI::log('--------------------------------------------------');
 
 		\WP_CLI::success('All commands are finished.');

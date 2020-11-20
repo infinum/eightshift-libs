@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Db;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class ExportCli
@@ -58,12 +59,16 @@ class ExportCli extends AbstractCli
 	{
 		require $this->getLibsPath('src/Db/DbExport.php');
 
-		dbExport(
-			$this->getProjectConfigRootPath(),
-			[
-				'skip_db' => $assocArgs['skip_db'] ?? false,
-				'skip_uploads' => $assocArgs['skip_uploads'] ?? false,
-			]
-		);
+		try {
+			dbExport(
+				$this->getProjectConfigRootPath(),
+				[
+					'skip_db' => $assocArgs['skip_db'] ?? false,
+					'skip_uploads' => $assocArgs['skip_uploads'] ?? false,
+				]
+			);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

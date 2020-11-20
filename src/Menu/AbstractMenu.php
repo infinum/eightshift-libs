@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Menu;
 
-use EightshiftLibs\Menu\MenuPositionsInterface;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**

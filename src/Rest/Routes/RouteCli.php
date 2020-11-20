@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class RouteCli
@@ -100,16 +101,34 @@ class RouteCli extends AbstractCli
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		try {
+			$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 
 		// Replace stuff in file.
 		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
-		$class = $this->renameNamespace($assocArgs, $class);
-		$class = $this->renameUse($assocArgs, $class);
+		try {
+			$class = $this->renameNamespace($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
+		try {
+			$class = $this->renameUse($assocArgs, $class);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		$class = str_replace('/example-route', "/{$endpointSlug}", $class);
 		$class = str_replace('static::READABLE', static::VERB_ENUM[$method], $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		try {
+			$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

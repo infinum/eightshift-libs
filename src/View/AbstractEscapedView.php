@@ -73,7 +73,6 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'stroke' => true,
 		],
 		'g' => [
-			'transform' => true,
 			'fill' => true,
 			'fill-rule' => true,
 			'style' => true,
