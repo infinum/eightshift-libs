@@ -27,7 +27,6 @@
     "php": "^7.2",
     "ext-json": "*",
     "ext-libxml": "*",
-    "ext-http": "*",
     "ext-dom": "*",
     "php-di/php-di": "^6.3.0",
     "php-di/invoker": "^2.0"
