@@ -1,6 +1,5 @@
 {
   "name": "infinum/eightshift-libs",
-  "version": "3.0.0",
   "description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
   "keywords": [
     "composer",
@@ -31,7 +30,7 @@
     "ext-http": "*",
     "ext-dom": "*",
     "php-di/php-di": "^6.3.0",
-    "php-di/invoker": "2.0"
+    "php-di/invoker": "^2.0"
   },
   "require-dev": {
     "codeception/codeception": "^4.1",
