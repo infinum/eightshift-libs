@@ -39,7 +39,6 @@ use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
-use WP_CLI\ExitException;
 
 /**
  * Class Cli
@@ -157,7 +156,6 @@ class Cli
 	 *
 	 * @param array $args WPCLI eval-file arguments.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 * @throws \ReflectionException Exception if the class doesn't exist.
 	 *
 	 * @return void
@@ -167,7 +165,7 @@ class Cli
 		$commandName = $args[0] ?? '';
 
 		if (empty($commandName)) {
-			\WP_CLI::error('First argument must be a valid command name.');
+			CliHelpers::cliError('First argument must be a valid command name.');
 		}
 
 		foreach ($this->getDevelopClasses() as $item) {

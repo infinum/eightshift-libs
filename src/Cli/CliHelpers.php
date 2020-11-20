@@ -52,8 +52,6 @@ trait CliHelpers
 	 * @param string $fileName File Name of example.
 	 * @param bool   $skipMissing Skip existing file.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
-	 *
 	 * @return string
 	 */
 	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): string
@@ -74,7 +72,7 @@ trait CliHelpers
 			if ($skipMissing) {
 				$templateFile = '';
 			} else {
-				\WP_CLI::error("The template {$path} seems to be missing.");
+				self::cliError("The template {$path} seems to be missing.");
 			}
 		}
 
@@ -101,8 +99,6 @@ trait CliHelpers
 	 * @param string $class Modified class.
 	 * @param array  $args Optional arguments.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
-	 *
 	 * @return void
 	 */
 	public function outputWrite(string $outputDir, string $outputFile, string $class, array $args = []): void
@@ -120,8 +116,7 @@ trait CliHelpers
 
 		// Bailout if file already exists.
 		if (file_exists($outputFile) && $skipExisting === false) {
-			\WP_CLI::error("The file {$outputFile} can\'t be generated because it already exists.");
-			return;
+			self::cliError("The file {$outputFile} can\'t be generated because it already exists.");
 		}
 
 		// Create output dir if it doesn't exist.
@@ -147,7 +142,7 @@ trait CliHelpers
 			return;
 		}
 
-		\WP_CLI::error("File {$outputFile} couldn\'t be created. There was an error.");
+		self::cliError("File {$outputFile} couldn\'t be created. There was an error.");
 	}
 
 	/**
@@ -199,8 +194,6 @@ trait CliHelpers
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
-	 *
 	 * @return string
 	 */
 	public function renameNamespace(array $args = [], string $string = ''): string
@@ -244,8 +237,6 @@ trait CliHelpers
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
-	 *
 	 * @return string
 	 */
 	public function renameUse(array $args = [], string $string = ''): string
@@ -286,8 +277,6 @@ trait CliHelpers
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
-	 *
 	 * @return string
 	 */
 	public function renameUseFrontendLibs(array $args = [], string $string = ''): string
@@ -320,8 +309,6 @@ trait CliHelpers
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
-	 *
 	 * @return string
 	 */
 	public function renameTextDomain(array $args = [], string $string = ''): string
@@ -340,8 +327,6 @@ trait CliHelpers
 	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
@@ -442,8 +427,6 @@ trait CliHelpers
 	 *
 	 * @param array $args CLI args array.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
-	 *
 	 * @return array
 	 */
 	public function getComposer(array $args = []): array
@@ -461,7 +444,7 @@ trait CliHelpers
 		$composerFile = file_get_contents($composerPath);
 
 		if ($composerFile === false) {
-			\WP_CLI::error("The composer on {$composerPath} path seems to be missing.");
+			self::cliError("The composer on {$composerPath} path seems to be missing.");
 		}
 
 		return json_decode((string)$composerFile, true);
@@ -471,8 +454,6 @@ trait CliHelpers
 	 * Get composers defined namespace
 	 *
 	 * @param array $args CLI args array.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
@@ -513,8 +494,6 @@ trait CliHelpers
 	 * Get composers defined vendor prefix
 	 *
 	 * @param array $args CLI args array.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
@@ -559,14 +538,17 @@ trait CliHelpers
 	 * @param array $items Array of classes.
 	 * @param bool  $run Run or log output.
 	 *
-	 * @throws \ReflectionException Exception if the class cannot be found.
-	 *
 	 * @return void
 	 */
 	public function getEvalLoop(array $items = [], bool $run = false): void
 	{
 		foreach ($items as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			try {
+				$reflectionClass = new \ReflectionClass($item);
+			} catch (\ReflectionException $e) {
+				exit("{$e->getCode()}: {$e->getMessage()}");
+			}
+
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
 			if (method_exists($class, 'getCommandName')) {
@@ -738,5 +720,23 @@ trait CliHelpers
 		}
 
 		return $output;
+	}
+
+	/**
+	 * WP CLI error logging helper
+	 *
+	 * A wrapper for the WP_CLI::error with error handling.
+	 *
+	 * @param string $errorMessage Error message to log in the CLI.
+	 *
+	 * @return void
+	 */
+	public static function cliError(string $errorMessage): void
+	{
+		try {
+			\WP_CLI::error($errorMessage);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

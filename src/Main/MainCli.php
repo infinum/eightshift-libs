@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Main;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI\ExitException;
 
 /**
  * Class MainCli
@@ -39,32 +38,16 @@ class MainCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Read the template contents, and replace the placeholders with provided variables.
-		try {
-			$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
 		$class = $this->renameClassName($this->getClassShortName(), $class);
 
-		try {
-			$class = $this->renameNamespace($assocArgs, $class);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$class = $this->renameNamespace($assocArgs, $class);
 
-		try {
-			$class = $this->renameUse($assocArgs, $class);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$class = $this->renameUse($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		try {
-			$this->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $class, $assocArgs);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$this->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $class, $assocArgs);
 	}
 }

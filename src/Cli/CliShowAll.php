@@ -44,41 +44,25 @@ class CliShowAll extends AbstractCli
 	{
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli and development:%n'));
 
-		try {
-			$this->getEvalLoop(Cli::CLASSES_LIST);
-		} catch (\ReflectionException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$this->getEvalLoop(Cli::CLASSES_LIST);
 
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli only:%n'));
 
-		try {
-			$this->getEvalLoop(Cli::PUBLIC_CLASSES);
-		} catch (\ReflectionException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$this->getEvalLoop(Cli::PUBLIC_CLASSES);
 
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for development:%n'));
 
-		try {
-			$this->getEvalLoop(Cli::DEVELOP_CLASSES);
-		} catch (\ReflectionException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$this->getEvalLoop(Cli::DEVELOP_CLASSES);
 
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for project setup:%n'));
 
-		try {
-			$this->getEvalLoop(Cli::SETUP_CLASSES);
-		} catch (\ReflectionException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$this->getEvalLoop(Cli::SETUP_CLASSES);
 
 		\WP_CLI::log('-----------------------------------------');
 

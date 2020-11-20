@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI\ExitException;
+use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class BlockCli
@@ -78,13 +78,7 @@ class BlockCli extends AbstractCli
 			$filesList = scandir($sourcePathFolder);
 
 			if (!$filesList) {
-				try {
-					\WP_CLI::error(
-						"The folder in the '{$sourcePath}' seems to be empty."
-					);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				CliHelpers::cliError("The folder in the '{$sourcePath}' seems to be empty.");
 			}
 
 			foreach (array_diff((array)$filesList, ['..', '.']) as $item) {
@@ -101,27 +95,17 @@ class BlockCli extends AbstractCli
 				"Or here is the list of all available block names: \n{$nameList}"
 			);
 
-			try {
-				\WP_CLI::error(
-					"The block '{$sourcePath}' doesn\'t exist in our library."
-				);
-			} catch (ExitException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
-			}
+			CliHelpers::cliError("The block '{$sourcePath}' doesn\'t exist in our library.");
 		}
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {
-			try {
-				\WP_CLI::error(
-					sprintf(
+			CliHelpers::cliError(
+				sprintf(
 						'The block in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
 						$destinationPath
 					)
-				);
-			} catch (ExitException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
-			}
+			);
 		} else {
 			system("mkdir -p {$destinationPath}/");
 		}
@@ -134,39 +118,19 @@ class BlockCli extends AbstractCli
 
 		foreach ($this->getFullBlocksFiles($name) as $file) {
 			// Set output file path.
-			try {
-				$class = $this->getExampleTemplate($destinationPath, $file, true);
-			} catch (ExitException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
-			}
+			$class = $this->getExampleTemplate($destinationPath, $file, true);
 
 			if (!empty($class)) {
 				$class = $this->renameProjectName($assocArgs, $class);
 
-				try {
-					$class = $this->renameNamespace($assocArgs, $class);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				$class = $this->renameNamespace($assocArgs, $class);
 
-				try {
-					$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
 
-				try {
-					$class = $this->renameUseFrontendLibs($assocArgs, $class);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				$class = $this->renameUseFrontendLibs($assocArgs, $class);
 
 				// Output final class to new file/folder and finish.
-				try {
-					$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
 			}
 		}
 

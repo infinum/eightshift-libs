@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI\ExitException;
 
 /**
  * Class SetupCli
@@ -76,17 +75,9 @@ class SetupCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Get setup.json file.
-		try {
-			$json = $this->getExampleTemplate(__DIR__, 'setup.json');
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$json = $this->getExampleTemplate(__DIR__, 'setup.json');
 
 		// Output json file to project root.
-		try {
-			$this->outputWrite($root, 'setup.json', $json, $assocArgs);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$this->outputWrite($root, 'setup.json', $json, $assocArgs);
 	}
 }

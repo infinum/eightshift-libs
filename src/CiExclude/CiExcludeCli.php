@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\CiExclude;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI\ExitException;
 
 /**
  * Class CiExcludeCli
@@ -88,21 +87,13 @@ class CiExcludeCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		try {
-			$class = $this->getExampleTemplate(__DIR__, 'ci-exclude.txt');
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$class = $this->getExampleTemplate(__DIR__, 'ci-exclude.txt');
 
 		// Replace stuff in file.
 		$class = $this->renameProjectName($assocArgs, $class);
 		$class = $this->renameProjectType($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		try {
-			$this->outputWrite($root, 'ci-exclude.txt', $class, $assocArgs);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$this->outputWrite($root, 'ci-exclude.txt', $class, $assocArgs);
 	}
 }

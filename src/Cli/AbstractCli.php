@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use WP_CLI\ExitException;
-
 /**
  * Class AbstractCli
  */
@@ -123,14 +121,8 @@ abstract class AbstractCli implements CliInterface
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 		if (!is_callable($class)) {
-			try {
-				$className = get_class($class);
-				\WP_CLI::error(
-					"The class '{$className}' is not callable. Make sure the command class has an __invoke method."
-				);
-			} catch (ExitException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
-			}
+			$className = get_class($class);
+			CliHelpers::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
 		}
 
 		\WP_CLI::add_command(

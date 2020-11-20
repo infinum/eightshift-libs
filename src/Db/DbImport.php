@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use WP_CLI\ExitException;
+use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Importing database.
@@ -17,8 +17,6 @@ use WP_CLI\ExitException;
  * @param string $projectRootPath Root of the project where config is located.
  * @param array  $args Optional arguments.
  * @param string $setupFile Define setup file name.
- *
- * @throws ExitException Exception thrown in case of error in WP-CLI command.
  *
  * @return void
  */
@@ -29,23 +27,23 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 	$to = $args['to'] ?? '';
 
 	if (empty($from)) {
-		WP_CLI::error("--from parameter is mandatory. Please provide one url key from {$setupFile} file.");
+		CliHelpers::cliError("--from parameter is mandatory. Please provide one url key from {$setupFile} file.");
 	}
 
 	if (empty($to)) {
-		WP_CLI::error("--to parameter is mandatory. Please provide one url key from {$setupFile} file.");
+		CliHelpers::cliError("--to parameter is mandatory. Please provide one url key from {$setupFile} file.");
 	}
 
 	// Change execution folder.
 	if (!is_dir($projectRootPath)) {
-		WP_CLI::error("Folder doesn't exist on this path: {$projectRootPath}.");
+		CliHelpers::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
 	}
 
 	chdir($projectRootPath);
 
 	// Check if setup exists.
 	if (!file_exists($setupFile)) {
-		WP_CLI::error("setup.json is missing at this path: {$setupFile}.");
+		CliHelpers::cliError("setup.json is missing at this path: {$setupFile}.");
 	}
 
 	// Parse json file to array.
@@ -53,14 +51,14 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 
 	// Check if $data is empty.
 	if (empty($data)) {
-		WP_CLI::error("{$setupFile} is empty.");
+		CliHelpers::cliError("{$setupFile} is empty.");
 	}
 
 	// Check if urls key exists.
 	$urls = $data['urls'] ?? [];
 
 	if (empty($urls)) {
-		WP_CLI::error('Urls key is missing or empty.');
+		CliHelpers::cliError('Urls key is missing or empty.');
 	}
 
 	$fromHost = '';
@@ -68,7 +66,7 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 
 	// Die if from key is missing and not valid.
 	if (!isset($urls[$from]) || empty($urls[$from])) {
-		WP_CLI::error("{$from} key is missing or empty in urls.");
+		CliHelpers::cliError("{$from} key is missing or empty in urls.");
 	} else {
 		$from = wp_parse_url($urls[$from]);
 		$fromHost = $from['host'];
@@ -80,7 +78,7 @@ function dbImport(string $projectRootPath, array $args = [], string $setupFile =
 
 	// Die if to key is missing and not valid.
 	if (!isset($urls[$to]) || empty($urls[$to])) {
-		WP_CLI::error("{$to} key is missing or empty in urls.");
+		CliHelpers::cliError("{$to} key is missing or empty in urls.");
 	} else {
 		$to = wp_parse_url($urls[$to]);
 		$toHost = $to['host'];

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Manifest;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI\ExitException;
 
 /**
  * Class ManifestCli
@@ -41,32 +40,16 @@ class ManifestCli extends AbstractCli
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		try {
-			$class = $this->getExampleTemplate(__DIR__, $className);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$class = $this->getExampleTemplate(__DIR__, $className);
 
 		// Replace stuff in file.
 		$class = $this->renameClassName($className, $class);
 
-		try {
-			$class = $this->renameNamespace($assocArgs, $class);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$class = $this->renameNamespace($assocArgs, $class);
 
-		try {
-			$class = $this->renameUse($assocArgs, $class);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$class = $this->renameUse($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		try {
-			$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
 	}
 }

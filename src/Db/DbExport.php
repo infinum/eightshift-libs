@@ -8,15 +8,13 @@
 
 declare(strict_types=1);
 
-use WP_CLI\ExitException;
+use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Exporting database.
  *
  * @param string $projectRootPath Root of the project where config is located.
  * @param array  $args Optional arguments.
- *
- * @throws ExitException Exception thrown in case of error in WP-CLI command.
  *
  * @return void
  */
@@ -28,7 +26,7 @@ function dbExport(string $projectRootPath, array $args = [])
 
 	// Change execution folder.
 	if (!is_dir($projectRootPath)) {
-		WP_CLI::error("Folder doesn't exist on this path: {$projectRootPath}.");
+		CliHelpers::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
 	}
 
 	chdir($projectRootPath);

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI\ExitException;
+use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class BlockWrapperCli
@@ -66,17 +66,13 @@ class BlockWrapperCli extends AbstractCli
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {
-			try {
-				\WP_CLI::error(
+			CliHelpers::cliError(
 				/* translators: %s will be replaced with the path. */
-					sprintf(
-						'The wrapper exists in your project on this "%s" path. Please check or remove that folder before running this command again.',
-						$destinationPath
-					)
-				);
-			} catch (ExitException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
-			}
+				sprintf(
+					'The wrapper exists in your project on this "%s" path. Please check or remove that folder before running this command again.',
+					$destinationPath
+				)
+			);
 		} else {
 			system("mkdir -p {$destinationPath}/");
 		}
@@ -89,39 +85,19 @@ class BlockWrapperCli extends AbstractCli
 
 		foreach ($this->getFullBlocksFiles($name) as $file) {
 			// Set output file path.
-			try {
-				$class = $this->getExampleTemplate($destinationPath, $file, true);
-			} catch (ExitException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
-			}
+			$class = $this->getExampleTemplate($destinationPath, $file, true);
 
 			if (!empty($class)) {
 				$class = $this->renameProjectName($assocArgs, $class);
 
-				try {
-					$class = $this->renameNamespace($assocArgs, $class);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				$class = $this->renameNamespace($assocArgs, $class);
 
-				try {
-					$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
 
-				try {
-					$class = $this->renameUseFrontendLibs($assocArgs, $class);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				$class = $this->renameUseFrontendLibs($assocArgs, $class);
 
 				// Output final class to new file/folder and finish.
-				try {
-					$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
-				} catch (ExitException $e) {
-					exit("{$e->getCode()}: {$e->getMessage()}");
-				}
+				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
 			}
 		}
 
