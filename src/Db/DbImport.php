@@ -15,7 +15,7 @@ use WP_CLI\ExitException;
  * Importing database.
  *
  * @param string $projectRootPath Root of the project where config is located.
- * @param array $args Optional arguments.
+ * @param array  $args Optional arguments.
  * @param string $setupFile Define setup file name.
  *
  * @throws ExitException Exception thrown in case of error in WP-CLI command.

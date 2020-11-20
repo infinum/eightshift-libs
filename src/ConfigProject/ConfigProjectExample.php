@@ -37,7 +37,9 @@ define('WP_DEBUG_LOG', true);
 
 // Helps preventing login fails.
 if (! defined('WP_CLI')) {
-	define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
+	if (isset($_SERVER['HTTP_HOST'])) {
+		define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
+	}
 }
 
 // Environment based setup.

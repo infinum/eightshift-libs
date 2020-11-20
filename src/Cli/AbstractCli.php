@@ -103,11 +103,10 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @return void
-	 * @throws \ReflectionException
+	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
 	 *
-	 * @throws \RuntimeException Error in case the WP_CLI::add_command fails.
-	 * @throws \Exception
+	 * @return void
+	 *  phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing
 	 */
 	public function registerCommand(): void
 	{
@@ -115,7 +114,12 @@ abstract class AbstractCli implements CliInterface
 			throw new \RuntimeException('Class doesn\'t exist');
 		}
 
-		$reflectionClass = new \ReflectionClass($this->getClassName());
+		try {
+			$reflectionClass = new \ReflectionClass($this->getClassName());
+		} catch (\ReflectionException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 		if (!is_callable($class)) {

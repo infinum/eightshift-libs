@@ -75,7 +75,19 @@ class BlockComponentCli extends AbstractCli
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
 			$nameList = '';
-			foreach (array_diff(scandir($sourcePathFolder), ['..', '.']) as $item) {
+			$filesList = scandir($sourcePathFolder);
+
+			if (!$filesList) {
+				try {
+					\WP_CLI::error(
+						"The folder in the '{$sourcePath}' seems to be empty."
+					);
+				} catch (ExitException $e) {
+					exit("{$e->getCode()}: {$e->getMessage()}");
+				}
+			}
+
+			foreach (array_diff((array)$filesList, ['..', '.']) as $item) {
 				$nameList .= "- {$item} \n";
 			}
 
