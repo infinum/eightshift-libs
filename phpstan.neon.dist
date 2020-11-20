@@ -10,8 +10,6 @@ parameters:
 		- src/
 	excludes_analyse:
 		- src/Core/CompiledContainer.php
-		- src/menu/class-bem-menu-walker.php
-		- src/commands/templates/*
 		- src/**/*Example.php
 	ignoreErrors:
 		# Uses func_get_args()
