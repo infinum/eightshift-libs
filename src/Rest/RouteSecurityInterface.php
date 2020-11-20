@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds the Securable Route interface.
+ * File that holds the Security Route interface.
  *
  * @package EightshiftLibs\Rest
  */

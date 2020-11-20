@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class BlockWrapperCli
@@ -65,8 +66,8 @@ class BlockWrapperCli extends AbstractCli
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {
-			\WP_CLI::error(
-			/* translators: %s will be replaced with the path. */
+			self::cliError(
+				/* translators: %s will be replaced with the path. */
 				sprintf(
 					'The wrapper exists in your project on this "%s" path. Please check or remove that folder before running this command again.',
 					$destinationPath
@@ -88,10 +89,13 @@ class BlockWrapperCli extends AbstractCli
 
 			if (!empty($class)) {
 				$class = $this->renameProjectName($assocArgs, $class);
+
 				$class = $this->renameNamespace($assocArgs, $class);
+
 				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
+
 				$class = $this->renameUseFrontendLibs($assocArgs, $class);
-	
+
 				// Output final class to new file/folder and finish.
 				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
 			}

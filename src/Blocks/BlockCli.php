@@ -74,7 +74,13 @@ class BlockCli extends AbstractCli
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
 			$nameList = '';
-			foreach (array_diff(scandir($sourcePathFolder), ['..', '.']) as $item) {
+			$filesList = scandir($sourcePathFolder);
+
+			if (!$filesList) {
+				self::cliError("The folder in the '{$sourcePath}' seems to be empty.");
+			}
+
+			foreach (array_diff((array)$filesList, ['..', '.']) as $item) {
 				$nameList .= "- {$item} \n";
 			}
 
@@ -87,14 +93,13 @@ class BlockCli extends AbstractCli
 			\WP_CLI::log(
 				"Or here is the list of all available block names: \n{$nameList}"
 			);
-			\WP_CLI::error(
-				"The block '{$sourcePath}' doesn\'t exist in our library."
-			);
+
+			self::cliError("The block '{$sourcePath}' doesn\'t exist in our library.");
 		}
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {
-			\WP_CLI::error(
+			self::cliError(
 				sprintf(
 					'The block in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
 					$destinationPath
@@ -116,10 +121,13 @@ class BlockCli extends AbstractCli
 
 			if (!empty($class)) {
 				$class = $this->renameProjectName($assocArgs, $class);
+
 				$class = $this->renameNamespace($assocArgs, $class);
+
 				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
+
 				$class = $this->renameUseFrontendLibs($assocArgs, $class);
-	
+
 				// Output final class to new file/folder and finish.
 				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
 			}

@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use http\Exception\RuntimeException;
-
 /**
  * Class AbstractCli
  */
@@ -103,9 +101,10 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @throws \RuntimeException Error in case the WP_CLI::add_command fails.
+	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
 	 *
 	 * @return void
+	 *  phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing
 	 */
 	public function registerCommand(): void
 	{
@@ -113,8 +112,18 @@ abstract class AbstractCli implements CliInterface
 			throw new \RuntimeException('Class doesn\'t exist');
 		}
 
-		$reflectionClass = new \ReflectionClass($this->getClassName());
+		try {
+			$reflectionClass = new \ReflectionClass($this->getClassName());
+		} catch (\ReflectionException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+
+		if (!is_callable($class)) {
+			$className = get_class($class);
+			self::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
+		}
 
 		\WP_CLI::add_command(
 			$this->commandParentName . ' ' . $this->getCommandName(),

@@ -183,8 +183,6 @@ class Components
 		$manifestKey = $manifest['attributes'][$key];
 		$defaultType = $manifestKey['type'];
 
-		$defaultValue = '';
-
 		switch ($defaultType) {
 			case 'boolean':
 				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : false;
@@ -203,7 +201,7 @@ class Components
 
 
 	/**
-	 * Retun BEM selector for html class and check if Block element is set.
+	 * Return BEM selector for html class and check if Block element is set.
 	 *
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
@@ -228,7 +226,7 @@ class Components
 	}
 
 	/**
-	 * Retun BEM selector for html class and check if element is set.
+	 * Return BEM selector for html class and check if element is set.
 	 *
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
@@ -248,7 +246,7 @@ class Components
 	}
 
 	/**
-	 * Retun BEM selector for html class and check if Modifier element is set.
+	 * Return BEM selector for html class and check if Modifier element is set.
 	 *
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
@@ -262,7 +260,7 @@ class Components
 	}
 
 	/**
-	 * Retun BEM selector for html class and check all conditions from checkAttr method.
+	 * Return BEM selector for html class and check all conditions from checkAttr method.
 	 *
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
@@ -276,12 +274,12 @@ class Components
 	{
 
 		$modifier = self::checkAttr($key, $attributes, $manifest);
-	
+
 		return self::selectorM($block, $element, $modifier);
 	}
 
 	/**
-	 * Retun BEM selector for html class and check if Custom condition is set.
+	 * Return BEM selector for html class and check if Custom condition is set.
 	 *
 	 * @param bool   $condition Check condition.
 	 * @param string $block BEM Block selector.

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Blocks\BlocksCli;
-use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
@@ -72,7 +71,12 @@ class CliInitTheme extends AbstractCli
 		}
 
 		foreach (static::INIT_THEME_CLASSES as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			try {
+				$reflectionClass = new \ReflectionClass($item);
+			} catch (\ReflectionException $e) {
+				exit("{$e->getCode()}: {$e->getMessage()}");
+			}
+
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 			if (method_exists($class, 'getCommandName')) {

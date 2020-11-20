@@ -91,8 +91,11 @@ class FieldCli extends AbstractCli
 
 		// Replace stuff in file.
 		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
+
 		$class = $this->renameNamespace($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
+
 		$class = str_replace('example-post-type', $objectType, $class);
 		$class = str_replace('example-field', $fieldName, $class);
 

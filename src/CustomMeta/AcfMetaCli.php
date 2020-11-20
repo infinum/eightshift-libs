@@ -63,7 +63,7 @@ class AcfMetaCli extends AbstractCli
 	{
 		// Get Props.
 		$fieldName = $this->prepareSlug($assocArgs['name']);
-		
+
 		// Get full class name.
 		$className = $this->getFileName($fieldName);
 		$className = $className . $this->getClassShortName();
@@ -74,6 +74,7 @@ class AcfMetaCli extends AbstractCli
 		// Replace stuff in file.
 		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.

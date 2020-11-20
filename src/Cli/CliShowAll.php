@@ -43,21 +43,29 @@ class CliShowAll extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli and development:%n'));
+
 		$this->getEvalLoop(Cli::CLASSES_LIST);
+
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli only:%n'));
+
 		$this->getEvalLoop(Cli::PUBLIC_CLASSES);
+
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for development:%n'));
+
 		$this->getEvalLoop(Cli::DEVELOP_CLASSES);
+
 		\WP_CLI::log('-----------------------------------------');
 
 		\WP_CLI::log(\WP_CLI::colorize('%mCommands for project setup:%n'));
+
 		$this->getEvalLoop(Cli::SETUP_CLASSES);
+
 		\WP_CLI::log('-----------------------------------------');
 
-		\WP_CLI::success('All commands are outputed.');
+		\WP_CLI::success('All commands are outputted.');
 	}
 }

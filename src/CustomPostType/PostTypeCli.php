@@ -121,9 +121,14 @@ class PostTypeCli extends AbstractCli
 
 		// Replace stuff in file.
 		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
+
 		$class = $this->renameNamespace($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
+
 		$class = $this->renameTextDomain($assocArgs, $class);
+
+
 		$class = str_replace('example-slug', $slug, $class);
 		$class = str_replace('example-url-slug', $rewriteUrl, $class);
 		$class = str_replace('example-endpoint-slug', $restEndpointSlug, $class);

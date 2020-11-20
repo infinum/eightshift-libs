@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class UpdateCli
@@ -36,36 +37,36 @@ class UpdateCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Run project update with detailes stored in setup.json file.',
+			'shortdesc' => 'Run project update with details stored in setup.json file.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'skip_core',
-					'description' => 'If you want to skip core update/instalation provide bool on this attr.',
+					'description' => 'If you want to skip core update/installation, provide bool on this attr.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_plugins',
-					'description' => 'If you want to skip all plugins update/instalation provide bool on this attr.',
+					'description' => 'If you want to skip all plugins update/installation, provide bool on this attr.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_plugins_core',
-					'description' => 'If you want to skip plugins only from core update/instalation provide bool on this attr.',
+					'description' => 'If you want to skip plugins only from core update/installation, provide bool on this attr.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_plugins_github',
-					'description' => 'If you want to skip plugins only from github update/instalation provide bool on this attr.',
+					'description' => 'If you want to skip plugins only from github update/installation, provide bool on this attr.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_themes',
-					'description' => 'If you want to skip themes update/instalation provide bool on this attr.',
+					'description' => 'If you want to skip themes update/installation, provide bool on this attr.',
 					'optional' => true,
 				],
 			],
@@ -76,15 +77,19 @@ class UpdateCli extends AbstractCli
 	{
 		require $this->getLibsPath('src/Setup/Setup.php');
 
-		setup(
-			$this->getProjectConfigRootPath(),
-			[
-				'skip_core' => $assocArgs['skip_core'] ?? false,
-				'skip_plugins' => $assocArgs['skip_plugins'] ?? false,
-				'skip_plugins_core' => $assocArgs['skip_plugins_core'] ?? false,
-				'skip_plugins_github' => $assocArgs['skip_plugins_github'] ?? false,
-				'skip_themes' => $assocArgs['skip_themes'] ?? false,
-			]
-		);
+		try {
+			setup(
+				$this->getProjectConfigRootPath(),
+				[
+					'skip_core' => $assocArgs['skip_core'] ?? false,
+					'skip_plugins' => $assocArgs['skip_plugins'] ?? false,
+					'skip_plugins_core' => $assocArgs['skip_plugins_core'] ?? false,
+					'skip_plugins_github' => $assocArgs['skip_plugins_github'] ?? false,
+					'skip_themes' => $assocArgs['skip_themes'] ?? false,
+				]
+			);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

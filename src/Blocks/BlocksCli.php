@@ -89,8 +89,11 @@ class BlocksCli extends AbstractCli
 
 		// Replace stuff in file.
 		$class = $this->renameClassName($className, $class);
+
 		$class = $this->renameNamespace($assocArgs, $class);
+
 		$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
 
 		if (function_exists('\add_action')) {

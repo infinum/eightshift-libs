@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Db;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI\ExitException;
 
 /**
  * Class ImportCli
@@ -36,18 +37,18 @@ class ImportCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Run database import based on enviroments.',
+			'shortdesc' => 'Run database import based on environments.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'from',
-					'description' => 'Set from what enviroment you have exported the data.',
+					'description' => 'Set from what environment you have exported the data.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'to',
-					'description' => 'Set to what enviroment you want to import the data.',
+					'description' => 'Set to what environment you want to import the data.',
 					'optional' => true,
 				],
 			],
@@ -58,12 +59,16 @@ class ImportCli extends AbstractCli
 	{
 		require $this->getLibsPath('src/Db/DbImport.php');
 
-		dbImport(
-			$this->getProjectConfigRootPath(),
-			[
-				'from' => $assocArgs['from'] ?? '',
-				'to' => $assocArgs['to'] ?? '',
-			]
-		);
+		try {
+			dbImport(
+				$this->getProjectConfigRootPath(),
+				[
+					'from' => $assocArgs['from'] ?? '',
+					'to' => $assocArgs['to'] ?? '',
+				]
+			);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

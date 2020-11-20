@@ -8,12 +8,13 @@
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/src/commands/templates/*</exclude-pattern>
+	<exclude-pattern>*/src/Build/BuildExample.php</exclude-pattern>
+	<exclude-pattern>*/bin/cli.php</exclude-pattern>
 
 	<!-- Additional arguments. -->
 	<arg value="sp"/>
 	<arg name="basepath" value="."/>
 	<arg name="parallel" value="8"/>
-	<arg name="cache"/>
 	<arg name="extensions" value="php"/>
 
 	<file>.</file>
@@ -44,6 +45,11 @@
 	</rule>
 
 	<rule ref="WordPress.WP.AlternativeFunctions.file_system_read_fclose">
+		<exclude-pattern>*/src/Cli/*</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.Security.EscapeOutput.OutputNotEscaped">
+		<exclude-pattern>*/src/**/*Cli.php</exclude-pattern>
 		<exclude-pattern>*/src/Cli/*</exclude-pattern>
 	</rule>
 

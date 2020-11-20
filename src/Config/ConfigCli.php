@@ -101,7 +101,9 @@ class ConfigCli extends AbstractCli
 
 		// Replace stuff in file.
 		$class = $this->renameClassName($className, $class);
+
 		$class = $this->renameNamespace($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
 
 		if (!empty($name)) {

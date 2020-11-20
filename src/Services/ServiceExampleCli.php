@@ -84,7 +84,9 @@ class ServiceExampleCli extends AbstractCli
 
 		// Replace stuff in file.
 		$class = str_replace($className, $classNameNew, $class);
+
 		$class = $this->renameNamespace($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
 
 		// Create new namespace from folder structure.
