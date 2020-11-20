@@ -122,7 +122,7 @@ abstract class AbstractCli implements CliInterface
 
 		if (!is_callable($class)) {
 			$className = get_class($class);
-			CliHelpers::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
+			self::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
 		}
 
 		\WP_CLI::add_command(

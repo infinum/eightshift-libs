@@ -9,6 +9,7 @@
  * @package EightshiftBoilerplate
  */
 
+// phpcs:disable
 if (! defined('EB_ENV')) {
 	return false;
 }
@@ -35,13 +36,6 @@ define('AUTOMATIC_UPDATER_DISABLED', true);
 define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', true);
 
-// Helps preventing login fails.
-if (! defined('WP_CLI')) {
-	if (isset($_SERVER['HTTP_HOST'])) {
-		define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
-	}
-}
-
 // Environment based setup.
 if (EB_ENV === 'develop') {
 	// Enable direct upload from admin.
@@ -59,3 +53,5 @@ if (EB_ENV === 'develop') {
 	// Enable debug and error logging.
 	define('WP_DEBUG_DISPLAY', false);
 }
+
+// phpcs:enable

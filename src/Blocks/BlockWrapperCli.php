@@ -66,7 +66,7 @@ class BlockWrapperCli extends AbstractCli
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {
-			CliHelpers::cliError(
+			self::cliError(
 				/* translators: %s will be replaced with the path. */
 				sprintf(
 					'The wrapper exists in your project on this "%s" path. Please check or remove that folder before running this command again.',

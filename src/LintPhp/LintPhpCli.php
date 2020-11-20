@@ -65,7 +65,7 @@ class LintPhpCli extends AbstractCli
 		\WP_CLI::log($output);
 
 		if (preg_match('/ERROR/', $output) || preg_match('/WARNING/', $output)) {
-			CliHelpers::cliError('Please fix all linting issues before continuing.');
+			self::cliError('Please fix all linting issues before continuing.');
 		}
 
 		\WP_CLI::success('Success! You have no linting issues.');

@@ -78,7 +78,7 @@ class BlockComponentCli extends AbstractCli
 			$filesList = scandir($sourcePathFolder);
 
 			if (!$filesList) {
-				CliHelpers::cliError("The folder in the '{$sourcePath}' seems to be empty.");
+				self::cliError("The folder in the '{$sourcePath}' seems to be empty.");
 			}
 
 			foreach (array_diff((array)$filesList, ['..', '.']) as $item) {
@@ -95,12 +95,12 @@ class BlockComponentCli extends AbstractCli
 				"Or here is the list of all available component names: \n{$nameList}"
 			);
 
-			CliHelpers::cliError("The component '{$sourcePath}' doesn\'t exist in our library.");
+			self::cliError("The component '{$sourcePath}' doesn\'t exist in our library.");
 		}
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {
-			CliHelpers::cliError(
+			self::cliError(
 				/* translators: %s will be replaced with the path. */
 				sprintf(
 					'The component in you project exists on this "%s" path. Please check or remove that folder before running this command again.',

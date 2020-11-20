@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class BlockCli
@@ -78,7 +77,7 @@ class BlockCli extends AbstractCli
 			$filesList = scandir($sourcePathFolder);
 
 			if (!$filesList) {
-				CliHelpers::cliError("The folder in the '{$sourcePath}' seems to be empty.");
+				self::cliError("The folder in the '{$sourcePath}' seems to be empty.");
 			}
 
 			foreach (array_diff((array)$filesList, ['..', '.']) as $item) {
@@ -95,16 +94,16 @@ class BlockCli extends AbstractCli
 				"Or here is the list of all available block names: \n{$nameList}"
 			);
 
-			CliHelpers::cliError("The block '{$sourcePath}' doesn\'t exist in our library.");
+			self::cliError("The block '{$sourcePath}' doesn\'t exist in our library.");
 		}
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {
-			CliHelpers::cliError(
+			self::cliError(
 				sprintf(
-						'The block in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
-						$destinationPath
-					)
+					'The block in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
+					$destinationPath
+				)
 			);
 		} else {
 			system("mkdir -p {$destinationPath}/");
