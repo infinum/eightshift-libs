@@ -48,7 +48,7 @@ class CliInitTheme extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_theme';
+		return 'setup_theme';
 	}
 
 	/**

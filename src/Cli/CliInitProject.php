@@ -56,7 +56,7 @@ class CliInitProject extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_project';
+		return 'setup_project';
 	}
 
 	/**
