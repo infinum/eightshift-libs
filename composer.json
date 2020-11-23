@@ -64,7 +64,7 @@
     "analyze": "@php ./vendor/bin/phpstan analyze",
     "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
 		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
-		"tests:unit": "@php ./vendor/bin/codecept run unit",
-		"tests:integration": "@php ./vendor/bin/codecept run integration"
+    "tests:unit": "@php ./vendor/bin/codecept run unit",
+    "tests:integration": "@php ./vendor/bin/codecept run integration"
   }
 }
