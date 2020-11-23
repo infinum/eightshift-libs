@@ -31,20 +31,21 @@
 		"php-di/php-di": "^6.2.2"
 	},
 	"require-dev": {
+		"brain/monkey": "^2.4",
 		"codeception/codeception": "^4.1",
+		"codeception/module-asserts": "^1.0",
+		"codeception/module-cli": "^1.0",
+		"codeception/module-db": "^1.0",
+		"codeception/module-filesystem": "^1.0",
+		"codeception/module-phpbrowser": "^1.0",
+		"codeception/module-webdriver": "^1.0",
+		"codeception/util-universalframework": "^1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
 		"infinum/coding-standards-wp": "^1.0.1",
 		"lucatume/wp-browser": "^2.6",
 		"roave/security-advisories": "dev-master",
 		"szepeviktor/phpstan-wordpress": "^0.6",
-		"wp-cli/wp-cli": "^2.4",
-		"codeception/module-asserts": "^1.0",                                      
-		"codeception/module-phpbrowser": "^1.0",                                   
-		"codeception/module-webdriver": "^1.0",                                    
-		"codeception/module-db": "^1.0",                                           
-		"codeception/module-filesystem": "^1.0",                                   
-		"codeception/module-cli": "^1.0",                                          
-		"codeception/util-universalframework": "^1.0"    
+		"wp-cli/wp-cli": "^2.4"
 	},
 	"autoload": {
 		"psr-4": {
