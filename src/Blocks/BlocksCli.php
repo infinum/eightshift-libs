@@ -32,21 +32,22 @@ class BlocksCli extends AbstractCli
 	 */
 	public const COMPONENTS = [
 		'button',
+		'card',
+		'copyright',
+		'drawer',
+		'footer',
+		'hamburger',
+		'head',
+		'header',
 		'heading',
 		'image',
+		'layout-three-columns',
 		'link',
 		'lists',
-		'paragraph',
-		'tracking',
-		'video',
-		'header',
-		'footer',
 		'logo',
-		'drawer',
 		'menu',
-		'hamburger',
-		'copyright',
 		'page-overlay',
+		'paragraph',
 	];
 
 	/**
@@ -56,13 +57,15 @@ class BlocksCli extends AbstractCli
 	 */
 	public const BLOCKS = [
 		'button',
+		'card',
+		'column',
+		'columns',
+		'group',
 		'heading',
 		'image',
 		'link',
 		'lists',
 		'paragraph',
-		'video',
-		'example',
 	];
 
 	/**
@@ -86,51 +89,64 @@ class BlocksCli extends AbstractCli
 
 		// Replace stuff in file.
 		$class = $this->renameClassName($className, $class);
+
 		$class = $this->renameNamespace($assocArgs, $class);
+
+		$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
 
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
-
 		if (function_exists('\add_action')) {
-			$this->blocksInit();
+			$this->blocksInit($assocArgs);
 		}
+
+		// Output final class to new file/folder and finish.
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
 	}
 
 	/**
 	 * Copy blocks from Eightshift-frontend-libs to project
 	 *
-	 * @param bool $all Copy all from Eightshift-frontend-libs to project or selective from the list.
+	 * @param array $args Arguments array.
 	 *
 	 * @return void
 	 */
-	public function blocksInit(bool $all = false): void
+	public function blocksInit(array $args): void
 	{
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		system("cp -R {$rootNode}/assets {$root}/assets");
-		system("cp -R {$rootNode}/storybook {$root}/.storybook");
+		$folders = [
+			'assetsGlobal' => "{$root}/assets",
+			'storybook' => "{$root}/.storybook",
+			'blocks' => "{$root}/src/Blocks",
+			'assets' => "{$root}/src/Blocks/assets",
+			'components' => "{$root}/src/Blocks/components",
+			'custom' => "{$root}/src/Blocks/custom",
+			'variations' => "{$root}/src/Blocks/variations",
+		];
 
-		if ($all) {
-			system("cp -R {$rootNode}/src/Blocks {$root}/src/Blocks");
-		} else {
-			system("cp -R {$rootNode}/src/Blocks/assets {$root}/src/Blocks/assets/");
-			system("cp -R {$rootNode}/src/Blocks/variations {$root}/src/Blocks/variations/");
-			system("cp -R {$rootNode}/src/blocks/wrapper {$root}/src/Blocks/wrapper/");
-			system("cp -R {$rootNode}/src/Blocks/manifest.json {$root}/src/Blocks/");
-
-			foreach (static::COMPONENTS as $component) {
-				system("mkdir -p {$root}/src/Blocks/components/{$component}/");
-				system(
-					"cp -R {$rootNode}/src/Blocks/components/{$component}/. {$root}/src/Blocks/components/{$component}/"
-				);
+		foreach ($folders as $folder) {
+			if (!file_exists($folder)) {
+				system("mkdir -p {$folder}");
 			}
+		}
 
-			foreach (static::BLOCKS as $block) {
-				system("mkdir -p {$root}/src/Blocks/custom/{$block}/");
-				system("cp -R {$rootNode}/src/Blocks/custom/{$block}/. {$root}/src/Blocks/custom/{$block}/");
-			}
+		system("cp -R {$rootNode}/assets/. {$folders['assetsGlobal']}/");
+		system("cp -R {$rootNode}/storybook/. {$folders['storybook']}/");
+
+		system("cp -R {$rootNode}/src/Blocks/assets/. {$folders['assets']}/");
+		system("cp -R {$rootNode}/src/Blocks/variations/. {$folders['variations']}/");
+		system("cp -R {$rootNode}/src/Blocks/manifest.json {$folders['blocks']}/");
+
+		\WP_CLI::runcommand("{$this->commandParentName} use_wrapper {$this->prepareArgsManual($args)}");
+
+		foreach (static::COMPONENTS as $component) {
+			\WP_CLI::runcommand("{$this->commandParentName} use_component --name='{$component}' {$this->prepareArgsManual($args)}");
+		}
+
+		foreach (static::BLOCKS as $block) {
+			\WP_CLI::runcommand("{$this->commandParentName} use_block --name='{$block}' {$this->prepareArgsManual($args)}");
 		}
 
 		\WP_CLI::success('Blocks successfully set.');

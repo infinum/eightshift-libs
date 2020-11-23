@@ -3,7 +3,7 @@
 
 /**
  * Custom Menu Walker specific functionality.
- * It provides BEM classes to menues.
+ * It provides BEM classes to menus.
  *
  * @package EightshiftLibs\Menu
  */
@@ -57,12 +57,14 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	/**
 	 * Display element for walker
 	 *
-	 * @param object $element element.
-	 * @param array  $children_elements children_elements.
-	 * @param int    $max_depth max_depth.
-	 * @param int    $depth depth.
-	 * @param array  $args args.
-	 * @param string $output output.
+	 * @see \Walker::display_element()
+	 *
+	 * @param object $element           Data object.
+     * @param array  $children_elements List of elements to continue traversing (passed by reference).
+     * @param int    $max_depth         Max depth to traverse.
+     * @param int    $depth             Depth of current element.
+     * @param array  $args              An array of arguments.
+     * @param string $output            Used to append additional content (passed by reference).
 	 *
 	 * @return void Parent Display element
 	 */
@@ -86,9 +88,11 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	/**
 	 * Start level
 	 *
-	 * @param string    $output output.
-	 * @param int       $depth depth.
-	 * @param \stdClass $args args.
+	 * @see \Walker_Nav_Menu::start_lvl()
+	 *
+	 * @param string $output Used to append additional content (passed by reference).
+	 * @param int $depth Depth of menu item. Used for padding.
+	 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
 	 *
 	 * @return void
 	 */
@@ -118,11 +122,13 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	/**
 	 * Add main/sub classes to li's and links.
 	 *
-	 * @param string    $output Used to append additional content (passed by reference).
-	 * @param \WP_Post  $item   Menu item data object.
-	 * @param int       $depth  Depth of menu item. Used for padding.
-	 * @param \stdClass $args   Not used.
-	 * @param int       $id     Not used.
+	 * @see \Walker_Nav_Menu::start_el()
+	 *
+     * @param string         $output Used to append additional content (passed by reference).
+     * @param \WP_Post       $item   Menu item data object.
+     * @param int            $depth  Depth of menu item. Used for padding.
+     * @param \stdClass|null $args   An object of wp_nav_menu() arguments.
+     * @param int            $id     Current item ID.
 	 *
 	 * @return void
 	 */
@@ -140,6 +146,8 @@ class BemMenuWalker extends \Walker_Nav_Menu
 
 		$parent_class = $prefix . $suffix['parent_item'];
 
+		$itemClasses = [];
+
 		if (!empty($item->classes)) {
 			$userClasses = array_map(
 				function ($className) use ($prefix) {
@@ -156,7 +164,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 			// Item classes.
 			$itemClasses = [
 				'item_class' => 0 === $depth ? $prefix . $suffix['item'] : '',
-				'parent_class' => isset($args) && $args->has_children ? $parent_class : '',
+				'parent_class' => isset($args->has_children) && $args->has_children ? $parent_class : '',
 				'active_page_class' => in_array(
 					'current-menu-item',
 					$item->classes,
@@ -178,8 +186,8 @@ class BemMenuWalker extends \Walker_Nav_Menu
 			];
 		}
 
-
 		// Convert array to string excluding any empty values.
+		$itemClasses = \apply_filters('walker_nav_menu_item_classes', $itemClasses, $item, $depth, $args);
 		$class_string = !empty($itemClasses) ? implode('  ', array_filter($itemClasses)) : '';
 
 		// Add the classes to the wrapping <li>.
@@ -218,6 +226,6 @@ class BemMenuWalker extends \Walker_Nav_Menu
 		$item_output .= !empty($args->after) ? $args->after : '';
 		$item_output .= '</span></a>';
 
-		$output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
+		$output .= apply_filters('walker_nav_menu_link_element', $item_output, $item, $depth, $args);
 	}
 }

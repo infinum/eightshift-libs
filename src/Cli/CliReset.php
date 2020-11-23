@@ -28,6 +28,18 @@ class CliReset extends AbstractCli
 		return 'reset';
 	}
 
+	/**
+	 * Get WPCLI command doc.
+	 *
+	 * @return array
+	 */
+	public function getDoc(): array
+	{
+		return [
+			'shortdesc' => 'DEVELOP - Used to reset and remove all outputs.',
+		];
+	}
+
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$outputDir = $this->getOutputDir('');

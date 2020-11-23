@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class BlockComponentCli
@@ -60,6 +61,9 @@ class BlockComponentCli extends AbstractCli
 		// Get Props.
 		$name = $assocArgs['name'] ?? '';
 
+		// Set optional arguments.
+		$skipExisting = $this->getSkipExisting($assocArgs);
+
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
@@ -71,7 +75,13 @@ class BlockComponentCli extends AbstractCli
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
 			$nameList = '';
-			foreach (array_diff(scandir($sourcePathFolder), ['..', '.']) as $item) {
+			$filesList = scandir($sourcePathFolder);
+
+			if (!$filesList) {
+				self::cliError("The folder in the '{$sourcePath}' seems to be empty.");
+			}
+
+			foreach (array_diff((array)$filesList, ['..', '.']) as $item) {
 				$nameList .= "- {$item} \n";
 			}
 
@@ -84,15 +94,14 @@ class BlockComponentCli extends AbstractCli
 			\WP_CLI::log(
 				"Or here is the list of all available component names: \n{$nameList}"
 			);
-			\WP_CLI::error(
-				"The component '{$sourcePath}' doesn\'t exist in our library."
-			);
+
+			self::cliError("The component '{$sourcePath}' doesn\'t exist in our library.");
 		}
 
 		// Destination exists.
-		if (file_exists($destinationPath)) {
-			\WP_CLI::error(
-			/* translators: %s will be replaced with the path. */
+		if (file_exists($destinationPath) && $skipExisting === false) {
+			self::cliError(
+				/* translators: %s will be replaced with the path. */
 				sprintf(
 					'The component in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
 					$destinationPath
@@ -102,7 +111,7 @@ class BlockComponentCli extends AbstractCli
 
 		system("cp -R {$sourcePath}/. {$destinationPath}/");
 
-		\WP_CLI::success('Compoent successfully moved to your project.');
+		\WP_CLI::success('Component successfully moved to your project.');
 
 		\WP_CLI::log('--------------------------------------------------');
 
@@ -112,12 +121,15 @@ class BlockComponentCli extends AbstractCli
 
 			if (!empty($class)) {
 				$class = $this->renameProjectName($assocArgs, $class);
+
 				$class = $this->renameNamespace($assocArgs, $class);
+
 				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-				$class = $this->renameUse($assocArgs, $class);
-	
+
+				$class = $this->renameUseFrontendLibs($assocArgs, $class);
+
 				// Output final class to new file/folder and finish.
-				$this->outputWrite($path, $file, $class, true);
+				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
 			}
 		}
 

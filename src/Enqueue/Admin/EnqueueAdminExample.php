@@ -3,12 +3,12 @@
 /**
  * The Admin Enqueue specific functionality.
  *
- * @package EightshiftLibs\Enqueue\Admin
+ * @package EightshiftBoilerplate\Enqueue\Admin
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Enqueue\Admin;
+namespace EightshiftBoilerplate\Enqueue\Admin;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Manifest\ManifestInterface;

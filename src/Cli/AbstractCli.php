@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use http\Exception\RuntimeException;
-
 /**
  * Class AbstractCli
  */
@@ -90,6 +88,12 @@ abstract class AbstractCli implements CliInterface
 					'description' => 'Define your project composer absolute path.',
 					'optional' => true,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'skip_existing',
+					'description' => 'If this value is set to true CLI commands will not fail it they find an existing files in your project',
+					'optional' => true,
+				],
 			],
 		];
 	}
@@ -97,9 +101,10 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @throws \RuntimeException Error in case the WP_CLI::add_command fails.
+	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
 	 *
 	 * @return void
+	 *  phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing
 	 */
 	public function registerCommand(): void
 	{
@@ -107,16 +112,23 @@ abstract class AbstractCli implements CliInterface
 			throw new \RuntimeException('Class doesn\'t exist');
 		}
 
-		$reflectionClass = new \ReflectionClass($this->getClassName());
+		try {
+			$reflectionClass = new \ReflectionClass($this->getClassName());
+		} catch (\ReflectionException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
+
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+
+		if (!is_callable($class)) {
+			$className = get_class($class);
+			self::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
+		}
 
 		\WP_CLI::add_command(
 			$this->commandParentName . ' ' . $this->getCommandName(),
 			$class,
-			array_merge(
-				$this->getGlobalSynopsis(),
-				$this->getDoc()
-			)
+			$this->prepareCommandDocs($this->getDoc(), $this->getGlobalSynopsis())
 		);
 	}
 
@@ -170,15 +182,5 @@ abstract class AbstractCli implements CliInterface
 	public function getCommandName(): string
 	{
 		return 'create_' . strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
-	}
-
-	/**
-	 * Get WPCLI command doc
-	 *
-	 * @return array
-	 */
-	public function getDoc(): array
-	{
-		return [];
 	}
 }

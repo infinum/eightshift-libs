@@ -94,12 +94,16 @@ class ConfigCli extends AbstractCli
 		$env = $assocArgs['env'] ?? '';
 		$routesVersion = $assocArgs['routes_version'] ?? '';
 
+		$className = $this->getClassShortName();
+
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
+		$class = $this->getExampleTemplate(__DIR__, $className);
 
 		// Replace stuff in file.
-		$class = $this->renameClassName($this->getClassShortName(), $class);
+		$class = $this->renameClassName($className, $class);
+
 		$class = $this->renameNamespace($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
 
 		if (!empty($name)) {
@@ -123,6 +127,6 @@ class ConfigCli extends AbstractCli
 		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $class);
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
 	}
 }

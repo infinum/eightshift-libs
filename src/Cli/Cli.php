@@ -14,13 +14,17 @@ use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli, BlockWrapperC
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\ConfigProject\ConfigProjectCli;
+use EightshiftLibs\LintPhp\LintPhpCli;
+use EightshiftLibs\View\EscapedViewCli;
+use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
-use EightshiftLibs\ExampleService\ServiceExampleCli;
+use EightshiftLibs\Services\ServiceExampleCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Login\LoginCli;
 use EightshiftLibs\Main\MainCli;
@@ -32,10 +36,9 @@ use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\{ExportCli, ImportCli};
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
-use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
-use WP_CLI\ExitException;
+use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 
 /**
  * Class Cli
@@ -79,6 +82,10 @@ class Cli
 		CiExcludeCli::class,
 		SetupCli::class,
 		LintPhpCli::class,
+		AcfMetaCli::class,
+		EscapedViewCli::class,
+		ThemeOptionsCli::class,
+		ConfigProjectCli::class,
 	];
 
 	/**
@@ -102,6 +109,7 @@ class Cli
 	 */
 	public const SETUP_CLASSES = [
 		CliInitTheme::class,
+		CliInitProject::class,
 	];
 
 	/**
@@ -148,7 +156,6 @@ class Cli
 	 *
 	 * @param array $args WPCLI eval-file arguments.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 * @throws \ReflectionException Exception if the class doesn't exist.
 	 *
 	 * @return void
@@ -158,7 +165,7 @@ class Cli
 		$commandName = $args[0] ?? '';
 
 		if (empty($commandName)) {
-			\WP_CLI::error('First argument must be a valid command name.');
+			CliHelpers::cliError('First argument must be a valid command name.');
 		}
 
 		foreach ($this->getDevelopClasses() as $item) {

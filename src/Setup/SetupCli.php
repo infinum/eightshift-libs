@@ -78,6 +78,6 @@ class SetupCli extends AbstractCli
 		$json = $this->getExampleTemplate(__DIR__, 'setup.json');
 
 		// Output json file to project root.
-		$this->outputWrite($root, 'setup.json', $json);
+		$this->outputWrite($root, 'setup.json', $json, $assocArgs);
 	}
 }

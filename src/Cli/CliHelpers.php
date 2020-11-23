@@ -50,14 +50,14 @@ trait CliHelpers
 	 *
 	 * @param string $currentDir Absolute path to dir where example is.
 	 * @param string $fileName File Name of example.
-	 * @param bool   $skipExisting Skip existing file.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
+	 * @param bool   $skipMissing Skip existing file.
 	 *
 	 * @return string
 	 */
-	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipExisting = false): string
+	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): string
 	{
+		$templateFile = '';
+
 		// If you pass file name with extension the version will be used.
 		if (strpos($fileName, '.') !== false) {
 			$path = "{$currentDir}/{$fileName}";
@@ -66,10 +66,14 @@ trait CliHelpers
 		}
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$templateFile = file_get_contents($path);
-
-		if ($templateFile === false && $skipExisting === false) {
-			\WP_CLI::error("The template {$path} seems to be missing.");
+		if (file_exists($path)) {
+			$templateFile = file_get_contents($path);
+		} else {
+			if ($skipMissing) {
+				$templateFile = '';
+			} else {
+				self::cliError("The template {$path} seems to be missing.");
+			}
 		}
 
 		return (string)$templateFile;
@@ -93,14 +97,16 @@ trait CliHelpers
 	 * @param string $outputDir Absolute path to output from project root dir.
 	 * @param string $outputFile Absolute path to output file.
 	 * @param string $class Modified class.
-	 * @param bool   $skipExisting Skip existing file.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
+	 * @param array  $args Optional arguments.
 	 *
 	 * @return void
 	 */
-	public function outputWrite(string $outputDir, string $outputFile, string $class, bool $skipExisting = false): void
+	public function outputWrite(string $outputDir, string $outputFile, string $class, array $args = []): void
 	{
+
+		// Set optional arguments.
+		$skipExisting = $this->getSkipExisting($args);
+
 		// Set output paths.
 		$outputDir = $this->getOutputDir($outputDir);
 
@@ -110,8 +116,7 @@ trait CliHelpers
 
 		// Bailout if file already exists.
 		if (file_exists($outputFile) && $skipExisting === false) {
-			\WP_CLI::error("The file {$outputFile} can\'t be generated because it already exists.");
-			return;
+			self::cliError("The file {$outputFile} can\'t be generated because it already exists.");
 		}
 
 		// Create output dir if it doesn't exist.
@@ -137,8 +142,7 @@ trait CliHelpers
 			return;
 		}
 
-		\WP_CLI::error("File {$outputFile} couldn\'t be created. There was an error.");
-		return;
+		self::cliError("File {$outputFile} couldn\'t be created. There was an error.");
 	}
 
 	/**
@@ -187,50 +191,51 @@ trait CliHelpers
 	/**
 	 * Replace namespace EightshiftBoilerplateVendor\ in class
 	 *
-	 * Note: ASCII is used because of composer imposter plugin we are using for prefixing vendors.
-	 *
-	 * \x6E\x61\x6D\x65\x73\x70\x61\x63\x65 - Corresponds to "namespace".
-	 * \x40\x70\x61\x63\x6B\x61\x67\x65 - Corresponds to "@package".
-	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
-	 *
-	 * @throws ExitException Exception in case of WP-CLI error.
 	 *
 	 * @return string
 	 */
 	public function renameNamespace(array $args = [], string $string = ''): string
 	{
+		$output = $string;
 		$namespace = $this->getNamespace($args);
+		$vendorPrefix = $this->getVendorPrefix($args);
 
-		// Namespace.
-		$class = preg_replace(
-			'/\x40\x70\x61\x63\x6B\x61\x67\x65 (w+|\w+)/',
-			"\x40\x70\x61\x63\x6B\x61\x67\x65 {$namespace}",
-			$string
-		);
+		if (function_exists('\add_action')) {
+			$output = str_replace(
+				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
+				"namespace {$namespace}\\",
+				$output
+			);
 
-		// @package.
-		$class = preg_replace(
-			'/\x6E\x61\x6D\x65\x73\x70\x61\x63\x65 (w+|\w+\\\\){1,2}/',
-			"\x6E\x61\x6D\x65\x73\x70\x61\x63\x65 {$namespace}\\",
-			(string)$class
-		);
+			$output = str_replace(
+				"@package {$vendorPrefix}\EightshiftBoilerplate\\",
+				"@package {$namespace}\\",
+				$output
+			);
+		} else {
+			$output = str_replace(
+				'namespace EightshiftBoilerplate\\',
+				"namespace {$namespace}\\",
+				$output
+			);
 
-		return (string)$class;
+			$output = str_replace(
+				'@package EightshiftBoilerplate\\',
+				"@package {$namespace}\\",
+				$output
+			);
+		}
+
+		return (string)$output;
 	}
 
 	/**
 	 * Replace use in class
 	 *
-	 * Note: ASCII is used because of composer imposter plugin we are using for prefixing vendors.
-	 *
-	 * \x75\x73\x65 - Corresponds to "use".
-	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
@@ -238,27 +243,62 @@ trait CliHelpers
 	{
 		$output = $string;
 
-		$prefix = "\x75\x73\x65";
-		$pattern = "/{$prefix} (w+|\w+\\\\)";
+		$vendorPrefix = $this->getVendorPrefix($args);
+		$namespace = $this->getNamespace($args);
+
+		$prefix = 'use';
+
+		if (function_exists('\add_action')) {
+			$output = str_replace(
+				"{$prefix} EightshiftBoilerplateVendor\\",
+				"{$prefix} {$vendorPrefix}\\",
+				$output
+			);
+
+			$output = str_replace(
+				"{$prefix} {$vendorPrefix}\EightshiftBoilerplate\\",
+				"{$prefix} {$namespace}\\",
+				$output
+			);
+		} else {
+			$output = str_replace(
+				"{$prefix} EightshiftBoilerplate\\",
+				"{$prefix} {$namespace}\\",
+				$output
+			);
+		}
+
+		return (string)$output;
+	}
+
+	/**
+	 * Replace use in frontend libs views.
+	 *
+	 * @param array  $args CLI args array.
+	 * @param string $string Full class as a string.
+	 *
+	 * @return string
+	 */
+	public function renameUseFrontendLibs(array $args = [], string $string = ''): string
+	{
+		$output = $string;
 
 		$vendorPrefix = $this->getVendorPrefix($args);
 		$namespace = $this->getNamespace($args);
 
-		// Rename all vendor prefix stuff.
-		$output = preg_replace(
-			"{$pattern}/",
+		$prefix = 'use';
+
+		$output = str_replace(
+			"{$prefix} EightshiftBoilerplateVendor\\",
 			"{$prefix} {$vendorPrefix}\\",
 			$output
 		);
 
-		// Leave all project stuff.
-		if (preg_match("{$pattern}{$namespace}/", $string)) {
-			$output = preg_replace(
-				"{$pattern}{$namespace}/",
-				"{$prefix} {$namespace}",
-				(string) $output
-			);
-		}
+		$output = str_replace(
+			"{$prefix} EightshiftBoilerplate\\",
+			"{$prefix} {$namespace}\\",
+			$output
+		);
 
 		return (string)$output;
 	}
@@ -268,18 +308,15 @@ trait CliHelpers
 	 *
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
-	 * @param string $name Name of lib to rename.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
-	public function renameTextDomain(array $args = [], string $string = '', string $name = 'eightshift-libs'): string
+	public function renameTextDomain(array $args = [], string $string = ''): string
 	{
 		$namespace = $this->getNamespace($args);
 
 		return str_replace(
-			$name,
+			'eightshift-libs',
 			$namespace,
 			$string
 		);
@@ -291,13 +328,17 @@ trait CliHelpers
 	 * @param array  $args CLI args array.
 	 * @param string $string Full class as a string.
 	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
-	 *
 	 * @return string
 	 */
 	public function renameTextDomainFrontendLibs(array $args = [], string $string = ''): string
 	{
-		return $this->renameTextDomain($args, $string, 'eightshift-boilerplate');
+		$namespace = $this->getNamespace($args);
+
+		return str_replace(
+			'eightshift-frontend-libs',
+			$namespace,
+			$string
+		);
 	}
 
 	/**
@@ -368,7 +409,7 @@ trait CliHelpers
 	}
 
 	/**
-	 * Change Class full name with suffix
+	 * Change Class full name with prefix
 	 *
 	 * @param string $templateName Current template.
 	 * @param string $newName New Class Name.
@@ -376,7 +417,7 @@ trait CliHelpers
 	 *
 	 * @return string
 	 */
-	public function renameClassNameWithSuffix(string $templateName, string $newName, string $string): string
+	public function renameClassNameWithPrefix(string $templateName, string $newName, string $string): string
 	{
 		return str_replace($this->getExampleFileName($templateName), $newName, $string);
 	}
@@ -385,8 +426,6 @@ trait CliHelpers
 	 * Get composer from project or lib
 	 *
 	 * @param array $args CLI args array.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return array
 	 */
@@ -405,7 +444,7 @@ trait CliHelpers
 		$composerFile = file_get_contents($composerPath);
 
 		if ($composerFile === false) {
-			\WP_CLI::error("The composer on {$composerPath} path seems to be missing.");
+			self::cliError("The composer on {$composerPath} path seems to be missing.");
 		}
 
 		return json_decode((string)$composerFile, true);
@@ -415,8 +454,6 @@ trait CliHelpers
 	 * Get composers defined namespace
 	 *
 	 * @param array $args CLI args array.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
@@ -457,8 +494,6 @@ trait CliHelpers
 	 * Get composers defined vendor prefix
 	 *
 	 * @param array $args CLI args array.
-	 *
-	 * @throws ExitException Exception thrown in case of error in WP-CLI command.
 	 *
 	 * @return string
 	 */
@@ -503,14 +538,17 @@ trait CliHelpers
 	 * @param array $items Array of classes.
 	 * @param bool  $run Run or log output.
 	 *
-	 * @throws \ReflectionException Exception if the class cannot be found.
-	 *
 	 * @return void
 	 */
 	public function getEvalLoop(array $items = [], bool $run = false): void
 	{
 		foreach ($items as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			try {
+				$reflectionClass = new \ReflectionClass($item);
+			} catch (\ReflectionException $e) {
+				exit("{$e->getCode()}: {$e->getMessage()}");
+			}
+
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
 			if (method_exists($class, 'getCommandName')) {
@@ -623,8 +661,82 @@ trait CliHelpers
 			"components/{$name}-editor.js",
 			"components/{$name}-toolbar.js",
 			"components/{$name}-options.js",
-			"components/{$name}-responsive-tab-content.js",
-			"components/{$name}-responsive-tab-content-simple.js",
 		];
+	}
+
+	/**
+	 * Check and prepare default value for skip_existing arg.
+	 *
+	 * @param array $args Optional arguments.
+	 *
+	 * @return boolean
+	 */
+	public function getSkipExisting(array $args): bool
+	{
+		return isset($args['skip_existing']) ? (bool) $args['skip_existing'] : false;
+	}
+
+	/**
+	 * Prepare Command Doc for output
+	 *
+	 * @param array $docs Command docs array.
+	 * @param array $docsGlobal Global docs array.
+	 *
+	 * @throws \RuntimeException Error in case the shortdesc is missing in command docs.
+	 *
+	 * @return array
+	 */
+	public function prepareCommandDocs(array $docs, array $docsGlobal): array
+	{
+		$shortdesc = $docs['shortdesc'] ?? '';
+
+		if (! $shortdesc) {
+			throw new \RuntimeException('CLI Short description is missing.');
+		}
+
+		$synopsis = $docs['synopsis'] ?? [];
+
+		return [
+			'shortdesc' => $shortdesc,
+			'synopsis' => array_merge(
+				$docsGlobal['synopsis'],
+				$synopsis
+			)
+		];
+	}
+
+	/**
+	 * Manually prepare arguments to pass to runcommand method.
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return string
+	 */
+	public function prepareArgsManual(array $args): string
+	{
+		$output = '';
+		foreach ($args as $key => $value) {
+			$output .= "--{$key}='{$value}' ";
+		}
+
+		return $output;
+	}
+
+	/**
+	 * WP CLI error logging helper
+	 *
+	 * A wrapper for the WP_CLI::error with error handling.
+	 *
+	 * @param string $errorMessage Error message to log in the CLI.
+	 *
+	 * @return void
+	 */
+	public static function cliError(string $errorMessage): void
+	{
+		try {
+			\WP_CLI::error($errorMessage);
+		} catch (ExitException $e) {
+			exit("{$e->getCode()}: {$e->getMessage()}");
+		}
 	}
 }

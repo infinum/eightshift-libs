@@ -11,19 +11,13 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Blocks\BlocksCli;
-use EightshiftLibs\Build\BuildCli;
-use EightshiftLibs\CiExclude\CiExcludeCli;
-use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
-use EightshiftLibs\GitIgnore\GitIgnoreCli;
-use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
-use EightshiftLibs\Setup\SetupCli;
 
 /**
  * Class CliInitTheme
@@ -44,11 +38,6 @@ class CliInitTheme extends AbstractCli
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
 		MenuCli::class,
-		BuildCli::class,
-		LintPhpCli::class,
-		GitIgnoreCli::class,
-		SetupCli::class,
-		CiExcludeCli::class,
 		BlocksCli::class,
 	];
 
@@ -59,7 +48,7 @@ class CliInitTheme extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_theme';
+		return 'setup_theme';
 	}
 
 	/**
@@ -82,17 +71,26 @@ class CliInitTheme extends AbstractCli
 		}
 
 		foreach (static::INIT_THEME_CLASSES as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			try {
+				$reflectionClass = new \ReflectionClass($item);
+			} catch (\ReflectionException $e) {
+				exit("{$e->getCode()}: {$e->getMessage()}");
+			}
+
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 			if (method_exists($class, 'getCommandName')) {
 				if (function_exists('\add_action')) {
-					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()}");
+					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
 				} else {
-					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
 				}
 			}
 		}
+
+		\WP_CLI::log('--------------------------------------------------');
+
+		\WP_CLI::log((string)shell_exec('npm run start')); // phpcs:ignore
 
 		\WP_CLI::log('--------------------------------------------------');
 

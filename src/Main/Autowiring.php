@@ -42,7 +42,6 @@ class Autowiring
 		$projectClasses = $this->getClassesInNamespace($this->namespace, $this->psr4Prefixes);
 
 		$dependencyTree = [];
-		$filenameIndex = [];
 
 		// Prepare the filename index.
 		$filenameIndex = $this->buildFilenameIndex($projectClasses);
@@ -169,7 +168,7 @@ class Autowiring
 			if ($file->isDir()) {
 				continue;
 			}
-			if (preg_match('/[A-Z]{1}.*.php/', $file->getFileName())) {
+			if (preg_match('/[A-Z].*.php/', $file->getFileName())) {
 				$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespace, $pathToNamespace);
 			}
 		}

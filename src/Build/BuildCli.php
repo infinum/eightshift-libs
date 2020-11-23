@@ -67,12 +67,6 @@ class BuildCli extends AbstractCli
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'skip_setup_file',
-					'description' => 'If you already have setup.json file in the root of your project.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
 					'name' => 'project_name',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name.',
 					'optional' => true,
@@ -91,7 +85,6 @@ class BuildCli extends AbstractCli
 	{
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
-		$skipSetupFile = $assocArgs['skip_setup_file'] ?? true;
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
@@ -99,17 +92,8 @@ class BuildCli extends AbstractCli
 		// Replace stuff in file.
 		$class = $this->renameProjectName($assocArgs, $class);
 		$class = $this->renameProjectType($assocArgs, $class);
-		$class = $this->renameTextDomain($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root . 'bin', $this->getClassShortName(), $class);
-
-		if (!$skipSetupFile) {
-			// Get setup.json file.
-			$json = $this->getExampleTemplate(dirname(__DIR__, 1), 'setup/setup.json');
-
-			// Output json file to project root.
-			$this->outputWrite($root, 'setup.json', $json);
-		}
+		$this->outputWrite($root . 'bin', 'build.sh', $class, $assocArgs);
 	}
 }

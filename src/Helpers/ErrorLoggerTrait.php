@@ -28,7 +28,7 @@ trait ErrorLoggerTrait
 	 *                                     if response is already an instance, WP_REST_Response,
 	 *                                     otherwise returns a new WP_REST_Response instance.
 	 */
-	public function restResponseHandler(int $code, string $status, $msg, $data = null)
+	public function restResponseHandler(int $code, string $status, ?string $msg, ?array $data = null)
 	{
 		$output = [
 			'code' => $code,

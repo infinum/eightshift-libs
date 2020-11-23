@@ -46,10 +46,11 @@ class I18nCli extends AbstractCli
 
 		// Replace stuff in file.
 		$class = $this->renameClassName($className, $class);
-		$class = $this->renameNamespace($assocArgs, $class);
-		$class = $this->renameUse($assocArgs, $class);
 
+		$class = $this->renameNamespace($assocArgs, $class);
+
+		$class = $this->renameUse($assocArgs, $class);
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
 	}
 }

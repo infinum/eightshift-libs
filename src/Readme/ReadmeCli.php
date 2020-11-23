@@ -78,6 +78,6 @@ class ReadmeCli extends AbstractCli
 		$class = $this->getExampleTemplate(__DIR__, 'README-project.md');
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, 'README-project.md', $class);
+		$this->outputWrite($root, 'README-project.md', $class, $assocArgs);
 	}
 }

@@ -28,7 +28,7 @@ class Shortcode
 	 *
 	 * @return string|bool False on failure, the result of the shortcode on success.
 	 */
-	public function getShortcode(string $tag, array $attr = [], $content = null)
+	public static function getShortcode(string $tag, array $attr = [], $content = null)
 	{
 		global $shortcodeTags;
 

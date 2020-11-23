@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Menu;
 
-use EightshiftLibs\Menu\MenuPositionsInterface;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -47,6 +46,7 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 	 * @param string $location This must be the same as what is set in wp-admin/settings/menus
 	 *                                   for menu location and registered in registerMenuPositions function.
 	 * @param string $cssClassPrefix This string will prefix all of the menu's classes, BEM syntax friendly.
+	 * @param string $parentClass This string will add class to only top level list element.
 	 * @param string $cssClassModifiers Provide either a string or array of values to apply extra classes
 	 *                                   to the <ul> but not the <li's>.
 	 * @param bool   $echo Echo the menu.
@@ -56,6 +56,7 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 	public static function bemMenu(
 		string $location = 'main_menu',
 		string $cssClassPrefix = 'main-menu',
+		string $parentClass = '',
 		$cssClassModifiers = '',
 		bool $echo = true
 	) {
@@ -73,7 +74,7 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 		$args = [
 			'theme_location' => $location,
 			'container' => false,
-			'items_wrap' => '<ul class="' . $cssClassPrefix . ' ' . $modifiers . '">%3$s</ul>',
+			'items_wrap' => '<ul class="' . $parentClass . ' ' . $cssClassPrefix . ' ' . $modifiers . '">%3$s</ul>',
 			'echo' => $echo,
 			'walker' => new BemMenuWalker($cssClassPrefix),
 		];

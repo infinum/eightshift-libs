@@ -462,7 +462,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				$error = esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs');
 				break;
 			default:
-				$error = esc_html__('Unknown JSON error occured.', 'eightshift-libs');
+				$error = esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
 				break;
 		}
 

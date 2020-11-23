@@ -94,6 +94,6 @@ class CiExcludeCli extends AbstractCli
 		$class = $this->renameProjectType($assocArgs, $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, 'ci-exclude.txt', $class);
+		$this->outputWrite($root, 'ci-exclude.txt', $class, $assocArgs);
 	}
 }

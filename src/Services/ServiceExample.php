@@ -1,14 +1,14 @@
 <?php
 
 /**
- * The file that is an example class.
+ * The file that is an ServiceExample class.
  *
- * @package EightshiftLibs\ExampleService
+ * @package EightshiftBoilerplate\Services;
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\ExampleService;
+namespace EightshiftBoilerplate\Services;
 
 use EightshiftLibs\Services\ServiceInterface;
 

@@ -3,12 +3,12 @@
 /**
  * Enqueue class used to define all script and style enqueues for Gutenberg blocks.
  *
- * @package EightshiftLibs\Enqueue\Blocks
+ * @package EightshiftBoilerplate\Enqueue\Blocks
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Enqueue\Blocks;
+namespace EightshiftBoilerplate\Enqueue\Blocks;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Manifest\ManifestInterface;

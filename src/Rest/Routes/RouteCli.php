@@ -97,19 +97,21 @@ class RouteCli extends AbstractCli
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
-		$className = $this->getClassShortName() . $className;
+		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
 
 		// Replace stuff in file.
-		$class = $this->renameClassNameWithSuffix($this->getClassShortName(), $className, $class);
+		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
 		$class = $this->renameNamespace($assocArgs, $class);
+
 		$class = $this->renameUse($assocArgs, $class);
+
 		$class = str_replace('/example-route', "/{$endpointSlug}", $class);
 		$class = str_replace('static::READABLE', static::VERB_ENUM[$method], $class);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class);
+		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
 	}
 }

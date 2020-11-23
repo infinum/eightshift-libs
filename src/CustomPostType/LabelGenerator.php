@@ -49,7 +49,7 @@ final class LabelGenerator
 	public const PLURAL_NAME_LC = 'plural_name_lc';
 
 	/**
-	 * Requiered Nons Constant
+	 * Required Nons Constant
 	 *
 	 * @var string
 	 */

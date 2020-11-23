@@ -5,14 +5,14 @@
  *
  * It is used to provide manifest.json file location used with Webpack to fetch correct file locations.
  *
- * @package EightshiftLibs\Manifest
+ * @package EightshiftBoilerplate\Manifest
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Manifest;
+namespace EightshiftBoilerplate\Manifest;
 
-use EightshiftLibs\Config\Config;
+use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Manifest\AbstractManifest;
 
 /**
