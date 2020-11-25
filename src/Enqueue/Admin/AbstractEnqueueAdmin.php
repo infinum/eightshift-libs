@@ -32,23 +32,13 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	protected $manifest;
 
 	/**
-	 * Register all the hooks
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		\add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
-	}
-
-	/**
 	 * Register the Stylesheets for the admin area.
 	 *
+	 * @param string $hookSuffix The current admin page.
+	 *
 	 * @return void
 	 */
-	public function enqueueStyles(): void
+	public function enqueueStyles(string $hookSuffix): void
 	{
 		$handle = "{$this->getAssetsPrefix()}-styles";
 
@@ -66,9 +56,11 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
+	 * @param string $hookSuffix The current admin page.
+	 *
 	 * @return void
 	 */
-	public function enqueueScripts(): void
+	public function enqueueScripts(string $hookSuffix): void
 	{
 		$handle = "{$this->getAssetsPrefix()}-scripts";
 

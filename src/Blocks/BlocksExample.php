@@ -35,7 +35,7 @@ class Blocks extends AbstractBlocks
 		remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		\add_filter('block_categories', [$this, 'getCustomCategory']);
+		\add_filter('block_categories', [$this, 'getCustomCategory'], 10, 2);
 
 		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 25);
 

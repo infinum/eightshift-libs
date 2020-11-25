@@ -108,11 +108,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
 	 *
-	 * @return array
+	 * @param bool|array<string> $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
+	 * @param \WP_Post           $post The post resource data.
+	 *
+	 * @return bool|array<string> Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
 	 */
-	public function getAllBlocksList(): array
+	public function getAllBlocksList( $allowedBlockTypes, \WP_Post $post)
 	{
-		$blocks = array_map(
+		$allowedBlockTypes = array_map(
 			function ($block) {
 				return $block['blockFullName'];
 			},
@@ -120,10 +123,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		);
 
 		// Allow reusable block.
-		$blocks[] = 'core/block';
-		$blocks[] = 'core/template';
+		$allowedBlockTypes[] = 'core/block';
+		$allowedBlockTypes[] = 'core/template';
 
-		return $blocks;
+		return $allowedBlockTypes;
 	}
 
 	/**
@@ -212,11 +215,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * This category will be shown on all blocks list in "Add Block" button.
 	 *
-	 * @param array $categories Array of all blocks categories.
+	 * @param array[]  $categories Array of all block categories.
+	 * @param \WP_Post $post Post being loaded.
 	 *
-	 * @return array
+	 * @return array[] Array of block categories.
 	 */
-	public function getCustomCategory(array $categories): array
+	public function getCustomCategory(array $categories, \WP_Post $post): array
 	{
 		return array_merge(
 			$categories,

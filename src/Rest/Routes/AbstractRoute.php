@@ -32,9 +32,11 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	/**
 	 * Method that registers rest route that is used inside rest_api_init hook
 	 *
+	 * @param \WP_REST_Server $wpRestServer Server object.
+	 *
 	 * @return void
 	 */
-	public function routeRegisterCallback(): void
+	public function routeRegisterCallback(\WP_REST_Server $wpRestServer): void
 	{
 		\register_rest_route(
 			$this->getNamespace() . '/' . $this->getVersion(),

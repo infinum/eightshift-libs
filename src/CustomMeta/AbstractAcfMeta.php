@@ -25,6 +25,11 @@ abstract class AbstractAcfMeta implements ServiceInterface
 	 */
 	public function register(): void
 	{
+		// Silently exit if no ACF is installed.
+		if (!class_exists('ACF')) {
+			return;
+		}
+
 		\add_action('acf/init', [$this, 'fields']);
 	}
 
