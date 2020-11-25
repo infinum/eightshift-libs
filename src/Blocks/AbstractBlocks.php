@@ -108,12 +108,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
 	 *
-	 * @param bool|array<string> $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
-	 * @param \WP_Post           $post The post resource data.
+	 * @param bool|array $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
+	 * @param \WP_Post   $post The post resource data.
 	 *
-	 * @return bool|array<string> Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
+	 * @return bool|array Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
 	 */
-	public function getAllBlocksList( $allowedBlockTypes, \WP_Post $post)
+	public function getAllBlocksList($allowedBlockTypes, \WP_Post $post)
 	{
 		$allowedBlockTypes = array_map(
 			function ($block) {
