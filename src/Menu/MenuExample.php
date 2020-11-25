@@ -31,7 +31,7 @@ class MenuExample extends AbstractMenu
 	/**
 	 * Return all menu positions
 	 *
-	 * @return array Menu positions with slug => name structure.
+	 * @return array<string> Menu positions with slug => name structure.
 	 */
 	public function getMenuPositions(): array
 	{
