@@ -32,7 +32,15 @@
     "php-di/invoker": "^2.0"
   },
   "require-dev": {
+    "brain/monkey": "^2.5",
     "codeception/codeception": "^4.1",
+    "codeception/module-asserts": "^1.0",
+    "codeception/module-cli": "^1.0",
+    "codeception/module-db": "^1.0",
+    "codeception/module-filesystem": "^1.0",
+    "codeception/module-phpbrowser": "^1.0",
+    "codeception/module-webdriver": "^1.0",
+    "codeception/util-universalframework": "^1.0",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "infinum/coding-standards-wp": "^1.0.1",
     "roave/security-advisories": "dev-master",
@@ -45,6 +53,11 @@
       "EightshiftBoilerplate\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
@@ -55,6 +68,8 @@
   "scripts": {
     "analyze": "@php ./vendor/bin/phpstan analyze",
     "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
-    "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
+    "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
+    "tests:unit": "@php ./vendor/bin/codecept run unit",
+    "tests:integration": "@php ./vendor/bin/codecept run integration"
   }
 }
