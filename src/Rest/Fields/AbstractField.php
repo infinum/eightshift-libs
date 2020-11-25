@@ -31,9 +31,11 @@ abstract class AbstractField implements ServiceInterface
 	/**
 	 * Method that register rest field that is used inside rest_api_init hook.
 	 *
+	 * @param \WP_REST_Server $wpRestServer Server object.
+	 *
 	 * @return void
 	 */
-	public function fieldRegisterCallback(): void
+	public function fieldRegisterCallback(\WP_REST_Server $wpRestServer): void
 	{
 		\register_rest_field(
 			$this->getObjectType(),
