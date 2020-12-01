@@ -149,10 +149,10 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'allowfullscreen' => true,
 		],
 		'button' => [
-      'class' => true,
-      'id' => true,
+			'class' => true,
+			'id' => true,
 			'type' => true,
-      'onClick' => true,
+			'onClick' => true,
 		],
 	];
 
