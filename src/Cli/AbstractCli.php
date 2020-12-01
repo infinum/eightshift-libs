@@ -10,13 +10,16 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use WP_CLI\ExitException;
-
 /**
  * Class AbstractCli
  */
 abstract class AbstractCli implements CliInterface
 {
+	/**
+	 * CLI helpers trait.
+	 */
+	use CliHelpers;
+
 	/**
 	 * Top level commands name.
 	 *
@@ -898,23 +901,5 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		return $output;
-	}
-
-	/**
-	 * WP CLI error logging helper
-	 *
-	 * A wrapper for the WP_CLI::error with error handling.
-	 *
-	 * @param string $errorMessage Error message to log in the CLI.
-	 *
-	 * @return void
-	 */
-	public static function cliError(string $errorMessage): void
-	{
-		try {
-			\WP_CLI::error($errorMessage);
-		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
-		}
 	}
 }
