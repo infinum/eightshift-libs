@@ -10,13 +10,16 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use WP_CLI\ExitException;
-
 /**
  * Class AbstractCli
  */
 abstract class AbstractCli implements CliInterface
 {
+	/**
+	 * CLI helpers trait.
+	 */
+	use CliHelpers;
+
 	/**
 	 * Top level commands name.
 	 *
