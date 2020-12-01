@@ -194,7 +194,7 @@ abstract class AbstractCli implements CliInterface
 		return 'create_' . strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
 	}
 
-/**
+	/**
 	 * Generate correct class name from provided string
 	 *
 	 * Remove _, - and empty space. Create a camelcase from string.
@@ -226,7 +226,7 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string $currentDir Absolute path to dir where example is.
 	 * @param string $fileName File Name of example.
-	 * @param bool $skipMissing Skip existing file.
+	 * @param bool   $skipMissing Skip existing file.
 	 *
 	 * @return CliInterface Current CLI class.
 	 */
@@ -368,7 +368,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace namespace EightshiftBoilerplateVendor\ in class
 	 *
-	 * @param array  $args CLI args array.
+	 * @param array $args CLI args array.
 	 *
 	 * @return CliInterface Current CLI class.
 	 */
@@ -453,7 +453,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace use in frontend libs views.
 	 *
-	 * @param array  $args CLI args array.
+	 * @param array $args CLI args array.
 	 *
 	 * @return CliInterface Current CLI class.
 	 */
