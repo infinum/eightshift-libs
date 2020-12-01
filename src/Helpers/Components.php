@@ -110,7 +110,7 @@ class Components
 			echo '</div>';
 		}
 
-		return (string)ob_get_clean();
+		return trim((string) ob_get_clean());
 	}
 
 	/**
