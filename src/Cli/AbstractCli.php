@@ -487,19 +487,20 @@ abstract class AbstractCli implements CliInterface
 	 * Replace text domain in class
 	 *
 	 * @param array  $args CLI args array.
-	 * @param string $string Full class as a string.
 	 *
-	 * @return string
+	 * @return CliInterface Current CLI class.
 	 */
-	public function renameTextDomain(array $args = [], string $string = ''): string
+	public function renameTextDomain(array $args = []): CliInterface
 	{
 		$namespace = $this->getNamespace($args);
 
-		return str_replace(
+		$this->fileContents = str_replace(
 			'eightshift-libs',
 			$namespace,
-			$string
+			$this->fileContents
 		);
+
+		return $this;
 	}
 
 	/**
