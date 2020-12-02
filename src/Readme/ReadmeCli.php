@@ -75,9 +75,7 @@ class ReadmeCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, 'README.md');
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, 'README.md', $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, 'README-project.md')
+			->outputWrite($root, 'README-project.md', $assocArgs);
 	}
 }
