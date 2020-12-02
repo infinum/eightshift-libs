@@ -605,6 +605,26 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
+	 * Search and replace wrapper
+	 *
+	 * This method will do a search and replace in the fileContents member variable and
+	 * return the current instance.
+	 *
+	 * It's a wrapper of str_replace.
+	 *
+	 * @param string $oldString Old string.
+	 * @param string $newString New string.
+	 *
+	 * @return CliInterface Current CLI class.
+	 */
+	public function searchReplaceString(string $oldString, string $newString): CliInterface
+	{
+		$this->fileContents = str_replace($oldString, $newString, $this->fileContents);
+
+		return $this;
+	}
+
+	/**
 	 * Get composer from project or lib
 	 *
 	 * @param array $args CLI args array.
