@@ -595,13 +595,14 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string $templateName Current template.
 	 * @param string $newName New Class Name.
-	 * @param string $string Full class as a string.
 	 *
-	 * @return string
+	 * @return CliInterface Current CLI class.
 	 */
-	public function renameClassNameWithPrefix(string $templateName, string $newName, string $string): string
+	public function renameClassNameWithPrefix(string $templateName, string $newName): CliInterface
 	{
-		return str_replace($this->getExampleFileName($templateName), $newName, $string);
+		$this->fileContents = str_replace($this->getExampleFileName($templateName), $newName, $this->fileContents);
+
+		return $this;
 	}
 
 	/**
