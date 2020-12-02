@@ -40,18 +40,11 @@ class MenuCli extends AbstractCli
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $className);
-
-		// Replace stuff in file.
-		$class = $this->renameClassName($className, $class);
-
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		$class = $this->renameTextDomain($assocArgs, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $className)
+			->renameClassName($className)
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs)
+			->renameTextDomain($assocArgs)
+			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }
