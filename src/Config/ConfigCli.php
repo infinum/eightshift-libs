@@ -55,7 +55,7 @@ class ConfigCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Define project name.',
-					'optional' => true,
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
