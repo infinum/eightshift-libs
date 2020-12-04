@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftBoilerplate\I18n;
 
 use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\I18n\AbstractI18n;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Class i18n
  *
  * This class handles theme or admin languages.
  */
-class I18n extends AbstractI18n
+class I18n implements ServiceInterface
 {
 
 	/**
@@ -32,22 +32,15 @@ class I18n extends AbstractI18n
 	}
 
 	/**
-	 * Text domain. Unique identifier for retrieving translated strings.
+	 * Load the plugin text domain for translation.
 	 *
-	 * @return string
+	 * @return void
 	 */
-	public function getTextdomainName(): string
+	public function loadThemeTextdomain(): void
 	{
-		return Config::getProjectName();
-	}
-
-	/**
-	 * Path to the directory containing the .mo file.
-	 *
-	 * @return string
-	 */
-	public function getTranslationFilePath(): string
-	{
-		return Config::getProjectPath('/src/I18n');
+		\load_theme_textdomain(
+			Config::getProjectName(),
+			Config::getProjectPath('/src/I18n')
+		);
 	}
 }

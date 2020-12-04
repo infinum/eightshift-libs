@@ -10,14 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Login;
 
-use EightshiftLibs\Login\AbstractLogin;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Class Login
  *
  * This class handles all login page options.
  */
-class LoginExample extends AbstractLogin
+class LoginExample implements ServiceInterface
 {
 
 	/**
@@ -28,5 +28,17 @@ class LoginExample extends AbstractLogin
 	public function register(): void
 	{
 		\add_filter('login_headerurl', [$this, 'customLoginUrl']);
+	}
+
+	/**
+	 * Change default logo link with home url.
+	 *
+	 * @param string $loginHeaderUrl Login header logo URL.
+	 *
+	 * @return string Modified login header logo URL.
+	 */
+	public function customLoginUrl(string $loginHeaderUrl): string
+	{
+		return \home_url('/');
 	}
 }
