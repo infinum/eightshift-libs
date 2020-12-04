@@ -27,7 +27,7 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		$postTypes = $this->getPostTypeSlug();
+		$postTypes = $this->getPostTypeSlugs();
 
 		foreach ($postTypes as $postType) {
 			\add_filter("manage_{$postType}_posts_columns", [$this, 'addColumnName']);
@@ -59,5 +59,5 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	 *
 	 * @return array The name of the post type.
 	 */
-	abstract protected function getPostTypeSlug(): array;
+	abstract protected function getPostTypeSlugs(): array;
 }
