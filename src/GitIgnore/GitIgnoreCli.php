@@ -75,9 +75,7 @@ class GitIgnoreCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, '.gitignore');
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, '.gitignore', $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, '.gitignore')
+			->outputWrite($root, '.gitignore', $assocArgs);
 	}
 }
