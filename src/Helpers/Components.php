@@ -118,7 +118,7 @@ class Components
 	 *
 	 * @param string $path Absolute path to manifest folder.
 	 *
-	 * @throws \Exception When we're unable to find the component by $component.
+	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return array
 	 */
