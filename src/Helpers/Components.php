@@ -128,7 +128,7 @@ class Components
 		$manifest = "{$path}/manifest.json";
 
 		if (!file_exists($manifest)) {
-			ComponentException::throwUnableToLocateComponent($manifest);
+			throw ComponentException::throwUnableToLocateComponent($manifest);
 		}
 
 		return json_decode(implode(' ', (array)file($manifest)), true);
