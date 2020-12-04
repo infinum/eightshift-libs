@@ -201,7 +201,7 @@ class Components
 
 
 	/**
-	 * Return BEM selector for html class and check if Block element is set.
+	 * Return BEM selector for html class and check if Block part is set.
 	 *
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
@@ -209,7 +209,7 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function selectorB(string $block, string $element = '', string $modifier = ''): string
+	public static function selectorBlock(string $block, string $element = '', string $modifier = ''): string
 	{
 		$fullModifier = '';
 		$fullElement = '';
@@ -226,7 +226,7 @@ class Components
 	}
 
 	/**
-	 * Return BEM selector for html class and check if element is set.
+	 * Return BEM selector for html class and check if Element part is set.
 	 *
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
@@ -234,7 +234,7 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function selectorE(string $block, string $element, string $modifier = ''): string
+	public static function selectorElement(string $block, string $element, string $modifier = ''): string
 	{
 		$fullModifier = '';
 
@@ -246,7 +246,7 @@ class Components
 	}
 
 	/**
-	 * Return BEM selector for html class and check if Modifier element is set.
+	 * Return BEM selector for html class and check if Modifier part is set.
 	 *
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
@@ -254,7 +254,7 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function selectorM(string $block, string $element, string $modifier): string
+	public static function selectorModifier(string $block, string $element, string $modifier): string
 	{
 		return $modifier ? "{$block}__{$element}--{$modifier}"  : '';
 	}
@@ -275,7 +275,7 @@ class Components
 
 		$modifier = self::checkAttr($key, $attributes, $manifest);
 
-		return self::selectorM($block, $element, $modifier);
+		return self::selectorModifier($block, $element, $modifier);
 	}
 
 	/**
@@ -290,6 +290,6 @@ class Components
 	 */
 	public static function selectorCustom(bool $condition, string $block, string $element = '', string $modifier = ''): string
 	{
-		return $condition ? self::selectorB($block, $element, $modifier) : '';
+		return $condition ? self::selectorBlock($block, $element, $modifier) : '';
 	}
 }
