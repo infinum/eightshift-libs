@@ -118,7 +118,7 @@ class Components
 	 *
 	 * @param string $path Absolute path to manifest folder.
 	 *
-	 * @throws \Exception When we're unable to find the component by $component.
+	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return array
 	 */
@@ -128,7 +128,7 @@ class Components
 		$manifest = "{$path}/manifest.json";
 
 		if (!file_exists($manifest)) {
-			ComponentException::throwUnableToLocateComponent($manifest);
+			throw ComponentException::throwUnableToLocateComponent($manifest);
 		}
 
 		return json_decode(implode(' ', (array)file($manifest)), true);

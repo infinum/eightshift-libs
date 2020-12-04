@@ -10,15 +10,26 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\ModifyAdminAppearance;
 
-use EightshiftLibs\ModifyAdminAppearance\AbstractModifyAdminAppearance;
+use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Class that modifies some administrator appearance
  *
  * Example: Change color based on environment, remove dashboard widgets etc.
  */
-class ModifyAdminAppearanceExample extends AbstractModifyAdminAppearance
+class ModifyAdminAppearanceExample implements ServiceInterface
 {
+
+	/**
+	 * List of admin color schemes.
+	 *
+	 * @var array
+	 */
+	public const COLOR_SCHEMES = [
+		'default' => 'fresh',
+		'staging' => 'blue',
+		'production' => 'sunrise',
+	];
 
 	/**
 	 * Register all the hooks
@@ -37,6 +48,14 @@ class ModifyAdminAppearanceExample extends AbstractModifyAdminAppearance
 	 */
 	public function adminColor(): string
 	{
-		return $this->setAdminColor(defined('EB_ENV') ? EB_ENV : 'default');
+		$env = defined('EB_ENV') ? EB_ENV : 'default';
+
+		$colors = self::COLOR_SCHEMES;
+
+		if (!isset($colors[$env])) {
+			return $colors['default'];
+		}
+
+		return $colors[$env];
 	}
 }
