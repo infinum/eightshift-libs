@@ -208,25 +208,19 @@ trait CliHelpers
 				"namespace {$namespace}\\",
 				$output
 			);
-
-			$output = str_replace(
-				"@package {$vendorPrefix}\EightshiftBoilerplate\\",
-				"@package {$namespace}\\",
-				$output
-			);
 		} else {
 			$output = str_replace(
 				'namespace EightshiftBoilerplate\\',
 				"namespace {$namespace}\\",
 				$output
 			);
-
-			$output = str_replace(
-				'@package EightshiftBoilerplate\\',
-				"@package {$namespace}\\",
-				$output
-			);
 		}
+
+		$output = str_replace(
+			'@package EightshiftBoilerplate',
+			"@package {$namespace}",
+			$output
+		);
 
 		return (string)$output;
 	}
