@@ -172,7 +172,6 @@ test('Asserts that checkAttr works in case attribute is array', function () {
 
 test('Asserts that checkAttr returns default value', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
-
 	$attributes['title'] = 'Some attribute';
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
@@ -254,6 +253,32 @@ test('Asserts that selectorModifier returns the correct class when element is an
 	$this->assertEquals('', $selector);
 });
 
+
+/**
+ * Components::selector tests
+ */
+test('Asserts that selector returns the correct class when attributes are set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
+	$attributes['buttonAlign'] = 'right';
+
+	$selector = Components::selector('button', 'icon', 'buttonAlign', $attributes, $manifest);
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button__icon--right', $selector);
+});
+
+
+/**
+ * Components::selectorCustom tests
+ */
+test('Asserts that selectorCustom returns the correct class attributes are set', function () {
+	$selector = Components::selectorCustom(true, 'button', 'icon', 'blue');
+	$selectorFalse = Components::selectorCustom(false, 'button', 'icon', 'blue');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button__icon--blue', $selector);
+	$this->assertEquals('', $selectorFalse);
+});
 
 
 

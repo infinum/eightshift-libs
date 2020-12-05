@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1607186403">
-  <project timestamp="1607186403">
+<coverage generated="1607186681">
+  <project timestamp="1607186681">
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Blocks/AbstractBlocks.php">
       <class name="EightshiftLibs\Blocks\AbstractBlocks" namespace="global">
         <metrics complexity="43" methods="17" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="157" coveredstatements="0" elements="174" coveredelements="0"/>
@@ -1864,7 +1864,7 @@
     </file>
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Helpers/Components.php">
       <class name="EightshiftLibs\Helpers\Components" namespace="global">
-        <metrics complexity="42" methods="11" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="86" coveredstatements="81" elements="97" coveredelements="90"/>
+        <metrics complexity="42" methods="11" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="86" coveredstatements="86" elements="97" coveredelements="97"/>
       </class>
       <line num="11" type="stmt" count="1"/>
       <line num="31" type="method" name="ensureString" visibility="public" complexity="5" crap="5" count="12"/>
@@ -1900,12 +1900,12 @@
       <line num="121" type="stmt" count="2"/>
       <line num="122" type="stmt" count="1"/>
       <line num="125" type="stmt" count="2"/>
-      <line num="137" type="method" name="getManifest" visibility="public" complexity="2" crap="2" count="6"/>
-      <line num="138" type="stmt" count="6"/>
-      <line num="140" type="stmt" count="6"/>
-      <line num="142" type="stmt" count="6"/>
+      <line num="137" type="method" name="getManifest" visibility="public" complexity="2" crap="2" count="7"/>
+      <line num="138" type="stmt" count="7"/>
+      <line num="140" type="stmt" count="7"/>
+      <line num="142" type="stmt" count="7"/>
       <line num="143" type="stmt" count="1"/>
-      <line num="146" type="stmt" count="5"/>
+      <line num="146" type="stmt" count="6"/>
       <line num="165" type="method" name="responsiveSelectors" visibility="public" complexity="7" crap="7" count="1"/>
       <line num="166" type="stmt" count="1"/>
       <line num="167" type="stmt" count="1"/>
@@ -1916,32 +1916,32 @@
       <line num="175" type="stmt" count="1"/>
       <line num="177" type="stmt" count="1"/>
       <line num="181" type="stmt" count="1"/>
-      <line num="193" type="method" name="checkAttr" visibility="public" complexity="9" crap="9" count="4"/>
-      <line num="194" type="stmt" count="4"/>
-      <line num="195" type="stmt" count="4"/>
-      <line num="196" type="stmt" count="4"/>
-      <line num="199" type="stmt" count="4"/>
+      <line num="193" type="method" name="checkAttr" visibility="public" complexity="9" crap="9" count="5"/>
+      <line num="194" type="stmt" count="5"/>
+      <line num="195" type="stmt" count="5"/>
+      <line num="196" type="stmt" count="5"/>
+      <line num="199" type="stmt" count="5"/>
       <line num="200" type="stmt" count="1"/>
       <line num="201" type="stmt" count="1"/>
-      <line num="202" type="stmt" count="3"/>
-      <line num="203" type="stmt" count="2"/>
+      <line num="202" type="stmt" count="4"/>
+      <line num="203" type="stmt" count="3"/>
       <line num="204" type="stmt" count="1"/>
       <line num="205" type="stmt" count="1"/>
-      <line num="207" type="stmt" count="2"/>
-      <line num="208" type="stmt" count="2"/>
-      <line num="211" type="stmt" count="4"/>
-      <line num="224" type="method" name="selectorBlock" visibility="public" complexity="4" crap="4" count="3"/>
-      <line num="225" type="stmt" count="3"/>
-      <line num="226" type="stmt" count="3"/>
-      <line num="227" type="stmt" count="3"/>
-      <line num="229" type="stmt" count="3"/>
-      <line num="230" type="stmt" count="3"/>
-      <line num="231" type="stmt" count="3"/>
-      <line num="233" type="stmt" count="3"/>
-      <line num="234" type="stmt" count="1"/>
-      <line num="237" type="stmt" count="3"/>
-      <line num="238" type="stmt" count="1"/>
-      <line num="241" type="stmt" count="3"/>
+      <line num="207" type="stmt" count="3"/>
+      <line num="208" type="stmt" count="3"/>
+      <line num="211" type="stmt" count="5"/>
+      <line num="224" type="method" name="selectorBlock" visibility="public" complexity="4" crap="4" count="4"/>
+      <line num="225" type="stmt" count="4"/>
+      <line num="226" type="stmt" count="4"/>
+      <line num="227" type="stmt" count="4"/>
+      <line num="229" type="stmt" count="4"/>
+      <line num="230" type="stmt" count="4"/>
+      <line num="231" type="stmt" count="4"/>
+      <line num="233" type="stmt" count="4"/>
+      <line num="234" type="stmt" count="2"/>
+      <line num="237" type="stmt" count="4"/>
+      <line num="238" type="stmt" count="2"/>
+      <line num="241" type="stmt" count="4"/>
       <line num="253" type="method" name="selectorElement" visibility="public" complexity="3" crap="3" count="3"/>
       <line num="254" type="stmt" count="3"/>
       <line num="255" type="stmt" count="3"/>
@@ -1951,21 +1951,21 @@
       <line num="261" type="stmt" count="3"/>
       <line num="262" type="stmt" count="1"/>
       <line num="265" type="stmt" count="3"/>
-      <line num="277" type="method" name="selectorModifier" visibility="public" complexity="2" crap="2" count="2"/>
-      <line num="278" type="stmt" count="2"/>
-      <line num="279" type="stmt" count="2"/>
-      <line num="280" type="stmt" count="2"/>
-      <line num="281" type="stmt" count="2"/>
-      <line num="283" type="stmt" count="2"/>
-      <line num="297" type="method" name="selector" visibility="public" complexity="1" crap="2" count="0"/>
-      <line num="298" type="stmt" count="0"/>
-      <line num="299" type="stmt" count="0"/>
-      <line num="301" type="stmt" count="0"/>
-      <line num="314" type="method" name="selectorCustom" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="315" type="stmt" count="0"/>
-      <line num="316" type="stmt" count="0"/>
+      <line num="277" type="method" name="selectorModifier" visibility="public" complexity="2" crap="2" count="3"/>
+      <line num="278" type="stmt" count="3"/>
+      <line num="279" type="stmt" count="3"/>
+      <line num="280" type="stmt" count="3"/>
+      <line num="281" type="stmt" count="3"/>
+      <line num="283" type="stmt" count="3"/>
+      <line num="297" type="method" name="selector" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="298" type="stmt" count="1"/>
+      <line num="299" type="stmt" count="1"/>
+      <line num="301" type="stmt" count="1"/>
+      <line num="314" type="method" name="selectorCustom" visibility="public" complexity="2" crap="2" count="1"/>
+      <line num="315" type="stmt" count="1"/>
+      <line num="316" type="stmt" count="1"/>
       <line num="318" type="stmt" count="1"/>
-      <metrics loc="318" ncloc="195" classes="1" methods="11" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="88" coveredstatements="83" elements="99" coveredelements="92"/>
+      <metrics loc="318" ncloc="195" classes="1" methods="11" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="88" coveredstatements="88" elements="99" coveredelements="99"/>
     </file>
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Helpers/ErrorLoggerTrait.php">
       <class name="EightshiftLibs\Helpers\ErrorLoggerTrait" namespace="global">
@@ -2808,6 +2808,6 @@
       <line num="49" type="stmt" count="0"/>
       <metrics loc="49" ncloc="32" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="14" coveredelements="0"/>
     </file>
-    <metrics files="90" loc="8728" ncloc="5667" classes="73" methods="266" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="2049" coveredstatements="90" elements="2315" coveredelements="100"/>
+    <metrics files="90" loc="8728" ncloc="5667" classes="73" methods="266" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="2049" coveredstatements="95" elements="2315" coveredelements="107"/>
   </project>
 </coverage>
