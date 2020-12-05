@@ -81,28 +81,24 @@ class ConfigCli extends AbstractCli
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $className);
-
-		// Replace stuff in file.
-		$class = $this->renameClassName($className, $class);
-
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
+		$class = $this->getExampleTemplate(__DIR__, $className)
+			->renameClassName($className)
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs);
 
 		if (!empty($name)) {
-			$class = str_replace('eightshift-libs', $name, $class);
+			$class->searchReplaceString('eightshift-libs', $name);
 		}
 
 		if (!empty($version)) {
-			$class = str_replace('1.0.0', $version, $class);
+			$class->searchReplaceString('1.0.0', $version);
 		}
-
+		
 		if (!empty($routesVersion)) {
-			$class = str_replace('v1', $routesVersion, $class);
+			$class->searchReplaceString('v1', $routesVersion);
 		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }
