@@ -180,3 +180,98 @@ test('Asserts that checkAttr returns default value', function () {
 	$this->assertIsString($results, 'The default value should be a string');
 	$this->assertEquals('left', $results, 'The default value should be left');
 });
+
+
+/**
+ * Components::selectorBlock tests
+ */
+test('Asserts that selectorBlock returns the correct class when attributes are set', function () {
+	$selector = Components::selectorBlock('button', 'icon', 'blue');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button__icon--blue', $selector);
+});
+
+
+test('Asserts that selectorBlock returns the correct class when only one attribute is set', function () {
+	$selector = Components::selectorBlock('button');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button', $selector);
+});
+
+
+test('Asserts that selectorBlock returns the correct class when element is an empty string', function () {
+	$selector = Components::selectorBlock('button', '    ');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button', $selector);
+});
+
+
+/**
+ * Components::selectorElement tests
+ */
+test('Asserts that selectorElement returns the correct class when attributes are set', function () {
+	$selector = Components::selectorElement('button', 'icon', 'blue');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button__icon--blue', $selector);
+});
+
+
+test('Asserts that selectorElement returns the correct class when only one attribute is set', function () {
+	$selector = Components::selectorElement('button', 'icon');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button__icon', $selector);
+});
+
+
+test('Asserts that selectorElement returns the correct class when element is an empty string', function () {
+	$selector = Components::selectorElement('button', '    ', '    ');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('', $selector);
+});
+
+
+/**
+ * Components::selectorModifier tests
+ */
+test('Asserts that selectorModifier returns the correct class when attributes are set', function () {
+	$selector = Components::selectorModifier('button', 'icon', 'blue');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button__icon--blue', $selector);
+});
+
+
+test('Asserts that selectorModifier returns the correct class when element is an empty string', function () {
+	$selector = Components::selectorModifier('button', '    ', '  ');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('', $selector);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
