@@ -54,8 +54,8 @@ class ThemeOptionsExample implements ServiceInterface
 		if (function_exists('acf_add_options_page')) {
 			\acf_add_options_page(
 				[
-					'page_title' => esc_html__('General Settings', 'eightshift-libs'),
-					'menu_title' => esc_html__('Theme Options', 'eightshift-libs'),
+					'page_title' => \esc_html__('General Settings', 'eightshift-libs'),
+					'menu_title' => \esc_html__('Theme Options', 'eightshift-libs'),
 					'menu_slug'  => static::THEME_OPTIONS_SLUG,
 					'capability' => static::THEME_OPTIONS_CAPABILITY,
 					'redirect'   => false,
