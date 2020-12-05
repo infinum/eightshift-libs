@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Helpers;
 
-use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
 
 /**
@@ -25,6 +24,7 @@ test('Throws argument count exception if no argument is passed', function () {
 	Components::ensureString();
 })->throws(\ArgumentCountError::class);
 
+
 /**
  * Components::classnames tests
  */
@@ -39,6 +39,7 @@ test('Throws type exception if wrong argument type is passed to classnames',
 	})
 	->throws(\TypeError::class)
 	->with('errorStringArguments');
+
 
 /**
  * Components::getManifest tests
@@ -59,3 +60,13 @@ test('Asserts that not specifying the path in getManifest will throw an exceptio
 test('Asserts that providing wrong type to getManifest will throw an exception', function () {
 	Components::getManifest(['path']);
 })->throws(\TypeError::class);
+
+
+/**
+ * Components::render tests
+ */
+test('Asserts that rendering a component works', function () {
+	$results = Components::render('component.php', []);
+
+	$this->assertNotEmpty($results);
+});
