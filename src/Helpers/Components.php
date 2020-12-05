@@ -239,11 +239,15 @@ class Components
 		$fullModifier = '';
 		$fullElement = '';
 
-		if ($element) {
+		$element = trim($element);
+		$modifier = trim($modifier);
+		$block = trim($block);
+
+		if (!empty($element)) {
 			$fullElement = "__{$element}";
 		}
 
-		if ($modifier) {
+		if (!empty($modifier)) {
 			$fullModifier = "--{$modifier}";
 		}
 
