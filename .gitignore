@@ -5,3 +5,4 @@ node_modules
 composer.lock
 package-lock.json
 cliOutput
+.phpunit.result.cache
