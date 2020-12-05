@@ -4,3 +4,4 @@ node_modules
 
 composer.lock
 cliOutput
+.phpunit.result.cache
