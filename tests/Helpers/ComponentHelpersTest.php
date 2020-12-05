@@ -33,7 +33,6 @@ test('Asserts classnames returns a string', function ($args) {
 	$this->assertIsString(Components::classnames($args));
 })->with('classesArray');
 
-
 test('Throws type exception if wrong argument type is passed to classnames',
 	function ($argument) {
 		Components::classnames($argument);
@@ -56,8 +55,6 @@ test('Asserts that reading manifest.json using getManifest will return an array'
 test('Asserts that not specifying the path in getManifest will throw an exception', function () {
 	Components::getManifest(dirname(__FILE__));
 })->throws(ComponentException::class);
-
-
 
 
 /**
