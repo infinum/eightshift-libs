@@ -73,13 +73,11 @@ class ConfigProjectCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameTextDomain($assocArgs, $class);
+		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameTextDomain($assocArgs);
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, 'wp-config-project.php', $class, $assocArgs);
+		$class->outputWrite($root, 'wp-config-project.php', $assocArgs);
 
 		\WP_CLI::success("Please do the following steps manually to complete the setup:");
 		\WP_CLI::success("1. In wp-config.php - Make sure to define WP_ENVIRONMENT_TYPE const to 'develop' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'develop' ); ?>`");
