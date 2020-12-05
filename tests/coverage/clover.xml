@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1607177272">
-  <project timestamp="1607177272">
+<coverage generated="1607183950">
+  <project timestamp="1607183950">
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Blocks/AbstractBlocks.php">
       <class name="EightshiftLibs\Blocks\AbstractBlocks" namespace="global">
         <metrics complexity="43" methods="17" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="157" coveredstatements="0" elements="174" coveredelements="0"/>
@@ -1864,7 +1864,7 @@
     </file>
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Helpers/Components.php">
       <class name="EightshiftLibs\Helpers\Components" namespace="global">
-        <metrics complexity="42" methods="11" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="77" coveredstatements="35" elements="88" coveredelements="39"/>
+        <metrics complexity="42" methods="11" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="77" coveredstatements="57" elements="88" coveredelements="63"/>
       </class>
       <line num="11" type="stmt" count="1"/>
       <line num="31" type="method" name="ensureString" visibility="public" complexity="5" crap="5" count="12"/>
@@ -1880,9 +1880,9 @@
       <line num="46" type="stmt" count="3"/>
       <line num="48" type="stmt" count="6"/>
       <line num="51" type="stmt" count="6"/>
-      <line num="61" type="method" name="classnames" visibility="public" complexity="1" crap="1" count="3"/>
-      <line num="62" type="stmt" count="3"/>
-      <line num="63" type="stmt" count="3"/>
+      <line num="61" type="method" name="classnames" visibility="public" complexity="1" crap="1" count="4"/>
+      <line num="62" type="stmt" count="4"/>
+      <line num="63" type="stmt" count="4"/>
       <line num="82" type="method" name="render" visibility="public" complexity="6" crap="6" count="4"/>
       <line num="83" type="stmt" count="4"/>
       <line num="84" type="stmt" count="4"/>
@@ -1900,36 +1900,36 @@
       <line num="121" type="stmt" count="2"/>
       <line num="122" type="stmt" count="1"/>
       <line num="125" type="stmt" count="2"/>
-      <line num="137" type="method" name="getManifest" visibility="public" complexity="2" crap="2" count="2"/>
-      <line num="138" type="stmt" count="2"/>
-      <line num="140" type="stmt" count="2"/>
-      <line num="142" type="stmt" count="2"/>
+      <line num="137" type="method" name="getManifest" visibility="public" complexity="2" crap="2" count="6"/>
+      <line num="138" type="stmt" count="6"/>
+      <line num="140" type="stmt" count="6"/>
+      <line num="142" type="stmt" count="6"/>
       <line num="143" type="stmt" count="1"/>
-      <line num="146" type="stmt" count="1"/>
-      <line num="165" type="method" name="responsiveSelectors" visibility="public" complexity="7" crap="56" count="0"/>
-      <line num="166" type="stmt" count="0"/>
-      <line num="167" type="stmt" count="0"/>
-      <line num="169" type="stmt" count="0"/>
-      <line num="170" type="stmt" count="0"/>
-      <line num="171" type="stmt" count="0"/>
-      <line num="174" type="stmt" count="0"/>
-      <line num="175" type="stmt" count="0"/>
-      <line num="177" type="stmt" count="0"/>
-      <line num="181" type="stmt" count="0"/>
-      <line num="193" type="method" name="checkAttr" visibility="public" complexity="9" crap="90" count="0"/>
-      <line num="194" type="stmt" count="0"/>
-      <line num="195" type="stmt" count="0"/>
-      <line num="196" type="stmt" count="0"/>
-      <line num="199" type="stmt" count="0"/>
-      <line num="200" type="stmt" count="0"/>
-      <line num="201" type="stmt" count="0"/>
-      <line num="202" type="stmt" count="0"/>
-      <line num="203" type="stmt" count="0"/>
-      <line num="204" type="stmt" count="0"/>
-      <line num="205" type="stmt" count="0"/>
-      <line num="207" type="stmt" count="0"/>
-      <line num="208" type="stmt" count="0"/>
-      <line num="211" type="stmt" count="0"/>
+      <line num="146" type="stmt" count="5"/>
+      <line num="165" type="method" name="responsiveSelectors" visibility="public" complexity="7" crap="7" count="1"/>
+      <line num="166" type="stmt" count="1"/>
+      <line num="167" type="stmt" count="1"/>
+      <line num="169" type="stmt" count="1"/>
+      <line num="170" type="stmt" count="1"/>
+      <line num="171" type="stmt" count="1"/>
+      <line num="174" type="stmt" count="1"/>
+      <line num="175" type="stmt" count="1"/>
+      <line num="177" type="stmt" count="1"/>
+      <line num="181" type="stmt" count="1"/>
+      <line num="193" type="method" name="checkAttr" visibility="public" complexity="9" crap="9" count="4"/>
+      <line num="194" type="stmt" count="4"/>
+      <line num="195" type="stmt" count="4"/>
+      <line num="196" type="stmt" count="4"/>
+      <line num="199" type="stmt" count="4"/>
+      <line num="200" type="stmt" count="1"/>
+      <line num="201" type="stmt" count="1"/>
+      <line num="202" type="stmt" count="3"/>
+      <line num="203" type="stmt" count="2"/>
+      <line num="204" type="stmt" count="1"/>
+      <line num="205" type="stmt" count="1"/>
+      <line num="207" type="stmt" count="2"/>
+      <line num="208" type="stmt" count="2"/>
+      <line num="211" type="stmt" count="4"/>
       <line num="224" type="method" name="selectorBlock" visibility="public" complexity="4" crap="20" count="0"/>
       <line num="225" type="stmt" count="0"/>
       <line num="226" type="stmt" count="0"/>
@@ -1956,7 +1956,7 @@
       <line num="304" type="stmt" count="0"/>
       <line num="305" type="stmt" count="0"/>
       <line num="307" type="stmt" count="1"/>
-      <metrics loc="307" ncloc="184" classes="1" methods="11" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="79" coveredstatements="37" elements="90" coveredelements="41"/>
+      <metrics loc="307" ncloc="184" classes="1" methods="11" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="79" coveredstatements="59" elements="90" coveredelements="65"/>
     </file>
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Helpers/ErrorLoggerTrait.php">
       <class name="EightshiftLibs\Helpers\ErrorLoggerTrait" namespace="global">
@@ -2799,6 +2799,6 @@
       <line num="49" type="stmt" count="0"/>
       <metrics loc="49" ncloc="32" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="14" coveredelements="0"/>
     </file>
-    <metrics files="90" loc="8717" ncloc="5656" classes="73" methods="266" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="2040" coveredstatements="44" elements="2306" coveredelements="49"/>
+    <metrics files="90" loc="8717" ncloc="5656" classes="73" methods="266" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="2040" coveredstatements="66" elements="2306" coveredelements="73"/>
   </project>
 </coverage>
