@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
+use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
 
 /**
@@ -54,7 +55,7 @@ test('Asserts that reading manifest.json using getManifest will return an array'
 
 test('Asserts that not specifying the path in getManifest will throw an exception', function () {
 	Components::getManifest(dirname(__FILE__));
-})->throws(\Error::class);
+})->throws(ComponentException::class);
 
 
 test('Asserts that providing wrong type to getManifest will throw an exception', function () {
@@ -68,5 +69,26 @@ test('Asserts that providing wrong type to getManifest will throw an exception',
 test('Asserts that rendering a component works', function () {
 	$results = Components::render('component.php', []);
 
-	$this->assertNotEmpty($results);
+	$this->assertNotEmpty($results, 'Component should be rendered here');
+	$this->assertStringContainsString('Hello!', $results, 'Component should contain a string');
 });
+
+test('Asserts that rendering a component will output a wrapper if parentClass is provided', function () {
+	$results = Components::render('component.php', ['parentClass' => 'test']);
+
+	$this->assertNotEmpty($results, 'Component should be rendered here');
+	$this->assertStringContainsString('Hello!', $results, 'Component should contain a string');
+	$this->assertStringNotContainsString('test__component.php', $results, 'Component should contain a class name, not file type');
+	$this->assertStringContainsString('test__component', $results, 'Component should contain a class name');
+});
+
+
+test('Asserts that providing a missing component will throw an exception without extension', function () {
+	Components::render('component', []);
+})->throws(ComponentException::class);
+
+
+test('Asserts that providing a missing component will throw an exception', function () {
+	Components::render('component-a.php', []);
+})->throws(ComponentException::class);
+
