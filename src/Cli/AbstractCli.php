@@ -486,7 +486,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace text domain in class
 	 *
-	 * @param array  $args CLI args array.
+	 * @param array $args CLI args array.
 	 *
 	 * @return CliInterface Current CLI class.
 	 */
