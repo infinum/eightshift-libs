@@ -49,7 +49,7 @@ test('Asserts that reading manifest.json using getManifest will return an array'
 	$results = Components::getManifest(dirname(__FILE__, 2) . '/data');
 
 	$this->assertIsArray($results, 'The result is not an array');
-	$this->assertArrayHasKey('application.css', $results, 'Missing a key from the manifest.json file');
+	$this->assertArrayHasKey('componentName', $results, 'Missing a key from the manifest.json file');
 });
 
 
@@ -58,9 +58,6 @@ test('Asserts that not specifying the path in getManifest will throw an exceptio
 })->throws(ComponentException::class);
 
 
-test('Asserts that providing wrong type to getManifest will throw an exception', function () {
-	Components::getManifest(['path']);
-})->throws(\TypeError::class);
 
 
 /**
@@ -92,3 +89,94 @@ test('Asserts that providing a missing component will throw an exception', funct
 	Components::render('component-a.php', []);
 })->throws(ComponentException::class);
 
+
+/**
+ * Components::responsiveSelectors tests
+ */
+test('Asserts that using responsive selectors will work', function () {
+	$modifiers = ['mobile' => '12', 'tablet' => '12', 'desktop' => '6'];
+	$modifiersAlt = ['mobile' => '12', 'tablet' => '12', 'desktop' => ''];
+
+	$withModifier = Components::responsiveSelectors($modifiers, 'width', 'column', true);
+	$withoutModifier = Components::responsiveSelectors($modifiers, 'width', 'column', false);
+	$withEmptyString = Components::responsiveSelectors($modifiersAlt, 'width', 'column');
+
+	$this->assertIsString($withModifier, 'Result should be a string');
+	$this->assertIsString($withoutModifier, 'Result should be a string');
+	$this->assertIsString($withEmptyString, 'Result should be a string');
+
+	$this->assertEquals(
+		'column__width-mobile--12 column__width-tablet--12 column__width-desktop--6'
+		, $withModifier,
+		'Strings are not equal in the case of modifiers added'
+	);
+	$this->assertEquals(
+		'column__width-mobile column__width-tablet column__width-desktop',
+		$withoutModifier,
+		'Strings are not equal in the case there is no modifier'
+	);
+	$this->assertEquals(
+		'column__width-mobile--12 column__width-tablet--12',
+		$withEmptyString,
+		'Strings are not equal when one option is empty'
+	);
+});
+
+
+test('Asserts that providing wrong type to responsiveSelectors will throw an exception', function () {
+	Components::responsiveSelectors('', false, true, '');
+})->throws(\TypeError::class);
+
+
+test('Asserts that providing wrong number of arguments to responsiveSelectors will throw an exception', function () {
+	Components::responsiveSelectors([], 'true');
+})->throws(\ArgumentCountError::class);
+
+
+/**
+ * Components::checkAttr tests
+ */
+test('Asserts that checkAttr works in case attribute is string', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
+	$attributes['buttonAlign'] = 'right';
+
+	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
+
+	$this->assertIsString($results, 'Result should be a string');
+	$this->assertEquals('right', $results, "The set attribute should be {$attributes['buttonAlign']}");
+});
+
+
+test('Asserts that checkAttr works in case attribute is boolean', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
+	$attributes['buttonIsAnchor'] = true;
+
+	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);
+
+	$this->assertIsBool($results, 'THe result should be a boolean');
+	$this->assertEquals(true, $results, "The set attribute should be {$attributes['buttonIsAnchor']}");
+});
+
+
+test('Asserts that checkAttr works in case attribute is array', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
+	$attributes['buttonAttrs'] = ['attr 1', 'attr 2'];
+
+	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
+
+	$this->assertIsArray($results, 'The result should be an array');
+	$this->assertEquals('attr 1', $results[0], 'The value in the array is not correct');
+	$this->assertEquals('attr 2', $results[1], 'The value in the array is not correct');
+});
+
+
+test('Asserts that checkAttr returns default value', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
+
+	$attributes['title'] = 'Some attribute';
+
+	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
+
+	$this->assertIsString($results, 'The default value should be a string');
+	$this->assertEquals('left', $results, 'The default value should be left');
+});
