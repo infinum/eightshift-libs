@@ -28,7 +28,7 @@ final class InvalidService extends \InvalidArgumentException implements GeneralE
 	{
 		$message = sprintf(
 		/* translators: %s is replaced with name of the service. */
-			esc_html__('The service %s is not recognized and cannot be registered.', 'eightshift-libs'),
+			\esc_html__('The service %s is not recognized and cannot be registered.', 'eightshift-libs'),
 			$service
 		);
 
