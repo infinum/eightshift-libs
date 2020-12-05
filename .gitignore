@@ -1,6 +1,7 @@
 vendor
 node_modules
 /docs
+tests/coverage/html
 
 composer.lock
 package-lock.json
