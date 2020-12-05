@@ -1,0 +1,13 @@
+{
+  "0.js": "/wp-content/themes/fake-project/public/0.js",
+  "1.js": "/wp-content/themes/fake-project/public/1.js",
+  "application.css": "/wp-content/themes/fake-project/public/application.css",
+  "application.js": "/wp-content/themes/fake-project/public/application.js",
+  "applicationAdmin.css": "/wp-content/themes/fake-project/public/applicationAdmin.css",
+  "applicationAdmin.js": "/wp-content/themes/fake-project/public/applicationAdmin.js",
+  "applicationBlocks.css": "/wp-content/themes/fake-project/public/applicationBlocks.css",
+  "applicationBlocks.js": "/wp-content/themes/fake-project/public/applicationBlocks.js",
+  "applicationBlocksEditor.css": "/wp-content/themes/fake-project/public/applicationBlocksEditor.css",
+  "applicationBlocksEditor.js": "/wp-content/themes/fake-project/public/applicationBlocksEditor.js",
+  "logo.svg": "/wp-content/themes/fake-project/public/logo.svg"
+}
