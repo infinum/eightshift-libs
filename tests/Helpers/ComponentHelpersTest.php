@@ -2,8 +2,12 @@
 
 namespace Tests\Unit\Helpers;
 
+use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
 
+/**
+ * Components::ensureString tests
+ */
 test('Asserts ensure string returns a correct result', function ($args) {
 	$this->assertIsString(Components::ensureString($args));
 })->with('correctArguments');
@@ -21,9 +25,10 @@ test('Throws argument count exception if no argument is passed', function () {
 	Components::ensureString();
 })->throws(\ArgumentCountError::class);
 
-
+/**
+ * Components::classnames tests
+ */
 test('Asserts classnames returns a string', function ($args) {
-	error_log(print_r(Components::classnames($args), true));
 	$this->assertIsString(Components::classnames($args));
 })->with('classesArray');
 
@@ -34,3 +39,23 @@ test('Throws type exception if wrong argument type is passed to classnames',
 	})
 	->throws(\TypeError::class)
 	->with('errorStringArguments');
+
+/**
+ * Components::getManifest tests
+ */
+test('Asserts that reading manifest.json using getManifest will return an array', function () {
+	$results = Components::getManifest(dirname(__FILE__, 2) . '/data');
+
+	$this->assertIsArray($results, 'The result is not an array');
+	$this->assertArrayHasKey('application.css', $results, 'Missing a key from the manifest.json file');
+});
+
+
+test('Asserts that not specifying the path in getManifest will throw an exception', function () {
+	Components::getManifest(dirname(__FILE__));
+})->throws(\Error::class);
+
+
+test('Asserts that providing wrong type to getManifest will throw an exception', function () {
+	Components::getManifest(['path']);
+})->throws(\TypeError::class);
