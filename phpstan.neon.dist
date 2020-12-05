@@ -1,6 +1,5 @@
 includes:
-	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
-	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
 	level: max
 	inferPrivatePropertyTypeFromConstructor: true
@@ -11,7 +10,6 @@ parameters:
 	paths:
 		- src/
 	excludes_analyse:
-		- src/Core/CompiledContainer.php
 		- src/**/*Example.php
 	ignoreErrors:
 		# Uses func_get_args()
