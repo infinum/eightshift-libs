@@ -93,7 +93,7 @@ class ConfigCli extends AbstractCli
 		if (!empty($version)) {
 			$class->searchReplaceString('1.0.0', $version);
 		}
-		
+
 		if (!empty($routesVersion)) {
 			$class->searchReplaceString('v1', $routesVersion);
 		}

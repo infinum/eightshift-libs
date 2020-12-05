@@ -33,16 +33,10 @@
 	},
 	"require-dev": {
 		"brain/monkey": "^2.5",
-		"codeception/codeception": "^4.1",
-		"codeception/module-asserts": "^1.0",
-		"codeception/module-cli": "^1.0",
-		"codeception/module-db": "^1.0",
-		"codeception/module-filesystem": "^1.0",
-		"codeception/module-phpbrowser": "^1.0",
-		"codeception/module-webdriver": "^1.0",
-		"codeception/util-universalframework": "^1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-		"infinum/coding-standards-wp": "^1.1",
+		"infinum/eightshift-coding-standards": "^1.1",
+		"pestphp/pest": "^0.3.15",
+		"phpunit/phpunit": "^9.3.10",
 		"roave/security-advisories": "dev-master",
 		"szepeviktor/phpstan-wordpress": "^0.7",
 		"wp-cli/wp-cli": "^2.4"
@@ -69,7 +63,7 @@
 		"analyze": "@php ./vendor/bin/phpstan analyze",
 		"standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
 		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
-		"tests:unit": "@php ./vendor/bin/codecept run unit",
-		"tests:integration": "@php ./vendor/bin/codecept run integration"
+		"tests:unit": "@php ./vendor/bin/pest",
+		"test:coverage": "@php ./vendor/bin/pest --coverage"
 	}
 }
