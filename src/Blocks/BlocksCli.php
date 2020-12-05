@@ -85,23 +85,18 @@ class BlocksCli extends AbstractCli
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $className);
-
-		// Replace stuff in file.
-		$class = $this->renameClassName($className, $class);
-
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
+		$class = $this->getExampleTemplate(__DIR__, $className)
+			->renameClassName($className)
+			->renameNamespace($assocArgs)
+			->renameTextDomainFrontendLibs($assocArgs)
+			->renameUse($assocArgs);
 
 		if (function_exists('\add_action')) {
 			$this->blocksInit($assocArgs);
 		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 
 	/**
@@ -111,7 +106,7 @@ class BlocksCli extends AbstractCli
 	 *
 	 * @return void
 	 */
-	public function blocksInit(array $args): void
+	private function blocksInit(array $args): void
 	{
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
