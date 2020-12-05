@@ -41,10 +41,6 @@
     "szepeviktor/phpstan-wordpress": "^0.7",
     "wp-cli/wp-cli": "^2.4"
   },
-  "suggest": {
-    "ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
-    "ext-xdebug": "^3.0.0 || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both."
-  },
   "autoload": {
     "psr-4": {
       "EightshiftLibs\\": "src/",
