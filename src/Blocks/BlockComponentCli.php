@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class BlockComponentCli
