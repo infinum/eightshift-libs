@@ -85,15 +85,27 @@ class Components
 			$parentPath = \get_template_directory();
 		}
 
-		// Detect if user passed component name or path.
+		/**
+		 * Detect if user passed component name or path.
+		 *
+		 * If the path was passed, we need to get the component name, in case the
+		 * parentClass attribute was added, because the class of the wrapper need to look like
+		 *
+		 * parentClass__componentName
+		 *
+		 * not
+		 *
+		 * parentClass__componentName.php
+		 */
 		if (strpos($component, '.php') !== false) {
 			$componentPath = "{$parentPath}/$component";
+			$component = pathinfo($component, PATHINFO_FILENAME);
 		} else {
 			$componentPath = "{$parentPath}/src/Blocks/components/{$component}/{$component}.php";
 		}
 
 		if (!file_exists($componentPath)) {
-			ComponentException::throwUnableToLocateComponent($componentPath);
+			throw ComponentException::throwUnableToLocateComponent($componentPath);
 		}
 
 		ob_start();
