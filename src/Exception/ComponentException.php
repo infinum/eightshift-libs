@@ -28,7 +28,7 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 		return new static(
 			sprintf(
 			/* translators: %1$s is replaced with the name of the variable, and %2$s with its type. */
-				esc_html__('%1$s variable is not a string or array but rather %2$s', 'eightshift-libs'),
+				\esc_html__('%1$s variable is not a string or array but rather %2$s', 'eightshift-libs'),
 				$variable,
 				gettype($variable)
 			)
@@ -46,7 +46,7 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 		return new static(
 			sprintf(
 			/* translators: %s is replaced with the path of the component. */
-				esc_html__('Unable to locate component by path: %s', 'eightshift-libs'),
+				\esc_html__('Unable to locate component by path: %s', 'eightshift-libs'),
 				$component
 			)
 		);

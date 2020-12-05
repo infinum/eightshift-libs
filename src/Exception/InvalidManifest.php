@@ -28,7 +28,7 @@ final class InvalidManifest extends \InvalidArgumentException implements General
 		return new static(
 			sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
-				esc_html__(
+				\esc_html__(
 					'%s key does not exist in manifest.json. Please check if provided key is correct.',
 					'eightshift-libs'
 				),
@@ -49,7 +49,7 @@ final class InvalidManifest extends \InvalidArgumentException implements General
 		return new static(
 			sprintf(
 			/* translators: %s is replaced by the path where the manifest.json should be */
-				esc_html__(
+				\esc_html__(
 					'manifest.json is missing at this path: %s. Bundle the theme before using it. Or your bundling process is returning an error.',
 					'eightshift-libs'
 				),
