@@ -205,11 +205,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getFileName(string $fileName): string
 	{
-		if (strpos($fileName, ' ') !== false) {
-			$fileName = strtolower($fileName);
-		}
-
-		$class = explode('_', str_replace('-', '_', str_replace(' ', '_', strtolower($fileName))));
+		$class = explode('_', str_replace('-', '_', str_replace(' ', '_', $fileName)));
 
 		$className = array_map(
 			function ($item) {
