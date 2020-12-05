@@ -87,13 +87,9 @@ class BuildCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameProjectName($assocArgs, $class);
-		$class = $this->renameProjectType($assocArgs, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite($root . 'bin', 'build.sh', $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameProjectName($assocArgs)
+			->renameProjectType($assocArgs)
+			->outputWrite($root . 'bin', 'build.sh', $assocArgs);
 	}
 }
