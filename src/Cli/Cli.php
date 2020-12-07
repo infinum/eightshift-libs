@@ -15,7 +15,6 @@ use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
-use EightshiftLibs\LintPhp\LintPhpCli;
 use EightshiftLibs\View\EscapedViewCli;
 use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
@@ -81,7 +80,6 @@ class Cli
 		GitIgnoreCli::class,
 		CiExcludeCli::class,
 		SetupCli::class,
-		LintPhpCli::class,
 		AcfMetaCli::class,
 		EscapedViewCli::class,
 		ThemeOptionsCli::class,
