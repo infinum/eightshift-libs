@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1607186681">
-  <project timestamp="1607186681">
+<coverage generated="1607329172">
+  <project timestamp="1607329172">
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Blocks/AbstractBlocks.php">
       <class name="EightshiftLibs\Blocks\AbstractBlocks" namespace="global">
         <metrics complexity="43" methods="17" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="157" coveredstatements="0" elements="174" coveredelements="0"/>
