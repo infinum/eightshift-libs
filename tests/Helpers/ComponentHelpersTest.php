@@ -279,24 +279,3 @@ test('Asserts that selectorCustom returns the correct class attributes are set',
 	$this->assertEquals('button__icon--blue', $selector);
 	$this->assertEquals('', $selectorFalse);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
