@@ -278,6 +278,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
+	 * Get blocks components folder absolute path
+	 *
+	 * @return string
+	 */
+	protected function getBlocksComponentsPath(): string
+	{
+		return "{$this->getBlocksPath()}/components";
+	}
+
+	/**
 	 * Get block view absolute path
 	 *
 	 * @param string $blockName Block Name value to get a path.
@@ -312,6 +322,29 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		if (!file_exists($manifestPath)) {
 			throw InvalidBlock::missingWrapperManifestException($manifestPath);
+		}
+
+		$settings = implode(' ', (array)file($manifestPath));
+		$settings = json_decode($settings, true);
+
+		return $settings;
+	}
+
+	/**
+	 * Get wrapper manifest data from wrapper manifest.json file
+	 *
+	 * @param string $componentName Name of the component.
+	 *
+	 * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
+	 *
+	 * @return array
+	 */
+	protected function getComponent(string $componentName): array
+	{
+		$manifestPath = "{$this->getBlocksComponentsPath()}/{$componentName}/manifest.json";
+
+		if (!file_exists($manifestPath) && !defined('WP_CLI')) {
+			throw InvalidBlock::missingComponentManifestException($manifestPath);
 		}
 
 		$settings = implode(' ', (array)file($manifestPath));
@@ -380,9 +413,71 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					'default' => "js-block-{$blockName}",
 				],
 			],
+			$this->getSettings()['attributes'] ?? [],
 			$this->blocks['wrapper']['attributes'],
+			$this->prepareComponentAttributes($blockDetails),
 			$blockDetails['attributes']
 		);
+	}
+
+	/**
+	 * Iterate over component object in block manifest and search and replace the component attributes with new one.
+	 * Search and replace the component attributes with new one.
+	 *
+	 * @param array  $component Object of component manifests to iterate.
+	 * @param string $realComponentName Reacl component name defined in the component manifest.
+	 * @param string $newComponentName New component name to search and replace the original.
+	 */
+	protected function prepareCommponentAttribute(array $component, string $realComponentName, string $newComponentName): array
+	{
+		$output = [];
+
+		$componentAttributes = $component['attributes'];
+
+		if ($realComponentName !== $newComponentName) {
+			foreach ($componentAttributes as $name => $key) {
+					$newName = str_replace($realComponentName, $newComponentName, $name);
+					$output[$newName] = $componentAttributes[$name];
+			}
+		} else {
+			$output = $componentAttributes;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Iterate over component object in block manifest and check if the component exists in the project.
+	 * If components contains more component this function will run recursively.
+	 *
+	 * @param array $blockDetails Object of component manifests to iterate.
+	 */
+	protected function prepareComponentAttributes(array $blockDetails): array
+	{
+		$output = [];
+
+		if (!isset($blockDetails['components'])) {
+			return $output;
+		}
+
+		foreach ($blockDetails['components'] as $newComponentName => $realComponentName) {
+			$component = $this->getComponent($realComponentName);
+
+			$outputAttributes = [];
+
+			if (isset($component['components'])) {
+				$outputAttributes = $this->prepareComponentAttributes($component);
+			} else {
+				$outputAttributes = $this->prepareCommponentAttribute($component, $realComponentName, $newComponentName);
+			}
+
+			$output = array_merge(
+				$output,
+				$outputAttributes
+			);
+		}
+
+		return $output;
 	}
 
 	/**

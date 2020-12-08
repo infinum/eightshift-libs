@@ -175,41 +175,54 @@ class Components
 	 * @param string $key Key to check.
 	 * @param array  $attributes Array of attributes.
 	 * @param array  $manifest Array of default attributes from manifest.json.
+	 * @param string $componentName The real component name.
+	 *
+	 * @throws \Exception When we're unable to find the component by $component.
 	 *
 	 * @return mixed
 	 */
-	public static function checkAttr(string $key, array $attributes, array $manifest)
+	public static function checkAttr(string $key, array $attributes, array $manifest, string $componentName = '')
 	{
-		$manifestKey = $manifest['attributes'][$key];
-		$defaultType = $manifestKey['type'];
 
-		switch ($defaultType) {
-			case 'boolean':
-				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : false;
-				break;
-			case 'array':
-			case 'object':
-				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : [];
-				break;
-			default:
-				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : '';
-				break;
+		if (isset($attributes[$key])) {
+			return $attributes[$key];
+		} else {
+			$manifestKey = $manifest['attributes'][$key];
+
+			if ($manifestKey === null) {
+				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation.");
+			}
+
+			$defaultType = $manifestKey['type'];
+
+			switch ($defaultType) {
+				case 'boolean':
+					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : false;
+					break;
+				case 'array':
+				case 'object':
+					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : [];
+					break;
+				default:
+					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : '';
+					break;
+			}
+
+			return $defaultValue;
 		}
-
-		return isset($attributes[$key]) ? $attributes[$key] : $defaultValue;
 	}
 
-
 	/**
-	 * Return BEM selector for html class and check if Block part is set.
+	 * Retun BEM selector for html class and check if Condition part is set.
 	 *
+	 * @param mixed  $condition Check condition.
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
 	 * @param string $modifier BEM Modifier selector.
 	 *
 	 * @return string
 	 */
-	public static function selectorBlock(string $block, string $element = '', string $modifier = ''): string
+	public static function selector($condition, string $block, string $element = '', string $modifier = ''): string
 	{
 		$fullModifier = '';
 		$fullElement = '';
@@ -222,74 +235,6 @@ class Components
 			$fullModifier = "--{$modifier}";
 		}
 
-		return $block ? "{$block}{$fullElement}{$fullModifier}"  : '';
-	}
-
-	/**
-	 * Return BEM selector for html class and check if Element part is set.
-	 *
-	 * @param string $block BEM Block selector.
-	 * @param string $element BEM Element selector.
-	 * @param string $modifier BEM Modifier selector.
-	 *
-	 * @return string
-	 */
-	public static function selectorElement(string $block, string $element, string $modifier = ''): string
-	{
-		$fullModifier = '';
-
-		if ($modifier) {
-			$fullModifier = "--{$modifier}";
-		}
-
-		return $element ? "{$block}__{$element}{$fullModifier}"  : '';
-	}
-
-	/**
-	 * Return BEM selector for html class and check if Modifier part is set.
-	 *
-	 * @param string $block BEM Block selector.
-	 * @param string $element BEM Element selector.
-	 * @param string $modifier BEM Modifier selector.
-	 *
-	 * @return string
-	 */
-	public static function selectorModifier(string $block, string $element, string $modifier): string
-	{
-		return $modifier ? "{$block}__{$element}--{$modifier}"  : '';
-	}
-
-	/**
-	 * Return BEM selector for html class and check all conditions from checkAttr method.
-	 *
-	 * @param string $block BEM Block selector.
-	 * @param string $element BEM Element selector.
-	 * @param string $key Key to check.
-	 * @param array  $attributes Array of attributes.
-	 * @param array  $manifest Array of default attributes from manifest.json.
-	 *
-	 * @return string
-	 */
-	public static function selector(string $block, string $element, string $key, array $attributes, array $manifest): string
-	{
-
-		$modifier = self::checkAttr($key, $attributes, $manifest);
-
-		return self::selectorModifier($block, $element, $modifier);
-	}
-
-	/**
-	 * Return BEM selector for html class and check if Custom condition is set.
-	 *
-	 * @param bool   $condition Check condition.
-	 * @param string $block BEM Block selector.
-	 * @param string $element BEM Element selector.
-	 * @param string $modifier BEM Modifier selector.
-	 *
-	 * @return string
-	 */
-	public static function selectorCustom(bool $condition, string $block, string $element = '', string $modifier = ''): string
-	{
-		return $condition ? self::selectorBlock($block, $element, $modifier) : '';
+		return $condition ? "{$block}{$fullElement}{$fullModifier}"  : '';
 	}
 }

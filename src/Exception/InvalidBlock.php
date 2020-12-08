@@ -125,6 +125,24 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
+	 * Throws error if wrapper settings manifest.json is missing.
+	 *
+	 * @param string $settingsManifestPath Full path for the missing manifest.json.
+	 *
+	 * @return static
+	 */
+	public static function missingComponentManifestException(string $settingsManifestPath)
+	{
+		return new static(
+			sprintf(
+			/* translators: %s will be replaced with the manifest path location. */
+				esc_html__('Component manifest.json is missing on this location: %s.', 'eightshift-libs'),
+				$settingsManifestPath
+			)
+		);
+	}
+
+	/**
 	 * Throws error if block wrapper view is missing.
 	 *
 	 * @param string $wrapperPath Full wrapper path.
