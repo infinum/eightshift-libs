@@ -28,7 +28,7 @@ class ThemeOptionsExample implements ServiceInterface
 	/**
 	 * Theme Options ACF Capability Name.
 	 */
-	public const THEME_OPTIONS_CAPABILITY = 'manage_acf_theme_options';
+	public const THEME_OPTIONS_CAPABILITY = 'edit_theme_options';
 
 	/**
 	 * Register all the hooks
