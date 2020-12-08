@@ -75,9 +75,9 @@ class ThemeOptionsExample implements ServiceInterface
 	{
 		if (function_exists('acf_add_options_page')) {
 			acf_add_local_field_group(
-				array(
+				[
 					'key' => 'group_5fcab51c7138c',
-					'title' => 'Theme Options',
+					'title' => esc_html__('Theme Options', 'eightshift-libs'),
 					'fields' => [],
 					'location' => [
 						[
@@ -96,7 +96,7 @@ class ThemeOptionsExample implements ServiceInterface
 					'hide_on_screen' => '',
 					'active' => true,
 					'description' => '',
-				)
+				]
 			);
 		}
 	}
