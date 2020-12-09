@@ -28,7 +28,7 @@ class ThemeOptionsExample implements ServiceInterface
 	/**
 	 * Theme Options ACF Capability Name.
 	 */
-	public const THEME_OPTIONS_CAPABILITY = 'manage_acf_theme_options';
+	public const THEME_OPTIONS_CAPABILITY = 'edit_theme_options';
 
 	/**
 	 * Register all the hooks
@@ -74,7 +74,30 @@ class ThemeOptionsExample implements ServiceInterface
 	public function registerThemeOptions(): void
 	{
 		if (function_exists('acf_add_options_page')) {
-			acf_add_local_field_group();
+			acf_add_local_field_group(
+				[
+					'key' => 'group_5fcab51c7138c',
+					'title' => esc_html__('Theme Options', 'eightshift-libs'),
+					'fields' => [],
+					'location' => [
+						[
+							[
+								'param' => 'options_page',
+								'operator' => '==',
+								'value' => static::THEME_OPTIONS_SLUG,
+							],
+						],
+					],
+					'menu_order' => 20,
+					'position' => 'normal',
+					'style' => 'default',
+					'label_placement' => 'top',
+					'instruction_placement' => 'label',
+					'hide_on_screen' => '',
+					'active' => true,
+					'description' => '',
+				]
+			);
 		}
 	}
 }
