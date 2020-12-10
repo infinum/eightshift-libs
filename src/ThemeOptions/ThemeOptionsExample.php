@@ -73,7 +73,7 @@ class ThemeOptionsExample implements ServiceInterface
 	 */
 	public function registerThemeOptions(): void
 	{
-		if (function_exists('acf_add_options_page')) {
+		if (function_exists('acf_add_local_field_group')) {
 			acf_add_local_field_group(
 				[
 					'key' => 'group_5fcab51c7138c',
