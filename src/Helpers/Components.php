@@ -199,7 +199,7 @@ class Components
 		if (isset($attributes[$key])) {
 			return $attributes[$key];
 		} else {
-			$manifestKey = $manifest['attributes'][$key];
+			$manifestKey = $manifest['attributes'][$key] ?? null;
 
 			if ($manifestKey === null) {
 				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation.");
