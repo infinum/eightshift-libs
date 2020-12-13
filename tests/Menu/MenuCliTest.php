@@ -54,7 +54,7 @@ test('Menu CLI command will correctly copy the Menu class with set arguments', f
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMenu = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Menu/Menu.php');
-var_dump($generatedMenu, true);
+
 	$this->assertStringContainsString('class Menu extends AbstractMenu', $generatedMenu);
 	$this->assertStringContainsString('namespace CoolTheme\Menu;', $generatedMenu);
 	$this->assertStringContainsString('header_main_nav', $generatedMenu);
