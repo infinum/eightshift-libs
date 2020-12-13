@@ -14,9 +14,29 @@ Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data'
 // Mock escaping function.
 Functions\when('wp_kses_post')->returnArg();
 
-// Mock certain WPCLI methods.
-$wpCliMock = \Mockery::mock('alias:WP_CLI');
+/**
+ * Used for cleaning out the cliOutput created after every CLI test
+ *
+ * @param string $dir Directory to remove.
+ *
+ * @return void
+ */
+function deleteCliOutput(string $dir) : void
+{
+	if (!is_dir($dir)) {
+		return;
+	}
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
+	$iterator = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+	$files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST);
+
+	foreach ($files as $file) {
+		if ($file->isDir()) {
+			rmdir($file->getRealPath());
+		} else {
+			unlink($file->getRealPath());
+		}
+	}
+
+	rmdir($dir);
+}
