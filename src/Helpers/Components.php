@@ -225,7 +225,7 @@ class Components
 	}
 
 	/**
-	 * Retun BEM selector for html class and check if Condition part is set.
+	 * Return BEM selector for html class and check if Condition part is set.
 	 *
 	 * @param mixed  $condition Check condition.
 	 * @param string $block BEM Block selector.
