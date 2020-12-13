@@ -46,8 +46,7 @@
       "default": false
     },
     "buttonIsNewTab": {
-      "type": "boolean",
-      "default": false
+      "type": "boolean"
     },
     "buttonAttrs": {
       "type": "array"
