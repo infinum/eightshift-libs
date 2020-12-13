@@ -158,6 +158,17 @@ test('Asserts that checkAttr works in case attribute is boolean', function () {
 });
 
 
+test('Asserts that checkAttr returns false in case attribute is boolean and default is not set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
+	$attributes['buttonIsAnchor'] = true;
+
+	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest);
+
+	$this->assertIsBool($results, 'THe result should be a boolean');
+	$this->assertEquals(false, $results, "The set attribute should be false");
+});
+
+
 test('Asserts that checkAttr works in case attribute is array', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
 	$attributes['buttonAttrs'] = ['attr 1', 'attr 2'];
@@ -170,112 +181,58 @@ test('Asserts that checkAttr works in case attribute is array', function () {
 });
 
 
+test('Asserts that checkAttr returns empty array in case attribute is array or object and default is not set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
+	$attributes['buttonSize'] = 'large';
+
+	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
+
+	$this->assertIsArray($results, 'THe result should be an empty array');
+	$this->assertEquals([], $results, "The set attribute should be empty array");
+});
+
+
 test('Asserts that checkAttr returns default value', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
 	$attributes['title'] = 'Some attribute';
 
-	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
+	$results = Components::checkAttr('buttonAlign', $attributes, $manifest, 'button');
 
 	$this->assertIsString($results, 'The default value should be a string');
 	$this->assertEquals('left', $results, 'The default value should be left');
 });
 
 
-/**
- * Components::selectorBlock tests
- */
-test('Asserts that selectorBlock returns the correct class when attributes are set', function () {
-	$selector = Components::selectorBlock('button', 'icon', 'blue');
+test('Asserts that checkAttr throws exception if manifest key is not set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
+	$attributes['title'] = 'Some attribute';
 
-	$this->assertIsString($selector);
-	$this->assertEquals('button__icon--blue', $selector);
-});
-
-
-test('Asserts that selectorBlock returns the correct class when only one attribute is set', function () {
-	$selector = Components::selectorBlock('button');
-
-	$this->assertIsString($selector);
-	$this->assertEquals('button', $selector);
-});
-
-
-test('Asserts that selectorBlock returns the correct class when element is an empty string', function () {
-	$selector = Components::selectorBlock('button', '    ');
-
-	$this->assertIsString($selector);
-	$this->assertEquals('button', $selector);
-});
-
-
-/**
- * Components::selectorElement tests
- */
-test('Asserts that selectorElement returns the correct class when attributes are set', function () {
-	$selector = Components::selectorElement('button', 'icon', 'blue');
-
-	$this->assertIsString($selector);
-	$this->assertEquals('button__icon--blue', $selector);
-});
-
-
-test('Asserts that selectorElement returns the correct class when only one attribute is set', function () {
-	$selector = Components::selectorElement('button', 'icon');
-
-	$this->assertIsString($selector);
-	$this->assertEquals('button__icon', $selector);
-});
-
-
-test('Asserts that selectorElement returns the correct class when element is an empty string', function () {
-	$selector = Components::selectorElement('button', '    ', '    ');
-
-	$this->assertIsString($selector);
-	$this->assertEquals('', $selector);
-});
-
-
-/**
- * Components::selectorModifier tests
- */
-test('Asserts that selectorModifier returns the correct class when attributes are set', function () {
-	$selector = Components::selectorModifier('button', 'icon', 'blue');
-
-	$this->assertIsString($selector);
-	$this->assertEquals('button__icon--blue', $selector);
-});
-
-
-test('Asserts that selectorModifier returns the correct class when element is an empty string', function () {
-	$selector = Components::selectorModifier('button', '    ', '  ');
-
-	$this->assertIsString($selector);
-	$this->assertEquals('', $selector);
-});
+	Components::checkAttr('bla', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'bla key does not exist in the button component. Please check your implementation.');
 
 
 /**
  * Components::selector tests
  */
-test('Asserts that selector returns the correct class when attributes are set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data');
-	$attributes['buttonAlign'] = 'right';
-
-	$selector = Components::selector('button', 'icon', 'buttonAlign', $attributes, $manifest);
-
-	$this->assertIsString($selector);
-	$this->assertEquals('button__icon--right', $selector);
-});
-
-
-/**
- * Components::selectorCustom tests
- */
-test('Asserts that selectorCustom returns the correct class attributes are set', function () {
-	$selector = Components::selectorCustom(true, 'button', 'icon', 'blue');
-	$selectorFalse = Components::selectorCustom(false, 'button', 'icon', 'blue');
+test('Asserts that selectorBlock returns the correct class when attributes are set', function () {
+	$selector = Components::selector('button', 'button', 'icon', 'blue');
 
 	$this->assertIsString($selector);
 	$this->assertEquals('button__icon--blue', $selector);
-	$this->assertEquals('', $selectorFalse);
+});
+
+
+test('Asserts that selector returns the correct class when only block class is set', function () {
+	$selector = Components::selector('button', 'button');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button', $selector);
+});
+
+
+test('Asserts that selector returns the correct class when element is an empty string', function () {
+	$selector = Components::selector('button', 'button', '    ');
+
+	$this->assertIsString($selector);
+	$this->assertEquals('button', $selector);
 });
