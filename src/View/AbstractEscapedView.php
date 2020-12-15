@@ -149,10 +149,10 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'allowfullscreen' => true,
 		],
 		'button' => [
-      'class' => true,
-      'id' => true,
+			'class' => true,
+			'id' => true,
 			'type' => true,
-      'onClick' => true,
+			'onClick' => true,
 		],
 	];
 
@@ -167,6 +167,22 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'frameborder' => true,
 			'allow' => true,
 			'allowfullscreen' => true,
+		],
+	];
+
+	/**
+	 * Tags that are allowed to be rendered in head.
+	 */
+	public const HEAD = [
+		'meta' => [
+			'content' => true,
+			'name' => true,
+			'charset' => true,
+			'http-equiv' => true,
+		],
+		'link' => [
+			'rel' => true,
+			'href' => true,
 		],
 	];
 }
