@@ -125,6 +125,8 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'class' => true,
 			'id' => true,
 			'readonly' => true,
+			'checked' => true,
+			'disabled' => true,
 		],
 		'select' => [
 			'name' => true,
@@ -133,6 +135,7 @@ abstract class AbstractEscapedView implements ServiceInterface
 		],
 		'option' => [
 			'value' => true,
+			'selected' => true,
 		],
 		'form' => [
 			'class' => true,
