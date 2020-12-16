@@ -45,7 +45,7 @@ class Components
 		} elseif (is_string($variable)) {
 			$output = $variable;
 		} else {
-			ComponentException::throwNotStringOrVariable($variable);
+			throw ComponentException::throwNotStringOrVariable($variable);
 		}
 
 		return $output;
@@ -76,7 +76,7 @@ class Components
 	 *                            If not get_template_directory_uri() will be used as a default parent path.
 	 * @param bool   $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
 	 *
-	 * @throws \Exception When we're unable to find the component by $component.
+	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return string
 	 */
