@@ -169,4 +169,20 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'allowfullscreen' => true,
 		],
 	];
+
+	/**
+	 * Tags that are allowed to be rendered in head.
+	 */
+	public const HEAD = [
+		'meta' => [
+			'content' => true,
+			'name' => true,
+			'charset' => true,
+			'http-equiv' => true,
+		],
+		'link' => [
+			'rel' => true,
+			'href' => true,
+		],
+	];
 }
