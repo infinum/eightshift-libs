@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Blocks Components.
+ * Class that registers WPCLI command for Blocks Variations.
  *
  * @package EightshiftLibs\Blocks
  */
@@ -13,9 +13,9 @@ namespace EightshiftLibs\Blocks;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
- * Class BlockComponentCli
+ * Class BlockVariationCli
  */
-class BlockComponentCli extends AbstractCli
+class BlockVariationCli extends AbstractCli
 {
 
 	/**
@@ -23,7 +23,7 @@ class BlockComponentCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks/components';
+	public const OUTPUT_DIR = 'src/Blocks/variations';
 
 	/**
 	 * Get WPCLI command name
@@ -32,7 +32,7 @@ class BlockComponentCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_component';
+		return 'use_variation';
 	}
 
 	/**
@@ -43,12 +43,12 @@ class BlockComponentCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy Component from library to your project.',
+			'shortdesc' => 'Copy Variation from library to your project.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'name',
-					'description' => 'Specify component name.',
+					'description' => 'Specify variation name.',
 					'optional' => false,
 				],
 			],
@@ -85,16 +85,16 @@ class BlockComponentCli extends AbstractCli
 			}
 
 			\WP_CLI::log(
-				"Please check the docs for all available components."
+				"Please check the docs for all available variations."
 			);
 			\WP_CLI::log(
-				"You can find all available components on this link: https://infinum.github.io/eightshift-docs/storybook/."
+				"You can find all available variations on this link: https://infinum.github.io/eightshift-docs/storybook/."
 			);
 			\WP_CLI::log(
-				"Or here is the list of all available component names: \n{$nameList}"
+				"Or here is the list of all available variation names: \n{$nameList}"
 			);
 
-			self::cliError("The component '{$sourcePath}' doesn\'t exist in our library.");
+			self::cliError("The variation '{$sourcePath}' doesn\'t exist in our library.");
 		}
 
 		// Destination exists.
@@ -102,7 +102,7 @@ class BlockComponentCli extends AbstractCli
 			self::cliError(
 				/* translators: %s will be replaced with the path. */
 				sprintf(
-					'The component in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
+					'The variation in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
 					$destinationPath
 				)
 			);
@@ -110,7 +110,7 @@ class BlockComponentCli extends AbstractCli
 
 		system("cp -R {$sourcePath}/. {$destinationPath}/");
 
-		\WP_CLI::success('Component successfully moved to your project.');
+		\WP_CLI::success('Variation successfully moved to your project.');
 
 		\WP_CLI::log('--------------------------------------------------');
 
