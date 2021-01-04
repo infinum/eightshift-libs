@@ -455,9 +455,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	protected function prepareComponentAttributes(array $blockDetails): array
 	{
 		$output = [];
+		$componentAttributes = [];
 
 		if (!isset($blockDetails['components'])) {
 			return $output;
+		}
+
+		if(isset($blockDetails['attributes'])) {
+			$componentAttributes = $blockDetails['attributes'];
 		}
 
 		foreach ($blockDetails['components'] as $newComponentName => $realComponentName) {
@@ -473,7 +478,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			$output = array_merge(
 				$output,
-				$outputAttributes
+				$outputAttributes,
+				$componentAttributes
 			);
 		}
 
