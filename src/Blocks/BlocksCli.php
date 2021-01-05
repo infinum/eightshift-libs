@@ -118,7 +118,6 @@ class BlocksCli extends AbstractCli
 
 		$folders = [
 			'assetsGlobal' => "{$root}/assets",
-			'storybook' => "{$root}/.storybook",
 			'blocks' => "{$root}/src/Blocks",
 			'assets' => "{$root}/src/Blocks/assets",
 			'components' => "{$root}/src/Blocks/components",
@@ -133,7 +132,6 @@ class BlocksCli extends AbstractCli
 		}
 
 		system("cp -R {$rootNode}/assets/. {$folders['assetsGlobal']}/");
-		system("cp -R {$rootNode}/storybook/. {$folders['storybook']}/");
 
 		system("cp -R {$rootNode}/src/Blocks/assets/. {$folders['assets']}/");
 		system("cp -R {$rootNode}/src/Blocks/variations/. {$folders['variations']}/");
