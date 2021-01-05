@@ -6,7 +6,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [3.0.0] - 2021-01-05
 MAYOR BREAKING CHANGES
 
-- You should not try to update from version 3 to 4 because they are not compatible.
+- You should not try to update from version 2 to 3 because they are not compatible.
 
 ## [2.4.1] - 2020-07-10
 
