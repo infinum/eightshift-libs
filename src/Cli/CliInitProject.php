@@ -14,6 +14,7 @@ use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
@@ -47,6 +48,7 @@ class CliInitProject extends AbstractCli
 		SetupCli::class,
 		CiExcludeCli::class,
 		BuildCli::class,
+		ConfigProjectCli::class,
 	];
 
 	/**
