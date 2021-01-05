@@ -3,21 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [Unreleased]
+## [3.0.0] - 2021-01-05
+MAYOR BREAKING CHANGES
 
-### Changed
-- Switching from Classmap to PSR-4 naming.
-- example: `class-media.php` is now `Media.php`.
-- example: `menu.php` is now `AbstractMenu.php`.
-- example: `interface-manifest-data.php` is now `ManifestInterface.php`.
-- example: `trait-error-logger.php` is now `ErrorLoggerTrait.php`.
-- example: `class-component-exception.php` is now `ComponentException.php`.
-- replaced `DI\create` with `new AutowireDefinitionHelper();`.
-- replaced `DI\get` with `new Reference( $dependency );`.
-- changed namespace `Eightshift_Libs` to `EightshiftLibs`.
-
-### Removed
-- removed `instantiate_service()` method.
+- You should not try to update from version 3 to 4 because they are not compatible.
 
 ## [2.4.1] - 2020-07-10
 
@@ -221,6 +210,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[3.0.0]: https://github.com/infinum/eightshift-libs/compare/2.4.1...v3.0.0
 [2.4.1]: https://github.com/infinum/eightshift-libs/compare/2.4.0...v2.4.1
 [2.4.0]: https://github.com/infinum/eightshift-libs/compare/2.3.0...v2.4.0
 [2.3.0]: https://github.com/infinum/eightshift-libs/compare/2.2.2...v2.3.0

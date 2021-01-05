@@ -461,7 +461,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return $output;
 		}
 
-		if(isset($blockDetails['attributes'])) {
+		if (isset($blockDetails['attributes'])) {
 			$componentAttributes = $blockDetails['attributes'];
 		}
 

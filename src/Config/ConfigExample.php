@@ -18,7 +18,7 @@ use EightshiftLibs\Config\AbstractConfigData;
 /**
  * The project config class.
  */
-class Config extends AbstractConfigData
+class ConfigExample extends AbstractConfigData
 {
 
 	/**

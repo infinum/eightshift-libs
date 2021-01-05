@@ -17,7 +17,7 @@ use EightshiftLibs\Blocks\AbstractBlocks;
 /**
  * Class Blocks
  */
-class Blocks extends AbstractBlocks
+class BlocksExample extends AbstractBlocks
 {
 
 	/**

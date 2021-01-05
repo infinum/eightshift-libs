@@ -24,12 +24,12 @@
 		"url": "https://github.com/infinum/eightshift-frontend-libs/issues"
 	},
 	"scripts": {
-		"lint": "wp eval-file bin/cli.php run_lint_php --skip-wordpress"
+		"lint": "composer standards:check -- --filter=gitstaged"
 	},
 	"homepage": "https://eightshift.com/",
 	"license": "MIT",
 	"dependencies": {
-		"husky": "^4.2.3"
+		"husky": "^4.3.6"
 	},
 	"husky": {
 		"hooks": {

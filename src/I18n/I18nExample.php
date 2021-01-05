@@ -18,7 +18,7 @@ use EightshiftLibs\Services\ServiceInterface;
  *
  * This class handles theme or admin languages.
  */
-class I18n implements ServiceInterface
+class I18nExample implements ServiceInterface
 {
 
 	/**
