@@ -48,7 +48,7 @@ class BlocksStorybookCli extends AbstractCli
 
 			\WP_CLI::log('--------------------------------------------------');
 
-			\WP_CLI::log((string)shell_exec('npm install @eightshift/storybook --save-dev')); // phpcs:ignore
+			\WP_CLI::log((string)shell_exec('npm install @eightshift/storybook --save-dev --legacy-peer-deps')); // phpcs:ignore
 
 			\WP_CLI::success('Storybook package successfully installed.');
 
