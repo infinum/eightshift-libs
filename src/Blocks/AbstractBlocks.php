@@ -438,7 +438,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		return array_reduce(
 			array_keys($componentAttributes),
-			function ($output, $name) use ($realComponentName, $newComponentName, $componentAttributes) {
+			static function ($output, $name) use ($realComponentName, $newComponentName, $componentAttributes) {
 				$output[str_replace($realComponentName, $newComponentName, $name)] = $componentAttributes[$name];
 				return $output;
 			},
