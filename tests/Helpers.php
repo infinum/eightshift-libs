@@ -14,6 +14,17 @@ Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data'
 // Mock escaping function.
 Functions\when('wp_kses_post')->returnArg();
 
+// Mock json success and error handlers.
+Functions\when('wp_send_json_success')->alias(function(...$args) {
+    echo json_encode($args);
+});
+Functions\when('wp_send_json_error')->alias(function(...$args) {
+    echo json_encode($args);
+});
+
+// Mock rest response handler.
+Functions\when('rest_ensure_response')->returnArg();
+
 /**
  * Used for cleaning out the cliOutput created after every CLI test
  *
