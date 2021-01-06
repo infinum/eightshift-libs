@@ -6,6 +6,8 @@ parameters:
 	inferPrivatePropertyTypeFromConstructor: true
 	checkMissingIterableValueType: false
 	treatPhpDocTypesAsCertain: false
+	scanFiles:
+		- vendor/wp-cli/wp-cli/php/class-wp-cli.php
 	paths:
 		- src/
 	excludes_analyse:
