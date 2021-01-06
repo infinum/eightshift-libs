@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1610649205">
-  <project timestamp="1610649205">
+<coverage generated="1610525240">
+  <project timestamp="1610525240">
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Blocks/AbstractBlocks.php">
       <class name="EightshiftLibs\Blocks\AbstractBlocks" namespace="global">
         <metrics complexity="54" methods="21" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="195" coveredstatements="0" elements="216" coveredelements="0"/>
@@ -2071,11 +2071,9 @@
     </file>
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Helpers/ErrorLoggerTrait.php">
       <class name="EightshiftLibs\Helpers\ErrorLoggerTrait" namespace="global">
-        <metrics complexity="3" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="0" elements="14" coveredelements="0"/>
+        <metrics complexity="3" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="13" coveredelements="0"/>
       </class>
-      <line num="11" type="stmt" count="0"/>
       <line num="31" type="method" name="restResponseHandler" visibility="public" complexity="3" crap="12" count="0"/>
-      <line num="32" type="stmt" count="0"/>
       <line num="34" type="stmt" count="0"/>
       <line num="35" type="stmt" count="0"/>
       <line num="36" type="stmt" count="0"/>
@@ -2088,7 +2086,7 @@
       <line num="46" type="stmt" count="0"/>
       <line num="47" type="stmt" count="0"/>
       <line num="50" type="stmt" count="0"/>
-      <metrics loc="52" ncloc="32" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="0" elements="15" coveredelements="0"/>
+      <metrics loc="52" ncloc="32" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="13" coveredelements="0"/>
     </file>
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Helpers/ObjectHelperTrait.php">
       <class name="EightshiftLibs\Helpers\ObjectHelperTrait" namespace="global">
@@ -2888,6 +2886,6 @@
       <line num="49" type="stmt" count="0"/>
       <metrics loc="49" ncloc="32" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="14" coveredelements="0"/>
     </file>
-    <metrics files="91" loc="8882" ncloc="5821" classes="74" methods="268" coveredmethods="18" conditionals="0" coveredconditionals="0" statements="2121" coveredstatements="211" elements="2389" coveredelements="229"/>
+    <metrics files="91" loc="8954" ncloc="5867" classes="74" methods="269" coveredmethods="18" conditionals="0" coveredconditionals="0" statements="2129" coveredstatements="211" elements="2398" coveredelements="229"/>
   </project>
 </coverage>
