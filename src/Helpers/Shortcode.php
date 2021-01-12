@@ -30,12 +30,12 @@ class Shortcode
 	 */
 	public static function getShortcode(string $tag, array $attr = [], $content = null)
 	{
-		global $shortcode_tags;
+		global $shortcode_tags; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
-		if (!isset($shortcode_tags[$tag])) {
+		if (!isset($shortcode_tags[$tag])) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 			return false;
 		}
 
-		return \call_user_func($shortcode_tags[$tag], $attr, $content, $tag);
+		return \call_user_func($shortcode_tags[$tag], $attr, $content, $tag); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 	}
 }
