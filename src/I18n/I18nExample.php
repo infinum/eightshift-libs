@@ -28,7 +28,7 @@ class I18nExample implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_action('after_setup_theme', [$this, 'loadThemeTextdomain']);
+		\add_action('after_setup_theme', [$this, 'loadThemeTextdomain'], 20);
 	}
 
 	/**
@@ -40,7 +40,7 @@ class I18nExample implements ServiceInterface
 	{
 		\load_theme_textdomain(
 			Config::getProjectName(),
-			Config::getProjectPath('/src/I18n')
+			Config::getProjectPath('src/I18n/languages')
 		);
 	}
 }
