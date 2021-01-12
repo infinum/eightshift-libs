@@ -19,24 +19,6 @@ abstract class AbstractConfigData implements ConfigDataInterface
 {
 
 	/**
-	 * Method that returns every string prefixed with project prefix based on project type.
-	 * It converts all spaces and "_" with "-", also it converts all characters to lowercase.
-	 *
-	 * @param string $key String key to append prefix on.
-	 *
-	 * @return string Returns key prefixed with project prefix.
-	 */
-	public static function getConfig(string $key): string
-	{
-		$projectPrefix = static::getProjectPrefix();
-		$projectPrefix = str_replace(' ', '-', $projectPrefix);
-		$projectPrefix = str_replace('_', '-', $projectPrefix);
-		$projectPrefix = strtolower($projectPrefix);
-
-		return "{$projectPrefix}-{$key}";
-	}
-
-	/**
 	 * Return project absolute path.
 	 *
 	 * If used in a theme use get_template_directory() and in case it's used in a plugin use __DIR__.

@@ -42,18 +42,6 @@ class ConfigExample extends AbstractConfigData
 	}
 
 	/**
-	 * Method that returns project prefix.
-	 *
-	 * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.
-	 *
-	 * @return string Full path to asset.
-	 */
-	public static function getProjectPrefix(): string
-	{
-		return 'eb';
-	}
-
-	/**
 	 * Method that returns project REST-API namespace.
 	 *
 	 * Used for namespacing projects REST-API routes and fields.
