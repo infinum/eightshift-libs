@@ -86,15 +86,11 @@ class ConfigProjectCli extends AbstractCli
 		// Replace stuff in file.
 		$class = $this->renameTextDomain($assocArgs, $class);
 
-		if (!empty($env)) {
-			$class = str_replace('EB_ENV', $env, $class);
-		}
-
 		// Output final class to new file/folder and finish.
 		$this->outputWrite($root, 'wp-config-project.php', $class, $assocArgs);
 
 		\WP_CLI::success("Please do the following steps manually to complete the setup:");
-		\WP_CLI::success("1. In wp-config.php - Make sure to define your env const {$env} to 'develop' like so: <?php define( '{$env}', 'develop' ); ?>`");
+		\WP_CLI::success("1. In wp-config.php - Make sure to define your env const {$env} to 'develop' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'develop' ); ?>`");
 		\WP_CLI::success("2. In wp-config.php - Make sure to require wp-config-project.php (at the end of the file) but before the wp-settings.php. Like this:`);");
 		\WP_CLI::success("
 		/** Absolute path to the WordPress directory. */

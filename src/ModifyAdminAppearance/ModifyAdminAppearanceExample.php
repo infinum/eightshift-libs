@@ -26,7 +26,7 @@ class ModifyAdminAppearanceExample implements ServiceInterface
 	 * @var array
 	 */
 	public const COLOR_SCHEMES = [
-		'default' => 'fresh',
+		'develop' => 'fresh',
 		'staging' => 'blue',
 		'production' => 'sunrise',
 	];
@@ -48,7 +48,7 @@ class ModifyAdminAppearanceExample implements ServiceInterface
 	 */
 	public function adminColor(): string
 	{
-		$env = defined('EB_ENV') ? EB_ENV : 'default';
+		$env = \wp_get_environment_type();
 
 		$colors = self::COLOR_SCHEMES;
 

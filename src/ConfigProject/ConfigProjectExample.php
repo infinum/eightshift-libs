@@ -10,7 +10,7 @@
  */
 
 // phpcs:disable
-if (! defined('EB_ENV')) {
+if (! defined('WP_ENVIRONMENT_TYPE')) {
 	return false;
 }
 
@@ -37,7 +37,7 @@ define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', true);
 
 // Environment based setup.
-if (EB_ENV === 'develop') {
+if (WP_ENVIRONMENT_TYPE === 'develop') {
 	// Enable direct upload from admin.
 	define('FS_METHOD', 'direct');
 
