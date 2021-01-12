@@ -30,12 +30,12 @@ class Shortcode
 	 */
 	public static function getShortcode(string $tag, array $attr = [], $content = null)
 	{
-		global $shortcodeTags;
+		global $shortcode_tags;
 
-		if (!isset($shortcodeTags[$tag])) {
+		if (!isset($shortcode_tags[$tag])) {
 			return false;
 		}
 
-		return \call_user_func($shortcodeTags[$tag], $attr, $content, $tag);
+		return \call_user_func($shortcode_tags[$tag], $attr, $content, $tag);
 	}
 }
