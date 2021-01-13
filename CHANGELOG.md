@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.1] - 2021-01-13
+
+### Fixed
+- Issues with -env parameter on `wp boilerplate setup_project` command.
+- Wrong Global variable name in Shortcodes.
+- Small improvements.
+
+### Added
+- I18n - added hook priority to fix bug on loading languages.
+
+### Removed
+- Config - removed `getProjectEnv` method.
+- Config - removed `getConfig` method.
+
+### Changed
+- Switched from custom env variable to native WP_ENVIRONMENT_TYPE.
+- ModifyAdminAppearance - implementing new env variable.
+
 ## [3.0.0] - 2021-01-05
 MAYOR BREAKING CHANGES
 
@@ -210,6 +228,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[3.0.1]: https://github.com/infinum/eightshift-libs/compare/3.0.0...v3.0.1
 [3.0.0]: https://github.com/infinum/eightshift-libs/compare/2.4.1...v3.0.0
 [2.4.1]: https://github.com/infinum/eightshift-libs/compare/2.4.0...v2.4.1
 [2.4.0]: https://github.com/infinum/eightshift-libs/compare/2.3.0...v2.4.0
