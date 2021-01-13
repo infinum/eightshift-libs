@@ -6,6 +6,8 @@ parameters:
 	inferPrivatePropertyTypeFromConstructor: true
 	checkMissingIterableValueType: false
 	treatPhpDocTypesAsCertain: false
+	scanFiles:
+		- vendor/wp-cli/wp-cli/php/class-wp-cli.php
 	paths:
 		- src/
 	excludes_analyse:
@@ -16,5 +18,3 @@ parameters:
 		- '/^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$/'
 		# WP-CLI accepts a class as callable
 		- '/^Parameter #2 \$callable of static method WP_CLI::add_command\(\) expects callable\(\): mixed, \S+ given\.$/'
-		# PHPStan bug https://github.com/phpstan/phpstan/issues/4107
-		- '/Call to static method cliError\(\) on trait EightshiftLibs\\Cli\\CliHelpers./'
