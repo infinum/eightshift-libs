@@ -43,7 +43,6 @@ class ConfigProjectCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'env' => $args[1] ?? 'EB_TEST_ENV',
 			'root' => $args[2] ?? './',
 		];
 	}
@@ -60,12 +59,6 @@ class ConfigProjectCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'env',
-					'description' => 'Define project env variable name.',
-					'optional' => false,
-				],
-				[
-					'type' => 'assoc',
 					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
 					'optional' => true,
@@ -77,7 +70,6 @@ class ConfigProjectCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$env = $assocArgs['env'] ?? '';
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -90,7 +82,7 @@ class ConfigProjectCli extends AbstractCli
 		$this->outputWrite($root, 'wp-config-project.php', $class, $assocArgs);
 
 		\WP_CLI::success("Please do the following steps manually to complete the setup:");
-		\WP_CLI::success("1. In wp-config.php - Make sure to define your env const {$env} to 'develop' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'develop' ); ?>`");
+		\WP_CLI::success("1. In wp-config.php - Make sure to define WP_ENVIRONMENT_TYPE const to 'develop' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'develop' ); ?>`");
 		\WP_CLI::success("2. In wp-config.php - Make sure to require wp-config-project.php (at the end of the file) but before the wp-settings.php. Like this:`);");
 		\WP_CLI::success("
 		/** Absolute path to the WordPress directory. */

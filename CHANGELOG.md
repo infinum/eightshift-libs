@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.2] - 2021-01-13
+
+### Removed
+- Removed env from the config CLI.
+
 ## [3.0.1] - 2021-01-13
 
 ### Fixed
@@ -228,6 +233,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[3.0.2]: https://github.com/infinum/eightshift-libs/compare/3.0.1...v3.0.2
 [3.0.1]: https://github.com/infinum/eightshift-libs/compare/3.0.0...v3.0.1
 [3.0.0]: https://github.com/infinum/eightshift-libs/compare/2.4.1...v3.0.0
 [2.4.1]: https://github.com/infinum/eightshift-libs/compare/2.4.0...v2.4.1
