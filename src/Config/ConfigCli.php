@@ -35,8 +35,6 @@ class ConfigCli extends AbstractCli
 		return [
 			'name' => $args[1] ?? 'Boilerplate',
 			'version' => $args[2] ?? '1',
-			'prefix' => $args[3] ?? 'ebs',
-			'env' => $args[4] ?? 'EBS_ENV',
 			'routes_version' => $args[5] ?? 'v2',
 		];
 	}
@@ -65,18 +63,6 @@ class ConfigCli extends AbstractCli
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'prefix',
-					'description' => 'Define project prefix.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'env',
-					'description' => 'Define project env.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
 					'name' => 'routes_version',
 					'description' => 'Define project REST version.',
 					'optional' => true,
@@ -90,8 +76,6 @@ class ConfigCli extends AbstractCli
 		// Get Props.
 		$name = $assocArgs['name'] ?? '';
 		$version = $assocArgs['version'] ?? '';
-		$prefix = $assocArgs['prefix'] ?? '';
-		$env = $assocArgs['env'] ?? '';
 		$routesVersion = $assocArgs['routes_version'] ?? '';
 
 		$className = $this->getClassShortName();
@@ -112,14 +96,6 @@ class ConfigCli extends AbstractCli
 
 		if (!empty($version)) {
 			$class = str_replace('1.0.0', $version, $class);
-		}
-
-		if (!empty($prefix)) {
-			$class = str_replace("'eb'", "'{$prefix}'", $class);
-		}
-
-		if (!empty($env)) {
-			$class = str_replace('EB_ENV', $env, $class);
 		}
 
 		if (!empty($routesVersion)) {

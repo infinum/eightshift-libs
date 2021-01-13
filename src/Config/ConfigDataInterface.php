@@ -33,15 +33,6 @@ interface ConfigDataInterface
 	public static function getProjectVersion(): string;
 
 	/**
-	 * Method that returns project prefix.
-	 *
-	 * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.
-	 *
-	 * @return string Full path to asset.
-	 */
-	public static function getProjectPrefix(): string;
-
-	/**
 	 * Return project absolute path.
 	 *
 	 * If used in a theme use get_template_directory() and in case it's used in a plugin use __DIR__.
@@ -51,14 +42,4 @@ interface ConfigDataInterface
 	 * @return string
 	 */
 	public static function getProjectPath(string $path = ''): string;
-
-	/**
-	 * Method that returns every string prefixed with project prefix based on project type.
-	 * It converts all spaces and "_" with "-", also it converts all characters to lowercase.
-	 *
-	 * @param string $key String key to append prefix on.
-	 *
-	 * @return string Returns key prefixed with project prefix.
-	 */
-	public static function getConfig(string $key): string;
 }

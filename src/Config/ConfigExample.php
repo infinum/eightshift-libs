@@ -42,38 +42,6 @@ class ConfigExample extends AbstractConfigData
 	}
 
 	/**
-	 * Method that returns project prefix.
-	 *
-	 * The WordPress filters live in a global namespace, so we need to prefix them to avoid naming collisions.
-	 *
-	 * @return string Full path to asset.
-	 */
-	public static function getProjectPrefix(): string
-	{
-		return 'eb';
-	}
-
-	/**
-	 * Returns the project environment variable descriptor.
-	 *
-	 * Used for defining global settings depending on the environment of the project.
-	 * Can be one of, but not limited to, develop, staging, production.
-	 *
-	 * Defaults to 'develop' (as to not cache manifest in transient) if not otherwise
-	 * defined in wp-config.php
-	 *
-	 * @return string Current project environment string.
-	 */
-	public static function getProjectEnv(): string
-	{
-		if (defined('EB_ENV')) {
-			return EB_ENV;
-		}
-
-		return 'develop';
-	}
-
-	/**
 	 * Method that returns project REST-API namespace.
 	 *
 	 * Used for namespacing projects REST-API routes and fields.
