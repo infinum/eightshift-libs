@@ -28,7 +28,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php }}
-                coverage: pcov
+                coverage: none
 
             # Install dependencies and handle caching in one go.
             # @link https://github.com/marketplace/actions/install-composer-dependencies
@@ -37,3 +37,31 @@ jobs:
 
             - name: Check coding standards using PHPCS
               run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}-
+
+    phpstan:
+        name: PHPStan check
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [7.4]
+
+        steps:
+            # Checkout repository
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            # Setup PHP versions, run checks
+            - name: PHP setup
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php }}
+                coverage: none
+
+            # Install dependencies and handle caching in one go.
+            # @link https://github.com/marketplace/actions/install-composer-dependencies
+            - name: Install Composer dependencies
+              uses: "ramsey/composer-install@v1"
+
+            - name: Check code consistency using PHPStan
+              run: composer analyze
