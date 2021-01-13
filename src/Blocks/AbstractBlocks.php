@@ -430,20 +430,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	protected function prepareCommponentAttribute(array $component, string $realComponentName, string $newComponentName): array
 	{
-		$output = [];
-
 		$componentAttributes = $component['attributes'];
 
-		if ($realComponentName !== $newComponentName) {
-			foreach ($componentAttributes as $name => $key) {
-					$newName = str_replace($realComponentName, $newComponentName, $name);
-					$output[$newName] = $componentAttributes[$name];
-			}
-		} else {
-			$output = $componentAttributes;
+		if ($realComponentName === $newComponentName) {
+			return $componentAttributes;
 		}
 
-		return $output;
+		return array_reduce(
+			array_keys($componentAttributes),
+			static function ($output, $name) use ($realComponentName, $newComponentName, $componentAttributes) {
+				$output[str_replace($realComponentName, $newComponentName, $name)] = $componentAttributes[$name];
+				return $output;
+			},
+			[]
+		);
 	}
 
 	/**
