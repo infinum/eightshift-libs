@@ -1,7 +1,13 @@
 name: Unit tests
 
 on:
-    pull_request:
+  # Run on PRs and pushes, only on significant changes.
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
 
 jobs:
     tests:
@@ -16,21 +22,10 @@ jobs:
               with:
                 php-version: 7.4
 
-            - name: Get composer cache directory
-              id: composer-cache
-              run: |
-                echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            - name: Cache composer dependencies
-              uses: actions/cache@v1
-              with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: |
-                  ${{ runner.os }}-composer-
-
-            - name: Install composer packages
-              run: composer install --no-progress
+            # Install dependencies and handle caching in one go.
+            # @link https://github.com/marketplace/actions/install-composer-dependencies
+            - name: Install Composer dependencies
+              uses: "ramsey/composer-install@v1"
 
             - name: Run unit tests
               run: composer tests:unit
