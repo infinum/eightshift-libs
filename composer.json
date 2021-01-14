@@ -67,7 +67,7 @@
     "analyze": "@php ./vendor/bin/phpstan analyze",
     "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
     "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
-    "tests:unit": "@php ./vendor/bin/pest",
+    "test:unit": "@php ./vendor/bin/pest",
     "test:coverage": "@php ./vendor/bin/pest --coverage"
   }
 }

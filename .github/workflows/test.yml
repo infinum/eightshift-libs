@@ -29,10 +29,10 @@ jobs:
               uses: "ramsey/composer-install@v1"
 
             - name: Run unit tests
-              run: composer tests:unit
+              run: composer test:unit
 
             - name: Run coverage generation
-              run: composer tests:coverage
+              run: composer test:coverage
 
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v1
