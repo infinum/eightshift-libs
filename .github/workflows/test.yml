@@ -30,3 +30,15 @@ jobs:
 
             - name: Run unit tests
               run: composer tests:unit
+
+            - name: Run coverage generation
+              run: composer tests:coverage
+
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v1
+              with:
+                files: ./tests/coverage/clover.xml
+                flags: unittests
+                name: libs-codecov
+                fail_ci_if_error: true
+                verbose: true
