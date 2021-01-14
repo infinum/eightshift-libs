@@ -15,11 +15,24 @@ Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data'
 Functions\when('wp_kses_post')->returnArg();
 
 // Mock json success and error handlers.
-Functions\when('wp_send_json_success')->alias(function(...$args) {
-    echo json_encode($args);
+Functions\when('wp_send_json_success')->alias(function ($data = null, $statusCode = null, $options = 0) {
+	$response = ['success' => true];
+
+	if (isset($data)) {
+		$response['data'] = $data;
+	}
+
+	echo json_encode($response, $options);
 });
-Functions\when('wp_send_json_error')->alias(function(...$args) {
-    echo json_encode($args);
+
+Functions\when('wp_send_json_error')->alias(function($data = null, $statusCode = null, $options = 0) {
+	$response = ['success' => false];
+
+	if (isset($data)) {
+		$response['data'] = $data;
+	}
+
+    echo json_encode($response, $options);
 });
 
 // Mock rest response handler.
