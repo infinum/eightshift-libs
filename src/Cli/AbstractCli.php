@@ -503,30 +503,30 @@ abstract class AbstractCli implements CliInterface
 	 * Replace text domain in class for frontend libs
 	 *
 	 * @param array  $args CLI args array.
-	 * @param string $string Full class as a string.
 	 *
-	 * @return string
+	 * @return CliInterface Current CLI class.
 	 */
-	public function renameTextDomainFrontendLibs(array $args = [], string $string = ''): string
+	public function renameTextDomainFrontendLibs(array $args = []): CliInterface
 	{
 		$namespace = $this->getNamespace($args);
 
-		return str_replace(
+		$this->fileContents = str_replace(
 			'eightshift-frontend-libs',
 			$namespace,
-			$string
+			$this->fileContents
 		);
+
+		return $this;
 	}
 
 	/**
 	 * Replace project file name
 	 *
 	 * @param array  $args CLI args array.
-	 * @param string $string Full class as a string.
 	 *
-	 * @return string
+	 * @return CliInterface Current CLI class.
 	 */
-	public function renameProjectName(array $args = [], string $string = ''): string
+	public function renameProjectName(array $args = []): CliInterface
 	{
 		$projectName = 'eightshift-boilerplate';
 
@@ -538,22 +538,23 @@ abstract class AbstractCli implements CliInterface
 			$projectName = $args['project_name'];
 		}
 
-		return str_replace(
+		$this->fileContents = str_replace(
 			'eightshift-boilerplate',
 			$projectName,
-			$string
+			$this->fileContents
 		);
+
+		return $this;
 	}
 
 	/**
 	 * Replace project file type
 	 *
 	 * @param array  $args CLI args array.
-	 * @param string $string Full class as a string.
 	 *
-	 * @return string
+	 * @return CliInterface Current CLI class.
 	 */
-	public function renameProjectType(array $args = [], string $string = ''): string
+	public function renameProjectType(array $args = []): CliInterface
 	{
 		$projectType = 'themes';
 
@@ -565,11 +566,13 @@ abstract class AbstractCli implements CliInterface
 			$projectType = $args['project_type'];
 		}
 
-		return str_replace(
+		$this->fileContents = str_replace(
 			'themes',
 			$projectType,
-			$string
+			$this->fileContents
 		);
+
+		return $this;
 	}
 
 	/**
@@ -735,9 +738,11 @@ abstract class AbstractCli implements CliInterface
 	 * Loop array of classes and output the commands
 	 *
 	 * @param array $items Array of classes.
-	 * @param bool  $run Run or log output.
+	 * @param bool $run Run or log output.
 	 *
 	 * @return void
+	 *
+	 * @throws \ReflectionException
 	 */
 	public function getEvalLoop(array $items = [], bool $run = false): void
 	{
