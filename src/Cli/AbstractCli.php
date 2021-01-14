@@ -502,7 +502,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace text domain in class for frontend libs
 	 *
-	 * @param array  $args CLI args array.
+	 * @param array $args CLI args array.
 	 *
 	 * @return CliInterface Current CLI class.
 	 */
@@ -522,7 +522,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace project file name
 	 *
-	 * @param array  $args CLI args array.
+	 * @param array $args CLI args array.
 	 *
 	 * @return CliInterface Current CLI class.
 	 */
@@ -550,7 +550,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace project file type
 	 *
-	 * @param array  $args CLI args array.
+	 * @param array $args CLI args array.
 	 *
 	 * @return CliInterface Current CLI class.
 	 */
@@ -738,11 +738,11 @@ abstract class AbstractCli implements CliInterface
 	 * Loop array of classes and output the commands
 	 *
 	 * @param array $items Array of classes.
-	 * @param bool $run Run or log output.
+	 * @param bool  $run Run or log output.
 	 *
 	 * @return void
 	 *
-	 * @throws \ReflectionException
+	 * @throws \ReflectionException Error in the case reflection class couldn't be created.
 	 */
 	public function getEvalLoop(array $items = [], bool $run = false): void
 	{
