@@ -119,16 +119,11 @@ class BlockComponentCli extends AbstractCli
 			$class = $this->getExampleTemplate($destinationPath, $file, true);
 
 			if (!empty($class)) {
-				$class = $this->renameProjectName($assocArgs, $class);
-
-				$class = $this->renameNamespace($assocArgs, $class);
-
-				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-
-				$class = $this->renameUseFrontendLibs($assocArgs, $class);
-
-				// Output final class to new file/folder and finish.
-				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
+				$class->renameProjectName($assocArgs)
+				->renameNamespace($assocArgs)
+				->renameTextDomainFrontendLibs($assocArgs)
+				->renameUseFrontendLibs($assocArgs)
+				->outputWrite($path, $file, ['skip_existing' => true]);
 			}
 		}
 
