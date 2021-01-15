@@ -26,7 +26,8 @@ class ModifyAdminAppearanceExample implements ServiceInterface
 	 * @var array
 	 */
 	public const COLOR_SCHEMES = [
-		'develop' => 'fresh',
+		'development' => 'fresh',
+		'local' => 'fresh',
 		'staging' => 'blue',
 		'production' => 'sunrise',
 	];
@@ -53,7 +54,7 @@ class ModifyAdminAppearanceExample implements ServiceInterface
 		$colors = self::COLOR_SCHEMES;
 
 		if (!isset($colors[$env])) {
-			return $colors['default'];
+			return $colors['development'];
 		}
 
 		return $colors[$env];

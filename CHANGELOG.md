@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.4] - 2021-01-15
+
+### Changed
+- ModifyAdminAppearance class fixing develop to development and local.
+- wp-config-project fixing global variable.
+- Fixing project config cli.
+
 ## [3.0.3] - 2021-01-15
 
 ### Removed
@@ -240,6 +247,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[3.0.4]: https://github.com/infinum/eightshift-libs/compare/3.0.3...v3.0.4
 [3.0.3]: https://github.com/infinum/eightshift-libs/compare/3.0.2...v3.0.3
 [3.0.2]: https://github.com/infinum/eightshift-libs/compare/3.0.1...v3.0.2
 [3.0.1]: https://github.com/infinum/eightshift-libs/compare/3.0.0...v3.0.1

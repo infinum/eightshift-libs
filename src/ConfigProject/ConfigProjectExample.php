@@ -37,7 +37,7 @@ define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', true);
 
 // Environment based setup.
-if (WP_ENVIRONMENT_TYPE === 'develop') {
+if (WP_ENVIRONMENT_TYPE === 'development' || WP_ENVIRONMENT_TYPE === 'local') {
 	// Enable direct upload from admin.
 	define('FS_METHOD', 'direct');
 
