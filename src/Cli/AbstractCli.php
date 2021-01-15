@@ -224,9 +224,9 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $fileName File Name of example.
 	 * @param bool   $skipMissing Skip existing file.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): CliInterface
+	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): self
 	{
 		$templateFile = '';
 
@@ -366,9 +366,9 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param array $args CLI args array.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameNamespace(array $args = []): CliInterface
+	public function renameNamespace(array $args = []): self
 	{
 		$output = $this->fileContents;
 		$namespace = $this->getNamespace($args);
@@ -410,9 +410,9 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param array $args CLI args array.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameUse(array $args = []): CliInterface
+	public function renameUse(array $args = []): self
 	{
 		$output = $this->fileContents;
 
@@ -451,9 +451,9 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param array $args CLI args array.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameUseFrontendLibs(array $args = []): CliInterface
+	public function renameUseFrontendLibs(array $args = []): self
 	{
 		$output = $this->fileContents;
 
@@ -484,9 +484,9 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param array $args CLI args array.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameTextDomain(array $args = []): CliInterface
+	public function renameTextDomain(array $args = []): self
 	{
 		$namespace = $this->getNamespace($args);
 
@@ -504,9 +504,9 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param array $args CLI args array.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameTextDomainFrontendLibs(array $args = []): CliInterface
+	public function renameTextDomainFrontendLibs(array $args = []): self
 	{
 		$namespace = $this->getNamespace($args);
 
@@ -524,9 +524,9 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param array $args CLI args array.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameProjectName(array $args = []): CliInterface
+	public function renameProjectName(array $args = []): self
 	{
 		$projectName = 'eightshift-boilerplate';
 
@@ -552,9 +552,9 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param array $args CLI args array.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameProjectType(array $args = []): CliInterface
+	public function renameProjectType(array $args = []): self
 	{
 		$projectType = 'themes';
 
@@ -580,9 +580,9 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string $className Class Name.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameClassName(string $className): CliInterface
+	public function renameClassName(string $className): self
 	{
 		$this->fileContents = str_replace($this->getExampleFileName($className), $className, $this->fileContents);
 
@@ -595,9 +595,9 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $templateName Current template.
 	 * @param string $newName New Class Name.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameClassNameWithPrefix(string $templateName, string $newName): CliInterface
+	public function renameClassNameWithPrefix(string $templateName, string $newName): self
 	{
 		$this->fileContents = str_replace($this->getExampleFileName($templateName), $newName, $this->fileContents);
 
@@ -615,9 +615,9 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $oldString Old string.
 	 * @param string $newString New string.
 	 *
-	 * @return CliInterface Current CLI class.
+	 * @return AbstractCli Current CLI class.
 	 */
-	public function searchReplaceString(string $oldString, string $newString): CliInterface
+	public function searchReplaceString(string $oldString, string $newString): self
 	{
 		$this->fileContents = str_replace($oldString, $newString, $this->fileContents);
 
