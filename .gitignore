@@ -3,4 +3,5 @@ node_modules
 /docs
 
 composer.lock
+package-lock.json
 cliOutput
