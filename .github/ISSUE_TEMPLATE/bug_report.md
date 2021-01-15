@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report to help us improve
+about: Create a report to help us improve
 title: "[BUG] "
 labels: bug
 assignees: iruzevic
@@ -38,6 +38,7 @@ Use the Preview link to see the final version before submitting it. -->
 * Development environment: <!-- For development: MAMP, XAMPP, VVV, Docker, Laravel Valet, none if on live server -->
 * Server type: <!-- Apache, Nginx, IIS -->
 * Operating System and version:
+* Libs version:
 
 ## Additional context
 <!-- Add any other context about the problem here. -->
