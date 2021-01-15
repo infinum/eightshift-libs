@@ -222,7 +222,7 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string $currentDir Absolute path to dir where example is.
 	 * @param string $fileName File Name of example.
-	 * @param bool $skipMissing Skip existing file.
+	 * @param bool   $skipMissing Skip existing file.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
