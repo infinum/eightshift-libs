@@ -28,7 +28,7 @@ test('Test valid XML checker helper with invalid XML', function () {
 
     $isValidXml = $this->mockHelper->isValidXml($invalidXml);
 
-    $this->assertNotTrue($isValidXml);
+    $this->assertFalse($isValidXml);
 });
 
 
