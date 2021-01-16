@@ -2,6 +2,7 @@
 
 namespace Tests\Helpers;
 
+use Brain\Monkey\Functions;
 use EightshiftLibs\Helpers\ObjectHelperTrait;
 
 class MockObjectHelper {
@@ -72,4 +73,50 @@ test('Test That multidimensional array is flattened', function () {
 	];
 
     $this->assertEquals(['bar', 1, 2, 3], $this->mockHelper->flattenArray($array));
+});
+
+test('Sanitization of array works', function() {
+	$array = [
+		'foo' => 'bar',
+		'baz' => [
+			1, 2, 3
+		]
+	];
+
+	/**
+	 * Mock sanitization function so that it returns a specific output.
+	 * That way we'll know if it's working.
+	 */
+	Functions\when('sanitize_text_field')->alias(function (string $str) {
+		return "{$str} is sanitized!";
+	});
+
+	 $sanitizedArray = $this->mockHelper->sanitizeArray($array, 'sanitize_text_field');
+
+	 $expectedSanitizedArray = [
+		'foo' => 'bar is sanitized!',
+		'baz' => [
+			'1 is sanitized!', '2 is sanitized!', '3 is sanitized!'
+		]
+	];
+
+	 $this->assertEquals($expectedSanitizedArray, $sanitizedArray);
+});
+
+test('Test that sorting helper works', function() {
+	$arrayToSort = [
+		['name' => 'Anne', 'order' => 2],
+		['name' => 'Mike', 'order' => 3],
+		['name' => 'Bob', 'order' => 1],
+	];
+
+	$orderedArray = $this->mockHelper->sortArrayByOrderKey($arrayToSort);
+
+	$expectedArray = [
+		['name' => 'Bob', 'order' => 1],
+		['name' => 'Anne', 'order' => 2],
+		['name' => 'Mike', 'order' => 3],
+	];
+
+	$this->assertEquals($expectedArray, $orderedArray);
 });
