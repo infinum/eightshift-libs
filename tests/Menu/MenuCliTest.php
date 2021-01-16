@@ -2,10 +2,8 @@
 
 namespace Tests\Unit\Menu;
 
-use Brain\Monkey\Functions;
 use EightshiftLibs\Menu\MenuCli;
 
-use function cli\err;
 use function Tests\deleteCliOutput;
 
 /**
