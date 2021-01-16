@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Menu;
 
+use Brain\Monkey;
+use EightshiftBoilerplate\Menu\MenuExample;
 use EightshiftLibs\Menu\MenuCli;
 
 use function Tests\deleteCliOutput;
@@ -19,6 +21,8 @@ beforeEach(function () {
 	$wpCliMock
 		->shouldReceive('error')
 		->andReturnArg(0);
+
+	Monkey\setUp();
 });
 
 /**
@@ -28,6 +32,8 @@ afterEach(function () {
 	$output = dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
+
+	Monkey\tearDown();
 });
 
 
@@ -71,4 +77,11 @@ test('Menu CLI documentation is correct', function () {
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayNotHasKey('synopsis', $documentation);
 	$this->assertEquals('Generates menu class.', $documentation[$key]);
+});
+
+
+test('Register method will call init hook', function () {
+	(new MenuExample())->register();
+
+	$this->assertSame(11, has_action('after_setup_theme', 'EightshiftBoilerplate\Menu\MenuExample->registerMenuPositions()'));
 });
