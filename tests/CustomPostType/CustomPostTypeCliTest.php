@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Menu;
 
+use Brain\Monkey;
 use EightshiftBoilerplate\CustomPostType\PostTypeExample;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 
@@ -20,6 +21,8 @@ beforeEach(function () {
 	$wpCliMock
 		->shouldReceive('error')
 		->andReturnArg(0);
+
+	Monkey\setUp();
 });
 
 /**
@@ -29,6 +32,8 @@ afterEach(function () {
 	$output = dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
+
+	Monkey\tearDown();
 });
 
 
@@ -88,5 +93,5 @@ test('Custom post type CLI documentation is correct', function () {
 test('Register method will call init hook', function () {
 	(new PostTypeExample())->register();
 
-	$this->assertTrue( \has_action('init', [PostTypeExample::class, 'postTypeRegisterCallback']));
+	$this->assertSame(10, has_action('init', 'EightshiftBoilerplate\CustomPostType\PostTypeExample->postTypeRegisterCallback()'));
 });
