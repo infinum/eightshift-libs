@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1610811060">
-  <project timestamp="1610811060">
+<coverage generated="1610813420">
+  <project timestamp="1610813420">
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Blocks/AbstractBlocks.php">
       <class name="EightshiftLibs\Blocks\AbstractBlocks" namespace="global">
         <metrics complexity="54" methods="21" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="195" coveredstatements="0" elements="216" coveredelements="0"/>
@@ -2128,16 +2128,16 @@
     </file>
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/Helpers/Shortcode.php">
       <class name="EightshiftLibs\Helpers\Shortcode" namespace="global">
-        <metrics complexity="2" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="0" elements="5" coveredelements="0"/>
+        <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
       </class>
-      <line num="11" type="stmt" count="0"/>
-      <line num="31" type="method" name="getShortcode" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="32" type="stmt" count="0"/>
-      <line num="35" type="stmt" count="0"/>
-      <line num="36" type="stmt" count="0"/>
-      <line num="39" type="stmt" count="0"/>
-      <line num="41" type="stmt" count="0"/>
-      <metrics loc="41" ncloc="21" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="7" coveredelements="0"/>
+      <line num="11" type="stmt" count="1"/>
+      <line num="31" type="method" name="getShortcode" visibility="public" complexity="2" crap="2" count="2"/>
+      <line num="32" type="stmt" count="2"/>
+      <line num="35" type="stmt" count="2"/>
+      <line num="36" type="stmt" count="1"/>
+      <line num="39" type="stmt" count="1"/>
+      <line num="41" type="stmt" count="1"/>
+      <metrics loc="41" ncloc="21" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
     </file>
     <file name="/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/src/I18n/I18nCli.php">
       <class name="EightshiftLibs\I18n\I18nCli" namespace="global">
@@ -2880,6 +2880,6 @@
       <line num="49" type="stmt" count="0"/>
       <metrics loc="49" ncloc="32" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="14" coveredelements="0"/>
     </file>
-    <metrics files="91" loc="8872" ncloc="5813" classes="74" methods="268" coveredmethods="24" conditionals="0" coveredconditionals="0" statements="2113" coveredstatements="250" elements="2381" coveredelements="274"/>
+    <metrics files="91" loc="8872" ncloc="5813" classes="74" methods="268" coveredmethods="25" conditionals="0" coveredconditionals="0" statements="2113" coveredstatements="256" elements="2381" coveredelements="281"/>
   </project>
 </coverage>
