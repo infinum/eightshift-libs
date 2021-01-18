@@ -1,7 +1,7 @@
 vendor
 node_modules
 /docs
-tests/coverage/html
+tests/coverage/*
 
 composer.lock
 cliOutput
