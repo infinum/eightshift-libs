@@ -22,6 +22,7 @@ use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
+use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
 
 /**
@@ -48,6 +49,7 @@ class CliInitProject extends AbstractCli
 		SetupCli::class,
 		CiExcludeCli::class,
 		BuildCli::class,
+		ReadmeCli::class,
 		ConfigProjectCli::class,
 	];
 

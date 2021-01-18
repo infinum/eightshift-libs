@@ -18,6 +18,7 @@ use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
+use EightshiftLibs\Readme\ReadmeCli;
 
 /**
  * Class CliInitTheme
@@ -39,6 +40,7 @@ class CliInitTheme extends AbstractCli
 		EnqueueThemeCli::class,
 		MenuCli::class,
 		BlocksCli::class,
+		ReadmeCli::class,
 	];
 
 	/**
