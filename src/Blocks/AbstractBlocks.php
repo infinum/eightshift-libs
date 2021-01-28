@@ -428,7 +428,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param string $realComponentName Reacl component name defined in the component manifest.
 	 * @param string $newComponentName New component name to search and replace the original.
 	 */
-	protected function prepareCommponentAttribute(array $component, string $realComponentName, string $newComponentName): array
+	protected function prepareComponentAttribute(array $component, string $realComponentName, string $newComponentName): array
 	{
 		$componentAttributes = $component['attributes'];
 
@@ -473,7 +473,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			if (isset($component['components'])) {
 				$outputAttributes = $this->prepareComponentAttributes($component);
 			} else {
-				$outputAttributes = $this->prepareCommponentAttribute($component, $realComponentName, $newComponentName);
+				$outputAttributes = $this->prepareComponentAttribute($component, $realComponentName, $newComponentName);
 			}
 
 			$output = array_merge(
