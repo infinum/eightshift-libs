@@ -5,7 +5,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [3.0.5] - 2021-02-04
 
-###
+### Changed
 - Updates on readme.
 
 ### Added
