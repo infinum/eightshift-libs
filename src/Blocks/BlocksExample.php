@@ -21,13 +21,18 @@ class BlocksExample extends AbstractBlocks
 {
 
 	/**
+	 * Reusable blocks Capability Name.
+	 */
+	public const REUSABLE_BLOCKS_CAPABILITY = 'edit_reusable_blocks';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
 	 */
 	public function register(): void
 	{
-		// // Register all custom blocks.
+		// Register all custom blocks.
 		\add_action('init', [$this, 'getBlocksDataFullRaw'], 10);
 		\add_action('init', [$this, 'registerBlocks'], 11);
 
@@ -37,9 +42,14 @@ class BlocksExample extends AbstractBlocks
 		// Create new custom category for custom blocks.
 		\add_filter('block_categories', [$this, 'getCustomCategory'], 10, 2);
 
+		// Register custom theme support options.
 		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 25);
 
+		// Register custom project color palette.
 		\add_action('after_setup_theme', [$this, 'changeEditorColorPalette'], 11);
+
+		// Register Reusable blocks side menu.
+		\add_action('admin_menu', [$this, 'addReusableBlocks']);
 	}
 
 	/**
@@ -52,5 +62,23 @@ class BlocksExample extends AbstractBlocks
 	protected function getBlocksPath(): string
 	{
 		return Config::getProjectPath() . '/src/Blocks';
+	}
+
+	/**
+	 * Add Reusable Blocks as a part of a sidebar menu.
+	 *
+	 * @return void
+	 */
+	public function addReusableBlocks(): void
+	{
+		\add_menu_page(
+			\esc_html__('Blocks', 'eightshift-libs'),
+			\esc_html__('Blocks', 'eightshift-libs'),
+			self::REUSABLE_BLOCKS_CAPABILITY,
+			'edit.php?post_type=wp_block',
+			'',
+			'dashicons-editor-table',
+			4
+		);
 	}
 }
