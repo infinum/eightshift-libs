@@ -8,20 +8,19 @@ use EightshiftBoilerplate\CustomPostType\PostTypeExample;
 /**
  * Mock before tests.
  */
-//beforeEach(function () {
+//beforeAll(function () {
 //	Monkey\setUp();
 //});
-//
-///**
-// * Cleanup after tests.
-// */
+
+/**
+ * Cleanup after tests.
+ */
 //afterEach(function () {
 //	Monkey\tearDown();
 //});
-//
-//
-//test('Register method will call init hook', function () {
-//	(new PostTypeExample())->register();
-//
-//	$this->assertSame(10, has_action('init', 'EightshiftBoilerplate\CustomPostType\PostTypeExample->postTypeRegisterCallback()'));
-//});
+
+test('Register method will call init hook', function () {
+	(new PostTypeExample())->register();
+
+	$this->assertSame(10, has_action('init', 'EightshiftBoilerplate\CustomPostType\PostTypeExample->postTypeRegisterCallback()'));
+});
