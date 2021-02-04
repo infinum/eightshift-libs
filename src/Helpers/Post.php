@@ -56,6 +56,6 @@ class Post
 		$readingTime = ceil($wordCount / 200);
 
 		/* translators: %d: number of minutes needed for reading the article. */
-		return sprintf(\esc_html__('%d min reading time', 'immunicom'), $readingTime);
+		return sprintf(\esc_html__('%d min reading time', 'eightshift-libs'), $readingTime);
 	}
 }
