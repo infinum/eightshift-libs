@@ -11,6 +11,8 @@ use function Tests\setupMocks;
 beforeEach(function() {
 	Monkey\setUp();
 	setupMocks();
+
+	$this->example = new PostTypeExample();
 });
 
 afterEach(function() {
@@ -19,7 +21,7 @@ afterEach(function() {
 
 
 test('Register method will call init hook', function () {
-	(new PostTypeExample())->register();
+	$this->example->register();
 
 	$this->assertSame(10, has_action('init', 'EightshiftBoilerplate\CustomPostType\PostTypeExample->postTypeRegisterCallback()'));
 });
@@ -37,7 +39,7 @@ test('Register post type method will be called', function() {
 	$action = 'post_type_registered';
 	Functions\when('register_post_type')->justReturn(putenv("SIDEAFFECT={$action}"));
 
-	(new PostTypeExample())->postTypeRegisterCallback();
+	$this->example->postTypeRegisterCallback();
 
 	$this->assertEquals(getenv('SIDEAFFECT'), $action);
 

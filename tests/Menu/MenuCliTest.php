@@ -19,6 +19,8 @@ beforeEach(function () {
 	$wpCliMock
 		->shouldReceive('error')
 		->andReturnArg(0);
+
+	$this->menu = new MenuCli('boilerplate');
 });
 
 /**
@@ -32,7 +34,7 @@ afterEach(function () {
 
 
 test('Menu CLI command will correctly copy the Menu class with defaults', function () {
-	$menu = new MenuCli('boilerplate');
+	$menu = $this->menu;
 	$menu([], []);
 
 	// Check the output dir if the generated method is correctly generated.
@@ -44,7 +46,7 @@ test('Menu CLI command will correctly copy the Menu class with defaults', functi
 
 
 test('Menu CLI command will correctly copy the Menu class with set arguments', function () {
-	$menu = new MenuCli('boilerplate');
+	$menu = $this->menu;
 	$menu([], [
 		'namespace' => 'CoolTheme',
 	]);
@@ -60,7 +62,7 @@ test('Menu CLI command will correctly copy the Menu class with set arguments', f
 
 
 test('Menu CLI documentation is correct', function () {
-	$menu = new MenuCli('boilerplate');
+	$menu = $this->menu;
 
 	$documentation = $menu->getDoc();
 
