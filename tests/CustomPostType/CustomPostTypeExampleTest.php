@@ -16,7 +16,7 @@ afterEach(function() {
 	Monkey\tearDown();
 });
 
-g
+
 test('Register method will call init hook', function () {
 	(new PostTypeExample())->register();
 
