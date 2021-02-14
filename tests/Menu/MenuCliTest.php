@@ -37,7 +37,6 @@ test('Menu CLI command will correctly copy the Menu class with defaults', functi
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMenu = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Menu/Menu.php');
-
 	$this->assertStringContainsString('class Menu extends AbstractMenu', $generatedMenu);
 	$this->assertStringContainsString('header_main_nav', $generatedMenu);
 	$this->assertStringNotContainsString('rendom string', $generatedMenu);

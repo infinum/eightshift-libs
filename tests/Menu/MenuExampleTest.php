@@ -5,17 +5,14 @@ namespace Tests\Unit\Menu;
 use Brain\Monkey;
 use EightshiftBoilerplate\Menu\MenuExample;
 
-/**
- * Mock before tests.
- */
-beforeAll(function () {
+use function Tests\setupMocks;
+
+beforeEach(function() {
 	Monkey\setUp();
+	setupMocks();
 });
 
-/**
- * Cleanup after tests.
- */
-afterAll(function () {
+afterEach(function() {
 	Monkey\tearDown();
 });
 
