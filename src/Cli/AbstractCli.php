@@ -327,7 +327,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputDir(string $path = ''): string
 	{
-		if (function_exists('\add_action')) {
+		if (function_exists('\add_action') && !getenv('TEST')) {
 			$root = $this->getProjectRootPath();
 		} else {
 			$root = $this->getProjectRootPath(true) . '/cliOutput';
@@ -374,28 +374,16 @@ abstract class AbstractCli implements CliInterface
 		$namespace = $this->getNamespace($args);
 		$vendorPrefix = $this->getVendorPrefix($args);
 
-		if (function_exists('\add_action')) {
+		if (function_exists('\add_action') && !getenv('TEST')) {
 			$output = str_replace(
 				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
 				"namespace {$namespace}\\",
-				$output
-			);
-
-			$output = str_replace(
-				"@package {$vendorPrefix}\EightshiftBoilerplate\\",
-				"@package {$namespace}\\",
 				$output
 			);
 		} else {
 			$output = str_replace(
 				'namespace EightshiftBoilerplate\\',
 				"namespace {$namespace}\\",
-				$output
-			);
-
-			$output = str_replace(
-				'@package EightshiftBoilerplate\\',
-				"@package {$namespace}\\",
 				$output
 			);
 		}
@@ -787,7 +775,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$output = dirname(__DIR__, 5);
 
-		if ($isDev) {
+		if ($isDev || getenv('TEST') !== false) {
 			$output = dirname(__DIR__, 2);
 		}
 
