@@ -5,6 +5,12 @@ namespace Tests\Unit\Helpers;
 use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
 
+use function Tests\setupMocks;
+
+beforeAll(function () {
+    setupMocks();
+});
+
 /**
  * Components::ensureString tests
  */
