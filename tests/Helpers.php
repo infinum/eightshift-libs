@@ -4,39 +4,47 @@ namespace Tests;
 
 use Brain\Monkey\Functions;
 
-// Mock WP functions
-Functions\stubTranslationFunctions();
-Functions\stubEscapeFunctions();
+/**
+ * Helper function that will setup some repeating mocks in every tests.
+ *
+ * This is a way to circumvent the issue I was having described here:
+ * https://github.com/pestphp/pest/issues/259
+ */
+function setupMocks() {
+	// Mock WP functions
+	Functions\stubTranslationFunctions();
+	Functions\stubEscapeFunctions();
 
-// Mock the template dir location.
-Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data');
+	// Mock the template dir location.
+	Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data');
 
-// Mock escaping function.
-Functions\when('wp_kses_post')->returnArg();
+	// Mock escaping function.
+	Functions\when('wp_kses_post')->returnArg();
 
-// Mock json success and error handlers.
-Functions\when('wp_send_json_success')->alias(function ($data = null, $statusCode = null, $options = 0) {
-	$response = ['success' => true];
+	// Mock json success and error handlers.
+	Functions\when('wp_send_json_success')->alias(function ($data = null, $statusCode = null, $options = 0) {
+		$response = ['success' => true];
 
-	if (isset($data)) {
-		$response['data'] = $data;
-	}
+		if (isset($data)) {
+			$response['data'] = $data;
+		}
 
-	echo json_encode($response, $options);
-});
+		echo json_encode($response, $options);
+	});
 
-Functions\when('wp_send_json_error')->alias(function($data = null, $statusCode = null, $options = 0) {
-	$response = ['success' => false];
+	Functions\when('wp_send_json_error')->alias(function($data = null, $statusCode = null, $options = 0) {
+		$response = ['success' => false];
 
-	if (isset($data)) {
-		$response['data'] = $data;
-	}
+		if (isset($data)) {
+			$response['data'] = $data;
+		}
 
-    echo json_encode($response, $options);
-});
+	    echo json_encode($response, $options);
+	});
 
-// Mock rest response handler.
-Functions\when('rest_ensure_response')->returnArg();
+	// Mock rest response handler.
+	Functions\when('rest_ensure_response')->returnArg();
+}
 
 /**
  * Used for cleaning out the cliOutput created after every CLI test
