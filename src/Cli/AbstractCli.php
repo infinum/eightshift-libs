@@ -821,6 +821,10 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getLibsPath(string $path = ''): string
 	{
+		if (getenv('TEST')) {
+			return "{$this->getProjectRootPath()}/{$path}";
+		}
+
 		return "{$this->getProjectRootPath()}/vendor/infinum/eightshift-libs/{$path}";
 	}
 
