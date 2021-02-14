@@ -5,20 +5,18 @@ namespace Tests\Unit\CustomPostType;
 use Brain\Monkey;
 use EightshiftBoilerplate\CustomPostType\PostTypeExample;
 
-/**
- * Mock before tests.
- */
-//beforeAll(function () {
-//	Monkey\setUp();
-//});
+use function Tests\setupMocks;
 
-/**
- * Cleanup after tests.
- */
-//afterEach(function () {
-//	Monkey\tearDown();
-//});
+beforeEach(function() {
+	Monkey\setUp();
+	setupMocks();
+});
 
+afterEach(function() {
+	Monkey\tearDown();
+});
+
+g
 test('Register method will call init hook', function () {
 	(new PostTypeExample())->register();
 

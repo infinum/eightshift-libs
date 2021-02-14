@@ -19,7 +19,6 @@ beforeEach(function () {
 	$wpCliMock
 		->shouldReceive('error')
 		->andReturnArg(0);
-
 });
 
 /**
