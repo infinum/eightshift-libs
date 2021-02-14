@@ -19,6 +19,8 @@ beforeEach(function () {
 	$wpCliMock
 		->shouldReceive('error')
 		->andReturnArg(0);
+
+	$this->cpt = new PostTypeCli('boilerplate');
 });
 
 /**
@@ -32,7 +34,7 @@ afterEach(function () {
 
 
 test('Custom post type CLI command will correctly copy the Custom post type class with defaults', function () {
-	$cpt = new PostTypeCli('boilerplate');
+	$cpt = $this->cpt;
 	$cpt([], $cpt->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
@@ -45,7 +47,7 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 
 
 test('Custom post type CLI command will correctly copy the Custom post type class with set arguments', function () {
-	$cpt = new PostTypeCli('boilerplate');
+	$cpt = $this->cpt;
 	$cpt([], [
 		'label' => 'Book',
 		'slug' => 'book',
@@ -72,7 +74,7 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 
 
 test('Custom post type CLI documentation is correct', function () {
-	$cpt = new PostTypeCli('boilerplate');
+	$cpt = $this->cpt;
 
 	$documentation = $cpt->getDoc();
 
