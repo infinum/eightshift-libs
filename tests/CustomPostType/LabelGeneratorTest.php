@@ -19,7 +19,7 @@ test('Generating labels will work', function () {
 	$nouns = [
 		LabelGenerator::SINGULAR_NAME_UC => 'Book',
 		LabelGenerator::SINGULAR_NAME_LC => 'book',
-        LabelGenerator::PLURAL_NAME_UC => 'Books',
+		LabelGenerator::PLURAL_NAME_UC => 'Books',
 		LabelGenerator::PLURAL_NAME_LC => 'books',
 	];
 
@@ -63,7 +63,7 @@ test('Generating labels will throw exception if noun wasn\'t specified', functio
 	$nouns = [
 		LabelGenerator::SINGULAR_NAME_UC => 'Book',
 		LabelGenerator::SINGULAR_NAME_LC => 'book',
-        LabelGenerator::PLURAL_NAME_UC => 'Books',
+		LabelGenerator::PLURAL_NAME_UC => 'Books',
 	];
 
 	$this->generator->getGeneratedLabels($nouns);
