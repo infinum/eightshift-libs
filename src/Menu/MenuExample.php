@@ -17,6 +17,12 @@ use EightshiftLibs\Menu\AbstractMenu;
  */
 class MenuExample extends AbstractMenu
 {
+	/**
+	 * Main menu position identifier.
+	 *
+	 * @var string
+	 */
+	public const MAIN_MENU = 'header_main_nav';
 
 	/**
 	 * Register all the hooks
@@ -36,7 +42,7 @@ class MenuExample extends AbstractMenu
 	public function getMenuPositions(): array
 	{
 		return [
-			'header_main_nav' => \esc_html__('Main Menu', 'eightshift-libs'),
+			self::MAIN_MENU => \esc_html__('Main Menu', 'eightshift-libs'),
 		];
 	}
 }

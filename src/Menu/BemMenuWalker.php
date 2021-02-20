@@ -1,20 +1,19 @@
 <?php
-// phpcs:ignoreFile
 
 /**
- * Custom Menu Walker specific functionality.
- * It provides BEM classes to menus.
+ * Custom BEM menu walker
  *
- * @package EightshiftLibs\Menu
+ * @package EightshiftLibs\Menu;
  */
+
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd, Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
 declare(strict_types=1);
 
 namespace EightshiftLibs\Menu;
 
 /**
- * Bem Menu Walker
- * Inserts some BEM naming sensibility into WordPress menus
+ * BemExtendedMenu class.
  */
 class BemMenuWalker extends \Walker_Nav_Menu
 {
@@ -26,31 +25,44 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	public $cssClassPrefix;
 
 	/**
+	 * List item custom class.
+	 *
+	 * @var string
+	 */
+	private $linkClasses;
+
+	/**
 	 * Menu item CSS suffixes.
 	 *
 	 * @var string[]
 	 */
-	public $itemCssClassSuffixes;
+	private $itemCssClassSuffixes;
 
 	/**
 	 * Constructor function
 	 *
 	 * @param string $cssClassPrefix load menu prefix for class.
+	 * @param string $linkClasses load menu prefix for class.
 	 */
-	public function __construct(string $cssClassPrefix)
+	public function __construct(string $cssClassPrefix, string $linkClasses)
 	{
 		$this->cssClassPrefix = $cssClassPrefix;
+		$this->linkClasses = $linkClasses;
 
 		// Define menu item names appropriately.
 		$this->itemCssClassSuffixes = [
+			'list' => '__list',
 			'item' => '__item',
-			'parent_item' => '__item--parent',
-			'active_item' => '__item--active',
-			'parent_of_active_item' => '__item--parent--active',
-			'ancestor_of_active_item' => '__item--ancestor--active',
-			'sub_menu' => '__sub-menu',
-			'sub_menu_item' => '__sub-menu__item',
 			'link' => '__link',
+			'link_text' => '__link-text',
+			'parent_item' => '__item--has-children',
+			'active_item' => '__item--current',
+			'parent_of_active_item' => '__item--current',
+			'ancestor_of_active_item' => '__item--current',
+			'sub_menu' => '__sub-menu',
+			'sub_menu_item' => '__sub-menu-item',
+			'sub_link' => '__sub-menu-link',
+			'sub_link_text' => '__sub-menu-link-text',
 		];
 	}
 
@@ -59,27 +71,27 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	 *
 	 * @see \Walker::display_element()
 	 *
-	 * @param object $element           Data object.
-     * @param array  $children_elements List of elements to continue traversing (passed by reference).
-     * @param int    $max_depth         Max depth to traverse.
-     * @param int    $depth             Depth of current element.
-     * @param array  $args              An array of arguments.
-     * @param string $output            Used to append additional content (passed by reference).
+	 * @param object $element Data object.
+	 * @param array  $children_elements List of elements to continue traversing (passed by reference).
+	 * @param int    $max_depth Max depth to traverse.
+	 * @param int    $depth Depth of current element.
+	 * @param array  $args An array of arguments.
+	 * @param string $output            Used to append additional content (passed by reference).
 	 *
 	 * @return void Parent Display element
 	 */
-	public function display_element( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+	public function display_element(
 		$element,
 		&$children_elements,
-		$max_depth, // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+		$max_depth,
 		$depth = 0,
-		$args, // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+		$args,
 		&$output
 	) {
-		$id_field = $this->db_fields['id'];
+		$idField = $this->db_fields['id'];
 
 		if (isset($args[0]-> has_children)) {
-			$args[0]->has_children = !empty($children_elements[$element->$id_field]);
+			$args[0]->has_children = !empty($children_elements[$element->$idField]);
 		}
 
 		parent::display_element($element, $children_elements, $max_depth, $depth, $args, $output);
@@ -90,33 +102,30 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	 *
 	 * @see \Walker_Nav_Menu::start_lvl()
 	 *
-	 * @param string $output Used to append additional content (passed by reference).
-	 * @param int $depth Depth of menu item. Used for padding.
+	 * @param string         $output Used to append additional content (passed by reference).
+	 * @param int            $depth Depth of menu item. Used for padding.
 	 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
 	 *
 	 * @return void
 	 */
-	public function start_lvl( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+	public function start_lvl(
 		&$output,
 		$depth = 1,
 		$args = null
 	) {
-		$real_depth = $depth + 1;
+		$realDepth = $depth + 1;
 
-		$indent = str_repeat("\t", $real_depth);
-
-		$prefix = $this->cssClassPrefix;
-		$suffix = $this->itemCssClassSuffixes;
+		$indent = str_repeat("\t", $realDepth);
 
 		$classes = [
-			$prefix . $suffix['sub_menu'],
-			$prefix . $suffix['sub_menu'] . '--' . $real_depth,
+			$this->getPrefixedItem('sub_menu'),
+			$this->getPrefixedItem('sub_menu') . '--' . $realDepth,
 		];
 
 		$classNames = implode(' ', $classes);
 
 		// Add a ul wrapper to sub nav.
-		$output .= "\n" . $indent . '<ul class="' . $classNames . '">' . "\n";
+		$output .= "\n" . $indent . '<ul class="' . \esc_attr($classNames) . ' js-submenu' . '">' . "\n";
 	}
 
 	/**
@@ -124,15 +133,15 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	 *
 	 * @see \Walker_Nav_Menu::start_el()
 	 *
-     * @param string         $output Used to append additional content (passed by reference).
-     * @param \WP_Post       $item   Menu item data object.
-     * @param int            $depth  Depth of menu item. Used for padding.
-     * @param \stdClass|null $args   An object of wp_nav_menu() arguments.
-     * @param int            $id     Current item ID.
+	 * @param string         $output Used to append additional content (passed by reference).
+	 * @param \WP_Post       $item Menu item data object.
+	 * @param int            $depth Depth of menu item. Used for padding.
+	 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
+	 * @param int            $id Current item ID.
 	 *
 	 * @return void
 	 */
-	public function start_el( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+	public function start_el(
 		&$output,
 		$item,
 		$depth = 0,
@@ -142,90 +151,147 @@ class BemMenuWalker extends \Walker_Nav_Menu
 		$indent = ($depth > 0 ? str_repeat('    ', $depth) : ''); // code indent.
 
 		$prefix = $this->cssClassPrefix;
-		$suffix = $this->itemCssClassSuffixes;
-
-		$parent_class = $prefix . $suffix['parent_item'];
 
 		$itemClasses = [];
 
 		if (!empty($item->classes)) {
-			$userClasses = array_map(
+
+			/**
+			 * Several types of built in classes:
+			 *
+			 * 1. menu-item (menu-item-type-post_type, menu-item-object-page, menu-item-has-children)
+			 * 2. current (current-menu-item, current_page_item)
+			 * 3. page (page_item, page-item-28)
+			 *
+			 * The aim here is only to leave custom classes coming from the admin,
+			 * or what we passed through the arguments.
+			 */
+			$itemClasses = array_map(
 				function ($className) use ($prefix) {
-					if (strpos($className, 'js-') !== false) {
+					if (strpos($className, 'menu-item-type') !== false) {
+						$parts = explode('menu-item-type-', $className);
+						$output = $prefix . '__item-type--' . $parts[1];
+					} elseif (strpos($className, 'menu-item-object-') !== false) {
+						$parts = explode('menu-item-object-', $className);
+						$output = $prefix . '__item-object-type--' . $parts[1];
+					} elseif (strpos($className, 'js-') !== false) {
 						$output = $className;
+					} elseif (strpos($className, 'menu-item') !== false) {
+						$output = '';
+					} elseif (strpos($className, 'current-page') !== false) {
+						$output = '';
+					} elseif (strpos($className, 'current-menu') !== false) {
+						$output = '';
+					} elseif (strpos($className, 'current_page') !== false) {
+						$output = '';
+					} elseif (strpos($className, 'page_item') !== false) {
+						$output = '';
+					} elseif (strpos($className, 'page-item') !== false) {
+						$output = '';
 					} else {
-						$output = $prefix . '__item--' . $className;
+						$output = $className;
 					}
 					return $output;
 				},
 				$item->classes
 			);
 
+			// Remove empty class names.
+			$itemClasses = array_filter($itemClasses, function ($className) {
+				return !empty($className);
+			});
+
+			$itemClassesString = implode(', ', $item->classes);
+
 			// Item classes.
 			$itemClasses = [
-				'item_class' => 0 === $depth ? $prefix . $suffix['item'] : '',
-				'parent_class' => isset($args->has_children) && $args->has_children ? $parent_class : '',
-				'active_page_class' => in_array(
-					'current-menu-item',
-					$item->classes,
-					true
-				) ? $prefix . $suffix['active_item'] : '',
-				'active_parent_class' => in_array(
-					'current-menu-parent',
-					$item->classes,
-					true
-				) ? $prefix . $suffix['parent_of_active_item'] : '',
-				'active_ancestor_class' => in_array(
-					'current-page-ancestor',
-					$item->classes,
-					true
-				) ? $prefix . $suffix['ancestor_of_active_item'] : '',
-				'depth_class' => $depth >= 1 ? $prefix . $suffix['sub_menu_item'] . ' ' . $prefix . $suffix['sub_menu'] . '--' . $depth . '__item' : '',
+				'item_class' => 0 === $depth ? $this->getPrefixedItem('item') : '',
+				'parent_class' => isset($args->walker->has_children) && $args->walker->has_children ?
+					$this->getPrefixedItem('parent_item') :
+					'',
+				'active_page_class' => strpos($itemClassesString, 'current-menu-item') !== false ?
+					$this->getPrefixedItem('active_item') :
+					'',
+				'active_parent_class' => strpos($itemClassesString, 'current-menu-parent') !== false ?
+					$this->getPrefixedItem('parent_of_active_item') :
+					'',
+				'active_ancestor_class' => strpos($itemClassesString, 'current-page-ancestor') !== false ?
+					$this->getPrefixedItem('ancestor_of_active_item') :
+					'',
+				'depth_class' => $depth >= 1 ?
+					$this->getPrefixedItem('sub_menu_item') . ' ' . $this->getPrefixedItem('sub_menu_item') . '--' . $depth :
+					'',
 				'item_id_class' => $prefix . '__item--' . $item->object_id,
-				'user_class' => !empty($userClasses) ? implode(' ', $userClasses) : '',
+				'user_class' => !empty($itemClasses) ? trim(implode(' ', $itemClasses)) : '',
 			];
 		}
 
-		// Convert array to string excluding any empty values.
 		$itemClasses = \apply_filters('walker_nav_menu_item_classes', $itemClasses, $item, $depth, $args);
-		$class_string = !empty($itemClasses) ? implode('  ', array_filter($itemClasses)) : '';
+
+		// Remove duplicates.
+		$itemClasses = array_keys(array_flip($itemClasses));
+
+		// Convert array to string excluding any empty values.
+		$classString = !empty($itemClasses) ? implode(' ', array_filter($itemClasses)) : '';
 
 		// Add the classes to the wrapping <li>.
-		$output .= $indent . '<li class="' . $class_string . '">';
+		$output .= $indent . '<li class="' . \esc_attr($classString) . '">';
 
 		// Link classes.
-		$link_classes = [
-			'item_link' => 0 === $depth ? $prefix . $suffix['link'] : '',
-			'depth_class' => $depth >= 1 ? $prefix . $suffix['sub_menu'] . $suffix['link'] . '  ' . $prefix . $suffix['sub_menu'] . '--' . $depth . $suffix['link'] : '',
+		$linkClasses = [
+			'item_link' => $depth === 0 ? $this->getPrefixedItem('link') : '',
+			'depth_class' => $depth >= 1 ? $this->getPrefixedItem('sub_link') : '',
+			'link_classes' => $this->linkClasses ?? ''
 		];
 
-		$link_class_string = implode('  ', array_filter($link_classes));
+		$linkClassString = implode(' ', array_filter($linkClasses));
 
-		$link_class_output = 'class="' . $link_class_string . ' "';
+		$linkClassOutput = 'class="' . trim(\esc_attr($linkClassString)) . '"';
 
-		$link_text_classes = [
-			'item_link' => 0 === $depth ? $prefix . $suffix['link'] . '-text' : '',
-			'depth_class' => $depth >= 1 ? $prefix . $suffix['sub_menu'] . $suffix['link'] . '-text ' . $prefix . $suffix['sub_menu'] . '--' . $depth . $suffix['link'] . '-text' : '',
+		$linkTextClasses = [
+			'item_link' => $depth === 0 ? $this->getPrefixedItem('link_text') : '',
+			'depth_class' => $depth >= 1 ? $this->getPrefixedItem('sub_link_text') : '',
 		];
 
-		$link_text_class_string = implode('  ', array_filter($link_text_classes));
-		$link_text_class_output = 'class="' . $link_text_class_string . '"';
+		$linkTextClassString = implode(' ', array_filter($linkTextClasses));
+		$linkTextClassOutput = 'class="' . trim(\esc_attr($linkTextClassString)) . '"';
 
 		// link attributes.
-		$attributes = !empty($item->attr_title) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
-		$attributes .= !empty($item->target) ? ' target="' . esc_attr($item->target) . '"' : '';
-		$attributes .= !empty($item->xfn) ? ' rel="' . esc_attr($item->xfn) . '"' : '';
-		$attributes .= !empty($item->url) ? ' href="' . esc_attr($item->url) . '"' : '';
+		$attributes = !empty($item->attr_title) ? ' title="' . \esc_attr($item->attr_title) . '"' : '';
+		$attributes .= !empty($item->target) ? ' target="' . \esc_attr($item->target) . '"' : '';
+		$attributes .= !empty($item->xfn) ? ' rel="' . \esc_attr($item->xfn) . '"' : '';
+		$attributes .= !empty($item->url) ? ' href="' . \esc_attr($item->url) . '"' : '';
+		$attributes .= !empty($args->walker->has_children) ? ' aria-expanded="false"' : '';
 
 		// Create link markup.
-		$item_output = !empty($args->before) ? $args->before : '';
-		$item_output .= '<a' . $attributes . ' ' . $link_class_output . '><span ' . $link_text_class_output . '>';
-		$item_output .= !empty($args->link_before) ? $args->link_before : '';
-		$item_output .= !empty($item->title) ? apply_filters('the_title', $item->title, $item->ID) : '';
-		$item_output .= !empty($args->link_after) ? $args->link_after : '';
-		$item_output .= !empty($args->after) ? $args->after : '';
-		$item_output .= '</span></a>';
+		$itemOutput = !empty($args->before) ? $args->before : '';
+		$itemOutput .= '<a' . $attributes . ' ' . $linkClassOutput . '><span ' . $linkTextClassOutput . '>';
+		$itemOutput .= !empty($args->link_before) ? $args->link_before : '';
+		$itemOutput .= !empty($item->title) ? \apply_filters('the_title', $item->title, $item->ID) : '';
+		$itemOutput .= !empty($args->link_after) ? $args->link_after : '';
+		$itemOutput .= !empty($args->after) ? $args->after : '';
+		$itemOutput .= '</span></a>';
 
-		$output .= apply_filters('walker_nav_menu_link_element', $item_output, $item, $depth, $args);
+		$output .= \apply_filters('walker_nav_menu_link_element', $itemOutput, $item, $depth, $args);
+	}
+
+	/**
+	 * Helper to make prefixed items classes
+	 *
+	 * Prefix is the descriptor of the menu. You pass the type of item you want and you'll
+	 * get back the prefixed item class.
+	 *
+	 * @param string $item Type of element to prefix. Read from $itemCssClassSuffixes member variable.
+	 *
+	 * @return string Prefixed class string.
+	 */
+	private function getPrefixedItem(string $item): string
+	{
+		$prefix = $this->cssClassPrefix;
+		$suffix = $this->itemCssClassSuffixes;
+
+		return $prefix . $suffix[$item];
 	}
 }
+
+// phpcs:enable

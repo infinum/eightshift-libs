@@ -17,6 +17,14 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 {
+	/**
+	 * Main menu position identifier.
+	 *
+	 * Used as a placeholder, can be overwritten.
+	 *
+	 * @var string
+	 */
+	public const MAIN_MENU = 'header_main_nav';
 
 	/**
 	 * Register All Menu positions
@@ -43,10 +51,12 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 	/**
 	 * This method returns an instance of the bemMenuWalker class with the following arguments
 	 *
-	 * @param string $location This must be the same as what is set in wp-admin/settings/menus
-	 *                                   for menu location and registered in registerMenuPositions function.
+	 * @param string $name Name of the menu. If theme location is provided and set
+	 *                     it will render the menu from the theme location.
+	 *                     If not it will render the name of the menu.
 	 * @param string $cssClassPrefix This string will prefix all of the menu's classes, BEM syntax friendly.
 	 * @param string $parentClass This string will add class to only top level list element.
+	 * @param string $jsModifier This string will add class to only top level list element.
 	 * @param string $cssClassModifiers Provide either a string or array of values to apply extra classes
 	 *                                   to the <ul> but not the <li's>.
 	 * @param bool   $echo Echo the menu.
@@ -54,9 +64,10 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 	 * @return string|false|void Menu output if $echo is false, false if there are no items or no menu was found.
 	 */
 	public static function bemMenu(
-		string $location = 'main_menu',
+		string $name = self::MAIN_MENU,
 		string $cssClassPrefix = 'main-menu',
 		string $parentClass = '',
+		string $jsModifier = '',
 		$cssClassModifiers = '',
 		bool $echo = true
 	) {
@@ -71,16 +82,19 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 			}
 		}
 
+		$menuWrapperClass = trim($cssClassPrefix . ' ' . $modifiers);
+
 		$args = [
-			'theme_location' => $location,
 			'container' => false,
-			'items_wrap' => '<ul class="' . $parentClass . ' ' . $cssClassPrefix . ' ' . $modifiers . '">%3$s</ul>',
+			'items_wrap' => '<ul class="' . trim($menuWrapperClass . ' ' . $jsModifier) . '">%3$s</ul>',
 			'echo' => $echo,
-			'walker' => new BemMenuWalker($cssClassPrefix),
+			'walker' => new BemMenuWalker($cssClassPrefix, $parentClass),
 		];
 
-		if (!\has_nav_menu($location)) {
-			return '';
+		if (\has_nav_menu($name)) {
+			$args['theme_location'] = $name;
+		} else {
+			$args['menu'] = $name;
 		}
 
 		return \wp_nav_menu($args);
