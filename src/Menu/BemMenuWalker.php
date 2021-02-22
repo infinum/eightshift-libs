@@ -52,7 +52,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 		// Define menu item names appropriately.
 		$this->itemCssClassSuffixes = [
 			'list' => '__list',
-			'item' => '__item',
+			'item' => '__item js-menu-item',
 			'link' => '__link',
 			'link_text' => '__link-text',
 			'parent_item' => '__item--has-children',
