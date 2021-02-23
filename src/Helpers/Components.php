@@ -74,7 +74,7 @@ class Components
 	 * @param array  $attributes Array of attributes that's implicitly passed to component.
 	 * @param string $parentPath If parent path is provides it will be appended to the file location.
 	 *                            If not get_template_directory_uri() will be used as a default parent path.
-	 * @param bool $useParentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
+	 * @param bool   $useParentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
 	 *
@@ -107,7 +107,7 @@ class Components
 
 		if ($useParentDefaults && isset($manifest['attributes'])) {
 			$defaultAttributes = [];
-			foreach($manifest['attributes'] as $itemKey => $itemValue) {
+			foreach ($manifest['attributes'] as $itemKey => $itemValue) {
 				if (isset($itemValue['default'])) {
 					$defaultAttributes[$itemKey] = $itemValue['default'];
 				}
@@ -121,7 +121,7 @@ class Components
 		// Wrap component with parent BEM selector if parent's class is provided. Used
 		// for setting specific styles for components rendered inside other components.
 		if (isset($attributes['parentClass'])) {
-			echo "<div class=\"{$attributes['parentClass']}__{$component}\">";
+			echo "<div class=\"{$attributes['parentClass']}__{$component}\">"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		require $componentPath;
