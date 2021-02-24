@@ -74,12 +74,13 @@ class Components
 	 * @param array  $attributes Array of attributes that's implicitly passed to component.
 	 * @param string $parentPath If parent path is provides it will be appended to the file location.
 	 *                            If not get_template_directory_uri() will be used as a default parent path.
+	 * @param bool   $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
 	 *
 	 * @return string
 	 */
-	public static function render(string $component, array $attributes = [], string $parentPath = '')
+	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false)
 	{
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
@@ -88,12 +89,31 @@ class Components
 		// Detect if user passed component name or path.
 		if (strpos($component, '.php') !== false) {
 			$componentPath = "{$parentPath}/$component";
+
+			if ($useComponentDefaults) {
+				$manifest = self::getManifest($parentPath);
+			}
 		} else {
 			$componentPath = "{$parentPath}/src/Blocks/components/{$component}/{$component}.php";
+
+			if ($useComponentDefaults) {
+				$manifest = self::getManifest("{$parentPath}/src/Blocks/components/{$component}");
+			}
 		}
 
 		if (!file_exists($componentPath)) {
 			ComponentException::throwUnableToLocateComponent($componentPath);
+		}
+
+		if ($useComponentDefaults && isset($manifest['attributes'])) {
+			$defaultAttributes = [];
+			foreach ($manifest['attributes'] as $itemKey => $itemValue) {
+				if (isset($itemValue['default'])) {
+					$defaultAttributes[$itemKey] = $itemValue['default'];
+				}
+			}
+
+			$attributes = array_merge($defaultAttributes, $attributes);
 		}
 
 		ob_start();
@@ -101,7 +121,7 @@ class Components
 		// Wrap component with parent BEM selector if parent's class is provided. Used
 		// for setting specific styles for components rendered inside other components.
 		if (isset($attributes['parentClass'])) {
-			echo \wp_kses_post("<div class=\"{$attributes['parentClass']}__{$component}\">");
+			printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}"));
 		}
 
 		require $componentPath;
@@ -190,7 +210,7 @@ class Components
 			$manifestKey = $manifest['attributes'][$key] ?? null;
 
 			if ($manifestKey === null) {
-				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation.");
+				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
 			}
 
 			$defaultType = $manifestKey['type'];
