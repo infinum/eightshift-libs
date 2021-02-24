@@ -29,7 +29,6 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          tools: cs2pr
 
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
@@ -37,7 +36,7 @@ jobs:
         uses: "ramsey/composer-install@v1"
 
       - name: Check coding standards using PHPCS
-        run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}- | cs2pr
+        run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}-
 
   phpstan:
     name: PHPStan check
@@ -58,7 +57,6 @@ jobs:
        with:
          php-version: ${{ matrix.php }}
          coverage: none
-         tools: cs2pr
 
      # Install dependencies and handle caching in one go.
      # @link https://github.com/marketplace/actions/install-composer-dependencies
@@ -66,4 +64,4 @@ jobs:
        uses: "ramsey/composer-install@v1"
 
      - name: Check code consistency using PHPStan
-       run: composer analyze | cs2pr
+       run: composer analyze
