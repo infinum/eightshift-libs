@@ -10,34 +10,34 @@ on:
       - '**.md'
 
 jobs:
-    tests:
-        name: Unit tests
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+  tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-            - name: PHP setup
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: 7.4
-                coverage: pcov
+      - name: PHP setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          coverage: pcov
 
-            # Install dependencies and handle caching in one go.
-            # @link https://github.com/marketplace/actions/install-composer-dependencies
-            - name: Install Composer dependencies
-              uses: "ramsey/composer-install@v1"
+      # Install dependencies and handle caching in one go.
+      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      - name: Install Composer dependencies
+        uses: "ramsey/composer-install@v1"
 
-            - name: Run unit tests
-              run: composer test:unit
+      - name: Run unit tests
+        run: composer test:unit
 
-            - name: Run coverage generation
-              run: composer test:coverage -q # We don't need an output for coverage, codecov will do that.
+      - name: Run coverage generation
+        run: composer test:coverage -q # We don't need an output for coverage, codecov will do that.
 
-            - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v1
-              with:
-                files: ./tests/coverage/clover.xml
-                flags: unittests
-                name: libs-codecov
-                fail_ci_if_error: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          files: ./tests/coverage/clover.xml
+          flags: unittests
+          name: libs-codecov
+          fail_ci_if_error: true

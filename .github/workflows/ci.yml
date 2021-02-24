@@ -10,58 +10,60 @@ on:
       - '**.md'
 
 jobs:
-    phpcs:
-        name: PHPCS check on PHP ${{ matrix.php }}
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                php: [7.3, 7.4]
+  phpcs:
+    name: PHPCS check on PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [7.3, 7.4]
 
-        steps:
-            # Checkout repository
-            - name: Checkout
-              uses: actions/checkout@v2
+    steps:
+      # Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v2
 
-            # Setup PHP versions, run checks
-            - name: PHP setup
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: ${{ matrix.php }}
-                coverage: none
+      # Setup PHP versions, run checks
+      - name: PHP setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: cs2pr
 
-            # Install dependencies and handle caching in one go.
-            # @link https://github.com/marketplace/actions/install-composer-dependencies
-            - name: Install Composer dependencies
-              uses: "ramsey/composer-install@v1"
+      # Install dependencies and handle caching in one go.
+      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      - name: Install Composer dependencies
+        uses: "ramsey/composer-install@v1"
 
-            - name: Check coding standards using PHPCS
-              run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}-
+      - name: Check coding standards using PHPCS
+        run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}- | cs2pr
 
-    phpstan:
-        name: PHPStan check
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                php: [7.4]
+  phpstan:
+    name: PHPStan check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [7.4]
 
-        steps:
-            # Checkout repository
-            - name: Checkout
-              uses: actions/checkout@v2
+    steps:
+     # Checkout repository
+     - name: Checkout
+       uses: actions/checkout@v2
 
-            # Setup PHP versions, run checks
-            - name: PHP setup
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: ${{ matrix.php }}
-                coverage: none
+     # Setup PHP versions, run checks
+     - name: PHP setup
+       uses: shivammathur/setup-php@v2
+       with:
+         php-version: ${{ matrix.php }}
+         coverage: none
+         tools: cs2pr
 
-            # Install dependencies and handle caching in one go.
-            # @link https://github.com/marketplace/actions/install-composer-dependencies
-            - name: Install Composer dependencies
-              uses: "ramsey/composer-install@v1"
+     # Install dependencies and handle caching in one go.
+     # @link https://github.com/marketplace/actions/install-composer-dependencies
+     - name: Install Composer dependencies
+       uses: "ramsey/composer-install@v1"
 
-            - name: Check code consistency using PHPStan
-              run: composer analyze
+     - name: Check code consistency using PHPStan
+       run: composer analyze | cs2pr
