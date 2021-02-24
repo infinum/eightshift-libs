@@ -210,7 +210,7 @@ class Components
 			$manifestKey = $manifest['attributes'][$key] ?? null;
 
 			if ($manifestKey === null) {
-				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation. Check if your {$key} attributes exists in the components manifest.json");
+				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
 			}
 
 			$defaultType = $manifestKey['type'];
