@@ -74,13 +74,13 @@ class Components
 	 * @param array  $attributes Array of attributes that's implicitly passed to component.
 	 * @param string $parentPath If parent path is provides it will be appended to the file location.
 	 *                            If not get_template_directory_uri() will be used as a default parent path.
-	 * @param bool   $useParentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
+	 * @param bool   $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
 	 *
 	 * @return string
 	 */
-	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useParentDefaults = false)
+	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false)
 	{
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
@@ -90,13 +90,13 @@ class Components
 		if (strpos($component, '.php') !== false) {
 			$componentPath = "{$parentPath}/$component";
 
-			if ($useParentDefaults) {
+			if ($useComponentDefaults) {
 				$manifest = self::getManifest($parentPath);
 			}
 		} else {
 			$componentPath = "{$parentPath}/src/Blocks/components/{$component}/{$component}.php";
 
-			if ($useParentDefaults) {
+			if ($useComponentDefaults) {
 				$manifest = self::getManifest("{$parentPath}/src/Blocks/components/{$component}");
 			}
 		}
@@ -105,7 +105,7 @@ class Components
 			ComponentException::throwUnableToLocateComponent($componentPath);
 		}
 
-		if ($useParentDefaults && isset($manifest['attributes'])) {
+		if ($useComponentDefaults && isset($manifest['attributes'])) {
 			$defaultAttributes = [];
 			foreach ($manifest['attributes'] as $itemKey => $itemValue) {
 				if (isset($itemValue['default'])) {
@@ -121,7 +121,7 @@ class Components
 		// Wrap component with parent BEM selector if parent's class is provided. Used
 		// for setting specific styles for components rendered inside other components.
 		if (isset($attributes['parentClass'])) {
-			echo "<div class=\"{$attributes['parentClass']}__{$component}\">"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}"));
 		}
 
 		require $componentPath;
