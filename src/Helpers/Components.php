@@ -100,7 +100,6 @@ class Components
 		 */
 		if (strpos($component, '.php') !== false) {
 			$componentPath = "{$parentPath}/$component";
-			$component = pathinfo($component, PATHINFO_FILENAME);
 
 			if ($useComponentDefaults) {
 				$manifest = self::getManifest($parentPath);
@@ -120,6 +119,17 @@ class Components
 		if ($useComponentDefaults && isset($manifest['attributes'])) {
 			$defaultAttributes = [];
 
+			foreach ($manifest['attributes'] as $itemKey => $itemValue) {
+				if (isset($itemValue['default'])) {
+					$defaultAttributes[$itemKey] = $itemValue['default'];
+				}
+			}
+
+			$attributes = array_merge($defaultAttributes, $attributes);
+		}
+
+		if ($useComponentDefaults && isset($manifest['attributes'])) {
+			$defaultAttributes = [];
 			foreach ($manifest['attributes'] as $itemKey => $itemValue) {
 				if (isset($itemValue['default'])) {
 					$defaultAttributes[$itemKey] = $itemValue['default'];
