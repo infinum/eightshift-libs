@@ -45,7 +45,7 @@ class Components
 		} elseif (is_string($variable)) {
 			$output = $variable;
 		} else {
-			throw ComponentException::throwNotStringOrVariable($variable);
+			throw ComponentException::throwNotStringOrArray($variable);
 		}
 
 		return $output;

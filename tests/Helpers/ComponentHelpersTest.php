@@ -8,7 +8,7 @@ use EightshiftLibs\Helpers\Components;
 use function Tests\setupMocks;
 
 beforeAll(function () {
-    setupMocks();
+	setupMocks();
 });
 
 /**
@@ -19,8 +19,7 @@ test('Asserts ensure string returns a correct result', function ($args) {
 })->with('correctArguments');
 
 
-test('Throws type exception if wrong argument type is passed to ensureString',
-	function ($argument) {
+test('Throws type exception if wrong argument type is passed to ensureString', function ($argument) {
 		Components::ensureString($argument);
 	})
 	->throws(\TypeError::class)
@@ -30,6 +29,13 @@ test('Throws type exception if wrong argument type is passed to ensureString',
 test('Throws argument count exception if no argument is passed', function () {
 	Components::ensureString();
 })->throws(\ArgumentCountError::class);
+
+error_log( print_r( ( Components::ensureString(0) ), true ) );
+
+test('Throws exception if any other argument is passed other than string or array', function () {
+	Components::ensureString(0);
+})->throws(ComponentException::class, '0 variable is not a string or array but rather integer');
+
 
 
 /**
@@ -82,11 +88,9 @@ test('Asserts that rendering a component will output a wrapper if parentClass is
 	$this->assertStringContainsString('test__component', $results, 'Component should contain a class name');
 });
 
-
 test('Asserts that providing a missing component will throw an exception without extension', function () {
 	Components::render('component', []);
 })->throws(ComponentException::class);
-
 
 test('Asserts that providing a missing component will throw an exception', function () {
 	Components::render('component-a.php', []);

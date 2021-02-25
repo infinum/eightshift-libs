@@ -19,11 +19,11 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 	/**
 	 * Throws exception if ensure_string argument is invalid.
 	 *
-	 * @param string $variable Variable that's of invalid type.
+	 * @param mixed $variable Variable that's of invalid type.
 	 *
 	 * @return static
 	 */
-	public static function throwNotStringOrVariable(string $variable)
+	public static function throwNotStringOrArray($variable)
 	{
 		return new static(
 			sprintf(
