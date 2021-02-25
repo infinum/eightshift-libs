@@ -144,6 +144,7 @@ class Components
 		// Wrap component with parent BEM selector if parent's class is provided. Used
 		// for setting specific styles for components rendered inside other components.
 		if (isset($attributes['parentClass'])) {
+			$component = str_replace('.php', '', $component);
 			printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}"));
 		}
 
