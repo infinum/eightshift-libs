@@ -3,9 +3,13 @@ name: Continuous integration checks
 on:
   # Run on PRs and pushes, only on significant changes.
   push:
+    branches:
+      - develop
     paths-ignore:
       - '**.md'
   pull_request:
+    branches:
+      - develop
     paths-ignore:
       - '**.md'
 
@@ -16,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.3, 7.4]
+        php: ['7.3', '7.4']
 
     steps:
       # Checkout repository
@@ -34,11 +38,13 @@ jobs:
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
       - name: Install Composer dependencies
-        uses: "ramsey/composer-install@v1"
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: highest
 
       - name: Check coding standards using PHPCS
         continue-on-error: true
-        run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
+        run: composer run-script standards:check -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
 
       - name: Show PHPCS results in PR
         run: cs2pr ./phpcs-report.xml
@@ -49,7 +55,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.4]
+        php: ['7.4']
 
     steps:
      # Checkout repository
@@ -66,7 +72,9 @@ jobs:
      # Install dependencies and handle caching in one go.
      # @link https://github.com/marketplace/actions/install-composer-dependencies
      - name: Install Composer dependencies
-       uses: "ramsey/composer-install@v1"
+       uses: ramsey/composer-install@v1
+       with:
+         dependency-versions: highest
 
      - name: Check code consistency using PHPStan
-       run: composer analyze
+       run: composer run-script analyze
