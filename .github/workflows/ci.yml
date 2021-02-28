@@ -111,4 +111,4 @@ jobs:
               run: composer update --no-progress
 
             - name: Run unit tests
-              run: composer tests:unit
+              run: composer run-script tests:unit
