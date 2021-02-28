@@ -13,7 +13,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4]
+                php: ["7.2", "7.3", "7.4"]
 
         steps:
             # Checkout repository
@@ -25,6 +25,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php }}
+                extensions: zip
                 coverage: pcov
 
             - name: Get composer cache directory
@@ -41,10 +42,10 @@ jobs:
                   ${{ runner.os }}-composer-
 
             - name: Install composer packages
-              run: composer install --no-progress
+              run: composer update --no-progress
 
             - name: Check coding standards using PHPCS
-              run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}-
+              run: composer run-script standards:check -- --runtime-set testVersion ${{ matrix.php }}-
 
     phpstan:
         name: PHPStan check
@@ -56,7 +57,8 @@ jobs:
             - name: PHP setup
               uses: shivammathur/setup-php@v2
               with:
-                php-version: 7.2
+                php-version: "7.2"
+                extensions: zip
                 coverage: pcov
 
             - name: Get composer cache directory
@@ -73,10 +75,10 @@ jobs:
                   ${{ runner.os }}-composer-
 
             - name: Install composer packages
-              run: composer install --no-progress
+              run: composer update --no-progress
 
             - name: Analyse code using phpstan
-              run: composer analyze
+              run: composer run-script analyze
 
     tests:
         name: Codeception - Unit tests
@@ -88,7 +90,8 @@ jobs:
             - name: PHP setup
               uses: shivammathur/setup-php@v2
               with:
-                php-version: 7.2
+                php-version: "7.2"
+                extensions: zip
                 coverage: pcov
 
             - name: Get composer cache directory
@@ -105,7 +108,7 @@ jobs:
                   ${{ runner.os }}-composer-
 
             - name: Install composer packages
-              run: composer install --no-progress
+              run: composer update --no-progress
 
             - name: Run unit tests
               run: composer tests:unit
