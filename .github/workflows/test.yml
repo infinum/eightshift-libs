@@ -39,7 +39,7 @@ jobs:
         run: composer run-script test:unit
 
       - name: Run coverage generation
-        run: composer run-script test:coverage -q # We don't need an output for coverage, codecov will do that.
+        run: composer test:coverage -q # We don't need an output for coverage, codecov will do that.
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
