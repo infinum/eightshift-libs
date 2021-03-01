@@ -36,7 +36,7 @@ jobs:
           dependency-versions: highest
 
       - name: Run unit tests
-        run: composer run-script test:unit
+        run: composer test:unit
 
       - name: Run coverage generation
         run: composer test:coverage -q # We don't need an output for coverage, codecov will do that.
