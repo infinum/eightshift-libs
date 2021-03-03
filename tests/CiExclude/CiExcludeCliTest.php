@@ -1,0 +1,79 @@
+<?php
+
+namespace Tests\Unit\CiExclude;
+
+use EightshiftLibs\CiExclude\CiExcludeCli;
+
+use function Tests\deleteCliOutput;
+
+/**
+ * Mock before tests.
+ */
+beforeEach(function () {
+	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+
+$wpCliMock
+	->shouldReceive('success')
+	->andReturnArg(0);
+
+$wpCliMock
+	->shouldReceive('error')
+	->andReturnArg(0);
+
+$this->ciexclude = new CiExcludeCli('boilerplate');
+});
+
+/**
+ * Cleanup after tests.
+ */
+afterEach(function () {
+	$output = dirname(__FILE__, 3) . '/cliOutput';
+
+	deleteCliOutput($output);
+});
+
+test('CiExclude CLI command will correctly copy the ci-exclude text file with defaults', function () {
+	$ciexclude = $this->ciexclude;
+	$ciexclude([], $ciexclude->getDevelopArgs([]));
+	
+
+	// Check the output dir if the generated method is correctly generated.
+	$generatedExclude = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/ci-exclude.txt');
+
+	$this->assertStringContainsString('eightshift-boilerplate', $generatedExclude);
+});
+
+test('CiExclude CLI command will run under custom command name', function () {
+	$ciexclude = $this->ciexclude;
+	$result = $ciexclude->getCommandName();
+
+	$this->assertStringContainsString('init_ci_exclude', $result);
+});
+
+test('CiExclude CLI command will correctly copy the CiExclude class with set arguments', function () {
+	$ciexclude = $this->ciexclude;
+	$ciexclude([], [
+		'root' => './',
+		'project_name' => 'coolPlugin',
+		'project_type' => 'plugin',
+	]);
+
+	// Check the output dir if the generated method is correctly generated.
+	$generatedExclude = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/ci-exclude.txt');
+
+	$this->assertStringContainsString('/wp-content/plugin/coolPlugin/node_modules', $generatedExclude);
+});
+
+
+test('CiExclude CLI documentation is correct', function () {
+	$ciexclude = $this->ciexclude;
+
+	$documentation = $ciexclude->getDoc();
+
+	$key = 'shortdesc';
+
+	$this->assertIsArray($documentation);
+	$this->assertArrayHasKey($key, $documentation);
+	$this->assertArrayHasKey('synopsis', $documentation);
+	$this->assertEquals('Initialize Command for building your projects CI exclude file.', $documentation[$key]);
+});
