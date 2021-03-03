@@ -10,14 +10,13 @@
 		</testsuite>
 	</testsuites>
 	<php>
-        <env name="TEST" value="true" force="true" />
-    </php>
+			<env name="TEST" value="true" force="true" />
+	</php>
 	<coverage processUncoveredFiles="true">
 		<include>
 			<directory suffix=".php">./src</directory>
 		</include>
 		<exclude>
-			<directory suffix="Example.php">./src</directory>
 			<file>./src/Menu/BemMenuWalker.php</file>
 		</exclude>
 		<report>
