@@ -36,12 +36,16 @@ test('Login CLI command will correctly copy the Login class with defaults', func
 	$login = $this->login;
 	$login([], []);
 
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/Login/Login.php';
+
 	// Check the output dir if the generated method is correctly generated.
-	$generatedLogin = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Login/Login.php');
+	$generatedLogin = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class Login implements ServiceInterface', $generatedLogin);
 	$this->assertStringContainsString('@package EightshiftBoilerplate\Login', $generatedLogin);
 	$this->assertStringContainsString('namespace EightshiftLibs\Login', $generatedLogin);
+	$this->assertStringNotContainsString('footer.php', $generatedLogin);
+	$this->assertFileExists($outputPath);
 });
 
 test('Login CLI command will correctly copy the Login class with set arguments', function () {
@@ -53,7 +57,6 @@ test('Login CLI command will correctly copy the Login class with set arguments',
 	// Check the output dir if the generated method is correctly generated.
 	$generatedLogin = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Login/Login.php');
 
-	$this->assertStringContainsString('class Login implements ServiceInterface', $generatedLogin);
 	$this->assertStringContainsString('namespace CoolTheme\Login;', $generatedLogin);
 });
 

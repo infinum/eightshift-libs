@@ -36,12 +36,16 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 	$modifyAdminAppearance = $this->modifyAdminAppearance;
 	$modifyAdminAppearance([], []);
 
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php';
+
 	// Check the output dir if the generated method is correctly generated.
-	$generatedModifyAdminAppearance = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php');
+	$generatedModifyAdminAppearance = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class ModifyAdminAppearance implements ServiceInterface', $generatedModifyAdminAppearance);
 	$this->assertStringContainsString('@package EightshiftBoilerplate\ModifyAdminAppearance', $generatedModifyAdminAppearance);
 	$this->assertStringContainsString('namespace EightshiftLibs\ModifyAdminAppearance', $generatedModifyAdminAppearance);
+	$this->assertStringNotContainsString('footer.php', $generatedModifyAdminAppearance);
+	$this->assertFileExists($outputPath);
 });
 
 test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppearance class with set arguments', function () {
@@ -53,7 +57,6 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 	// Check the output dir if the generated method is correctly generated.
 	$generatedModifyAdminAppearance = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php');
 
-	$this->assertStringContainsString('class ModifyAdminAppearance implements ServiceInterface', $generatedModifyAdminAppearance);
 	$this->assertStringContainsString('namespace CoolTheme\ModifyAdminAppearance;', $generatedModifyAdminAppearance);
 });
 

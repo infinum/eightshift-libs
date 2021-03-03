@@ -36,12 +36,16 @@ test('Main CLI command will correctly copy the Main class with defaults', functi
 	$main = $this->main;
 	$main([], []);
 
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/Main/Main.php';
+
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMain = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Main/Main.php');
+	$generatedMain = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class Main extends AbstractMain', $generatedMain);
 	$this->assertStringContainsString('@package EightshiftBoilerplate\Main', $generatedMain);
 	$this->assertStringContainsString('namespace EightshiftLibs\Main', $generatedMain);
+	$this->assertStringNotContainsString('footer.php', $generatedMain);
+	$this->assertFileExists($outputPath);
 });
 
 test('Main CLI command will correctly copy the Main class with set arguments', function () {
@@ -53,7 +57,6 @@ test('Main CLI command will correctly copy the Main class with set arguments', f
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMain = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Main/Main.php');
 
-	$this->assertStringContainsString('class Main extends AbstractMain', $generatedMain);
 	$this->assertStringContainsString('namespace CoolTheme\Main;', $generatedMain);
 });
 

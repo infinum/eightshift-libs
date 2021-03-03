@@ -36,12 +36,16 @@ test('I18n CLI command will correctly copy the I18n class with defaults', functi
 	$i18n = $this->i18n;
 	$i18n([], []);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMain = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/I18n/I18n.php');
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/I18n/I18n.php';
 
-	$this->assertStringContainsString('class I18n implements ServiceInterface', $generatedMain);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\I18n', $generatedMain);
-	$this->assertStringContainsString('namespace EightshiftLibs\I18n', $generatedMain);
+	// Check the output dir if the generated method is correctly generated.
+	$generatedI18n = file_get_contents($outputPath);
+
+	$this->assertStringContainsString('class I18n implements ServiceInterface', $generatedI18n);
+	$this->assertStringContainsString('@package EightshiftBoilerplate\I18n', $generatedI18n);
+	$this->assertStringContainsString('namespace EightshiftLibs\I18n', $generatedI18n);
+	$this->assertStringNotContainsString('footer.php', $generatedI18n);
+	$this->assertFileExists($outputPath);
 });
 
 test('I18n CLI command will correctly copy the I18n class with set arguments', function () {
@@ -51,10 +55,9 @@ test('I18n CLI command will correctly copy the I18n class with set arguments', f
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMain = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/I18n/I18n.php');
+	$generatedI18n = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/I18n/I18n.php');
 
-	$this->assertStringContainsString('class I18n implements ServiceInterface', $generatedMain);
-	$this->assertStringContainsString('namespace CoolTheme\I18n;', $generatedMain);
+	$this->assertStringContainsString('namespace CoolTheme\I18n;', $generatedI18n);
 });
 
 test('I18n CLI documentation is correct', function () {

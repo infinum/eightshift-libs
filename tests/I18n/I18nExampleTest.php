@@ -30,10 +30,9 @@ test('Registering load_theme_textdomain works', function () {
 	// Set up a side-affect.
 	putenv('I18N_ABSTRACTED=false');
 
-
 	\Mockery::mock('alias:EightshiftBoilerplate\Config\Config')
-	->shouldReceive('getProjectName', 'getProjectPath')
-	->andReturn('CoolProject', 'projectPath');
+		->shouldReceive('getProjectName', 'getProjectPath')
+		->andReturn('CoolProject', 'projectPath');
 
 	Functions\when('load_theme_textdomain')->alias(function() {
 		putenv('I18N_ABSTRACTED=true');

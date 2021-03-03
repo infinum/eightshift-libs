@@ -36,12 +36,16 @@ test('Services CLI command will correctly copy the Services class with defaults'
 	$services = $this->services;
 	$services([], $services->getDevelopArgs([]));
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMain = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/TestFolder/TMP/TestTest.php');
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/TestFolder/TMP/TestTest.php';
 
-	$this->assertStringContainsString('class TestTest implements ServiceInterface', $generatedMain);
-	$this->assertStringContainsString('namespace EightshiftLibs\TestFolder\TMP', $generatedMain);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\TestFolder\TMP', $generatedMain);
+	// Check the output dir if the generated method is correctly generated.
+	$generatedService = file_get_contents($outputPath);
+
+	$this->assertStringContainsString('class TestTest implements ServiceInterface', $generatedService);
+	$this->assertStringContainsString('namespace EightshiftLibs\TestFolder\TMP', $generatedService);
+	$this->assertStringContainsString('@package EightshiftBoilerplate\TestFolder\TMP', $generatedService);
+	$this->assertStringNotContainsString('footer.php', $generatedService);
+	$this->assertFileExists($outputPath);
 });
 
 test('Services CLI command will correctly copy the Services class with set arguments', function () {
@@ -52,12 +56,15 @@ test('Services CLI command will correctly copy the Services class with set argum
 		'file_name' => 'FileName',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMain = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/FolderName/FileName.php');
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/FolderName/FileName.php';
 
-	$this->assertStringContainsString('class FileName implements ServiceInterface', $generatedMain);
-	$this->assertStringContainsString('namespace CoolTheme\FolderName', $generatedMain);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\FolderName', $generatedMain);
+	// Check the output dir if the generated method is correctly generated.
+	$generatedService = file_get_contents($outputPath);
+
+	$this->assertStringContainsString('class FileName implements ServiceInterface', $generatedService);
+	$this->assertStringContainsString('namespace CoolTheme\FolderName', $generatedService);
+	$this->assertStringContainsString('@package EightshiftBoilerplate\FolderName', $generatedService);
+	$this->assertFileExists($outputPath);
 });
 
 test('Services CLI documentation is correct', function () {

@@ -35,12 +35,15 @@ afterEach(function () {
 test('Readme CLI command will correctly copy the readme file with defaults', function () {
 	$readme = $this->readme;
 	$readme([], $readme->getDevelopArgs([]));
-	
+
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/README.md';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedExclude = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/README.md');
+	$generatedReadme = file_get_contents($outputPath);
 
-	$this->assertStringContainsString('This is the official repository of the {Project name}.', $generatedExclude);
+	$this->assertStringContainsString('This is the official repository of the {Project name}.', $generatedReadme);
+	$this->assertStringNotContainsString('footer.php', $generatedReadme);
+	$this->assertFileExists($outputPath);
 });
 
 test('Readme CLI command will run under custom command name', function () {
@@ -56,10 +59,9 @@ test('Readme CLI command will correctly copy the readme in the custom folder wit
 		'root' => './test',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedExclude = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/test/README.md');
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/test/README.md';
 
-	$this->assertStringContainsString('This is the official repository of the {Project name}.', $generatedExclude);
+	$this->assertFileExists($outputPath);
 });
 
 test('Readme CLI documentation is correct', function () {

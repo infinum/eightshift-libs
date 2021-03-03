@@ -36,11 +36,14 @@ test('GitIgnore CLI command will correctly copy the .gitignore file with default
 	$gitignore = $this->gitignore;
 	$gitignore([], $gitignore->getDevelopArgs([]));
 	
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/.gitignore';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedIgnore = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/.gitignore');
+	$generatedIgnore = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('wp-admin', $generatedIgnore);
+	$this->assertStringNotContainsString('footer.php', $generatedIgnore);
+	$this->assertFileExists($outputPath);
 });
 
 test('GitIgnore CLI command will run under custom command name', function () {
@@ -56,10 +59,7 @@ test('GitIgnore CLI command will correctly copy the .gitignore file in the custo
 		'root' => './test',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedIgnore = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/test/.gitignore');
-
-	$this->assertStringContainsString('wp-admin', $generatedIgnore);
+	$this->assertFileExists(dirname(__FILE__, 3) . '/cliOutput/test/.gitignore');
 });
 
 
