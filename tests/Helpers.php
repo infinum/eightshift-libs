@@ -44,6 +44,9 @@ function setupMocks() {
 
 	// Mock rest response handler.
 	Functions\when('rest_ensure_response')->returnArg();
+
+	// Require all WP Mock objects.
+	require_once dirname( __FILE__ ) . '/WpMocks/WP_REST_Server.php';
 }
 
 /**

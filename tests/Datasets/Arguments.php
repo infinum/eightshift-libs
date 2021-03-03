@@ -23,3 +23,17 @@ dataset('classesArray', [
 	[['small']],
 	[['key' => 'bold--all']]
 ]);
+
+dataset('correctFieldNameArguments', [
+	[['field_name' => 'NekiField', 'object_type' => 'post']],
+	[['field_name' => 'neki field', 'object_type' => 'post']],
+	[['field_name' => 'neki-field', 'object_type' => 'post']],
+	[['field_name' => 'neki_field', 'object_type' => 'post']],
+	[['field_name' => 'Neki Field', 'object_type' => 'page']],
+	[['field_name' => 'Neki Field', 'object_type' => 'custom-post-type']],
+]);
+
+dataset('errorFieldNameArguments', [
+	[['field_name' => 'NekiField']],
+	[['object_type' => 'post']],
+]);
