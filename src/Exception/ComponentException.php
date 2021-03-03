@@ -25,8 +25,7 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 	 */
 	public static function throwNotStringOrArray($variable)
 	{
-		if(gettype($variable) !== 'object') {
-
+		if (gettype($variable) !== 'object') {
 			$output = sprintf(
 				/* translators: %1$s is replaced with the name of the variable, and %2$s with its type. */
 				\esc_html__('%1$s variable is not a string or array but rather %2$s', 'eightshift-libs'),
