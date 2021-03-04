@@ -40,6 +40,10 @@ if (WP_ENVIRONMENT_TYPE !== 'production') {
 
 // Environment based setup.
 if (WP_ENVIRONMENT_TYPE === 'development' || WP_ENVIRONMENT_TYPE === 'local') {
+	// Enable debug and error logging.
+	define('WP_DEBUG', true);
+	define('WP_DEBUG_LOG', true);
+
 	// Enable direct upload from admin.
 	define('FS_METHOD', 'direct');
 
