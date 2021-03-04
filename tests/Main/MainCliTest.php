@@ -57,7 +57,8 @@ test('Main CLI command will correctly copy the Main class with set arguments', f
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMain = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Main/Main.php');
 
-	$this->assertStringContainsString('namespace CoolTheme\Main;', $generatedMain);
+	$this->assertStringContainsString('namespace CoolTheme\Main', $generatedMain);
+	$this->assertStringNotContainsString('namespace EightshiftLibs\Main', $generatedMain);
 });
 
 test('Main CLI documentation is correct', function () {

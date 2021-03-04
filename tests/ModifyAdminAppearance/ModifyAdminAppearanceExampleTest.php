@@ -41,4 +41,5 @@ test('Asserts if wp_get_environment_type is empty', function () {
 	$output = $this->modifyAdminAppearance->adminColor();
 
 	$this->assertStringContainsString('fresh', $output);
+	$this->assertStringNotContainsString('sunrise', $output);
 });

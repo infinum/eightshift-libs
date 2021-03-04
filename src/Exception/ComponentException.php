@@ -33,7 +33,7 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 				gettype($variable)
 			);
 		} else {
-			$output = \esc_html__('Object can\'t be converted to string. Please provide only string or array.', 'eightshift-libs');
+			$output = \esc_html__('Object couldn\'t be converted to string. Please provide only string or array.', 'eightshift-libs');
 		}
 
 		return new static($output);

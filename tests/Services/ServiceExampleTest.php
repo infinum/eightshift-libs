@@ -20,12 +20,9 @@ afterEach(function() {
 });
 
 test('Service Example test register method', function () {
-	$this->service->register();
-
-	$this->assertTrue(true);
+	$this->assertNull($this->service->register());
 });
 
 test('Service Example contains register method', function () {
-
 	$this->assertTrue(method_exists($this->service, 'register'));
 });
