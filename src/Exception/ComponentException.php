@@ -19,20 +19,24 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 	/**
 	 * Throws exception if ensure_string argument is invalid.
 	 *
-	 * @param string $variable Variable that's of invalid type.
+	 * @param mixed $variable Variable that's of invalid type.
 	 *
 	 * @return static
 	 */
-	public static function throwNotStringOrVariable(string $variable)
+	public static function throwNotStringOrArray($variable)
 	{
-		return new static(
-			sprintf(
-			/* translators: %1$s is replaced with the name of the variable, and %2$s with its type. */
+		if (gettype($variable) !== 'object') {
+			$output = sprintf(
+				/* translators: %1$s is replaced with the name of the variable, and %2$s with its type. */
 				\esc_html__('%1$s variable is not a string or array but rather %2$s', 'eightshift-libs'),
 				$variable,
 				gettype($variable)
-			)
-		);
+			);
+		} else {
+			$output = \esc_html__('Object couldn\'t be converted to string. Please provide only string or array.', 'eightshift-libs');
+		}
+
+		return new static($output);
 	}
 
 	/**

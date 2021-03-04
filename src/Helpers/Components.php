@@ -45,7 +45,7 @@ class Components
 		} elseif (is_string($variable)) {
 			$output = $variable;
 		} else {
-			throw ComponentException::throwNotStringOrVariable($variable);
+			throw ComponentException::throwNotStringOrArray($variable);
 		}
 
 		return $output;
@@ -100,7 +100,6 @@ class Components
 		 */
 		if (strpos($component, '.php') !== false) {
 			$componentPath = "{$parentPath}/$component";
-			$component = pathinfo($component, PATHINFO_FILENAME);
 
 			if ($useComponentDefaults) {
 				$manifest = self::getManifest($parentPath);
@@ -129,11 +128,23 @@ class Components
 			$attributes = array_merge($defaultAttributes, $attributes);
 		}
 
+		if ($useComponentDefaults && isset($manifest['attributes'])) {
+			$defaultAttributes = [];
+			foreach ($manifest['attributes'] as $itemKey => $itemValue) {
+				if (isset($itemValue['default'])) {
+					$defaultAttributes[$itemKey] = $itemValue['default'];
+				}
+			}
+
+			$attributes = array_merge($defaultAttributes, $attributes);
+		}
+
 		ob_start();
 
 		// Wrap component with parent BEM selector if parent's class is provided. Used
 		// for setting specific styles for components rendered inside other components.
 		if (isset($attributes['parentClass'])) {
+			$component = str_replace('.php', '', $component);
 			printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}"));
 		}
 
