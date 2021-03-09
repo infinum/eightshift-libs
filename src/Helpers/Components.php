@@ -117,26 +117,7 @@ class Components
 		}
 
 		if ($useComponentDefaults && isset($manifest['attributes'])) {
-			$defaultAttributes = [];
-
-			foreach ($manifest['attributes'] as $itemKey => $itemValue) {
-				if (isset($itemValue['default'])) {
-					$defaultAttributes[$itemKey] = $itemValue['default'];
-				}
-			}
-
-			$attributes = array_merge($defaultAttributes, $attributes);
-		}
-
-		if ($useComponentDefaults && isset($manifest['attributes'])) {
-			$defaultAttributes = [];
-			foreach ($manifest['attributes'] as $itemKey => $itemValue) {
-				if (isset($itemValue['default'])) {
-					$defaultAttributes[$itemKey] = $itemValue['default'];
-				}
-			}
-
-			$attributes = array_merge($defaultAttributes, $attributes);
+			$attributes =  self::getDefaultRenderAttributes($manifest, $attributes);
 		}
 
 		ob_start();
@@ -155,6 +136,27 @@ class Components
 		}
 
 		return trim((string) ob_get_clean());
+	}
+
+	/**
+	 * Merges attributes array with the manifet default attributes.
+	 *
+	 * @param array $manifest   Block/Component manifest data.
+	 * @param array $attributes Block/Component rendered attributes data.
+	 *
+	 * @return array
+	 */
+	public static function getDefaultRenderAttributes(array $manifest, array $attributes): array
+	{
+		$defaultAttributes = [];
+
+		foreach ($manifest['attributes'] as $itemKey => $itemValue) {
+			if (isset($itemValue['default'])) {
+				$defaultAttributes[$itemKey] = $itemValue['default'];
+			}
+		}
+
+		return array_merge($defaultAttributes, $attributes);
 	}
 
 	/**
@@ -296,52 +298,57 @@ class Components
 	{
 		$output = '';
 
+		if (!$globalManifest || !isset($globalManifest['globalVariables'])) {
+			return $output;
+		}
+
 		foreach ($globalManifest['globalVariables'] as $itemKey => $itemValue) {
 			$itemKey = self::camelToKebabCase($itemKey);
 
 			if (gettype($itemValue) === 'array') {
 				$output .= self::outputCssVariablesGlobalInner($itemValue, $itemKey);
 			} else {
-				$output .= "--global-{$itemKey}: {$itemValue};";
+				$output .= "--global-{$itemKey}: {$itemValue};\n";
 			}
 		}
 
-		return "
+		return $output ? "
 			<style>
 				:root {
 					{$output}
 				}
 			</style>
-		";
+		" : '';
 	}
 
 	/**
 	 * Process and return global css variables based on the type.
 	 *
-	 * @param array  $itemValue Values of data to check.
-	 * @param string $itemKey Item key to check.
+	 * @param array  $itemValues Values of data to check.
+	 * @param string $itemKey    Item key to check.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobalInner(array $itemValue, string $itemKey): string
+	public static function outputCssVariablesGlobalInner(array $itemValues, string $itemKey): string
 	{
 		$output = '';
 
-		foreach ($itemValue as $key => $value) {
+		foreach ($itemValues as $key => $value) {
 			$key = self::camelToKebabCase((string)$key);
+			$itemKey = self::camelToKebabCase((string)$itemKey);
 
 			switch ($itemKey) {
 				case 'colors':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};";
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
 					break;
 				case 'gradients':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};";
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
 					break;
-				case 'fontSizes':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['slug']};";
+				case 'font-sizes':
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['slug']};\n";
 					break;
 				default:
-					$output .= "--global-{$itemKey}-{$key}: {$value};";
+					$output .= "--global-{$itemKey}-{$key}: {$value};\n";
 					break;
 			}
 		}
@@ -354,18 +361,21 @@ class Components
 	 *
 	 * @param array  $attributes Built attributes.
 	 * @param array  $manifest Component/block manifest data.
-	 * @param array  $globalManifest Global manifest data.
 	 * @param string $unique Unique key.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, array $globalManifest, string $unique): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique): string
 	{
+		$output = '';
+
+		if (!$attributes || !$manifest) {
+			return $output;
+		}
+
 		$name = $manifest['componentClass'] ?? $manifest['blockName'];
 
 		$name = self::camelToKebabCase($name);
-
-		$output = '';
 
 		foreach ($attributes as $key => $value) {
 			if (! isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
@@ -373,12 +383,12 @@ class Components
 			}
 
 			if (isset($manifest['attributes'][$key]['color'])) {
-				$value = self::getColorBySlug($value, $globalManifest['globalVariables']['colors']);
+				$value = $value = "var(--global-colors-{$value})";
 			}
 
 			$key = self::camelToKebabCase($key);
 
-			$output .= "--{$key}: {$value};";
+			$output .= "--{$key}: {$value};\n";
 		}
 
 		return "
@@ -391,35 +401,13 @@ class Components
 	}
 
 	/**
-	 * Process color variables by key.
-	 *
-	 * @param string $slug Color slug.
-	 * @param array  $globalVariables Global manifest data.
-	 *
-	 * @return string
-	 */
-	public static function getColorBySlug(string $slug, array $globalVariables): string
-	{
-		$output = array_map(
-			function ($item) use ($slug) {
-				if ($item['slug'] === $slug) {
-					return $item;
-				}
-			},
-			$globalVariables
-		)[0] ?? '';
-
-		return $output['color'] ?? '';
-	}
-
-	/**
 	 * Return unique ID for block processing.
 	 *
 	 * @return string
 	 */
 	public static function getUnique(): string
 	{
-		return md5(uniqid((string)wp_rand(), true));
+		return md5(uniqid((string)\wp_rand(), true));
 	}
 
 	/**
