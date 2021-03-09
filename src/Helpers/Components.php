@@ -383,7 +383,7 @@ class Components
 			}
 
 			if (isset($manifest['attributes'][$key]['color'])) {
-				$value = $value = "var(--global-colors-{$value})";
+				$value = "var(--global-colors-{$value})";
 			}
 
 			$key = self::camelToKebabCase($key);
