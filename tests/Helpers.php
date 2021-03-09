@@ -21,6 +21,9 @@ function setupMocks() {
 	// Mock escaping function.
 	Functions\when('wp_kses_post')->returnArg();
 
+	// Mock rand function.
+	Functions\when('wp_rand')->justReturn(1154790670);
+
 	// Mock json success and error handlers.
 	Functions\when('wp_send_json_success')->alias(function ($data = null, $statusCode = null, $options = 0) {
 		$response = ['success' => true];
