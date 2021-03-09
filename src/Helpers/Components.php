@@ -285,4 +285,152 @@ class Components
 
 		return $condition ? "{$block}{$fullElement}{$fullModifier}"  : '';
 	}
+
+	/**
+	 * Get Global Manifest.json and return globalVariables as css variables.
+	 *
+	 * @param array $globalManifest Array of global variables data.
+	 * @return string
+	 */
+	public static function outputCssVariablesGlobal(array $globalManifest): string
+	{
+		$output = '';
+
+		foreach ($globalManifest['globalVariables'] as $itemKey => $itemValue) {
+			$itemKey = self::camelToKebabCase($itemKey);
+
+			if (gettype($itemValue) === 'array') {
+				$output .= self::outputCssVariablesGlobalInner($itemValue, $itemKey);
+			} else {
+				$output .= "--global-{$itemKey}: {$itemValue};\n";
+			}
+		}
+
+		return "
+			<style>
+				:root {
+					{$output}
+				}
+			</style>
+		";
+	}
+
+	/**
+	 * Process and return global css variables based on the type.
+	 *
+	 * @param array  $itemValue Values of data to check.
+	 * @param string $itemKey Item key to check.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariablesGlobalInner(array $itemValue, string $itemKey): string
+	{
+		$output = '';
+
+		foreach ($itemValue as $key => $value) {
+			$key = self::camelToKebabCase((string)$key);
+
+			switch ($itemKey) {
+				case 'colors':
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
+					break;
+				case 'gradients':
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
+					break;
+				case 'fontSizes':
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['slug']};\n";
+					break;
+				default:
+					$output .= "--global-{$itemKey}-{$key}: {$value};\n";
+					break;
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get component/block options and process them in css variables.
+	 *
+	 * @param array  $attributes Built attributes.
+	 * @param array  $manifest Component/block manifest data.
+	 * @param array  $globalManifest Global manifest data.
+	 * @param string $unique Unique key.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariables(array $attributes, array $manifest, array $globalManifest, string $unique): string
+	{
+		$name = $manifest['componentClass'] ?? $manifest['blockName'];
+
+		$name = self::camelToKebabCase($name);
+
+		$output = '';
+
+		foreach ($attributes as $key => $value) {
+			if (! isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
+				continue;
+			}
+
+			if (isset($manifest['attributes'][$key]['color'])) {
+				$value = self::getColorBySlug($value, $globalManifest['globalVariables']['colors']);
+			}
+
+			$key = self::camelToKebabCase($key);
+
+			$output .= "--{$key}: {$value};";
+		}
+
+		return "
+			<style>
+				.{$name}[data-id='{$unique}'] {
+					{$output}
+				}
+			</style>
+		";
+	}
+
+	/**
+	 * Process color variables by key.
+	 *
+	 * @param string $slug Color slug.
+	 * @param array  $globalVariables Global manifest data.
+	 *
+	 * @return string
+	 */
+	public static function getColorBySlug(string $slug, array $globalVariables): string
+	{
+		$output = array_map(
+			function ($item) use ($slug) {
+				if ($item['slug'] === $slug) {
+					return $item;
+				}
+			},
+			$globalVariables
+		)[0] ?? '';
+
+		return $output['color'] ?? '';
+	}
+
+	/**
+	 * Return unique ID for block processing.
+	 *
+	 * @return string
+	 */
+	public static function getUnique(): string
+	{
+		return md5(uniqid((string)wp_rand(), true));
+	}
+
+	/**
+	 * Convert string from camel to kebab case
+	 *
+	 * @param string $string String to convert.
+	 *
+	 * @return string
+	 */
+	public static function camelToKebabCase(string $string): string
+	{
+		return ltrim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string)), '-');
+	}
 }
