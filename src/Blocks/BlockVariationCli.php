@@ -118,7 +118,7 @@ class BlockVariationCli extends AbstractCli
 			// Set output file path.
 			$class = $this->getExampleTemplate($destinationPath, $file, true);
 
-			if (!empty($class)) {
+			if (!empty($class->fileContents)) {
 				$class->renameProjectName($assocArgs)
 				->renameNamespace($assocArgs)
 				->renameTextDomainFrontendLibs($assocArgs)

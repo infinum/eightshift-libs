@@ -27,19 +27,24 @@
     },
     "buttonSize": {
       "type": "string",
-      "default": "default"
+      "default": "default",
+      "variable": true
     },
     "buttonColor": {
       "type": "string",
-      "default": "primary"
+      "default": "primary",
+      "variable": true,
+      "color": true
     },
     "buttonWidth": {
       "type": "string",
-      "default": "default"
+      "default": "default",
+      "variable": true
     },
     "buttonAlign": {
       "type": "string",
-      "default": "left"
+      "default": "left",
+      "variable": true
     },
     "buttonIsAnchor": {
       "type": "boolean",

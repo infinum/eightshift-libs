@@ -17,7 +17,7 @@
 			<directory suffix=".php">./src</directory>
 		</include>
 		<exclude>
-			<directory suffix="Example.php">./src</directory>
+			<file>./src/Build/BuildExample.php</file>
 			<file>./src/Menu/BemMenuWalker.php</file>
 		</exclude>
 		<report>
