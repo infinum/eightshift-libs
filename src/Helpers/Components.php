@@ -302,7 +302,7 @@ class Components
 			if (gettype($itemValue) === 'array') {
 				$output .= self::outputCssVariablesGlobalInner($itemValue, $itemKey);
 			} else {
-				$output .= "--global-{$itemKey}: {$itemValue};\n";
+				$output .= "--global-{$itemKey}: {$itemValue};";
 			}
 		}
 
@@ -332,16 +332,16 @@ class Components
 
 			switch ($itemKey) {
 				case 'colors':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};";
 					break;
 				case 'gradients':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};";
 					break;
 				case 'fontSizes':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['slug']};\n";
+					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['slug']};";
 					break;
 				default:
-					$output .= "--global-{$itemKey}-{$key}: {$value};\n";
+					$output .= "--global-{$itemKey}-{$key}: {$value};";
 					break;
 			}
 		}
