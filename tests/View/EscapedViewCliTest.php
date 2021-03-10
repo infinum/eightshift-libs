@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Config;
+namespace Tests\Unit\View;
 
 use EightshiftLibs\View\EscapedViewCli;
 
