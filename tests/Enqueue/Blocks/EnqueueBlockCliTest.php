@@ -32,61 +32,54 @@ afterEach(function () {
 	deleteCliOutput($output);
 });
 
-
+/**
+ * Making an appropriate class with all it's key strings.
+ */
 test('Enqueue Block CLI command will make appropriate class.', function () {
 	$ebc = $this->ebc;
-  $ebc([], []);
+	$ebc([], []);
 
-  $generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
-  $this->assertStringContainsString('class EnqueueBlocks extends AbstractEnqueueBlocks', $generatedEBC);
-  
+	$generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
+	$this->assertStringContainsString('class EnqueueBlocks extends AbstractEnqueueBlocks', $generatedEBC);
+	
 	$this->assertStringContainsString('enqueue_block_editor_assets', $generatedEBC);
 	$this->assertStringContainsString('enqueueBlockEditorScript', $generatedEBC);
-  
+	
 	$this->assertStringContainsString('enqueue_block_editor_assets', $generatedEBC);
 	$this->assertStringContainsString('enqueueBlockEditorStyle', $generatedEBC);
 	
-  $this->assertStringContainsString('enqueue_block_assets', $generatedEBC);
-  $this->assertStringContainsString('enqueueBlockStyle', $generatedEBC);
+	$this->assertStringContainsString('enqueue_block_assets', $generatedEBC);
+	$this->assertStringContainsString('enqueueBlockStyle', $generatedEBC);
 	
-  $this->assertStringContainsString('wp_enqueue_scripts', $generatedEBC);
-  $this->assertStringContainsString('enqueueBlockScript', $generatedEBC
+	$this->assertStringContainsString('wp_enqueue_scripts', $generatedEBC);
+	$this->assertStringContainsString('enqueueBlockScript', $generatedEBC
 );
 });
 
-
+/**
+ * Testing if correct namespace will be set.
+ */
 test('Enqueue Block CLI command will set correct namespace.', function () {
-  $ebc = $this->ebc;
-  $ebc([],[
+	$ebc = $this->ebc;
+	$ebc([],[
 		'namespace' => 'NewTheme',
 	]);
 
-  $generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
+	$generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
 
-  $this->assertStringContainsString('use NewTheme\Config\Config;', $generatedEBC);
+	$this->assertStringContainsString('use NewTheme\Config\Config;', $generatedEBC);
 	$this->assertStringContainsString('namespace NewTheme\Enqueue\Blocks;', $generatedEBC);
 });
 
+/**
+ * Testing if correct functions will be generated.
+ */
 test('Enqueue Block CLI command will set correct functions.', function () {
-  $ebc = $this->ebc;
-  $ebc([], []);
+	$ebc = $this->ebc;
+	$ebc([], []);
 
-  $generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
+	$generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
 
 	$this->assertStringContainsString('getAssetsPrefix', $generatedEBC);
-  $this->assertStringContainsString('getAssetsVersion', $generatedEBC);
+	$this->assertStringContainsString('getAssetsVersion', $generatedEBC);
 });
-
-
-
-
-// test('Enqueue Block CLI command will set correct functions.', function () {
-//   $ebc = $this->ebc;
-//   $ebc([],);
-
-//   $generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
-//   $generatedEBC = file_get_contents(dirname(__FILE__, 4) . '');
-
-// 	$this->assertStringContainsString('getAssetsPrefix', $generatedEBC);
-//   $this->assertStringContainsString('getAssetsVersion', $generatedEBC);
-// });
