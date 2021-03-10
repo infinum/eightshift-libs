@@ -37,9 +37,9 @@ test('Custom enqueue theme CLI command will correctly copy the Enqueue Theme cla
 	$theme([], $theme->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedTheme = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Theme/EnqueueThemeCli.php');
+	$generatedTheme = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Theme/EnqueueTheme.php');
 
-	$this->assertStringContainsString('class EnqueueThemeCli extends AbstractCli', $generatedTheme);
+	$this->assertStringContainsString('class EnqueueTheme extends AbstractEnqueueTheme', $generatedTheme);
 	$this->assertStringContainsString('wp_enqueue_scripts', $generatedTheme);
 });
 
