@@ -45,6 +45,7 @@ test('Custom acf meta CLI command will correctly copy the Config class with defa
 	$this->assertStringContainsString('getProjectVersion', $generatedConfig);
 	$this->assertStringContainsString('getProjectRoutesNamespace', $generatedConfig);
 	$this->assertStringContainsString('getProjectRoutesVersion', $generatedConfig);
+	$this->assertStringNotContainsString('someRandomMethod', $generatedConfig);
 });
 
 

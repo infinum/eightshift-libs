@@ -45,6 +45,7 @@ test('Custom theme options CLI command will correctly copy the theme options cla
 	$this->assertStringContainsString('acf_add_local_field_group', $generatedMeta);
 	$this->assertStringContainsString('createThemeOptionsPage', $generatedMeta);
 	$this->assertStringContainsString('registerThemeOptions', $generatedMeta);
+	$this->assertStringNotContainsString('someRandomMethod', $generatedMeta);
 });
 
 test('Custom theme options CLI documentation is correct', function () {

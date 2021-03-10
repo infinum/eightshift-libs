@@ -18,7 +18,6 @@ afterEach(function() {
 	Monkey\tearDown();
 });
 
-
 test('Is project name defined and a string', function () {
 	$this->assertNotEmpty($this->example::getProjectName());
 	$this->assertIsString(gettype($this->example::getProjectName()));
