@@ -36,7 +36,21 @@ class BlockCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Define default develop props.
+	 *
+	 * @param array $args WPCLI eval-file arguments.
+	 *
+	 * @return array
+	 */
+	public function getDevelopArgs(array $args): array
+	{
+		return [
+			'name' => $args[1] ?? 'button',
+		];
+	}
+
+	/**
+	 * Get WPCLI command docblock
 	 *
 	 * @return array
 	 */
