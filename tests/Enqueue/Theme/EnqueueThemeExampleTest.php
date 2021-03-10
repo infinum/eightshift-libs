@@ -26,6 +26,6 @@ test('Register method will call wp_enqueue_scripts hook', function () {
 
 	$this->assertSame(10, has_action('wp_enqueue_scripts', 'EightshiftBoilerplate\Enqueue\Theme\EnqueueThemeExample->enqueueStyles()'));
 	$this->assertSame(10, has_action('wp_enqueue_scripts', 'EightshiftBoilerplate\Enqueue\Theme\EnqueueThemeExample->enqueueScripts()'));
-	$this->assertNotSame(10, has_action('admin_enqueue_scripts', 'EightshiftBoilerplate\Enqueue\Theme\EnqueueThemeExample->enqueueScripts()'));
+	$this->assertNotSame(10, has_action('admin_enqueue_scripts', 'EightshiftBoilerplate\Enqueue\Theme\EnqueueThemeExample->enqueueStyles()'));
 	$this->assertNotSame(10, has_action('admin_enqueue_scripts', 'EightshiftBoilerplate\Enqueue\Theme\EnqueueThemeExample->enqueueScripts()'));
 });
