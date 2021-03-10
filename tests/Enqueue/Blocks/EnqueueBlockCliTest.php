@@ -52,8 +52,7 @@ test('Enqueue Block CLI command will make appropriate class.', function () {
 	$this->assertStringContainsString('enqueueBlockStyle', $generatedEBC);
 	
 	$this->assertStringContainsString('wp_enqueue_scripts', $generatedEBC);
-	$this->assertStringContainsString('enqueueBlockScript', $generatedEBC
-);
+	$this->assertStringContainsString('enqueueBlockScript', $generatedEBC);
 });
 
 /**
