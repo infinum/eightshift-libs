@@ -47,6 +47,7 @@ function setupMocks() {
 
 	// Require all WP Mock objects.
 	require_once dirname( __FILE__ ) . '/WpMocks/WP_REST_Server.php';
+	require_once dirname( __FILE__ ) . '/WpMocks/WP_REST_Request.php';
 }
 
 /**
