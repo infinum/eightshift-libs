@@ -41,6 +41,7 @@ test('Custom enqueue theme CLI command will correctly copy the Enqueue Theme cla
 
 	$this->assertStringContainsString('class EnqueueTheme extends AbstractEnqueueTheme', $generatedTheme);
 	$this->assertStringContainsString('wp_enqueue_scripts', $generatedTheme);
+	$this->assertStringNotContainsString('admin_enqueue_scripts', $generatedTheme);
 });
 
 
