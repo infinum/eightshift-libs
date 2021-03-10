@@ -30,6 +30,7 @@ use EightshiftLibs\Setup\SetupCli;
  */
 class CliInitProject extends AbstractCli
 {
+	public const COMMAND_NAME = 'setup_project';
 
 	/**
 	 * All classes for initial theme setup for project
@@ -60,7 +61,7 @@ class CliInitProject extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'setup_project';
+		return self::COMMAND_NAME;
 	}
 
 	/**
