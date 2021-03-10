@@ -66,7 +66,6 @@ test('Enqueue Block CLI command will set correct namespace.', function () {
 
 	$generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
 
-	$this->assertStringContainsString('use NewTheme\Config\Config;', $generatedEBC);
 	$this->assertStringContainsString('namespace NewTheme\Enqueue\Blocks;', $generatedEBC);
 });
 
