@@ -26,16 +26,16 @@ dataset('classesArray', [
 
 // Rest/Fields arguments
 dataset('correctFieldNameArguments', [
-	[['field_name' => 'NekiField', 'object_type' => 'post']],
-	[['field_name' => 'neki field', 'object_type' => 'post']],
-	[['field_name' => 'neki-field', 'object_type' => 'post']],
-	[['field_name' => 'neki_field', 'object_type' => 'post']],
-	[['field_name' => 'Neki Field', 'object_type' => 'page']],
-	[['field_name' => 'Neki Field', 'object_type' => 'custom-post-type']],
+	[['field_name' => 'SomeField', 'object_type' => 'post']],
+	[['field_name' => 'some field', 'object_type' => 'post']],
+	[['field_name' => 'some-field', 'object_type' => 'post']],
+	[['field_name' => 'some_field', 'object_type' => 'post']],
+	[['field_name' => 'Some Field', 'object_type' => 'page']],
+	[['field_name' => 'Some Field', 'object_type' => 'custom-post-type']],
 ]);
 
 dataset('errorFieldNameArguments', [
-	[['field_name' => 'NekiField']],
+	[['field_name' => 'SomeField']],
 	[['object_type' => 'post']],
 ]);
 
