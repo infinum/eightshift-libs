@@ -71,10 +71,10 @@ test('REST route CLI command will correctly copy the field class with arguments'
 test('REST route CLI command will throw error on missing / invalid arguments', function ($routeArguments) {
 	$route = $this->route;
 	$route([], $routeArguments);
-})->with('errorRouteArguments')->throws('exception');
+})->with('errorRouteArguments')->throws(\Exception::class);
 
 
 test('REST CLI command will throw WP_Error when arguments fail validation', function ($routeArguments) {
 	$route = $this->route;
 	$route([], $routeArguments);
-})->with('invalidRouteArguments')->throws('InvalidArgumentException');
+})->with('invalidRouteArguments')->throws(\InvalidArgumentException::class);
