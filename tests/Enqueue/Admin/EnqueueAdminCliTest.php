@@ -32,7 +32,7 @@ afterEach(function () {
 	deleteCliOutput($output);
 });
 
-test('Custom enqueue admin CLI command will correctly copy the Enqueue Admin class', function () {
+test('Custom Enqueue Admin CLI command will correctly copy the Enqueue Admin class', function () {
 	$admin = $this->enqueueAdmin;
 	$admin([], $admin->getDevelopArgs([]));
 
