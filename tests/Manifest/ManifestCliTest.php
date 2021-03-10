@@ -53,10 +53,7 @@ test('Manifest CLI command will correctly copy the Manifest class with set argum
 	// Check the output dir if the generated method is correctly generated.
 	$generatedManifest = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Manifest/Manifest.php');
 
-	$this->assertStringContainsString('class Manifest extends AbstractManifest', $generatedManifest);
 	$this->assertStringContainsString('namespace MyTheme\Manifest;', $generatedManifest);
-	$this->assertStringContainsString('manifest-item', $generatedManifest);
-	$this->assertStringNotContainsString('random string', $generatedManifest);
 });
 
 test('Manifest CLI documentation is correct', function () {
