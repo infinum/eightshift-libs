@@ -1,0 +1,16 @@
+{
+  "0.js": "/wp-content/themes/eightshift-boilerplate/public/0.js",
+  "application.css": "/wp-content/themes/eightshift-boilerplate/public/application.css",
+  "application.js": "/wp-content/themes/eightshift-boilerplate/public/application.js",
+  "application.json": "/wp-content/themes/eightshift-boilerplate/public/application.asset.json",
+  "applicationAdmin.css": "/wp-content/themes/eightshift-boilerplate/public/applicationAdmin.css",
+  "applicationAdmin.js": "/wp-content/themes/eightshift-boilerplate/public/applicationAdmin.js",
+  "applicationAdmin.json": "/wp-content/themes/eightshift-boilerplate/public/applicationAdmin.asset.json",
+  "applicationBlocks.css": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocks.css",
+  "applicationBlocks.js": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocks.js",
+  "applicationBlocks.json": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocks.asset.json",
+  "applicationBlocksEditor.css": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocksEditor.css",
+  "applicationBlocksEditor.js": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocksEditor.js",
+  "applicationBlocksEditor.json": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocksEditor.asset.json",
+  "logo.svg": "/wp-content/themes/eightshift-boilerplate/public/logo.svg"
+}
