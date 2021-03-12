@@ -18,6 +18,7 @@ use WP_CLI\ExitException;
  */
 class UpdateCli extends AbstractCli
 {
+	public const COMMAND_NAME = 'run_update';
 
 	/**
 	 * Get WPCLI command name
@@ -26,7 +27,7 @@ class UpdateCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'run_update';
+		return self::COMMAND_NAME;
 	}
 
 	/**
@@ -75,7 +76,13 @@ class UpdateCli extends AbstractCli
 
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		require $this->getLibsPath('src/Setup/Setup.php');
+		require_once $this->getLibsPath('src/Setup/Setup.php');
+
+		$setupFilename = 'setup.json';
+
+		if (getenv('TEST') !== false) {
+			$setupFilename = $this->getProjectConfigRootPath() . '/cliOutput/setup.json';
+		}
 
 		try {
 			setup(
@@ -86,7 +93,8 @@ class UpdateCli extends AbstractCli
 					'skip_plugins_core' => $assocArgs['skip_plugins_core'] ?? false,
 					'skip_plugins_github' => $assocArgs['skip_plugins_github'] ?? false,
 					'skip_themes' => $assocArgs['skip_themes'] ?? false,
-				]
+				],
+				$setupFilename
 			);
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}");
