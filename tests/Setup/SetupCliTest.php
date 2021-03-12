@@ -10,7 +10,7 @@ use function Tests\deleteCliOutput;
  * Mock before tests.
  */
 beforeEach(function () {
-    $wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = \Mockery::mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')
