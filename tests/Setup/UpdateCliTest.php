@@ -12,7 +12,7 @@ use function Tests\deleteCliOutput;
  * Mock before tests.
  */
 beforeEach(function () {
-    $wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = \Mockery::mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')
@@ -56,8 +56,14 @@ test('Update CLI command will correctly run the update with defaults', function 
 	// Check if an exception occured
 	$exceptionOccured = false;
 
-	$update = $this->update;
-	$update([], []);
+	try {
+		$update = $this->update;
+		$update([], []);
+	} catch (\Throwable $th) {
+		$exceptionOccured = true;
+	}
+
+	$this->assertFalse($exceptionOccured);
 });
 
 test('Update CLI command will correctly throw an exception if setup.json does not exist or has the wrong filename', function () {
