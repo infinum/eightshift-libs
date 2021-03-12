@@ -102,6 +102,7 @@ class TaxonomyCli extends AbstractCli
 			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
 			->searchReplaceString("'post'", "'{$postTypeSlug}'")
 			->searchReplaceString('Example Name', $label)
+			->searchReplaceString('Blog_Taxonomy', $className)
 			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }
