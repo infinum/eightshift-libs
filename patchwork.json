@@ -1,5 +1,7 @@
 {
   "redefinable-internals": [
-    "shell_exec"
+    "shell_exec",
+    "system",
+    "function_exists"
   ]
 }
