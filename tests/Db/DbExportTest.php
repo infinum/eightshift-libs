@@ -3,6 +3,7 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\Db\ExportCli;
+use Brain\Monkey\Functions;
 
 use function Tests\setupMocks;
 
@@ -15,7 +16,7 @@ beforeEach(function() {
 
 	$wpCliMock
 		->shouldReceive('runcommand')
-		->andReturnArg(0);
+		->andReturn(putenv("INIT_CALLED=true"));
 
 	$wpCliMock
 		->shouldReceive('log')
@@ -36,7 +37,10 @@ beforeEach(function() {
 
 
 test('Exporting DB functionality fails if --skip_db parameter is not specified', function () {
+	Functions\when('shell_exec')->returnArg();
 	$dbExport = $this->export;
 
 	$dbExport([], []);
+
+	$this->assertSame('true', getenv('INIT_CALLED'));
 });
