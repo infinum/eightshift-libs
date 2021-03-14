@@ -25,6 +25,7 @@ use EightshiftLibs\Readme\ReadmeCli;
  */
 class CliInitTheme extends AbstractCli
 {
+	public const COMMAND_NAME = 'setup_theme';
 
 	/**
 	 * All classes for initial theme setup for project
@@ -50,7 +51,7 @@ class CliInitTheme extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'setup_theme';
+		return self::COMMAND_NAME;
 	}
 
 	/**
@@ -75,9 +76,12 @@ class CliInitTheme extends AbstractCli
 		foreach (static::INIT_THEME_CLASSES as $item) {
 			try {
 				$reflectionClass = new \ReflectionClass($item);
+				// @codeCoverageIgnoreStart
+				// See the explanation in the CliInitProject.
 			} catch (\ReflectionException $e) {
 				exit("{$e->getCode()}: {$e->getMessage()}");
 			}
+			// @codeCoverageIgnoreEnd
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
