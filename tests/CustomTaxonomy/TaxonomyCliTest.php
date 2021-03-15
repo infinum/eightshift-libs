@@ -40,6 +40,7 @@ test('Custom taxonomy CLI command will correctly copy the Taxonomy class', funct
 	// Check the output dir if the generated method is correctly generated.
 	$generatedTaxonomy = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
 
+	$this->assertStringContainsString('The LocationTaxonomy specific functionality.', $generatedTaxonomy);
 	$this->assertStringContainsString('class LocationTaxonomy extends AbstractTaxonomy', $generatedTaxonomy);
 	$this->assertStringContainsString('getTaxonomySlug', $generatedTaxonomy);
 	$this->assertStringContainsString('getPostTypeSlug', $generatedTaxonomy);
