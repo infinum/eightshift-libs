@@ -373,7 +373,7 @@ class Components
 			return $output;
 		}
 
-		$name = $manifest['componentClass'] ?? $manifest['blockName'];
+		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
 
 		$name = self::camelToKebabCase($name);
 
