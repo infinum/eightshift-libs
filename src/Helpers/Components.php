@@ -240,7 +240,7 @@ class Components
 				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
 			}
 
-			$defaultType = $manifestKey['type'];
+			$defaultType = $manifestKey['type'] ?? $setType;
 
 			switch ($defaultType) {
 				case 'boolean':
