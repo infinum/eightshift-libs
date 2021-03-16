@@ -222,12 +222,13 @@ class Components
 	 * @param array  $attributes Array of attributes.
 	 * @param array  $manifest Array of default attributes from manifest.json.
 	 * @param string $componentName The real component name.
+	 * @param string $setType Override manifest key check and manually set default value.
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
 	 *
 	 * @return mixed
 	 */
-	public static function checkAttr(string $key, array $attributes, array $manifest, string $componentName = '')
+	public static function checkAttr(string $key, array $attributes, array $manifest, string $componentName = '', string $setType = '')
 	{
 
 		if (isset($attributes[$key])) {
@@ -235,7 +236,7 @@ class Components
 		} else {
 			$manifestKey = $manifest['attributes'][$key] ?? null;
 
-			if ($manifestKey === null) {
+			if ($manifestKey === null && ! $setType) {
 				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
 			}
 
