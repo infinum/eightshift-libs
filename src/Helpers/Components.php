@@ -233,30 +233,30 @@ class Components
 
 		if (isset($attributes[$key])) {
 			return $attributes[$key];
-		} else {
-			$manifestKey = $manifest['attributes'][$key] ?? null;
-
-			if ($manifestKey === null && ! $setType) {
-				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
-			}
-
-			$defaultType = $manifestKey['type'] ?? $setType;
-
-			switch ($defaultType) {
-				case 'boolean':
-					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : false;
-					break;
-				case 'array':
-				case 'object':
-					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : [];
-					break;
-				default:
-					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : '';
-					break;
-			}
-
-			return $defaultValue;
 		}
+
+		$manifestKey = $manifest['attributes'][$key] ?? null;
+
+		if ($manifestKey === null && ! $setType) {
+			throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
+		}
+
+		$defaultType = $manifestKey['type'] ?? $setType;
+
+		switch ($defaultType) {
+			case 'boolean':
+				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : false;
+				break;
+			case 'array':
+			case 'object':
+				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : [];
+				break;
+			default:
+				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : '';
+				break;
+		}
+
+		return $defaultValue;
 	}
 
 	/**
