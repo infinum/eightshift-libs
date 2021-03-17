@@ -91,7 +91,7 @@ class CliInitProject extends AbstractCli
 				// The only way to mock this would to generate a Reflection factory which could be mocked.
 				// And I really feel we would be pushing the abstraction too far without much being gained.
 			} catch (\ReflectionException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
+				CliHelpers::cliError("{$e->getCode()}: {$e->getMessage()}");
 			}
 			// @codeCoverageIgnoreEnd
 

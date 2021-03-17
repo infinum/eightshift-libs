@@ -79,7 +79,7 @@ class CliInitTheme extends AbstractCli
 				// @codeCoverageIgnoreStart
 				// See the explanation in the CliInitProject.
 			} catch (\ReflectionException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
+				CliHelpers::cliError("{$e->getCode()}: {$e->getMessage()}");
 			}
 			// @codeCoverageIgnoreEnd
 
