@@ -17,6 +17,7 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class SetupCli extends AbstractCli
 {
+	public const SETUP_CLI_COMMAND_NAME = 'init_setup';
 
 	/**
 	 * Output dir relative path.
@@ -32,7 +33,7 @@ class SetupCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_setup';
+		return self::SETUP_CLI_COMMAND_NAME;
 	}
 
 	/**
