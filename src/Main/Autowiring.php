@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Main;
 
+use EightshiftLibs\Services\ServiceInterface;
+
 /**
  * The file that defines the autowiring process
  */
@@ -50,8 +52,13 @@ class Autowiring
 		foreach ($projectClasses as $projectClass) {
 			$reflClass = new \ReflectionClass($projectClass);
 
-			// Skip abstract classes, interfaces & traits.
-			if ($reflClass->isAbstract() || $reflClass->isInterface() || $reflClass->isTrait()) {
+			// Skip abstract classes, interfaces & traits, and non service classes.
+			if (
+				$reflClass->isAbstract() ||
+				$reflClass->isInterface() ||
+				$reflClass->isTrait() ||
+				!$reflClass->implementsInterface(ServiceInterface::class)
+			) {
 				continue;
 			}
 
