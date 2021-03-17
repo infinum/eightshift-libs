@@ -23,3 +23,40 @@ dataset('classesArray', [
 	[['small']],
 	[['key' => 'bold--all']]
 ]);
+
+// Rest/Fields arguments
+dataset('correctFieldNameArguments', [
+	[['field_name' => 'SomeField', 'object_type' => 'post']],
+	[['field_name' => 'some field', 'object_type' => 'post']],
+	[['field_name' => 'some-field', 'object_type' => 'post']],
+	[['field_name' => 'some_field', 'object_type' => 'post']],
+	[['field_name' => 'Some Field', 'object_type' => 'page']],
+	[['field_name' => 'Some Field', 'object_type' => 'custom-post-type']],
+]);
+
+dataset('errorFieldNameArguments', [
+	[['field_name' => 'SomeField']],
+	[['object_type' => 'post']],
+]);
+
+// Rest/Routes arguments
+dataset('correctRouteArguments', [
+	[['endpoint_slug' => 'some-test', 'method' => 'post']],
+	[['endpoint_slug' => 'some-test', 'method' => 'get']],
+	[['endpoint_slug' => 'some-test', 'method' => 'put']],
+	[['endpoint_slug' => 'some-test', 'method' => 'patch']],
+	[['endpoint_slug' => 'some-test', 'method' => 'delete']],
+	[['endpoint_slug' => 'someTest', 'method' => 'post']],
+	[['endpoint_slug' => 'some_test', 'method' => 'post']],
+	[['endpoint_slug' => 'some_Test_1', 'method' => 'post']],
+]);
+
+dataset('errorRouteArguments', [
+	[['endpoint_slug' => 'some-test']],
+	[['method' => 'post']],
+]);
+
+dataset('invalidRouteArguments', [
+	[['endpoint_slug' => 'some-test', 'method' => 'asdad']],
+	[['endpoint_slug' => '', 'method' => 'post']],
+]);

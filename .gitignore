@@ -1,9 +1,14 @@
 vendor
 node_modules
 /docs
-tests/coverage/*
 
 composer.lock
 package-lock.json
+
+# Tests
+tests/coverage/*
 cliOutput
 .phpunit.result.cache
+
+# Editor settings
+.vscode/settings.json
