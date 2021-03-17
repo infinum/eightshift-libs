@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.6] - 2021-03-17
+
+### Fixed
+- Fixes the autowiring issue (exclude the non-service classes).
+
 ## [3.0.5] - 2021-02-04
 
 ### Changed
@@ -256,6 +261,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
 
+[3.0.6]: https://github.com/infinum/eightshift-libs/compare/3.0.5...v3.0.6
 [3.0.5]: https://github.com/infinum/eightshift-libs/compare/3.0.4...v3.0.5
 [3.0.4]: https://github.com/infinum/eightshift-libs/compare/3.0.3...v3.0.4
 [3.0.3]: https://github.com/infinum/eightshift-libs/compare/3.0.2...v3.0.3
