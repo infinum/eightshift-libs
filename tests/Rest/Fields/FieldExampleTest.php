@@ -13,6 +13,8 @@ beforeEach(function() {
 	setupMocks();
 
 	$this->field = new FieldExample();
+
+	$this->wpRestServer = \Mockery::mock('alias:WP_REST_Server');
 });
 
 afterEach(function() {
@@ -36,7 +38,7 @@ test('Field registers the callback properly', function () {
 	$action = 'field_registered';
 	Functions\when('register_rest_field')->justReturn(putenv("SIDEAFFECT={$action}"));
 
-	$this->field->fieldRegisterCallback(new \WP_REST_Server(), 'attr', new class{}, 'post');
+	$this->field->fieldRegisterCallback($this->wpRestServer, 'attr', new class{}, 'post');
 
 	$this->assertEquals(getenv('SIDEAFFECT'), $action);
 

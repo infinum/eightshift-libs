@@ -15,6 +15,8 @@ beforeEach(function() {
 	$this->route = new RouteExample();
 	$this->projectNamespace = 'LibsTests';
 	$this->projectVersion = '1.0';
+	$this->mockRequestKey = 'some-key';
+	$this->mockRequestValue = 'here is the value';
 
 	// Setting up Eightshift Boilerplate Config class mock.
 	$config = \Mockery::mock('alias:EightshiftBoilerplate\Config\Config');
@@ -28,6 +30,12 @@ beforeEach(function() {
 		->shouldReceive('getProjectRoutesVersion')
 		->andReturn($this->projectVersion);
 
+	$this->wpRestServer = \Mockery::mock('alias:WP_REST_Server');
+	$this->wpRestRequest = \Mockery::mock('alias:WP_REST_Request');
+
+	$this->wpRestRequest
+		->shouldReceive('get_body')
+		->andReturn(json_encode([$this->mockRequestKey => $this->mockRequestValue]));
 });
 
 afterEach(function() {
@@ -43,10 +51,11 @@ test('Register method will call init hook', function () {
 
 
 test('Route has a valid callback', function () {
-	$output = $this->route->routeCallback(new \WP_REST_Request());
+	$output = $this->route->routeCallback($this->wpRestRequest);
 
 	$this->assertIsArray($output);
-	$this->assertArrayHasKey('some-key', $output);
+	$this->assertArrayHasKey($this->mockRequestKey, $output);
+	$this->assertEquals($output[$this->mockRequestKey], $this->mockRequestValue);
 });
 
 
@@ -54,7 +63,7 @@ test('Route registers the callback properly', function () {
 	$action = 'route_registered';
 	Functions\when('register_rest_route')->justReturn(putenv("SIDEAFFECT={$action}"));
 
-	$this->route->routeRegisterCallback(new \WP_REST_Server());
+	$this->route->routeRegisterCallback($this->wpRestServer);
 
 	$this->assertEquals(getenv('SIDEAFFECT'), $action);
 
