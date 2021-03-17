@@ -4,7 +4,11 @@ node_modules
 
 composer.lock
 package-lock.json
+
+# Tests
+tests/coverage/*
 cliOutput
 .phpunit.result.cache
 
+# Editor settings
 .vscode/settings.json
