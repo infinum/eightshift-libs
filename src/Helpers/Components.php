@@ -426,25 +426,25 @@ class Components
 	/**
 	 * Output only attributes that are used in the component and remove everything else.
 	 *
-	 * @param array  attributes Object of attributes from block/component.
-	 * @param string keyNameNew New key to use to rename attributes.
-	 * @param string keyNameOld Old key to use, generally this is the name of the block/component.
-	 * 
-	 * @returns object
+	 * @param array  $attributes Object of attributes from block/component.
+	 * @param string $keyNameNew New key to use to rename attributes.
+	 * @param string $keyNameOld Old key to use, generally this is the name of the block/component.
+	 *
+	 * @return array
 	 */
-	public static function props(array $attributes, string $keyNameNew, string $keyNameOld = '') {
+	public static function props(array $attributes, string $keyNameNew, string $keyNameOld = ''): array
+	{
 		$onlyAttributes = [];
 
 		$oldKey = $keyNameOld;
-	
+
 		// Check if old key is set.
 		if ($oldKey === '') {
 			$oldKey = $keyNameNew;
 		}
-	
-		// Loop attributes provided.
-		foreach($attributes as $key => $value) {
 
+		// Loop attributes provided.
+		foreach ($attributes as $key => $value) {
 			// Find only attributes that contains keyName.
 			if (strpos($key, $oldKey) === false) {
 				continue;
@@ -459,10 +459,10 @@ class Components
 
 			$onlyAttributes[$newName] = $value;
 		}
-	
+
 		// Append componentName for usage.
 		$onlyAttributes['componentName'] = $oldKey;
-	
+
 		return $onlyAttributes;
 	}
 }
