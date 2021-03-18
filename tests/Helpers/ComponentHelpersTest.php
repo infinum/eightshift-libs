@@ -234,21 +234,6 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
 })->throws(\Exception::class, 'bla key does not exist in the button component. Please check your implementation.');
 
-test('Asserts that checkAttr returns value type if setType value is set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
-	$attributes['title'] = 'Some attribute';
-
-	$resultString = Components::checkAttr('buttonString', $attributes, $manifest, 'button', 'string');
-	$resultArray = Components::checkAttr('buttonArray', $attributes, $manifest, 'button', 'array');
-	$resultObject = Components::checkAttr('buttonObject', $attributes, $manifest, 'button', 'object');
-	$resultWrong = Components::checkAttr('buttonWrong', $attributes, $manifest, 'button', 'wrong');
-
-	$this->assertIsString($resultString, 'The default value should be a string');
-	$this->assertIsArray($resultArray, 'The result should be an empty array');
-	$this->assertIsArray($resultObject, 'The result should be an empty object');
-	$this->assertIsString($resultWrong, 'The default value should be a string');
-});
-
 
 /**
  * Components::selector tests
