@@ -486,7 +486,7 @@ class Components
 		return $output;
 	}
 
-		/**
+	/**
 	 * Flatten multidimensional array in to a single array.
 	 *
 	 * @param array $array Array to itearate.
