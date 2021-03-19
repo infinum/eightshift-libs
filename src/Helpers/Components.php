@@ -378,7 +378,7 @@ class Components
 		$name = self::camelToKebabCase($name);
 
 		foreach ($attributes as $key => $value) {
-			if (! isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
+			if (!isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
 				continue;
 			}
 
@@ -421,5 +421,89 @@ class Components
 	{
 		$replace = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
 		return ltrim(strtolower($replace), '-');
+	}
+
+	/**
+	 * Output only attributes that are used in the component and remove everything else.
+	 *
+	 * @param array   $attributes Object of attributes from block/component.
+	 * @param string  $realName Old key to use, generally this is the name of the block/component.
+	 * @param string  $newName New key to use to rename attributes.
+	 * @param boolean $isBlock Check if helper is used on block or component.
+	 * @param array   $globalData Global data of block, components, etc.
+	 *
+	 * @return array
+	 */
+	public static function props(array $attributes, string $realName, string $newName = '', bool $isBlock = false, array $globalData): array // phpcs:ignore PEAR.Functions.ValidDefaultValue.NotAtEnd
+	{
+
+		$newNameInternal = $newName;
+
+		// Check if newName key is passed if not use the default one from block/component name.
+		if (!$newName) {
+			$newNameInternal = $realName;
+		}
+
+		$output = [];
+
+		// If component use components dependency tree.
+		$dependency = $globalData['components'][$realName];
+
+		// If block use blocks dependency tree.
+		if ($isBlock) {
+			$dependency = $globalData['blocks'][$realName];
+		}
+
+		// If dependency is empty put the name in the array for the easier checks later on.
+		if (!$dependency) {
+			$dependency = [$newNameInternal];
+		}
+
+		foreach ($attributes as $key => $value) {
+			$result = false;
+			foreach ($dependency as $element) {
+				if ($element === substr($key, 0, strlen($element))) {
+					$result =  true;
+				}
+			}
+
+			// Check if attributes key exists in the dependency by comparing the keys partial string.
+			if ($result) {
+				$newKey = $key;
+
+				// Change the name of the key if they are different.
+				if ($realName !== $newNameInternal) {
+					$newKey = $realName . substr($key, strlen($newNameInternal));
+				}
+
+				$output[$newKey] = $value;
+			}
+		}
+
+		// Append componentName for usage.
+		$output['componentName'] = $newNameInternal;
+
+		return $output;
+	}
+
+	/**
+	 * Flatten multidimensional array in to a single array.
+	 *
+	 * @param array $array Array to itearate.
+	 *
+	 * @return array
+	 */
+	public static function flattenArray(array $array): array
+	{
+		$return = [];
+
+		array_walk_recursive(
+			$array,
+			function ($a) use (&$return) {
+				$return[] = $a;
+			}
+		);
+
+		return $return;
 	}
 }

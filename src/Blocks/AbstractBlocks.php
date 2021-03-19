@@ -13,6 +13,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -27,20 +28,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @var array
 	 */
 	protected $blocks = [];
-
-	/**
-	 * Block view filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCK_VIEW_FILTER_NAME = 'block-view-data';
-
-	/**
-	 * Block attributes override filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCK_ATTRIBUTES_FILTER_NAME = 'block-attributes-override';
 
 	/**
 	 * Create custom project color palette
@@ -80,6 +67,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		if (!$this->blocks) {
 			$settings = $this->getSettings();
 			$wrapper = $this->getWrapper();
+			$components = $this->getComponents();
 
 			$blocks = array_map(
 				function ($block) use ($settings) {
@@ -96,11 +84,57 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			);
 
 			$this->blocks = [
-				'settings' => $settings,
-				'wrapper' => $wrapper,
+				'dependency' => [
+					'components' => $this->buildDependencyComponentsTree($components),
+					'blocks' => $this->buildDependencyBlocksTree($blocks, $components),
+				],
 				'blocks' => $blocks,
+				'components' => $components,
+				'wrapper' => $wrapper,
+				'settings' => $settings,
 			];
 		}
+	}
+
+	/**
+	 * Get blocks full data in raw format by item. Used with filter on the frontend.
+	 *
+	 * @param string $key Key to get data from array.
+	 *
+	 * @return array
+	 */
+	public function getBlocksDataFullRawItem(string $key = 'blocks'): array
+	{
+		if (defined('WP_CLI')) {
+			return [];
+		}
+
+		return $key ? $this->blocks[$key] : $this->blocks;
+	}
+
+	/**
+	 * Return full path for specific asset from manifest.json.
+	 *
+	 * @param string $key File name key you want to get from manifest.
+	 *
+	 * @throws InvalidManifest Throws error if manifest key is missing.
+	 *                         Returns data from manifest and not global variable.
+	 *
+	 * @return string Full path to asset.
+	 */
+	public function getAssetsManifestItem(string $key): string
+	{
+		if (defined('WP_CLI')) {
+			return '';
+		}
+
+		$manifest = $this->manifest;
+
+		if (!isset($manifest[$key])) {
+			throw InvalidManifest::missingManifestItemException($key);
+		}
+
+		return $manifest[$key];
 	}
 
 	/**
@@ -331,7 +365,29 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get wrapper manifest data from wrapper manifest.json file
+	 * Get all components in the components folder.
+	 *
+	 * @return array
+	 */
+	protected function getComponents(): array
+	{
+		$components = array_diff(scandir($this->getBlocksComponentsPath()), ['..', '.']);
+
+		$output = [];
+
+		if (!$components) {
+			return $output;
+		}
+
+		foreach ($components as $component) {
+			$output[] = $this->getComponent($component);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get component manifest data from component manifest.json file
 	 *
 	 * @param string $componentName Name of the component.
 	 *
@@ -484,6 +540,93 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Build components dependency tree for blocks.
+	 *
+	 * @param array $blocks List of all blocks.
+	 * @param array $components List of all components.
+	 *
+	 * @return array
+	 */
+	private function buildDependencyBlocksTree(array $blocks, array $components): array
+	{
+		$output = [];
+
+		foreach ($blocks as $item) {
+			$blockName = $item['blockName'] ?? '';
+			$componentsItem = $item['components'] ?? [];
+
+			$output[$blockName] = array_unique($this->buildDependencyComponentsInnerTree($componentsItem, $components));
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Build components dependency tree for blocks.
+	 *
+	 * @param array $components List of all blocks.
+	 *
+	 * @return array
+	 */
+	private function buildDependencyComponentsTree(array $components): array
+	{
+		$output = [];
+
+		foreach ($components as $item) {
+			$componentName = $item['componentName'] ?? '';
+			$componentsItem = $item['components'] ?? [];
+
+			if (!$componentName) {
+				continue;
+			}
+
+			$output[$componentName] = array_unique($this->buildDependencyComponentsInnerTree($componentsItem, $components));
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Build inner recursive dependency tree for components.
+	 *
+	 * @param array $componentsList List of components to check.
+	 * @param array $components List of all components.
+	 *
+	 * @return array
+	 */
+	private function buildDependencyComponentsInnerTree(array $componentsList, array $components): array
+	{
+		$output = [];
+
+		if (!$componentsList) {
+			return $output;
+		}
+
+		foreach ($componentsList as $key => $value) {
+			$items = array_values(
+				array_filter(
+					$components,
+					function ($item) use ($value) {
+						$componentName = $item['componentName'] ?? '';
+
+						return $componentName === $value;
+					}
+				)
+			)[0] ?? [];
+
+			$items = $items['components'] ?? [];
+
+			$output[] = $key;
+
+			if ($items) {
+				$output[] = $this->buildDependencyComponentsInnerTree($items, $components);
+			}
+		}
+
+		return Components::flattenArray($output);
 	}
 
 	/**
