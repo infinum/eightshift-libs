@@ -485,4 +485,25 @@ class Components
 
 		return $output;
 	}
+
+		/**
+	 * Flatten multidimensional array in to a single array.
+	 *
+	 * @param array $array Array to itearate.
+	 *
+	 * @return array
+	 */
+	public static function flattenArray(array $array): array
+	{
+		$return = [];
+
+		array_walk_recursive(
+			$array,
+			function ($a) use (&$return) {
+				$return[] = $a;
+			}
+		);
+
+		return $return;
+	}
 }

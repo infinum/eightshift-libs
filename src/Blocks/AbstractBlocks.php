@@ -13,6 +13,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -104,7 +105,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getBlocksDataFullRawItem(string $key = 'blocks'): array
 	{
-
 		if (defined('WP_CLI')) {
 			return [];
 		}
@@ -628,28 +628,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			}
 		}
 
-		return $this->flatten($output);
-	}
-
-	/**
-	 * Flatten multidimensional array in to a single array.
-	 *
-	 * @param array $array Array to itearate.
-	 *
-	 * @return array
-	 */
-	private function flatten(array $array): array
-	{
-		$return = [];
-
-		array_walk_recursive(
-			$array,
-			function ($a) use (&$return) {
-				$return[] = $a;
-			}
-		);
-
-		return $return;
+		return Components::flattenArray($output);
 	}
 
 	/**
