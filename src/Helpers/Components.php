@@ -298,7 +298,7 @@ class Components
 	{
 		$output = '';
 
-		if (! $globalManifest || !isset($globalManifest['globalVariables'])) {
+		if (! $globalManifest || ! isset($globalManifest['globalVariables'])) {
 			return $output;
 		}
 
@@ -369,7 +369,7 @@ class Components
 	{
 		$output = '';
 
-		if (! $attributes || !$manifest) {
+		if (! $attributes || ! $manifest) {
 			return $output;
 		}
 
@@ -378,7 +378,7 @@ class Components
 		$name = self::camelToKebabCase($name);
 
 		foreach ($attributes as $key => $value) {
-			if (! isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
+			if (! isset($manifest['attributes'][$key]) || ! isset($manifest['attributes'][$key]['variable'])) {
 				continue;
 			}
 
