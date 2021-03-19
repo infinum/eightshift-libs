@@ -9,6 +9,7 @@ package-lock.json
 tests/coverage/*
 cliOutput
 .phpunit.result.cache
+latest_dump.tar.gz
 
 # Editor settings
 .vscode/settings.json
