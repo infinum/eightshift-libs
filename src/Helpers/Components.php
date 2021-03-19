@@ -378,7 +378,7 @@ class Components
 		$name = self::camelToKebabCase($name);
 
 		foreach ($attributes as $key => $value) {
-			if (!  isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
+			if (! isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
 				continue;
 			}
 
