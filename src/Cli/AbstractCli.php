@@ -118,7 +118,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function registerCommand(): void
 	{
-		if (! class_exists($this->getClassName())) {
+		if (!class_exists($this->getClassName())) {
 			throw new \RuntimeException('Class doesn\'t exist');
 		}
 
@@ -886,7 +886,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$shortdesc = $docs['shortdesc'] ?? '';
 
-		if (! $shortdesc) {
+		if (!$shortdesc) {
 			throw new \RuntimeException('CLI Short description is missing.');
 		}
 

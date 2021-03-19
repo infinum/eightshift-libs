@@ -112,7 +112,7 @@ class Components
 			}
 		}
 
-		if (! file_exists($componentPath)) {
+		if (!file_exists($componentPath)) {
 			throw ComponentException::throwUnableToLocateComponent($componentPath);
 		}
 
@@ -173,7 +173,7 @@ class Components
 
 		$manifest = "{$path}/manifest.json";
 
-		if (! file_exists($manifest)) {
+		if (!file_exists($manifest)) {
 			throw ComponentException::throwUnableToLocateComponent($manifest);
 		}
 
@@ -277,11 +277,11 @@ class Components
 		$modifier = trim($modifier);
 		$block = trim($block);
 
-		if (! empty($element)) {
+		if (!empty($element)) {
 			$fullElement = "__{$element}";
 		}
 
-		if (! empty($modifier)) {
+		if (!empty($modifier)) {
 			$fullModifier = "--{$modifier}";
 		}
 
@@ -298,7 +298,7 @@ class Components
 	{
 		$output = '';
 
-		if (! $globalManifest || ! isset($globalManifest['globalVariables'])) {
+		if (!$globalManifest || !isset($globalManifest['globalVariables'])) {
 			return $output;
 		}
 
@@ -369,7 +369,7 @@ class Components
 	{
 		$output = '';
 
-		if (! $attributes || ! $manifest) {
+		if (!$attributes || !$manifest) {
 			return $output;
 		}
 
@@ -378,7 +378,7 @@ class Components
 		$name = self::camelToKebabCase($name);
 
 		foreach ($attributes as $key => $value) {
-			if (! isset($manifest['attributes'][$key]) || ! isset($manifest['attributes'][$key]['variable'])) {
+			if (!isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
 				continue;
 			}
 
@@ -440,7 +440,7 @@ class Components
 		$newNameInternal = $newName;
 
 		// Check if newName key is passed if not use the default one from block/component name.
-		if (! $newName) {
+		if (!$newName) {
 			$newNameInternal = $realName;
 		}
 
@@ -455,7 +455,7 @@ class Components
 		}
 
 		// If dependency is empty put the name in the array for the easier checks later on.
-		if (! $dependency) {
+		if (!$dependency) {
 			$dependency = [$newNameInternal];
 		}
 

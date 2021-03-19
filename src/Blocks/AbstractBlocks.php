@@ -64,7 +64,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getBlocksDataFullRaw(): void
 	{
-		if (! $this->blocks) {
+		if (!$this->blocks) {
 			$settings = $this->getSettings();
 			$wrapper = $this->getWrapper();
 			$components = $this->getComponents();
@@ -130,7 +130,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		$manifest = $this->manifest;
 
-		if (! isset($manifest[$key])) {
+		if (!isset($manifest[$key])) {
 			throw InvalidManifest::missingManifestItemException($key);
 		}
 
@@ -225,12 +225,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$wrapperPath = "{$this->getWrapperPath()}/wrapper.php";
 
 		// Check if wrapper component exists.
-		if (! file_exists($wrapperPath)) {
+		if (!file_exists($wrapperPath)) {
 			throw InvalidBlock::missingWrapperViewException($wrapperPath);
 		}
 
 		// Check if actual block exists.
-		if (! file_exists($templatePath)) {
+		if (!file_exists($templatePath)) {
 			throw InvalidBlock::missingViewException($blockName, $templatePath);
 		}
 
@@ -283,7 +283,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function renderWrapperView(string $src, array $attributes, $innerBlockContent = null): void
 	{
-		if (! file_exists($src)) {
+		if (!file_exists($src)) {
 			throw InvalidBlock::missingWrapperViewException($src);
 		}
 
@@ -354,7 +354,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$manifestPath = "{$this->getWrapperPath()}/manifest.json";
 
-		if (! file_exists($manifestPath)) {
+		if (!file_exists($manifestPath)) {
 			throw InvalidBlock::missingWrapperManifestException($manifestPath);
 		}
 
@@ -375,7 +375,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		$output = [];
 
-		if (! $components) {
+		if (!$components) {
 			return $output;
 		}
 
@@ -399,7 +399,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$manifestPath = "{$this->getBlocksComponentsPath()}/{$componentName}/manifest.json";
 
-		if (! file_exists($manifestPath) && !defined('WP_CLI')) {
+		if (!file_exists($manifestPath) && !defined('WP_CLI')) {
 			throw InvalidBlock::missingComponentManifestException($manifestPath);
 		}
 
@@ -421,14 +421,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$manifestPath = "{$this->getBlocksPath()}/manifest.json";
 
-		if (! file_exists($manifestPath)) {
+		if (!file_exists($manifestPath)) {
 			throw InvalidBlock::missingSettingsManifestException($manifestPath);
 		}
 
 		$settings = implode(' ', (array)file(($manifestPath)));
 		$settings = json_decode($settings, true);
 
-		if (! isset($settings['namespace'])) {
+		if (!isset($settings['namespace'])) {
 			throw InvalidBlock::missingNamespaceException();
 		}
 
@@ -513,7 +513,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$output = [];
 		$componentAttributes = [];
 
-		if (! isset($blockDetails['components'])) {
+		if (!isset($blockDetails['components'])) {
 			return $output;
 		}
 
@@ -579,7 +579,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$componentName = $item['componentName'] ?? '';
 			$componentsItem = $item['components'] ?? [];
 
-			if (! $componentName) {
+			if (!$componentName) {
 				continue;
 			}
 
@@ -601,7 +601,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$output = [];
 
-		if (! $componentsList) {
+		if (!$componentsList) {
 			return $output;
 		}
 
@@ -612,9 +612,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					function ($item) use ($value) {
 						$componentName = $item['componentName'] ?? '';
 
-						if ($componentName === $value) {
-							return $item;
-						}
+						return $componentName === $value;
 					}
 				)
 			)[0] ?? [];
@@ -646,19 +644,19 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 				$block = $this->parseManifest($block);
 
-				if (! isset($block['blockName'])) {
+				if (!isset($block['blockName'])) {
 					throw InvalidBlock::missingNameException($blockPath);
 				}
 
-				if (! isset($block['classes'])) {
+				if (!isset($block['classes'])) {
 					$block['classes'] = [];
 				}
 
-				if (! isset($block['attributes'])) {
+				if (!isset($block['attributes'])) {
 					$block['attributes'] = [];
 				}
 
-				if (! isset($block['hasInnerBlocks'])) {
+				if (!isset($block['hasInnerBlocks'])) {
 					$block['hasInnerBlocks'] = false;
 				}
 

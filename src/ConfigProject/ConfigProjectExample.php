@@ -10,7 +10,7 @@
  */
 
 // phpcs:disable
-if (! defined('WP_ENVIRONMENT_TYPE')) {
+if (!defined('WP_ENVIRONMENT_TYPE')) {
 	return false;
 }
 
