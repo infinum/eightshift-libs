@@ -226,24 +226,26 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): self
 	{
-		$templateFile = '';
+		if ($skipMissing) {
+			$this->fileContents = '';
+
+			return $this;
+		}
+
+		$path = "{$currentDir}/{$this->getExampleFileName( $fileName )}.php";
 
 		// If you pass file name with extension the version will be used.
 		if (strpos($fileName, '.') !== false) {
 			$path = "{$currentDir}/{$fileName}";
-		} else {
-			$path = "{$currentDir}/{$this->getExampleFileName( $fileName )}.php";
 		}
+
+		$templateFile = '';
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		if (file_exists($path)) {
 			$templateFile = file_get_contents($path);
 		} else {
-			if ($skipMissing) {
-				$templateFile = '';
-			} else {
-				self::cliError("The template {$path} seems to be missing.");
-			}
+			self::cliError("The template {$path} seems to be missing.");
 		}
 
 		$this->fileContents = (string)$templateFile;
