@@ -124,9 +124,11 @@ abstract class AbstractCli implements CliInterface
 
 		try {
 			$reflectionClass = new \ReflectionClass($this->getClassName());
+			// @codeCoverageIgnoreStart
 		} catch (\ReflectionException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
+			self::cliError("{$e->getCode()}: {$e->getMessage()}");
 		}
+		// @codeCoverageIgnoreEnd
 
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
@@ -654,26 +656,10 @@ abstract class AbstractCli implements CliInterface
 		if (empty($namespace)) {
 			$composer = $this->getComposer($args);
 
-			$namespace = rtrim($this->arrayKeyFirstChild($composer['autoload']['psr-4']), '\\');
+			$namespace = rtrim(array_key_first($composer['autoload']['psr-4']), '\\');
 		}
 
 		return $namespace;
-	}
-
-	/**
-	 * Array_key_first polyfill function
-	 *
-	 * @param array $array Array to search.
-	 *
-	 * @return string
-	 */
-	public function arrayKeyFirstChild(array $array): string
-	{
-		foreach ($array as $key => $unused) {
-			return $key;
-		}
-
-		return '';
 	}
 
 	/**
@@ -703,7 +689,8 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Convert user input string to slug safe format
 	 *
-	 * Convert _ to -, empty space to - and convert everything to lowercase.
+	 * Convert _ to -, empty space to - and convert everything to lowercase
+	 * if the string contains empty space.
 	 *
 	 * @param string $string String to convert.
 	 *
@@ -733,9 +720,11 @@ abstract class AbstractCli implements CliInterface
 		foreach ($items as $item) {
 			try {
 				$reflectionClass = new \ReflectionClass($item);
+				// @codeCoverageIgnoreStart
 			} catch (\ReflectionException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
+				self::cliError("{$e->getCode()}: {$e->getMessage()}");
 			}
+			// @codeCoverageIgnoreEnd
 
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
