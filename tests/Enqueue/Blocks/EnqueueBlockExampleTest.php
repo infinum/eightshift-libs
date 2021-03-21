@@ -9,6 +9,7 @@ use EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 /**
  * Setup before each test.
@@ -22,13 +23,13 @@ beforeEach(function() {
 	$this->projectVersion = '3.1.23';
 
 	// Setting WPCLI mock.
-	\Mockery::mock('alias:WP_CLI')
+	mock('alias:WP_CLI')
 		->shouldReceive('success', 'error')
 		->andReturnArg(0);
 
 	// Setting up Eightshift Boilerplate Config class mock.
-	$config = \Mockery::mock('alias:EightshiftBoilerplate\Config\Config');
-	
+	$config = mock('alias:EightshiftBoilerplate\Config\Config');
+
 	// Mocking functions from EB Config.
 	$config
 		->shouldReceive('getProjectName')

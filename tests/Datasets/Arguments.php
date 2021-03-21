@@ -60,3 +60,12 @@ dataset('invalidRouteArguments', [
 	[['endpoint_slug' => 'some-test', 'method' => 'asdad']],
 	[['endpoint_slug' => '', 'method' => 'post']],
 ]);
+
+dataset('inputSlugs', [
+	'someName',
+	'some-Name',
+	'some name',
+	'longer slug goes here',
+	'mixed_Case_goes here-as well',
+	'UPPER-CASE',
+]);

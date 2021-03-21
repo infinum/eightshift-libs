@@ -3,13 +3,15 @@
 namespace Tests\Unit\Blocks;
 
 use EightshiftLibs\Blocks\BlocksCli;
+
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 $wpCliMock
 	->shouldReceive('success')

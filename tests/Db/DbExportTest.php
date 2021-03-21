@@ -6,9 +6,10 @@ use EightshiftLibs\Db\ExportCli;
 use Brain\Monkey\Functions;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeEach(function() {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')
