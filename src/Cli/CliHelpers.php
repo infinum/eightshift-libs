@@ -30,8 +30,11 @@ trait CliHelpers
 	{
 		try {
 			\WP_CLI::error($errorMessage);
+			// @codeCoverageIgnoreStart
+			// Cannot test the exit.
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}");
+			// @codeCoverageIgnoreEnd
 		}
 	}
 }

@@ -177,10 +177,6 @@ abstract class AbstractCli implements CliInterface
 
 		$lastElement = end($arr);
 
-		if (empty($lastElement)) {
-			throw new \RuntimeException('No class name given.');
-		}
-
 		return str_replace('Cli', '', $lastElement);
 	}
 
