@@ -56,6 +56,7 @@ afterEach(function () {
 	deleteCliOutput($output);
 
 	putenv('ERROR_HAPPENED');
+	putenv('INIT_CALLED');
 
 	Monkey\tearDown();
 });
