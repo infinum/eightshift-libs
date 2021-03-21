@@ -9,6 +9,8 @@ use function Tests\deleteCliOutput;
 use function Tests\mock;
 
 class AbstractTest extends AbstractCli {
+	protected $fileContents = 'use EightshiftBoilerplateVendor\Service; use EightshiftBoilerplate\Test;';
+
 	public function __construct(string $commandParentName)
 	{
 		parent::__construct($commandParentName);
@@ -243,15 +245,15 @@ test('Getting vendor prefix works correctly if set', function() {
 });
 
 
-//test('Getting composer fails if config path is set but nothing is in it', function() {
-//	$abstractMock = new AbstractTest('nonexistent');
-//
-//	$composerPath = $abstractMock->getComposer(['config_path' => 'file.php']);
-//})->throws(\Exception::class, 'fopen(file.php): failed to open stream: No such file or directory');
+test('Replacing use in frontend libs views works', function() {
+	$abstractMock = new AbstractTest('test');
 
+	$abstractMock->renameUseFrontendLibs([]);
 
-//test('Register command fails if class doesn\'t have invoke method', function() {
-//	$abstractMock = new AbstractTest('AbstractTest');
-//
-//	$abstractMock->registerCommand();
-//})->throws(\RuntimeException::class, '');
+	$reflection = new \ReflectionClass($abstractMock);
+	$property = $reflection->getProperty('fileContents');
+    $property->setAccessible(true);
+    $contents = $property->getValue($abstractMock);
+
+	$this->assertSame('use EightshiftLibs\Service; use EightshiftLibs\Test;', $contents);
+});g
