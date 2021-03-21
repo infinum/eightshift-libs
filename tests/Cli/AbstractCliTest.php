@@ -256,4 +256,4 @@ test('Replacing use in frontend libs views works', function() {
     $contents = $property->getValue($abstractMock);
 
 	$this->assertSame('use EightshiftLibs\Service; use EightshiftLibs\Test;', $contents);
-});g
+});
