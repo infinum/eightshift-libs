@@ -7,8 +7,8 @@ use Brain\Monkey\Functions;
 use EightshiftLibs\Cli\CliInitProject;
 
 use function Patchwork\{redefine, always};
-
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
@@ -16,7 +16,7 @@ use function Tests\deleteCliOutput;
 beforeEach(function () {
 	Monkey\setUp();
 
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')

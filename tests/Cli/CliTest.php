@@ -17,6 +17,7 @@ use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\Setup\UpdateCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
@@ -24,7 +25,7 @@ use function Tests\deleteCliOutput;
 beforeEach(function () {
 	Monkey\setUp();
 
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')

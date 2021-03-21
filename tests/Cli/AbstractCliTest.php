@@ -6,6 +6,7 @@ use Brain\Monkey;
 use EightshiftLibs\Cli\AbstractCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 class AbstractTest extends AbstractCli {
 	public function __construct(string $commandParentName)
@@ -30,7 +31,7 @@ class AbstractTest extends AbstractCli {
 beforeEach(function () {
 	Monkey\setUp();
 
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')
@@ -49,6 +50,10 @@ beforeEach(function () {
 	$wpCliMock
 		->shouldReceive('runcommand')
 		->andReturn(putenv("INIT_CALLED=true"));
+
+	$wpCliMock
+		->shouldReceive('add_command')
+		->andReturn(putenv("COMMAND_ADDED=true"));
 });
 
 /**
@@ -61,6 +66,7 @@ afterEach(function () {
 
 	putenv('ERROR_HAPPENED');
 	putenv('INIT_CALLED');
+	putenv('COMMAND_ADDED');
 
 	Monkey\tearDown();
 });
@@ -90,3 +96,162 @@ test('Global CLI synopsis works', function() {
 		$this->assertArrayHasKey('optional', $descriptions);
 	}
 });
+
+
+test('Prepare command docs fails if shortdesc doesn\'t exist', function() {
+	$abstractMock = new AbstractTest('test');
+
+	$abstractMock->prepareCommandDocs([], []);
+})->throws(\RuntimeException::class, 'CLI Short description is missing.');
+
+
+test('Prepare command docs returns correct doc', function() {
+	$abstractMock = new AbstractTest('test');
+
+	$docs = [
+		'shortdesc' => 'Some description',
+		'synopsis' => [
+			[
+				'type' => 'assoc',
+				'name' => 'random',
+				'description' => 'Random description.',
+				'optional' => true,
+			],
+		],
+	];
+
+	$preparedDocs = $abstractMock->prepareCommandDocs($docs, $abstractMock->getGlobalSynopsis());
+
+	$this->assertIsArray($preparedDocs);
+	$this->assertArrayHasKey('shortdesc', $preparedDocs);
+	$this->assertArrayHasKey('synopsis', $preparedDocs);
+
+	$addedSynopsis = array_filter($preparedDocs['synopsis'], function($descArr) {
+		return $descArr['name'] === 'random';
+	});
+	// Check if the synopsis was added to the global one.
+	$this->assertNotEmpty($addedSynopsis);
+});
+
+
+test('Manually preparing arguments works', function() {
+	$abstractMock = new AbstractTest('test');
+
+	$output = $abstractMock->prepareArgsManual([
+		'color' => '#EFEFEF',
+	]);
+
+	$this->assertSame('--color=\'#EFEFEF\' ', $output);
+
+	$outputEmpty = $abstractMock->prepareArgsManual([]);
+
+	$this->assertEmpty($outputEmpty, 'Argument output should be empty');
+});
+
+
+test('Block full file list helper works', function() {
+	$abstractMock = new AbstractTest('test');
+
+	$output = $abstractMock->getFullBlocksFiles('button');
+
+	$this->assertIsArray($output);
+
+	$this->assertTrue(array_key_exists('button.php', array_flip($output)), 'button.php is missing.');
+	$this->assertTrue(array_key_exists('button-block.js', array_flip($output)), 'button-block.js is missing.');
+	$this->assertTrue(array_key_exists('button-hooks.js', array_flip($output)), 'button-hooks.js is missing.');
+	$this->assertTrue(array_key_exists('button-transforms.js', array_flip($output)), 'button-transforms.js is missing.');
+	$this->assertTrue(array_key_exists('button.js', array_flip($output)), 'button.js is missing.');
+	$this->assertTrue(array_key_exists('docs/story.js', array_flip($output)), 'docs/story.js is missing.');
+	$this->assertTrue(array_key_exists('components/button-editor.js', array_flip($output)), 'components/button-editor.js is missing.');
+	$this->assertTrue(array_key_exists('components/button-toolbar.js', array_flip($output)), 'components/button-toolbar.js is missing.');
+	$this->assertTrue(array_key_exists('components/button-options.js', array_flip($output)), 'components/button-options.js is missing.');
+});
+
+
+test('Getting frontend libs block path works', function() {
+	$abstractMock = new AbstractTest('test');
+
+	$output = $abstractMock->getFrontendLibsBlockPath();
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('node_modules/@eightshift/frontend-libs/blocks/init', $output);
+});
+
+
+test('Getting frontend libs path works', function() {
+	$abstractMock = new AbstractTest('test');
+
+	$output = $abstractMock->getFrontendLibsPath('test');
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('node_modules/@eightshift/frontend-libs/test', $output);
+});
+
+
+test('Getting libs path works', function() {
+	$abstractMock = new AbstractTest('test');
+
+	// The test one is covered. Let's see if we can get the one that will be used
+	putenv('TEST');
+	$output = $abstractMock->getLibsPath('test');
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('/vendor/infinum/eightshift-libs/test', $output);
+	putenv('TEST=true');
+});
+
+
+test('Project config root path works', function() {
+	$abstractMock = new AbstractTest('test');
+
+	$outputDev = $abstractMock->getProjectConfigRootPath(true);
+
+	$this->assertIsString($outputDev);
+
+	$outputProd = $abstractMock->getProjectConfigRootPath(false);
+
+	$this->assertIsString($outputProd);
+	$this->assertSame('/', $outputProd);
+});
+
+
+test('Preparing slug works', function($slugs) {
+	$abstractMock = new AbstractTest('test');
+
+	$output = $abstractMock->prepareSlug($slugs);
+
+	$this->assertIsString($output);
+	$this->assertFalse(strpos($output, '_'), 'Prepared string contains _');
+	$this->assertFalse(strpos($output, ' '), 'Prepared string contains empty space');
+})->with('inputSlugs');
+
+
+test('Register command fails if class doesn\'t exist', function() {
+	$abstractMock = new AbstractTest('nonexistent');
+
+	$abstractMock->registerCommand();
+})->throws(\RuntimeException::class);
+
+
+test('Getting vendor prefix works correctly if set', function() {
+	$abstractMock = new AbstractTest('nonexistent');
+
+	$prefix = $abstractMock->getVendorPrefix(['vendor_prefix' => 'test']);
+
+	$this->assertIsString($prefix);
+	$this->assertSame('test', $prefix);
+});
+
+
+//test('Getting composer fails if config path is set but nothing is in it', function() {
+//	$abstractMock = new AbstractTest('nonexistent');
+//
+//	$composerPath = $abstractMock->getComposer(['config_path' => 'file.php']);
+//})->throws(\Exception::class, 'fopen(file.php): failed to open stream: No such file or directory');
+
+
+//test('Register command fails if class doesn\'t have invoke method', function() {
+//	$abstractMock = new AbstractTest('AbstractTest');
+//
+//	$abstractMock->registerCommand();
+//})->throws(\RuntimeException::class, '');
