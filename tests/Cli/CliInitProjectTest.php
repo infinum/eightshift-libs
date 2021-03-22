@@ -20,7 +20,9 @@ beforeEach(function () {
 
 	$wpCliMock
 		->shouldReceive('success')
-		->andReturnArg(0);
+		->andReturnUsing(function ($message) {
+			putenv("SUCCESS={$message}");
+		});
 
 	$wpCliMock
 		->shouldReceive('error')
@@ -44,6 +46,10 @@ afterEach(function () {
 	$output = dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
+
+	putenv('SHELL_CALLED');
+	putenv('SUCCESS');
+	putenv('INIT_CALLED');
 
 	Monkey\tearDown();
 });
@@ -69,12 +75,16 @@ test('CliInitProject CLI documentation is correct', function () {
 
 
 test('InitProject CLI command will correctly copy the project classes', function () {
-	Functions\when('shell_exec')->returnArg();
+	Functions\when('shell_exec')->alias(function ($args) {
+		putenv("SHELL_CALLED={$args}");
+	});
 
 	$configProject = $this->cliInitProject;
 	$configProject([], []);
 
 	$this->assertSame('true', getenv('INIT_CALLED'));
+	$this->assertSame('npm run start', getenv('SHELL_CALLED'));
+	$this->assertSame('All commands are finished.', getenv('SUCCESS'));
 });
 
 

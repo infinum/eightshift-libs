@@ -199,21 +199,30 @@ test('Getting libs path works', function() {
 
 	$this->assertIsString($output);
 	$this->assertStringContainsString('/vendor/infinum/eightshift-libs/test', $output);
-	putenv('TEST=true');
+
+	putenv('TEST=1');
 });
 
 
-test('Project config root path works', function() {
+test('Project config root path works if dev is true', function() {
 	$abstractMock = new AbstractTest('test');
 
 	$outputDev = $abstractMock->getProjectConfigRootPath(true);
 
 	$this->assertIsString($outputDev);
+});
+
+
+test('Project config root path works if dev is false', function() {
+	putenv('TEST');
+	$abstractMock = new AbstractTest('test');
 
 	$outputProd = $abstractMock->getProjectConfigRootPath(false);
 
 	$this->assertIsString($outputProd);
 	$this->assertSame('/', $outputProd);
+
+	putenv('TEST=1');
 });
 
 
