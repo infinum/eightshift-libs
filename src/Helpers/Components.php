@@ -459,6 +459,9 @@ class Components
 			$dependency = [$newNameInternal];
 		}
 
+		// Add the current component name to the dependency array.
+		$dependency[] = $newNameInternal;
+
 		foreach ($attributes as $key => $value) {
 			$result = false;
 			foreach ($dependency as $element) {
