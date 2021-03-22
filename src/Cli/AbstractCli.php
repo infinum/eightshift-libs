@@ -780,7 +780,11 @@ abstract class AbstractCli implements CliInterface
 	{
 		$output = dirname(__DIR__, 8);
 
-		if ($isDev || getenv('TEST') !== false) {
+		if ($isDev) {
+			$output = dirname(__DIR__, 2);
+		}
+
+		if (getenv('TEST')) {
 			$output = dirname(__DIR__, 2);
 		}
 
