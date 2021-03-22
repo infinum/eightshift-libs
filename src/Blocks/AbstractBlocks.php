@@ -113,31 +113,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Return full path for specific asset from manifest.json.
-	 *
-	 * @param string $key File name key you want to get from manifest.
-	 *
-	 * @throws InvalidManifest Throws error if manifest key is missing.
-	 *                         Returns data from manifest and not global variable.
-	 *
-	 * @return string Full path to asset.
-	 */
-	public function getAssetsManifestItem(string $key): string
-	{
-		if (defined('WP_CLI')) {
-			return '';
-		}
-
-		$manifest = $this->manifest;
-
-		if (!isset($manifest[$key])) {
-			throw InvalidManifest::missingManifestItemException($key);
-		}
-
-		return $manifest[$key];
-	}
-
-	/**
 	 * Get all blocks with full block name
 	 *
 	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
@@ -367,11 +342,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Get all components in the components folder.
 	 *
+	 * @throws InvalidBlock Throws error thera are no components in the project.
+	 *
 	 * @return array
 	 */
 	protected function getComponents(): array
 	{
-		$components = array_diff(scandir($this->getBlocksComponentsPath()), ['..', '.']);
+
+		$paths = scandir($this->getBlocksComponentsPath()) ?? [];
+
+		if (!$paths && !defined('WP_CLI')) {
+			throw InvalidBlock::missingComponentsException();
+		}
+
+		$components = array_diff((array)$paths, ['..', '.']);
 
 		$output = [];
 
@@ -380,7 +364,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		foreach ($components as $component) {
-			$output[] = $this->getComponent($component);
+			$output[] = $this->getComponent((string)$component);
 		}
 
 		return $output;
