@@ -66,8 +66,10 @@ afterEach(function () {
 test('Cli getDevelopClasses return correct class list', function () {
 	$developClasses = $this->cli->getDevelopClasses();
 
+	$numberOfDevClasses = 31;
+
 	$this->assertIsArray($developClasses);
-	$this->assertTrue(count($developClasses) === 31, 'Total number of classes is correct');
+	$this->assertTrue(count($developClasses) === $numberOfDevClasses, 'Total number of classes is correct');
 	$this->assertArrayNotHasKey(BlockComponentCli::class, $developClasses, 'Public class found');
 	$this->assertArrayNotHasKey(BlockWrapperCli::class, $developClasses, 'Public class found');
 	$this->assertArrayNotHasKey(BlockVariationCli::class, $developClasses, 'Public class found');
@@ -82,8 +84,10 @@ test('Cli getDevelopClasses return correct class list', function () {
 test('Cli getPublicClasses return correct class list', function () {
 	$publicClasses = $this->cli->getPublicClasses();
 
+	$numberOfPublicClasses = 36;
+
 	$this->assertIsArray($publicClasses);
-	$this->assertTrue(count($publicClasses) === 36, 'Total number of classes is correct');
+	$this->assertTrue(count($publicClasses) === $numberOfPublicClasses, 'Total number of classes is correct');
 	$this->assertArrayNotHasKey(CliReset::class, $publicClasses, 'Development class found');
 	$this->assertArrayNotHasKey(CliRunAll::class, $publicClasses, 'Development class found');
 	$this->assertArrayNotHasKey(CliShowAll::class, $publicClasses, 'Development class found');

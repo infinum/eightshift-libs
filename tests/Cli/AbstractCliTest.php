@@ -18,7 +18,6 @@ class AbstractTest extends AbstractCli {
 
 	public function __invoke(array $args, array $assocArgs)
 	{
-		// TODO: Implement __invoke() method.
 	}
 
 	public function getDoc(): array

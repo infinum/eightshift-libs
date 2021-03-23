@@ -45,7 +45,7 @@ test('CliReset works', function () {
 	$cliReset([], []);
 
 	$this->assertSame('Output directory successfully removed.', getenv('SUCCESS'));
-	$this->assertSame('rm -rf \'/Users/denis.zoljom/Projects/Infinum/Eightshift/eightshift-libs/cliOutput/\'', getenv('SYSTEM_CALLED'));
+	$this->assertStringContainsString('rm -rf', getenv('SYSTEM_CALLED'));
 });
 
 
