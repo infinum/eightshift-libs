@@ -14,16 +14,19 @@ use EightshiftLibs\Cli\CliRunAll;
 use EightshiftLibs\Cli\CliShowAll;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
+use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\Setup\UpdateCli;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
+use function Tests\setupMocks;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
 	Monkey\setUp();
+	setupMocks();
 
 	$wpCliMock = mock('alias:WP_CLI');
 
@@ -109,3 +112,12 @@ test('Running develop commands runs a particular command successfully', function
 	$this->assertStringContainsString('header_main_nav', $generatedMenu);
 	$this->assertStringNotContainsString('footer_main_nav', $generatedMenu);
 });
+
+
+test('Running load command works', function() {
+	$this->cli->load('boilerplate');
+
+	// We could add all 36 of the public CLI classes, but I don't think that makes sense ¯\_(ツ)_/¯.
+	$this->assertSame(10, has_action('cli_init', 'EightshiftLibs\Menu\MenuCli->registerCommand()'));
+});
+
