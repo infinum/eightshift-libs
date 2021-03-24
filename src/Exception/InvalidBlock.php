@@ -27,7 +27,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
-	 * Throws error if blocks are missing.
+	 * Throws error if components are missing.
 	 *
 	 * @return static
 	 */
