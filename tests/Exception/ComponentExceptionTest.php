@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Enqueue\Exception;
+namespace Tests\Unit\Exception;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
@@ -46,10 +46,10 @@ test('Throws exception if ensure_string argument is invalid.', function () {
 	$this->assertStringContainsString("{$bool} variable is not a string or array but rather boolean", $exceptionBool->getMessage());
 });
 
-test('Throws exception if unable to locate component.', function () {
+/*test('Throws exception if unable to locate component.', function () {
 
 	$component = 'nonexistent';
 	$output = ComponentException::throwUnableToLocateComponent($component);
 
 	$this->assertStringContainsString("Unable to locate component by path: {$component}", $output->getMessage());
-});
+});*/
