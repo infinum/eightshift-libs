@@ -44,14 +44,6 @@ use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
  */
 class Cli
 {
-
-	/**
-	 * Top level commands name.
-	 *
-	 * @var string
-	 */
-	protected $commandParentName;
-
 	/**
 	 * All classes and commands that can be used on development and public WP CLI.
 	 *
@@ -196,11 +188,9 @@ class Cli
 	 */
 	public function load(string $commandParentName): void
 	{
-		$this->commandParentName = $commandParentName;
-
 		foreach ($this->getPublicClasses() as $item) {
 			$reflectionClass = new \ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+			$class = $reflectionClass->newInstanceArgs([$commandParentName]);
 
 			if ($class instanceof CliInterface) {
 				$class->register();

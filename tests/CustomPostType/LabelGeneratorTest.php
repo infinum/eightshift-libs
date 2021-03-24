@@ -3,7 +3,6 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\CustomPostType\LabelGenerator;
-
 use EightshiftLibs\Exception\InvalidNouns;
 
 use function Tests\setupMocks;

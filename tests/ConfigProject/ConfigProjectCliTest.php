@@ -5,22 +5,23 @@ namespace Tests\Unit\ConfigProject;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('success')
+		->andReturnArg(0);
 
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('error')
+		->andReturnArg(0);
 
-$this->configProject = new ConfigProjectCli('boilerplate');
+	$this->configProject = new ConfigProjectCli('boilerplate');
 });
 
 /**

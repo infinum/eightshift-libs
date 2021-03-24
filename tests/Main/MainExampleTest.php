@@ -3,7 +3,6 @@
 namespace Tests\Unit\Login;
 
 use Brain\Monkey;
-use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Main\MainExample;
 
 use function Tests\setupMocks;

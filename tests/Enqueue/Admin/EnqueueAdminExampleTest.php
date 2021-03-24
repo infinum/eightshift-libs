@@ -7,6 +7,7 @@ use EightshiftBoilerplate\Enqueue\Admin\EnqueueAdminExample;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();

@@ -53,17 +53,17 @@ test('Update CLI command will correctly run the update with defaults', function 
 	// ... so you can copy the example setup.json inside
 	copy(dirname(__FILE__, 3) . '/src/Setup/setup.json', dirname(__FILE__, 3) . '/cliOutput/setup.json');
 
-	// Check if an exception occured
-	$exceptionOccured = false;
+	// Check if an exception occurred
+	$exceptionOccurred = false;
 
 	try {
 		$update = $this->update;
 		$update([], []);
 	} catch (\Throwable $th) {
-		$exceptionOccured = true;
+		$exceptionOccurred = true;
 	}
 
-	$this->assertFalse($exceptionOccured);
+	$this->assertFalse($exceptionOccurred);
 });
 
 test('Update CLI command will correctly throw an exception if setup.json does not exist or has the wrong filename', function () {
