@@ -31,14 +31,14 @@ test('addThemeSupport method will call add_theme_support() function with differe
 
   Functions\when('add_theme_support')->alias(function($arg) {
 		$envName = strtoupper($arg);
+		$envName = \str_replace('-', '_', $envName);
     putenv("{$envName}=true");
-		var_dump($envName);
 	});
 
   $this->media->addThemeSupport();
 
-  $this->assertEquals(getenv('THEME_SUPPORT'), 'title-tag');
-  $this->assertEquals(getenv('THEME_SUPPORT'), 'html5');
-  $this->assertEquals(getenv('THEME_SUPPORT'), 'post-thumbnails');
+  $this->assertSame(getenv('TITLE_TAG'), 'true');
+  $this->assertSame(getenv('HTML5'), 'true');
+  $this->assertSame(getenv('POST_THUMBNAILS'), 'true');
 
 });
