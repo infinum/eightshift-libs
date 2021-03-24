@@ -135,7 +135,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
-	 * Throws error if wrapper settings manifest.json is missing.
+	 * Throws error if component manifest.json is missing.
 	 *
 	 * @param string $settingsManifestPath Full path for the missing manifest.json.
 	 *
