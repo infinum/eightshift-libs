@@ -2,9 +2,6 @@
 
 namespace Tests\Unit\Exception;
 
-use Brain\Monkey;
-use Brain\Monkey\Functions;
-
 use EightshiftLibs\Exception\ComponentException;
 use stdClass;
 
@@ -12,10 +9,6 @@ use function Tests\setupMocks;
 
 beforeAll(function () {
 	setupMocks();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('Throws exception if ensure_string argument is invalid.', function () {
@@ -46,10 +39,12 @@ test('Throws exception if ensure_string argument is invalid.', function () {
 	$this->assertStringContainsString("{$bool} variable is not a string or array but rather boolean", $exceptionBool->getMessage());
 });
 
-/*test('Throws exception if unable to locate component.', function () {
+test('Throws exception if unable to locate component.', function () {
 
 	$component = 'nonexistent';
 	$output = ComponentException::throwUnableToLocateComponent($component);
 
+	$this->assertIsObject($output);
+	$this->assertObjectHasAttribute('message', $output);
 	$this->assertStringContainsString("Unable to locate component by path: {$component}", $output->getMessage());
-});*/
+});
