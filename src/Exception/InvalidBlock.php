@@ -27,6 +27,16 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
+	 * Throws error if blocks are missing.
+	 *
+	 * @return static
+	 */
+	public static function missingComponentsException()
+	{
+		return new static(\esc_html__('There are no components added in your project.', 'eightshift-libs'));
+	}
+
+	/**
 	 * Throws error if manifest key blockName is missing.
 	 *
 	 * @param string $blockPath Full block path for the missing name.

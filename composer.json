@@ -65,8 +65,8 @@
   },
   "scripts": {
     "analyze": "@php ./vendor/bin/phpstan analyze",
-    "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
-    "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
+    "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.3-",
+    "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.3-",
     "test:unit": "@php ./vendor/bin/pest",
     "test:coverage": "@php ./vendor/bin/pest --coverage"
   }

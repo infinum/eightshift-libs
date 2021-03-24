@@ -5,6 +5,7 @@ namespace Tests\Helpers;
 use EightshiftLibs\Helpers\ErrorLoggerTrait;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 class MockErrorLogger {
     use ErrorLoggerTrait;
@@ -26,7 +27,7 @@ test('Test restResponseHandler will return expected result in case of success', 
 
 
 test('Test restResponseHandler will return expected result in case of error', function () {
-    \Mockery::mock('WP_Error');
+    mock('WP_Error');
 
     $response = $this->mockLogger->restResponseHandler(404, 'Some error', 'Some error message', ['fake data']);
 

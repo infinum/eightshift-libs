@@ -6,6 +6,7 @@ use Brain\Monkey;
 use EightshiftBoilerplate\Config\ConfigExample;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();

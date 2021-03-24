@@ -5,12 +5,13 @@ namespace Tests\Unit\GitIgnore;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 $wpCliMock
 	->shouldReceive('success')
@@ -35,7 +36,7 @@ afterEach(function () {
 test('GitIgnore CLI command will correctly copy the .gitignore file with defaults', function () {
 	$gitignore = $this->gitignore;
 	$gitignore([], $gitignore->getDevelopArgs([]));
-	
+
 	$outputPath = dirname(__FILE__, 3) . '/cliOutput/.gitignore';
 
 	// Check the output dir if the generated method is correctly generated.

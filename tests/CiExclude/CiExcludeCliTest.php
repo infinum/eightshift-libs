@@ -5,12 +5,13 @@ namespace Tests\Unit\CiExclude;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 $wpCliMock
 	->shouldReceive('success')
@@ -35,7 +36,7 @@ afterEach(function () {
 test('CiExclude CLI command will correctly copy the ci-exclude text file with defaults', function () {
 	$ciexclude = $this->ciexclude;
 	$ciexclude([], $ciexclude->getDevelopArgs([]));
-	
+
 	$outputPath = dirname(__FILE__, 3) . '/cliOutput/ci-exclude.txt';
 
 	// Check the output dir if the generated method is correctly generated.

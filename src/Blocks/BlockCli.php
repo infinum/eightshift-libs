@@ -83,7 +83,12 @@ class BlockCli extends AbstractCli
 		$path = static::OUTPUT_DIR . '/' . $name;
 		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
 		$sourcePath = "{$sourcePathFolder}{$name}";
-		$destinationPath = $root . '/' . $path;
+
+		if (!getenv('TEST')) {
+			$destinationPath = $root . '/' . $path;
+		} else {
+			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
+		}
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {

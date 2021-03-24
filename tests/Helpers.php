@@ -3,6 +3,8 @@
 namespace Tests;
 
 use Brain\Monkey\Functions;
+use Mockery;
+use Mockery\MockInterface;
 
 /**
  * Helper function that will setup some repeating mocks in every tests.
@@ -77,4 +79,9 @@ function deleteCliOutput(string $dir) : void
 	}
 
 	rmdir($dir);
+}
+
+function mock(string $class): MockInterface
+{
+    return Mockery::mock($class);
 }

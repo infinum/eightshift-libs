@@ -5,12 +5,13 @@ namespace Tests\Unit\EnqueueBlock;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')
@@ -41,16 +42,16 @@ test('Enqueue Block CLI command will make appropriate class.', function () {
 
 	$generatedEBC = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
 	$this->assertStringContainsString('class EnqueueBlocks extends AbstractEnqueueBlocks', $generatedEBC);
-	
+
 	$this->assertStringContainsString('enqueue_block_editor_assets', $generatedEBC);
 	$this->assertStringContainsString('enqueueBlockEditorScript', $generatedEBC);
-	
+
 	$this->assertStringContainsString('enqueue_block_editor_assets', $generatedEBC);
 	$this->assertStringContainsString('enqueueBlockEditorStyle', $generatedEBC);
-	
+
 	$this->assertStringContainsString('enqueue_block_assets', $generatedEBC);
 	$this->assertStringContainsString('enqueueBlockStyle', $generatedEBC);
-	
+
 	$this->assertStringContainsString('wp_enqueue_scripts', $generatedEBC);
 	$this->assertStringContainsString('enqueueBlockScript', $generatedEBC);
 });
