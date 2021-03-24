@@ -518,7 +518,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$projectName = 'eightshift-boilerplate';
 
-		if (function_exists('\add_action')) {
+		if (function_exists('\add_action') && !getenv('TEST')) {
 			$projectName = basename(dirname(__DIR__, 5));
 		}
 
