@@ -27,18 +27,18 @@ test('Register method will call init hook', function () {
 
 test('addThemeSupport method will call add_theme_support() function with different arguments', function () {
 
-  $arg = '';
+	$arg = '';
 
-  Functions\when('add_theme_support')->alias(function($arg) {
+	Functions\when('add_theme_support')->alias(function($arg) {
 		$envName = strtoupper($arg);
 		$envName = \str_replace('-', '_', $envName);
-    putenv("{$envName}=true");
+		putenv("{$envName}=true");
 	});
 
-  $this->media->addThemeSupport();
+	$this->media->addThemeSupport();
 
-  $this->assertSame(getenv('TITLE_TAG'), 'true');
-  $this->assertSame(getenv('HTML5'), 'true');
-  $this->assertSame(getenv('POST_THUMBNAILS'), 'true');
+	$this->assertSame(getenv('TITLE_TAG'), 'true', "Method addThemeSupport() didn't add theme support for title-tag");
+	$this->assertSame(getenv('HTML5'), 'true', "Method addThemeSupport() didn't add theme support for html5");
+	$this->assertSame(getenv('POST_THUMBNAILS'), 'true', "Method addThemeSupport() didn't add theme support for post-thumbnails");
 
 });
