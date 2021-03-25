@@ -39,25 +39,18 @@ class Autowiring
 	 *
 	 * @return array<array> Array of fully qualified class names.
 	 */
-	public function buildServiceClasses(array $manuallyDefinedDependencies = []): array
+	public function buildServiceClasses(array $manuallyDefinedDependencies = [], bool $skipInvalid = false): array
 	{
-		$projectClasses = $this->getClassesInNamespace($this->namespace, $this->psr4Prefixes);
-		// $projectReflectionClasses = $this->validateAndBuildClasses($projectClasses);
+		$projectReflectionClasses = $this->validateAndBuildClasses($this->getClassesInNamespace($this->namespace, $this->psr4Prefixes), $skipInvalid);
 
 		$dependencyTree = [];
 
 		// Prepare the filename index.
-		$filenameIndex = $this->buildFilenameIndex($projectClasses);
-		// echo print_r($filenameIndex);
-		$classInterfaceIndex = $this->buildClassInterfaceIndex($projectClasses);
+		$filenameIndex = $this->buildFilenameIndex($projectReflectionClasses);
+		echo print_r($filenameIndex);
+		$classInterfaceIndex = $this->buildClassInterfaceIndex($projectReflectionClasses);
 
-		foreach ($projectClasses as $projectClass) {
-			try {
-				$reflClass = new \ReflectionClass($projectClass);
-			} catch (\Exception $e) {
-				continue;
-			}
-
+		foreach ($projectReflectionClasses as $projectClass => $reflClass) {
 			// Skip abstract classes, interfaces & traits, and non service classes.
 			if (
 				$reflClass->isAbstract() ||
@@ -176,13 +169,13 @@ class Autowiring
 			return [];
 		}
 
-
 		$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($pathToNamespace));
 		foreach ($it as $file) {
 			if ($file->isDir()) {
 				continue;
 			}
-			if (preg_match('/[A-Z].*.php/', $file->getFileName())) {
+
+			if (preg_match('/^[A-Z]{1}[A-Za-z0-9]+\.php/', $file->getFileName())) {
 				$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespace, $pathToNamespace);
 			}
 		}
@@ -235,7 +228,7 @@ class Autowiring
 		// If there's no matches in filename index by variable, we need to skip it, this dependency's definition.
 		// list need sto be build manually.
 		if (!isset($filenameIndex[$filename])) {
-			throw new \Exception("File {$filename} not found filenameIndex, aborting");
+			throw new \Exception("File {$filename} not found in \$filenameIndex, aborting");
 		}
 
 		// Lets go through each file that's called $filename and check which interfaces that class
@@ -269,15 +262,14 @@ class Autowiring
 	/**
 	 * Builds the PSR-4 filename index. Maps filenames to class names.
 	 *
-	 * @param array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader
-	 *                                   ($loader->getPsr4Prefixes()).
+	 * @param array $reflectionClasses Reflection classes of all relevant classes.
 	 *
 	 * @return array
 	 */
-	private function buildFilenameIndex(array $allRelevantClasses): array
+	private function buildFilenameIndex(array $reflectionClasses): array
 	{
 		$filenameIndex = [];
-		foreach ($allRelevantClasses as $relevantClass) {
+		foreach ($reflectionClasses as $relevantClass => $reflClass) {
 			$filename = $this->getFilenameFromClass($relevantClass);
 
 			$filenameIndex[$filename][] = $relevantClass;
@@ -289,23 +281,16 @@ class Autowiring
 	/**
 	 * Builds the PSR-4 class => [$interfaces] index. Maps classes to interfaces they implement.
 	 *
-	 * @param array $allRelevantClasses PSR-4 Namespace prefixes, can be build this Composer's ClassLoader
-	 *                                  ($loader->getPsr4Prefixes()).
+	 * @param array $reflectionClasses  Reflection classes of all relevant classes.
 	 *
 	 * @throws \ReflectionException Exception thrown in case class is missing.
 	 *
 	 * @return array
 	 */
-	private function buildClassInterfaceIndex(array $allRelevantClasses): array
+	private function buildClassInterfaceIndex(array $reflectionClasses): array
 	{
 		$classInterfaceIndex = [];
-		foreach ($allRelevantClasses as $relevantClass) {
-			try {
-				$reflectionClass = new \ReflectionClass($relevantClass);
-			} catch (\Exception $e) {
-				continue;
-			}
-
+		foreach ($reflectionClasses as $projectClass => $reflectionClass) {
 			$interfaces = array_map(
 				function () {
 					return true;
@@ -313,7 +298,7 @@ class Autowiring
 				$reflectionClass->getInterfaces()
 			);
 
-			$classInterfaceIndex[$relevantClass] = $interfaces;
+			$classInterfaceIndex[$projectClass] = $interfaces;
 		}
 
 		return $classInterfaceIndex;
@@ -352,5 +337,33 @@ class Autowiring
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Validates that all classes / interfaces / traits / etc provided here are valid (we can build a ReflectionClass on them
+	 * ) and return them. Otherwise throw an exception.
+	 *
+	 * @param array $classnames FQCNs found in $this->namespace.
+	 * @return array
+	 *
+	 * @throws \Exception When a found class / file doesn't match PSR-4 standards.
+	 */
+	private function validateAndBuildClasses(array $classnames, bool $skipInvalid)
+	{
+		$reflectionClasses = [];
+		foreach ($classnames as $classname) {
+			try {
+				$reflClass = new \ReflectionClass($classname);
+				$reflectionClasses[$classname] = $reflClass;
+			} catch (\Exception $e) {
+				if ($skipInvalid) {
+					continue;
+				} else {
+					throw new \Exception(sprintf('Unable to autowire %s. Please check if the namespace is PSR-4 compliant (i.e. it matches the folder structure).', $classname));
+				}
+			}
+		}
+
+		return $reflectionClasses;
 	}
 }
