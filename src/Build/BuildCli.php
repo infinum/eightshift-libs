@@ -17,6 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class BuildCli extends AbstractCli
 {
+	/**
+	 * Init build command name.
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'init_build';
 
 	/**
 	 * Output dir relative path
@@ -32,7 +38,7 @@ class BuildCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_build';
+		return self::COMMAND_NAME;
 	}
 
 	/**
