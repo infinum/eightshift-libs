@@ -147,3 +147,19 @@ test('Autowiring does not throw exceptions on blocks', function () {
 test('Autowiring throws exception on primitive deps which are not manually configured', function () {
 	$this->main->buildServiceClasses($this->manualDepsNoPrimitive, true);
 })->throws(InvalidAutowireDependency::class);
+
+test('buildServiceClasses includes all manually defined dependency trees', function () {
+	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
+	$this->assertArrayHasKey(ServiceWithInterfaceDepWrongName::class, $dependencyTree);
+	$this->assertArrayHasKey(ServiceWithInterfaceDepMoreThanOneClassFound::class, $dependencyTree);
+	$this->assertArrayHasKey(ServiceWithPrimitiveDep::class, $dependencyTree);
+	$this->assertArrayHasKey(ServiceWithPrimitiveDepHasDefault::class, $dependencyTree);
+	$this->assertIsArray($dependencyTree[ServiceWithInterfaceDepWrongName::class]);
+	$this->assertIsArray($dependencyTree[ServiceWithInterfaceDepMoreThanOneClassFound::class]);
+	$this->assertIsArray($dependencyTree[ServiceWithPrimitiveDep::class]);
+	$this->assertIsArray($dependencyTree[ServiceWithPrimitiveDepHasDefault::class]);
+	$this->assertContains(ClassImplementingInterfaceDependency::class, $dependencyTree[ServiceWithInterfaceDepWrongName::class] );
+	$this->assertContains(SomeClass::class, $dependencyTree[ServiceWithInterfaceDepMoreThanOneClassFound::class] );
+	$this->assertContains('some string', $dependencyTree[ServiceWithPrimitiveDep::class] );
+	$this->assertContains('some string', $dependencyTree[ServiceWithPrimitiveDepHasDefault::class] );
+});
