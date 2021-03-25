@@ -105,14 +105,16 @@ class Autowiring
 	 * @param array  $filenameIndex Filename index. Maps filenames to class names.
 	 * @param array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
 	 *
-	 * @throws \ReflectionException Exception thrown in case class is missing.
-	 * @throws \Exception If things we're looking for are missing
-	 *                    inside filename or classInterface index (which shouldn't happen).
+	 * @throws InvalidAutowireDependency If a primitive dependency is found.
 	 *
 	 * @return array
 	 */
 	private function buildDependencyTree(string $relevantClass, array $filenameIndex, array $classInterfaceIndex): array
 	{
+		// Keeping PHPStan happy.
+		if (!class_exists($relevantClass, false)) {
+			return [];
+		}
 
 		$dependencyTree = [];
 		$reflClass = new \ReflectionClass($relevantClass);
@@ -122,6 +124,8 @@ class Autowiring
 			// Go through each constructor parameter.
 			foreach ($reflClass->getConstructor()->getParameters() as $reflParam) {
 				$type = $reflParam->getType();
+
+				// Skip parameters without type hints.
 				if ($type instanceof \ReflectionNamedType) {
 					$className = $type->getName();
 					$isBuiltin = $type->isBuiltin();
@@ -133,29 +137,32 @@ class Autowiring
 				// to check if this parameter has a default value or not (so we need to throw an exception regardless).
 				// See: https://www.php.net/manual/en/class.reflectionnamedtype.php.
 				if ($isBuiltin) {
-					throw new \Exception($relevantClass);
+					throw InvalidAutowireDependency::throwPrimitiveDependencyFound($relevantClass);
 				}
 
-				$reflClassForParam = new \ReflectionClass($className);
+				// Keeping PHPStan happy.
+				if (class_exists($className, false) || interface_exists($className, false)) {
+					$reflClassForParam = new \ReflectionClass($className);
 
-				// If the expected type is interface, try guessing based on var name. Otherwise
-				// Just inject that class.
-				if ($reflClassForParam->isInterface()) {
-					$matchedClass = $this->tryToFindMatchingClass(
-						$reflParam->getName(),
-						$className,
-						$filenameIndex,
-						$classInterfaceIndex
-					);
+					// If the expected type is interface, try guessing based on var name. Otherwise
+					// Just inject that class.
+					if ($reflClassForParam->isInterface()) {
+						$matchedClass = $this->tryToFindMatchingClass(
+							$reflParam->getName(),
+							$className,
+							$filenameIndex,
+							$classInterfaceIndex
+						);
 
-					// If we're unable to find exactly 1 class for whatever reason, just skip it, the user
-					// will have to define the dependencies manually.
-					if (empty($matchedClass)) {
-						continue;
+						// If we're unable to find exactly 1 class for whatever reason, just skip it, the user
+						// will have to define the dependencies manually.
+						if (empty($matchedClass)) {
+							continue;
+						}
+						$dependencyTree[$relevantClass][$matchedClass] = [];
+					} else {
+						$dependencyTree[$relevantClass][$className] = [];
 					}
-					$dependencyTree[$relevantClass][$matchedClass] = [];
-				} else {
-					$dependencyTree[$relevantClass][$className] = [];
 				}
 			}
 		} else {
@@ -228,6 +235,7 @@ class Autowiring
 	 * @param array  $filenameIndex Filename index. Maps filenames to class names.
 	 * @param array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
 	 *
+	 * @throws InvalidAutowireDependency If we didn't find exactly 1 class when trying to inject interface-based dependencies.
 	 * @throws \Exception If things we're looking for are missing inside filename or classInterface index (which shouldn't happen).
 	 *
 	 * @return string

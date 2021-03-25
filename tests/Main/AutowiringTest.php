@@ -146,4 +146,4 @@ test('Autowiring does not throw exceptions on blocks', function () {
 
 test('Autowiring throws exception on primitive deps which are not manually configured', function () {
 	$this->main->buildServiceClasses($this->manualDepsNoPrimitive, true);
-})->throws(\Exception::class);
+})->throws(InvalidAutowireDependency::class);
