@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MockAutowiring\NonServices;
+namespace Tests\Datasets\Autowiring\NonServices;
 
 /**
  * Some class that should not be autowired.

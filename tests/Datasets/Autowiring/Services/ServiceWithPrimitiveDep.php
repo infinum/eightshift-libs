@@ -6,8 +6,12 @@ namespace Tests\Datasets\Autowiring\Services;
 
 use EightshiftLibs\Services\ServiceInterface;
 
-class ServiceNoDependencies implements ServiceInterface
+class ServiceWithPrimitiveDep implements ServiceInterface
 {
+	public function __construct(string $something) {
+		$this->something = $something;
+	}
+
 	/**
 	 * Registers service.
    *

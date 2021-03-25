@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MockAutowiring\Deep\Deeper;
+namespace Tests\Datasets\Autowiring\Deep\Deeper;
 
 use EightshiftLibs\Services\ServiceInterface;
 
