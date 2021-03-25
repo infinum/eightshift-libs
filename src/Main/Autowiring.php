@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Main;
 
+use EightshiftLibs\Exception\InvalidAutowireDependency;
+use EightshiftLibs\Exception\NonPsr4CompliantClass;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -35,19 +37,27 @@ class Autowiring
 	/**
 	 * Autowiring.
 	 *
+	 * @param array $manuallyDefinedDependencies Manually defined dependencies from Main.
+	 * @param bool  $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.
+	 *
 	 * @throws \ReflectionException Exception thrown in case class is missing.
 	 *
 	 * @return array<array> Array of fully qualified class names.
 	 */
 	public function buildServiceClasses(array $manuallyDefinedDependencies = [], bool $skipInvalid = false): array
 	{
-		$projectReflectionClasses = $this->validateAndBuildClasses($this->getClassesInNamespace($this->namespace, $this->psr4Prefixes), $skipInvalid);
+		$projectReflectionClasses = $this->validateAndBuildClasses(
+			$this->filterManuallyDefinedDependencies(
+				$this->getClassesInNamespace($this->namespace, $this->psr4Prefixes),
+				$manuallyDefinedDependencies
+			),
+			$skipInvalid
+		);
 
 		$dependencyTree = [];
 
 		// Prepare the filename index.
 		$filenameIndex = $this->buildFilenameIndex($projectReflectionClasses);
-		echo print_r($filenameIndex);
 		$classInterfaceIndex = $this->buildClassInterfaceIndex($projectReflectionClasses);
 
 		foreach ($projectReflectionClasses as $projectClass => $reflClass) {
@@ -103,9 +113,7 @@ class Autowiring
 	 */
 	private function buildDependencyTree(string $relevantClass, array $filenameIndex, array $classInterfaceIndex): array
 	{
-		if (!class_exists($relevantClass)) {
-			return [];
-		}
+
 		$dependencyTree = [];
 		$reflClass = new \ReflectionClass($relevantClass);
 		// If this class has dependencies, we need to figure those out. Otherwise
@@ -113,24 +121,29 @@ class Autowiring
 		if (!empty($reflClass->getConstructor()) && !empty($reflClass->getConstructor()->getParameters())) {
 			// Go through each constructor parameter.
 			foreach ($reflClass->getConstructor()->getParameters() as $reflParam) {
-				if ($reflParam->getType() === null) {
+				$type = $reflParam->getType();
+				if ($type instanceof \ReflectionNamedType) {
+					$className = $type->getName();
+					$isBuiltin = $type->isBuiltin();
+				} else {
 					continue;
 				}
 
-				$reflClassForParam = $reflParam->getClass();
-
-				if ($reflClassForParam === null) {
-					continue;
+				// We're unable to autowire primitive dependency and there doesn't seem to yet be a way
+				// to check if this parameter has a default value or not (so we need to throw an exception regardless).
+				// See: https://www.php.net/manual/en/class.reflectionnamedtype.php.
+				if ($isBuiltin) {
+					throw new \Exception($relevantClass);
 				}
 
-				$classname = $reflClassForParam->getName();
+				$reflClassForParam = new \ReflectionClass($className);
 
 				// If the expected type is interface, try guessing based on var name. Otherwise
 				// Just inject that class.
 				if ($reflClassForParam->isInterface()) {
 					$matchedClass = $this->tryToFindMatchingClass(
 						$reflParam->getName(),
-						$classname,
+						$className,
 						$filenameIndex,
 						$classInterfaceIndex
 					);
@@ -142,7 +155,7 @@ class Autowiring
 					}
 					$dependencyTree[$relevantClass][$matchedClass] = [];
 				} else {
-					$dependencyTree[$relevantClass][$classname] = [];
+					$dependencyTree[$relevantClass][$className] = [];
 				}
 			}
 		} else {
@@ -225,10 +238,11 @@ class Autowiring
 		array $filenameIndex,
 		array $classInterfaceIndex
 	): string {
-		// If there's no matches in filename index by variable, we need to skip it, this dependency's definition.
-		// list need sto be build manually.
+		// If there's no matches in filename index by variable, we need to throw an exception to let the user
+		// know he either needs to provide the correct variable name OR manually define the dependencies for this class.
+		$className = ucfirst($filename);
 		if (!isset($filenameIndex[$filename])) {
-			throw new \Exception("File {$filename} not found in \$filenameIndex, aborting");
+			throw InvalidAutowireDependency::throwUnableToFindClass($className, $interfaceName);
 		}
 
 		// Lets go through each file that's called $filename and check which interfaces that class
@@ -252,8 +266,12 @@ class Autowiring
 		// If we don't have a unique match
 		// (i.e. if 2 classes of the same name are implementing the interface we're looking for)
 		// then we need to cancel the match because we don't know how to handle that.
-		if ($matches !== 1) {
-			$match = '';
+		if ($matches === 0) {
+			throw InvalidAutowireDependency::throwUnableToFindClass($className, $interfaceName);
+		}
+
+		if ($matches > 1) {
+			throw InvalidAutowireDependency::throwMoreThanOneClassFound($className, $interfaceName);
 		}
 
 		return $match;
@@ -309,13 +327,13 @@ class Autowiring
 	 *
 	 * Example: AutowiringTest/Something/Class => class
 	 *
-	 * @param string $classname Fully qualified classname.
+	 * @param string $className Fully qualified classname.
 	 *
 	 * @return string
 	 */
-	private function getFilenameFromClass(string $classname): string
+	private function getFilenameFromClass(string $className): string
 	{
-		return lcfirst(trim(substr($classname, strrpos($classname, '\\') + 1)));
+		return lcfirst(trim(substr($className, strrpos($className, '\\') + 1)));
 	}
 
 	/**
@@ -343,27 +361,42 @@ class Autowiring
 	 * Validates that all classes / interfaces / traits / etc provided here are valid (we can build a ReflectionClass on them
 	 * ) and return them. Otherwise throw an exception.
 	 *
-	 * @param array $classnames FQCNs found in $this->namespace.
+	 * @param array $classNames FQCNs found in $this->namespace.
+	 * @param bool  $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.
 	 * @return array
 	 *
-	 * @throws \Exception When a found class / file doesn't match PSR-4 standards.
+	 * @throws NonPsr4CompliantClass When a found class / file doesn't match PSR-4 standards.
 	 */
-	private function validateAndBuildClasses(array $classnames, bool $skipInvalid)
+	private function validateAndBuildClasses(array $classNames, bool $skipInvalid): array
 	{
 		$reflectionClasses = [];
-		foreach ($classnames as $classname) {
+		foreach ($classNames as $className) {
 			try {
-				$reflClass = new \ReflectionClass($classname);
-				$reflectionClasses[$classname] = $reflClass;
+				$reflClass = new \ReflectionClass($className);
+				$reflectionClasses[$className] = $reflClass;
 			} catch (\Exception $e) {
 				if ($skipInvalid) {
 					continue;
 				} else {
-					throw new \Exception(sprintf('Unable to autowire %s. Please check if the namespace is PSR-4 compliant (i.e. it matches the folder structure).', $classname));
+					throw NonPsr4CompliantClass::throwInvalidNamespace($className);
 				}
 			}
 		}
 
 		return $reflectionClasses;
+	}
+
+	/**
+	 * Filters out manually defined dependencies so we don't autowire them.
+	 *
+	 * @param array $serviceClasses All FQCNs inside the namespace.
+	 * @param array $manuallyDefinedDependencies Manually defined dependency tree.
+	 * @return array
+	 */
+	private function filterManuallyDefinedDependencies(array $serviceClasses, array $manuallyDefinedDependencies): array
+	{
+		return array_filter($serviceClasses, function ($classNamespace) use ($manuallyDefinedDependencies) {
+			return !isset($manuallyDefinedDependencies[$classNamespace]);
+		});
 	}
 }
