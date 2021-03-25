@@ -37,18 +37,24 @@ class Autowiring
 	 *
 	 * @return array<array> Array of fully qualified class names.
 	 */
-	public function buildServiceClasses(): array
+	public function buildServiceClasses(array $manuallyDefinedDependencies = []): array
 	{
 		$projectClasses = $this->getClassesInNamespace($this->namespace, $this->psr4Prefixes);
+		// $projectReflectionClasses = $this->validateAndBuildClasses($projectClasses);
 
 		$dependencyTree = [];
 
 		// Prepare the filename index.
 		$filenameIndex = $this->buildFilenameIndex($projectClasses);
+		// echo print_r($filenameIndex);
 		$classInterfaceIndex = $this->buildClassInterfaceIndex($projectClasses);
 
 		foreach ($projectClasses as $projectClass) {
-			$reflClass = new \ReflectionClass($projectClass);
+			try {
+				$reflClass = new \ReflectionClass($projectClass);
+			} catch (\Exception $e) {
+				continue;
+			}
 
 			// Skip abstract classes, interfaces & traits.
 			if ($reflClass->isAbstract() || $reflClass->isInterface() || $reflClass->isTrait()) {
@@ -79,7 +85,7 @@ class Autowiring
 		}
 
 		// Convert dependency tree into PHP-DI's definition list.
-		return $this->convertDependencyTreeIntoDefinitionList($dependencyTree);
+		return array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
 	}
 
 	/**
@@ -162,6 +168,7 @@ class Autowiring
 		if (!is_dir($pathToNamespace)) {
 			return [];
 		}
+
 
 		$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($pathToNamespace));
 		foreach ($it as $file) {
@@ -286,11 +293,17 @@ class Autowiring
 	{
 		$classInterfaceIndex = [];
 		foreach ($allRelevantClasses as $relevantClass) {
+			try {
+				$reflectionClass = new \ReflectionClass($relevantClass);
+			} catch (\Exception $e) {
+				continue;
+			}
+
 			$interfaces = array_map(
 				function () {
 					return true;
 				},
-				(new \ReflectionClass($relevantClass))->getInterfaces()
+				$reflectionClass->getInterfaces()
 			);
 
 			$classInterfaceIndex[$relevantClass] = $interfaces;
