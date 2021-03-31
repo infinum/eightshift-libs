@@ -5,46 +5,39 @@ namespace Tests\Unit\Exception;
 use EightshiftLibs\Exception\ComponentException;
 use stdClass;
 
+use Brain\Monkey;
+
 use function Tests\setupMocks;
 
 beforeAll(function () {
+	Monkey\setUp();
 	setupMocks();
 });
 
-test('Throws exception if ensure_string argument is invalid.', function () {
-
-	$object = new stdClass();
-	$integer = 7;
-	$null = null;
-	$bool = true;
-
-	$exceptionObject = ComponentException::throwNotStringOrArray($object);
-	$exceptionInteger = ComponentException::throwNotStringOrArray($integer);
-	$exceptionNull = ComponentException::throwNotStringOrArray($null);
-	$exceptionBool = ComponentException::throwNotStringOrArray($bool);
-
-	$this->assertIsObject($exceptionObject);
-	$this->assertIsObject($exceptionInteger);
-	$this->assertIsObject($exceptionNull);
-	$this->assertIsObject($exceptionBool);
-	
-	$this->assertObjectHasAttribute('message', $exceptionObject);
-	$this->assertObjectHasAttribute('message', $exceptionInteger);
-	$this->assertObjectHasAttribute('message', $exceptionNull);
-	$this->assertObjectHasAttribute('message', $exceptionBool);
-
-	$this->assertStringContainsString('Object couldn&#039;t be converted to string. Please provide only string or array.', $exceptionObject->getMessage());
-	$this->assertStringContainsString("{$integer} variable is not a string or array but rather integer", $exceptionInteger->getMessage());
-	$this->assertStringContainsString("{$null} variable is not a string or array but rather NULL", $exceptionNull->getMessage());
-	$this->assertStringContainsString("{$bool} variable is not a string or array but rather boolean", $exceptionBool->getMessage());
+afterAll(function() {
+	Monkey\tearDown();
 });
 
-test('Throws exception if unable to locate component.', function () {
+test('Checks if the throwNotStringOrArray method functions correctly.',
+	function ($argument) {
+		$exception = ComponentException::throwNotStringOrArray($argument);
+		$type = gettype($argument);
+
+		$this->assertIsObject($exception, "The {$exception} should be an instance of ComponentException class");
+		$this->assertObjectHasAttribute('message', $exception, "Object doesn't contain message attribute");
+		// $this->assertStringContainsString("{$argument} variable is not a string or array but rather {$type}", $exception->getMessage(), "Strings for message if item is {$type} do not match!");
+
+	})
+	->with('exceptionArguments');
+
+	// $this->assertStringContainsString('Object couldn&#039;t be converted to string. Please provide only string or array.', $exceptionObject->getMessage(), "Strings for 'Object couldn't be converted to string' message do not match!");
+
+test('Checks if throwUnableToLocateComponent method will return correct response.', function () {
 
 	$component = 'nonexistent';
 	$output = ComponentException::throwUnableToLocateComponent($component);
 
-	$this->assertIsObject($output);
-	$this->assertObjectHasAttribute('message', $output);
-	$this->assertStringContainsString("Unable to locate component by path: {$component}", $output->getMessage());
+	$this->assertIsObject($output, "The {$output} should be an instance of ComponentException class");
+	$this->assertObjectHasAttribute('message', $output, "Object doesn't contain message attribute");
+	$this->assertStringContainsString("Unable to locate component by path: {$component}", $output->getMessage(), "Strings for 'Unable to locate component by path' message do not match!");
 });

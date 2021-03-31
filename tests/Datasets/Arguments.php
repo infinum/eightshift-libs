@@ -69,3 +69,11 @@ dataset('inputSlugs', [
 	'mixed_Case_goes here-as well',
 	'UPPER-CASE',
 ]);
+
+// Exceptions
+dataset('exceptionArguments', [
+	new stdClass(),
+	7,
+	null,
+	true
+]);
