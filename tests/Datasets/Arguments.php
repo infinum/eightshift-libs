@@ -72,7 +72,6 @@ dataset('inputSlugs', [
 
 // Exceptions
 dataset('exceptionArguments', [
-	new stdClass(),
 	7,
 	null,
 	true
