@@ -105,7 +105,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 */
 	private function getServiceClassesWithAutowire(): array
 	{
-		return array_merge($this->buildServiceClasses(), $this->getServiceClasses());
+		return $this->buildServiceClasses($this->getServiceClasses());
 	}
 
 	/**
