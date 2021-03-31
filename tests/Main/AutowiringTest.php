@@ -2,26 +2,26 @@
 
 namespace Tests\Unit\Autowiring;
 
-use Brain\Monkey;
 use EightshiftBoilerplate\Main\MainExample;
-use EightshiftLibs\Exception\InvalidAutowireDependency;
-use EightshiftLibs\Exception\NonPsr4CompliantClass;
-use Tests\Datasets\Autowiring\Services\ServiceNoDependencies;
+use EightshiftLibs\Exception\{InvalidAutowireDependency, NonPsr4CompliantClass};
 use Tests\Datasets\Autowiring\Deep\Deeper\ServiceNoDependenciesDeep;
-use Tests\Datasets\Autowiring\Dependencies\ClassDepWithNoDependencies;
-use Tests\Datasets\Autowiring\Dependencies\ClassImplementingInterfaceDependency;
-use Tests\Datasets\Autowiring\Dependencies\ClassWithDependency;
-use Tests\Datasets\Autowiring\Dependencies\InterfaceDependency;
+use Tests\Datasets\Autowiring\Dependencies\{ClassDepWithNoDependencies,
+	ClassImplementingInterfaceDependency,
+	ClassWithDependency,
+	InterfaceDependency
+};
 use Tests\Datasets\Autowiring\Dependencies\SubNamespace1\SomeClass;
 use Tests\Datasets\Autowiring\NonServices\SomeFactory;
-use Tests\Datasets\Autowiring\Services\ServiceWithClassDep;
-use Tests\Datasets\Autowiring\Services\ServiceWithDeepClassDep;
-use Tests\Datasets\Autowiring\Services\ServiceWithInterfaceDep;
-use Tests\Datasets\Autowiring\Services\ServiceWithInterfaceDepMoreThanOneClassFound;
-use Tests\Datasets\Autowiring\Services\ServiceWithInterfaceDepWrongName;
-use Tests\Datasets\Autowiring\Services\ServiceWithMultipleDeps;
-use Tests\Datasets\Autowiring\Services\ServiceWithPrimitiveDep;
-use Tests\Datasets\Autowiring\Services\ServiceWithPrimitiveDepHasDefault;
+use Tests\Datasets\Autowiring\Services\{ServiceNoDependencies,
+    ServiceWithClassDep,
+	ServiceWithDeepClassDep,
+	ServiceWithInterfaceDep,
+	ServiceWithInterfaceDepMoreThanOneClassFound,
+	ServiceWithInterfaceDepWrongName,
+	ServiceWithMultipleDeps,
+	ServiceWithPrimitiveDep,
+	ServiceWithPrimitiveDepHasDefault
+};
 
 beforeEach(function() {
 

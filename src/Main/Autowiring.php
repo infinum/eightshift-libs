@@ -144,8 +144,8 @@ class Autowiring
 				if (class_exists($className, false) || interface_exists($className, false)) {
 					$reflClassForParam = new \ReflectionClass($className);
 
-					// If the expected type is interface, try guessing based on var name. Otherwise
-					// Just inject that class.
+					// If the expected type is interface, try guessing based on var name.
+					// Otherwise just inject that class.
 					if ($reflClassForParam->isInterface()) {
 						$matchedClass = $this->tryToFindMatchingClass(
 							$reflParam->getName(),
@@ -247,7 +247,7 @@ class Autowiring
 		array $classInterfaceIndex
 	): string {
 		// If there's no matches in filename index by variable, we need to throw an exception to let the user
-		// know he either needs to provide the correct variable name OR manually define the dependencies for this class.
+		// know they either need to provide the correct variable name OR manually define the dependencies for this class.
 		$className = ucfirst($filename);
 		if (!isset($filenameIndex[$filename])) {
 			throw InvalidAutowireDependency::throwUnableToFindClass($className, $interfaceName);
@@ -366,14 +366,16 @@ class Autowiring
 	}
 
 	/**
-	 * Validates that all classes / interfaces / traits / etc provided here are valid (we can build a ReflectionClass on them
-	 * ) and return them. Otherwise throw an exception.
+	 * Validates all classes.
+	 *
+	 * Validates that all classes/interfaces/traits/etc. provided here are valid (we can build a ReflectionClass
+	 * on them) and return them. Otherwise throw an exception.
 	 *
 	 * @param array $classNames FQCNs found in $this->namespace.
 	 * @param bool  $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.
 	 * @return array
 	 *
-	 * @throws NonPsr4CompliantClass When a found class / file doesn't match PSR-4 standards.
+	 * @throws NonPsr4CompliantClass When a found class/file doesn't match PSR-4 standards (and $skipInvalid is false).
 	 */
 	private function validateAndBuildClasses(array $classNames, bool $skipInvalid): array
 	{
