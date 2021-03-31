@@ -23,7 +23,7 @@ test('Checks if missingBlocksException will return correct response.', function 
 
 	$this->assertIsObject($missingBlocks, "The {$missingBlocks} should be an instance of InvalidBlock class");
 	$this->assertObjectHasAttribute('message', $missingBlocks, "Object doesn't contain message attribute");
-	$this->assertStringContainsString('There are no blocks added in your project.', $missingBlocks->getMessage(), "Strings for message if there are no blocks added to the project do not match!");
+	$this->assertSame('There are no blocks added in your project.', $missingBlocks->getMessage(), "Strings for message if there are no blocks added to the project do not match!");
 });
 
 test('Checks if missingComponentsException will return correct response.', function () {
@@ -32,7 +32,7 @@ test('Checks if missingComponentsException will return correct response.', funct
 
 	$this->assertIsObject($missingComponents);
 	$this->assertObjectHasAttribute('message', $missingComponents);
-	$this->assertStringContainsString('There are no components added in your project.', $missingComponents->getMessage());
+	$this->assertSame('There are no components added in your project.', $missingComponents->getMessage(), "Strings for message if there are no components added to the project do not match!");
 });
 
 test('Checks if missingNameException will return correct response.', function () {
@@ -42,7 +42,7 @@ test('Checks if missingNameException will return correct response.', function ()
 
 	$this->assertIsObject($missingName);
 	$this->assertObjectHasAttribute('message', $missingName);
-	$this->assertStringContainsString("Block in this path {$blockPath} is missing blockName key in its manifest.json.", $missingName->getMessage());
+	$this->assertSame("Block in this path {$blockPath} is missing blockName key in its manifest.json.", $missingName->getMessage(), "Strings for message if blockName key is missing in manifest.json do not match!");
 });
 
 test('Checks if missingViewException will return correct response.', function () {
@@ -53,7 +53,7 @@ test('Checks if missingViewException will return correct response.', function ()
 
 	$this->assertIsObject($missingView);
 	$this->assertObjectHasAttribute('message', $missingView);
-	$this->assertStringContainsString("Block with this name {$blockName} is missing view template. Template name should be called {$blockName}.php, and it should be located in this path {$blockPath}", $missingView->getMessage());
+	$this->assertSame("Block with this name {$blockName} is missing view template. Template name should be called {$blockName}.php, and it should be located in this path {$blockPath}", $missingView->getMessage(), "Strings for message if block is missing view template do not match!");
 });
 
 test('Checks if missingRenderViewException will return correct response.', function () {
@@ -63,7 +63,7 @@ test('Checks if missingRenderViewException will return correct response.', funct
 
 	$this->assertIsObject($missingRenderView);
 	$this->assertObjectHasAttribute('message', $missingRenderView);
-	$this->assertStringContainsString("Block view is missing in the provided path. Please check if {$blockPath} is the right path for your block view.", $missingRenderView->getMessage());
+	$this->assertSame("Block view is missing in the provided path. Please check if {$blockPath} is the right path for your block view.", $missingRenderView->getMessage(), "Strings for message if block view is missing provided path do not match!");
 });
 
 test('Checks if missingSettingsManifestException will return correct response.', function () {
@@ -73,7 +73,7 @@ test('Checks if missingSettingsManifestException will return correct response.',
 
 	$this->assertIsObject($missingManifestPath);
 	$this->assertObjectHasAttribute('message', $missingManifestPath);
-	$this->assertStringContainsString("Global blocks settings manifest.json is missing on this location: {$manifestPath}.", $missingManifestPath->getMessage());
+	$this->assertSame("Global blocks settings manifest.json is missing on this location: {$manifestPath}.", $missingManifestPath->getMessage(), "Strings for message if global blocks settings manifest.json is missing do not match!");
 });
 
 test('Checks if missingWrapperManifestException will return correct response.', function () {
@@ -83,7 +83,7 @@ test('Checks if missingWrapperManifestException will return correct response.', 
 
 	$this->assertIsObject($missingManifestPath);
 	$this->assertObjectHasAttribute('message', $missingManifestPath);
-	$this->assertStringContainsString("Wrapper blocks settings manifest.json is missing on this location: {$manifestPath}.", $missingManifestPath->getMessage());
+	$this->assertSame("Wrapper blocks settings manifest.json is missing on this location: {$manifestPath}.", $missingManifestPath->getMessage(), "Strings for message if wrapper blocks settings manifest.json is missing do not match!");
 });
 
 test('Checks if missingComponentManifestException will return correct response.', function () {
@@ -93,7 +93,7 @@ test('Checks if missingComponentManifestException will return correct response.'
 
 	$this->assertIsObject($missingComponentManifest);
 	$this->assertObjectHasAttribute('message', $missingComponentManifest);
-	$this->assertStringContainsString("Component manifest.json is missing on this location: {$manifestPath}.", $missingComponentManifest->getMessage());
+	$this->assertSame("Component manifest.json is missing on this location: {$manifestPath}.", $missingComponentManifest->getMessage(), "Strings for message if component manifest.json is missing do not match!");
 });
 
 test('Checks if missingWrapperViewException will return correct response.', function () {
@@ -103,7 +103,7 @@ test('Checks if missingWrapperViewException will return correct response.', func
 
 	$this->assertIsObject($missingWrapperView);
 	$this->assertObjectHasAttribute('message', $missingWrapperView);
-	$this->assertStringContainsString("Wrapper view is missing. Template should be located in this path {$wrapperPath}", $missingWrapperView->getMessage());
+	$this->assertSame("Wrapper view is missing. Template should be located in this path {$wrapperPath}", $missingWrapperView->getMessage(), "Strings for message if wrapper view is missing do not match!");
 });
 
 test('Checks if missingNamespaceException will return correct response.', function () {
@@ -112,5 +112,5 @@ test('Checks if missingNamespaceException will return correct response.', functi
 
 	$this->assertIsObject($missingNamespace);
 	$this->assertObjectHasAttribute('message', $missingNamespace);
-	$this->assertStringContainsString('Global Blocks settings manifest.json is missing a key called namespace. This key prefixes all block names.', $missingNamespace->getMessage());
+	$this->assertSame('Global Blocks settings manifest.json is missing a key called namespace. This key prefixes all block names.', $missingNamespace->getMessage(), "Strings for message global settings manifest.json is missing a key called namespace do not match!");
 });
