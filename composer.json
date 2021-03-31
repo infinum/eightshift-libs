@@ -25,14 +25,15 @@
   },
   "require": {
     "php": "^7.3",
+    "ext-dom": "*",
     "ext-json": "*",
     "ext-libxml": "*",
-    "ext-dom": "*",
-    "php-di/php-di": "^6.3.0",
-    "php-di/invoker": "^2.0"
+    "php-di/invoker": "^2.0",
+    "php-di/php-di": "^6.3.0"
   },
   "require-dev": {
     "brain/monkey": "^2.5",
+    "brain/faker": "dev-master",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "infinum/eightshift-coding-standards": "^1.1",
     "pestphp/pest": "^1.0.2",

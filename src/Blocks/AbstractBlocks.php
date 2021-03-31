@@ -124,11 +124,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getAllBlocksList($allowedBlockTypes, \WP_Post $post)
 	{
+		if (gettype($allowedBlockTypes) === 'boolean') {
+			return $allowedBlockTypes;
+		}
+
 		$allowedBlockTypes = array_map(
 			function ($block) {
 				return $block['blockFullName'];
 			},
-			$this->blocks['blocks']
+			$this->blocks['blocks'] ?? []
 		);
 
 		// Allow reusable block.
