@@ -5,6 +5,8 @@ namespace Tests\Unit\Blocks;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
+use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setupMocks;
 use function Tests\mock;
@@ -13,19 +15,25 @@ beforeEach(function() {
 	Monkey\setUp();
 	setupMocks();
 
-	$this->faker = \Brain\faker();
-	$this->wpFaker = $this->faker->wp();
-
 	mock('alias:EightshiftBoilerplate\Config\Config')
 	->shouldReceive('getProjectPath')
-	->andReturn('tests/data/frontend-libs');
+	->andReturn('tests/data');
+
+	mock('alias:EightshiftBoilerplateVendor\EightshiftLibs\Helpers\Components')
+	->shouldReceive([
+		'render' => 'test',
+		'getManifest' => '',
+		'checkAttr' => '',
+		'selector' => '',
+		'responsiveSelectors' => '',
+		'classnames' => ''
+	]);
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
 });
 
 afterEach(function() {
-	\Brain\fakerReset();
 	Monkey\tearDown();
 });
 
@@ -77,7 +85,7 @@ test('addThemeSupport method will call add_theme_support() function with differe
 
 test('Asserts that getAllBlocksList first argument is boolean and return the provided attribute as return value.', function () {
 
-	$post = $this->wpFaker->post();
+	$post = \Mockery::mock('WP_Post');
 
 	$blocks = $this->blocksExample->getAllBlocksList(true, $post);
 
@@ -85,19 +93,20 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 
 	$blocks = $this->blocksExample->getAllBlocksList(false, $post);
 
-	$this->assertEquals(false, $blocks);
+	$this->assertEquals(false, $blocks, "Return value is not false.");
 });
 
 test('Asserts that getAllBlocksList will return only projects blocks.', function () {
 
-	$post = $this->wpFaker->post();
+	$post = \Mockery::mock('WP_Post');
+
 	$list = $this->blocksExample->getAllBlocksList([], $post);
 
 	$this->assertIsArray($list);
-	$this->assertNotContains('core/paragraph', $list);
-	$this->assertContains('eightshift-boilerplate/button', $list);
-	$this->assertContains('core/block', $list);
-	$this->assertContains('core/template', $list);
+	$this->assertNotContains('core/paragraph', $list, "List array does contain core/paragraph item.");
+	$this->assertContains('eightshift-boilerplate/button', $list, "List array doesn't contain eightshift-boilerplate/button item.");
+	$this->assertContains('core/block', $list, "List array doesn't contain core/block item.");
+	$this->assertContains('core/template', $list, "List array doesn't contain core/template item.");
 });
 
 test('Asserts that getBlocksDataFullRawItem will return full details for blocks if key is not provided.', function () {
@@ -105,12 +114,12 @@ test('Asserts that getBlocksDataFullRawItem will return full details for blocks 
 	$items = $this->blocksExample->getBlocksDataFullRawItem('');
 
 	$this->assertIsArray($items);
-	$this->assertNotContains('button', array_keys($items));
-	$this->assertContains('dependency', array_keys($items));
-	$this->assertContains('blocks', array_keys($items));
-	$this->assertContains('components', array_keys($items));
-	$this->assertContains('wrapper', array_keys($items));
-	$this->assertContains('settings', array_keys($items));
+	$this->assertNotContains('button', array_keys($items), "Items array contains button key");
+	$this->assertContains('dependency', array_keys($items), "Items array doesn't contain dependency key");
+	$this->assertContains('blocks', array_keys($items), "Items array doesn't contain blocks key");
+	$this->assertContains('components', array_keys($items), "Items array doesn't contain components key");
+	$this->assertContains('wrapper', array_keys($items), "Items array doesn't contain wrapper key");
+	$this->assertContains('settings', array_keys($items), "Items array doesn't contain settings key");
 });
 
 test('Asserts that getBlocksDataFullRawItem will return all blocks details if key is default.', function () {
@@ -118,10 +127,10 @@ test('Asserts that getBlocksDataFullRawItem will return all blocks details if ke
 	$items = $this->blocksExample->getBlocksDataFullRawItem();
 
 	$this->assertIsArray($items);
-	$this->assertContains('blockName', array_keys($items[0]));
-	$this->assertEquals('button', $items[0]['blockName']);
-	$this->assertNotContains('componentName', array_keys($items[0]));
-	$this->assertNotEquals('test', $items[0]['blockName']);
+	$this->assertContains('blockName', array_keys($items[0]), "Items array doesn't contain blockName key");
+	$this->assertEquals('button', $items[0]['blockName'], "Items array doesn't contain blockName key with value button");
+	$this->assertNotContains('componentName', array_keys($items[0]), "Items array does contain componentName key");
+	$this->assertNotEquals('test', $items[0]['blockName'], "Items array contain blockName key with value test");
 });
 
 test('Asserts that getBlocksDataFullRawItem will return all components details if key is components.', function () {
@@ -129,10 +138,10 @@ test('Asserts that getBlocksDataFullRawItem will return all components details i
 	$items = $this->blocksExample->getBlocksDataFullRawItem('components');
 
 	$this->assertIsArray($items);
-	$this->assertContains('componentName', array_keys($items[0]));
-	$this->assertEquals('button', $items[0]['componentName']);
-	$this->assertNotContains('blockName', array_keys($items[0]));
-	$this->assertNotEquals('test', $items[0]['componentName']);
+	$this->assertContains('componentName', array_keys($items[0]), "Items array doesn't contain componentName key");
+	$this->assertEquals('button', $items[0]['componentName'], "Items array doesn't contain componentName key with value button");
+	$this->assertNotContains('blockName', array_keys($items[0]), "Items array does contain blockName key");
+	$this->assertNotEquals('test', $items[0]['componentName'], "Items array contain componentName key with value test");
 });
 
 test('Asserts that getBlocksDataFullRawItem will return empty array if code is run using WP_CLI.', function () {
@@ -143,6 +152,27 @@ test('Asserts that getBlocksDataFullRawItem will return empty array if code is r
 
 	$this->assertIsArray($items);
 	$this->assertEmpty($items);
-	$this->assertEmpty($items);
-	$this->assertNotContains('componentName', $items);
+	$this->assertNotContains('componentName', $items, "Items array contains componentName");
 });
+
+test('Asserts that render component view template.', function () {
+
+	$blockManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+	$blockManifest['example']['attributes']['blockName'] = 'button';
+
+	$block = $this->blocksExample->render($blockManifest['example']['attributes'], '');
+
+	$this->assertEquals('test', $block);
+	$this->assertNotEquals('fake', $block, "Blocks render contains fake string.");
+});
+
+test('Asserts that render will throw error if block view is missing.', function () {
+
+	$blockManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+
+	$this->blocksExample->render($blockManifest['example']['attributes'], '');
+})->throws(InvalidBlock::class);
+
+test('Asserts that renderWrapperView will throw error if patch is not valid.', function () {
+	$this->blocksExample->renderWrapperView('fake path', []);
+})->throws(InvalidBlock::class);

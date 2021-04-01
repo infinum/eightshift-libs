@@ -41,7 +41,7 @@ afterEach(function () {
 	$blockMock = mock(BlockCli::class)
 		->makePartial()
 		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(dirname(__FILE__, 2) . '/data/frontend-libs');
+		->andReturn(dirname(__FILE__, 2) . '/data/');
 
 	$mock = $blockMock->getMock();
 

@@ -33,7 +33,6 @@
   },
   "require-dev": {
     "brain/monkey": "^2.5",
-    "brain/faker": "dev-master",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "infinum/eightshift-coding-standards": "^1.1",
     "pestphp/pest": "^1.0.2",

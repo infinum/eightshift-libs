@@ -55,7 +55,7 @@ test('Throws type exception if wrong argument type is passed to classnames',
  * Components::getManifest tests
  */
 test('Asserts that reading manifest.json using getManifest will return an array', function () {
-	$results = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button');
+	$results = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
 	$this->assertIsArray($results, 'The result is not an array');
 	$this->assertArrayHasKey('componentName', $results, 'Missing a key from the manifest.json file');
@@ -71,7 +71,6 @@ test('Asserts that not specifying the path in getManifest will throw an exceptio
  * Components::render tests
  */
 test('Asserts that rendering a component works', function () {
-	Functions\when('get_template_directory')->justReturn(dirname(__FILE__, 2) . '/data/frontend-libs');
 	$results = Components::render('button', []);
 
 	$this->assertNotEmpty($results, 'Component should be rendered here');
@@ -79,7 +78,6 @@ test('Asserts that rendering a component works', function () {
 });
 
 test('Asserts that rendering a component will output a wrapper if parentClass is provided', function () {
-	Functions\when('get_template_directory')->justReturn(dirname(__FILE__, 2) . '/data/frontend-libs');
 	$results = Components::render('button', ['parentClass' => 'test']);
 
 	$this->assertNotEmpty($results, 'Component should be rendered here');
@@ -97,8 +95,6 @@ test('Asserts that providing a missing component will throw an exception', funct
 })->throws(ComponentException::class);
 
 test('Asserts that render used components defaults', function () {
-	Functions\when('get_template_directory')->justReturn(dirname(__FILE__, 2) . '/data/frontend-libs');
-
 	$results = Components::render('button', [], '', true);
 
 	$this->assertNotEmpty($results, 'Component should be rendered here');
@@ -109,7 +105,7 @@ test('Asserts that render used components defaults', function () {
  * Components::getDefaultRenderAttributes tests
  */
 test('Asserts that getDefaultRenderAttributes will merge rendered attributes with manifest attributes that have default values', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button/');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 
 	$output = Components::getDefaultRenderAttributes(
 		$manifest,
@@ -173,7 +169,7 @@ test('Asserts that providing wrong number of arguments to responsiveSelectors wi
  * Components::checkAttr tests
  */
 test('Asserts that checkAttr works in case attribute is string', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button/');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonAlign'] = 'right';
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
@@ -184,7 +180,7 @@ test('Asserts that checkAttr works in case attribute is string', function () {
 
 
 test('Asserts that checkAttr works in case attribute is boolean', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button/');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonIsAnchor'] = true;
 
 	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);
@@ -195,7 +191,7 @@ test('Asserts that checkAttr works in case attribute is boolean', function () {
 
 
 test('Asserts that checkAttr returns false in case attribute is boolean and default is not set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button/');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonIsAnchor'] = true;
 
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest);
@@ -206,7 +202,7 @@ test('Asserts that checkAttr returns false in case attribute is boolean and defa
 
 
 test('Asserts that checkAttr works in case attribute is array', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button/');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonAttrs'] = ['attr 1', 'attr 2'];
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
@@ -218,7 +214,7 @@ test('Asserts that checkAttr works in case attribute is array', function () {
 
 
 test('Asserts that checkAttr returns empty array in case attribute is array or object and default is not set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button/');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonSize'] = 'large';
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
@@ -229,7 +225,7 @@ test('Asserts that checkAttr returns empty array in case attribute is array or o
 
 
 test('Asserts that checkAttr returns default value', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button/');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['title'] = 'Some attribute';
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest, 'button');
@@ -239,7 +235,7 @@ test('Asserts that checkAttr returns default value', function () {
 });
 
 test('Asserts that checkAttr throws exception if manifest key is not set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button/');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['title'] = 'Some attribute';
 
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
@@ -276,7 +272,7 @@ test('Asserts that selector returns the correct class when element is an empty s
  * Components::outputCssVariablesGlobal tests
  */
 test('Asserts that outputCssVariablesGlobal returns the correct css variables from global manifest', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariablesGlobal($globalManifest);
 
@@ -298,7 +294,7 @@ test('Asserts that outputCssVariablesGlobal returns empty string if global manif
  * Components::outputCssVariablesGlobalInner tests
  */
 test('Asserts that outputCssVariablesGlobalInner returns the correct css variable for color', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariablesGlobalInner(
 		$globalManifest['globalVariables']['colors'],
@@ -310,7 +306,7 @@ test('Asserts that outputCssVariablesGlobalInner returns the correct css variabl
 });
 
 test('Asserts that outputCssVariablesGlobalInner returns the correct css variable for gradients', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariablesGlobalInner(
 		$globalManifest['globalVariables']['gradients'],
@@ -322,7 +318,7 @@ test('Asserts that outputCssVariablesGlobalInner returns the correct css variabl
 });
 
 test('Asserts that outputCssVariablesGlobalInner returns the correct css variable for fontSizes', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariablesGlobalInner(
 		$globalManifest['globalVariables']['fontSizes'],
@@ -334,7 +330,7 @@ test('Asserts that outputCssVariablesGlobalInner returns the correct css variabl
 });
 
 test('Asserts that outputCssVariablesGlobalInner returns the correct css variable for generic value', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariablesGlobalInner(
 		$globalManifest['globalVariables']['gutters'],
@@ -362,7 +358,7 @@ test('Asserts that outputCssVariablesGlobalInner provided data si wrong', functi
  * Components::outputCssVariables tests
  */
 test('Asserts that outputCssVariables returns the correct css variables output', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
 	$attributes = [
 		'buttonSize' => 'default',
@@ -386,7 +382,7 @@ test('Asserts that outputCssVariables returns the correct css variables output',
 });
 
 test('Asserts that outputCssVariables will not return css variables if data is empty', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/frontend-libs/src/Blocks/components/button');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
 	$attributes = [
 		'buttonSize' => 'default',
