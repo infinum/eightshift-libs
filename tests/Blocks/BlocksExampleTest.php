@@ -155,7 +155,7 @@ test('Asserts that getBlocksDataFullRawItem will return empty array if code is r
 	$this->assertNotContains('componentName', $items, "Items array contains componentName");
 });
 
-test('Asserts that render component view template.', function () {
+test('Asserts that render component will load view template.', function () {
 
 	$blockManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 	$blockManifest['example']['attributes']['blockName'] = 'button';
