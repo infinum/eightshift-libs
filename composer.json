@@ -25,11 +25,11 @@
   },
   "require": {
     "php": "^7.3",
+    "ext-dom": "*",
     "ext-json": "*",
     "ext-libxml": "*",
-    "ext-dom": "*",
-    "php-di/php-di": "^6.3.0",
-    "php-di/invoker": "^2.0"
+    "php-di/invoker": "^2.0",
+    "php-di/php-di": "^6.3.0"
   },
   "require-dev": {
     "brain/monkey": "^2.5",

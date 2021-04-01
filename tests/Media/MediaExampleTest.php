@@ -26,9 +26,6 @@ test('Register method will call init hook', function () {
 });
 
 test('addThemeSupport method will call add_theme_support() function with different arguments', function () {
-
-	$arg = '';
-
 	Functions\when('add_theme_support')->alias(function($arg) {
 		$envName = strtoupper($arg);
 		$envName = \str_replace('-', '_', $envName);

@@ -4,11 +4,18 @@ namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
+use Brain\Monkey\Functions;
 
+use Brain\Monkey;
 use function Tests\setupMocks;
 
 beforeAll(function () {
+	Monkey\setUp();
 	setupMocks();
+});
+
+afterAll(function() {
+	Monkey\tearDown();
 });
 
 /**
@@ -332,8 +339,8 @@ test('Asserts that outputCssVariablesGlobalInner returns the correct css variabl
 
 	$this->assertIsString($output);
 	$this->assertStringContainsString('--global-gutters-none: 0;', $output);
-	$this->assertStringContainsString('--global-gutters-default: 25px;', $output);
-	$this->assertStringContainsString('--global-gutters-big: 50px;', $output);
+	$this->assertStringContainsString('--global-gutters-default: 1.25em;', $output);
+	$this->assertStringContainsString('--global-gutters-big: 2.5em;', $output);
 });
 
 test('Asserts that outputCssVariablesGlobalInner provided data si wrong', function () {
