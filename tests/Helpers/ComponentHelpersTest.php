@@ -4,10 +4,12 @@ namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
-use Brain\Monkey\Functions;
 
 use Brain\Monkey;
+use EightshiftBoilerplate\Blocks\BlocksExample;
+
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeAll(function () {
 	Monkey\setUp();
@@ -435,4 +437,59 @@ test('Asserts that camelToKebabCase returns the wrong output', function () {
 	$output = Components::camelToKebabCase('super_CoolTest-String ivan');
 
 	$this->assertNotEquals('super-cool-test-string-ivan', $output);
+});
+
+/**
+ * Components::props tests
+ */
+test('Asserts props for heading block will return only heading attributes', function () {
+	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
+	$headingComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading');
+	$typographyComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = array_merge(
+		$headingBlock['attributes'],
+		$headingComponent['attributes'],
+		$typographyComponent['attributes']
+	);
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$globalData = $this->blocksExample->getBlocksDataFullRawItem('dependency');
+
+	$output = Components::props($attributes, $headingBlock['blockName'], '', true, $globalData);
+
+	$this->assertIsArray($output);
+	$this->assertContains('headingAlign', array_keys($output), "Output array doesn't contain headingAlign attribute key.");
+	$this->assertNotContains('typographySize', array_keys($output), "Output array does contain typographySize attribute key.");
+});
+
+test('Asserts props for heading component will return only typography attributes', function () {
+	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
+	$headingComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading');
+	$typographyComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = array_merge(
+		$headingBlock['attributes'],
+		$headingComponent['attributes'],
+		$typographyComponent['attributes']
+	);
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$globalData = $this->blocksExample->getBlocksDataFullRawItem('dependency');
+
+	$output = Components::props($attributes, 'typography', $headingComponent['componentName'], false, $globalData);
+
+	$this->assertIsArray($output);
+	$this->assertContains('typographyAlign', array_keys($output), "Output array doesn't contain typographyAlign attribute key.");
+	$this->assertNotContains('headingSize', array_keys($output), "Output array does contain headingSize attribute key.");
 });

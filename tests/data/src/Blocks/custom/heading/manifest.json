@@ -1,0 +1,41 @@
+{
+	"blockName": "heading",
+	"title": "Heading",
+	"description" : "Heading block with custom settings.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-heading"
+	},
+	"keywords": [
+		"heading",
+		"title",
+		"label"
+	],
+	"example": {
+		"attributes": {
+			"headingAlign": "left"
+		}
+	},
+	"attributes": {
+		"headingAlign": {
+			"type": "string",
+			"default": "left",
+			"variable": true
+		},
+		"testSize": {
+			"type": "string",
+			"default": "left",
+			"variable": true
+		}
+	},
+	"components": {
+		"heading": "heading"
+	},
+	"options": {
+		"headingAlign": [
+			"left",
+			"center",
+			"right"
+		]
+	}
+}

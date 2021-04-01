@@ -105,7 +105,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getBlocksDataFullRawItem(string $key = 'blocks'): array
 	{
-		if (defined('WP_CLI')) {
+		if (defined('WP_CLI') && !getenv('TEST')) {
 			return [];
 		}
 
