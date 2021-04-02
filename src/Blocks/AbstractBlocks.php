@@ -151,9 +151,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function registerBlocks(): void
 	{
-		$blocks = $this->blocks['blocks'];
+		$blocks = $this->blocks['blocks'] ?? [];
 
-		if (empty($blocks)) {
+		if (!$blocks) {
 			throw InvalidBlock::missingBlocksException();
 		}
 
@@ -474,7 +474,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	protected function prepareComponentAttribute(array $component, string $realComponentName, string $newComponentName): array
 	{
-		$componentAttributes = $component['attributes'];
+		$componentAttributes = $component['attributes'] ?? [];
 
 		if ($realComponentName === $newComponentName) {
 			return $componentAttributes;
@@ -498,11 +498,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	protected function prepareComponentAttributes(array $blockDetails): array
 	{
-		$output = [];
-		$componentAttributes = [];
-
 		if (!isset($blockDetails['components'])) {
-			return $output;
+			return [];
 		}
 
 		if (isset($blockDetails['attributes'])) {
@@ -512,8 +509,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		foreach ($blockDetails['components'] as $newComponentName => $realComponentName) {
 			$component = $this->getComponent($realComponentName);
 
-			$outputAttributes = [];
-
 			if (isset($component['components'])) {
 				$outputAttributes = $this->prepareComponentAttributes($component);
 			} else {
@@ -521,13 +516,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			}
 
 			$output = array_merge(
-				$output,
 				$outputAttributes,
-				$componentAttributes
+				$componentAttributes ?? []
 			);
 		}
 
-		return $output;
+		return $output ?? [];
 	}
 
 	/**
