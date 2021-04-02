@@ -6,7 +6,6 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Exception\InvalidBlock;
-use EightshiftLibs\Helpers\Components;
 
 use function Tests\setupMocks;
 use function Tests\mock;
@@ -15,22 +14,9 @@ beforeEach(function() {
 	Monkey\setUp();
 	setupMocks();
 
-	mock('alias:EightshiftBoilerplate\Config\Config')
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
-
-	mock('alias:EightshiftBoilerplateVendor\EightshiftLibs\Helpers\Components')
-	->shouldReceive([
-		'render' => 'test',
-		'getManifest' => '',
-		'checkAttr' => '',
-		'selector' => '',
-		'responsiveSelectors' => '',
-		'classnames' => ''
-	]);
+	$this->config = mock('alias:EightshiftBoilerplate\Config\Config');
 
 	$this->blocksExample = new BlocksExample();
-	$this->blocksExample->getBlocksDataFullRaw();
 });
 
 afterEach(function() {
@@ -38,6 +24,10 @@ afterEach(function() {
 });
 
 test('Register method will call init hooks', function () {
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
+
 	$this->blocksExample->register();
 
 	$this->assertSame(10, has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->getBlocksDataFullRaw()'), 'The callback getBlocksDataFullRaw should be hooked to init hook with priority 10');
@@ -100,6 +90,12 @@ test('Asserts that getAllBlocksList will return only projects blocks.', function
 
 	$post = \Mockery::mock('WP_Post');
 
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
+
+	$this->blocksExample->getBlocksDataFullRaw();
+
 	$list = $this->blocksExample->getAllBlocksList([], $post);
 
 	$this->assertIsArray($list);
@@ -110,6 +106,12 @@ test('Asserts that getAllBlocksList will return only projects blocks.', function
 });
 
 test('Asserts that getBlocksDataFullRawItem will return full details for blocks if key is not provided.', function () {
+
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
+
+	$this->blocksExample->getBlocksDataFullRaw();
 
 	$items = $this->blocksExample->getBlocksDataFullRawItem('');
 
@@ -124,6 +126,12 @@ test('Asserts that getBlocksDataFullRawItem will return full details for blocks 
 
 test('Asserts that getBlocksDataFullRawItem will return all blocks details if key is default.', function () {
 
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
+
+	$this->blocksExample->getBlocksDataFullRaw();
+
 	$items = $this->blocksExample->getBlocksDataFullRawItem();
 
 	$this->assertIsArray($items);
@@ -134,6 +142,12 @@ test('Asserts that getBlocksDataFullRawItem will return all blocks details if ke
 });
 
 test('Asserts that getBlocksDataFullRawItem will return all components details if key is components.', function () {
+
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
+
+	$this->blocksExample->getBlocksDataFullRaw();
 
 	$items = $this->blocksExample->getBlocksDataFullRawItem('components');
 
@@ -147,32 +161,119 @@ test('Asserts that getBlocksDataFullRawItem will return all components details i
 test('Asserts that getBlocksDataFullRawItem will return empty array if code is run using WP_CLI.', function () {
 
 	define('WP_CLI', true);
+	putenv('TEST');
 
 	$items = $this->blocksExample->getBlocksDataFullRawItem();
 
 	$this->assertIsArray($items);
 	$this->assertEmpty($items);
 	$this->assertNotContains('componentName', $items, "Items array contains componentName");
+	putenv('TEST=1');
 });
 
 test('Asserts that render component will load view template.', function () {
 
-	$blockManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
-	$blockManifest['example']['attributes']['blockName'] = 'button';
+	$blockManifest = [
+		'blockName' => 'button',
+	];
 
-	$block = $this->blocksExample->render($blockManifest['example']['attributes'], '');
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
 
-	$this->assertEquals('test', $block);
-	$this->assertNotEquals('fake', $block, "Blocks render contains fake string.");
+	$block = $this->blocksExample->render($blockManifest, '');
+
+	$this->assertStringContainsString('Wrapper!', $block);
+	$this->assertStringNotContainsString('fake', $block, "Blocks render contains fake string.");
 });
 
 test('Asserts that render will throw error if block view is missing.', function () {
+	$blockManifest = [
+		'blockName' => 'fake',
+	];
 
-	$blockManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
 
-	$this->blocksExample->render($blockManifest['example']['attributes'], '');
+	$this->blocksExample->render($blockManifest, '');
 })->throws(InvalidBlock::class);
 
-test('Asserts that renderWrapperView will throw error if patch is not valid.', function () {
+test('Asserts that render will throw error if wrapper view is missing.', function () {
+	$blockManifest = [
+		'blockName' => 'fake',
+	];
+
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('fake');
+
+	$this->blocksExample->render($blockManifest, '');
+
+})->throws(InvalidBlock::class);
+
+test('Asserts that renderWrapperView will return a valid file.', function () {
+	$wrapperManifest = dirname(__FILE__, 2) . '/data/src/Blocks/wrapper/wrapper.php';
+
+	$this->blocksExample->renderWrapperView($wrapperManifest, []);
+
+	$this->assertTrue(true);
+});
+
+test('Asserts that renderWrapperView will throw error if path is not valid.', function () {
 	$this->blocksExample->renderWrapperView('fake path', []);
 })->throws(InvalidBlock::class);
+
+test('Asserts that getCustomCategory will return categories array.', function () {
+
+	$post = \Mockery::mock('WP_Post');
+	$category = $this->blocksExample->getCustomCategory([], $post);
+
+	$this->assertIsArray($category);
+	$this->assertContains('eightshift', $category[0], "Items array doesn't contain eightshift category");
+});
+
+test('Asserts that getCustomCategory will throw error if first argument is not array.', function () {
+
+	$post = \Mockery::mock('WP_Post');
+	$this->blocksExample->getCustomCategory('', $post);
+
+})->throws(\TypeError::class);
+
+test('changeEditorColorPalette method will call add_theme_support() function with if colors exist.', function () {
+
+	Functions\when('add_theme_support')->alias(function($arg) {
+		$envName = strtoupper($arg);
+		$envName = \str_replace('-', '_', $envName);
+		putenv("{$envName}=true");
+	});
+
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
+
+	$this->blocksExample->getBlocksDataFullRaw();
+
+	$this->blocksExample->changeEditorColorPalette();
+
+	$this->assertSame(getenv('EDITOR_COLOR_PALETTE'), 'true', "Method addThemeSupport() didn't add theme support for editor-color-palette");
+});
+
+test('registerBlocks method will register all blocks.', function () {
+
+	putenv('BLOCK_TYPE=false');
+
+	Functions\when('register_block_type')->alias(function(string $name, array $args = []) {
+		putenv('BLOCK_TYPE=true');
+	});
+
+	$this->config
+	->shouldReceive('getProjectPath')
+	->andReturn('tests/data');
+
+	$this->blocksExample->getBlocksDataFullRaw();
+
+	$this->blocksExample->registerBlocks();
+
+	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no sideaffects');
+});
