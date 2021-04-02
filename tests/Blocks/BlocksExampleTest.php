@@ -160,7 +160,10 @@ test('Asserts that getBlocksDataFullRawItem will return all components details i
 
 test('Asserts that getBlocksDataFullRawItem will return empty array if code is run using WP_CLI.', function () {
 
-	define('WP_CLI', true);
+	if (!defined('WP_CLI')) {
+		define('WP_CLI', true);
+	}
+
 	putenv('TEST');
 
 	$items = $this->blocksExample->getBlocksDataFullRawItem();
@@ -277,3 +280,7 @@ test('registerBlocks method will register all blocks.', function () {
 
 	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no sideaffects');
 });
+
+test('registerBlocks method will throws error if blocks are not registered.', function () {
+	$this->blocksExample->registerBlocks();
+})->throws(InvalidBlock::class);
