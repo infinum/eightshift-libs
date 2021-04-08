@@ -359,12 +359,11 @@ test('Asserts that outputCssVariablesGlobalInner provided data si wrong', functi
 /**
  * Components::outputCssVariables tests
  */
-test('Asserts that outputCssVariables returns the correct css variables output', function () {
+test('Asserts that outputCssVariables returns the correct css variables output for default type', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
 	$attributes = [
 		'buttonSize' => 'default',
-		'buttonColor' => 'primary',
 		'buttonWidth' => 'default',
 		'buttonAlign' => 'left',
 	];
@@ -378,9 +377,118 @@ test('Asserts that outputCssVariables returns the correct css variables output',
 	$this->assertIsString($output);
 	$this->assertStringContainsString('<style>', $output);
 	$this->assertStringContainsString('--button-size: default;', $output);
-	$this->assertStringContainsString('--button-color: var(--global-colors-primary);', $output);
 	$this->assertStringNotContainsString('--button-content:', $output);
 	$this->assertStringContainsString(".btn[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns manual variables', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+
+	$attributes = [
+		'buttonAlign' => 'left',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--variable1: test1;', $output);
+	$this->assertStringContainsString('--variable2: test2;', $output);
+	$this->assertStringContainsString('--variable3: test3', $output);
+});
+
+test('Asserts that outputCssVariables returns global variable for color type', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+
+	$attributes = [
+		'buttonColor' => 'primary',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--button-color: var(--global-colors-primary);', $output);
+	$this->assertStringNotContainsString('--button-content:', $output);
+});
+
+test('Asserts that outputCssVariables returns boolean value for boolean type if options key is not set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+
+	$attributes = [
+		'buttonIsAnchor' => true,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--button-is-anchor: true;', $output);
+	$this->assertStringNotContainsString('--button-content:', $output);
+});
+
+test('Asserts that outputCssVariables returns custom value for boolean type if options key is set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+
+	$attributes = [
+		'buttonUse' => true,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--button-use: test-true;', $output);
+	$this->assertStringNotContainsString('--button-content:', $output);
+});
+
+test('Asserts that outputCssVariables returns value for select type if variable keys is not set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'typographySize' => "16-text-roman",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--typography-size: 16-text-roman;', $output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
+test('Asserts that outputCssVariables returns variable for select type if variable keys is set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectVariable' => "test-2",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--test-select-variable: custom-variable-2;', $output);
+	$this->assertStringNotContainsString('--typography-size: 16-text-roman;', $output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
 test('Asserts that outputCssVariables will not return css variables if data is empty', function () {
