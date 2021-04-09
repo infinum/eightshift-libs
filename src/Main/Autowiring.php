@@ -116,6 +116,12 @@ class Autowiring
 			return [];
 		}
 
+		// Ignore dependedncies for autowire and main class.
+		$ignorePaths = array_flip([
+			'psr4Prefixes',
+			'namespace',
+		]);
+
 		$dependencyTree = [];
 		$reflClass = new \ReflectionClass($relevantClass);
 		// If this class has dependencies, we need to figure those out. Otherwise
@@ -136,7 +142,7 @@ class Autowiring
 				// We're unable to autowire primitive dependency and there doesn't seem to yet be a way
 				// to check if this parameter has a default value or not (so we need to throw an exception regardless).
 				// See: https://www.php.net/manual/en/class.reflectionnamedtype.php.
-				if ($isBuiltin) {
+				if ($isBuiltin && !isset($ignorePaths[$reflParam->getName()])) {
 					throw InvalidAutowireDependency::throwPrimitiveDependencyFound($relevantClass);
 				}
 
