@@ -389,7 +389,7 @@ class Components
 		if ($defaultAttributes) {
 			$default = [];
 
-			foreach($defaultAttributes as $key => $value) {
+			foreach ($defaultAttributes as $key => $value) {
 				if (isset($value['default'])) {
 					$default[$key] = $value['default'];
 				}
