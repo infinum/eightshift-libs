@@ -382,8 +382,31 @@ class Components
 				continue;
 			}
 
-			if (isset($manifest['attributes'][$key]['color'])) {
+			// Output color variable from the global variables.
+			if ($manifest['attributes'][$key]['variable'] === 'color') {
 				$value = "var(--global-colors-{$value})";
+			}
+
+			// Output select variable from the options array but dont use value key. It will use variable key.
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'select-variable') {
+				$selectVariable = array_values(array_filter(
+					$manifest['options'][$key],
+					function ($item) use ($attributes, $key) {
+						return $item['value'] === $attributes[$key];
+					}
+				))[0]['variable'] ?? null;
+
+				$value = $selectVariable === null ? $attributes[$key] : $selectVariable;
+			}
+
+			// Output boolean variable from the options array key. First key is false value, second is true value.
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'boolean-variable' && count($manifest['options'][$key]) === 2) {
+				$value = $manifest['options'][$key][(int)$attributes[$key]];
+			}
+
+			// Return correct boolean type as string.
+			if (gettype($value) === 'boolean') {
+				$value = $value ? 'true' : 'false';
 			}
 
 			$key = self::camelToKebabCase($key);
@@ -391,10 +414,15 @@ class Components
 			$output .= "--{$key}: {$value};\n";
 		}
 
+
+		// Output manual output from the array of variables.
+		$manual = isset($manifest['variables']) ? implode(";\n", $manifest['variables']) : '';
+
 		return "
 			<style>
 				.{$name}[data-id='{$unique}'] {
 					{$output}
+					{$manual}
 				}
 			</style>
 		";

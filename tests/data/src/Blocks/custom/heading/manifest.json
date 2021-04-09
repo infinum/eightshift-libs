@@ -20,12 +20,12 @@
 		"headingAlign": {
 			"type": "string",
 			"default": "left",
-			"variable": true
+			"variable": "default"
 		},
 		"testSize": {
 			"type": "string",
 			"default": "left",
-			"variable": true
+			"variable": "default"
 		}
 	},
 	"components": {
