@@ -388,7 +388,7 @@ class Components
 			}
 
 			// Output select variable from the options array but dont use value key. It will use variable key.
-			if ($manifest['attributes'][$key]['variable'] === 'select-variable' && isset($manifest['options'][$key])) {
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'select-variable') {
 				$selectVariable = array_values(array_filter(
 					$manifest['options'][$key],
 					function ($item) use ($attributes, $key) {
@@ -400,7 +400,7 @@ class Components
 			}
 
 			// Output boolean variable from the options array key. First key is false value, second is true value.
-			if ($manifest['attributes'][$key]['variable'] === 'boolean-variable' && isset($manifest['options'][$key]) && count($manifest['options'][$key]) === 2) {
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'boolean-variable' && count($manifest['options'][$key]) === 2) {
 				$value = $manifest['options'][$key][(int)$attributes[$key]];
 			}
 
@@ -415,7 +415,7 @@ class Components
 		}
 
 
-		// Output manual output from the array ov variables.
+		// Output manual output from the array of variables.
 		$manual = isset($manifest['variables']) ? implode(";\n", $manifest['variables']) : '';
 
 		return "

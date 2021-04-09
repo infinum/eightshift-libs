@@ -273,7 +273,7 @@ test('Asserts that selector returns the correct class when element is an empty s
 /**
  * Components::outputCssVariablesGlobal tests
  */
-test('Asserts that outputCssVariablesGlobal returns the correct css variables from global manifest', function () {
+test('Asserts that outputCssVariablesGlobal returns the correct CSS variables from global manifest', function () {
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariablesGlobal($globalManifest);
@@ -359,7 +359,7 @@ test('Asserts that outputCssVariablesGlobalInner provided data si wrong', functi
 /**
  * Components::outputCssVariables tests
  */
-test('Asserts that outputCssVariables returns the correct css variables output for default type', function () {
+test('Asserts that outputCssVariables returns the correct CSS variables output for default type', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
 	$attributes = [
