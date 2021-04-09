@@ -29,12 +29,12 @@
 		"typographySize": {
 			"type": "string",
 			"default": "16-text-roman",
-			"variable": "select-variable"
+			"variable": "select"
 		},
 		"testSelectVariable": {
 			"type": "string",
 			"default": "test-2",
-			"variable": "select-variable"
+			"variable": "select"
 		},
 		"typographyColor": {
 			"type": "string",

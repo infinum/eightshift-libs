@@ -487,7 +487,6 @@ test('Asserts that outputCssVariables returns variable for select type if variab
 
 	$this->assertIsString($output);
 	$this->assertStringContainsString('--test-select-variable: custom-variable-2;', $output);
-	$this->assertStringNotContainsString('--typography-size: 16-text-roman;', $output);
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 

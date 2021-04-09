@@ -377,6 +377,27 @@ class Components
 
 		$name = self::camelToKebabCase($name);
 
+		// Check manifest for the attributes with variable key.
+		$defaultAttributes = array_filter(
+			$manifest['attributes'],
+			function ($item) {
+				return isset($item['variable']);
+			}
+		);
+
+		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
+		if ($defaultAttributes) {
+			$default = [];
+
+			foreach ($defaultAttributes as $key => $value) {
+				if (isset($value['default'])) {
+					$default[$key] = $value['default'];
+				}
+			}
+
+			$attributes = array_merge($default, $attributes);
+		}
+
 		foreach ($attributes as $key => $value) {
 			if (!isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
 				continue;
@@ -388,7 +409,7 @@ class Components
 			}
 
 			// Output select variable from the options array but dont use value key. It will use variable key.
-			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'select-variable') {
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'select') {
 				$selectVariable = array_values(array_filter(
 					$manifest['options'][$key],
 					function ($item) use ($attributes, $key) {
@@ -400,7 +421,7 @@ class Components
 			}
 
 			// Output boolean variable from the options array key. First key is false value, second is true value.
-			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'boolean-variable' && count($manifest['options'][$key]) === 2) {
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'boolean' && count($manifest['options'][$key]) === 2) {
 				$value = $manifest['options'][$key][(int)$attributes[$key]];
 			}
 
