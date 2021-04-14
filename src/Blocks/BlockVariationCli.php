@@ -36,6 +36,20 @@ class BlockVariationCli extends AbstractCli
 	}
 
 	/**
+	 * Define default develop props.
+	 *
+	 * @param array $args WPCLI eval-file arguments.
+	 *
+	 * @return array
+	 */
+	public function getDevelopArgs(array $args): array
+	{
+		return [
+			'name' => $args[1] ?? 'button',
+		];
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array
@@ -69,7 +83,12 @@ class BlockVariationCli extends AbstractCli
 		$path = static::OUTPUT_DIR . '/' . $name;
 		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
 		$sourcePath = "{$sourcePathFolder}{$name}";
-		$destinationPath = $root . '/' . $path;
+
+		if (!getenv('TEST')) {
+			$destinationPath = $root . '/' . $path;
+		} else {
+			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
+		}
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {

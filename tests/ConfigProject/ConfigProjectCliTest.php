@@ -67,7 +67,6 @@ test('ConfigProject CLI command will correctly copy the ConfigProject class with
 	$this->assertStringContainsString('!defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
 });
 
-
 test('ConfigProject CLI documentation is correct', function () {
 	$configProject = $this->configProject;
 
