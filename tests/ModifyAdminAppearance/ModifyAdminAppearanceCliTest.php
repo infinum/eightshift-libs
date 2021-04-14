@@ -43,7 +43,7 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 	$generatedModifyAdminAppearance = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class ModifyAdminAppearance implements ServiceInterface', $generatedModifyAdminAppearance);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\ModifyAdminAppearance', $generatedModifyAdminAppearance);
+	$this->assertStringContainsString('@package EightshiftLibs\ModifyAdminAppearance', $generatedModifyAdminAppearance);
 	$this->assertStringContainsString('namespace EightshiftLibs\ModifyAdminAppearance', $generatedModifyAdminAppearance);
 	$this->assertStringNotContainsString('footer.php', $generatedModifyAdminAppearance);
 	$this->assertFileExists($outputPath);

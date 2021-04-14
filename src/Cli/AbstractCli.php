@@ -405,27 +405,34 @@ abstract class AbstractCli implements CliInterface
 		$vendorPrefix = $this->getVendorPrefix($args);
 		$namespace = $this->getNamespace($args);
 
-		$prefix = 'use';
+		$prefixUse = 'use';
+		$prefixPackage = '@package';
 
 		if (function_exists('\add_action')) {
 			$output = str_replace(
-				"{$prefix} EightshiftBoilerplateVendor\\",
-				"{$prefix} {$vendorPrefix}\\",
+				"{$prefixUse} EightshiftBoilerplateVendor\\",
+				"{$prefixUse} {$vendorPrefix}\\",
 				$output
 			);
 
 			$output = str_replace(
-				"{$prefix} {$vendorPrefix}\EightshiftBoilerplate\\",
-				"{$prefix} {$namespace}\\",
+				"{$prefixUse} {$vendorPrefix}\EightshiftBoilerplate\\",
+				"{$prefixUse} {$namespace}\\",
 				$output
 			);
 		} else {
 			$output = str_replace(
-				"{$prefix} EightshiftBoilerplate\\",
-				"{$prefix} {$namespace}\\",
+				"{$prefixUse} EightshiftBoilerplate\\",
+				"{$prefixUse} {$namespace}\\",
 				$output
 			);
 		}
+
+		$output = str_replace(
+			"{$prefixPackage} EightshiftBoilerplate",
+			"{$prefixPackage} {$namespace}",
+			$output
+		);
 
 		$this->fileContents = $output;
 
@@ -446,23 +453,46 @@ abstract class AbstractCli implements CliInterface
 		$vendorPrefix = $this->getVendorPrefix($args);
 		$namespace = $this->getNamespace($args);
 
-		$prefix = 'use';
+		$prefixUse = 'use';
+		$prefixPackage = '@package';
 
 		$output = str_replace(
-			"{$prefix} EightshiftBoilerplateVendor\\",
-			"{$prefix} {$vendorPrefix}\\",
+			"{$prefixUse} EightshiftBoilerplateVendor\\",
+			"{$prefixUse} {$vendorPrefix}\\",
 			$output
 		);
 
 		$output = str_replace(
-			"{$prefix} EightshiftBoilerplate\\",
-			"{$prefix} {$namespace}\\",
+			"{$prefixUse} EightshiftBoilerplate\\",
+			"{$prefixUse} {$namespace}\\",
+			$output
+		);
+
+		$output = str_replace(
+			"{$prefixPackage} EightshiftBoilerplate",
+			"{$prefixPackage} {$namespace}",
 			$output
 		);
 
 		$this->fileContents = $output;
 
 		return $this;
+	}
+
+	/**
+	 * Convert camel case to kebab case.
+	 *
+	 * @param string $input Input to convert.
+	 * @return string
+	 */
+	public function camelCaseToKebabCase(string $input): string
+	{
+		preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
+		$ret = $matches[0];
+		foreach ($ret as &$match) {
+			$match = $match === strtoupper($match) ? strtolower($match) : lcfirst($match);
+		}
+		return implode('-', $ret);
 	}
 
 	/**
@@ -474,7 +504,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomain(array $args = []): self
 	{
-		$namespace = $this->getNamespace($args);
+		$namespace = $this->camelCaseToKebabCase($this->getNamespace($args));
 
 		$this->fileContents = str_replace(
 			'eightshift-libs',
@@ -494,7 +524,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomainFrontendLibs(array $args = []): self
 	{
-		$namespace = $this->getNamespace($args);
+		$namespace = $this->camelCaseToKebabCase($this->getNamespace($args));
 
 		$this->fileContents = str_replace(
 			'eightshift-frontend-libs',

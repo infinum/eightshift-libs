@@ -43,7 +43,7 @@ test('I18n CLI command will correctly copy the I18n class with defaults', functi
 	$generatedI18n = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class I18n implements ServiceInterface', $generatedI18n);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\I18n', $generatedI18n);
+	$this->assertStringContainsString('@package EightshiftLibs\I18n', $generatedI18n);
 	$this->assertStringContainsString('namespace EightshiftLibs\I18n', $generatedI18n);
 	$this->assertStringNotContainsString('footer.php', $generatedI18n);
 	$this->assertFileExists($outputPath);

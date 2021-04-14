@@ -43,7 +43,7 @@ test('Login CLI command will correctly copy the Login class with defaults', func
 	$generatedLogin = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class Login implements ServiceInterface', $generatedLogin);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\Login', $generatedLogin);
+	$this->assertStringContainsString('@package EightshiftLibs\Login', $generatedLogin);
 	$this->assertStringContainsString('namespace EightshiftLibs\Login', $generatedLogin);
 	$this->assertStringNotContainsString('footer.php', $generatedLogin);
 	$this->assertFileExists($outputPath);
