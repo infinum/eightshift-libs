@@ -92,6 +92,7 @@ afterEach(function() {
 	putenv("ENQUEUE_STYLE");
 	putenv("REGISTER_SCRIPT");
 	putenv("ENQUEUE_SCRIPT");
+	putenv("SIDEAFFECT");
 });
 
 /**
