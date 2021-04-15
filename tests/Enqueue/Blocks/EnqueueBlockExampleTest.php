@@ -5,11 +5,27 @@ namespace Tests\Unit\EnqueueBlock;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample;
-
+use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
 use function Tests\setupMocks;
 use function Tests\mock;
+
+class EnqueueBlocksTest extends EnqueueBlocksExample {
+
+	public function __construct(ManifestInterface $manifest)
+	{
+		parent::__construct($manifest);
+	}
+
+	protected function getLocalizations(): array
+	{
+		return [
+			'someKey' => ['someValue'],
+			'anotherKey' => ['anotherValue']
+		];
+	}
+};
 
 /**
  * Setup before each test.
@@ -43,9 +59,28 @@ beforeEach(function() {
 	$manifestPath = dirname(__FILE__, 2) . '/data/public/manifest.json';
 	Functions\when('getManifestFilePath')->justReturn($manifestPath);
 
+	Functions\when('wp_register_style')->alias(function($args) {
+		putenv("REGISTER_STYLE={$args}");
+	});
+
+	Functions\when('wp_enqueue_style')->alias(function($args) {
+		putenv("ENQUEUE_STYLE={$args}");
+	});
+
+	Functions\when('wp_register_script')->alias(function($args) {
+		putenv("REGISTER_SCRIPT={$args}");
+	});
+
+	Functions\when('wp_enqueue_script')->alias(function($args) {
+		putenv("ENQUEUE_SCRIPT={$args}");
+	});
+
+	$localize = 'localize';
+	Functions\when('wp_localize_script')->justReturn(putenv("SIDEAFFECT={$localize}"));
+
 	// Creating manifest from manifest data.
 	$manifest = new ManifestExample();
-	$this->eb = new EnqueueBlocksExample($manifest);
+	$this->eb = new EnqueueBlocksTest($manifest);
 });
 
 /**
@@ -53,6 +88,11 @@ beforeEach(function() {
  */
 afterEach(function() {
 	Monkey\tearDown();
+	putenv("REGISTER_STYLE");
+	putenv("ENQUEUE_STYLE");
+	putenv("REGISTER_SCRIPT");
+	putenv("ENQUEUE_SCRIPT");
+	putenv("SIDEAFFECT");
 });
 
 /**
@@ -61,10 +101,10 @@ afterEach(function() {
 test('Enqueue Blocks\' register method will set hooks.', function () {
 	$this->eb->register();
 
-	$this->assertSame(10, has_action('enqueue_block_editor_assets', 'EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample->enqueueBlockEditorScript()'));
-	$this->assertSame(50, has_action('enqueue_block_editor_assets', 'EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample->enqueueBlockEditorStyle()'));
-	$this->assertSame(50, has_action('enqueue_block_assets', 'EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample->enqueueBlockStyle()'));
-	$this->assertSame(10, has_action('wp_enqueue_scripts', 'EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample->enqueueBlockScript()'));
+	$this->assertSame(10, has_action('enqueue_block_editor_assets', 'Tests\Unit\EnqueueBlock\EnqueueBlocksTest->enqueueBlockEditorScript()'));
+	$this->assertSame(50, has_action('enqueue_block_editor_assets', 'Tests\Unit\EnqueueBlock\EnqueueBlocksTest->enqueueBlockEditorStyle()'));
+	$this->assertSame(50, has_action('enqueue_block_assets', 'Tests\Unit\EnqueueBlock\EnqueueBlocksTest->enqueueBlockStyle()'));
+	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\EnqueueBlock\EnqueueBlocksTest->enqueueBlockScript()'));
 });
 
 /**
@@ -83,4 +123,30 @@ test('Enqueue Blocks will get assets version.', function () {
 	$assetsVersion= $this->eb->getAssetsVersion();
 
 	$this->assertSame($assetsVersion, $this->projectVersion);
+});
+
+test('enqueueBlockEditorScript method will enqueue scripts for block editor', function () {
+	$this->eb->enqueueBlockEditorScript();
+	$this->assertSame(getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-editor-scripts", "Method enqueueStyles() failed to register style");
+	$this->assertSame(getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-editor-scripts", "Method enqueueScripts() failed to enqueue style");
+	$this->assertSame(getenv('SIDEAFFECT'), 'localize', "Method wp_localize_script() failed");
+});
+
+test('enqueueBlockEditorStyle method will enqueue styles for block editor', function () {
+	$this->eb->enqueueBlockEditorStyle();
+	$this->assertSame(getenv('REGISTER_STYLE'), "{$this->projectName}-block-editor-style", "Method enqueueStyles() failed to register style");
+	$this->assertSame(getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-editor-style", "Method enqueueStyles() failed to enqueue style");
+});
+
+test('enqueueBlockStyle method will enqueue styles for a block', function () {
+	$this->eb->enqueueBlockStyle();
+	$this->assertSame(getenv('REGISTER_STYLE'), "{$this->projectName}-block-style", "Method enqueueStyles() failed to register style");
+	$this->assertSame(getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-style", "Method enqueueStyles() failed to enqueue style");
+});
+
+test('enqueueBlockScript method will enqueue scripts for a block', function () {
+	$this->eb->enqueueBlockScript();
+	$this->assertSame(getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-scripts", "Method enqueueStyles() failed to register style");
+	$this->assertSame(getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-scripts", "Method enqueueScripts() failed to enqueue style");
+	$this->assertSame(getenv('SIDEAFFECT'), 'localize', "Method wp_localize_script() failed");
 });
