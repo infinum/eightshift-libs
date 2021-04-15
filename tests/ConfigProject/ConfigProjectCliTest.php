@@ -43,7 +43,7 @@ test('ConfigProject CLI command will correctly copy the ConfigProject class with
 	$generatedConfigProject = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('!defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
-	$this->assertStringContainsString('@package EightshiftBoilerplate', $generatedConfigProject);
+	$this->assertStringContainsString('@package EightshiftLibs', $generatedConfigProject);
 	$this->assertStringNotContainsString('footer.php', $generatedConfigProject);
 	$this->assertFileExists($outputPath);
 });
@@ -66,7 +66,6 @@ test('ConfigProject CLI command will correctly copy the ConfigProject class with
 
 	$this->assertStringContainsString('!defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
 });
-
 
 test('ConfigProject CLI documentation is correct', function () {
 	$configProject = $this->configProject;

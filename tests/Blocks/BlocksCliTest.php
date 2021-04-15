@@ -43,7 +43,7 @@ test('Blocks CLI command will correctly copy the Blocks class with defaults', fu
 	$generatedBlocks = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class Blocks extends AbstractBlocks', $generatedBlocks);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\Blocks', $generatedBlocks);
+	$this->assertStringContainsString('@package EightshiftLibs\Blocks', $generatedBlocks);
 	$this->assertStringContainsString('namespace EightshiftLibs\Blocks', $generatedBlocks);
 	$this->assertStringNotContainsString('footer.php', $generatedBlocks);
 	$this->assertFileExists($outputPath);

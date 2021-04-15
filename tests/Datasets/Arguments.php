@@ -109,3 +109,47 @@ dataset('postsDifferentLength', [
     ]]
   ]]
 ]);
+
+dataset('caseCheckCorrect', [
+	['simpleTest', 'simple-test'],
+	['easy', 'easy'],
+	['HTML', 'html'],
+	['simpleXML', 'simple-xml'],
+	['PDFLoad', 'pdf-load'],
+	['startMIDDLELast', 'start-middle-last'],
+	['AString', 'a-string'],
+	['Some4Numbers234', 'some4-numbers234'],
+	['TEST123String', 'test123-string'],
+	['hello_world', 'hello-world'],
+	['hello__world', 'hello-world'],
+	['_hello_world_', '-hello-world-'],
+	['hello_World', 'hello-world'],
+	['HelloWorld', 'hello-world'],
+	['helloWorldFoo', 'hello-world-foo'],
+	['hello-world', 'hello-world'],
+	['myHTMLFiLe', 'my-html-fi-le'],
+	['aBaBaB', 'a-ba-ba-b'],
+	['BaBaBa', 'ba-ba-ba'],
+	['libC', 'lib-c'],
+]);
+
+dataset('caseCheckWrong', [
+	['simpleTest', 'simpleTest'],
+	['HTML', 'HTML'],
+	['simpleXML', 'simpleXML'],
+	['PDFLoad', 'PDFLoad'],
+	['startMIDDLELast', 'startMIDDLELast'],
+	['AString', 'AString'],
+	['Some4Numbers234', 'Some4Numbers234'],
+	['TEST123String', 'TEST123String'],
+	['hello_world', 'hello_world'],
+	['hello__world', 'hello__world'],
+	['_hello_world_', '_hello_world_'],
+	['hello_World', 'hello_World'],
+	['HelloWorld', 'HelloWorld'],
+	['helloWorldFoo', 'helloWorldFoo'],
+	['myHTMLFiLe', 'myHTMLFiLe'],
+	['aBaBaB', 'aBaBaB'],
+	['BaBaBa', 'BaBaBa'],
+	['libC', 'libC'],
+]);
