@@ -46,7 +46,7 @@ trait CliHelpers
 	 */
 	public static function camelCaseToKebabCase(string $input): string
 	{
-		$output = ltrim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
+		$output = ltrim(strtolower((string)preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
 		$output = str_replace('_', '-', $output);
 		$output = str_replace('--', '-', $output);
 
