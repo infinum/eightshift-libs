@@ -222,9 +222,7 @@ test('Asserts that renderWrapperView will return a valid file.', function () {
 	$this->blocksExample->renderWrapperView($wrapperManifest, []);
 	$content = ob_get_clean();
 
-	$this->assertSame('
-<div>Wrapper!</div>
-', $content);
+	$this->assertSame('<div>Wrapper!</div>', trim($content));
 });
 
 test('Asserts that renderWrapperView will throw error if path is not valid.', function () {
