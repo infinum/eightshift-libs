@@ -5,6 +5,7 @@ namespace Tests\Unit\Enqueue\Admin;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Enqueue\Admin\EnqueueAdminExample;
+use EightshiftLibs\Enqueue\AbstractAssets;
 use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
@@ -108,4 +109,33 @@ test('enqueueScripts method enqueue scripts in WP Admin', function () {
 	$this->assertSame(getenv('REGISTER_SCRIPT'), 'tests/data-scripts', "Method enqueueStyles() failed to register style");
 	$this->assertSame(getenv('ENQUEUE_SCRIPT'), 'tests/data-scripts', "Method enqueueScripts() failed to enqueue style");
 	$this->assertSame(getenv('SIDEAFFECT'), 'localize', "Method wp_localize_script() failed");
+});
+
+test('Localization will return empty array if not initialized', function() {
+	class ExampleLocalization extends AbstractAssets {
+
+		public function getAssetsPrefix(): string
+		{
+			return 'prefix';
+		}
+
+		public function getAssetsVersion(): string
+		{
+			return '1.0.0';
+		}
+
+		public function register(): void
+		{
+		}
+
+		public function getLocalizations(): array
+		{
+			return parent::getLocalizations();
+		}
+	}
+
+	$localizationExample = new ExampleLocalization();
+
+	$this->assertIsArray($localizationExample->getLocalizations());
+	$this->assertEmpty($localizationExample->getLocalizations());
 });
