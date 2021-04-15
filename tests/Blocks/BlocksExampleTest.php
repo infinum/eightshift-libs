@@ -218,9 +218,13 @@ test('Asserts that render will throw error if wrapper view is missing.', functio
 test('Asserts that renderWrapperView will return a valid file.', function () {
 	$wrapperManifest = dirname(__FILE__, 2) . '/data/src/Blocks/wrapper/wrapper.php';
 
+	ob_start();
 	$this->blocksExample->renderWrapperView($wrapperManifest, []);
+	$content = ob_get_clean();
 
-	$this->assertTrue(true);
+	$this->assertSame('
+<div>Wrapper!</div>
+', $content);
 });
 
 test('Asserts that renderWrapperView will throw error if path is not valid.', function () {
