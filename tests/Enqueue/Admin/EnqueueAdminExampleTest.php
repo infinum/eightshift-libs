@@ -67,7 +67,10 @@ beforeEach(function() {
 
 afterEach(function() {
 	Monkey\tearDown();
-	putenv('...=');
+	putenv("REGISTER_STYLE");
+	putenv("ENQUEUE_STYLE");
+	putenv("REGISTER_SCRIPT");
+	putenv("ENQUEUE_SCRIPT");
 });
 
 
