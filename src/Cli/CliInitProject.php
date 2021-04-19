@@ -30,6 +30,7 @@ use EightshiftLibs\Setup\SetupCli;
  */
 class CliInitProject extends AbstractCli
 {
+	public const COMMAND_NAME = 'setup_project';
 
 	/**
 	 * All classes for initial theme setup for project
@@ -60,7 +61,7 @@ class CliInitProject extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'setup_project';
+		return self::COMMAND_NAME;
 	}
 
 	/**
@@ -85,9 +86,14 @@ class CliInitProject extends AbstractCli
 		foreach (static::INIT_PROJECT_CLASSES as $item) {
 			try {
 				$reflectionClass = new \ReflectionClass($item);
+				// @codeCoverageIgnoreStart
+				// There is no way that I found to mock an internal PHP class that gets instantiated directly.
+				// The only way to mock this would to generate a Reflection factory which could be mocked.
+				// And I really feel we would be pushing the abstraction too far without much being gained.
 			} catch (\ReflectionException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
+				CliHelpers::cliError("{$e->getCode()}: {$e->getMessage()}");
 			}
+			// @codeCoverageIgnoreEnd
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 

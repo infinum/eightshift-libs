@@ -28,7 +28,7 @@ final class InvalidCallback extends \InvalidArgumentException implements General
 	{
 		$message = sprintf(
 		/* translators: %s is replaced with callback name. */
-			esc_html__('The callback %s is not recognized and cannot be registered.', 'eightshift-libs'),
+			\esc_html__('The callback %s is not recognized and cannot be registered.', 'eightshift-libs'),
 			$callback
 		);
 

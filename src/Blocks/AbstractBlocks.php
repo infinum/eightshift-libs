@@ -13,6 +13,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -27,20 +28,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @var array
 	 */
 	protected $blocks = [];
-
-	/**
-	 * Block view filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCK_VIEW_FILTER_NAME = 'block-view-data';
-
-	/**
-	 * Block attributes override filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCK_ATTRIBUTES_FILTER_NAME = 'block-attributes-override';
 
 	/**
 	 * Create custom project color palette
@@ -80,6 +67,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		if (!$this->blocks) {
 			$settings = $this->getSettings();
 			$wrapper = $this->getWrapper();
+			$components = $this->getComponents();
 
 			$blocks = array_map(
 				function ($block) use ($settings) {
@@ -96,11 +84,32 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			);
 
 			$this->blocks = [
-				'settings' => $settings,
-				'wrapper' => $wrapper,
+				'dependency' => [
+					'components' => $this->buildDependencyComponentsTree($components),
+					'blocks' => $this->buildDependencyBlocksTree($blocks, $components),
+				],
 				'blocks' => $blocks,
+				'components' => $components,
+				'wrapper' => $wrapper,
+				'settings' => $settings,
 			];
 		}
+	}
+
+	/**
+	 * Get blocks full data in raw format by item. Used with filter on the frontend.
+	 *
+	 * @param string $key Key to get data from array.
+	 *
+	 * @return array
+	 */
+	public function getBlocksDataFullRawItem(string $key = 'blocks'): array
+	{
+		if (defined('WP_CLI') && !getenv('TEST')) {
+			return [];
+		}
+
+		return $key ? $this->blocks[$key] : $this->blocks;
 	}
 
 	/**
@@ -115,11 +124,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getAllBlocksList($allowedBlockTypes, \WP_Post $post)
 	{
+		if (gettype($allowedBlockTypes) === 'boolean') {
+			return $allowedBlockTypes;
+		}
+
 		$allowedBlockTypes = array_map(
 			function ($block) {
 				return $block['blockFullName'];
 			},
-			$this->blocks['blocks']
+			$this->blocks['blocks'] ?? []
 		);
 
 		// Allow reusable block.
@@ -138,9 +151,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function registerBlocks(): void
 	{
-		$blocks = $this->blocks['blocks'];
+		$blocks = $this->blocks['blocks'] ?? [];
 
-		if (empty($blocks)) {
+		if (!$blocks) {
 			throw InvalidBlock::missingBlocksException();
 		}
 
@@ -331,7 +344,38 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get wrapper manifest data from wrapper manifest.json file
+	 * Get all components in the components folder.
+	 *
+	 * @throws InvalidBlock Throws error thera are no components in the project.
+	 *
+	 * @return array
+	 */
+	protected function getComponents(): array
+	{
+
+		$paths = scandir($this->getBlocksComponentsPath()) ?? [];
+
+		if (!$paths && !defined('WP_CLI')) {
+			throw InvalidBlock::missingComponentsException();
+		}
+
+		$components = array_diff((array)$paths, ['..', '.']);
+
+		$output = [];
+
+		if (!$components) {
+			return $output;
+		}
+
+		foreach ($components as $component) {
+			$output[] = $this->getComponent((string)$component);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get component manifest data from component manifest.json file
 	 *
 	 * @param string $componentName Name of the component.
 	 *
@@ -430,7 +474,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	protected function prepareComponentAttribute(array $component, string $realComponentName, string $newComponentName): array
 	{
-		$componentAttributes = $component['attributes'];
+		$componentAttributes = $component['attributes'] ?? [];
 
 		if ($realComponentName === $newComponentName) {
 			return $componentAttributes;
@@ -454,11 +498,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	protected function prepareComponentAttributes(array $blockDetails): array
 	{
-		$output = [];
-		$componentAttributes = [];
-
 		if (!isset($blockDetails['components'])) {
-			return $output;
+			return [];
 		}
 
 		if (isset($blockDetails['attributes'])) {
@@ -468,8 +509,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		foreach ($blockDetails['components'] as $newComponentName => $realComponentName) {
 			$component = $this->getComponent($realComponentName);
 
-			$outputAttributes = [];
-
 			if (isset($component['components'])) {
 				$outputAttributes = $this->prepareComponentAttributes($component);
 			} else {
@@ -477,13 +516,99 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			}
 
 			$output = array_merge(
-				$output,
 				$outputAttributes,
-				$componentAttributes
+				$componentAttributes ?? []
 			);
 		}
 
+		return $output ?? [];
+	}
+
+	/**
+	 * Build components dependency tree for blocks.
+	 *
+	 * @param array $blocks List of all blocks.
+	 * @param array $components List of all components.
+	 *
+	 * @return array
+	 */
+	private function buildDependencyBlocksTree(array $blocks, array $components): array
+	{
+		$output = [];
+
+		foreach ($blocks as $item) {
+			$blockName = $item['blockName'] ?? '';
+			$componentsItem = $item['components'] ?? [];
+
+			$output[$blockName] = array_unique($this->buildDependencyComponentsInnerTree($componentsItem, $components));
+		}
+
 		return $output;
+	}
+
+	/**
+	 * Build components dependency tree for blocks.
+	 *
+	 * @param array $components List of all blocks.
+	 *
+	 * @return array
+	 */
+	private function buildDependencyComponentsTree(array $components): array
+	{
+		$output = [];
+
+		foreach ($components as $item) {
+			$componentName = $item['componentName'] ?? '';
+			$componentsItem = $item['components'] ?? [];
+
+			if (!$componentName) {
+				continue;
+			}
+
+			$output[$componentName] = array_unique($this->buildDependencyComponentsInnerTree($componentsItem, $components));
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Build inner recursive dependency tree for components.
+	 *
+	 * @param array $componentsList List of components to check.
+	 * @param array $components List of all components.
+	 *
+	 * @return array
+	 */
+	private function buildDependencyComponentsInnerTree(array $componentsList, array $components): array
+	{
+		$output = [];
+
+		if (!$componentsList) {
+			return $output;
+		}
+
+		foreach ($componentsList as $key => $value) {
+			$items = array_values(
+				array_filter(
+					$components,
+					function ($item) use ($value) {
+						$componentName = $item['componentName'] ?? '';
+
+						return $componentName === $value;
+					}
+				)
+			)[0] ?? [];
+
+			$items = $items['components'] ?? [];
+
+			$output[] = $key;
+
+			if ($items) {
+				$output[] = $this->buildDependencyComponentsInnerTree($items, $components);
+			}
+		}
+
+		return Components::flattenArray($output);
 	}
 
 	/**
@@ -543,31 +668,31 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				$error = '';
 				break;
 			case JSON_ERROR_DEPTH:
-				$error = esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs');
+				$error = \esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_STATE_MISMATCH:
-				$error = esc_html__('Invalid or malformed JSON.', 'eightshift-libs');
+				$error = \esc_html__('Invalid or malformed JSON.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_CTRL_CHAR:
-				$error = esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs');
+				$error = \esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_SYNTAX:
-				$error = esc_html__('Syntax error, malformed JSON.', 'eightshift-libs');
+				$error = \esc_html__('Syntax error, malformed JSON.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_UTF8:
-				$error = esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs');
+				$error = \esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_RECURSION:
-				$error = esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs');
+				$error = \esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_INF_OR_NAN:
-				$error = esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs');
+				$error = \esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_UNSUPPORTED_TYPE:
-				$error = esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs');
+				$error = \esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs');
 				break;
 			default:
-				$error = esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
+				$error = \esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
 				break;
 		}
 

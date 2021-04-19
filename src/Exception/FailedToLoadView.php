@@ -30,7 +30,7 @@ final class FailedToLoadView extends \RuntimeException implements GeneralExcepti
 	{
 		$message = sprintf(
 		/* translators: %1$s will be replaced with view URI, and %2$s with error. */
-			esc_html__('Could not load the View URI: %1$s. Reason: %2$s.', 'eightshift-libs'),
+			\esc_html__('Could not load the View URI: %1$s. Reason: %2$s.', 'eightshift-libs'),
 			$uri,
 			$exception->getMessage()
 		);

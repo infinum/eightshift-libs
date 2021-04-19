@@ -87,13 +87,9 @@ class CiExcludeCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, 'ci-exclude.txt');
-
-		// Replace stuff in file.
-		$class = $this->renameProjectName($assocArgs, $class);
-		$class = $this->renameProjectType($assocArgs, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, 'ci-exclude.txt', $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, 'ci-exclude.txt')
+			->renameProjectName($assocArgs)
+			->renameProjectType($assocArgs)
+			->outputWrite($root, 'ci-exclude.txt', $assocArgs);
 	}
 }

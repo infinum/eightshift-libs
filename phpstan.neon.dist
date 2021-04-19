@@ -1,6 +1,5 @@
 includes:
-	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
-	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
 	level: max
 	inferPrivatePropertyTypeFromConstructor: true
@@ -11,10 +10,11 @@ parameters:
 	paths:
 		- src/
 	excludes_analyse:
-		- src/Core/CompiledContainer.php
 		- src/**/*Example.php
 	ignoreErrors:
 		# Uses func_get_args()
 		- '/^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$/'
 		# WP-CLI accepts a class as callable
 		- '/^Parameter #2 \$callable of static method WP_CLI::add_command\(\) expects callable\(\): mixed, \S+ given\.$/'
+		# Ignore errors about reflection class variable being undefined. Errors are caught.
+		- '/^Variable \$reflectionClass might not be defined\.$/'

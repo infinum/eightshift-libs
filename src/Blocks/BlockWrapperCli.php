@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\CliHelpers;
 
 /**
  * Class BlockWrapperCli
@@ -62,7 +61,12 @@ class BlockWrapperCli extends AbstractCli
 		$path = static::OUTPUT_DIR;
 		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
 		$sourcePath = "{$sourcePathFolder}";
-		$destinationPath = $root . '/' . $path;
+
+		if (!getenv('TEST')) {
+			$destinationPath = $root . '/' . $path;
+		} else {
+			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
+		}
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {
@@ -87,17 +91,12 @@ class BlockWrapperCli extends AbstractCli
 			// Set output file path.
 			$class = $this->getExampleTemplate($destinationPath, $file, true);
 
-			if (!empty($class)) {
-				$class = $this->renameProjectName($assocArgs, $class);
-
-				$class = $this->renameNamespace($assocArgs, $class);
-
-				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-
-				$class = $this->renameUseFrontendLibs($assocArgs, $class);
-
-				// Output final class to new file/folder and finish.
-				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
+			if (!empty($class->fileContents)) {
+				$class->renameProjectName($assocArgs)
+					->renameNamespace($assocArgs)
+					->renameTextDomainFrontendLibs($assocArgs)
+					->renameUseFrontendLibs($assocArgs)
+					->outputWrite($path, $file, ['skip_existing' => true]);
 			}
 		}
 

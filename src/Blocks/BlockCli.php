@@ -36,7 +36,21 @@ class BlockCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Define default develop props.
+	 *
+	 * @param array $args WPCLI eval-file arguments.
+	 *
+	 * @return array
+	 */
+	public function getDevelopArgs(array $args): array
+	{
+		return [
+			'name' => $args[1] ?? 'button',
+		];
+	}
+
+	/**
+	 * Get WPCLI command docblock
 	 *
 	 * @return array
 	 */
@@ -69,7 +83,12 @@ class BlockCli extends AbstractCli
 		$path = static::OUTPUT_DIR . '/' . $name;
 		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
 		$sourcePath = "{$sourcePathFolder}{$name}";
-		$destinationPath = $root . '/' . $path;
+
+		if (!getenv('TEST')) {
+			$destinationPath = $root . '/' . $path;
+		} else {
+			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
+		}
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
@@ -119,17 +138,12 @@ class BlockCli extends AbstractCli
 			// Set output file path.
 			$class = $this->getExampleTemplate($destinationPath, $file, true);
 
-			if (!empty($class)) {
-				$class = $this->renameProjectName($assocArgs, $class);
-
-				$class = $this->renameNamespace($assocArgs, $class);
-
-				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-
-				$class = $this->renameUseFrontendLibs($assocArgs, $class);
-
-				// Output final class to new file/folder and finish.
-				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
+			if (!empty($class->fileContents)) {
+				$class->renameProjectName($assocArgs)
+					->renameNamespace($assocArgs)
+					->renameTextDomainFrontendLibs($assocArgs)
+					->renameUseFrontendLibs($assocArgs)
+					->outputWrite($path, $file, ['skip_existing' => true]);
 			}
 		}
 
