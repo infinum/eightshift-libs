@@ -80,7 +80,7 @@ class Autowiring
 
 		// Build dependency tree for dependencies. Things that need to be injected but were skipped because
 		// they were initially irrelevant.
-		foreach ($dependencyTree as $dependencies) {
+		foreach ($dependencyTree as &$dependencies) {
 			foreach ($dependencies as $depClass => $subDeps) {
 				// No need to build dependencies for this again if we already have them.
 				if (isset($dependencyTree[$depClass])) {
