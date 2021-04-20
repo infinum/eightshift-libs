@@ -7,7 +7,14 @@ use EightshiftLibs\Exception\{InvalidAutowireDependency, NonPsr4CompliantClass};
 use Tests\Datasets\Autowiring\Deep\Deeper\ServiceNoDependenciesDeep;
 use Tests\Datasets\Autowiring\Dependencies\{ClassDepWithNoDependencies,
 	ClassImplementingInterfaceDependency,
-	ClassWithDependency,
+    ClassLvl1Dependency,
+    ClassLvl2Dependency,
+    ClassLvl3Dependency,
+    ClassLvl4Dependency,
+    ClassLvl5Dependency,
+    ClassLvl6Dependency,
+    ClassLvl7Dependency,
+    ClassWithDependency,
 	InterfaceDependency
 };
 use Tests\Datasets\Autowiring\Dependencies\SubNamespace1\SomeClass;
@@ -15,7 +22,8 @@ use Tests\Datasets\Autowiring\NonServices\SomeFactory;
 use Tests\Datasets\Autowiring\Services\{ServiceNoDependencies,
     ServiceWithClassDep,
 	ServiceWithDeepClassDep,
-	ServiceWithInterfaceDep,
+    ServiceWithDeepDependencyTree,
+    ServiceWithInterfaceDep,
 	ServiceWithInterfaceDepMoreThanOneClassFound,
 	ServiceWithInterfaceDepWrongName,
 	ServiceWithMultipleDeps,
@@ -162,4 +170,17 @@ test('buildServiceClasses includes all manually defined dependency trees', funct
 	$this->assertContains(SomeClass::class, $dependencyTree[ServiceWithInterfaceDepMoreThanOneClassFound::class] );
 	$this->assertContains('some string', $dependencyTree[ServiceWithPrimitiveDep::class] );
 	$this->assertContains('some string', $dependencyTree[ServiceWithPrimitiveDepHasDefault::class] );
+});
+
+test('Deep dependencies are correctly auto-wired', function () {
+	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
+	$this->assertIsArray($dependencyTree);
+	$this->assertArrayHasKey(ServiceWithDeepDependencyTree::class, $dependencyTree);
+	$this->assertArrayHasKey(ClassLvl1Dependency::class, $dependencyTree);
+	$this->assertArrayHasKey(ClassLvl2Dependency::class, $dependencyTree);
+	$this->assertArrayHasKey(ClassLvl3Dependency::class, $dependencyTree);
+	$this->assertArrayHasKey(ClassLvl4Dependency::class, $dependencyTree);
+	$this->assertArrayHasKey(ClassLvl5Dependency::class, $dependencyTree);
+	$this->assertArrayHasKey(ClassLvl6Dependency::class, $dependencyTree);
+	$this->assertContains(ClassLvl7Dependency::class, $dependencyTree);
 });
