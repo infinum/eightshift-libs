@@ -32,9 +32,9 @@ abstract class AbstractConfigData implements ConfigDataInterface
 	public static function getProjectPath(string $path = ''): string
 	{
 		$locations = [
+			\trailingslashit(dirname(__DIR__, 5)) . $path,
 			\trailingslashit(\get_stylesheet_directory()) . $path,
 			\trailingslashit(\get_template_directory()) . $path,
-			\trailingslashit(__DIR__) . $path,
 		];
 
 		foreach ($locations as $location) {
