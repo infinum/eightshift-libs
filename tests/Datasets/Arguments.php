@@ -110,6 +110,20 @@ dataset('postsDifferentLength', [
   ]]
 ]);
 
+dataset('isAssocWrong', [[
+	['a', 'b', 'c'],
+	['1', '2', '3'],
+	[],
+	'',
+	false,
+	['1' => 'a', '0' => 'b', '2' => 'c'],
+]]);
+
+dataset('isAssocCorrect', [[
+	['a' => 'a', 'b' => 'b', 'c' => 'c'],
+	['a' => 'a', '1' => 'b', 'c' => 'c'],
+]]);
+
 dataset('caseCheckCorrect', [
 	['simpleTest', 'simple-test'],
 	['easy', 'easy'],

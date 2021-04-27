@@ -41,6 +41,11 @@
 			"default": "black",
 			"variable": "color"
 		},
+		"typographyCustom": {
+			"type": "string",
+			"default": "center center",
+			"variable": "custom"
+		},
 		"typographyUppercase": {
 			"type": "boolean",
 			"default": false
@@ -48,6 +53,11 @@
 		"typographyColorUse": {
 			"type": "boolean",
 			"default": true
+		},
+		"typographyCustomFail": {
+			"type": "string",
+			"default": "test",
+			"variable": "custom"
 		},
 		"typographyUse": {
 			"type": "boolean",
@@ -152,6 +162,44 @@
 			"grey300",
 			"grey400",
 			"grey500"
-		]
+		],
+		"typographyCustom": {
+			"top left": {
+				"horizontal": "flex-start",
+				"vertical": "flex-start"
+			},
+			"top center": {
+				"horizontal": "center",
+				"vertical": "flex-start"
+			},
+			"top right": {
+				"horizontal": "flex-end",
+				"vertical": "flex-start"
+			},
+			"center left": {
+				"horizontal": "flex-start",
+				"vertical": "center"
+			},
+			"center center": {
+				"horizontal": "center",
+				"vertical": "center"
+			},
+			"center right": {
+				"horizontal": "flex-end",
+				"vertical": "center"
+			},
+			"bottom left": {
+				"horizontal": "flex-start",
+				"vertical": "flex-end"
+			},
+			"bottom center": {
+				"horizontal": "center",
+				"vertical": "flex-end"
+			},
+			"bottom right": {
+				"horizontal": "flex-end",
+				"vertical": "flex-end"
+			}
+		}
 	}
 }

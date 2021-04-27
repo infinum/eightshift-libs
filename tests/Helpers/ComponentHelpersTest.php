@@ -521,6 +521,44 @@ test('Asserts that outputCssVariables will not return css variable if variable k
 	$this->assertStringContainsString('', $output);
 });
 
+test('Asserts that outputCssVariables returns custom variables for custom type if options key is set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'typographyCustom' => "center center",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--typography-custom: center center;', $output);
+	$this->assertStringContainsString('--typography-custom-horizontal: center;', $output);
+	$this->assertStringContainsString('--typography-custom-vertical: center;', $output);
+	$this->assertStringNotContainsString('--button-content:', $output);
+});
+
+test('aaaAsserts that outputCssVariables returns custom variables for custom type if options key is set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'typographyCustomFail' => "center center",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('--typography-custom-fail-horizontal', $output);
+	$this->assertStringNotContainsString('--button-content:', $output);
+});
+
 /**
  * Components::getUnique tests
  */
@@ -530,6 +568,23 @@ test('Asserts that getUnique returns the correct output', function () {
 	$this->assertIsString($output);
 	$this->assertMatchesRegularExpression('/[a-z0-9]{1,32}/m', $output);
 });
+
+/**
+ * Components::isAssoc tests
+ */
+test('Asserts that isAssoc returns the correct output for correct input', function ($input) {
+	$case = Components::isAssoc($input);
+
+	$this->assertIsBool($case);
+	$this->assertTrue($case);
+})->with('isAssocCorrect');
+
+test('Asserts that isAssoc returns the correct output for wrong input', function ($input) {
+	$case = Components::isAssoc($input);
+
+	$this->assertIsBool($case);
+	$this->assertFalse($case);
+})->with('isAssocWrong');
 
 /**
  * Components::camelToKebabCase tests
