@@ -494,9 +494,11 @@ class Components
 	public static function arrayIsList(array $array): bool
 	{
 		$expectedKey = 0;
-		foreach ($array as $i => $_) {
-				if ($i !== $expectedKey) { return false; }
-				$expectedKey++;
+		foreach ($array as $i => $value) {
+			if ($i !== $expectedKey) {
+				return false;
+			}
+			$expectedKey++;
 		}
 
 		return true;
