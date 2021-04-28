@@ -570,21 +570,21 @@ test('Asserts that getUnique returns the correct output', function () {
 });
 
 /**
- * Components::isAssoc tests
+ * Components::arrayIsList tests
  */
-test('Asserts that isAssoc returns the correct output for correct input', function ($input) {
-	$case = Components::isAssoc($input);
+test('Asserts that arrayIsList returns the correct output for correct input', function ($input) {
+	$case = Components::arrayIsList($input);
 
 	$this->assertIsBool($case);
 	$this->assertTrue($case);
-})->with('isAssocCorrect');
+})->with('arrayIsListWrong');
 
-test('Asserts that isAssoc returns the correct output for wrong input', function ($input) {
-	$case = Components::isAssoc($input);
+test('Asserts that arrayIsList returns the correct output for wrong input', function ($input) {
+	$case = Components::arrayIsList($input);
 
 	$this->assertIsBool($case);
 	$this->assertFalse($case);
-})->with('isAssocWrong');
+})->with('arrayIsListCorrect');
 
 /**
  * Components::camelToKebabCase tests

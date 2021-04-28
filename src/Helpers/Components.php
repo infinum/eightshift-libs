@@ -433,7 +433,7 @@ class Components
 			}
 
 			// Output custom variable/s from options object.
-			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'custom' && self::isAssoc($manifest['options'][$key][$attributes[$key]])) {
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'custom' && !self::arrayIsList($manifest['options'][$key][$attributes[$key]])) {
 				foreach ($manifest['options'][$key][$attributes[$key]] as $customKey => $customValue) {
 					$internalKey = self::camelToKebabCase($key);
 					$internalCustomKey = self::camelToKebabCase($customKey);
@@ -491,9 +491,15 @@ class Components
 	 *
 	 * @return boolean
 	 */
-	public static function isAssoc(array $array): bool
+	public static function arrayIsList(array $array): bool
 	{
-		return count(array_filter(array_keys($array), 'is_string')) > 0;
+		$expectedKey = 0;
+		foreach ($array as $i => $_) {
+				if ($i !== $expectedKey) { return false; }
+				$expectedKey++;
+		}
+
+		return true;
 	}
 
 	/**
