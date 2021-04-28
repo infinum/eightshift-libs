@@ -485,7 +485,7 @@ class Components
 	}
 
 	/**
-	 * Check if provided array is associative or sequential
+	 * Check if provided array is associative or sequential. Will return true if array is sequential.
 	 *
 	 * @param array $array Array to check.
 	 *
