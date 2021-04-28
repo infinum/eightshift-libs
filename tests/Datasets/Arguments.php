@@ -110,6 +110,21 @@ dataset('postsDifferentLength', [
   ]]
 ]);
 
+dataset('arrayIsListWrong', [[
+	['a', 'b', 'c'],
+	['1', '2', '3'],
+	[],
+	'',
+	false,
+	['1' => 'a', '0' => 'b', '2' => 'c'],
+]]);
+
+dataset('arrayIsListCorrect', [[
+	['a' => 'a', 'b' => 'b', 'c' => 'c'],
+	['a' => 'a', '1' => 'b', '2' => 'c'],
+	['0' => 'a', '1' => 'b', '2' => 'c'],
+]]);
+
 dataset('caseCheckCorrect', [
 	['simpleTest', 'simple-test'],
 	['easy', 'easy'],

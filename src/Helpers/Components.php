@@ -377,6 +377,8 @@ class Components
 
 		$name = self::camelToKebabCase($name);
 
+		$customOutput = '';
+
 		// Check manifest for the attributes with variable key.
 		$defaultAttributes = array_filter(
 			$manifest['attributes'],
@@ -430,9 +432,19 @@ class Components
 				$value = $value ? 'true' : 'false';
 			}
 
+			// Output custom variable/s from options object.
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'custom' && !self::arrayIsList($manifest['options'][$key][$attributes[$key]])) {
+				foreach ($manifest['options'][$key][$attributes[$key]] as $customKey => $customValue) {
+					$internalKey = self::camelToKebabCase($key);
+					$internalCustomKey = self::camelToKebabCase($customKey);
+
+					$customOutput .= "--{$internalKey}-{$internalCustomKey}: ${customValue};\n";
+				}
+			}
+
 			$key = self::camelToKebabCase($key);
 
-			$output .= "--{$key}: {$value};\n";
+			$output .= "--{$key}: {$value};\n{$customOutput}\n";
 		}
 
 
@@ -470,6 +482,26 @@ class Components
 	{
 		$replace = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
 		return ltrim(strtolower($replace), '-');
+	}
+
+	/**
+	 * Check if provided array is associative or sequential. Will return true if array is sequential.
+	 *
+	 * @param array $array Array to check.
+	 *
+	 * @return boolean
+	 */
+	public static function arrayIsList(array $array): bool
+	{
+		$expectedKey = 0;
+		foreach ($array as $i => $value) {
+			if ($i !== $expectedKey) {
+				return false;
+			}
+			$expectedKey++;
+		}
+
+		return true;
 	}
 
 	/**
