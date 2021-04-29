@@ -451,7 +451,7 @@ class Components
 					}
 				))[0]['variable'] ?? null;
 
-				$value = $selectVariable === null ? $attributes[$key] : $selectVariable;
+				$value = $selectVariable !== null ? $selectVariable : $attributes[$key];
 			}
 
 			// Output boolean variable from the options array key. First key is false value, second is true value.
@@ -465,8 +465,8 @@ class Components
 			}
 
 			// Output custom variable/s from options object.
-			if (isset($manifest['options'][$key]) && isset($manifest['options'][$key]['variable']) && $manifest['attributes'][$key]['variable'] === 'custom' && !self::arrayIsList($manifest['options'][$key]['variable'][$attributes[$key]])) {
-				foreach ($manifest['options'][$key]['variable'][$attributes[$key]] as $customKey => $customValue) {
+			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'custom' && !self::arrayIsList($manifest['options'][$key][$attributes[$key]])) {
+				foreach ($manifest['options'][$key][$attributes[$key]] as $customKey => $customValue) {
 					$internalKey = self::camelToKebabCase($key);
 					$internalCustomKey = self::camelToKebabCase($customKey);
 

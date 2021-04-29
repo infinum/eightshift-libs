@@ -584,7 +584,7 @@ test('Asserts that outputCssVariables returns custom variables for custom type i
 	$this->assertStringNotContainsString('--button-content:', $output);
 });
 
-test('aaaAsserts that outputCssVariables returns custom variables for custom type if options key is set.', function () {
+test('Asserts that outputCssVariables doesn\'t return custom variables for custom type if options key is not set.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
 
 	$attributes = [
