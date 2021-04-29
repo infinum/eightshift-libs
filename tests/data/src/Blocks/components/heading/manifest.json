@@ -22,6 +22,22 @@
 		"headingTag": {
 			"type": "string",
 			"default": "h"
+		},
+		"headingContentSpacingLarge": {
+			"type": "integer",
+			"variable": "default"
+		},
+		"headingContentSpacingDesktop": {
+			"type": "integer",
+			"variable": "default"
+		},
+		"headingContentSpacingTablet": {
+			"type": "integer",
+			"variable": "default"
+		},
+		"headingContentSpacingMobile": {
+			"type": "integer",
+			"variable": "default"
 		}
 	},
 	"options": {
@@ -39,5 +55,13 @@
 			"black",
 			"white"
 		]
+	},
+	"responsiveAttributes": {
+		"headingContentSpacing": {
+			"large": "headingContentSpacingLarge",
+			"desktop": "headingContentSpacingDesktop",
+			"tablet": "headingContentSpacingTablet",
+			"mobile": "headingContentSpacingMobile"
+		}
 	}
 }

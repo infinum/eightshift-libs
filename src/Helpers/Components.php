@@ -259,6 +259,38 @@ class Components
 	}
 
 	/**
+	 * Map and check attributes for responsive object.
+	 *
+	 * @param string $keyName Key name to find in responsiveAttributes object.
+	 * @param array  $attributes Array of attributes.
+	 * @param array  $manifest Array of default attributes from manifest.json.
+	 * @param string $componentName The real component name.
+	 *
+	 * @throws \Exception If missing responsiveAttributes or keyName in responsiveAttributes.
+	 * @throws \Exception If missing keyName in responsiveAttributes.
+	 *
+	 * @return mixed
+	 */
+	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest, string $componentName = '')
+	{
+		$output = [];
+
+		if (!isset($manifest['responsiveAttributes'])) {
+			throw new \Exception("It looks like you are missing responsiveAttributes key in your {$componentName} manifest.");
+		}
+
+		if (!isset($manifest['responsiveAttributes'][$keyName])) {
+			throw new \Exception("It looks like you are missing {$keyName} key in your manifest responsiveAttributes array.");
+		}
+
+		foreach ($manifest['responsiveAttributes'][$keyName] as $key => $value) {
+			$output[$key] = self::checkAttr($value, $attributes, $manifest, $componentName);
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Return BEM selector for html class and check if Condition part is set.
 	 *
 	 * @param mixed  $condition Check condition.

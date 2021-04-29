@@ -243,6 +243,49 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
 })->throws(\Exception::class, 'bla key does not exist in the button component. Please check your implementation.');
 
+/**
+ * Components::checkAttrResponsive tests
+ */
+test('Asserts that checkAttrResponsive returns correct output.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$attributes = [
+		'headingContentSpacingLarge' => '10',
+		'headingContentSpacingDesktop' => '5',
+		'headingContentSpacingTablet' => '3',
+		'headingContentSpacingMobile' => '1',
+	];
+
+	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
+
+	$this->assertIsArray($results, 'Result should be a array');
+	$this->assertArrayHasKey('large', $results);
+	$this->assertEquals($results['large'], '10');
+});
+
+test('Asserts that checkAttrResponsive returns empty values if attribute is not provided.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$attributes = [];
+
+	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
+
+	$this->assertIsArray($results, 'Result should be a array');
+	$this->assertArrayHasKey('large', $results);
+	$this->assertEquals($results['large'], '');
+});
+
+test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$attributes = [];
+
+	Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your button manifest.');
+
+test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$attributes = [];
+
+	Components::checkAttrResponsive('testAttribtue', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'It looks like you are missing testAttribtue key in your manifest responsiveAttributes array.');
 
 /**
  * Components::selector tests
