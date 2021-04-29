@@ -400,6 +400,7 @@ class Components
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique): string
 	{
 		$output = '';
+		$customOutput = '';
 
 		if (!$attributes || !$manifest) {
 			return $output;
@@ -408,8 +409,6 @@ class Components
 		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
 
 		$name = self::camelToKebabCase($name);
-
-		$customOutput = '';
 
 		// Check manifest for the attributes with variable key.
 		$defaultAttributes = array_filter(
@@ -451,7 +450,15 @@ class Components
 					}
 				))[0]['variable'] ?? null;
 
-				$value = $selectVariable !== null ? $selectVariable : $attributes[$key];
+				$value = $selectVariable === null ? $attributes[$key] : $selectVariable;
+
+				if ($value === "") {
+					continue;
+				}
+
+				if (gettype($value) === 'array') {
+					$customOutput = self::outputCssVariablesCustom($selectVariable, $key);
+				}
 			}
 
 			// Output boolean variable from the options array key. First key is false value, second is true value.
@@ -466,17 +473,16 @@ class Components
 
 			// Output custom variable/s from options object.
 			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'custom' && !self::arrayIsList($manifest['options'][$key][$attributes[$key]])) {
-				foreach ($manifest['options'][$key][$attributes[$key]] as $customKey => $customValue) {
-					$internalKey = self::camelToKebabCase($key);
-					$internalCustomKey = self::camelToKebabCase($customKey);
-
-					$customOutput .= "--{$internalKey}-{$internalCustomKey}: ${customValue};\n";
-				}
+				$customOutput = self::outputCssVariablesCustom($manifest['options'][$key][$attributes[$key]], $key);
 			}
 
 			$key = self::camelToKebabCase($key);
 
-			$output .= "--{$key}: {$value};\n{$customOutput}\n";
+			if ($customOutput !== '') {
+				$output .= "{$customOutput}\n";
+			} else {
+				$output .= "--{$key}: {$value};\n";
+			}
 		}
 
 
@@ -491,6 +497,27 @@ class Components
 				}
 			</style>
 		";
+	}
+
+	/**
+	 * Internal helper to loop Css Variables from object.
+	 *
+	 * @param array  $arrayList Array list of css variables.
+	 * @param string $attributeKey Attribute key to append to output variable name.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariablesCustom(array $arrayList, string $attributeKey): string
+	{
+		$output = '';
+		foreach ($arrayList as $customKey => $customValue) {
+			$internalKey = self::camelToKebabCase($attributeKey);
+			$internalCustomKey = self::camelToKebabCase($customKey);
+
+			$output .= "--{$internalKey}-{$internalCustomKey}: ${customValue};\n";
+		}
+
+		return $output;
 	}
 
 	/**

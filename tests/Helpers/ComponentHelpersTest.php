@@ -533,6 +533,42 @@ test('Asserts that outputCssVariables returns variable for select type if variab
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
+test('Asserts that outputCssVariables returns variables custom for select type if variable keys is set to object.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectVariable' => "test-3",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--test-select-variable-test1: novi1;', $output);
+	$this->assertStringContainsString('--test-select-variable-test2: novi2;', $output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
+test('Asserts that outputCssVariables doesn\'t return variable if value is emapty', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectVariable' => "",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
 test('Asserts that outputCssVariables will not return css variables if data is empty', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
@@ -578,7 +614,6 @@ test('Asserts that outputCssVariables returns custom variables for custom type i
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('--typography-custom: center center;', $output);
 	$this->assertStringContainsString('--typography-custom-horizontal: center;', $output);
 	$this->assertStringContainsString('--typography-custom-vertical: center;', $output);
 	$this->assertStringNotContainsString('--button-content:', $output);

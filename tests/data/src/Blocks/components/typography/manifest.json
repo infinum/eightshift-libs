@@ -79,7 +79,14 @@
 			{
 				"label": "Test 3",
 				"value": "test-3",
-				"variable": "custom-variable-3"
+				"variable": {
+					"test1": "novi1",
+					"test2": "novi2"
+				}
+			},
+			{
+				"label": "None",
+				"value": ""
 			}
 		],
 		"typographySize": [
