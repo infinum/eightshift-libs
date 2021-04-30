@@ -437,7 +437,6 @@ class Components
 
 		// Iterate each attribute and make corrections.
 		foreach ($attributes as $key => $value) {
-
 			// Bailout if attribute is not using variables.
 			if (!isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
 				continue;
@@ -458,7 +457,6 @@ class Components
 
 			// Output select variable.
 			if ($variableType === 'select' || $variableType === 'select-responsive') {
-
 				// Find select item from the attribute set in the db.
 				$selectVariable = array_values(array_filter(
 					$manifest['options'][$key],
@@ -469,7 +467,6 @@ class Components
 
 				// Output select variable from the options array but don't use value key. It will use variable key.
 				if ($variableType === 'select') {
-
 					// If custom variable is missing fallback to default.
 					$value = $selectVariable !== null ? $selectVariable : $attributes[$key];
 
@@ -484,7 +481,6 @@ class Components
 
 				// Output select-responsive variable from the options array.
 				if ($variableType === 'select-responsive') {
-
 					// Bailout if variable key is missing because there is no fallback here.
 					if ($selectVariable === null) {
 						continue;
@@ -497,7 +493,6 @@ class Components
 
 			// Output boolean variable from the options array key. First key is false value, second is true value.
 			if ($variableType === 'boolean') {
-
 				// Bailout if missing boolean options in array.
 				if (count($manifest['options'][$key]) !== 2) {
 					continue;
@@ -573,7 +568,6 @@ class Components
 
 		// Iterate each attribute and make corrections.
 		foreach ($list as $customKey => $customValue) {
-
 			// Convert to correct case.
 			$internalKey = self::camelToKebabCase($attributeKey);
 			$internalCustomKey = self::camelToKebabCase($customKey);
@@ -607,7 +601,6 @@ class Components
 
 		// Iterate each attribute and make corrections.
 		foreach ($list as $item) {
-
 			$breakpoint = $item['breakpoint'] ?? '';
 			$inverse = $item['inverse'] ?? false;
 			$variable = $item['variable'] ?? [];
