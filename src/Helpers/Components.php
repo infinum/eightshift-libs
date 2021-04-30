@@ -126,13 +126,13 @@ class Components
 		// for setting specific styles for components rendered inside other components.
 		if (isset($attributes['parentClass'])) {
 			$component = str_replace('.php', '', $component);
-			printf(\esc_html('<div class="%s">'), \esc_attr("{$attributes['parentClass']}__{$component}"));
+			printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}")); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 		}
 
 		require $componentPath;
 
 		if (isset($attributes['parentClass'])) {
-			echo \esc_html('</div>');
+			echo '</div>'; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 		}
 
 		return trim((string) ob_get_clean());
