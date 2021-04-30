@@ -285,7 +285,7 @@ test('Asserts that checkAttrResponsive throws error if keyName key is missing re
 	$attributes = [];
 
 	Components::checkAttrResponsive('testAttribtue', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are the missing testAttribtue key in your manifest responsiveAttributes array.');
+})->throws(\Exception::class, 'It looks like you are missing the testAttribtue key in your manifest responsiveAttributes array.');
 
 /**
  * Components::selector tests
