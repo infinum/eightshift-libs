@@ -552,6 +552,27 @@ test('Asserts that outputCssVariables returns custom variables for the selected 
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
+test('Asserts that outputCssVariables returns and replaces magic constant variablefor the selected type if variable key is set to object.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectVariable' => "test-3",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--test-select-variable-test1: new1;', $output);
+	$this->assertStringContainsString('--test-select-variable-test2: new2;', $output);
+	$this->assertStringContainsString('--test-select-variable-test-magic: test-3;', $output);
+	$this->assertStringContainsString('--test-select-variable-test-magic-mixed: new-test-3-complex;', $output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
 test('Asserts that outputCssVariables doesn\'t return a variable if the value is empty', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
 

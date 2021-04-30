@@ -81,7 +81,9 @@
 				"value": "test-3",
 				"variable": {
 					"test1": "new1",
-					"test2": "new2"
+					"test2": "new2",
+					"test-magic": "%value%",
+					"test-magic-mixed": "new-%value%-complex"
 				}
 			},
 			{

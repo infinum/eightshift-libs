@@ -457,7 +457,7 @@ class Components
 				}
 
 				if (is_array($value)) {
-					$customOutput = self::outputCssVariablesCustom($selectVariable, $key);
+					$customOutput = self::outputCssVariablesCustom($selectVariable, $key, $attributes[$key]);
 				}
 			}
 
@@ -473,7 +473,7 @@ class Components
 
 			// Output custom variable/s from options object.
 			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'custom' && !self::arrayIsList($manifest['options'][$key][$attributes[$key]])) {
-				$customOutput = self::outputCssVariablesCustom($manifest['options'][$key][$attributes[$key]], $key);
+				$customOutput = self::outputCssVariablesCustom($manifest['options'][$key][$attributes[$key]], $key, $attributes[$key]);
 			}
 
 			$key = self::camelToKebabCase($key);
@@ -504,15 +504,21 @@ class Components
 	 *
 	 * @param array  $arrayList Array of CSS variables.
 	 * @param string $attributeKey Attribute key to append to the output variable name.
+	 * @param mixed  $originalAttribute Original attribute value used in magic variable.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesCustom(array $arrayList, string $attributeKey): string
+	public static function outputCssVariablesCustom(array $arrayList, string $attributeKey, $originalAttribute): string
 	{
 		$output = '';
 		foreach ($arrayList as $customKey => $customValue) {
 			$internalKey = self::camelToKebabCase($attributeKey);
 			$internalCustomKey = self::camelToKebabCase($customKey);
+
+			// If value contains magic variable swap that variable with original attribute value.
+			if (strpos($customValue, '%value%') !== false) {
+				$customValue = str_replace('%value%', $originalAttribute, $customValue);
+			}
 
 			$output .= "--{$internalKey}-{$internalCustomKey}: ${customValue};\n";
 		}
