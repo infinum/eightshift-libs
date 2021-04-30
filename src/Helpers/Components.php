@@ -445,71 +445,92 @@ class Components
 			// Check type of variable.
 			$variableType = $manifest['attributes'][$key]['variable'];
 
-			// Output color variable from the global variables.
-			if ($variableType === 'color') {
-				$value = "var(--global-colors-{$value})";
-			}
+			switch ($variableType) {
+				case 'color':
+					// Output color variable from the global variables.
+					$value = "var(--global-colors-{$value})";
 
-			// Each type requires options key.
-			if (!isset($manifest['options'][$key])) {
-				continue;
-			}
+					break;
+				case 'select':
+				case 'select-responsive':
+					// Output select variable.
 
-			// Output select variable.
-			if ($variableType === 'select' || $variableType === 'select-responsive') {
-				// Find select item from the attribute set in the db.
-				$selectVariable = array_values(array_filter(
-					$manifest['options'][$key],
-					function ($item) use ($attributes, $key) {
-						return $item['value'] === $attributes[$key];
-					}
-				))[0]['variable'] ?? null;
-
-				// Output select variable from the options array but don't use value key. It will use variable key.
-				if ($variableType === 'select') {
-					// If custom variable is missing fallback to default.
-					$value = $selectVariable !== null ? $selectVariable : $attributes[$key];
-
-					// Bailout if slug or variable key is missing.
-					if ($value === '') {
-						continue;
+					// Each type requires options key.
+					if (!isset($manifest['options'][$key])) {
+						continue 2;
 					}
 
-					// Output custom variables if variables key is object.
-					$customOutput = self::outputCssVariablesCustom($selectVariable, $key, $attributes[$key]);
-				}
+					// Find select item from the attribute set in the db.
+					$selectVariable = array_values(array_filter(
+						$manifest['options'][$key],
+						function ($item) use ($attributes, $key) {
+							return $item['value'] === $attributes[$key];
+						}
+					))[0]['variable'] ?? null;
 
-				// Output select-responsive variable from the options array.
-				if ($variableType === 'select-responsive') {
-					// Bailout if variable key is missing because there is no fallback here.
-					if ($selectVariable === null) {
-						continue;
+					// Output select variable from the options array but don't use value key. It will use variable key.
+					if ($variableType === 'select') {
+						// If custom variable is missing fallback to default.
+						$value = $selectVariable !== null ? $selectVariable : $attributes[$key];
+
+						// Bailout if slug or variable key is missing.
+						if ($value === '') {
+							continue 2;
+						}
+
+						// Output custom variables if variables key is object.
+						if (is_array($selectVariable)) {
+							$customOutput = self::outputCssVariablesCustom($selectVariable, $key, $attributes[$key]);
+						}
 					}
 
-					// Output custom variables if variables key is array of objects.
-					$customResponsiveOutput = self::outputCssVariablesResponsive($selectVariable, $key, $attributes[$key], $name, $unique);
-				}
-			}
+					// Output select-responsive variable from the options array.
+					if ($variableType === 'select-responsive') {
+						// Bailout if variable key is missing because there is no fallback here.
+						if ($selectVariable === null) {
+							continue 2;
+						}
 
-			// Output boolean variable from the options array key. First key is false value, second is true value.
-			if ($variableType === 'boolean') {
-				// Bailout if missing boolean options in array.
-				if (count($manifest['options'][$key]) !== 2) {
-					continue;
-				}
+						// Output custom variables if variables key is array of objects.
+						if (is_array($selectVariable)) {
+							$customResponsiveOutput = self::outputCssVariablesResponsive($selectVariable, $key, $attributes[$key], $name, $unique);
+						}
+					}
+					break;
 
-				// Output variables depending on the boolean. First key is false.
-				$value = $manifest['options'][$key][(int)$attributes[$key]];
+				case 'boolean':
+					// Output boolean variable from the options array key. First key is false value, second is true value.
+
+					// Each type requires options key.
+					if (!isset($manifest['options'][$key])) {
+						break;
+					}
+
+					// Bailout if missing boolean options in array.
+					if (count($manifest['options'][$key]) !== 2) {
+						break;
+					}
+
+					// Output variables depending on the boolean. First key is false.
+					$value = $manifest['options'][$key][(int)$attributes[$key]];
+
+					break;
+
+				case 'custom':
+					// Each type requires options key.
+					if (!isset($manifest['options'][$key])) {
+						continue 2;
+					}
+
+					// Output custom variable/s from options array.
+					$customOutput = self::outputCssVariablesCustom($manifest['options'][$key][$attributes[$key]], $key, $attributes[$key]);
+
+					break;
 			}
 
 			// Return correct boolean type as string.
 			if (gettype($value) === 'boolean') {
 				$value = $value ? 'true' : 'false';
-			}
-
-			// Output custom variable/s from options array.
-			if ($variableType === 'custom') {
-				$customOutput = self::outputCssVariablesCustom($manifest['options'][$key][$attributes[$key]], $key, $attributes[$key]);
 			}
 
 			// Convert key to correct case.
