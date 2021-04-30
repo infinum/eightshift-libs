@@ -33,7 +33,7 @@ trait CliHelpers
 			// @codeCoverageIgnoreStart
 			// Cannot test the exit.
 		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
+			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 			// @codeCoverageIgnoreEnd
 		}
 	}
