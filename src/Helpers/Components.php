@@ -456,7 +456,7 @@ class Components
 					continue;
 				}
 
-				if (gettype($value) === 'array') {
+				if (is_array($value)) {
 					$customOutput = self::outputCssVariablesCustom($selectVariable, $key);
 				}
 			}
