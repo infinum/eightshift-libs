@@ -261,7 +261,7 @@ class Components
 	/**
 	 * Map and check attributes for responsive object.
 	 *
-	 * @param string $keyName Key name to find in responsiveAttributes object.
+	 * @param string $keyName Key name to find in the responsiveAttributes object.
 	 * @param array  $attributes Array of attributes.
 	 * @param array  $manifest Array of default attributes from manifest.json.
 	 * @param string $componentName The real component name.
@@ -276,11 +276,11 @@ class Components
 		$output = [];
 
 		if (!isset($manifest['responsiveAttributes'])) {
-			throw new \Exception("It looks like you are missing responsiveAttributes key in your {$componentName} manifest.");
+			throw new \Exception("It looks like you are missing the responsiveAttributes key in your {$componentName} manifest.");
 		}
 
 		if (!isset($manifest['responsiveAttributes'][$keyName])) {
-			throw new \Exception("It looks like you are missing {$keyName} key in your manifest responsiveAttributes array.");
+			throw new \Exception("It looks like you are missing the {$keyName} key in your manifest responsiveAttributes array.");
 		}
 
 		foreach ($manifest['responsiveAttributes'][$keyName] as $key => $value) {
@@ -291,7 +291,7 @@ class Components
 	}
 
 	/**
-	 * Return BEM selector for html class and check if Condition part is set.
+	 * Return a BEM class selector and check if Condition part is set.
 	 *
 	 * @param mixed  $condition Check condition.
 	 * @param string $block BEM Block selector.
@@ -500,10 +500,10 @@ class Components
 	}
 
 	/**
-	 * Internal helper to loop Css Variables from object.
+	 * Internal helper to loop CSS variables from an object.
 	 *
-	 * @param array  $arrayList Array list of css variables.
-	 * @param string $attributeKey Attribute key to append to output variable name.
+	 * @param array  $arrayList Array of CSS variables.
+	 * @param string $attributeKey Attribute key to append to the output variable name.
 	 *
 	 * @return string
 	 */
