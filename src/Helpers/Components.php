@@ -452,7 +452,7 @@ class Components
 
 				$value = $selectVariable === null ? $attributes[$key] : $selectVariable;
 
-				if ($value === "") {
+				if ($value === '') {
 					continue;
 				}
 
