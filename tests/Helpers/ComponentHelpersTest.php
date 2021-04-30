@@ -547,8 +547,8 @@ test('Asserts that outputCssVariables returns variables custom for select type i
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('--test-select-variable-test1: novi1;', $output);
-	$this->assertStringContainsString('--test-select-variable-test2: novi2;', $output);
+	$this->assertStringContainsString('--test-select-variable-test1: new1;', $output);
+	$this->assertStringContainsString('--test-select-variable-test2: new2;', $output);
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
