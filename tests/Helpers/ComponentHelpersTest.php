@@ -243,6 +243,49 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
 })->throws(\Exception::class, 'bla key does not exist in the button component. Please check your implementation.');
 
+/**
+ * Components::checkAttrResponsive tests
+ */
+test('Asserts that checkAttrResponsive returns the correct output.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$attributes = [
+		'headingContentSpacingLarge' => '10',
+		'headingContentSpacingDesktop' => '5',
+		'headingContentSpacingTablet' => '3',
+		'headingContentSpacingMobile' => '1',
+	];
+
+	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
+
+	$this->assertIsArray($results, 'Result should be an array');
+	$this->assertArrayHasKey('large', $results);
+	$this->assertEquals($results['large'], '10');
+});
+
+test('Asserts that checkAttrResponsive returns empty values if attribute is not provided.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$attributes = [];
+
+	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
+
+	$this->assertIsArray($results, 'Result should be an array');
+	$this->assertArrayHasKey('large', $results);
+	$this->assertEquals($results['large'], '');
+});
+
+test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$attributes = [];
+
+	Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'It looks like you are missing the responsiveAttributes key in your button manifest.');
+
+test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$attributes = [];
+
+	Components::checkAttrResponsive('testAttribtue', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'It looks like you are missing the testAttribtue key in your manifest responsiveAttributes array.');
 
 /**
  * Components::selector tests
@@ -490,7 +533,64 @@ test('Asserts that outputCssVariables returns variable for select type if variab
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
-test('Asserts that outputCssVariables will not return css variables if data is empty', function () {
+test('Asserts that outputCssVariables returns custom variables for the selected type if variable key is set to object.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectVariable' => "test-3",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--test-select-variable-test1: new1;', $output);
+	$this->assertStringContainsString('--test-select-variable-test2: new2;', $output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
+test('Asserts that outputCssVariables returns and replaces magic constant variablefor the selected type if variable key is set to object.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectVariable' => "test-3",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--test-select-variable-test1: new1;', $output);
+	$this->assertStringContainsString('--test-select-variable-test2: new2;', $output);
+	$this->assertStringContainsString('--test-select-variable-test-magic: test-3;', $output);
+	$this->assertStringContainsString('--test-select-variable-test-magic-mixed: new-test-3-complex;', $output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
+test('Asserts that outputCssVariables doesn\'t return a variable if the value is empty', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectVariable' => "",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
+test('Asserts that outputCssVariables will not return CSS variables if data is empty', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
 	$attributes = [
@@ -535,13 +635,12 @@ test('Asserts that outputCssVariables returns custom variables for custom type i
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('--typography-custom: center center;', $output);
 	$this->assertStringContainsString('--typography-custom-horizontal: center;', $output);
 	$this->assertStringContainsString('--typography-custom-vertical: center;', $output);
 	$this->assertStringNotContainsString('--button-content:', $output);
 });
 
-test('aaaAsserts that outputCssVariables returns custom variables for custom type if options key is set.', function () {
+test('Asserts that outputCssVariables doesn\'t return custom variables for custom type if the options key is not set.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
 
 	$attributes = [

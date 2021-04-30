@@ -126,13 +126,13 @@ class Components
 		// for setting specific styles for components rendered inside other components.
 		if (isset($attributes['parentClass'])) {
 			$component = str_replace('.php', '', $component);
-			printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}"));
+			printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}")); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 		}
 
 		require $componentPath;
 
 		if (isset($attributes['parentClass'])) {
-			echo '</div>';
+			echo '</div>'; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 		}
 
 		return trim((string) ob_get_clean());
@@ -259,7 +259,39 @@ class Components
 	}
 
 	/**
-	 * Return BEM selector for html class and check if Condition part is set.
+	 * Map and check attributes for responsive object.
+	 *
+	 * @param string $keyName Key name to find in the responsiveAttributes object.
+	 * @param array  $attributes Array of attributes.
+	 * @param array  $manifest Array of default attributes from manifest.json.
+	 * @param string $componentName The real component name.
+	 *
+	 * @throws \Exception If missing responsiveAttributes or keyName in responsiveAttributes.
+	 * @throws \Exception If missing keyName in responsiveAttributes.
+	 *
+	 * @return mixed
+	 */
+	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest, string $componentName = '')
+	{
+		$output = [];
+
+		if (!isset($manifest['responsiveAttributes'])) {
+			throw new \Exception("It looks like you are missing the responsiveAttributes key in your {$componentName} manifest.");
+		}
+
+		if (!isset($manifest['responsiveAttributes'][$keyName])) {
+			throw new \Exception("It looks like you are missing the {$keyName} key in your manifest responsiveAttributes array.");
+		}
+
+		foreach ($manifest['responsiveAttributes'][$keyName] as $key => $value) {
+			$output[$key] = self::checkAttr($value, $attributes, $manifest, $componentName);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return a BEM class selector and check if Condition part is set.
 	 *
 	 * @param mixed  $condition Check condition.
 	 * @param string $block BEM Block selector.
@@ -368,6 +400,7 @@ class Components
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique): string
 	{
 		$output = '';
+		$customOutput = '';
 
 		if (!$attributes || !$manifest) {
 			return $output;
@@ -376,8 +409,6 @@ class Components
 		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
 
 		$name = self::camelToKebabCase($name);
-
-		$customOutput = '';
 
 		// Check manifest for the attributes with variable key.
 		$defaultAttributes = array_filter(
@@ -420,6 +451,14 @@ class Components
 				))[0]['variable'] ?? null;
 
 				$value = $selectVariable === null ? $attributes[$key] : $selectVariable;
+
+				if ($value === '') {
+					continue;
+				}
+
+				if (is_array($value)) {
+					$customOutput = self::outputCssVariablesCustom($selectVariable, $key, $attributes[$key]);
+				}
 			}
 
 			// Output boolean variable from the options array key. First key is false value, second is true value.
@@ -434,17 +473,16 @@ class Components
 
 			// Output custom variable/s from options object.
 			if (isset($manifest['options'][$key]) && $manifest['attributes'][$key]['variable'] === 'custom' && !self::arrayIsList($manifest['options'][$key][$attributes[$key]])) {
-				foreach ($manifest['options'][$key][$attributes[$key]] as $customKey => $customValue) {
-					$internalKey = self::camelToKebabCase($key);
-					$internalCustomKey = self::camelToKebabCase($customKey);
-
-					$customOutput .= "--{$internalKey}-{$internalCustomKey}: ${customValue};\n";
-				}
+				$customOutput = self::outputCssVariablesCustom($manifest['options'][$key][$attributes[$key]], $key, $attributes[$key]);
 			}
 
 			$key = self::camelToKebabCase($key);
 
-			$output .= "--{$key}: {$value};\n{$customOutput}\n";
+			if ($customOutput !== '') {
+				$output .= "{$customOutput}\n";
+			} else {
+				$output .= "--{$key}: {$value};\n";
+			}
 		}
 
 
@@ -459,6 +497,33 @@ class Components
 				}
 			</style>
 		";
+	}
+
+	/**
+	 * Internal helper to loop CSS variables from an object.
+	 *
+	 * @param array  $arrayList Array of CSS variables.
+	 * @param string $attributeKey Attribute key to append to the output variable name.
+	 * @param mixed  $originalAttribute Original attribute value used in magic variable.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariablesCustom(array $arrayList, string $attributeKey, $originalAttribute): string
+	{
+		$output = '';
+		foreach ($arrayList as $customKey => $customValue) {
+			$internalKey = self::camelToKebabCase($attributeKey);
+			$internalCustomKey = self::camelToKebabCase($customKey);
+
+			// If value contains magic variable swap that variable with original attribute value.
+			if (strpos($customValue, '%value%') !== false) {
+				$customValue = str_replace('%value%', $originalAttribute, $customValue);
+			}
+
+			$output .= "--{$internalKey}-{$internalCustomKey}: ${customValue};\n";
+		}
+
+		return $output;
 	}
 
 	/**
