@@ -38,7 +38,7 @@
 		},
 		"testSelectResponsiveVariable": {
 			"type": "string",
-			"default": "test-2",
+			"default": "test-3",
 			"variable": "select-responsive"
 		},
 		"typographyColor": {
