@@ -246,7 +246,7 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 /**
  * Components::checkAttrResponsive tests
  */
-test('Asserts that checkAttrResponsive returns correct output.', function () {
+test('Asserts that checkAttrResponsive returns the correct output.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [
 		'headingContentSpacingLarge' => '10',
@@ -257,7 +257,7 @@ test('Asserts that checkAttrResponsive returns correct output.', function () {
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'Result should be a array');
+	$this->assertIsArray($results, 'Result should be an array');
 	$this->assertArrayHasKey('large', $results);
 	$this->assertEquals($results['large'], '10');
 });
@@ -268,7 +268,7 @@ test('Asserts that checkAttrResponsive returns empty values if attribute is not 
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'Result should be a array');
+	$this->assertIsArray($results, 'Result should be an array');
 	$this->assertArrayHasKey('large', $results);
 	$this->assertEquals($results['large'], '');
 });
@@ -278,14 +278,14 @@ test('Asserts that checkAttrResponsive throws error if responsiveAttribute key i
 	$attributes = [];
 
 	Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your button manifest.');
+})->throws(\Exception::class, 'It looks like you are missing the responsiveAttributes key in your button manifest.');
 
 test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [];
 
 	Components::checkAttrResponsive('testAttribtue', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are missing testAttribtue key in your manifest responsiveAttributes array.');
+})->throws(\Exception::class, 'It looks like you are the missing testAttribtue key in your manifest responsiveAttributes array.');
 
 /**
  * Components::selector tests
@@ -533,7 +533,7 @@ test('Asserts that outputCssVariables returns variable for select type if variab
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
-test('Asserts that outputCssVariables returns variables custom for select type if variable keys is set to object.', function () {
+test('Asserts that outputCssVariables returns custom variables for the selected type if variable key is set to object.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
 
 	$attributes = [
@@ -552,7 +552,7 @@ test('Asserts that outputCssVariables returns variables custom for select type i
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
-test('Asserts that outputCssVariables doesn\'t return variable if value is emapty', function () {
+test('Asserts that outputCssVariables doesn\'t return a variable if the value is empty', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
 
 	$attributes = [
@@ -569,7 +569,7 @@ test('Asserts that outputCssVariables doesn\'t return variable if value is emapt
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
-test('Asserts that outputCssVariables will not return css variables if data is empty', function () {
+test('Asserts that outputCssVariables will not return CSS variables if data is empty', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
 	$attributes = [
@@ -619,7 +619,7 @@ test('Asserts that outputCssVariables returns custom variables for custom type i
 	$this->assertStringNotContainsString('--button-content:', $output);
 });
 
-test('Asserts that outputCssVariables doesn\'t return custom variables for custom type if options key is not set.', function () {
+test('Asserts that outputCssVariables doesn\'t return custom variables for custom type if the options key is not set.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
 
 	$attributes = [
