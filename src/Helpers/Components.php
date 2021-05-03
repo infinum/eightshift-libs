@@ -472,6 +472,11 @@ class Components
 		// Loop data and provide correct selectors from data object.
 		if (!empty($data)) {
 			foreach ($data as $breakpoint => $breakpointData) {
+				// Bailout if output array is empty.
+				if (empty($breakpointData)) {
+					continue;
+				}
+
 				// If this is default dont wrap the media query around it.
 				$breakpointData = implode("\n", $breakpointData);
 
@@ -501,7 +506,7 @@ class Components
 		";
 
 		// Check if final output is empty and and remove if it is.
-		if (empty(preg_replace('/[ \t]+/', ' ', (string) preg_replace('/\s*$^\s*/m', "\n", $finalOutput)))) {
+		if (empty(trim($finalOutput))) {
 			return '';
 		}
 

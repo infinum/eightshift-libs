@@ -359,7 +359,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			throw InvalidBlock::missingComponentsException();
 		}
 
-		$components = array_diff((array)$paths, ['..', '.']);
+		$components = array_diff((array)$paths, ['..', '.', '.DS_Store']);
 
 		$output = [];
 

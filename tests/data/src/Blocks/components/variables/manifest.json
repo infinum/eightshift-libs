@@ -1,0 +1,110 @@
+{
+	"componentName": "variables",
+	"title": "Variables",
+	"componentClass": "variables",
+	"example": {
+	},
+	"attributes": {
+		"variableDefault": {
+			"type": "string",
+			"variable": "default"
+		},
+		"variableValue": {
+			"type": "string",
+			"variable": "value"
+		},
+		"variableEmpty": {
+			"type": "string",
+			"variable": "default"
+		},
+		"variableMissing": {
+			"type": "string",
+			"variable": "default"
+		},
+		"variablesWithDefault": {
+			"type": "string",
+			"default": "value",
+			"variable": "default"
+		},
+		"variablesWithoutVariable": {
+			"type": "string",
+			"default": "value"
+		},
+		"variableValueNotArray": {
+			"type": "string",
+			"variable": "value"
+		},
+		"variableValueNotSetValue": {
+			"type": "string",
+			"variable": "value"
+		}
+	},
+	"variables": {
+		"variableValueNotSetValue": {
+		},
+		"variableValueNotArray": {
+			"aaa": ""
+		},
+		"variableEmpty": [
+			{
+				"variable": {}
+			}
+		],
+		"variableDefault": [
+			{
+				"variable": {
+					"variable-default": "default"
+				}
+			},
+			{
+				"breakpoint": "tablet",
+				"variable": {
+					"variable-default-tablet": "%value%"
+				}
+			},
+			{
+				"breakpoint": "large",
+				"variable": {
+					"variable-default-large": "large"
+				}
+			}
+		],
+
+		"variableValue": {
+			"value1": [
+				{
+					"variable": {
+						"variable-value-default": "default"
+					}
+				}
+			],
+			"value2": [
+				{
+					"variable": {
+						"variable-value-default": "default"
+					}
+				},
+				{
+					"breakpoint": "tablet",
+					"variable": {
+						"variable-value-tablet": "tablet"
+					}
+				}
+			],
+			"value3": [
+				{
+					"variable": {
+						"variable-value-default": "default"
+					}
+				},
+				{
+					"breakpoint": "tablet",
+					"inverse": true,
+					"variable": {
+						"variable-value-tablet": "tablet"
+					}
+				}
+			]
+		}
+	}
+}
