@@ -560,7 +560,7 @@ class Components
 		}
 
 		// Output manual output from the array of variables.
-		$manual = isset($manifest['variables']) ? \esc_html(implode(";\n", ($manifest['variables']))) : '';
+		$manual = isset($manifest['variables']) ? \esc_html(implode(";\n", $manifest['variables'])) : '';
 
 		// Prepare final output.
 		$finalOutput = "
