@@ -479,6 +479,23 @@ test('Asserts that outputCssVariables returns boolean value for boolean type if 
 	$this->assertStringNotContainsString('--button-content:', $output);
 });
 
+test('Asserts that outputCssVariables returns empty value for boolean type if options are not set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'typographyUse' => true,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('--typography-use', $output);
+});
+
 test('Asserts that outputCssVariables returns custom value for boolean type if options key is set.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
@@ -533,6 +550,40 @@ test('Asserts that outputCssVariables returns variable for select type if variab
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
+test('Asserts that outputCssVariables returns empty for select type if options keys are not set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectVariableNoOptions' => "14-text-roman",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('--test-select-variable-no-option', $output);
+});
+
+test('Asserts that outputCssVariables returns empty for select responsive type if variable key is not set.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectResponsiveVariable' => "test-1",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('--test-select-responsive-variable', $output);
+});
+
 test('Asserts that outputCssVariables returns custom variables for the selected type if variable key is set to object.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
 
@@ -575,6 +626,7 @@ test('Asserts that outputCssVariables returns and replaces magic constant variab
 
 test('Asserts that outputCssVariables returns correct responsive select variables.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+	$manifestGlobal = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$attributes = [
 		'testSelectResponsiveVariable' => "test-3",
@@ -583,7 +635,8 @@ test('Asserts that outputCssVariables returns correct responsive select variable
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
-		'uniqueString'
+		'uniqueString',
+		$manifestGlobal
 	);
 
 	$this->assertIsString($output);
@@ -591,8 +644,8 @@ test('Asserts that outputCssVariables returns correct responsive select variable
 	$this->assertStringContainsString('--test-select-responsive-variable-tablet: ivan-tablet;', $output);
 	$this->assertStringContainsString('--test-select-responsive-variable-test: ivan;', $output);
 	$this->assertStringContainsString('--test-select-responsive-variable-test-novi: test-3;', $output);
-	$this->assertStringContainsString('@media (max-width: var(--global-breakpoints-large))', $output);
-	$this->assertStringContainsString('@media (min-width: var(--global-breakpoints-tablet))', $output);
+	$this->assertStringContainsString('@media (max-width: 1200px)', $output);
+	$this->assertStringContainsString('@media (min-width: 991px)', $output);
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
@@ -679,6 +732,47 @@ test('Asserts that outputCssVariables doesn\'t return custom variables for custo
 	$this->assertIsString($output);
 	$this->assertStringNotContainsString('--typography-custom-fail-horizontal', $output);
 	$this->assertStringNotContainsString('--button-content:', $output);
+});
+
+
+test('Asserts that outputCssVariables returns correct responsive custom variables.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+	$manifestGlobal = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'typographyCustomResponsive' => "center center",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$manifestGlobal
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--typography-custom-responsive-novi: cool', $output);
+	$this->assertStringContainsString('--typography-custom-responsive-tablet: cool-tablet;', $output);
+	$this->assertStringContainsString('--typography-custom-responsive-test: ivan;', $output);
+	$this->assertStringContainsString('--typography-custom-responsive-test-novi: center center;', $output);
+	$this->assertStringContainsString('@media (max-width: 1200px)', $output);
+	$this->assertStringContainsString('@media (min-width: 991px)', $output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
+test('Asserts that outputCssVariables will not output if everything is empty.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+	$manifestGlobal = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$output = Components::outputCssVariables(
+		[],
+		$manifest,
+		'uniqueString',
+		$manifestGlobal
+	);
+
+	$this->assertIsString($output);
+	$this->assertEmpty($output);
 });
 
 /**

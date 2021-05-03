@@ -394,10 +394,11 @@ class Components
 	 * @param array  $attributes Built attributes.
 	 * @param array  $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
+	 * @param array  $globalManifest Global manifest array.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest = []): string
 	{
 		$output = '';
 		$customOutput = '';
@@ -451,6 +452,7 @@ class Components
 					$value = "var(--global-colors-{$value})";
 
 					break;
+
 				case 'select':
 				case 'select-responsive':
 					// Output select variable.
@@ -480,7 +482,7 @@ class Components
 
 						// Output custom variables if variables key is object.
 						if (is_array($selectVariable)) {
-							$customOutput = self::outputCssVariablesCustom($selectVariable, $key, $attributes[$key]);
+							$customOutput .= self::outputCssVariablesCustom($selectVariable, $key, $attributes[$key]);
 						}
 					}
 
@@ -493,7 +495,7 @@ class Components
 
 						// Output custom variables if variables key is array of objects.
 						if (is_array($selectVariable)) {
-							$customResponsiveOutput = self::outputCssVariablesResponsive($selectVariable, $key, $attributes[$key], $name, $unique);
+							$customResponsiveOutput .= self::outputCssVariablesResponsive($selectVariable, $key, $attributes[$key], $name, $unique, $globalManifest);
 						}
 					}
 					break;
@@ -517,13 +519,25 @@ class Components
 					break;
 
 				case 'custom':
+				case 'custom-responsive':
 					// Each type requires options key.
 					if (!isset($manifest['options'][$key])) {
 						continue 2;
 					}
 
+					$customVariable = $manifest['options'][$key][$attributes[$key]];
+
 					// Output custom variable/s from options array.
-					$customOutput = self::outputCssVariablesCustom($manifest['options'][$key][$attributes[$key]], $key, $attributes[$key]);
+					if ($variableType === 'custom') {
+						$customOutput .= self::outputCssVariablesCustom($customVariable, $key, $attributes[$key]);
+					}
+
+					// Output custom variables if variables key is array of arrays.
+					if ($variableType === 'custom-responsive') {
+						if (is_array($customVariable)) {
+							$customResponsiveOutput .= self::outputCssVariablesResponsive($customVariable, $key, $attributes[$key], $name, $unique, $globalManifest);
+						}
+					}
 
 					break;
 			}
@@ -538,14 +552,14 @@ class Components
 
 			// If custom output is empty use normal key value pair.
 			if ($customOutput !== '') {
-				$output .= "{$customOutput}\n";
+				$output .= \esc_html("{$customOutput}\n");
 			} else {
-				$output .= "--{$key}: {$value};\n";
+				$output .= \esc_html("--{$key}: {$value};\n");
 			}
 		}
 
 		// Output manual output from the array of variables.
-		$manual = isset($manifest['variables']) ? implode(";\n", $manifest['variables']) : '';
+		$manual = isset($manifest['variables']) ? \esc_html(implode(";\n", $manifest['variables'])) : '';
 
 		// Prepare final output.
 		$finalOutput = "
@@ -602,7 +616,7 @@ class Components
 			$output .= "--{$internalKey}-{$internalCustomKey}: ${customValue};\n";
 		}
 
-		return $output;
+		return \esc_html($output);
 	}
 
 	/**
@@ -613,18 +627,27 @@ class Components
 	 * @param mixed  $originalAttribute Original attribute value used in magic variable.
 	 * @param string $name Block/component name used for selector.
 	 * @param string $unique Unique ID used for selector.
+	 * @param array  $globalManifest Global manifest array.
 	 *
 	 * @returns sting
 	 */
-	public static function outputCssVariablesResponsive(array $list, string $attributeKey, $originalAttribute, string $name, string $unique): string
+	public static function outputCssVariablesResponsive(array $list, string $attributeKey, $originalAttribute, string $name, string $unique, array $globalManifest): string
 	{
 		$output = '';
+
+		// Bailout if globalVariables or breakpoints is missing.
+		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
+			return $output;
+		}
 
 		// Iterate each attribute and make corrections.
 		foreach ($list as $item) {
 			$breakpoint = $item['breakpoint'] ?? '';
 			$inverse = $item['inverse'] ?? false;
 			$variable = $item['variable'] ?? [];
+
+			// Find the actual value of the breakpoint.
+			$breakpointValue = $globalManifest['globalVariables']['breakpoints'][$breakpoint] ?? '';
 
 			// Output CSS variables from the variables object.
 			$innerValue = self::outputCssVariablesCustom($variable, $attributeKey, $originalAttribute);
@@ -634,7 +657,7 @@ class Components
 
 			// Output normal selector if breakpoint is not defined (used for top level element like mobile).
 			// Else wrap it in media query condition.
-			if (empty($breakpoint)) {
+			if (empty($breakpointValue)) {
 				$output .= "
 					.{$name}[data-id='{$unique}'] {
 						{$innerValue}
@@ -642,7 +665,7 @@ class Components
 				";
 			} else {
 				$output .= "
-					@media (${orderBreakpint}: var(--global-breakpoints-${breakpoint})) {
+					@media (${orderBreakpint}: ${breakpointValue}px) {
 						.{$name}[data-id='{$unique}'] {
 							{$innerValue}
 						}
