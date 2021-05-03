@@ -36,6 +36,11 @@
 			"default": "test-2",
 			"variable": "select"
 		},
+		"testSelectResponsiveVariable": {
+			"type": "string",
+			"default": "test-3",
+			"variable": "select-responsive"
+		},
 		"typographyColor": {
 			"type": "string",
 			"default": "black",
@@ -65,6 +70,46 @@
 		}
 	},
 	"options": {
+		"testSelectResponsiveVariable": [
+			{
+				"label": "Test 1",
+				"value": "test-1"
+			},
+			{
+				"label": "Test 2",
+				"value": "test-2",
+				"variable": "custom-variable-responsive-2"
+			},
+			{
+				"label": "Test 3",
+				"value": "test-3",
+				"variable": [
+					{
+						"variable": {
+							"novi": "cool"
+						}
+					},
+					{
+						"breakpoint": "tablet",
+						"variable": {
+							"tablet": "ivan-tablet"
+						}
+					},
+					{
+						"breakpoint": "large",
+						"inverse": true,
+						"variable": {
+							"test": "ivan",
+							"testNovi": "%value%"
+						}
+					}
+				]
+			},
+			{
+				"label": "None",
+				"value": ""
+			}
+		],
 		"testSelectVariable": [
 			{
 				"label": "Test 1",

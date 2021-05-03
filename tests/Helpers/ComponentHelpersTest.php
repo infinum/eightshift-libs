@@ -552,7 +552,7 @@ test('Asserts that outputCssVariables returns custom variables for the selected 
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
-test('Asserts that outputCssVariables returns and replaces magic constant variablefor the selected type if variable key is set to object.', function () {
+test('Asserts that outputCssVariables returns and replaces magic constant variable for the selected type if variable key is set to object.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
 
 	$attributes = [
@@ -570,6 +570,29 @@ test('Asserts that outputCssVariables returns and replaces magic constant variab
 	$this->assertStringContainsString('--test-select-variable-test2: new2;', $output);
 	$this->assertStringContainsString('--test-select-variable-test-magic: test-3;', $output);
 	$this->assertStringContainsString('--test-select-variable-test-magic-mixed: new-test-3-complex;', $output);
+	$this->assertStringNotContainsString('--typography-content:', $output);
+});
+
+test('Asserts that outputCssVariables returns correct responsive select variables.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = [
+		'testSelectResponsiveVariable' => "test-3",
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('--test-select-responsive-variable-novi: cool;', $output);
+	$this->assertStringContainsString('--test-select-responsive-variable-tablet: ivan-tablet;', $output);
+	$this->assertStringContainsString('--test-select-responsive-variable-test: ivan;', $output);
+	$this->assertStringContainsString('--test-select-responsive-variable-test-novi: test-3;', $output);
+	$this->assertStringContainsString('@media (max-width: var(--global-breakpoints-large))', $output);
+	$this->assertStringContainsString('@media (min-width: var(--global-breakpoints-tablet))', $output);
 	$this->assertStringNotContainsString('--typography-content:', $output);
 });
 
