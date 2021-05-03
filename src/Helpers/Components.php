@@ -447,14 +447,14 @@ class Components
 			$variableType = $manifest['attributes'][$key]['variable'];
 
 			switch ($variableType) {
-				case 'color': {
+				case 'color':
 					// Output color variable from the global variables.
 					$value = "var(--global-colors-{$value})";
 
 					break;
-				}
+
 				case 'select':
-				case 'select-responsive': {
+				case 'select-responsive':
 					// Output select variable.
 
 					// Each type requires options key.
@@ -499,8 +499,8 @@ class Components
 						}
 					}
 					break;
-				}
-				case 'boolean': {
+
+				case 'boolean':
 					// Output boolean variable from the options array key. First key is false value, second is true value.
 
 					// Each type requires options key.
@@ -517,9 +517,9 @@ class Components
 					$value = $manifest['options'][$key][(int)$attributes[$key]];
 
 					break;
-				}
+
 				case 'custom':
-				case 'custom-responsive': {
+				case 'custom-responsive':
 					// Each type requires options key.
 					if (!isset($manifest['options'][$key])) {
 						continue 2;
@@ -540,7 +540,6 @@ class Components
 					}
 
 					break;
-				}
 			}
 
 			// Return correct boolean type as string.
