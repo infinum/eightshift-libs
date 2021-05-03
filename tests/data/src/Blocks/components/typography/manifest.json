@@ -31,6 +31,11 @@
 			"default": "16-text-roman",
 			"variable": "select"
 		},
+		"testSelectVariableNoOptions": {
+			"type": "string",
+			"default": "14-text-roman",
+			"variable": "select"
+		},
 		"testSelectVariable": {
 			"type": "string",
 			"default": "test-2",
@@ -51,6 +56,11 @@
 			"default": "center center",
 			"variable": "custom"
 		},
+		"typographyCustomResponsive": {
+			"type": "string",
+			"default": "center center",
+			"variable": "custom-responsive"
+		},
 		"typographyUppercase": {
 			"type": "boolean",
 			"default": false
@@ -66,10 +76,17 @@
 		},
 		"typographyUse": {
 			"type": "boolean",
-			"default": true
+			"default": true,
+			"variable": "boolean"
 		}
 	},
 	"options": {
+		"typographyUse": [
+			"1",
+			"2",
+			"3",
+			"4"
+		],
 		"testSelectResponsiveVariable": [
 			{
 				"label": "Test 1",
@@ -218,42 +235,33 @@
 			"grey500"
 		],
 		"typographyCustom": {
-			"top left": {
-				"horizontal": "flex-start",
-				"vertical": "flex-start"
-			},
-			"top center": {
-				"horizontal": "center",
-				"vertical": "flex-start"
-			},
-			"top right": {
-				"horizontal": "flex-end",
-				"vertical": "flex-start"
-			},
-			"center left": {
-				"horizontal": "flex-start",
-				"vertical": "center"
-			},
 			"center center": {
 				"horizontal": "center",
 				"vertical": "center"
-			},
-			"center right": {
-				"horizontal": "flex-end",
-				"vertical": "center"
-			},
-			"bottom left": {
-				"horizontal": "flex-start",
-				"vertical": "flex-end"
-			},
-			"bottom center": {
-				"horizontal": "center",
-				"vertical": "flex-end"
-			},
-			"bottom right": {
-				"horizontal": "flex-end",
-				"vertical": "flex-end"
 			}
+		},
+		"typographyCustomResponsive": {
+			"center center": [
+				{
+					"variable": {
+						"novi": "cool"
+					}
+				},
+				{
+					"breakpoint": "tablet",
+					"variable": {
+						"tablet": "cool-tablet"
+					}
+				},
+				{
+					"breakpoint": "large",
+					"inverse": true,
+					"variable": {
+						"test": "ivan",
+						"testNovi": "%value%"
+					}
+				}
+			]
 		}
 	}
 }
