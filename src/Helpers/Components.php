@@ -400,9 +400,8 @@ class Components
 	 */
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest = []): string
 	{
+		$data = [];
 		$output = '';
-		$customOutput = '';
-		$customResponsiveOutput = '';
 
 		if (!$attributes || !$manifest) {
 			return $output;
@@ -410,9 +409,6 @@ class Components
 
 		// Check if component or block.
 		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
-
-		// Convert name to correct case.
-		$name = self::camelToKebabCase($name);
 
 		// Check manifest for the attributes with variable key.
 		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
@@ -437,129 +433,66 @@ class Components
 		}
 
 		// Iterate each attribute and make corrections.
-		foreach ($attributes as $key => $value) {
+		foreach ($attributes as $attributeName => $attributeValue) {
 			// Bailout if attribute is not using variables.
-			if (!isset($manifest['attributes'][$key]) || !isset($manifest['attributes'][$key]['variable'])) {
+			if (!isset($manifest['attributes'][$attributeName]) || !isset($manifest['attributes'][$attributeName]['variable'])) {
+				continue;
+			}
+
+			// Bailout if variables key is not existing or attribute key is non existing in variables array.
+			if (!isset($manifest['variables']) || !isset($manifest['variables'][$attributeName])) {
 				continue;
 			}
 
 			// Check type of variable.
-			$variableType = $manifest['attributes'][$key]['variable'];
+			$variableType = $manifest['attributes'][$attributeName]['variable'];
+			$variables = $manifest['variables'][$attributeName];
 
 			switch ($variableType) {
-				case 'color':
-					// Output color variable from the global variables.
-					$value = "var(--global-colors-{$value})";
-
-					break;
-
-				case 'select':
-				case 'select-responsive':
-					// Output select variable.
-
-					// Each type requires options key.
-					if (!isset($manifest['options'][$key])) {
-						continue 2;
-					}
-
-					// Find select item from the attribute set in the db.
-					$selectVariable = array_values(array_filter(
-						$manifest['options'][$key],
-						function ($item) use ($attributes, $key) {
-							return $item['value'] === $attributes[$key];
-						}
-					))[0]['variable'] ?? null;
-
-					// Output select variable from the options array but don't use value key. It will use variable key.
-					if ($variableType === 'select') {
-						// If custom variable is missing fallback to default.
-						$value = $selectVariable !== null ? $selectVariable : $attributes[$key];
-
-						// Bailout if slug or variable key is missing.
-						if ($value === '') {
-							continue 2;
-						}
-
-						// Output custom variables if variables key is object.
-						if (is_array($selectVariable)) {
-							$customOutput .= self::outputCssVariablesCustom($selectVariable, $key, $attributes[$key]);
-						}
-					}
-
-					// Output select-responsive variable from the options array.
-					if ($variableType === 'select-responsive') {
-						// Bailout if variable key is missing because there is no fallback here.
-						if ($selectVariable === null) {
-							continue 2;
-						}
-
-						// Output custom variables if variables key is array of objects.
-						if (is_array($selectVariable)) {
-							$customResponsiveOutput .= self::outputCssVariablesResponsive($selectVariable, $key, $attributes[$key], $name, $unique, $globalManifest);
-						}
-					}
-					break;
-
-				case 'boolean':
-					// Output boolean variable from the options array key. First key is false value, second is true value.
-
-					// Each type requires options key.
-					if (!isset($manifest['options'][$key])) {
+				case 'value':
+					// Bailout if attribute value doesn't exist in variables.
+					if (!isset($variables[$attributeValue])) {
 						break;
 					}
 
-					// Bailout if missing boolean options in array.
-					if (count($manifest['options'][$key]) !== 2) {
+					// Bailout if attribute value is not array.
+					if (!is_array($variables[$attributeValue])) {
 						break;
 					}
 
-					// Output variables depending on the boolean. First key is false.
-					$value = $manifest['options'][$key][(int)$attributes[$key]];
-
+					$data = self::outputCssVariablesResponsive($variables[$attributeValue], $attributeValue, $globalManifest, $data);
 					break;
 
-				case 'custom':
-				case 'custom-responsive':
-					// Each type requires options key.
-					if (!isset($manifest['options'][$key])) {
-						continue 2;
-					}
+				default:
+					$data = self::outputCssVariablesResponsive($variables, $attributeValue, $globalManifest, $data);
+					break;
+			}
+		}
 
-					$customVariable = $manifest['options'][$key][$attributes[$key]];
+		// Loop data and provide correct selectors from data object.
+		if (!empty($data)) {
+			foreach ($data as $breakpoint => $breakpointData) {
+				// If this is default dont wrap the media query around it.
+				$breakpointData = implode("\n", $breakpointData);
 
-					// Output custom variable/s from options array.
-					if ($variableType === 'custom') {
-						$customOutput .= self::outputCssVariablesCustom($customVariable, $key, $attributes[$key]);
-					}
-
-					// Output custom variables if variables key is array of arrays.
-					if ($variableType === 'custom-responsive') {
-						if (is_array($customVariable)) {
-							$customResponsiveOutput .= self::outputCssVariablesResponsive($customVariable, $key, $attributes[$key], $name, $unique, $globalManifest);
+				if ($breakpoint === 'default') {
+					$output .= ".{$name}[data-id='{$unique}'] {
+							{$breakpointData}
 						}
-					}
-
-					break;
-			}
-
-			// Return correct boolean type as string.
-			if (gettype($value) === 'boolean') {
-				$value = $value ? 'true' : 'false';
-			}
-
-			// Convert key to correct case.
-			$key = self::camelToKebabCase($key);
-
-			// If custom output is empty use normal key value pair.
-			if ($customOutput !== '') {
-				$output .= \esc_html("{$customOutput}\n");
-			} else {
-				$output .= \esc_html("--{$key}: {$value};\n");
+					";
+				} else {
+					$output .= "@media ({$breakpoint}) {
+							.{$name}[data-id='{$unique}'] {
+								{$breakpointData}
+							}
+						}
+					";
+				}
 			}
 		}
 
 		// Output manual output from the array of variables.
-		$manual = isset($manifest['variables']) ? \esc_html(implode(";\n", $manifest['variables'])) : '';
+		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
 
 		// Prepare final output.
 		$finalOutput = "
@@ -573,75 +506,63 @@ class Components
 		}
 
 		// Output the style for CSS variables.
-		return "
-			<style>
-				.{$name}[data-id='{$unique}'] {
-					{$finalOutput}
-				}
-				{$customResponsiveOutput}
-			</style>
-		";
+		return "<style>{$finalOutput}</style>";
 	}
 
 	/**
-	 * Internal helper to loop CSS variables from an object.
+	 * Internal helper to loop CSS Variables from array.
 	 *
-	 * @param array  $list Array of CSS variables.
-	 * @param string $attributeKey Attribute key to append to the output variable name.
-	 * @param mixed  $originalAttribute Original attribute value used in magic variable.
+	 * @param array $variables Array of variables of CSS variables.
+	 * @param mixed $attributeValue Original attribute value used in magic variable.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public static function outputCssVariablesCustom(array $list, string $attributeKey, $originalAttribute): string
+	public static function outputCssVariablesInner(array $variables, $attributeValue): array
 	{
-		$output = '';
+		$output = [];
 
 		// Bailout if provided list is not an object.
-		if (self::arrayIsList($list)) {
+		if (self::arrayIsList($variables)) {
 			return $output;
 		}
 
 		// Iterate each attribute and make corrections.
-		foreach ($list as $customKey => $customValue) {
+		foreach ($variables as $variableKey => $variableValue) {
 			// Convert to correct case.
-			$internalKey = self::camelToKebabCase($attributeKey);
-			$internalCustomKey = self::camelToKebabCase($customKey);
+			$internalKey = self::camelToKebabCase($variableKey);
 
 			// If value contains magic variable swap that variable with original attribute value.
-			if (strpos($customValue, '%value%') !== false) {
-				$customValue = str_replace('%value%', $originalAttribute, $customValue);
+			if (strpos($variableValue, '%value%') !== false) {
+				$variableValue = str_replace('%value%', $attributeValue, $variableValue);
 			}
 
 			// Output the custom CSS variable by adding the attribute key + custom object key.
-			$output .= "--{$internalKey}-{$internalCustomKey}: ${customValue};\n";
+			$output[] = "--{$internalKey}: ${variableValue};";
 		}
 
-		return \esc_html($output);
+		return $output;
 	}
 
 	/**
 	 * Internal helper to loop CSS Variables from array of objects in an responsive manner.
 	 *
-	 * @param array  $list Array list of css variables.
-	 * @param string $attributeKey Attribute key to append to output variable name.
-	 * @param mixed  $originalAttribute Original attribute value used in magic variable.
-	 * @param string $name Block/component name used for selector.
-	 * @param string $unique Unique ID used for selector.
-	 * @param array  $globalManifest Global manifest array.
+	 * @param array $breakpoints Breakpoints array list of CSS variables.
+	 * @param mixed $attributeValue Original attribute value used in magic variable.
+	 * @param array $globalManifest Global manifest array.
+	 * @param array $data Data array from parent.
 	 *
-	 * @returns sting
+	 * @returns array
 	 */
-	public static function outputCssVariablesResponsive(array $list, string $attributeKey, $originalAttribute, string $name, string $unique, array $globalManifest): string
+	public static function outputCssVariablesResponsive(array $breakpoints, $attributeValue, array $globalManifest, array $data): array
 	{
-		$output = '';
 
 		// Bailout if globalVariables or breakpoints is missing.
 		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
-			return $output;
+			return $data;
 		}
 
 		// Iterate each attribute and make corrections.
-		foreach ($list as $item) {
+		foreach ($breakpoints as $item) {
 			$breakpoint = $item['breakpoint'] ?? '';
 			$inverse = $item['inverse'] ?? false;
 			$variable = $item['variable'] ?? [];
@@ -649,8 +570,8 @@ class Components
 			// Find the actual value of the breakpoint.
 			$breakpointValue = $globalManifest['globalVariables']['breakpoints'][$breakpoint] ?? '';
 
-			// Output CSS variables from the variables object.
-			$innerValue = self::outputCssVariablesCustom($variable, $attributeKey, $originalAttribute);
+			// Output CSS variables from the variables array.
+			$innerValue = self::outputCssVariablesInner($variable, $attributeValue);
 
 			// Check if we are using mobile or desktop first. Mobile first is the default.
 			$orderBreakpint = $inverse ? 'max-width' : 'min-width';
@@ -658,23 +579,23 @@ class Components
 			// Output normal selector if breakpoint is not defined (used for top level element like mobile).
 			// Else wrap it in media query condition.
 			if (empty($breakpointValue)) {
-				$output .= "
-					.{$name}[data-id='{$unique}'] {
-						{$innerValue}
-					}
-				";
+				if (!isset($data['default'])) {
+					$data['default'] = [];
+				}
+
+				$data['default'] = array_merge($data['default'], $innerValue);
 			} else {
-				$output .= "
-					@media (${orderBreakpint}: ${breakpointValue}px) {
-						.{$name}[data-id='{$unique}'] {
-							{$innerValue}
-						}
-					}
-				";
+				$customKey = "${orderBreakpint}: ${breakpointValue}px";
+
+				if (!isset($data[$customKey])) {
+					$data[$customKey] = [];
+				}
+
+				$data[$customKey] = array_merge($data[$customKey], $innerValue);
 			}
 		};
 
-		return $output;
+		return $data;
 	}
 
 	/**
