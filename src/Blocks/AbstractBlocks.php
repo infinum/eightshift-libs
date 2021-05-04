@@ -353,13 +353,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	protected function getComponents(): array
 	{
 
-		$paths = scandir($this->getBlocksComponentsPath()) ?? [];
+		$paths = preg_grep('/^([^.])/', scandir($this->getBlocksComponentsPath()) ?? []);
 
 		if (!$paths && !defined('WP_CLI')) {
 			throw InvalidBlock::missingComponentsException();
 		}
 
-		$components = array_diff((array)$paths, ['..', '.', '.DS_Store']);
+		$components = array_diff((array)$paths, ['..', '.']);
 
 		$output = [];
 
