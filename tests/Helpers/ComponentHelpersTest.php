@@ -570,8 +570,6 @@ test('Asserts that outputCssVariables returns empty if none of attributes have v
 		$globalManifest
 	);
 
-	var_dump($output);
-
 	$this->assertIsString($output);
 	$this->assertStringNotContainsString('<style>', $output);
 	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
