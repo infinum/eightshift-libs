@@ -323,12 +323,12 @@ test('Asserts that outputCssVariablesGlobal returns empty string if global manif
 });
 
 /**
- * Components::outputCssVariablesGlobalInner tests
+ * Components::globalInner tests
  */
-test('Asserts that outputCssVariablesGlobalInner returns the correct css variable for color', function () {
+test('Asserts that globalInner returns the correct css variable for color', function () {
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$output = Components::outputCssVariablesGlobalInner(
+	$output = Components::globalInner(
 		$globalManifest['globalVariables']['colors'],
 		'colors'
 	);
@@ -337,10 +337,10 @@ test('Asserts that outputCssVariablesGlobalInner returns the correct css variabl
 	$this->assertStringContainsString('--global-colors-primary: #C3151B;', $output);
 });
 
-test('Asserts that outputCssVariablesGlobalInner returns the correct css variable for gradients', function () {
+test('Asserts that globalInner returns the correct css variable for gradients', function () {
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$output = Components::outputCssVariablesGlobalInner(
+	$output = Components::globalInner(
 		$globalManifest['globalVariables']['gradients'],
 		'gradients'
 	);
@@ -349,10 +349,10 @@ test('Asserts that outputCssVariablesGlobalInner returns the correct css variabl
 	$this->assertStringContainsString('--global-gradients-black: #000000;', $output);
 });
 
-test('Asserts that outputCssVariablesGlobalInner returns the correct css variable for fontSizes', function () {
+test('Asserts that globalInner returns the correct css variable for fontSizes', function () {
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$output = Components::outputCssVariablesGlobalInner(
+	$output = Components::globalInner(
 		$globalManifest['globalVariables']['fontSizes'],
 		'fontSizes'
 	);
@@ -361,10 +361,10 @@ test('Asserts that outputCssVariablesGlobalInner returns the correct css variabl
 	$this->assertStringContainsString('--global-font-sizes-normal: normal;', $output);
 });
 
-test('Asserts that outputCssVariablesGlobalInner returns the correct css variable for generic value', function () {
+test('Asserts that globalInner returns the correct css variable for generic value', function () {
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$output = Components::outputCssVariablesGlobalInner(
+	$output = Components::globalInner(
 		$globalManifest['globalVariables']['gutters'],
 		'gutters'
 	);
@@ -375,9 +375,9 @@ test('Asserts that outputCssVariablesGlobalInner returns the correct css variabl
 	$this->assertStringContainsString('--global-gutters-big: 2.5em;', $output);
 });
 
-test('Asserts that outputCssVariablesGlobalInner provided data si wrong', function () {
+test('Asserts that globalInner provided data si wrong', function () {
 
-	$output = Components::outputCssVariablesGlobalInner(
+	$output = Components::globalInner(
 		[],
 		''
 	);
@@ -593,12 +593,30 @@ test('Asserts that outputCssVariables returns empty if attributes variables opti
 	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
 });
 
-test('Asserts that outputCssVariables returns empty for missing variables array.', function () {
+test('Asserts that outputCssVariables returns empty for missing attributes array.', function () {
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariables(
 		[],
 		[],
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('<style>', $output);
+	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
+});
+
+test('Asserts that outputCssVariables returns empty for missing variables array.', function () {
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$output = Components::outputCssVariables(
+		[
+			"test" => "1",
+		],
+		$manifest,
 		'uniqueString',
 		$globalManifest
 	);
