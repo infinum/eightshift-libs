@@ -6,37 +6,30 @@
 	},
 	"attributes": {
 		"variableDefault": {
-			"type": "string",
-			"variable": "default"
+			"type": "string"
 		},
 		"variableValue": {
-			"type": "string",
-			"variable": "value"
+			"type": "string"
 		},
 		"variableEmpty": {
-			"type": "string",
-			"variable": "default"
+			"type": "string"
 		},
 		"variableMissing": {
-			"type": "string",
-			"variable": "default"
+			"type": "string"
 		},
 		"variablesWithDefault": {
 			"type": "string",
-			"default": "value",
-			"variable": "default"
+			"default": "value"
 		},
 		"variablesWithoutVariable": {
 			"type": "string",
 			"default": "value"
 		},
 		"variableValueNotArray": {
-			"type": "string",
-			"variable": "value"
+			"type": "string"
 		},
 		"variableValueNotSetValue": {
-			"type": "string",
-			"variable": "value"
+			"type": "string"
 		}
 	},
 	"variables": {

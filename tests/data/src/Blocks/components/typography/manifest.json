@@ -28,38 +28,31 @@
 		},
 		"typographySize": {
 			"type": "string",
-			"default": "16-text-roman",
-			"variable": "select"
+			"default": "16-text-roman"
 		},
 		"testSelectVariableNoOptions": {
 			"type": "string",
-			"default": "14-text-roman",
-			"variable": "select"
+			"default": "14-text-roman"
 		},
 		"testSelectVariable": {
 			"type": "string",
-			"default": "test-2",
-			"variable": "select"
+			"default": "test-2"
 		},
 		"testSelectResponsiveVariable": {
 			"type": "string",
-			"default": "test-3",
-			"variable": "select-responsive"
+			"default": "test-3"
 		},
 		"typographyColor": {
 			"type": "string",
-			"default": "black",
-			"variable": "color"
+			"default": "black"
 		},
 		"typographyCustom": {
 			"type": "string",
-			"default": "center center",
-			"variable": "custom"
+			"default": "center center"
 		},
 		"typographyCustomResponsive": {
 			"type": "string",
-			"default": "center center",
-			"variable": "custom-responsive"
+			"default": "center center"
 		},
 		"typographyUppercase": {
 			"type": "boolean",
@@ -71,13 +64,11 @@
 		},
 		"typographyCustomFail": {
 			"type": "string",
-			"default": "test",
-			"variable": "custom"
+			"default": "test"
 		},
 		"typographyUse": {
 			"type": "boolean",
-			"default": true,
-			"variable": "boolean"
+			"default": true
 		}
 	},
 	"options": {
@@ -87,72 +78,6 @@
 			"3",
 			"4"
 		],
-		"testSelectResponsiveVariable": [
-			{
-				"label": "Test 1",
-				"value": "test-1"
-			},
-			{
-				"label": "Test 2",
-				"value": "test-2",
-				"variable": "custom-variable-responsive-2"
-			},
-			{
-				"label": "Test 3",
-				"value": "test-3",
-				"variable": [
-					{
-						"variable": {
-							"novi": "cool"
-						}
-					},
-					{
-						"breakpoint": "tablet",
-						"variable": {
-							"tablet": "ivan-tablet"
-						}
-					},
-					{
-						"breakpoint": "large",
-						"inverse": true,
-						"variable": {
-							"test": "ivan",
-							"testNovi": "%value%"
-						}
-					}
-				]
-			},
-			{
-				"label": "None",
-				"value": ""
-			}
-		],
-		"testSelectVariable": [
-			{
-				"label": "Test 1",
-				"value": "test-1",
-				"variable": "custom-variable-1"
-			},
-			{
-				"label": "Test 2",
-				"value": "test-2",
-				"variable": "custom-variable-2"
-			},
-			{
-				"label": "Test 3",
-				"value": "test-3",
-				"variable": {
-					"test1": "new1",
-					"test2": "new2",
-					"test-magic": "%value%",
-					"test-magic-mixed": "new-%value%-complex"
-				}
-			},
-			{
-				"label": "None",
-				"value": ""
-			}
-		],
 		"typographySize": [
 			{
 				"label": "180 Display",
@@ -160,8 +85,7 @@
 			},
 			{
 				"label": "120 Display",
-				"value": "120-default",
-				"variable": "custom-variable"
+				"value": "120-default"
 			},
 			{
 				"label": "80 Display",
@@ -239,29 +163,6 @@
 				"horizontal": "center",
 				"vertical": "center"
 			}
-		},
-		"typographyCustomResponsive": {
-			"center center": [
-				{
-					"variable": {
-						"novi": "cool"
-					}
-				},
-				{
-					"breakpoint": "tablet",
-					"variable": {
-						"tablet": "cool-tablet"
-					}
-				},
-				{
-					"breakpoint": "large",
-					"inverse": true,
-					"variable": {
-						"test": "ivan",
-						"testNovi": "%value%"
-					}
-				}
-			]
 		}
 	}
 }

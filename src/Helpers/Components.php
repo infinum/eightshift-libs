@@ -338,7 +338,7 @@ class Components
 			$itemKey = self::camelToKebabCase($itemKey);
 
 			if (gettype($itemValue) === 'array') {
-				$output .= self::outputCssVariablesGlobalInner($itemValue, $itemKey);
+				$output .= self::globalInner($itemValue, $itemKey);
 			} else {
 				$output .= "--global-{$itemKey}: {$itemValue};\n";
 			}
@@ -361,7 +361,7 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobalInner(array $itemValues, string $itemKey): string
+	public static function globalInner(array $itemValues, string $itemKey): string
 	{
 		$output = '';
 
@@ -398,101 +398,131 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest = []): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest): string
 	{
-		$data = [];
 		$output = '';
 
-		if (!$attributes || !$manifest) {
-			return $output;
+		// Bailout if global breakpoints are missing.
+		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
+			return '';
 		}
+
+		// Bailout if attributes or manifest is missing.
+		if (!$attributes || !$manifest) {
+			return '';
+		}
+
+		// Bailout if manifest is missing variables key.
+		if (!isset($manifest['variables'])) {
+			return '';
+		}
+
+		// Define variables from globalManifest.
+		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
+
+		// Define variables from manifest.
+		$variables = $manifest['variables'];
+
+		// Get the initial data array.
+		$data = self::prepareVariableData($breakpoints);
 
 		// Check if component or block.
 		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
 
 		// Check manifest for the attributes with variable key.
 		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
-		$defaultAttributes = array_filter(
-			$manifest['attributes'],
-			function ($item) {
-				return isset($item['variable']);
-			}
+		$defaultAttributes = array_keys(
+			array_filter(
+				$variables,
+				function ($key) use ($attributes) {
+					return !isset($attributes[$key]);
+				},
+				ARRAY_FILTER_USE_KEY
+			)
 		);
 
 		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
 		if ($defaultAttributes) {
 			$default = [];
 
-			foreach ($defaultAttributes as $key => $value) {
-				if (isset($value['default'])) {
-					$default[$key] = $value['default'];
+			foreach ($defaultAttributes as $key) {
+				if (isset($attributes[$key]['default'])) {
+					$default[$key] = $attributes[$key]['default'];
 				}
 			}
 
 			$attributes = array_merge($default, $attributes);
 		}
 
-		// Iterate each attribute and make corrections.
-		foreach ($attributes as $attributeName => $attributeValue) {
-			// Bailout if attribute is not using variables.
-			if (!isset($manifest['attributes'][$attributeName]) || !isset($manifest['attributes'][$attributeName]['variable'])) {
+		// Iterate each variable.
+		foreach ($variables as $variableName => $variableValue) {
+			// Bailout if variable is empty or not set.
+			if (!isset($attributes[$variableName])) {
 				continue;
 			}
 
-			// Bailout if variables key is not existing or attribute key is non existing in variables array.
-			if (!isset($manifest['variables']) || !isset($manifest['variables'][$attributeName])) {
+			// Constant for attributes set value (in db or default).
+			$attributeValue = $attributes[$variableName] ?? [];
+
+			// If type default or value.
+			if (!self::arrayIsList($variableValue)) {
+				$variableValue = $variableValue[$attributeValue] ?? [];
+			}
+
+			// Bailout if wrong type is provided.
+			if (!is_array($variableValue)) {
 				continue;
 			}
 
-			// Check type of variable.
-			$variableType = $manifest['attributes'][$attributeName]['variable'];
-			$variables = $manifest['variables'][$attributeName];
+			// Iterate variable array to check breakpoints.
+			foreach ($variableValue as $breakpointItem) {
+				// Define variables from breakpointItem.
+				$breakpoint = $breakpointItem['breakpoint'] ?? 'default'; // If breakpoint is not set use default name.
+				$inverse = $breakpointItem['inverse'] ?? false; // If inverse is not set use mobile first.
+				$variable = $breakpointItem['variable'] ?? [];
 
-			switch ($variableType) {
-				case 'value':
-					// Bailout if attribute value doesn't exist in variables.
-					if (!isset($variables[$attributeValue])) {
-						break;
+				// Check if we are using mobile or desktop first. Mobile first is the default.
+				$type = $inverse ? 'max' : 'min';
+
+				// Iterate each data array to find the correct breakpoint.
+				foreach ($data as $index => $item) {
+					// Check if breakpoint and type match.
+					if ($item['name'] === $breakpoint && $item['type'] === $type) {
+						// Merge data variables with the new variables array.
+						$data[$index]['variable'] = array_merge($item['variable'], self::variablesInner($variable, $attributeValue));
 					}
-
-					// Bailout if attribute value is not array.
-					if (!is_array($variables[$attributeValue])) {
-						break;
-					}
-
-					$data = self::outputCssVariablesResponsive($variables[$attributeValue], $attributeValue, $globalManifest, $data);
-					break;
-
-				default:
-					$data = self::outputCssVariablesResponsive($variables, $attributeValue, $globalManifest, $data);
-					break;
+				}
 			}
 		}
 
-		// Loop data and provide correct selectors from data object.
-		if (!empty($data)) {
-			foreach ($data as $breakpoint => $breakpointData) {
-				// Bailout if output array is empty.
-				if (empty($breakpointData)) {
-					continue;
-				}
+		// Loop data and provide correct selectors from data array.
+		foreach ($data as $values) {
+			// Define variables from values.
+			$type = $values['type'];
+			$value = $values['value'];
+			$variable = $values['variable'];
 
-				// If this is default dont wrap the media query around it.
-				$breakpointData = implode("\n", $breakpointData);
+			// Bailout if variables are empty.
+			if (!$variable) {
+				continue;
+			}
 
-				if ($breakpoint === 'default') {
-					$output .= ".{$name}[data-id='{$unique}'] {
+			// Merge array of variables to string.
+			$breakpointData = implode("\n", $variable);
+
+			// If breakpoint value is 0 then don't wrap the media query around it.
+			if ($value === 0) {
+				$output .= ".{$name}[data-id='{$unique}'] {
+						{$breakpointData}
+					}
+				";
+			} else {
+				$output .= "@media ({$type}-width: {$value}px) {
+						.{$name}[data-id='{$unique}'] {
 							{$breakpointData}
 						}
-					";
-				} else {
-					$output .= "@media ({$breakpoint}) {
-							.{$name}[data-id='{$unique}'] {
-								{$breakpointData}
-							}
-						}
-					";
-				}
+					}
+				";
 			}
 		}
 
@@ -515,6 +545,79 @@ class Components
 	}
 
 	/**
+	 * Create initial array of data to be able to populate later.
+	 *
+	 * @param array $globalBreakpoints Global breakpoints from global manifest to set the correct output.
+	 *
+	 * @return array
+	 */
+	public static function prepareVariableData(array $globalBreakpoints): array
+	{
+
+		// Define the min and max arrays.
+		$min = [];
+		$max = [];
+
+		// Loop the global breakpoints and populate the data.
+		foreach ($globalBreakpoints as $itemKey => $itemValue) {
+			// Initial inner object.
+			$itemObject = [
+				'name' => $itemKey,
+				'value' => $itemValue,
+				'variable' => [],
+			];
+
+			// Inner object for min values.
+			$itemObjectMin = array_merge(
+				[
+					'type' => 'min',
+				],
+				$itemObject
+			);
+
+			// Inner object for max values.
+			$itemObjectMax = array_merge(
+				[
+					'type' => 'max',
+				],
+				$itemObject
+			);
+
+			// Push both min and max to the defined arrays.
+			$min[] = $itemObjectMin;
+			$max[] = $itemObjectMax;
+		};
+
+		// Add default object to the top of the array.
+		array_unshift(
+			$min,
+			[
+				'type' => 'min',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			]
+		);
+
+		// Reverse order of max array.
+		$max = array_reverse($max);
+
+		// Add default object to the top of the array.
+		array_unshift(
+			$max,
+			[
+				'type' => 'max',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			]
+		);
+
+		// Merge both arrays.
+		return array_merge($min, $max);
+	}
+
+	/**
 	 * Internal helper to loop CSS Variables from array.
 	 *
 	 * @param array $variables Array of variables of CSS variables.
@@ -522,7 +625,7 @@ class Components
 	 *
 	 * @return array
 	 */
-	public static function outputCssVariablesInner(array $variables, $attributeValue): array
+	public static function variablesInner(array $variables, $attributeValue): array
 	{
 		$output = [];
 
@@ -546,61 +649,6 @@ class Components
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Internal helper to loop CSS Variables from array of objects in an responsive manner.
-	 *
-	 * @param array $breakpoints Breakpoints array list of CSS variables.
-	 * @param mixed $attributeValue Original attribute value used in magic variable.
-	 * @param array $globalManifest Global manifest array.
-	 * @param array $data Data array from parent.
-	 *
-	 * @returns array
-	 */
-	public static function outputCssVariablesResponsive(array $breakpoints, $attributeValue, array $globalManifest, array $data): array
-	{
-
-		// Bailout if globalVariables or breakpoints is missing.
-		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
-			return $data;
-		}
-
-		// Iterate each attribute and make corrections.
-		foreach ($breakpoints as $item) {
-			$breakpoint = $item['breakpoint'] ?? '';
-			$inverse = $item['inverse'] ?? false;
-			$variable = $item['variable'] ?? [];
-
-			// Find the actual value of the breakpoint.
-			$breakpointValue = $globalManifest['globalVariables']['breakpoints'][$breakpoint] ?? '';
-
-			// Output CSS variables from the variables array.
-			$innerValue = self::outputCssVariablesInner($variable, $attributeValue);
-
-			// Check if we are using mobile or desktop first. Mobile first is the default.
-			$orderBreakpint = $inverse ? 'max-width' : 'min-width';
-
-			// Output normal selector if breakpoint is not defined (used for top level element like mobile).
-			// Else wrap it in media query condition.
-			if (empty($breakpointValue)) {
-				if (!isset($data['default'])) {
-					$data['default'] = [];
-				}
-
-				$data['default'] = array_merge($data['default'], $innerValue);
-			} else {
-				$customKey = "${orderBreakpint}: ${breakpointValue}px";
-
-				if (!isset($data[$customKey])) {
-					$data[$customKey] = [];
-				}
-
-				$data[$customKey] = array_merge($data[$customKey], $innerValue);
-			}
-		};
-
-		return $data;
 	}
 
 	/**
