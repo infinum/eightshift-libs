@@ -639,8 +639,6 @@ test('Asserts that outputCssVariables returns empty if variables array is not ar
 		$globalManifest
 	);
 
-	var_dump($output);
-
 	$this->assertIsString($output);
 	$this->assertStringNotContainsString('<style>', $output);
 	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
