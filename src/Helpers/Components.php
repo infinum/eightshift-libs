@@ -529,19 +529,24 @@ class Components
 		// Output manual output from the array of variables.
 		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
 
-		// Prepare final output.
-		$finalOutput = "
+		// Prepare final output for testing.
+		$fullOutput = "
 			{$output}
 			{$manual}
 		";
 
 		// Check if final output is empty and and remove if it is.
-		if (empty(trim($finalOutput))) {
+		if (empty(trim($fullOutput))) {
 			return '';
 		}
 
+		// Prepare output for manual variables.
+		$finalManualOutput = ".{$name}[data-id='{$unique}'] {
+			{$manual}
+		}";
+
 		// Output the style for CSS variables.
-		return "<style>{$finalOutput}</style>";
+		return "<style>{$fullOutput} {$finalManualOutput}</style>";
 	}
 
 	/**
@@ -641,6 +646,11 @@ class Components
 
 			// If value contains magic variable swap that variable with original attribute value.
 			if (strpos($variableValue, '%value%') !== false) {
+				// Bailout if magic variable is empty.
+				if (empty($attributeValue)) {
+					continue;
+				}
+
 				$variableValue = str_replace('%value%', $attributeValue, $variableValue);
 			}
 
