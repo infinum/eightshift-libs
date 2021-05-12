@@ -464,6 +464,11 @@ class Components
 			// Constant for attributes set value (in db or default).
 			$attributeValue = $attributes[$variableName] ?? [];
 
+			// Make sure this works correctly for attributes which are toggles (booleans).
+			if (is_bool($attributeValue)) {
+				$attributeValue = $attributeValue ? 'true' : 'false';
+			}
+
 			// If type default or value.
 			if (!self::arrayIsList($variableValue)) {
 				$variableValue = $variableValue[$attributeValue] ?? [];

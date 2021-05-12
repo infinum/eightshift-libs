@@ -17,6 +17,10 @@
 		"variableMissing": {
 			"type": "string"
 		},
+		"variableBool": {
+			"type": "boolean",
+			"default": true
+		},
 		"variablesWithDefault": {
 			"type": "string",
 			"default": "value"
@@ -62,6 +66,22 @@
 				}
 			}
 		],
+		"variableBool": {
+			"true": [
+				{
+					"variable": {
+						"variable-created-by-boolean": "value-when-true"
+					}
+				}
+			],
+			"false": [
+				{
+					"variable": {
+						"variable-created-by-boolean": "value-when-false"
+					}
+				}
+			]
+		},
 
 		"variableValue": {
 			"value1": [
