@@ -70,7 +70,14 @@
 			"true": [
 				{
 					"variable": {
-						"variable-created-by-boolean": "any-value"
+						"variable-created-by-boolean": "value-when-true"
+					}
+				}
+			],
+			"false": [
+				{
+					"variable": {
+						"variable-created-by-boolean": "value-when-false"
 					}
 				}
 			]

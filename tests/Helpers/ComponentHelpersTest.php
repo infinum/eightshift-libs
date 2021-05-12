@@ -678,7 +678,22 @@ test('Asserts that outputCssVariables returns variable for attributes which expe
 
 	$this->assertIsString($output);
 	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-created-by-boolean: any-value;', $output);
+	$this->assertStringContainsString('--variable-created-by-boolean: value-when-true;', $output);
+
+	$attributes = [
+		'variableBool' => false,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-created-by-boolean: value-when-false;', $output);
 });
 
 /**
