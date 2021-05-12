@@ -661,6 +661,26 @@ test('Asserts that outputCssVariables returns empty globalManifest is not set.',
 	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
 });
 
+test('Asserts that outputCssVariables returns variable for attributes which expect booleans.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableBool' => true,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-created-by-boolean: any-value;', $output);
+});
+
 /**
  * Components::getUnique tests
  */
