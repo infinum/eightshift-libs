@@ -546,12 +546,12 @@ class Components
 		}
 
 		// Prepare output for manual variables.
-		$finalManualOutput = ".{$name}[data-id='{$unique}'] {
+		$finalManualOutput = $manual ? ".{$name}[data-id='{$unique}'] {
 			{$manual}
-		}";
+		}" : '';
 
 		// Output the style for CSS variables.
-		return "<style>{$fullOutput} {$finalManualOutput}</style>";
+		return "<style>{$output} {$finalManualOutput}</style>";
 	}
 
 	/**
