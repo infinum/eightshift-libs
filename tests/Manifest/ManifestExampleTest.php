@@ -14,7 +14,7 @@ beforeEach(function() {
 
 	// Setup Config mock
 	mock('alias:EightshiftBoilerplate\Config\Config')
-		->shouldReceive([
+		->shouldReceive([~~
 			'getProjectName' => 'MyProject',
 			'getProjectPath' => 'projectPath',
 		]);
@@ -37,4 +37,14 @@ test('Manifest example contains correct manifest file path', function () {
 
 	$this->assertStringContainsString('projectPath/public/manifest.json', $manifestFilePath);
 	$this->assertStringNotContainsString('random string', $manifestFilePath);
+});
+
+test('Setting manifest data manually works', function() {
+	$this->example->setAssetsManifestRaw();
+
+	// Mock Config::getProjectPath to point to test folder.
+
+	$item = $this->example->getAssetsManifestItem('application.css');
+
+	$this->assertIsString($item);
 });
