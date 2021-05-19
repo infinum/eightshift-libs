@@ -109,7 +109,7 @@ class PostTypeCli extends AbstractCli
 		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url']);
 		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug']);
 		$capability = $assocArgs['capability'] ?? '';
-		$menuPosition = $assocArgs['menu_position'] ? (string)$assocArgs['menu_position'] : '';
+		$menuPosition = isset($assocArgs['menu_position']) ? (string)$assocArgs['menu_position'] : '';
 		$menuIcon = $assocArgs['menu_icon'] ?? '';
 
 		// Get full class name.
