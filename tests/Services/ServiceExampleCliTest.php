@@ -5,12 +5,13 @@ namespace Tests\Unit\Services;
 use EightshiftLibs\Services\ServiceExampleCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 $wpCliMock
 	->shouldReceive('success')
@@ -43,7 +44,7 @@ test('Services CLI command will correctly copy the Services class with defaults'
 
 	$this->assertStringContainsString('class TestTest implements ServiceInterface', $generatedService);
 	$this->assertStringContainsString('namespace EightshiftLibs\TestFolder\TMP', $generatedService);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\TestFolder\TMP', $generatedService);
+	$this->assertStringContainsString('@package EightshiftLibs\TestFolder\TMP', $generatedService);
 	$this->assertStringNotContainsString('footer.php', $generatedService);
 	$this->assertFileExists($outputPath);
 });
@@ -63,7 +64,7 @@ test('Services CLI command will correctly copy the Services class with set argum
 
 	$this->assertStringContainsString('class FileName implements ServiceInterface', $generatedService);
 	$this->assertStringContainsString('namespace CoolTheme\FolderName', $generatedService);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\FolderName', $generatedService);
+	$this->assertStringContainsString('@package CoolTheme\FolderName', $generatedService);
 	$this->assertFileExists($outputPath);
 });
 

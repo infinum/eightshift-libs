@@ -5,9 +5,10 @@ namespace Tests\Unit\CustomPostType;
 use EightshiftLibs\Db\ImportCli;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeEach(function() {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')

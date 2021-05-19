@@ -5,12 +5,13 @@ namespace Tests\Unit\Main;
 use EightshiftLibs\Main\MainCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 $wpCliMock
 	->shouldReceive('success')
@@ -42,7 +43,7 @@ test('Main CLI command will correctly copy the Main class with defaults', functi
 	$generatedMain = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class Main extends AbstractMain', $generatedMain);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\Main', $generatedMain);
+	$this->assertStringContainsString('@package EightshiftLibs\Main', $generatedMain);
 	$this->assertStringContainsString('namespace EightshiftLibs\Main', $generatedMain);
 	$this->assertStringNotContainsString('footer.php', $generatedMain);
 	$this->assertFileExists($outputPath);

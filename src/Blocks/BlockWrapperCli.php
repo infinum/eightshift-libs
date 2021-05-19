@@ -61,7 +61,12 @@ class BlockWrapperCli extends AbstractCli
 		$path = static::OUTPUT_DIR;
 		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
 		$sourcePath = "{$sourcePathFolder}";
-		$destinationPath = $root . '/' . $path;
+
+		if (!getenv('TEST')) {
+			$destinationPath = $root . '/' . $path;
+		} else {
+			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
+		}
 
 		// Destination exists.
 		if (file_exists($destinationPath) && $skipExisting === false) {

@@ -118,15 +118,17 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function registerCommand(): void
 	{
-		if (! class_exists($this->getClassName())) {
+		if (!class_exists($this->getClassName())) {
 			throw new \RuntimeException('Class doesn\'t exist');
 		}
 
 		try {
 			$reflectionClass = new \ReflectionClass($this->getClassName());
+			// @codeCoverageIgnoreStart
 		} catch (\ReflectionException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
+			self::cliError("{$e->getCode()}: {$e->getMessage()}");
 		}
+		// @codeCoverageIgnoreEnd
 
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
@@ -177,10 +179,6 @@ abstract class AbstractCli implements CliInterface
 
 		$lastElement = end($arr);
 
-		if (empty($lastElement)) {
-			throw new \RuntimeException('No class name given.');
-		}
-
 		return str_replace('Cli', '', $lastElement);
 	}
 
@@ -228,21 +226,21 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): self
 	{
-		$templateFile = '';
+		$path = "{$currentDir}/{$this->getExampleFileName( $fileName )}.php";
 
 		// If you pass file name with extension the version will be used.
 		if (strpos($fileName, '.') !== false) {
 			$path = "{$currentDir}/{$fileName}";
-		} else {
-			$path = "{$currentDir}/{$this->getExampleFileName( $fileName )}.php";
 		}
+
+		$templateFile = '';
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		if (file_exists($path)) {
 			$templateFile = file_get_contents($path);
 		} else {
 			if ($skipMissing) {
-				$templateFile = '';
+				$this->fileContents = '';
 			} else {
 				self::cliError("The template {$path} seems to be missing.");
 			}
@@ -407,27 +405,34 @@ abstract class AbstractCli implements CliInterface
 		$vendorPrefix = $this->getVendorPrefix($args);
 		$namespace = $this->getNamespace($args);
 
-		$prefix = 'use';
+		$prefixUse = 'use';
+		$prefixPackage = '@package';
 
 		if (function_exists('\add_action')) {
 			$output = str_replace(
-				"{$prefix} EightshiftBoilerplateVendor\\",
-				"{$prefix} {$vendorPrefix}\\",
+				"{$prefixUse} EightshiftBoilerplateVendor\\",
+				"{$prefixUse} {$vendorPrefix}\\",
 				$output
 			);
 
 			$output = str_replace(
-				"{$prefix} {$vendorPrefix}\EightshiftBoilerplate\\",
-				"{$prefix} {$namespace}\\",
+				"{$prefixUse} {$vendorPrefix}\EightshiftBoilerplate\\",
+				"{$prefixUse} {$namespace}\\",
 				$output
 			);
 		} else {
 			$output = str_replace(
-				"{$prefix} EightshiftBoilerplate\\",
-				"{$prefix} {$namespace}\\",
+				"{$prefixUse} EightshiftBoilerplate\\",
+				"{$prefixUse} {$namespace}\\",
 				$output
 			);
 		}
+
+		$output = str_replace(
+			"{$prefixPackage} EightshiftBoilerplate",
+			"{$prefixPackage} {$namespace}",
+			$output
+		);
 
 		$this->fileContents = $output;
 
@@ -448,17 +453,24 @@ abstract class AbstractCli implements CliInterface
 		$vendorPrefix = $this->getVendorPrefix($args);
 		$namespace = $this->getNamespace($args);
 
-		$prefix = 'use';
+		$prefixUse = 'use';
+		$prefixPackage = '@package';
 
 		$output = str_replace(
-			"{$prefix} EightshiftBoilerplateVendor\\",
-			"{$prefix} {$vendorPrefix}\\",
+			"{$prefixUse} EightshiftBoilerplateVendor\\",
+			"{$prefixUse} {$vendorPrefix}\\",
 			$output
 		);
 
 		$output = str_replace(
-			"{$prefix} EightshiftBoilerplate\\",
-			"{$prefix} {$namespace}\\",
+			"{$prefixUse} EightshiftBoilerplate\\",
+			"{$prefixUse} {$namespace}\\",
+			$output
+		);
+
+		$output = str_replace(
+			"{$prefixPackage} EightshiftBoilerplate",
+			"{$prefixPackage} {$namespace}",
 			$output
 		);
 
@@ -476,7 +488,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomain(array $args = []): self
 	{
-		$namespace = $this->getNamespace($args);
+		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
 
 		$this->fileContents = str_replace(
 			'eightshift-libs',
@@ -496,7 +508,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomainFrontendLibs(array $args = []): self
 	{
-		$namespace = $this->getNamespace($args);
+		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
 
 		$this->fileContents = str_replace(
 			'eightshift-frontend-libs',
@@ -518,7 +530,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$projectName = 'eightshift-boilerplate';
 
-		if (function_exists('\add_action')) {
+		if (function_exists('\add_action') && !getenv('TEST')) {
 			$projectName = basename(dirname(__DIR__, 5));
 		}
 
@@ -658,26 +670,10 @@ abstract class AbstractCli implements CliInterface
 		if (empty($namespace)) {
 			$composer = $this->getComposer($args);
 
-			$namespace = rtrim($this->arrayKeyFirstChild($composer['autoload']['psr-4']), '\\');
+			$namespace = rtrim(array_key_first($composer['autoload']['psr-4']), '\\');
 		}
 
 		return $namespace;
-	}
-
-	/**
-	 * Array_key_first polyfill function
-	 *
-	 * @param array $array Array to search.
-	 *
-	 * @return string
-	 */
-	public function arrayKeyFirstChild(array $array): string
-	{
-		foreach ($array as $key => $unused) {
-			return $key;
-		}
-
-		return '';
 	}
 
 	/**
@@ -707,7 +703,8 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Convert user input string to slug safe format
 	 *
-	 * Convert _ to -, empty space to - and convert everything to lowercase.
+	 * Convert _ to -, empty space to - and convert everything to lowercase
+	 * if the string contains empty space.
 	 *
 	 * @param string $string String to convert.
 	 *
@@ -737,9 +734,11 @@ abstract class AbstractCli implements CliInterface
 		foreach ($items as $item) {
 			try {
 				$reflectionClass = new \ReflectionClass($item);
+				// @codeCoverageIgnoreStart
 			} catch (\ReflectionException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
+				self::cliError("{$e->getCode()}: {$e->getMessage()}");
 			}
+			// @codeCoverageIgnoreEnd
 
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
@@ -793,7 +792,11 @@ abstract class AbstractCli implements CliInterface
 	{
 		$output = dirname(__DIR__, 8);
 
-		if ($isDev || getenv('TEST') !== false) {
+		if ($isDev) {
+			$output = dirname(__DIR__, 2);
+		}
+
+		if (getenv('TEST')) {
 			$output = dirname(__DIR__, 2);
 		}
 
@@ -886,7 +889,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$shortdesc = $docs['shortdesc'] ?? '';
 
-		if (! $shortdesc) {
+		if (!$shortdesc) {
 			throw new \RuntimeException('CLI Short description is missing.');
 		}
 

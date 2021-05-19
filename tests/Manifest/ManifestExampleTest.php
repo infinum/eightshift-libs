@@ -6,13 +6,14 @@ use Brain\Monkey;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();
 	setupMocks();
 
 	// Setup Config mock
-	\Mockery::mock('alias:EightshiftBoilerplate\Config\Config')
+	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive([
 			'getProjectName' => 'MyProject',
 			'getProjectPath' => 'projectPath',

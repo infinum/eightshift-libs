@@ -3,13 +3,15 @@
 namespace Tests\Unit\Blocks;
 
 use EightshiftLibs\Blocks\BlocksCli;
+
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 $wpCliMock
 	->shouldReceive('success')
@@ -41,7 +43,7 @@ test('Blocks CLI command will correctly copy the Blocks class with defaults', fu
 	$generatedBlocks = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class Blocks extends AbstractBlocks', $generatedBlocks);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\Blocks', $generatedBlocks);
+	$this->assertStringContainsString('@package EightshiftLibs\Blocks', $generatedBlocks);
 	$this->assertStringContainsString('namespace EightshiftLibs\Blocks', $generatedBlocks);
 	$this->assertStringNotContainsString('footer.php', $generatedBlocks);
 	$this->assertFileExists($outputPath);

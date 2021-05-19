@@ -5,12 +5,13 @@ namespace Tests\Unit\ModifyAdminAppearance;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 $wpCliMock
 	->shouldReceive('success')
@@ -42,7 +43,7 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 	$generatedModifyAdminAppearance = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class ModifyAdminAppearance implements ServiceInterface', $generatedModifyAdminAppearance);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\ModifyAdminAppearance', $generatedModifyAdminAppearance);
+	$this->assertStringContainsString('@package EightshiftLibs\ModifyAdminAppearance', $generatedModifyAdminAppearance);
 	$this->assertStringContainsString('namespace EightshiftLibs\ModifyAdminAppearance', $generatedModifyAdminAppearance);
 	$this->assertStringNotContainsString('footer.php', $generatedModifyAdminAppearance);
 	$this->assertFileExists($outputPath);

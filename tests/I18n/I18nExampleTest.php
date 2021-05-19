@@ -7,6 +7,7 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\I18n\I18nExample;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();
@@ -30,7 +31,7 @@ test('Registering load_theme_textdomain works', function () {
 	// Set up a side-affect.
 	putenv('I18N_ABSTRACTED=false');
 
-	\Mockery::mock('alias:EightshiftBoilerplate\Config\Config')
+	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive('getProjectName', 'getProjectPath')
 		->andReturn('CoolProject', 'projectPath');
 

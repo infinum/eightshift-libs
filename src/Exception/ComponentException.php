@@ -40,7 +40,7 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 	}
 
 	/**
-	 * Throws exception if ensure_string argument is invalid.
+	 * Throws exception if unable to locate component.
 	 *
 	 * @param string $component Missing component name.
 	 * @return static

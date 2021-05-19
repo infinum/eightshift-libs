@@ -30,8 +30,24 @@ trait CliHelpers
 	{
 		try {
 			\WP_CLI::error($errorMessage);
+			// @codeCoverageIgnoreStart
+			// Cannot test the exit.
 		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
+			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
+			// @codeCoverageIgnoreEnd
 		}
+	}
+
+	/**
+	 * Convert camel case to kebab case.
+	 *
+	 * @param string $input Input to convert.
+	 * @return string
+	 */
+	public static function camelCaseToKebabCase(string $input): string
+	{
+		$output = ltrim(strtolower((string)preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
+		$output = str_replace('_', '-', $output);
+		return str_replace('--', '-', $output);
 	}
 }

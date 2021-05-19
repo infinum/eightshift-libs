@@ -5,12 +5,13 @@ namespace Tests\Unit\I18n;
 use EightshiftLibs\I18n\I18nCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 $wpCliMock
 	->shouldReceive('success')
@@ -42,7 +43,7 @@ test('I18n CLI command will correctly copy the I18n class with defaults', functi
 	$generatedI18n = file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class I18n implements ServiceInterface', $generatedI18n);
-	$this->assertStringContainsString('@package EightshiftBoilerplate\I18n', $generatedI18n);
+	$this->assertStringContainsString('@package EightshiftLibs\I18n', $generatedI18n);
 	$this->assertStringContainsString('namespace EightshiftLibs\I18n', $generatedI18n);
 	$this->assertStringNotContainsString('footer.php', $generatedI18n);
 	$this->assertFileExists($outputPath);

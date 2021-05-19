@@ -27,6 +27,16 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
+	 * Throws error if components are missing.
+	 *
+	 * @return static
+	 */
+	public static function missingComponentsException()
+	{
+		return new static(\esc_html__('There are no components added in your project.', 'eightshift-libs'));
+	}
+
+	/**
 	 * Throws error if manifest key blockName is missing.
 	 *
 	 * @param string $blockPath Full block path for the missing name.
@@ -125,7 +135,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
-	 * Throws error if wrapper settings manifest.json is missing.
+	 * Throws error if component manifest.json is missing.
 	 *
 	 * @param string $settingsManifestPath Full path for the missing manifest.json.
 	 *

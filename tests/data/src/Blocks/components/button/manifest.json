@@ -28,27 +28,27 @@
     "buttonSize": {
       "type": "string",
       "default": "default",
-      "variable": true
+      "variable": "default"
     },
     "buttonColor": {
       "type": "string",
       "default": "primary",
-      "variable": true,
-      "color": true
+      "variable": "color"
     },
     "buttonWidth": {
       "type": "string",
       "default": "default",
-      "variable": true
+      "variable": "default"
     },
     "buttonAlign": {
       "type": "string",
       "default": "left",
-      "variable": true
+      "variable": "default"
     },
     "buttonIsAnchor": {
       "type": "boolean",
-      "default": false
+      "default": true,
+      "variable": "boolean"
     },
     "buttonIsNewTab": {
       "type": "boolean"
@@ -61,10 +61,15 @@
     },
     "buttonUse": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "variable": "boolean"
     }
   },
   "options": {
+    "buttonUse": [
+      "test-false",
+      "test-true"
+    ],
     "sizes": [{
       "label": "Default",
       "value": "default"
@@ -81,5 +86,10 @@
     }],
     "aligns": ["left", "center", "right"],
     "colors": ["primary", "black"]
-  }
+  },
+  "variables": [
+    "--variable1: test1",
+    "--variable2: test2",
+    "--variable3: test3"
+  ]
 }

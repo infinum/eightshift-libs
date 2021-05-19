@@ -13,6 +13,7 @@ namespace EightshiftBoilerplate\Blocks;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Blocks\AbstractBlocks;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class Blocks
@@ -24,6 +25,13 @@ class BlocksExample extends AbstractBlocks
 	 * Reusable blocks Capability Name.
 	 */
 	public const REUSABLE_BLOCKS_CAPABILITY = 'edit_reusable_blocks';
+
+	/**
+	 * Blocks dependency filter name constant.
+	 *
+	 * @var string
+	 */
+	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'blocks_dependency';
 
 	/**
 	 * Register all the hooks
@@ -50,6 +58,9 @@ class BlocksExample extends AbstractBlocks
 
 		// Register Reusable blocks side menu.
 		\add_action('admin_menu', [$this, 'addReusableBlocks']);
+
+		// Register blocks internal filter for props helper.
+		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
 	}
 
 	/**
@@ -62,6 +73,21 @@ class BlocksExample extends AbstractBlocks
 	protected function getBlocksPath(): string
 	{
 		return Config::getProjectPath() . '/src/Blocks';
+	}
+
+	/**
+	 * Set props helper to a proper values to be used in blocks/components.
+	 *
+	 * @param array  $attributes Object of attributes from block/component.
+	 * @param string $realName Old key to use, generally this is the name of the block/component.
+	 * @param string $newName New key to use to rename attributes.
+	 * @param bool   $isBlock Check if helper is used on block or component.
+	 *
+	 * @return array
+	 */
+	public static function props(array $attributes, string $realName, string $newName = '', bool $isBlock = false): array
+	{
+		return Components::props($attributes, $realName, $newName, $isBlock, \apply_filters(self::BLOCKS_DEPENDENCY_FILTER_NAME, 'dependency'));
 	}
 
 	/**
