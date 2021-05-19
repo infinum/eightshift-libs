@@ -42,7 +42,6 @@ class BlocksCli extends AbstractCli
 		'heading',
 		'image',
 		'layout-three-columns',
-		'link',
 		'lists',
 		'logo',
 		'menu',
@@ -63,7 +62,6 @@ class BlocksCli extends AbstractCli
 		'group',
 		'heading',
 		'image',
-		'link',
 		'lists',
 		'paragraph',
 	];
