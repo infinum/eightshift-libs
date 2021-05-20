@@ -739,6 +739,21 @@ test('Asserts that camelToKebabCase returns the wrong output', function () {
 });
 
 /**
+ * Components::kebabToCamelCase tests
+ */
+test('Asserts that kebabToCamelCase returns the correct output', function () {
+	$output = Components::kebabToCamelCase('super-cool-test-string');
+
+	$this->assertEquals('superCoolTestString', $output);
+});
+
+test('Asserts that kebabToCamelCase returns the wrong output', function () {
+	$output = Components::kebabToCamelCase('super-cool-test-string-goc');
+
+	$this->assertNotEquals('super_CoolTest-String goc', $output);
+});
+
+/**
  * Components::props tests
  */
 test('Asserts props for heading block will return only heading attributes', function () {
