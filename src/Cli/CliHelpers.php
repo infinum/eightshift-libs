@@ -50,4 +50,17 @@ trait CliHelpers
 		$output = str_replace('_', '-', $output);
 		return str_replace('--', '-', $output);
 	}
+
+	/**
+	 * Convert string from kebab to camel case
+	 *
+	 * @param string $string    String to convert.
+	 * @param string $separator Separator to use for conversion.
+	 *
+	 * @return string
+	 */
+	public static function kebabToCamelCase(string $string, string $separator = '-'): string
+	{
+		return lcfirst(str_replace($separator, '', ucwords(mb_strtolower($string), $separator)));
+	}
 }
