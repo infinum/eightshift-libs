@@ -125,7 +125,7 @@ dataset('arrayIsListCorrect', [[
 	['0' => 'a', '1' => 'b', '2' => 'c'],
 ]]);
 
-dataset('caseCheckCorrect', [
+dataset('camelToKebabCaseCheckCorrect', [
 	['simpleTest', 'simple-test'],
 	['easy', 'easy'],
 	['HTML', 'html'],
@@ -148,7 +148,7 @@ dataset('caseCheckCorrect', [
 	['libC', 'lib-c'],
 ]);
 
-dataset('caseCheckWrong', [
+dataset('camelToKebabCaseCheckWrong', [
 	['simpleTest', 'simpleTest'],
 	['HTML', 'HTML'],
 	['simpleXML', 'simpleXML'],
@@ -167,4 +167,45 @@ dataset('caseCheckWrong', [
 	['aBaBaB', 'aBaBaB'],
 	['BaBaBa', 'BaBaBa'],
 	['libC', 'libC'],
+]);
+
+dataset('kebabToCamelCaseCheckCorrect', [
+	['simple-test', 'simpleTest'],
+	['easy', 'easy'],
+	['HTML', 'html'],
+	['simple-xml', 'simpleXml'],
+	['pdf-load', 'pdfLoad'],
+	['start-middle-last', 'startMiddleLast'],
+	['start-MIDDLE-last', 'startMiddleLast'],
+	['a-string', 'aString'],
+	['some4-numbers234', 'some4Numbers234'],
+	['test123-string', 'test123String'],
+	['test123 456', 'test123 456'],
+	['hello-world', 'helloWorld'],
+	['-hello-world-', 'helloWorld'],
+	['hello-world', 'helloWorld'],
+	['hello-world', 'helloWorld'],
+	['hello-world-foo', 'helloWorldFoo'],
+	['my-html-fi-le', 'myHtmlFiLe'],
+	['a-ba-ba-b', 'aBaBaB'],
+	['ba-ba-ba', 'baBaBa'],
+	['lib-c', 'libC'],
+]);
+
+dataset('kebabToCamelCaseCheckWrong', [
+	['simple-test', 'simpletest'],
+	['HTML', 'HTML'],
+	['simple-xml', 'simpleXML'],
+	['pdf-load', 'PDFLoad'],
+	['start-MIDDLE-last', 'startMIDDLElast'],
+	['a-string', 'AString'],
+	['some4-numbers234', 'Some4Numbers234'],
+	['test123-string', 'Test123String'],
+	['-hello-world-', 'HelloWorld'],
+	['hello-world-foo', 'HelloWorldFoo'],
+	['hello-world', 'HelloWorld'],
+	['my-html-fi-le', 'MyHtmlFiLe'],
+	['a-ba-ba-b', 'ABaBaB'],
+	['ba-ba-ba', 'BaBaBa'],
+	['lib-c', 'libc'],
 ]);
