@@ -690,6 +690,19 @@ class Components
 	}
 
 	/**
+	 * Convert string from kebab to camel case
+	 *
+	 * @param string $string    String to convert.
+	 * @param string $separator Separator to use for conversion.
+	 *
+	 * @return string
+	 */
+	public static function kebabToCamelCase(string $string, string $separator = '-'): string
+	{
+		return lcfirst(str_replace($separator, '', ucwords($string, $separator)));
+	}
+
+	/**
 	 * Check if provided array is associative or sequential. Will return true if array is sequential.
 	 *
 	 * @param array $array Array to check.
