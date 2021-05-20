@@ -7,8 +7,8 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Exception\InvalidBlock;
 
-use function Tests\setupMocks;
 use function Tests\mock;
+use function Tests\setupMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
@@ -25,8 +25,8 @@ afterEach(function() {
 
 test('Register method will call init hooks', function () {
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$this->blocksExample->register();
 
@@ -91,8 +91,8 @@ test('Asserts that getAllBlocksList will return only projects blocks.', function
 	$post = \Mockery::mock('WP_Post');
 
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -106,10 +106,9 @@ test('Asserts that getAllBlocksList will return only projects blocks.', function
 });
 
 test('Asserts that getBlocksDataFullRawItem will return full details for blocks if key is not provided.', function () {
-
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -125,10 +124,9 @@ test('Asserts that getBlocksDataFullRawItem will return full details for blocks 
 });
 
 test('Asserts that getBlocksDataFullRawItem will return all blocks details if key is default.', function () {
-
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -142,10 +140,9 @@ test('Asserts that getBlocksDataFullRawItem will return all blocks details if ke
 });
 
 test('Asserts that getBlocksDataFullRawItem will return all components details if key is components.', function () {
-
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -181,8 +178,8 @@ test('Asserts that render component will load view template.', function () {
 	];
 
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$block = $this->blocksExample->render($blockManifest, '');
 
@@ -196,8 +193,8 @@ test('Asserts that render will throw error if block view is missing.', function 
 	];
 
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$this->blocksExample->render($blockManifest, '');
 })->throws(InvalidBlock::class);
@@ -208,8 +205,8 @@ test('Asserts that render will throw error if wrapper view is missing.', functio
 	];
 
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('fake');
+		->shouldReceive('getProjectPath')
+		->andReturn('fake');
 
 	$this->blocksExample->render($blockManifest, '');
 
@@ -254,8 +251,8 @@ test('changeEditorColorPalette method will call add_theme_support() function wit
 	});
 
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -273,8 +270,8 @@ test('registerBlocks method will register all blocks.', function () {
 	});
 
 	$this->config
-	->shouldReceive('getProjectPath')
-	->andReturn('tests/data');
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
