@@ -5,12 +5,12 @@ namespace Tests\Unit\Enqueue\Admin;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Enqueue\Admin\EnqueueAdminExample;
+use EightshiftBoilerplate\Manifest\ManifestExample;
 use EightshiftLibs\Enqueue\AbstractAssets;
 use EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftBoilerplate\Manifest\ManifestExample;
 
-use function Tests\setupMocks;
 use function Tests\mock;
+use function Tests\setupMocks;
 
 class EnqueueAdminTest extends EnqueueAdminExample {
 
@@ -32,13 +32,13 @@ beforeEach(function() {
 	Monkey\setUp();
 	setupMocks();
 
+	// Setup Config mock.
 	mock('alias:EightshiftBoilerplate\Config\Config')
-	->shouldReceive('getProjectName', 'getProjectVersion')
-	->andReturn('tests/data');
-
-	mock('alias:EightshiftBoilerplate\Config\Config')
-	->shouldReceive('getProjectName', 'getProjectVersion')
-	->andReturn('tests/data', '1.0');
+		->shouldReceive([
+			'getProjectName' => 'MyProject',
+			'getProjectPath' => 'tests/data',
+			'getProjectVersion' => '1.0',
+		]);
 
 	Functions\when('wp_register_style')->alias(function($args) {
 		putenv("REGISTER_STYLE={$args}");
@@ -60,24 +60,27 @@ beforeEach(function() {
 	Functions\when('wp_localize_script')->justReturn(putenv("SIDEAFFECT={$localize}"));
 
 	$manifest = new ManifestExample();
-	$this->example = new EnqueueAdminTest($manifest);
+	// We need to 'kickstart' the manifest registration manually during tests.
+	$manifest->setAssetsManifestRaw();
+
+	$this->adminEnqueue = new EnqueueAdminTest($manifest);
 
 	$this->hookSuffix = 'test';
-
 });
 
 afterEach(function() {
 	Monkey\tearDown();
-	putenv("REGISTER_STYLE");
-	putenv("ENQUEUE_STYLE");
-	putenv("REGISTER_SCRIPT");
-	putenv("ENQUEUE_SCRIPT");
-	putenv("SIDEAFFECT");
+
+	putenv('REGISTER_STYLE');
+	putenv('ENQUEUE_STYLE');
+	putenv('REGISTER_SCRIPT');
+	putenv('ENQUEUE_SCRIPT');
+	putenv('SIDEAFFECT');
 });
 
 
 test('Register method will call login_enqueue_scripts and admin_enqueue_scripts hook', function () {
-	$this->example->register();
+	$this->adminEnqueue->register();
 
 	$this->assertSame(10, has_action('login_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminTest->enqueueStyles()'));
 	$this->assertSame(50, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminTest->enqueueStyles()'));
@@ -87,28 +90,30 @@ test('Register method will call login_enqueue_scripts and admin_enqueue_scripts 
 });
 
 test('getAssetsPrefix method will return string', function () {
-	$assetsPrefix = $this->example->getAssetsPrefix();
+	$assetsPrefix = $this->adminEnqueue->getAssetsPrefix();
 
 	$this->assertIsString($assetsPrefix, 'getAssetsPrefix method must return a string');
 });
 
 test('getAssetsVersion method will return string', function () {
-	$assetsVersion = $this->example->getAssetsVersion();
+	$assetsVersion = $this->adminEnqueue->getAssetsVersion();
 
 	$this->assertIsString($assetsVersion, 'getAssetsVersion method must return a string');
 });
 
 test('enqueueStyles method enqueue styles in WP Admin', function () {
-	$this->example->enqueueStyles($this->hookSuffix);
-	$this->assertSame(getenv('REGISTER_STYLE'), 'tests/data-styles', "Method enqueueStyles() failed to register style");
-	$this->assertSame(getenv('ENQUEUE_STYLE'), 'tests/data-styles', "Method enqueueStyles() failed to enqueue style");
+	$this->adminEnqueue->enqueueStyles($this->hookSuffix);
+
+	$this->assertSame(getenv('REGISTER_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to register style');
+	$this->assertSame(getenv('ENQUEUE_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to enqueue style');
 });
 
 test('enqueueScripts method enqueue scripts in WP Admin', function () {
-	$this->example->enqueueScripts($this->hookSuffix);
-	$this->assertSame(getenv('REGISTER_SCRIPT'), 'tests/data-scripts', "Method enqueueStyles() failed to register style");
-	$this->assertSame(getenv('ENQUEUE_SCRIPT'), 'tests/data-scripts', "Method enqueueScripts() failed to enqueue style");
-	$this->assertSame(getenv('SIDEAFFECT'), 'localize', "Method wp_localize_script() failed");
+	$this->adminEnqueue->enqueueScripts($this->hookSuffix);
+
+	$this->assertSame(getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
+	$this->assertSame(getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
+	$this->assertSame(getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
 });
 
 test('Localization will return empty array if not initialized', function() {
