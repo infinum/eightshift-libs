@@ -748,19 +748,37 @@ class Components
 		// If component use components dependency tree.
 		$dependency = $globalData['components'][$realName];
 
+		// Add the current component name to the dependency array.
+		$dependency[] = $newNameInternal;
+
 		// If block use blocks dependency tree.
 		if ($isBlock) {
 			$dependency = $globalData['blocks'][$realName];
 		}
 
-		// If dependency is empty put the name in the array for the easier checks later on.
-		if (!$dependency) {
-			$dependency = [$newNameInternal];
+		// If you have multiple components just use one.
+		$dependency = array_unique($dependency);
+
+		// Set parent to empty for check if not defined.
+		$parent = $attributes['parent'] ?? '';
+
+		// Replace stuff if there is any changing of the attribute names.
+		if ($parent !== $newNameInternal && $realName !== $newNameInternal) {
+			// Remove real component name from the dependency tree.
+			$dependency = array_filter(
+				$dependency,
+				function ($item) use ($realName) {
+					if ($item !== $realName) {
+						return true;
+					}
+				}
+			);
+
+			// Swap componentName with the parent on if attribute name has changed in the parent.
+			$output['componentName'] = $parent;
 		}
 
-		// Add the current component name to the dependency array.
-		$dependency[] = $newNameInternal;
-
+		// Loop attributes.
 		foreach ($attributes as $key => $value) {
 			$result = false;
 			foreach ($dependency as $element) {
@@ -778,12 +796,13 @@ class Components
 					$newKey = $realName . substr($key, strlen($newNameInternal));
 				}
 
+				// Populate output with new values.
 				$output[$newKey] = $value;
 			}
 		}
 
-		// Append componentName for usage.
-		$output['componentName'] = $newNameInternal;
+		// Append parent for usage in checking if attribute name has changed in the parent.
+		$output['parent'] = $newNameInternal;
 
 		return $output;
 	}

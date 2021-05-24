@@ -476,6 +476,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$componentAttributes = $component['attributes'] ?? [];
 
+		// Check if realComponentName and newComponentName are not the same. If so do the replace of the attribute names.
 		if ($realComponentName === $newComponentName) {
 			return $componentAttributes;
 		}
@@ -494,9 +495,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Iterate over component object in block manifest and check if the component exists in the project.
 	 * If components contains more component this function will run recursively.
 	 *
-	 * @param array $blockDetails Object of component manifests to iterate.
+	 * @param array  $blockDetails Object of component manifests to iterate.
+	 * @param string $parentAttributeName Use parent attribute name to determine if the name has changed in the parent component.
+	 *
+	 * @return array
 	 */
-	protected function prepareComponentAttributes(array $blockDetails): array
+	protected function prepareComponentAttributes(array $blockDetails, $parentAttributeName = null): array
 	{
 		$output = [];
 
@@ -512,8 +516,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$component = $this->getComponent($realComponentName);
 
 			if (isset($component['components'])) {
-				$outputAttributes = $this->prepareComponentAttributes($component);
+				$outputAttributes = $this->prepareComponentAttributes($component, $newComponentName);
 			} else {
+				// Use parent attribute name to determine if the name has changed in the parent component.
+				if ($parentAttributeName !== $newComponentName && $realComponentName !== $newComponentName) {
+					$newComponentName = $parentAttributeName;
+				}
+
 				$outputAttributes = $this->prepareComponentAttribute($component, $realComponentName, $newComponentName);
 			}
 
