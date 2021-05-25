@@ -87,7 +87,7 @@ function setup(string $projectRootPath, array $args = [], string $setupFile = 's
 				// Install github plugins.
 				if (!empty($pluginsGithub)) {
 					foreach ($pluginsGithub as $name => $version) {
-						WP_CLI::runcommand("plugin install https://github.com/{$name}/archive/{$version}.zip --force");
+						WP_CLI::runcommand("plugin install https://github.com/{$name}/releases/download/{$version}/release.zip --force");
 						WP_CLI::log('--------------------------------------------------');
 					}
 				} else {
