@@ -10,6 +10,7 @@ use EightshiftBoilerplate\Manifest\ManifestExample;
 
 use function Tests\setupMocks;
 use function Tests\mock;
+
 class EnqueueThemeTest extends EnqueueThemeExample {
 
 	public function __construct(ManifestInterface $manifest)
@@ -31,8 +32,11 @@ beforeEach(function() {
 	setupMocks();
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
-		->shouldReceive('getProjectName', 'getProjectVersion')
-		->andReturn('tests/data', '1.0');
+		->shouldReceive([
+			'getProjectName' => 'MyProject',
+			'getProjectPath' => 'tests/data',
+			'getProjectVersion' => '1.0',
+		]);
 
 	Functions\when('wp_register_style')->alias(function($args) {
 		putenv("REGISTER_STYLE={$args}");
@@ -54,21 +58,25 @@ beforeEach(function() {
 	Functions\when('wp_localize_script')->justReturn(putenv("SIDEAFFECT={$localize}"));
 
 	$manifest = new ManifestExample();
-	$this->example = new EnqueueThemeTest($manifest);
+	// We need to 'kickstart' the manifest registration manually during tests.
+	$manifest->setAssetsManifestRaw();
+
+	$this->themeEnqueue = new EnqueueThemeTest($manifest);
 });
 
 afterEach(function() {
 	Monkey\tearDown();
-	putenv("REGISTER_STYLE");
-	putenv("ENQUEUE_STYLE");
-	putenv("REGISTER_SCRIPT");
-	putenv("ENQUEUE_SCRIPT");
-	putenv("SIDEAFFECT");
+
+	putenv('REGISTER_STYLE');
+	putenv('ENQUEUE_STYLE');
+	putenv('REGISTER_SCRIPT');
+	putenv('ENQUEUE_SCRIPT');
+	putenv('SIDEAFFECT');
 });
 
 
 test('Register method will call wp_enqueue_scripts hook', function () {
-	$this->example->register();
+	$this->themeEnqueue->register();
 
 	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeTest->enqueueStyles()'));
 	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeTest->enqueueScripts()'));
@@ -77,27 +85,27 @@ test('Register method will call wp_enqueue_scripts hook', function () {
 });
 
 test('getAssetsPrefix method will return string', function () {
-	$assetsPrefix = $this->example->getAssetsPrefix();
+	$assetsPrefix = $this->themeEnqueue->getAssetsPrefix();
 
 	$this->assertIsString($assetsPrefix, 'getAssetsPrefix method must return a string');
 });
 
 test('getAssetsVersion method will return string', function () {
-	$assetsVersion = $this->example->getAssetsVersion();
+	$assetsVersion = $this->themeEnqueue->getAssetsVersion();
 
 	$this->assertIsString($assetsVersion, 'getAssetsVersion method must return a string');
 });
 
 test('enqueueStyles method will enqueue styles in a theme', function () {
-	$this->example->enqueueStyles();
-	$this->assertSame(getenv('REGISTER_STYLE'), 'tests/data-theme-styles', "Method enqueueStyles() failed to register style");
-	$this->assertSame(getenv('ENQUEUE_STYLE'), 'tests/data-theme-styles', "Method enqueueStyles() failed to enqueue style");
+	$this->themeEnqueue->enqueueStyles();
+	$this->assertSame(getenv('REGISTER_STYLE'), 'MyProject-theme-styles', 'Method enqueueStyles() failed to register style');
+	$this->assertSame(getenv('ENQUEUE_STYLE'), 'MyProject-theme-styles', 'Method enqueueStyles() failed to enqueue style');
 });
 
 test('enqueueScripts method will enqueue scripts in a theme', function () {
 
-	$this->example->enqueueScripts();
-	$this->assertSame(getenv('REGISTER_SCRIPT'), 'tests/data-scripts', "Method enqueueStyles() failed to register style");
-	$this->assertSame(getenv('ENQUEUE_SCRIPT'), 'tests/data-scripts', "Method enqueueScripts() failed to enqueue style");
-	$this->assertSame(getenv('SIDEAFFECT'), 'localize', "Method wp_localize_script() failed");
+	$this->themeEnqueue->enqueueScripts();
+	$this->assertSame(getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
+	$this->assertSame(getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
+	$this->assertSame(getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
 });

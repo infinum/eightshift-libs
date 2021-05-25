@@ -52,6 +52,9 @@ function setupMocks() {
 
 	// Mock rest response handler.
 	Functions\when('rest_ensure_response')->returnArg();
+
+	// Mock site_url function.
+	Functions\when('site_url')->justReturn('https://example.com');
 }
 
 /**

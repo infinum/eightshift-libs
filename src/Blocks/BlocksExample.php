@@ -78,12 +78,12 @@ class BlocksExample extends AbstractBlocks
 	/**
 	 * Set props helper to a proper values to be used in blocks/components.
 	 *
-	 * @param array  $attributes Object of attributes from block/component.
-	 * @param string $realName Old key to use, generally this is the name of the block/component.
-	 * @param string $newName New key to use to rename attributes.
-	 * @param bool   $isBlock Check if helper is used on block or component.
+	 * @param array<mixed> $attributes Object of attributes from block/component.
+	 * @param string       $realName Old key to use, generally this is the name of the block/component.
+	 * @param string       $newName New key to use to rename attributes.
+	 * @param bool         $isBlock Check if helper is used on block or component.
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 */
 	public static function props(array $attributes, string $realName, string $newName = '', bool $isBlock = false): array
 	{
@@ -102,7 +102,7 @@ class BlocksExample extends AbstractBlocks
 			\esc_html__('Blocks', 'eightshift-libs'),
 			self::REUSABLE_BLOCKS_CAPABILITY,
 			'edit.php?post_type=wp_block',
-			'',
+			'', // @phpstan-ignore-line
 			'dashicons-editor-table',
 			4
 		);

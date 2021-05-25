@@ -739,6 +739,48 @@ test('Asserts that camelToKebabCase returns the wrong output', function () {
 });
 
 /**
+ * Components::kebabToCamelCase tests
+ */
+test('Asserts that kebabToCamelCase returns the correct output', function () {
+	$output = Components::kebabToCamelCase('super-cool-test-string');
+
+	$this->assertEquals('superCoolTestString', $output);
+});
+
+test('Asserts that kebabToCamelCase returns the wrong output', function () {
+	$output = Components::kebabToCamelCase('super-cool-test-string-goc');
+
+	$this->assertNotEquals('super_CoolTest-String goc', $output);
+});
+
+/**
+ * Components::kebabToCamelCase tests
+ */
+test('Asserts that kebabToCamelCase returns the correct output with a different separator', function () {
+	$output = Components::kebabToCamelCase('super_cool_test_string', '_');
+
+	$this->assertEquals('superCoolTestString', $output);
+});
+
+/**
+ * Components::kebabToCamelCase tests
+ */
+test('Asserts that kebabToCamelCase returns the correct output with numbers as a string', function () {
+	$output = Components::kebabToCamelCase('123-456-789');
+
+	$this->assertEquals('123456789', $output);
+});
+
+/**
+ * Components::kebabToCamelCase tests
+ */
+test('Asserts that kebabToCamelCase returns the correct output with a non-kebab-case string', function () {
+	$output = Components::kebabToCamelCase('non kebab string');
+
+	$this->assertEquals('non kebab string', $output);
+});
+
+/**
  * Components::props tests
  */
 test('Asserts props for heading block will return only heading attributes', function () {

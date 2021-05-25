@@ -54,16 +54,30 @@ afterEach(function () {
 	Monkey\tearDown();
 });
 
-test('Return correct case', function($input, $output) {
+test('Return correct case - camelCase to kebab-case', function ($input, $output) {
 	$case = CliHelpers::camelCaseToKebabCase($input);
 
 	$this->assertIsString($case);
 	$this->assertSame($case, $output);
-})->with('caseCheckCorrect');
+})->with('camelToKebabCaseCheckCorrect');
 
-test('Return wrong case', function($input, $output) {
+test('Return wrong case - camelCase to kebab-case', function ($input, $output) {
 	$case = CliHelpers::camelCaseToKebabCase($input);
 
 	$this->assertIsString($case);
 	$this->assertNotSame($case, $output);
-})->with('caseCheckWrong');
+})->with('camelToKebabCaseCheckWrong');
+
+test('Return correct case - kebab-case to camelCase', function ($input, $output) {
+	$case = CliHelpers::kebabToCamelCase($input);
+
+	$this->assertIsString($case);
+	$this->assertSame($case, $output);
+})->with('kebabToCamelCaseCheckCorrect');
+
+test('Return wrong case - kebab-case to camelCase', function ($input, $output) {
+	$case = CliHelpers::kebabToCamelCase($input);
+
+	$this->assertIsString($case);
+	$this->assertNotSame($case, $output);
+})->with('kebabToCamelCaseCheckWrong');
