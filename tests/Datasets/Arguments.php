@@ -146,6 +146,10 @@ dataset('camelToKebabCaseCheckCorrect', [
 	['aBaBaB', 'a-ba-ba-b'],
 	['BaBaBa', 'ba-ba-ba'],
 	['libC', 'lib-c'],
+	['Some Title', 'some-title'],
+	['Some title', 'some-title'],
+	['some title', 'some-title'],
+	['some title longer', 'some-title-longer'],
 ]);
 
 dataset('camelToKebabCaseCheckWrong', [

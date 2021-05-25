@@ -55,7 +55,7 @@ test('Block pattern CLI command will correctly copy the Block Pattern class with
 });
 
 
-test('Custom post type CLI command will correctly copy the Custom post type class with set arguments', function () {
+test('Block pattern CLI command will correctly copy the Block pattern class with set arguments', function () {
 	$blockPattern = $this->blockPattern;
 	$cliArgs = [
 		'title' => 'Your Own Thing',
@@ -77,6 +77,21 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 	$this->assertStringNotContainsString('example-description', $generatedBlockPattern);
 	$this->assertStringNotContainsString('example-title', $generatedBlockPattern);
 	$this->assertStringNotContainsString('example-name', $generatedBlockPattern);
+});
+
+test('Block pattern CLI command will generate a name from title if "name" argument is not provided', function () {
+	$blockPattern = $this->blockPattern;
+	$cliArgs = [
+		'title' => 'Your Own Thing',
+		'description' => 'Description of the your own thing pattern',
+		'content' => 'this-one-has-some-content',
+	];
+	$blockPattern([], $cliArgs);
+
+	// Check the output dir if the generated method is correctly generated.
+	$generatedBlockPattern = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/BlockPatterns/YourOwnThingBlockPattern.php');
+
+	$this->assertStringContainsString('eightshift-boilerplate/your-own-thing', $generatedBlockPattern);
 });
 
 
