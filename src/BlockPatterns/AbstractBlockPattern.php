@@ -3,12 +3,12 @@
 /**
  * File that holds base abstract class for block pattern.
  *
- * @package EightshiftLibs\BlockPattern
+ * @package EightshiftLibs\BlockPatterns
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\BlockPattern;
+namespace EightshiftLibs\BlockPatterns;
 
 use EightshiftLibs\Services\ServiceInterface;
 
@@ -35,7 +35,7 @@ abstract class AbstractBlockPattern implements ServiceInterface
 	 */
 	public function registerBlockPattern(): void
 	{
-		if ( class_exists( 'WP_Block_Patterns_Registry' ) ) {
+		if (class_exists('WP_Block_Patterns_Registry')) {
 			\register_block_pattern(
 				$this->getName(),
 				[
@@ -54,7 +54,8 @@ abstract class AbstractBlockPattern implements ServiceInterface
 	 *
 	 * @return array Array of categories.
 	 */
-	protected function getCategories() : array {
+	protected function getCategories(): array
+	{
 		return [];
 	}
 
@@ -63,7 +64,8 @@ abstract class AbstractBlockPattern implements ServiceInterface
 	 *
 	 * @return array Array of keywords.
 	 */
-	protected function getKeywords() : array {
+	protected function getKeywords(): array
+	{
 		return [];
 	}
 
