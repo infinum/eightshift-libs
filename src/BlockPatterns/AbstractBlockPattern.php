@@ -35,18 +35,16 @@ abstract class AbstractBlockPattern implements ServiceInterface
 	 */
 	public function registerBlockPattern(): void
 	{
-		if (class_exists('WP_Block_Patterns_Registry')) {
-			\register_block_pattern(
-				$this->getName(),
-				[
-					'title' => $this->getTitle(),
-					'description' => $this->getDescription(),
-					'content' => $this->getContent(),
-					'categories' => $this->getCategories(),
-					'keywords' => $this->getKeywords(),
-				],
-			);
-		}
+		\register_block_pattern(
+			$this->getName(),
+			[
+				'title' => $this->getTitle(),
+				'description' => $this->getDescription(),
+				'content' => $this->getContent(),
+				'categories' => $this->getCategories(),
+				'keywords' => $this->getKeywords(),
+			]
+		);
 	}
 
 	/**
