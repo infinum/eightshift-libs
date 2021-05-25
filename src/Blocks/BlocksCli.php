@@ -19,6 +19,13 @@ class BlocksCli extends AbstractCli
 {
 
 	/**
+	 * Toggle to see if this is running inside tests or not
+	 *
+	 * @var bool
+	 */
+	private $isTest;
+
+	/**
 	 * Output dir relative path
 	 *
 	 * @var string
@@ -89,7 +96,7 @@ class BlocksCli extends AbstractCli
 			->renameTextDomainFrontendLibs($assocArgs)
 			->renameUse($assocArgs);
 
-		if (function_exists('\add_action')) {
+		if (!$this->isTest && function_exists('\add_action')) {
 			$this->blocksInit($assocArgs);
 		}
 
@@ -141,5 +148,15 @@ class BlocksCli extends AbstractCli
 		}
 
 		\WP_CLI::success('Blocks successfully set.');
+	}
+
+	/**
+	 * Used when running tests.
+	 *
+	 * @return void
+	 */
+	public function setTest(): void
+	{
+		$this->isTest = true;
 	}
 }

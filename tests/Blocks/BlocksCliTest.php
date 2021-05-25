@@ -13,15 +13,16 @@ use function Tests\mock;
 beforeEach(function () {
 	$wpCliMock = mock('alias:WP_CLI');
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('success')
+		->andReturnArg(0);
 
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('error')
+		->andReturnArg(0);
 
-$this->blocks = new BlocksCli('boilerplate');
+	$this->blocks = new BlocksCli('boilerplate');
+	$this->blocks->setTest();
 });
 
 /**
