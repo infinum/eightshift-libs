@@ -87,6 +87,7 @@ class Cli
 		BlockComponentCli::class,
 		BlockWrapperCli::class,
 		BlockVariationCli::class,
+		BlockPatternCli::class,
 		BlockCli::class,
 		BlocksStorybookCli::class,
 		UpdateCli::class,
