@@ -89,8 +89,8 @@ function setup(string $projectRootPath, array $args = [], string $setupFile = 's
 					foreach ($pluginsGithub as $name => $version) {
 						$shortName = CliHelpers::getGithubPluginName($name);
 						$filePath = getcwd() . "/{$shortName}.zip";
-						$releaseZip = file_get_contents("https://github.com/{$name}/releases/download/{$version}/release.zip");
-						file_put_contents($filePath, $releaseZip);
+						$releaseZip = file_get_contents("https://github.com/{$name}/releases/download/{$version}/release.zip"); // phpcs:ignore WordPress.WP.AlternativeFunctions
+						file_put_contents($filePath, $releaseZip); // phpcs:ignore WordPress.WP.AlternativeFunctions
 						WP_CLI::runcommand("plugin install {$filePath} --force");
 						WP_CLI::log('--------------------------------------------------');
 						unlink($filePath);
