@@ -63,7 +63,7 @@ test('Update CLI command will correctly run the update with defaults', function 
 		$exceptionOccurred = true;
 	}
 
-	$this->assertFalse($exceptionOccurred);
+	$this->assertFalse($exceptionOccurred, ! empty($th) ? $th->getMessage() : 'Unknown error');
 });
 
 test('Update CLI command will correctly throw an exception if setup.json does not exist or has the wrong filename', function () {
