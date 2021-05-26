@@ -81,3 +81,18 @@ test('Return wrong case - kebab-case to camelCase', function ($input, $output) {
 	$this->assertIsString($case);
 	$this->assertNotSame($case, $output);
 })->with('kebabToCamelCaseCheckWrong');
+
+test('Return correct name - getGithubPluginName', function ($input, $output) {
+	$case = CliHelpers::getGithubPluginName($input);
+
+	$this->assertIsString($case);
+	$this->assertSame($case, $output);
+})->with('getGithubPluginNameCorrect');
+
+test('Return wrong name - getGithubPluginName', function ($input, $output) {
+	$case = CliHelpers::getGithubPluginName($input);
+
+	$this->assertIsString($case);
+	$this->assertNotSame($case, $output);
+})->with('getGithubPluginNameWrong');
+

@@ -209,3 +209,17 @@ dataset('kebabToCamelCaseCheckWrong', [
 	['ba-ba-ba', 'BaBaBa'],
 	['lib-c', 'libc'],
 ]);
+
+dataset('getGithubPluginNameCorrect', [
+	['some-plugin-name', 'some-plugin-name'],
+	['infinum/some-plugin-name', 'some-plugin-name'],
+	['simple', 'simple'],
+	['infinum/simple', 'simple'],
+	['infinum/something-else/simple', 'simple'],
+]);
+
+dataset('getGithubPluginNameWrong', [
+	['infinum/some-plugin-name', 'infinum/some-plugin-name'],
+	['infinum/something-else/simple', 'infinum/something-else'],
+	['infinum/something-else/simple', 'something-else/simple'],
+]);
