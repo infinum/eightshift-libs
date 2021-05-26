@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli, BlocksStorybookCli, BlockVariationCli, BlockWrapperCli};
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;

@@ -87,7 +87,7 @@ test('Cli getDevelopClasses return correct class list', function () {
 test('Cli getPublicClasses return correct class list', function () {
 	$publicClasses = $this->cli->getPublicClasses();
 
-	$numberOfPublicClasses = 36;
+	$numberOfPublicClasses = 37;
 
 	$this->assertIsArray($publicClasses);
 	$this->assertTrue(count($publicClasses) === $numberOfPublicClasses, 'Total number of classes is correct');
