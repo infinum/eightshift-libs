@@ -21,7 +21,7 @@ class BlockPatternExample extends AbstractBlockPattern
 	/**
 	 * Get the pattern categories.
 	 *
-	 * @return array Array of categories.
+	 * @return array<string> Array of categories.
 	 */
 	protected function getCategories(): array
 	{
@@ -31,7 +31,7 @@ class BlockPatternExample extends AbstractBlockPattern
 	/**
 	 * Get the pattern keywords.
 	 *
-	 * @return array Array of keywords.
+	 * @return array<string> Array of keywords.
 	 */
 	protected function getKeywords(): array
 	{
