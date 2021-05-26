@@ -41,7 +41,6 @@ class CliInitTheme extends AbstractCli
 		EnqueueThemeCli::class,
 		MenuCli::class,
 		BlocksCli::class,
-		ReadmeCli::class,
 	];
 
 	/**
