@@ -745,16 +745,15 @@ class Components
 
 		$output = [];
 
-		// If component use components dependency tree.
-		$dependency = $globalData['components'][$realName];
+		// If block use blocks dependency tree, if component use components dependency tree.
+		if ($isBlock) {
+			$dependency = $globalData['blocks'][$realName];
+		} else {
+			$dependency = $globalData['components'][$realName];
+		}
 
 		// Add the current component name to the dependency array.
 		$dependency[] = $newNameInternal;
-
-		// If block use blocks dependency tree.
-		if ($isBlock) {
-			$dependency = $globalData['blocks'][$realName];
-		}
 
 		// If you have multiple components just use one.
 		$dependency = array_unique($dependency);
