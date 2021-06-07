@@ -792,7 +792,7 @@ class Components
 
 				// Change the name of the key if they are different.
 				if ($realName !== $newNameInternal) {
-					$newKey = $realName . substr($key, strlen($newNameInternal));
+					$newKey = str_replace($newNameInternal, $realName, $key);
 				}
 
 				// Populate output with new values.
