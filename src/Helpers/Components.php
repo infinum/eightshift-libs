@@ -389,78 +389,88 @@ class Components
 	}
 
 	/**
-	 * Get component/block options and process them in CSS variables.
+	 * Sets up a breakpoint value to responsive attribute objects from responsiveAttribute object.
 	 *
-	 * @param array  $attributes Built attributes.
-	 * @param array  $manifest Component/block manifest data.
-	 * @param string $unique Unique key.
-	 * @param array  $globalManifest Global manifest array.
+	 * @param array   $attributeVariables Array of attribute variables object.
+	 * @param string  $breakpointName Breakpoint name from responsiveAttribute's breakpoint in block's/component's manifest.
+	 * @param integer $breakpointIndex Index of responsiveAttribute's breakpoint in manifest.
+	 * @param integer $numberOfBreakpoints Number of responsiveAttribute breakpoints in block's/component's manifest.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest): string
+	private static function setBreakpointResponsiveVariables(array $attributeVariables, string $breakpointName, int $breakpointIndex, int $numberOfBreakpoints): array
 	{
-		$output = '';
+		$breakpointAttributeValues = [];
+		foreach ($attributeVariables as $attributeVariablesObject) {
+			// Calculate default breakpoint index.
+			$defaultbreakpointIndex = $attributeVariablesObject['inverse'] ? 0 : ((int) $numberOfBreakpoints - 1);
 
-		// Bailout if global breakpoints are missing.
-		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
-			return '';
-		}
+			$attributeVariablesObject['breakpoint'] = ($breakpointIndex === $defaultbreakpointIndex) ? 'default' : $breakpointName;
+			$breakpointAttributeValues[] = $attributeVariablesObject;
+		};
 
-		// Bailout if attributes or manifest is missing.
-		if (!$attributes || !$manifest) {
-			return '';
-		}
+		return $breakpointAttributeValues;
+	}
 
-		// Bailout if manifest is missing variables key.
-		if (!isset($manifest['variables'])) {
-			return '';
-		}
+	/**
+	 * Iterating through variables matching the keys from responsiveAttributes and translating it to responsive attributes names.
+	 *
+	 * @param array $responsiveAttributes Responsive attributes that are read from component's/block's manifest.
+	 * @param array $variables Object containing objects with component's/block's attribute variables that are read from manifest.
+	 *
+	 * @return array Object prepared for setting all the variables to its breakpoints.
+	 */
+	private static function setupResponsiveVariables(array $responsiveAttributes, array $variables): array
+	{
+		$responsiveAttributesVariables = [];
 
-		// Define variables from globalManifest.
-		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
-
-		// Define variables from manifest.
-		$variables = $manifest['variables'];
-
-		// Get the initial data array.
-		$data = self::prepareVariableData($breakpoints);
-
-		// Check if component or block.
-		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
-
-		// Check manifest for the attributes with variable key.
-		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
-		$defaultAttributes = array_keys(
-			array_filter(
-				$variables,
-				function ($key) use ($attributes) {
-					return !isset($attributes[$key]);
-				},
-				ARRAY_FILTER_USE_KEY
-			)
-		);
-
-		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
-		if ($defaultAttributes) {
-			$default = [];
-
-			foreach ($defaultAttributes as $key) {
-				if (isset($attributes[$key]['default'])) {
-					$default[$key] = $attributes[$key]['default'];
-				}
+		foreach ($responsiveAttributes as $responsiveAttributeName => $responsiveAttributeObject) {
+			if (!$responsiveAttributeName || !isset($variables[$responsiveAttributeName])) {
+				continue;
 			}
 
-			$attributes = array_merge($default, $attributes);
-		}
+			$numberOfBreakpoints = count($responsiveAttributeObject);
+			$responsiveAttribute = [];
+			$breakpointIndex = 0;
 
-		// Iterate each variable.
+			foreach ($responsiveAttributeObject as $breakpointName => $breakpointVariableName) {
+				$breakpointVariables = [];
+				$isAssociative = array_values($variables[$responsiveAttributeName]) === $variables[$responsiveAttributeName];
+
+				if ($isAssociative) {
+					$breakpointVariables = self::setBreakpointResponsiveVariables($variables[$responsiveAttributeName], $breakpointName, $breakpointIndex, $numberOfBreakpoints);
+				} else {
+					foreach ($variables[$responsiveAttributeName] as $attrValue => $attrObject) {
+						$breakpointVariables[$attrValue] = self::setBreakpointResponsiveVariables($attrObject, $breakpointName, $breakpointIndex, $numberOfBreakpoints);
+					}
+				}
+
+				$responsiveAttribute[$breakpointVariableName] = $breakpointVariables;
+				$breakpointIndex++;
+			}
+
+			$responsiveAttributesVariables = array_merge($responsiveAttributesVariables, $responsiveAttribute);
+		};
+
+		return $responsiveAttributesVariables;
+	}
+
+	/**
+	 * Iterating through variables matching the keys from responsiveAttributes and translating it to responsive attributes names.
+	 *
+	 * @param array $attributes Attributes that are read from component's/block's manifest.
+	 * @param array $variables Variables that are read from component's/block's manifest.
+	 * @param array $data Predefined structure for adding styles to a specific breakpoint value.
+	 *
+	 * @return array Object prepared for setting all the variables to its breakpoints.
+	 */
+	private static function setVariablesToBreakpoints(array $attributes, array $variables, array $data): array
+	{
 		foreach ($variables as $variableName => $variableValue) {
 			// Bailout if variable is empty or not set.
 			if (!isset($attributes[$variableName])) {
 				continue;
 			}
-
 			// Constant for attributes set value (in db or default).
 			$attributeValue = $attributes[$variableName] ?? [];
 
@@ -499,6 +509,86 @@ class Components
 				}
 			}
 		}
+
+		return $data;
+	}
+
+	/**
+	 * Get component/block options and process them in CSS variables.
+	 *
+	 * @param array  $attributes Built attributes.
+	 * @param array  $manifest Component/block manifest data.
+	 * @param string $unique Unique key.
+	 * @param array  $globalManifest Global manifest array.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest): string
+	{
+		$output = '';
+
+		// Bailout if global breakpoints are missing.
+		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
+			return '';
+		}
+
+		// Bailout if attributes or manifest is missing.
+		if (!$attributes || !$manifest) {
+			return '';
+		}
+
+		// Bailout if manifest is missing variables key.
+		if (!isset($manifest['variables'])) {
+			return '';
+		}
+
+		// Define variables from globalManifest.
+		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
+
+		// Define variables from manifest.
+		$variables = $manifest['variables'];
+
+		// Define responsiveAttributes from manifest.
+		$responsiveAttributes = $manifest['responsiveAttributes'] ?? [];
+
+		// Get the initial data array.
+		$data = self::prepareVariableData($breakpoints);
+
+		// Check if component or block.
+		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
+
+		// Check manifest for the attributes with variable key.
+		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
+		$defaultAttributes = array_keys(
+			array_filter(
+				$variables,
+				function ($key) use ($attributes) {
+					return !isset($attributes[$key]);
+				},
+				ARRAY_FILTER_USE_KEY
+			)
+		);
+
+		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
+		if ($defaultAttributes) {
+			$default = [];
+
+			foreach ($defaultAttributes as $key) {
+				if (isset($attributes[$key]['default'])) {
+					$default[$key] = $attributes[$key]['default'];
+				}
+			}
+
+			$attributes = array_merge($default, $attributes);
+		}
+
+		if (!empty($responsiveAttributes)) {
+			$responsiveVariables = self::setupResponsiveVariables($responsiveAttributes, $variables);
+			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data);
+		}
+
+		// Iterate each variable.
+		$data = self::setVariablesToBreakpoints($attributes, $variables, $data);
 
 		// Loop data and provide correct selectors from data array.
 		foreach ($data as $values) {
