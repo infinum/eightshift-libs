@@ -519,7 +519,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				$outputAttributes = $this->prepareComponentAttributes($component, $newComponentName);
 			} else {
 				// Use parent attribute name to determine if the name has changed in the parent component.
-				if ($parentAttributeName !== $newComponentName && $realComponentName !== $newComponentName) {
+				if (
+					$parentAttributeName !== $newComponentName &&
+					$realComponentName !== $newComponentName &&
+					array_key_exists($newComponentName, $this->getBlocksDataFullRawItem('dependency'))
+				) {
 					$newComponentName = $parentAttributeName;
 				}
 
