@@ -398,13 +398,22 @@ class Components
 	 *
 	 * @return array
 	 */
-	private static function setBreakpointResponsiveVariables(array $attributeVariables, string $breakpointName, int $breakpointIndex, int $numberOfBreakpoints): array
-	{
+	private static function setBreakpointResponsiveVariables(
+		array $attributeVariables,
+		string $breakpointName,
+		int $breakpointIndex,
+		int $numberOfBreakpoints
+	): array {
 		$breakpointAttributeValues = [];
 		foreach ($attributeVariables as $attributeVariablesObject) {
-			// Calculate default breakpoint index.
+
+			/**
+			 * Calculate default breakpoint index based on order of the breakpoint, inverse property
+			 * and number of properties in responsiveAttributeObject.
+			 */
 			$defaultbreakpointIndex = $attributeVariablesObject['inverse'] ? 0 : ((int) $numberOfBreakpoints - 1);
 
+			// Expanding an object with an additional breakpoint property.
 			$attributeVariablesObject['breakpoint'] = ($breakpointIndex === $defaultbreakpointIndex) ? 'default' : $breakpointName;
 			$breakpointAttributeValues[] = $attributeVariablesObject;
 		};
@@ -424,31 +433,56 @@ class Components
 	{
 		$responsiveAttributesVariables = [];
 
+		// Iterate through responsive attributes.
 		foreach ($responsiveAttributes as $responsiveAttributeName => $responsiveAttributeObject) {
+			// If responsive attribute doesn't exist in variables object, skip it.
 			if (!$responsiveAttributeName || !isset($variables[$responsiveAttributeName])) {
 				continue;
 			}
 
+			// Used for determination of default breakpoint.
 			$numberOfBreakpoints = count($responsiveAttributeObject);
 			$responsiveAttribute = [];
 			$breakpointIndex = 0;
 
+			/**
+			 * Iterate each responsive attribute object as breakpoint name is the
+			 * key of the object, and value represents the name of the responsive variable.
+			 */
 			foreach ($responsiveAttributeObject as $breakpointName => $breakpointVariableName) {
 				$breakpointVariables = [];
+
+				// Determins whether array is a key value pair or not.
 				$isAssociative = array_values($variables[$responsiveAttributeName]) === $variables[$responsiveAttributeName];
 
 				if ($isAssociative) {
-					$breakpointVariables = self::setBreakpointResponsiveVariables($variables[$responsiveAttributeName], $breakpointName, $breakpointIndex, $numberOfBreakpoints);
+					// Array represents direct value(default or value).
+					$breakpointVariables = self::setBreakpointResponsiveVariables(
+						$variables[$responsiveAttributeName],
+						$breakpointName,
+						$breakpointIndex,
+						$numberOfBreakpoints
+					);
 				} else {
+					/**
+					 * Object treatment goes depending on a value inserted(multiple choice, boolean or similar).
+					 * Iterate options/multiple choices/boolean...
+					 */
 					foreach ($variables[$responsiveAttributeName] as $attrValue => $attrObject) {
-						$breakpointVariables[$attrValue] = self::setBreakpointResponsiveVariables($attrObject, $breakpointName, $breakpointIndex, $numberOfBreakpoints);
+						$breakpointVariables[$attrValue] = self::setBreakpointResponsiveVariables(
+							$attrObject,
+							$breakpointName,
+							$breakpointIndex,
+							$numberOfBreakpoints
+						);
 					}
 				}
 
+				// Collect all the values from one responsive attribute to one associative array.
 				$responsiveAttribute[$breakpointVariableName] = $breakpointVariables;
 				$breakpointIndex++;
 			}
-
+			// Merge multiple responsive attributes to one array.
 			$responsiveAttributesVariables = array_merge($responsiveAttributesVariables, $responsiveAttribute);
 		};
 
