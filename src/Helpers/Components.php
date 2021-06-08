@@ -236,7 +236,7 @@ class Components
 		$manifestKey = $manifest['attributes'][$key] ?? null;
 
 		if ($manifestKey === null) {
-			if (array_key_exists('blockName', $manifest)) {
+			if (isset($manifest['blockName']) || array_key_exists('blockName', $manifest)) {
 				throw new \Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
 			} else {
 				throw new \Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
@@ -247,14 +247,14 @@ class Components
 
 		switch ($defaultType) {
 			case 'boolean':
-				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : false;
+				$defaultValue = $manifestKey['default'] ?? false;
 				break;
 			case 'array':
 			case 'object':
-				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : [];
+				$defaultValue = $manifestKey['default'] ?? [];
 				break;
 			default:
-				$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : '';
+				$defaultValue = $manifestKey['default'] ?? '';
 				break;
 		}
 
@@ -278,7 +278,7 @@ class Components
 		$output = [];
 
 		if (!isset($manifest['responsiveAttributes'])) {
-			if (array_key_exists('blockName', $manifest)) {
+			if (isset($manifest['blockName']) || array_key_exists('blockName', $manifest)) {
 				throw new \Exception("It looks like you are missing responsiveAttributes key in your {$manifest['blockName']} block manifest.");
 			} else {
 				throw new \Exception("It looks like you are missing responsiveAttributes key in your {$manifest['componentName']} component manifest.");
@@ -771,7 +771,7 @@ class Components
 		if (
 			$parent !== $newNameInternal &&
 			$realName !== $newNameInternal &&
-			array_key_exists($newNameInternal, $globalData['components'])
+			(isset($globalData['components'][$newNameInternal]) || array_key_exists($newNameInternal, $globalData['components']))
 		) {
 			// Remove real component name from the dependency tree.
 			$dependency = array_filter(

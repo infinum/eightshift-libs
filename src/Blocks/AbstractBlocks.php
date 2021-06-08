@@ -512,6 +512,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$componentAttributes = $blockDetails['attributes'];
 		}
 
+		$globalData = $this->getBlocksDataFullRawItem('dependency');
+
 		foreach ($blockDetails['components'] as $newComponentName => $realComponentName) {
 			$component = $this->getComponent($realComponentName);
 
@@ -522,7 +524,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				if (
 					$parentAttributeName !== $newComponentName &&
 					$realComponentName !== $newComponentName &&
-					array_key_exists($newComponentName, $this->getBlocksDataFullRawItem('dependency'))
+					(isset($globalData[$newComponentName]) || array_key_exists($newComponentName, $globalData))
 				) {
 					$newComponentName = $parentAttributeName;
 				}
