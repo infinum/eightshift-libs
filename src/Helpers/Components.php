@@ -221,41 +221,44 @@ class Components
 	 * @param string $key Key to check.
 	 * @param array  $attributes Array of attributes.
 	 * @param array  $manifest Array of default attributes from manifest.json.
-	 * @param string $componentName The real component name.
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
 	 *
 	 * @return mixed
 	 */
-	public static function checkAttr(string $key, array $attributes, array $manifest, string $componentName = '')
+	public static function checkAttr(string $key, array $attributes, array $manifest)
 	{
 
 		if (isset($attributes[$key])) {
 			return $attributes[$key];
-		} else {
-			$manifestKey = $manifest['attributes'][$key] ?? null;
+		};
 
-			if ($manifestKey === null) {
-				throw new \Exception("{$key} key does not exist in the {$componentName} component. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
+		$manifestKey = $manifest['attributes'][$key] ?? null;
+
+		if ($manifestKey === null) {
+			if (isset($manifest['blockName']) || array_key_exists('blockName', $manifest)) {
+				throw new \Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
+			} else {
+				throw new \Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
 			}
-
-			$defaultType = $manifestKey['type'];
-
-			switch ($defaultType) {
-				case 'boolean':
-					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : false;
-					break;
-				case 'array':
-				case 'object':
-					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : [];
-					break;
-				default:
-					$defaultValue = isset($manifestKey['default']) ? $manifestKey['default'] : '';
-					break;
-			}
-
-			return $defaultValue;
 		}
+
+		$defaultType = $manifestKey['type'];
+
+		switch ($defaultType) {
+			case 'boolean':
+				$defaultValue = $manifestKey['default'] ?? false;
+				break;
+			case 'array':
+			case 'object':
+				$defaultValue = $manifestKey['default'] ?? [];
+				break;
+			default:
+				$defaultValue = $manifestKey['default'] ?? '';
+				break;
+		}
+
+		return $defaultValue;
 	}
 
 	/**
@@ -264,19 +267,22 @@ class Components
 	 * @param string $keyName Key name to find in the responsiveAttributes object.
 	 * @param array  $attributes Array of attributes.
 	 * @param array  $manifest Array of default attributes from manifest.json.
-	 * @param string $componentName The real component name.
 	 *
 	 * @throws \Exception If missing responsiveAttributes or keyName in responsiveAttributes.
 	 * @throws \Exception If missing keyName in responsiveAttributes.
 	 *
 	 * @return mixed
 	 */
-	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest, string $componentName = '')
+	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest)
 	{
 		$output = [];
 
 		if (!isset($manifest['responsiveAttributes'])) {
-			throw new \Exception("It looks like you are missing the responsiveAttributes key in your {$componentName} manifest.");
+			if (isset($manifest['blockName']) || array_key_exists('blockName', $manifest)) {
+				throw new \Exception("It looks like you are missing responsiveAttributes key in your {$manifest['blockName']} block manifest.");
+			} else {
+				throw new \Exception("It looks like you are missing responsiveAttributes key in your {$manifest['componentName']} component manifest.");
+			}
 		}
 
 		if (!isset($manifest['responsiveAttributes'][$keyName])) {
@@ -284,7 +290,7 @@ class Components
 		}
 
 		foreach ($manifest['responsiveAttributes'][$keyName] as $key => $value) {
-			$output[$key] = self::checkAttr($value, $attributes, $manifest, $componentName);
+			$output[$key] = self::checkAttr($value, $attributes, $manifest);
 		}
 
 		return $output;
@@ -762,7 +768,11 @@ class Components
 		$parent = $attributes['parent'] ?? '';
 
 		// Replace stuff if there is any changing of the attribute names.
-		if ($parent !== $newNameInternal && $realName !== $newNameInternal) {
+		if (
+			$parent !== $newNameInternal &&
+			$realName !== $newNameInternal &&
+			(isset($globalData['components'][$newNameInternal]) || array_key_exists($newNameInternal, $globalData['components']))
+		) {
 			// Remove real component name from the dependency tree.
 			$dependency = array_filter(
 				$dependency,
