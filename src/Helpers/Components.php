@@ -406,12 +406,11 @@ class Components
 	): array {
 		$breakpointAttributeValues = [];
 		foreach ($attributeVariables as $attributeVariablesObject) {
-
 			/**
 			 * Calculate default breakpoint index based on order of the breakpoint, inverse property
 			 * and number of properties in responsiveAttributeObject.
 			 */
-			$defaultbreakpointIndex = $attributeVariablesObject['inverse'] ? 0 : ((int) $numberOfBreakpoints - 1);
+			$defaultbreakpointIndex = (isset($attributeVariablesObject['inverse']) && $attributeVariablesObject['inverse']) ? 0 : ((int) $numberOfBreakpoints - 1);
 
 			// Expanding an object with an additional breakpoint property.
 			$attributeVariablesObject['breakpoint'] = ($breakpointIndex === $defaultbreakpointIndex) ? 'default' : $breakpointName;
