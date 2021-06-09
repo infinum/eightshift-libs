@@ -5,33 +5,33 @@
 	"example": {
 	},
 	"attributes": {
-    "variableValueDesktop": {
-      "type": "string"
-    },
-    "variableValueMobile": {
-      "type": "string"
-    },
-    "variableDefaultLarge": {
-      "type": "string"
-    },
-    "variableDefaultDesktop": {
-      "type": "string"
-    },
-    "variableDefaultMobile": {
-      "type": "string"
-    }
+		"variableValueDesktop": {
+			"type": "string"
+		},
+		"variableValueMobile": {
+			"type": "string"
+		},
+		"variableDefaultLarge": {
+			"type": "string"
+		},
+		"variableDefaultDesktop": {
+			"type": "string"
+		},
+		"variableDefaultMobile": {
+			"type": "string"
+		}
 	},
-  "responsiveAttributes": {
-    "responsiveVariableDefault": {
-      "large": "variableDefaultLarge",
-      "desktop":"variableDefaultDesktop",
-      "mobile":"variableDefaultMobile"
-    },
-    "responsiveVariableValue": {
-      "desktop":"variableValueDesktop",
-      "mobile":"variableValueMobile"
-    }
-  },
+	"responsiveAttributes": {
+		"responsiveVariableDefault": {
+			"large": "variableDefaultLarge",
+			"desktop":"variableDefaultDesktop",
+			"mobile":"variableDefaultMobile"
+		},
+		"responsiveVariableValue": {
+			"desktop":"variableValueDesktop",
+			"mobile":"variableValueMobile"
+		}
+	},
 	"variables": {
 		"variableDefaultLarge": [
 			{
@@ -42,7 +42,7 @@
 		],
 		"variableDefaultDesktop": [
 			{
-        "breakpoint": "desktop",
+				"breakpoint": "desktop",
 				"variable": {
 					"variable-default-normal": "default-desktop-%value%"
 				}
@@ -50,10 +50,10 @@
 		],
 		"variableDefaultMobile": [
 			{
-        "breakpoint": "mobile",
+				"breakpoint": "mobile",
 				"variable": {
 					"variable-default-normal": "default-mobile-%value%",
-          "variable-default": "default-mobile-%value%"
+					"variable-default": "default-mobile-%value%"
 				}
 			}
 		],
@@ -69,7 +69,7 @@
 		"variableValueDesktop": {
 			"value1": [
 				{
-          "breakpoint": "desktop",
+					"breakpoint": "desktop",
 					"variable": {
 						"variable-value-default": "value1-dekstop"
 					}
@@ -77,7 +77,7 @@
 			],
 			"value2": [
 				{
-          "breakpoint": "desktop",
+					"breakpoint": "desktop",
 					"variable": {
 						"variable-value-default": "value2-dekstop"
 					}
@@ -87,7 +87,7 @@
 		"variableValueMobile": {
 			"value1": [
 				{
-          "breakpoint": "mobile",
+					"breakpoint": "mobile",
 					"variable": {
 						"variable-value-default": "value1-mobile"
 					}
@@ -95,14 +95,14 @@
 			],
 			"value2": [
 				{
-          "breakpoint": "mobile",
+					"breakpoint": "mobile",
 					"variable": {
 						"variable-value-default": "value2-mobile"
 					}
 				}
 			]
 		},
-    "responsiveVariableValue": {
+		"responsiveVariableValue": {
 			"value1": [
 				{
 					"variable": {
