@@ -230,7 +230,7 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 	$attributes['title'] = 'Some attribute';
 
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'bla key does not exist in the button component. Please check your implementation.');
+})->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation. Check if your bla attribut exists in the component's manifest.json");
 
 /**
  * Components::checkAttrResponsive tests
@@ -267,7 +267,7 @@ test('Asserts that checkAttrResponsive throws error if responsiveAttribute key i
 	$attributes = [];
 
 	Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are missing the responsiveAttributes key in your button manifest.');
+})->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your button component manifest.');
 
 test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');

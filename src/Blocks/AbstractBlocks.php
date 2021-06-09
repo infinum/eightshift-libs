@@ -512,6 +512,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$componentAttributes = $blockDetails['attributes'];
 		}
 
+		$globalData = $this->getBlocksDataFullRawItem('dependency');
+
 		foreach ($blockDetails['components'] as $newComponentName => $realComponentName) {
 			$component = $this->getComponent($realComponentName);
 
@@ -519,7 +521,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				$outputAttributes = $this->prepareComponentAttributes($component, $newComponentName);
 			} else {
 				// Use parent attribute name to determine if the name has changed in the parent component.
-				if ($parentAttributeName !== $newComponentName && $realComponentName !== $newComponentName) {
+				if (
+					$parentAttributeName !== $newComponentName &&
+					$realComponentName !== $newComponentName &&
+					(isset($globalData[$newComponentName]) || array_key_exists($newComponentName, $globalData))
+				) {
 					$newComponentName = $parentAttributeName;
 				}
 
