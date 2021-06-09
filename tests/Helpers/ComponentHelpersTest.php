@@ -696,6 +696,214 @@ test('Asserts that outputCssVariables returns variable for attributes which expe
 	$this->assertStringContainsString('--variable-created-by-boolean: value-when-false;', $output);
 });
 
+test('Asserts that manifest has responsive attributes defined but without variables definition', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+	unset($manifest['variables']);
+	$attributes = [
+		'variableValueMobile' => 'value1',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('<style>', $output);
+
+	$value = '2';
+
+	$attributes = [
+		'variableDefaultDesktop' => $value,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('<style>', $output);
+	$this->assertStringNotContainsString("variable-default-normal: default-desktop-{$value}", $output);
+});
+
+test('Asserts that manifest has responsive attributes defined but without responsive variables definition', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+	unset($manifest['variables']['responsiveVariableDefault']);
+	unset($manifest['variables']['responsiveVariableValue']);
+	$attributes = [
+		'variableValueMobile' => 'value1',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
+	$this->assertStringNotContainsString('variable-value-default-responsive: value1-responsive', $output);
+
+	$value = '2';
+
+	$attributes = [
+		'variableDefaultDesktop' => $value,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString("variable-default-normal: default-desktop-{$value}", $output);
+	$this->assertStringNotContainsString("variable-default-responsive: default-responsive-{$value}", $output);
+});
+
+test('Asserts that only responsive variables are defined', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+	unset($manifest['variables']['variableDefaultLarge']);
+	unset($manifest['variables']['variableDefaultDesktop']);
+	unset($manifest['variables']['variableDefaultMobile']);
+	unset($manifest['variables']['variableValueDesktop']);
+	unset($manifest['variables']['variableValueMobile']);
+
+	$attributes = [
+		'variableValueMobile' => 'value1',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
+	$this->assertStringNotContainsString('variable-value-default: value1-mobile', $output);
+
+	$value = '2';
+
+	$attributes = [
+		'variableDefaultDesktop' => $value,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString("variable-default-responsive: default-responsive-{$value}", $output);
+	$this->assertStringContainsString('@media (min-width: 1199px)', $output);
+	$this->assertStringContainsString("variable-default: default-responsive-{$value}", $output);
+	$this->assertStringNotContainsString("variable-default-normal: default-desktop-{$value}", $output);
+});
+
+test('Asserts that responsive variables and default variables are defined', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValueMobile' => 'value1',
+		'variableValueDesktop' => 'value2',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
+	$this->assertStringContainsString('variable-value-default-responsive: value2-responsive', $output);
+	$this->assertStringContainsString('@media (min-width: 1199px)', $output);
+	$this->assertStringContainsString('variable-value-default: value2-dekstop', $output);
+	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
+
+	$value = '2';
+
+	$attributes = [
+		'variableDefaultMobile' => $value,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('variable-default:', $output);
+	$this->assertStringContainsString("variable-default: default-mobile-{$value}", $output);
+	$this->assertStringContainsString("variable-default: default-responsive-{$value}", $output);
+	$this->assertStringContainsString("variable-default-responsive: default-responsive-{$value}", $output);
+	$this->assertStringContainsString("variable-default-normal: default-mobile-{$value}", $output);
+});
+
+test('Asserts that manifest has responsive variables defined but without appereance of responsiveAttributes', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+	unset($manifest['responsiveAttributes']);
+
+	$attributes = [
+		'variableValueMobile' => 'value1',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
+	$this->assertStringNotContainsString('variable-value-default-responsive: value1-responsive', $output);
+
+	$value = '2';
+
+	$attributes = [
+		'variableDefaultDesktop' => $value,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString("variable-default-normal: default-desktop-{$value}", $output);
+	$this->assertStringNotContainsString("variable-default-responsive: default-responsive-{$value}", $output);
+});
+
 /**
  * Components::getUnique tests
  */
