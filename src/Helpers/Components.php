@@ -781,7 +781,7 @@ class Components
 			// If value contains magic variable swap that variable with original attribute value.
 			if (strpos($variableValue, '%value%') !== false) {
 				// Bailout if magic variable is empty.
-				if (empty($attributeValue)) {
+				if (empty($attributeValue) && $attributeValue !== 0) {
 					continue;
 				}
 
