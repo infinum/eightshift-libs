@@ -862,7 +862,7 @@ class Components
 		$newNameInternal = $newName;
 
 		// Check if newName key is passed if not use the default one from block/component name.
-		if (empty($newName)) {
+		if (!$newName) {
 			$newNameInternal = $realName;
 		}
 
@@ -904,7 +904,8 @@ class Components
 			$output['componentName'] = $parent;
 		}
 
-		// Loop all attributes but the actual (newNameInternal) component.
+		// Filter out all the dependencies but the one we're
+		// trying to replace (newNameInternal).
 		$filteredDependencies = array_filter(
 			$dependency,
 			function ($item) use ($newNameInternal) {
@@ -914,20 +915,36 @@ class Components
 			}
 		);
 
-		foreach ($attributes as $key => $value) {
+		// Extract all the attributes from the dependencies
+		// that we just filtered. This will ensure that extraction
+		// of dependencies doesn't override any of the attributes
+		// from the element whose attributes we're renaming.
+		foreach ($attributes as $attributeName => $attributeValue) {
+			// If the attribute name contains the name of
+			// a dependency, include it in the output.
 			foreach ($filteredDependencies as $element) {
-				if (strpos($key, $element) !== false) {
-					$output[$key] = $value;
+				if (strpos($attributeName, $element) !== false) {
+					$output[$attributeName] = $attributeValue;
 				}
 			}
 		}
 
-		// Loop attributes of the actual (newNameInternal) component.
-		foreach ($attributes as $key => $value) {
-			// Check if attributes key contains the actual component name.
-			if (strpos($key, $newNameInternal) !== false) {
-				$newKey = str_replace($newNameInternal, $realName, $key);
-				$output[$newKey] = $value;
+		// Go through all the attributes of the element whose
+		// attributes we're renaming and replace the name with
+		// the real component name.
+		//
+		// Because this is last, if you have something that,
+		// for example, gets converted into a 'paragraph',
+		// doesn't get replaced by a 'paragraph' dependency,
+		// if such exists.
+		foreach ($attributes as $attributeName => $attributeValue) {
+			// If the attribute name (for example 'introColor') contains
+			// 'newNameInternal' (here 'intro'), replace it with the real
+			// component name (here 'paragraph' - so now the attribute
+			// becomes 'paragraphColor').
+			if (strpos($attributeName, $newNameInternal) !== false) {
+				$newKey = str_replace($newNameInternal, $realName, $attributeName);
+				$output[$newKey] = $attributeValue;
 			}
 		}
 
@@ -940,7 +957,7 @@ class Components
 	/**
 	 * Flatten multidimensional array in to a single array.
 	 *
-	 * @param array $array Array to itearate.
+	 * @param array $array Array to iterate.
 	 *
 	 * @return array
 	 */
