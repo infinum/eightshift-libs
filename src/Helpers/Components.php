@@ -859,11 +859,10 @@ class Components
 	 */
 	public static function props(array $attributes, string $realName, string $newName = '', bool $isBlock = false, array $globalData): array // phpcs:ignore PEAR.Functions.ValidDefaultValue.NotAtEnd
 	{
-
 		$newNameInternal = $newName;
 
 		// Check if newName key is passed if not use the default one from block/component name.
-		if (!$newName) {
+		if (empty($newName)) {
 			$newNameInternal = $realName;
 		}
 
@@ -905,25 +904,29 @@ class Components
 			$output['componentName'] = $parent;
 		}
 
-		// Loop attributes.
-		foreach ($attributes as $key => $value) {
-			$result = false;
-			foreach ($dependency as $element) {
-				if ($element === substr($key, 0, strlen($element))) {
-					$result =  true;
+		// Loop all attributes but the actual (newNameInternal) component.
+		$filteredDependencies = array_filter(
+			$dependency,
+			function ($item) use ($newNameInternal) {
+				if ($item !== $newNameInternal) {
+					return true;
 				}
 			}
+		);
 
-			// Check if attributes key exists in the dependency by comparing the keys partial string.
-			if ($result) {
-				$newKey = $key;
-
-				// Change the name of the key if they are different.
-				if ($realName !== $newNameInternal) {
-					$newKey = str_replace($newNameInternal, $realName, $key);
+		foreach ($attributes as $key => $value) {
+			foreach ($filteredDependencies as $element) {
+				if (strpos($key, $element) !== false) {
+					$output[$key] = $value;
 				}
+			}
+		}
 
-				// Populate output with new values.
+		// Loop attributes of the actual (newNameInternal) component.
+		foreach ($attributes as $key => $value) {
+			// Check if attributes key contains the actual component name.
+			if (strpos($key, $newNameInternal) !== false) {
+				$newKey = str_replace($newNameInternal, $realName, $key);
 				$output[$newKey] = $value;
 			}
 		}
