@@ -465,7 +465,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param array $manifest Array of component/block manifest to get data from.
 	 * @param string $newName New renamed component name.
 	 * @param string $realName Original real component name.
-	 * @param string $parent  Parent component key with stacked parent component names for the final output.
+	 * @param string $parent Parent component key with stacked parent component names for the final output.
 	 *
 	 * @return array
 	 */

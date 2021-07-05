@@ -309,7 +309,7 @@ class Components
 	}
 
 	/**
-	 * Check if attributes key has prefix and outputs the correct attribute name.
+	 * Check if the attribute's key has a prefix and output the correct attribute name.
 	 *
 	 * @param string $key Key to check.
 	 * @param array $attributes Array of attributes.
@@ -905,9 +905,9 @@ class Components
 			$output['prefix'] = $attributes['prefix'] . ucfirst(self::kebabToCamelCase($newName));
 		}
 
-		// Iterate over attributes.
+		// Iterate over the attributes.
 		foreach ($attributes as $key => $value) {
-			// Includes attributes from iteration.
+			// Include attributes from iteration.
 			if (in_array($key, $includes, true)) {
 				$output[$key] = $value;
 			}
