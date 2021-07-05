@@ -196,9 +196,11 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function wrongComponentNameException(string $name, string $componentName)
 	{
 		return new static(
-			\esc_html__(
-				"Component specified in '{$name}' manifest doesn't exist in your components list. Please check if you project has '{$componentName}' component.",
-				'eightshift-libs'
+			sprintf(
+				/* translators: %1$s is going to be replaced with the component/block name, %2$s with component name. */
+				\esc_html__('Component specified in %1$s manifest doesn\'t exist in your components list. Please check if you project has %2$s component.', 'eightshift-libs'),
+				$name,
+				$componentName
 			)
 		);
 	}

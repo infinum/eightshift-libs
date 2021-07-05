@@ -313,7 +313,7 @@ class Components
 	 *
 	 * @param string $key Key to check.
 	 * @param array $attributes Array of attributes.
-	 * @param array $manifest Components/blocks manifest.json
+	 * @param array $manifest Components/blocks manifest.json.
 	 *
 	 * @return string
 	 */
@@ -897,7 +897,7 @@ class Components
 			'blockClass',
 			'blockJsClass',
 		];
-		
+
 		// Populate prefix key for recursive checks of attribute names.
 		if (!isset($attributes['prefix'])) {
 			$output['prefix'] = self::kebabToCamelCase($newName);
@@ -907,14 +907,13 @@ class Components
 
 		// Iterate over attributes.
 		foreach ($attributes as $key => $value) {
-
 			// Includes attributes from iteration.
-			if (in_array($key, $includes)) {
+			if (in_array($key, $includes, true)) {
 				$output[$key] = $value;
 			}
 
 			// If attribute starts with the prefix key leave it in the object if not remove it.
-			if (substr($key, 0, strlen($output['prefix'])) === $output['prefix']) {
+			if (substr((string)$key, 0, strlen($output['prefix'])) === $output['prefix']) {
 				$output[$key] = $value;
 			}
 		}

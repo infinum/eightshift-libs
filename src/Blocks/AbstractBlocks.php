@@ -466,8 +466,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param string $newName New renamed component name.
 	 * @param string $realName Original real component name.
 	 * @param string $parent  Parent component key with stacked parent component names for the final output.
-	 * 
-	 * @returns array
+	 *
+	 * @return array
 	 */
 	protected function prepareComponentAttribute(array $manifest, string $newName, string $realName, string $parent = ''): array
 	{
@@ -506,8 +506,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param array $manifest Array of component/block manifest to get the data from.
 	 * @param string $parent Parent component key with stacked parent component names for the final output.
-	 * 
-	 * @returns array
+	 *
+	 * @throws InvalidBlock If the component is wrong, or the name is wrong or it doesn't exist.
+	 *
+	 * @return array
 	 */
 	protected function prepareComponentAttributes(array $manifest, string $parent = ''): array
 	{
@@ -546,11 +548,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		// Add the current block attributes to the output.
-			if (isset($manifest['blockName'])) {
-				$output = array_merge(
-					$output,
-					$this->prepareComponentAttribute($manifest, '', '')
-				);
+		if (isset($manifest['blockName'])) {
+			$output = array_merge(
+				$output,
+				$this->prepareComponentAttribute($manifest, '', '')
+			);
 		} else {
 			// Add the current component attributes to the output.
 			$output = array_merge(
