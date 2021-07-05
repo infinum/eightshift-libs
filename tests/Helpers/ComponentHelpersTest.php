@@ -230,7 +230,7 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 	$attributes['title'] = 'Some attribute';
 
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
-})->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation. Check if your bla attribut exists in the component's manifest.json");
+})->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation.");
 
 /**
  * Components::checkAttrResponsive tests
@@ -1008,8 +1008,7 @@ test('Asserts props for heading block will return only heading attributes', func
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
-	$globalData = $this->blocksExample->getBlocksDataFullRawItem('dependency');
-	$output = Components::props($attributes, $headingBlock['blockName'], '', true, $globalData);
+	$output = Components::props($attributes, $headingBlock['blockName'], '');
 
 	$this->assertIsArray($output);
 	$this->assertContains('headingAlign', array_keys($output), "Output array doesn't contain headingAlign attribute key.");
@@ -1033,11 +1032,10 @@ test('Asserts props for heading component will return only typography attributes
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
-	$globalData = $this->blocksExample->getBlocksDataFullRawItem('dependency');
-
-	$output = Components::props($attributes, 'typography', $headingComponent['componentName'], false, $globalData);
+	$output = Components::props($attributes, 'typography');
 
 	$this->assertIsArray($output);
-	$this->assertContains('typographyAlign', array_keys($output), "Output array doesn't contain typographyAlign attribute key.");
+  echo print_r(array_keys($output), true);
+	$this->assertContains('typographyContent', array_keys($output), "Output array doesn't contain typographyContent attribute key.");
 	$this->assertNotContains('headingSize', array_keys($output), "Output array does contain headingSize attribute key.");
 });

@@ -312,8 +312,8 @@ class Components
 	 * Check if the attribute's key has a prefix and output the correct attribute name.
 	 *
 	 * @param string $key Key to check.
-	 * @param array $attributes Array of attributes.
-	 * @param array $manifest Components/blocks manifest.json.
+	 * @param array  $attributes Array of attributes.
+	 * @param array  $manifest Components/blocks manifest.json.
 	 *
 	 * @return string
 	 */
@@ -542,7 +542,7 @@ class Components
 	{
 		foreach ($variables as $variableName => $variableValue) {
 			// Constant for attributes set value (in db or default).
-			$attributeValue = $attributes[self::getAttrKey($variableName, $attributes, $manifest)] ?? [];
+			$attributeValue = $attributes[self::getAttrKey($variableName, $attributes, $manifest)] ?? '';
 
 			// Make sure this works correctly for attributes which are toggles (booleans).
 			if (is_bool($attributeValue)) {
@@ -572,7 +572,7 @@ class Components
 				// Iterate each data array to find the correct breakpoint.
 				foreach ($data as $index => $item) {
 					// Check if breakpoint and type match.
-					if ($item['name'] === $breakpoint && $item['type'] === $type) {
+					if ($item['name'] === $breakpoint && $item['type'] === $type && !empty($attributeValue)) {
 						// Merge data variables with the new variables array.
 						$data[$index]['variable'] = array_merge($item['variable'], self::variablesInner($variable, $attributeValue));
 					}
@@ -795,7 +795,7 @@ class Components
 	 *
 	 * @return array
 	 */
-	public static function variablesInner(array $variables, $attributeValue): array
+	public static function variablesInner(array $variables, string $attributeValue): array
 	{
 		$output = [];
 
