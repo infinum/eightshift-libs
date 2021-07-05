@@ -220,6 +220,19 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
 })->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation.");
 
+test('Asserts that checkAttr returns attribute based on prefix if set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$attributes = [
+		'prefix' => 'prefixedMultipleTimesButton',
+		'prefixedMultipleTimesButtonAlign' => 'right'
+	];
+
+	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
+
+	$this->assertIsString($results, 'Result should be a string');
+	$this->assertEquals('right', $results, "The set attribute should be {$attributes['prefixedMultipleTimesButtonAlign']}");
+});
+
 /**
  * Components::checkAttrResponsive tests
  */
@@ -1023,7 +1036,6 @@ test('Asserts props for heading component will return only typography attributes
 	$output = Components::props($attributes, 'typography');
 
 	$this->assertIsArray($output);
-  echo print_r(array_keys($output), true);
 	$this->assertContains('typographyContent', array_keys($output), "Output array doesn't contain typographyContent attribute key.");
 	$this->assertNotContains('headingSize', array_keys($output), "Output array does contain headingSize attribute key.");
 });
