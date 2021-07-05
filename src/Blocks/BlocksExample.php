@@ -13,7 +13,6 @@ namespace EightshiftBoilerplate\Blocks;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Blocks\AbstractBlocks;
-use EightshiftLibs\Helpers\Components;
 
 /**
  * Class Blocks
@@ -73,21 +72,6 @@ class BlocksExample extends AbstractBlocks
 	protected function getBlocksPath(): string
 	{
 		return Config::getProjectPath() . '/src/Blocks';
-	}
-
-	/**
-	 * Set props helper to a proper values to be used in blocks/components.
-	 *
-	 * @param array<mixed> $attributes Object of attributes from block/component.
-	 * @param string       $realName Old key to use, generally this is the name of the block/component.
-	 * @param string       $newName New key to use to rename attributes.
-	 * @param bool         $isBlock Check if helper is used on block or component.
-	 *
-	 * @return array<mixed>
-	 */
-	public static function props(array $attributes, string $realName, string $newName = '', bool $isBlock = false): array
-	{
-		return Components::props($attributes, $realName, $newName, $isBlock, \apply_filters(self::BLOCKS_DEPENDENCY_FILTER_NAME, 'dependency'));
 	}
 
 	/**

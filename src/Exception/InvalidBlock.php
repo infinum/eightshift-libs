@@ -184,4 +184,22 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 			)
 		);
 	}
+
+	/**
+	 * Throws error if global manifest settings key namespace MarkoVendor\is missing.
+	 *
+	 * @param string $name Block/component name.
+	 * @param string $componentName Component name to chec.
+	 *
+	 * @return static
+	 */
+	public static function wrongComponentNameException(string $name, string $componentName)
+	{
+		return new static(
+			\esc_html__(
+				"Component specified in '{$name}' manifest doesn't exist in your components list. Please check if you project has '{$componentName}' component.",
+				'eightshift-libs'
+			)
+		);
+	}
 }

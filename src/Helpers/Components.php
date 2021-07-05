@@ -217,6 +217,7 @@ class Components
 
 	/**
 	 * Check if attribute exist in attributes list and add default value if not.
+	 * This is used because Block editor will not output attributes that don't have default value.
 	 *
 	 * @param string $key Key to check.
 	 * @param array  $attributes Array of attributes.
@@ -228,18 +229,29 @@ class Components
 	 */
 	public static function checkAttr(string $key, array $attributes, array $manifest)
 	{
+		// Check if there is prefix in the attributes object.
+		$prefix = $attributes['prefix'] ?? '';
+		$newKey = $key;
 
-		if (isset($attributes[$key])) {
-			return $attributes[$key];
+		// If there is no prefix return the key as it was.
+		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
+		if ($prefix !== '') {
+			// No need to test if this is block or component because on top level block there is no prefix.
+			$newKey = str_replace($manifest['componentName'], $prefix, $key);
+		}
+
+		// If key exists in the attributes object, just return that key value.
+		if (isset($attributes[$newKey])) {
+			return $attributes[$newKey];
 		};
 
 		$manifestKey = $manifest['attributes'][$key] ?? null;
 
 		if ($manifestKey === null) {
 			if (isset($manifest['blockName']) || array_key_exists('blockName', $manifest)) {
-				throw new \Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
+				throw new \Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation.");
 			} else {
-				throw new \Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation. Check if your {$key} attribut exists in the component's manifest.json");
+				throw new \Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation.");
 			}
 		}
 
@@ -294,6 +306,28 @@ class Components
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Check if attributes key has prefix and outputs the correct attribute name.
+	 *
+	 * @param string $key Key to check.
+	 * @param array $attributes Array of attributes.
+	 * @param array $manifest Components/blocks manifest.json
+	 *
+	 * @return string
+	 */
+	public static function getAttrKey(string $key, array $attributes, array $manifest): string
+	{
+		$prefix = $attributes['prefix'] ?? '';
+
+		if ($prefix === '') {
+			return $key;
+		}
+
+		// No need to test if this is block or component because on top level block there is no prefix.
+		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
+		return str_replace($manifest['componentName'], $prefix, $key);
 	}
 
 	/**
@@ -500,18 +534,15 @@ class Components
 	 * @param array $attributes Attributes that are read from component's/block's manifest.
 	 * @param array $variables Variables that are read from component's/block's manifest.
 	 * @param array $data Predefined structure for adding styles to a specific breakpoint value.
+	 * @param array $manifest Component/block manifest data.
 	 *
 	 * @return array Object prepared for setting all the variables to its breakpoints.
 	 */
-	private static function setVariablesToBreakpoints(array $attributes, array $variables, array $data): array
+	private static function setVariablesToBreakpoints(array $attributes, array $variables, array $data, array $manifest): array
 	{
 		foreach ($variables as $variableName => $variableValue) {
-			// Bailout if variable is empty or not set.
-			if (!isset($attributes[$variableName])) {
-				continue;
-			}
 			// Constant for attributes set value (in db or default).
-			$attributeValue = $attributes[$variableName] ?? [];
+			$attributeValue = $attributes[self::getAttrKey($variableName, $attributes, $manifest)] ?? [];
 
 			// Make sure this works correctly for attributes which are toggles (booleans).
 			if (is_bool($attributeValue)) {
@@ -623,11 +654,11 @@ class Components
 
 		if (!empty($responsiveAttributes)) {
 			$responsiveVariables = self::setupResponsiveVariables($responsiveAttributes, $variables);
-			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data);
+			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest);
 		}
 
 		// Iterate each variable.
-		$data = self::setVariablesToBreakpoints($attributes, $variables, $data);
+		$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest);
 
 		// Loop data and provide correct selectors from data array.
 		foreach ($data as $values) {
@@ -823,7 +854,7 @@ class Components
 	 */
 	public static function kebabToCamelCase(string $string, string $separator = '-'): string
 	{
-		return lcfirst(str_replace($separator, '', ucwords(mb_strtolower($string), $separator)));
+		return lcfirst(str_replace($separator, '', ucwords($string, $separator)));
 	}
 
 	/**
@@ -849,88 +880,46 @@ class Components
 	/**
 	 * Output only attributes that are used in the component and remove everything else.
 	 *
-	 * @param array   $attributes Object of attributes from block/component.
-	 * @param string  $realName Old key to use, generally this is the name of the block/component.
-	 * @param string  $newName New key to use to rename attributes.
-	 * @param boolean $isBlock Check if helper is used on block or component.
-	 * @param array   $globalData Global data of block, components, etc.
+	 * @param array $attributes Attributes from the block/component.
+	 * @param string $newName *New* key to use to rename attributes.
 	 *
 	 * @return array
 	 */
-	public static function props(array $attributes, string $realName, string $newName = '', bool $isBlock = false, array $globalData): array // phpcs:ignore PEAR.Functions.ValidDefaultValue.NotAtEnd
+	public static function props(array $attributes, string $newName): array
 	{
-
-		$newNameInternal = $newName;
-
-		// Check if newName key is passed if not use the default one from block/component name.
-		if (!$newName) {
-			$newNameInternal = $realName;
-		}
 
 		$output = [];
 
-		// If block use blocks dependency tree, if component use components dependency tree.
-		if ($isBlock) {
-			$dependency = $globalData['blocks'][$realName];
+		// Check what attributes we need to includes.
+		$includes = [
+			'blockName',
+			'blockFullName',
+			'blockClass',
+			'blockJsClass',
+		];
+		
+		// Populate prefix key for recursive checks of attribute names.
+		if (!isset($attributes['prefix'])) {
+			$output['prefix'] = self::kebabToCamelCase($newName);
 		} else {
-			$dependency = $globalData['components'][$realName];
+			$output['prefix'] = $attributes['prefix'] . ucfirst(self::kebabToCamelCase($newName));
 		}
 
-		// Add the current component name to the dependency array.
-		$dependency[] = $newNameInternal;
-
-		// If you have multiple components just use one.
-		$dependency = array_unique($dependency);
-
-		// Set parent to empty for check if not defined.
-		$parent = $attributes['parent'] ?? '';
-
-		// Replace stuff if there is any changing of the attribute names.
-		if (
-			$parent !== $newNameInternal &&
-			$realName !== $newNameInternal &&
-			(isset($globalData['components'][$newNameInternal]) || array_key_exists($newNameInternal, $globalData['components']))
-		) {
-			// Remove real component name from the dependency tree.
-			$dependency = array_filter(
-				$dependency,
-				function ($item) use ($realName) {
-					if ($item !== $realName) {
-						return true;
-					}
-				}
-			);
-
-			// Swap componentName with the parent on if attribute name has changed in the parent.
-			$output['componentName'] = $parent;
-		}
-
-		// Loop attributes.
+		// Iterate over attributes.
 		foreach ($attributes as $key => $value) {
-			$result = false;
-			foreach ($dependency as $element) {
-				if ($element === substr($key, 0, strlen($element))) {
-					$result =  true;
-				}
+
+			// Includes attributes from iteration.
+			if (in_array($key, $includes)) {
+				$output[$key] = $value;
 			}
 
-			// Check if attributes key exists in the dependency by comparing the keys partial string.
-			if ($result) {
-				$newKey = $key;
-
-				// Change the name of the key if they are different.
-				if ($realName !== $newNameInternal) {
-					$newKey = str_replace($newNameInternal, $realName, $key);
-				}
-
-				// Populate output with new values.
-				$output[$newKey] = $value;
+			// If attribute starts with the prefix key leave it in the object if not remove it.
+			if (substr($key, 0, strlen($output['prefix'])) === $output['prefix']) {
+				$output[$key] = $value;
 			}
 		}
 
-		// Append parent for usage in checking if attribute name has changed in the parent.
-		$output['parent'] = $newNameInternal;
-
+		// Return the original attribute for optimization purposes.
 		return $output;
 	}
 
