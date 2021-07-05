@@ -149,14 +149,6 @@ test('Asserts that using responsive selectors will work', function () {
 	);
 });
 
-test('Asserts that providing wrong type to responsiveSelectors will throw an exception', function () {
-	Components::responsiveSelectors('', false, true, '');
-})->throws(\TypeError::class);
-
-test('Asserts that providing wrong number of arguments to responsiveSelectors will throw an exception', function () {
-	Components::responsiveSelectors([], 'true');
-})->throws(\ArgumentCountError::class);
-
 /**
  * Components::checkAttr tests
  */
