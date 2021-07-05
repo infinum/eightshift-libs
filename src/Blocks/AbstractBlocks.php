@@ -482,7 +482,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		// Iterate each attribute and attach parent prefixes.
-		foreach ($componentAttributes as $componentAttribute => $value) {
+		$componentAttributeKeys = array_keys($componentAttributes);
+		foreach ($componentAttributeKeys as $componentAttribute) {
 			$attribute = $componentAttribute;
 
 			// If there is a attribute name switch use the new one.
