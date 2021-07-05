@@ -261,8 +261,8 @@ test('Asserts that checkAttrResponsive throws error if keyName key is missing re
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [];
 
-	Components::checkAttrResponsive('testAttribtue', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are missing the testAttribtue key in your manifest responsiveAttributes array.');
+	Components::checkAttrResponsive('testAttribute', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'It looks like you are missing the testAttribute key in your manifest responsiveAttributes array.');
 
 /**
  * Components::selector tests
@@ -529,7 +529,7 @@ test('Asserts that outputCssVariables returns empty for missing variables.', fun
 	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
 });
 
-test('Asserts that outputCssVariables returns array of attributes if defaut is set.', function () {
+test('Asserts that outputCssVariables returns array of attributes if default is set.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
@@ -827,7 +827,7 @@ test('Asserts that responsive variables and default variables are defined', func
 	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
 	$this->assertStringContainsString('variable-value-default-responsive: value2-responsive', $output);
 	$this->assertStringContainsString('@media (min-width: 1199px)', $output);
-	$this->assertStringContainsString('variable-value-default: value2-dekstop', $output);
+	$this->assertStringContainsString('variable-value-default: value2-desktop', $output);
 	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
 
 	$value = '2';
@@ -852,7 +852,7 @@ test('Asserts that responsive variables and default variables are defined', func
 	$this->assertStringContainsString("variable-default-normal: default-mobile-{$value}", $output);
 });
 
-test('Asserts that manifest has responsive variables defined but without appereance of responsiveAttributes', function () {
+test('Asserts that manifest has responsive variables defined but without appearance of responsiveAttributes', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 	unset($manifest['responsiveAttributes']);
