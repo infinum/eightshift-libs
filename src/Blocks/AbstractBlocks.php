@@ -488,11 +488,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// If there is an attribute name switch, use the new one.
 			if ($newName !== $realName) {
-				$attribute = Components::kebabToCamelCase(str_replace($realName, $newName, $componentAttribute));
+				$attribute = Components::kebabToCamelCase(str_replace($realName, $newName, (string) $componentAttribute));
 			}
 
 			// Determine if the parent is empty and if the parent's name is the same as the component/block name.
-			$attributeName = ($parent === '' || $parent === $newName) ? $attribute : lcfirst($parent) . ucfirst($attribute);
+			$attributeName = ($parent === '' || $parent === $newName) ? $attribute : lcfirst($parent) . ucfirst((string) $attribute);
 
 			// Output new attribute names.
 			$output[$attributeName] = $componentAttributes[$componentAttribute];
