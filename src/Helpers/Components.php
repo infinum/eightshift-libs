@@ -217,7 +217,7 @@ class Components
 
 	/**
 	 * Check if attribute exist in attributes list and add default value if not.
-	 * This is used because Block editor will not output attributes that don't have default value.
+	 * This is used because Block editor will not output attributes that don't have a default value.
 	 *
 	 * @param string $key Key to check.
 	 * @param array  $attributes Array of attributes.
