@@ -790,8 +790,8 @@ class Components
 	/**
 	 * Internal helper to loop CSS Variables from array.
 	 *
-	 * @param array $variables Array of variables of CSS variables.
-	 * @param mixed $attributeValue Original attribute value used in magic variable.
+	 * @param array  $variables Array of variables of CSS variables.
+	 * @param string $attributeValue Original attribute value used in magic variable.
 	 *
 	 * @return array
 	 */
@@ -880,7 +880,7 @@ class Components
 	/**
 	 * Output only attributes that are used in the component and remove everything else.
 	 *
-	 * @param array $attributes Attributes from the block/component.
+	 * @param array  $attributes Attributes from the block/component.
 	 * @param string $newName *New* key to use to rename attributes.
 	 *
 	 * @return array
