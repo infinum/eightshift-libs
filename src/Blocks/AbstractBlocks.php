@@ -340,7 +340,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Get all components in the components folder.
 	 *
-	 * @throws InvalidBlock Throws error thera are no components in the project.
+	 * @throws InvalidBlock Throws error if there are no components in the project.
 	 *
 	 * @return array
 	 */
@@ -455,14 +455,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			],
 			$this->getSettings()['attributes'] ?? [],
 			$this->blocks['wrapper']['attributes'],
-			$this->prepareComponentAttributes($blockDetails),
+			$this->prepareComponentAttributes($blockDetails)
 		);
 	}
 
 	/**
 	 * Iterate over attributes or example attributes array in block/component manifest and append the parent prefixes.
 	 *
-	 * @param array $manifest Array of component/block manifest to get data from.
+	 * @param array  $manifest Array of component/block manifest to get data from.
 	 * @param string $newName New renamed component name.
 	 * @param string $realName Original real component name.
 	 * @param string $parent Parent component key with stacked parent component names for the final output.
@@ -505,7 +505,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Iterate over component array in block manifest and check if the component exists in the project.
 	 * If components contains more component this function will run recursively.
 	 *
-	 * @param array $manifest Array of component/block manifest to get the data from.
+	 * @param array  $manifest Array of component/block manifest to get the data from.
 	 * @param string $parent Parent component key with stacked parent component names for the final output.
 	 *
 	 * @throws InvalidBlock If the component is wrong, or the name is wrong or it doesn't exist.
@@ -544,7 +544,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			// Populate the output recursively.
 			$output = array_merge(
 				$output,
-				$outputAttributes,
+				$outputAttributes
 			);
 		}
 
