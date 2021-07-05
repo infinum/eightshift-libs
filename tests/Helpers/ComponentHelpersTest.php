@@ -1039,3 +1039,63 @@ test('Asserts props for heading component will return only typography attributes
 	$this->assertContains('typographyContent', array_keys($output), "Output array doesn't contain typographyContent attribute key.");
 	$this->assertNotContains('headingSize', array_keys($output), "Output array does contain headingSize attribute key.");
 });
+
+test('Asserts props will correctly build the prefix', function () {
+	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
+	$headingComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading');
+	$typographyComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = array_merge(
+		$headingBlock['attributes'],
+		$headingComponent['attributes'],
+		$typographyComponent['attributes']
+	);
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props($attributes, 'heading');
+
+	$this->assertIsArray($output);
+	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
+	$this->assertEquals('heading', $output['prefix']);
+
+	// Next level
+	$output = Components::props($output, 'typography');
+	$this->assertIsArray($output);
+	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
+	$this->assertEquals('headingTypography', $output['prefix']);
+});
+
+test('Asserts props will correctly leave only the the needed attributes', function () {
+	$attributes = [
+		'componentName' => 'mock-card',
+		'mockCardHeadingTypographyContent' => 'mock heading content',
+		'mockCardParagraphTypographyContent' => 'mock paragraph content',
+	];
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props($attributes, 'mock-card');
+
+	$this->assertIsArray($output);
+	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+	$this->assertContains('mockCardParagraphTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+
+	// Now let's pass these to mock heading
+	$output = Components::props($output, 'heading');
+	$this->assertIsArray($output);
+	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+	$this->assertNotContains('mockCardParagraphTypographyContent', array_keys($output), "Output array contains attribute that should have been purged.");
+
+	$output = Components::props($output, 'typography');
+	$this->assertIsArray($output);
+	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+});
