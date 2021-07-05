@@ -22,6 +22,6 @@ test('if theme options actions are registered', function () {
 	$this->example->register();
 
 	$this->assertTrue(\method_exists($this->example, 'register'));
-	$this->assertEquals(10, has_action('acf/init', [$this->example, 'createThemeOptionsPage']));
-	$this->assertEquals(10, has_action('acf/init', [$this->example, 'registerThemeOptions']));
+	$this->assertSame(10, has_action('acf/init', [$this->example, 'createThemeOptionsPage']));
+	$this->assertSame(10, has_action('acf/init', [$this->example, 'registerThemeOptions']));
 });

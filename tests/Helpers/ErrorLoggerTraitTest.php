@@ -22,7 +22,7 @@ test('Test restResponseHandler will return expected result in case of success', 
     $response = $this->mockLogger->restResponseHandler(200, 'Some status', 'Some message', ['fake data']);
 
     $this->assertJson($response, 'Response is not a JSON string.');
-    $this->assertEquals('{"success":true,"data":{"code":200,"status":"Some status","message":"Some message","data":["fake data"]}}', $response);
+    $this->assertSame('{"success":true,"data":{"code":200,"status":"Some status","message":"Some message","data":["fake data"]}}', $response);
 });
 
 
@@ -32,5 +32,5 @@ test('Test restResponseHandler will return expected result in case of error', fu
     $response = $this->mockLogger->restResponseHandler(404, 'Some error', 'Some error message', ['fake data']);
 
     $this->assertJson($response, 'Response is not a JSON string.');
-    $this->assertEquals('{"success":false,"data":{}}', $response);
+    $this->assertSame('{"success":false,"data":{}}', $response);
 });

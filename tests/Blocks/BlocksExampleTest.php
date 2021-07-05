@@ -79,11 +79,11 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 
 	$blocks = $this->blocksExample->getAllBlocksList(true, $post);
 
-	$this->assertEquals(true, $blocks);
+	$this->assertSame(true, $blocks);
 
 	$blocks = $this->blocksExample->getAllBlocksList(false, $post);
 
-	$this->assertEquals(false, $blocks, "Return value is not false.");
+	$this->assertSame(false, $blocks, "Return value is not false.");
 });
 
 test('Asserts that getAllBlocksList will return only projects blocks.', function () {
@@ -132,7 +132,7 @@ test('Asserts that getBlocksDataFullRawItem will return all blocks details if ke
 
 	$this->assertIsArray($items);
 	$this->assertContains('blockName', array_keys($items[0]), "Items array doesn't contain blockName key");
-	$this->assertEquals('button', $items[0]['blockName'], "Items array doesn't contain blockName key with value button");
+	$this->assertSame('button', $items[0]['blockName'], "Items array doesn't contain blockName key with value button");
 	$this->assertNotContains('componentName', array_keys($items[0]), "Items array does contain componentName key");
 	$this->assertNotEquals('test', $items[0]['blockName'], "Items array contain blockName key with value test");
 });

@@ -70,7 +70,7 @@ test('CliInitProject CLI documentation is correct', function () {
 
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
-	$this->assertEquals('Generates initial setup for WordPress theme project with all files to run a client project, for example: gitignore file for the full WordPress project, continuous integration exclude files, etc.', $documentation[$key]);
+	$this->assertSame('Generates initial setup for WordPress theme project with all files to run a client project, for example: gitignore file for the full WordPress project, continuous integration exclude files, etc.', $documentation[$key]);
 });
 
 

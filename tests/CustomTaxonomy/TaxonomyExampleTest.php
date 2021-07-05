@@ -23,7 +23,7 @@ test('if taxonomy actions are registered', function () {
 	$this->example->register();
 
 	$this->assertTrue(\method_exists($this->example, 'register'));
-	$this->assertEquals(10, has_action('init', [$this->example, 'taxonomyRegisterCallback']));
+	$this->assertSame(10, has_action('init', [$this->example, 'taxonomyRegisterCallback']));
 });
 
 test('if taxonomy is registered', function () {
@@ -32,7 +32,7 @@ test('if taxonomy is registered', function () {
 
 	$this->example->taxonomyRegisterCallback();
 
-	$this->assertEquals(getenv('SIDEAFFECT'), $action);
+	$this->assertSame(getenv('SIDEAFFECT'), $action);
 
 	// Cleanup.
 	putenv('SIDEAFFECT=');

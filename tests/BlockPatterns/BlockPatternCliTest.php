@@ -105,5 +105,5 @@ test('Block Pattern documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Generates a block pattern.', $documentation[$key]);
+	$this->assertSame('Generates a block pattern.', $documentation[$key]);
 });

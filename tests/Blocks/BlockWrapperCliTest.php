@@ -73,7 +73,7 @@ test('Wrapper CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertEquals('Copy Wrapper from library to your project.', $documentation[$key]);
+	$this->assertSame('Copy Wrapper from library to your project.', $documentation[$key]);
 });
 
 test('Wrapper CLI command will fail if Wrapper doesn\'t exist', function () {

@@ -58,5 +58,5 @@ test('Custom theme options CLI documentation is correct', function () {
 
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertEquals('Generates project Theme Options class using ACF.', $documentation[$descKey]);
+	$this->assertSame('Generates project Theme Options class using ACF.', $documentation[$descKey]);
 });

@@ -75,7 +75,7 @@ test('Block CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Copy Block from library to your project.', $documentation[$key]);
+	$this->assertSame('Copy Block from library to your project.', $documentation[$key]);
 });
 
 test('Block CLI command will fail if block doesn\'t exist', function () {

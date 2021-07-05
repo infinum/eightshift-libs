@@ -72,5 +72,5 @@ test('Main CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertEquals('Generates Main class file for all other features using service container pattern.', $documentation[$key]);
+	$this->assertSame('Generates Main class file for all other features using service container pattern.', $documentation[$key]);
 });

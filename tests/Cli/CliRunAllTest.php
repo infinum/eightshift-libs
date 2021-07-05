@@ -62,5 +62,5 @@ test('CliRunAll CLI documentation is correct', function () {
 
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
-	$this->assertEquals('DEVELOP - Used to run all commands.', $documentation[$key]);
+	$this->assertSame('DEVELOP - Used to run all commands.', $documentation[$key]);
 });

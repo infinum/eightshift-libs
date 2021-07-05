@@ -53,5 +53,5 @@ test('Custom Enqueue Admin CLI documentation is correct', function () {
 
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertEquals('Generates Enqueue Admin class.', $documentation[$descKey]);
+	$this->assertSame('Generates Enqueue Admin class.', $documentation[$descKey]);
 });

@@ -64,25 +64,25 @@ test('Custom acf meta CLI documentation is correct', function () {
 	$this->assertArrayHasKey($descKey, $documentation);
 	$this->assertArrayHasKey($synopsisKey, $documentation);
 	$this->assertIsArray($documentation[$synopsisKey]);
-	$this->assertEquals('Generates custom taxonomy class file.', $documentation[$descKey]);
+	$this->assertSame('Generates custom taxonomy class file.', $documentation[$descKey]);
 
-	$this->assertEquals('assoc', $documentation[$synopsisKey][0]['type']);
-	$this->assertEquals('label', $documentation[$synopsisKey][0]['name']);
-	$this->assertEquals('The label of the custom taxonomy to show in WP admin.', $documentation[$synopsisKey][0]['description']);
-	$this->assertEquals(false, $documentation[$synopsisKey][0]['optional']);
+	$this->assertSame('assoc', $documentation[$synopsisKey][0]['type']);
+	$this->assertSame('label', $documentation[$synopsisKey][0]['name']);
+	$this->assertSame('The label of the custom taxonomy to show in WP admin.', $documentation[$synopsisKey][0]['description']);
+	$this->assertSame(false, $documentation[$synopsisKey][0]['optional']);
 
-	$this->assertEquals('assoc', $documentation[$synopsisKey][1]['type']);
-	$this->assertEquals('slug', $documentation[$synopsisKey][1]['name']);
-	$this->assertEquals('The name of the custom taxonomy slug. Example: location.', $documentation[$synopsisKey][1]['description']);
-	$this->assertEquals(false, $documentation[$synopsisKey][1]['optional']);
+	$this->assertSame('assoc', $documentation[$synopsisKey][1]['type']);
+	$this->assertSame('slug', $documentation[$synopsisKey][1]['name']);
+	$this->assertSame('The name of the custom taxonomy slug. Example: location.', $documentation[$synopsisKey][1]['description']);
+	$this->assertSame(false, $documentation[$synopsisKey][1]['optional']);
 
-	$this->assertEquals('assoc', $documentation[$synopsisKey][2]['type']);
-	$this->assertEquals('rest_endpoint_slug', $documentation[$synopsisKey][2]['name']);
-	$this->assertEquals('The name of the custom taxonomy REST-API endpoint slug. Example: locations.', $documentation[$synopsisKey][2]['description']);
-	$this->assertEquals(false, $documentation[$synopsisKey][2]['optional']);
+	$this->assertSame('assoc', $documentation[$synopsisKey][2]['type']);
+	$this->assertSame('rest_endpoint_slug', $documentation[$synopsisKey][2]['name']);
+	$this->assertSame('The name of the custom taxonomy REST-API endpoint slug. Example: locations.', $documentation[$synopsisKey][2]['description']);
+	$this->assertSame(false, $documentation[$synopsisKey][2]['optional']);
 
-	$this->assertEquals('assoc', $documentation[$synopsisKey][3]['type']);
-	$this->assertEquals('post_type_slug', $documentation[$synopsisKey][3]['name']);
-	$this->assertEquals('The position where to assign the new custom taxonomy. Example: post.', $documentation[$synopsisKey][3]['description']);
-	$this->assertEquals(false, $documentation[$synopsisKey][3]['optional']);
+	$this->assertSame('assoc', $documentation[$synopsisKey][3]['type']);
+	$this->assertSame('post_type_slug', $documentation[$synopsisKey][3]['name']);
+	$this->assertSame('The position where to assign the new custom taxonomy. Example: post.', $documentation[$synopsisKey][3]['description']);
+	$this->assertSame(false, $documentation[$synopsisKey][3]['optional']);
 });

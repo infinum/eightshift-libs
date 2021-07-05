@@ -65,7 +65,7 @@ test('Build CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Initialize Command for building your project with one command, generally used on CI deployments.', $documentation[$key]);
+	$this->assertSame('Initialize Command for building your project with one command, generally used on CI deployments.', $documentation[$key]);
 });
 
 test('getDevelopArgs correctly returns arguments', function() {

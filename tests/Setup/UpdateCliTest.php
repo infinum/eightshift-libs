@@ -81,5 +81,5 @@ test('Update CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Run project update with details stored in setup.json file.', $documentation[$key]);
+	$this->assertSame('Run project update with details stored in setup.json file.', $documentation[$key]);
 });

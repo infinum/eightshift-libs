@@ -59,5 +59,5 @@ test('Escaped view command will correctly copy the EscapedView class with defaul
 	$this->assertNotEmpty($documentation);
 	$this->assertIsArray($documentation);
  	$this->assertArrayHasKey($descKey, $documentation);
- 	$this->assertEquals('Generates project Escape view class.', $documentation[$descKey]);
+ 	$this->assertSame('Generates project Escape view class.', $documentation[$descKey]);
  });

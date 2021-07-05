@@ -132,17 +132,17 @@ test('Asserts that using responsive selectors will work', function () {
 	$this->assertIsString($withoutModifier, 'Result should be a string');
 	$this->assertIsString($withEmptyString, 'Result should be a string');
 
-	$this->assertEquals(
+	$this->assertSame(
 		'column__width-mobile--12 column__width-tablet--12 column__width-desktop--6'
 		, $withModifier,
 		'Strings are not equal in the case of modifiers added'
 	);
-	$this->assertEquals(
+	$this->assertSame(
 		'column__width-mobile column__width-tablet column__width-desktop',
 		$withoutModifier,
 		'Strings are not equal in the case there is no modifier'
 	);
-	$this->assertEquals(
+	$this->assertSame(
 		'column__width-mobile--12 column__width-tablet--12',
 		$withEmptyString,
 		'Strings are not equal when one option is empty'
@@ -159,7 +159,7 @@ test('Asserts that checkAttr works in case attribute is string', function () {
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
 
 	$this->assertIsString($results, 'Result should be a string');
-	$this->assertEquals('right', $results, "The set attribute should be {$attributes['buttonAlign']}");
+	$this->assertSame('right', $results, "The set attribute should be {$attributes['buttonAlign']}");
 });
 
 test('Asserts that checkAttr works in case attribute is boolean', function () {
@@ -169,7 +169,7 @@ test('Asserts that checkAttr works in case attribute is boolean', function () {
 	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);
 
 	$this->assertIsBool($results, 'THe result should be a boolean');
-	$this->assertEquals(true, $results, "The set attribute should be {$attributes['buttonIsAnchor']}");
+	$this->assertSame(true, $results, "The set attribute should be {$attributes['buttonIsAnchor']}");
 });
 
 test('Asserts that checkAttr returns false in case attribute is boolean and default is not set', function () {
@@ -179,7 +179,7 @@ test('Asserts that checkAttr returns false in case attribute is boolean and defa
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest);
 
 	$this->assertIsBool($results, 'THe result should be a boolean');
-	$this->assertEquals(false, $results, "The set attribute should be false");
+	$this->assertSame(false, $results, "The set attribute should be false");
 });
 
 test('Asserts that checkAttr works in case attribute is array', function () {
@@ -189,8 +189,8 @@ test('Asserts that checkAttr works in case attribute is array', function () {
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
 
 	$this->assertIsArray($results, 'The result should be an array');
-	$this->assertEquals('attr 1', $results[0], 'The value in the array is not correct');
-	$this->assertEquals('attr 2', $results[1], 'The value in the array is not correct');
+	$this->assertSame('attr 1', $results[0], 'The value in the array is not correct');
+	$this->assertSame('attr 2', $results[1], 'The value in the array is not correct');
 });
 
 test('Asserts that checkAttr returns empty array in case attribute is array or object and default is not set', function () {
@@ -200,7 +200,7 @@ test('Asserts that checkAttr returns empty array in case attribute is array or o
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
 
 	$this->assertIsArray($results, 'The result should be an empty array');
-	$this->assertEquals([], $results, "The set attribute should be empty array");
+	$this->assertSame([], $results, "The set attribute should be empty array");
 });
 
 test('Asserts that checkAttr returns default value', function () {
@@ -210,7 +210,7 @@ test('Asserts that checkAttr returns default value', function () {
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest, 'button');
 
 	$this->assertIsString($results, 'The default value should be a string');
-	$this->assertEquals('left', $results, 'The default value should be left');
+	$this->assertSame('left', $results, 'The default value should be left');
 });
 
 test('Asserts that checkAttr throws exception if manifest key is not set', function () {
@@ -230,7 +230,7 @@ test('Asserts that checkAttr returns attribute based on prefix if set', function
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
 
 	$this->assertIsString($results, 'Result should be a string');
-	$this->assertEquals('right', $results, "The set attribute should be {$attributes['prefixedMultipleTimesButtonAlign']}");
+	$this->assertSame('right', $results, "The set attribute should be {$attributes['prefixedMultipleTimesButtonAlign']}");
 });
 
 /**
@@ -249,7 +249,7 @@ test('Asserts that checkAttrResponsive returns the correct output.', function ()
 
 	$this->assertIsArray($results, 'Result should be an array');
 	$this->assertArrayHasKey('large', $results);
-	$this->assertEquals($results['large'], '10');
+	$this->assertSame($results['large'], '10');
 });
 
 test('Asserts that checkAttrResponsive returns empty values if attribute is not provided.', function () {
@@ -260,7 +260,7 @@ test('Asserts that checkAttrResponsive returns empty values if attribute is not 
 
 	$this->assertIsArray($results, 'Result should be an array');
 	$this->assertArrayHasKey('large', $results);
-	$this->assertEquals($results['large'], '');
+	$this->assertSame($results['large'], '');
 });
 
 test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing.', function () {
@@ -284,21 +284,21 @@ test('Asserts that selectorBlock returns the correct class when attributes are s
 	$selector = Components::selector('button', 'button', 'icon', 'blue');
 
 	$this->assertIsString($selector);
-	$this->assertEquals('button__icon--blue', $selector);
+	$this->assertSame('button__icon--blue', $selector);
 });
 
 test('Asserts that selector returns the correct class when only block class is set', function () {
 	$selector = Components::selector('button', 'button');
 
 	$this->assertIsString($selector);
-	$this->assertEquals('button', $selector);
+	$this->assertSame('button', $selector);
 });
 
 test('Asserts that selector returns the correct class when element is an empty string', function () {
 	$selector = Components::selector('button', 'button', '    ');
 
 	$this->assertIsString($selector);
-	$this->assertEquals('button', $selector);
+	$this->assertSame('button', $selector);
 });
 
 /**
@@ -938,7 +938,7 @@ test('Asserts that arrayIsList returns the correct output for wrong input', func
 test('Asserts that camelToKebabCase returns the correct output', function () {
 	$output = Components::camelToKebabCase('superCoolTestString');
 
-	$this->assertEquals('super-cool-test-string', $output);
+	$this->assertSame('super-cool-test-string', $output);
 });
 
 test('Asserts that camelToKebabCase returns the wrong output', function () {
@@ -953,7 +953,7 @@ test('Asserts that camelToKebabCase returns the wrong output', function () {
 test('Asserts that kebabToCamelCase returns the correct output', function () {
 	$output = Components::kebabToCamelCase('super-cool-test-string');
 
-	$this->assertEquals('superCoolTestString', $output);
+	$this->assertSame('superCoolTestString', $output);
 });
 
 test('Asserts that kebabToCamelCase returns the wrong output', function () {
@@ -968,7 +968,7 @@ test('Asserts that kebabToCamelCase returns the wrong output', function () {
 test('Asserts that kebabToCamelCase returns the correct output with a different separator', function () {
 	$output = Components::kebabToCamelCase('super_cool_test_string', '_');
 
-	$this->assertEquals('superCoolTestString', $output);
+	$this->assertSame('superCoolTestString', $output);
 });
 
 /**
@@ -977,7 +977,7 @@ test('Asserts that kebabToCamelCase returns the correct output with a different 
 test('Asserts that kebabToCamelCase returns the correct output with numbers as a string', function () {
 	$output = Components::kebabToCamelCase('123-456-789');
 
-	$this->assertEquals('123456789', $output);
+	$this->assertSame('123456789', $output);
 });
 
 /**
@@ -986,7 +986,7 @@ test('Asserts that kebabToCamelCase returns the correct output with numbers as a
 test('Asserts that kebabToCamelCase returns the correct output with a non-kebab-case string', function () {
 	$output = Components::kebabToCamelCase('non kebab string');
 
-	$this->assertEquals('non kebab string', $output);
+	$this->assertSame('non kebab string', $output);
 });
 
 /**
@@ -1061,13 +1061,13 @@ test('Asserts props will correctly build the prefix', function () {
 
 	$this->assertIsArray($output);
 	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
-	$this->assertEquals('heading', $output['prefix']);
+	$this->assertSame('heading', $output['prefix']);
 
 	// Next level
 	$output = Components::props($output, 'typography');
 	$this->assertIsArray($output);
 	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
-	$this->assertEquals('headingTypography', $output['prefix']);
+	$this->assertSame('headingTypography', $output['prefix']);
 });
 
 test('Asserts props will correctly leave only the the needed attributes', function () {

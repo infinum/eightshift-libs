@@ -31,7 +31,7 @@ test('Is project version defined and a string', function () {
 test('Is project REST namespace defined, a string and same as project name', function () {
 	$this->assertNotEmpty($this->example::getProjectRoutesNamespace());
 	$this->assertIsString(gettype($this->example::getProjectRoutesNamespace()));
-	$this->assertEquals($this->example::getProjectName(), $this->example::getProjectRoutesNamespace());
+	$this->assertSame($this->example::getProjectName(), $this->example::getProjectRoutesNamespace());
 });
 
 test('Is project REST route version defined and a string', function () {

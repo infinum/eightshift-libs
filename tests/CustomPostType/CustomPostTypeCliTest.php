@@ -84,5 +84,5 @@ test('Custom post type CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Generates custom post type class file.', $documentation[$key]);
+	$this->assertSame('Generates custom post type class file.', $documentation[$key]);
 });

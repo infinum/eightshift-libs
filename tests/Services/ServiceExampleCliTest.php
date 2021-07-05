@@ -78,5 +78,5 @@ test('Services CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Generates empty generic service class.', $documentation[$key]);
+	$this->assertSame('Generates empty generic service class.', $documentation[$key]);
 });

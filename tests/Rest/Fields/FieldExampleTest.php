@@ -40,7 +40,7 @@ test('Field registers the callback properly', function () {
 
 	$this->field->fieldRegisterCallback($this->wpRestServer, 'attr', new class{}, 'post');
 
-	$this->assertEquals(getenv('SIDEAFFECT'), $action);
+	$this->assertSame(getenv('SIDEAFFECT'), $action);
 
 	// Cleanup.
 	putenv('SIDEAFFECT=');
