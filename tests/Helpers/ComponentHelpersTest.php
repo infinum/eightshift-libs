@@ -33,10 +33,6 @@ test('Throws type exception if wrong argument type is passed to ensureString', f
 ->throws(ComponentException::class)
 ->with('errorStringArguments');
 
-test('Throws argument count exception if no argument is passed', function () {
-	Components::ensureString();
-})->throws(\ArgumentCountError::class);
-
 /**
  * Components::classnames tests
  */
