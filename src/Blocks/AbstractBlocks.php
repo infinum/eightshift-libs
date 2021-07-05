@@ -473,10 +473,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$output = [];
 
-		// Define different data point for attributes or example.
+		// Define different data entry point for attributes or example.
 		$componentAttributes = $manifest['attributes'] ?? [];
 
-		// It can occur that attributes or example key is missing in manifest so bailout.
+		// If the attributes or example key is missing in the manifest - bailout.
 		if (!$componentAttributes) {
 			return $output;
 		}
@@ -485,12 +485,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		foreach ($componentAttributes as $componentAttribute => $value) {
 			$attribute = $componentAttribute;
 
-			// If there is a attribute name switch use the new one.
+			// If there is an attribute name switch, use the new one.
 			if ($newName !== $realName) {
 				$attribute = Components::kebabToCamelCase(str_replace($realName, $newName, $componentAttribute));
 			}
 
-			// Determine if parent is empty and if parent name is the same as component/block name.
+			// Determine if the parent is empty and if the parent's name is the same as the component/block name.
 			$attributeName = ($parent === '' || $parent === $newName) ? $attribute : lcfirst($parent) . ucfirst($attribute);
 
 			// Output new attribute names.
