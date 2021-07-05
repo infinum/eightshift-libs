@@ -67,7 +67,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		if (!$this->blocks) {
 			$settings = $this->getSettings();
 			$wrapper = $this->getWrapper();
-			$components = $this->getComponents();
 
 			$blocks = array_map(
 				function ($block) use ($settings) {
@@ -84,12 +83,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			);
 
 			$this->blocks = [
-				'dependency' => [
-					'components' => $this->buildDependencyComponentsTree($components),
-					'blocks' => $this->buildDependencyBlocksTree($blocks, $components),
-				],
 				'blocks' => $blocks,
-				'components' => $components,
 				'wrapper' => $wrapper,
 				'settings' => $settings,
 			];
@@ -385,6 +379,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	protected function getComponent(string $componentName): array
 	{
+		$componentName = Components::camelToKebabCase($componentName);
+
 		$manifestPath = "{$this->getBlocksComponentsPath()}/{$componentName}/manifest.json";
 
 		if (!file_exists($manifestPath) && !defined('WP_CLI')) {
@@ -460,173 +456,113 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$this->getSettings()['attributes'] ?? [],
 			$this->blocks['wrapper']['attributes'],
 			$this->prepareComponentAttributes($blockDetails),
-			$blockDetails['attributes']
 		);
 	}
 
 	/**
-	 * Iterate over component object in block manifest and search and replace the component attributes with new one.
-	 * Search and replace the component attributes with new one.
+	 * Iterate over attributes or example attributes array in block/component manifest and append the parent prefixes.
 	 *
-	 * @param array  $component Object of component manifests to iterate.
-	 * @param string $realComponentName Reacl component name defined in the component manifest.
-	 * @param string $newComponentName New component name to search and replace the original.
-	 */
-	protected function prepareComponentAttribute(array $component, string $realComponentName, string $newComponentName): array
-	{
-		$componentAttributes = $component['attributes'] ?? [];
-
-		// Check if realComponentName and newComponentName are not the same. If so do the replace of the attribute names.
-		if ($realComponentName === $newComponentName) {
-			return $componentAttributes;
-		}
-
-		return array_reduce(
-			array_keys($componentAttributes),
-			static function ($output, $name) use ($realComponentName, $newComponentName, $componentAttributes) {
-				$output[str_replace($realComponentName, $newComponentName, $name)] = $componentAttributes[$name];
-				return $output;
-			},
-			[]
-		);
-	}
-
-	/**
-	 * Iterate over component object in block manifest and check if the component exists in the project.
-	 * If components contains more component this function will run recursively.
-	 *
-	 * @param array  $blockDetails Object of component manifests to iterate.
-	 * @param string $parentAttributeName Use parent attribute name to determine if the name has changed in the parent component.
+	 * @param array $manifest Array of component/block manifest to get data from.
+	 * @param string $newName New renamed component name.
+	 * @param string $realName Original real component name.
+	 * @param string $parent Parent component key with stacked parent component names for the final output.
 	 *
 	 * @return array
 	 */
-	protected function prepareComponentAttributes(array $blockDetails, $parentAttributeName = null): array
+	protected function prepareComponentAttribute(array $manifest, string $newName, string $realName, string $parent = ''): array
 	{
 		$output = [];
 
-		if (!isset($blockDetails['components'])) {
-			return [];
-		}
+		// Define different data entry point for attributes or example.
+		$componentAttributes = $manifest['attributes'] ?? [];
 
-		if (isset($blockDetails['attributes'])) {
-			$componentAttributes = $blockDetails['attributes'];
-		}
-
-		$globalData = $this->getBlocksDataFullRawItem('dependency');
-
-		foreach ($blockDetails['components'] as $newComponentName => $realComponentName) {
-			$component = $this->getComponent($realComponentName);
-
-			if (isset($component['components'])) {
-				$outputAttributes = $this->prepareComponentAttributes($component, $newComponentName);
-			} else {
-				// Use parent attribute name to determine if the name has changed in the parent component.
-				if (
-					$parentAttributeName !== $newComponentName &&
-					$realComponentName !== $newComponentName &&
-					(isset($globalData[$newComponentName]) || array_key_exists($newComponentName, $globalData))
-				) {
-					$newComponentName = $parentAttributeName;
-				}
-
-				$outputAttributes = $this->prepareComponentAttribute($component, $realComponentName, $newComponentName);
-			}
-
-			$output = array_merge(
-				$output,
-				$outputAttributes,
-				$componentAttributes ?? []
-			);
-		}
-
-		return $output ?? [];
-	}
-
-	/**
-	 * Build components dependency tree for blocks.
-	 *
-	 * @param array $blocks List of all blocks.
-	 * @param array $components List of all components.
-	 *
-	 * @return array
-	 */
-	private function buildDependencyBlocksTree(array $blocks, array $components): array
-	{
-		$output = [];
-
-		foreach ($blocks as $item) {
-			$blockName = $item['blockName'] ?? '';
-			$componentsItem = $item['components'] ?? [];
-
-			$output[$blockName] = array_unique($this->buildDependencyComponentsInnerTree($componentsItem, $components));
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Build components dependency tree for blocks.
-	 *
-	 * @param array $components List of all blocks.
-	 *
-	 * @return array
-	 */
-	private function buildDependencyComponentsTree(array $components): array
-	{
-		$output = [];
-
-		foreach ($components as $item) {
-			$componentName = $item['componentName'] ?? '';
-			$componentsItem = $item['components'] ?? [];
-
-			if (!$componentName) {
-				continue;
-			}
-
-			$output[$componentName] = array_unique($this->buildDependencyComponentsInnerTree($componentsItem, $components));
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Build inner recursive dependency tree for components.
-	 *
-	 * @param array $componentsList List of components to check.
-	 * @param array $components List of all components.
-	 *
-	 * @return array
-	 */
-	private function buildDependencyComponentsInnerTree(array $componentsList, array $components): array
-	{
-		$output = [];
-
-		if (!$componentsList) {
+		// If the attributes or example key is missing in the manifest - bailout.
+		if (!$componentAttributes) {
 			return $output;
 		}
 
-		foreach ($componentsList as $key => $value) {
-			$items = array_values(
-				array_filter(
-					$components,
-					function ($item) use ($value) {
-						$componentName = $item['componentName'] ?? '';
+		// Iterate each attribute and attach parent prefixes.
+		$componentAttributeKeys = array_keys($componentAttributes);
+		foreach ($componentAttributeKeys as $componentAttribute) {
+			$attribute = $componentAttribute;
 
-						return $componentName === $value;
-					}
-				)
-			)[0] ?? [];
-
-			$items = $items['components'] ?? [];
-
-			$output[] = $key;
-
-			if ($items) {
-				$output[] = $this->buildDependencyComponentsInnerTree($items, $components);
+			// If there is an attribute name switch, use the new one.
+			if ($newName !== $realName) {
+				$attribute = Components::kebabToCamelCase(str_replace($realName, $newName, (string) $componentAttribute));
 			}
+
+			// Determine if the parent is empty and if the parent's name is the same as the component/block name.
+			$attributeName = ($parent === '' || $parent === $newName) ? $attribute : lcfirst($parent) . ucfirst((string) $attribute);
+
+			// Output new attribute names.
+			$output[$attributeName] = $componentAttributes[$componentAttribute];
 		}
 
-		return Components::flattenArray($output);
+		return $output;
+	}
+
+	/**
+	 * Iterate over component array in block manifest and check if the component exists in the project.
+	 * If components contains more component this function will run recursively.
+	 *
+	 * @param array $manifest Array of component/block manifest to get the data from.
+	 * @param string $parent Parent component key with stacked parent component names for the final output.
+	 *
+	 * @throws InvalidBlock If the component is wrong, or the name is wrong or it doesn't exist.
+	 *
+	 * @return array
+	 */
+	protected function prepareComponentAttributes(array $manifest, string $parent = ''): array
+	{
+		$output = [];
+
+		// Determine if this is component or block and provide the name, not used for anything important but only to output the error msg.
+		$name = $manifest['blockName'] ?? $manifest['componentName'];
+
+		$components = $manifest['components'] ?? [];
+
+		// Iterate over components key in manifest recursively and check component names.
+		foreach ($components as $newComponentName => $realComponentName) {
+			// Filter components real name.
+			$component = $this->getComponent(Components::camelToKebabCase($realComponentName));
+
+			// Bailout if component doesn't exist.
+			if (!$component) {
+				throw InvalidBlock::wrongComponentNameException($name, $realComponentName);
+			}
+
+			$outputAttributes = [];
+
+			// If component has more components do recursive loop.
+			if (isset($component['components'])) {
+				$outputAttributes = $this->prepareComponentAttributes($component, $parent . ucfirst($newComponentName));
+			} else {
+				// Output the component attributes if there is no nesting left, and append the parent prefixes.
+				$outputAttributes = $this->prepareComponentAttribute($component, $newComponentName, $realComponentName, $parent);
+			}
+
+			// Populate the output recursively.
+			$output = array_merge(
+				$output,
+				$outputAttributes,
+			);
+		}
+
+		// Add the current block attributes to the output.
+		if (isset($manifest['blockName'])) {
+			$output = array_merge(
+				$output,
+				$this->prepareComponentAttribute($manifest, '', '')
+			);
+		} else {
+			// Add the current component attributes to the output.
+			$output = array_merge(
+				$output,
+				$this->prepareComponentAttribute($manifest, '', $name, $parent)
+			);
+		}
+
+		return $output;
 	}
 
 	/**
