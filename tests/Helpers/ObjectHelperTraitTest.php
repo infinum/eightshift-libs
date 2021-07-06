@@ -72,7 +72,7 @@ test('Test That multidimensional array is flattened', function () {
 		]
 	];
 
-    $this->assertEquals(['bar', 1, 2, 3], $this->mockHelper->flattenArray($array));
+    $this->assertSame(['bar', 1, 2, 3], $this->mockHelper->flattenArray($array));
 });
 
 test('Sanitization of array works', function() {
@@ -100,7 +100,7 @@ test('Sanitization of array works', function() {
 		]
 	];
 
-	 $this->assertEquals($expectedSanitizedArray, $sanitizedArray);
+	 $this->assertSame($expectedSanitizedArray, $sanitizedArray);
 });
 
 test('Test that sorting helper works', function() {
@@ -118,5 +118,5 @@ test('Test that sorting helper works', function() {
 		['name' => 'Mike', 'order' => 3],
 	];
 
-	$this->assertEquals($expectedArray, $orderedArray);
+	$this->assertSame($expectedArray, $orderedArray);
 });

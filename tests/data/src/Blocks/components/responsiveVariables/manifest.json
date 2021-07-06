@@ -71,7 +71,7 @@
 				{
 					"breakpoint": "desktop",
 					"variable": {
-						"variable-value-default": "value1-dekstop"
+						"variable-value-default": "value1-desktop"
 					}
 				}
 			],
@@ -79,7 +79,7 @@
 				{
 					"breakpoint": "desktop",
 					"variable": {
-						"variable-value-default": "value2-dekstop"
+						"variable-value-default": "value2-desktop"
 					}
 				}
 			]

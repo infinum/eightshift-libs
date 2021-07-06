@@ -64,7 +64,7 @@ test('CliInitTheme CLI documentation is correct', function () {
 
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
-	$this->assertEquals('Generates initial setup for WordPress theme project.', $documentation[$key]);
+	$this->assertSame('Generates initial setup for WordPress theme project.', $documentation[$key]);
 });
 
 

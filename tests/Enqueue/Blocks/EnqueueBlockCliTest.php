@@ -90,5 +90,5 @@ test('Custom Enqueue Blocks CLI documentation is correct', function () {
 
 	$this->assertIsArray($documentation, 'Returned value must be an array.');
 	$this->assertArrayHasKey($descKey, $documentation, 'Array doesn\'t have a required key.');
-	$this->assertEquals('Generates Enqueue Blocks class.', $documentation[$descKey], 'Returned string doesn\'t match');
+	$this->assertSame('Generates Enqueue Blocks class.', $documentation[$descKey], 'Returned string doesn\'t match');
 });

@@ -33,10 +33,6 @@ test('Throws type exception if wrong argument type is passed to ensureString', f
 ->throws(ComponentException::class)
 ->with('errorStringArguments');
 
-test('Throws argument count exception if no argument is passed', function () {
-	Components::ensureString();
-})->throws(\ArgumentCountError::class);
-
 /**
  * Components::classnames tests
  */
@@ -136,30 +132,22 @@ test('Asserts that using responsive selectors will work', function () {
 	$this->assertIsString($withoutModifier, 'Result should be a string');
 	$this->assertIsString($withEmptyString, 'Result should be a string');
 
-	$this->assertEquals(
+	$this->assertSame(
 		'column__width-mobile--12 column__width-tablet--12 column__width-desktop--6'
 		, $withModifier,
 		'Strings are not equal in the case of modifiers added'
 	);
-	$this->assertEquals(
+	$this->assertSame(
 		'column__width-mobile column__width-tablet column__width-desktop',
 		$withoutModifier,
 		'Strings are not equal in the case there is no modifier'
 	);
-	$this->assertEquals(
+	$this->assertSame(
 		'column__width-mobile--12 column__width-tablet--12',
 		$withEmptyString,
 		'Strings are not equal when one option is empty'
 	);
 });
-
-test('Asserts that providing wrong type to responsiveSelectors will throw an exception', function () {
-	Components::responsiveSelectors('', false, true, '');
-})->throws(\TypeError::class);
-
-test('Asserts that providing wrong number of arguments to responsiveSelectors will throw an exception', function () {
-	Components::responsiveSelectors([], 'true');
-})->throws(\ArgumentCountError::class);
 
 /**
  * Components::checkAttr tests
@@ -171,7 +159,7 @@ test('Asserts that checkAttr works in case attribute is string', function () {
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
 
 	$this->assertIsString($results, 'Result should be a string');
-	$this->assertEquals('right', $results, "The set attribute should be {$attributes['buttonAlign']}");
+	$this->assertSame('right', $results, "The set attribute should be {$attributes['buttonAlign']}");
 });
 
 test('Asserts that checkAttr works in case attribute is boolean', function () {
@@ -181,7 +169,7 @@ test('Asserts that checkAttr works in case attribute is boolean', function () {
 	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);
 
 	$this->assertIsBool($results, 'THe result should be a boolean');
-	$this->assertEquals(true, $results, "The set attribute should be {$attributes['buttonIsAnchor']}");
+	$this->assertSame(true, $results, "The set attribute should be {$attributes['buttonIsAnchor']}");
 });
 
 test('Asserts that checkAttr returns false in case attribute is boolean and default is not set', function () {
@@ -191,7 +179,7 @@ test('Asserts that checkAttr returns false in case attribute is boolean and defa
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest);
 
 	$this->assertIsBool($results, 'THe result should be a boolean');
-	$this->assertEquals(false, $results, "The set attribute should be false");
+	$this->assertSame(false, $results, "The set attribute should be false");
 });
 
 test('Asserts that checkAttr works in case attribute is array', function () {
@@ -201,8 +189,8 @@ test('Asserts that checkAttr works in case attribute is array', function () {
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
 
 	$this->assertIsArray($results, 'The result should be an array');
-	$this->assertEquals('attr 1', $results[0], 'The value in the array is not correct');
-	$this->assertEquals('attr 2', $results[1], 'The value in the array is not correct');
+	$this->assertSame('attr 1', $results[0], 'The value in the array is not correct');
+	$this->assertSame('attr 2', $results[1], 'The value in the array is not correct');
 });
 
 test('Asserts that checkAttr returns empty array in case attribute is array or object and default is not set', function () {
@@ -212,7 +200,7 @@ test('Asserts that checkAttr returns empty array in case attribute is array or o
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
 
 	$this->assertIsArray($results, 'The result should be an empty array');
-	$this->assertEquals([], $results, "The set attribute should be empty array");
+	$this->assertSame([], $results, "The set attribute should be empty array");
 });
 
 test('Asserts that checkAttr returns default value', function () {
@@ -222,7 +210,7 @@ test('Asserts that checkAttr returns default value', function () {
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest, 'button');
 
 	$this->assertIsString($results, 'The default value should be a string');
-	$this->assertEquals('left', $results, 'The default value should be left');
+	$this->assertSame('left', $results, 'The default value should be left');
 });
 
 test('Asserts that checkAttr throws exception if manifest key is not set', function () {
@@ -230,7 +218,20 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 	$attributes['title'] = 'Some attribute';
 
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
-})->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation. Check if your bla attribut exists in the component's manifest.json");
+})->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation.");
+
+test('Asserts that checkAttr returns attribute based on prefix if set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$attributes = [
+		'prefix' => 'prefixedMultipleTimesButton',
+		'prefixedMultipleTimesButtonAlign' => 'right'
+	];
+
+	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
+
+	$this->assertIsString($results, 'Result should be a string');
+	$this->assertSame('right', $results, "The set attribute should be {$attributes['prefixedMultipleTimesButtonAlign']}");
+});
 
 /**
  * Components::checkAttrResponsive tests
@@ -248,7 +249,7 @@ test('Asserts that checkAttrResponsive returns the correct output.', function ()
 
 	$this->assertIsArray($results, 'Result should be an array');
 	$this->assertArrayHasKey('large', $results);
-	$this->assertEquals($results['large'], '10');
+	$this->assertSame($results['large'], '10');
 });
 
 test('Asserts that checkAttrResponsive returns empty values if attribute is not provided.', function () {
@@ -259,7 +260,7 @@ test('Asserts that checkAttrResponsive returns empty values if attribute is not 
 
 	$this->assertIsArray($results, 'Result should be an array');
 	$this->assertArrayHasKey('large', $results);
-	$this->assertEquals($results['large'], '');
+	$this->assertSame($results['large'], '');
 });
 
 test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing.', function () {
@@ -273,8 +274,8 @@ test('Asserts that checkAttrResponsive throws error if keyName key is missing re
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [];
 
-	Components::checkAttrResponsive('testAttribtue', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are missing the testAttribtue key in your manifest responsiveAttributes array.');
+	Components::checkAttrResponsive('testAttribute', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'It looks like you are missing the testAttribute key in your manifest responsiveAttributes array.');
 
 /**
  * Components::selector tests
@@ -283,21 +284,21 @@ test('Asserts that selectorBlock returns the correct class when attributes are s
 	$selector = Components::selector('button', 'button', 'icon', 'blue');
 
 	$this->assertIsString($selector);
-	$this->assertEquals('button__icon--blue', $selector);
+	$this->assertSame('button__icon--blue', $selector);
 });
 
 test('Asserts that selector returns the correct class when only block class is set', function () {
 	$selector = Components::selector('button', 'button');
 
 	$this->assertIsString($selector);
-	$this->assertEquals('button', $selector);
+	$this->assertSame('button', $selector);
 });
 
 test('Asserts that selector returns the correct class when element is an empty string', function () {
 	$selector = Components::selector('button', 'button', '    ');
 
 	$this->assertIsString($selector);
-	$this->assertEquals('button', $selector);
+	$this->assertSame('button', $selector);
 });
 
 /**
@@ -541,7 +542,7 @@ test('Asserts that outputCssVariables returns empty for missing variables.', fun
 	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
 });
 
-test('Asserts that outputCssVariables returns array of attributes if defaut is set.', function () {
+test('Asserts that outputCssVariables returns array of attributes if default is set.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
@@ -839,7 +840,7 @@ test('Asserts that responsive variables and default variables are defined', func
 	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
 	$this->assertStringContainsString('variable-value-default-responsive: value2-responsive', $output);
 	$this->assertStringContainsString('@media (min-width: 1199px)', $output);
-	$this->assertStringContainsString('variable-value-default: value2-dekstop', $output);
+	$this->assertStringContainsString('variable-value-default: value2-desktop', $output);
 	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
 
 	$value = '2';
@@ -864,7 +865,7 @@ test('Asserts that responsive variables and default variables are defined', func
 	$this->assertStringContainsString("variable-default-normal: default-mobile-{$value}", $output);
 });
 
-test('Asserts that manifest has responsive variables defined but without appereance of responsiveAttributes', function () {
+test('Asserts that manifest has responsive variables defined but without appearance of responsiveAttributes', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 	unset($manifest['responsiveAttributes']);
@@ -937,7 +938,7 @@ test('Asserts that arrayIsList returns the correct output for wrong input', func
 test('Asserts that camelToKebabCase returns the correct output', function () {
 	$output = Components::camelToKebabCase('superCoolTestString');
 
-	$this->assertEquals('super-cool-test-string', $output);
+	$this->assertSame('super-cool-test-string', $output);
 });
 
 test('Asserts that camelToKebabCase returns the wrong output', function () {
@@ -952,7 +953,7 @@ test('Asserts that camelToKebabCase returns the wrong output', function () {
 test('Asserts that kebabToCamelCase returns the correct output', function () {
 	$output = Components::kebabToCamelCase('super-cool-test-string');
 
-	$this->assertEquals('superCoolTestString', $output);
+	$this->assertSame('superCoolTestString', $output);
 });
 
 test('Asserts that kebabToCamelCase returns the wrong output', function () {
@@ -967,7 +968,7 @@ test('Asserts that kebabToCamelCase returns the wrong output', function () {
 test('Asserts that kebabToCamelCase returns the correct output with a different separator', function () {
 	$output = Components::kebabToCamelCase('super_cool_test_string', '_');
 
-	$this->assertEquals('superCoolTestString', $output);
+	$this->assertSame('superCoolTestString', $output);
 });
 
 /**
@@ -976,7 +977,7 @@ test('Asserts that kebabToCamelCase returns the correct output with a different 
 test('Asserts that kebabToCamelCase returns the correct output with numbers as a string', function () {
 	$output = Components::kebabToCamelCase('123-456-789');
 
-	$this->assertEquals('123456789', $output);
+	$this->assertSame('123456789', $output);
 });
 
 /**
@@ -985,7 +986,7 @@ test('Asserts that kebabToCamelCase returns the correct output with numbers as a
 test('Asserts that kebabToCamelCase returns the correct output with a non-kebab-case string', function () {
 	$output = Components::kebabToCamelCase('non kebab string');
 
-	$this->assertEquals('non kebab string', $output);
+	$this->assertSame('non kebab string', $output);
 });
 
 /**
@@ -1008,8 +1009,7 @@ test('Asserts props for heading block will return only heading attributes', func
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
-	$globalData = $this->blocksExample->getBlocksDataFullRawItem('dependency');
-	$output = Components::props($attributes, $headingBlock['blockName'], '', true, $globalData);
+	$output = Components::props($attributes, $headingBlock['blockName'], '');
 
 	$this->assertIsArray($output);
 	$this->assertContains('headingAlign', array_keys($output), "Output array doesn't contain headingAlign attribute key.");
@@ -1033,11 +1033,69 @@ test('Asserts props for heading component will return only typography attributes
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
-	$globalData = $this->blocksExample->getBlocksDataFullRawItem('dependency');
-
-	$output = Components::props($attributes, 'typography', $headingComponent['componentName'], false, $globalData);
+	$output = Components::props($attributes, 'typography');
 
 	$this->assertIsArray($output);
-	$this->assertContains('typographyAlign', array_keys($output), "Output array doesn't contain typographyAlign attribute key.");
+	$this->assertContains('typographyContent', array_keys($output), "Output array doesn't contain typographyContent attribute key.");
 	$this->assertNotContains('headingSize', array_keys($output), "Output array does contain headingSize attribute key.");
+});
+
+test('Asserts props will correctly build the prefix', function () {
+	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
+	$headingComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading');
+	$typographyComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = array_merge(
+		$headingBlock['attributes'],
+		$headingComponent['attributes'],
+		$typographyComponent['attributes']
+	);
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props($attributes, 'heading');
+
+	$this->assertIsArray($output);
+	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
+	$this->assertSame('heading', $output['prefix']);
+
+	// Next level
+	$output = Components::props($output, 'typography');
+	$this->assertIsArray($output);
+	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
+	$this->assertSame('headingTypography', $output['prefix']);
+});
+
+test('Asserts props will correctly leave only the the needed attributes', function () {
+	$attributes = [
+		'componentName' => 'mock-card',
+		'mockCardHeadingTypographyContent' => 'mock heading content',
+		'mockCardParagraphTypographyContent' => 'mock paragraph content',
+	];
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props($attributes, 'mock-card');
+
+	$this->assertIsArray($output);
+	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+	$this->assertContains('mockCardParagraphTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+
+	// Now let's pass these to mock heading
+	$output = Components::props($output, 'heading');
+	$this->assertIsArray($output);
+	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+	$this->assertNotContains('mockCardParagraphTypographyContent', array_keys($output), "Output array contains attribute that should have been purged.");
+
+	$output = Components::props($output, 'typography');
+	$this->assertIsArray($output);
+	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
 });

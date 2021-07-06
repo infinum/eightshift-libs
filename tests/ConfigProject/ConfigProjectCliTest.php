@@ -77,5 +77,5 @@ test('ConfigProject CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Generates projects config file to control global variables used in WordPress project.', $documentation[$key]);
+	$this->assertSame('Generates projects config file to control global variables used in WordPress project.', $documentation[$key]);
 });

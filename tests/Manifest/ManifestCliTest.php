@@ -67,5 +67,5 @@ test('Manifest CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertEquals('Generates Manifest class.', $documentation[$key]);
+	$this->assertSame('Generates Manifest class.', $documentation[$key]);
 });

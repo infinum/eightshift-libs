@@ -75,5 +75,5 @@ test('Readme CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Initialize Command for building your projects readme.', $documentation[$key]);
+	$this->assertSame('Initialize Command for building your projects readme.', $documentation[$key]);
 });

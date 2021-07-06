@@ -53,5 +53,5 @@ test('Custom Enqueue Theme CLI documentation is correct', function () {
 
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertEquals('Generates Enqueue Theme class.', $documentation[$descKey]);
+	$this->assertSame('Generates Enqueue Theme class.', $documentation[$descKey]);
 });

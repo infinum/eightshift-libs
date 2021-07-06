@@ -72,6 +72,6 @@ test('Menu CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertEquals('Generates menu class.', $documentation[$key]);
+	$this->assertSame('Generates menu class.', $documentation[$key]);
 });
 

@@ -55,7 +55,7 @@ test('Route has a valid callback', function () {
 
 	$this->assertIsArray($output);
 	$this->assertArrayHasKey($this->mockRequestKey, $output);
-	$this->assertEquals($output[$this->mockRequestKey], $this->mockRequestValue);
+	$this->assertSame($output[$this->mockRequestKey], $this->mockRequestValue);
 });
 
 
@@ -65,7 +65,7 @@ test('Route registers the callback properly', function () {
 
 	$this->route->routeRegisterCallback($this->wpRestServer);
 
-	$this->assertEquals(getenv('SIDEAFFECT'), $action);
+	$this->assertSame(getenv('SIDEAFFECT'), $action);
 
 	// Cleanup.
 	putenv('SIDEAFFECT=');

@@ -68,5 +68,5 @@ test('CliShowAll CLI documentation is correct', function () {
 
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
-	$this->assertEquals('DEVELOP - Used to show all commands.', $documentation[$key]);
+	$this->assertSame('DEVELOP - Used to show all commands.', $documentation[$key]);
 });

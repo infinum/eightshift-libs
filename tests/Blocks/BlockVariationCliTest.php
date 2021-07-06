@@ -73,7 +73,7 @@ test('Variation CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertEquals('Copy Variation from library to your project.', $documentation[$key]);
+	$this->assertSame('Copy Variation from library to your project.', $documentation[$key]);
 });
 
 test('Variation CLI command will fail if Variation doesn\'t exist', function () {

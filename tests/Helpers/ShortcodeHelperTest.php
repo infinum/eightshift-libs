@@ -21,7 +21,7 @@ test('Shortcode helper will call the shortcode callback', function() {
 	$this->shortcode->getShortcode('sayHello', ['name' => 'John']);
 	$result = ob_get_clean();
 
-	$this->assertEquals('Hello John!', $result);
+	$this->assertSame('Hello John!', $result);
 });
 
 

@@ -79,11 +79,11 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 
 	$blocks = $this->blocksExample->getAllBlocksList(true, $post);
 
-	$this->assertEquals(true, $blocks);
+	$this->assertSame(true, $blocks);
 
 	$blocks = $this->blocksExample->getAllBlocksList(false, $post);
 
-	$this->assertEquals(false, $blocks, "Return value is not false.");
+	$this->assertSame(false, $blocks, "Return value is not false.");
 });
 
 test('Asserts that getAllBlocksList will return only projects blocks.', function () {
@@ -116,9 +116,7 @@ test('Asserts that getBlocksDataFullRawItem will return full details for blocks 
 
 	$this->assertIsArray($items);
 	$this->assertNotContains('button', array_keys($items), "Items array contains button key");
-	$this->assertContains('dependency', array_keys($items), "Items array doesn't contain dependency key");
 	$this->assertContains('blocks', array_keys($items), "Items array doesn't contain blocks key");
-	$this->assertContains('components', array_keys($items), "Items array doesn't contain components key");
 	$this->assertContains('wrapper', array_keys($items), "Items array doesn't contain wrapper key");
 	$this->assertContains('settings', array_keys($items), "Items array doesn't contain settings key");
 });
@@ -134,25 +132,9 @@ test('Asserts that getBlocksDataFullRawItem will return all blocks details if ke
 
 	$this->assertIsArray($items);
 	$this->assertContains('blockName', array_keys($items[0]), "Items array doesn't contain blockName key");
-	$this->assertEquals('button', $items[0]['blockName'], "Items array doesn't contain blockName key with value button");
+	$this->assertSame('button', $items[0]['blockName'], "Items array doesn't contain blockName key with value button");
 	$this->assertNotContains('componentName', array_keys($items[0]), "Items array does contain componentName key");
 	$this->assertNotEquals('test', $items[0]['blockName'], "Items array contain blockName key with value test");
-});
-
-test('Asserts that getBlocksDataFullRawItem will return all components details if key is components.', function () {
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
-
-	$this->blocksExample->getBlocksDataFullRaw();
-
-	$items = $this->blocksExample->getBlocksDataFullRawItem('components');
-
-	$this->assertIsArray($items);
-	$this->assertContains('componentName', array_keys($items[0]), "Items array doesn't contain componentName key");
-	$this->assertEquals('button', $items[0]['componentName'], "Items array doesn't contain componentName key with value button");
-	$this->assertNotContains('blockName', array_keys($items[0]), "Items array does contain blockName key");
-	$this->assertNotEquals('test', $items[0]['componentName'], "Items array contain componentName key with value test");
 });
 
 test('Asserts that getBlocksDataFullRawItem will return empty array if code is run using WP_CLI.', function () {

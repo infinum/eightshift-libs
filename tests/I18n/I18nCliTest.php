@@ -71,5 +71,5 @@ test('I18n CLI documentation is correct', function () {
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($key, $documentation);
 	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertEquals('Generates i18n language class.', $documentation[$key]);
+	$this->assertSame('Generates i18n language class.', $documentation[$key]);
 });
