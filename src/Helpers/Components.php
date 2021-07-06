@@ -791,11 +791,11 @@ class Components
 	 * Internal helper to loop CSS Variables from array.
 	 *
 	 * @param array  $variables Array of variables of CSS variables.
-	 * @param string $attributeValue Original attribute value used in magic variable.
+	 * @param mixed $attributeValue Original attribute value used in magic variable.
 	 *
 	 * @return array
 	 */
-	public static function variablesInner(array $variables, string $attributeValue): array
+	public static function variablesInner(array $variables, $attributeValue): array
 	{
 		$output = [];
 
