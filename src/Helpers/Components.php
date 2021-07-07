@@ -898,6 +898,7 @@ class Components
 			'blockJsClass',
 			'selectorClass',
 			'additionalClass',
+			'uniqueWrapperId',
 		];
 
 		// Populate prefix key for recursive checks of attribute names.
