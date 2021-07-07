@@ -897,7 +897,6 @@ class Components
 			'blockClass',
 			'blockJsClass',
 			'selectorClass',
-			'componentClass',
 			'additionalClass',
 		];
 
