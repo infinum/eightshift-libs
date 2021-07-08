@@ -481,6 +481,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return $output;
 		}
 
+		// Make sure the case is always correct for parent.
+		$newParent = Components::kebabToCamelCase($parent);
+
 		// Iterate each attribute and attach parent prefixes.
 		$componentAttributeKeys = array_keys($componentAttributes);
 		foreach ($componentAttributeKeys as $componentAttribute) {
@@ -492,7 +495,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			}
 
 			// Determine if the parent is empty and if the parent's name is the same as the component/block name.
-			$attributeName = ($parent === '' || $parent === $newName) ? $attribute : lcfirst($parent) . ucfirst((string) $attribute);
+			$attributeName = ($newParent === '' || $newParent === $newName) ? $attribute : lcfirst($newParent) . ucfirst((string) $attribute);
 
 			// Output new attribute names.
 			$output[$attributeName] = $componentAttributes[$componentAttribute];
