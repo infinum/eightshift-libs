@@ -880,12 +880,12 @@ class Components
 	/**
 	 * Output only attributes that are used in the component and remove everything else.
 	 *
-	 * @param array  $attributes Attributes from the block/component.
 	 * @param string $newName *New* key to use to rename attributes.
+	 * @param array  $attributes Attributes from the block/component.
 	 *
 	 * @return array
 	 */
-	public static function props(array $attributes, string $newName): array
+	public static function props(string $newName, array $attributes): array
 	{
 
 		$output = [];
