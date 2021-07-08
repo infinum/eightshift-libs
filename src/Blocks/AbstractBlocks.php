@@ -462,14 +462,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Iterate over attributes or example attributes array in block/component manifest and append the parent prefixes.
 	 *
-	 * @param array  $manifest Array of component/block manifest to get data from.
-	 * @param string $newName New renamed component name.
-	 * @param string $realName Original real component name.
-	 * @param string $parent Parent component key with stacked parent component names for the final output.
+	 * @param array   $manifest Array of component/block manifest to get data from.
+	 * @param string  $newName New renamed component name.
+	 * @param string  $realName Original real component name.
+	 * @param string  $parent Parent component key with stacked parent component names for the final output.
+	 * @param boolean $currentAttributes Check if current attribute is a part of the current component.
 	 *
 	 * @return array
 	 */
-	protected function prepareComponentAttribute(array $manifest, string $newName, string $realName, string $parent = ''): array
+	protected function prepareComponentAttribute(array $manifest, string $newName, string $realName, string $parent = '', bool $currentAttributes = false): array
 	{
 		$output = [];
 
@@ -496,6 +497,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// Determine if the parent is empty and if the parent's name is the same as the component/block name.
 			$attributeName = ($newParent === '' || $newParent === $newName) ? $attribute : lcfirst($newParent) . ucfirst((string) $attribute);
+
+			// Check if you we have duplicate attributes names and remove them.
+			$duplicateAttributesCheck = ucfirst(Components::kebabToCamelCase($realName)) . ucfirst(Components::kebabToCamelCase($realName));
+			if ($currentAttributes && str_contains((string) $attributeName, $duplicateAttributesCheck)) {
+				$attributeName = str_replace($duplicateAttributesCheck, ucfirst(Components::kebabToCamelCase($realName)), (string) $attributeName);
+			}
 
 			// Output new attribute names.
 			$output[$attributeName] = $componentAttributes[$componentAttribute];
@@ -561,7 +568,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			// Add the current component attributes to the output.
 			$output = array_merge(
 				$output,
-				$this->prepareComponentAttribute($manifest, '', $name, $parent)
+				$this->prepareComponentAttribute($manifest, '', $name, $parent, true)
 			);
 		}
 

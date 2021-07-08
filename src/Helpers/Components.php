@@ -237,7 +237,7 @@ class Components
 		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
 		if ($prefix !== '') {
 			// No need to test if this is block or component because on top level block there is no prefix.
-			$newKey = str_replace($manifest['componentName'], $prefix, $key);
+			$newKey = str_replace(Components::kebabToCamelCase($manifest['componentName']), $prefix, $key);
 		}
 
 		// If key exists in the attributes object, just return that key value.
@@ -327,7 +327,7 @@ class Components
 
 		// No need to test if this is block or component because on top level block there is no prefix.
 		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
-		return str_replace($manifest['componentName'], $prefix, $key);
+		return str_replace(Components::kebabToCamelCase($manifest['componentName']), $prefix, $key);
 	}
 
 	/**
