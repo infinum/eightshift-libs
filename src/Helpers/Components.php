@@ -882,10 +882,11 @@ class Components
 	 *
 	 * @param string $newName *New* key to use to rename attributes.
 	 * @param array  $attributes Attributes from the block/component.
+	 * @param array  $manual Array of attributes to change key and merge to the original output.
 	 *
 	 * @return array
 	 */
-	public static function props(string $newName, array $attributes): array
+	public static function props(string $newName, array $attributes, array $manual = []): array
 	{
 
 		$output = [];
@@ -919,6 +920,24 @@ class Components
 			if (substr((string)$key, 0, strlen($output['prefix'])) === $output['prefix']) {
 				$output[$key] = $value;
 			}
+		}
+
+		// Check if you have manual array and prepare the attribute keys and merge them with the original attributes for output.
+		if ($manual) {
+			// Iterate manual attributes.
+			foreach ($manual as $key => $value) {
+				// Remove the current component name from the attribute name.
+				$newKey = str_replace(lcfirst(self::kebabToCamelCase($newName)), '', $key);
+
+				// Remove the old key.
+				unset($manual[$key]);
+
+				// Add new key to the output with prepared attribute name.
+				$manual[$output['prefix'] . $newKey] = $value;
+			}
+
+			// Merge manual and output arrays to one.
+			$output = array_merge($output, $manual);
 		}
 
 		// Return the original attribute for optimization purposes.

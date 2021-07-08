@@ -1009,7 +1009,7 @@ test('Asserts props for heading block will return only heading attributes', func
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
-	$output = Components::props($attributes, $headingBlock['blockName'], '');
+	$output = Components::props($headingBlock['blockName'], $attributes);
 
 	$this->assertIsArray($output);
 	$this->assertContains('headingAlign', array_keys($output), "Output array doesn't contain headingAlign attribute key.");
@@ -1033,7 +1033,7 @@ test('Asserts props for heading component will return only typography attributes
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
-	$output = Components::props($attributes, 'typography');
+	$output = Components::props('typography', $attributes);
 
 	$this->assertIsArray($output);
 	$this->assertContains('typographyContent', array_keys($output), "Output array doesn't contain typographyContent attribute key.");
@@ -1057,14 +1057,14 @@ test('Asserts props will correctly build the prefix', function () {
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
-	$output = Components::props($attributes, 'heading');
+	$output = Components::props('heading', $attributes);
 
 	$this->assertIsArray($output);
 	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
 	$this->assertSame('heading', $output['prefix']);
 
 	// Next level
-	$output = Components::props($output, 'typography');
+	$output = Components::props('typography', $output);
 	$this->assertIsArray($output);
 	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
 	$this->assertSame('headingTypography', $output['prefix']);
@@ -1083,19 +1083,19 @@ test('Asserts props will correctly leave only the the needed attributes', functi
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
-	$output = Components::props($attributes, 'mock-card');
+	$output = Components::props('mock-card', $attributes);
 
 	$this->assertIsArray($output);
 	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
 	$this->assertContains('mockCardParagraphTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
 
 	// Now let's pass these to mock heading
-	$output = Components::props($output, 'heading');
+	$output = Components::props('heading', $output);
 	$this->assertIsArray($output);
 	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
 	$this->assertNotContains('mockCardParagraphTypographyContent', array_keys($output), "Output array contains attribute that should have been purged.");
 
-	$output = Components::props($output, 'typography');
+	$output = Components::props('typography', $output);
 	$this->assertIsArray($output);
 	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
 });
