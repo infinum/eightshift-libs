@@ -73,7 +73,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					// Add additional data to the block settings.
 					$namespace = $block['namespace'] ?? '';
 
-					// Check if namespace is defined in block or in global manifest settings.
+					// Check if namespace RedesignVendor\is defined in block or in global manifest settings.
 					$block['namespace'] = !empty($namespace) ? $namespace : $settings['namespace'];
 					$block['blockFullName'] = "{$block['namespace']}/{$block['blockName']}";
 
@@ -492,17 +492,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// If there is an attribute name switch, use the new one.
 			if ($newName !== $realName) {
-				$attribute = Components::kebabToCamelCase(str_replace($realName, $newName, (string) $componentAttribute));
+				$attribute = str_replace($realName, $newName, (string) $componentAttribute);
 			}
 
-			// Determine if the parent is empty and if the parent's name is the same as the component/block name.
-			$attributeName = ($newParent === '' || $newParent === $newName) ? $attribute : lcfirst($newParent) . ucfirst((string) $attribute);
-
-			// Check if you we have duplicate attributes names and remove them.
-			$duplicateAttributesCheck = ucfirst(Components::kebabToCamelCase($realName)) . ucfirst(Components::kebabToCamelCase($realName));
-			if ($currentAttributes && str_contains((string) $attributeName, $duplicateAttributesCheck)) {
-				$attributeName = str_replace($duplicateAttributesCheck, ucfirst(Components::kebabToCamelCase($realName)), (string) $attributeName);
+			// Check if current attribute is used strip component prefix from attribute and replace it with parent prefix.
+			if ($currentAttributes) {
+				$attribute = str_replace(lcfirst(Components::kebabToCamelCase($realName)), '', (string) $componentAttribute);
 			}
+
+			// Determine if parent is empty and if parent name is the same as component/block name.
+			$attributeName = $newParent . ucfirst($attribute);
 
 			// Output new attribute names.
 			$output[$attributeName] = $componentAttributes[$componentAttribute];
@@ -531,6 +530,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		$components = $manifest['components'] ?? [];
 
+		$newParent = ($parent === '') ? $name : $parent;
+
 		// Iterate over components key in manifest recursively and check component names.
 		foreach ($components as $newComponentName => $realComponentName) {
 			// Filter components real name.
@@ -545,10 +546,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// If component has more components do recursive loop.
 			if (isset($component['components'])) {
-				$outputAttributes = $this->prepareComponentAttributes($component, $parent . ucfirst($newComponentName));
+				$outputAttributes = $this->prepareComponentAttributes($component, $newParent . ucfirst(Components::camelToKebabCase($newComponentName)));
 			} else {
 				// Output the component attributes if there is no nesting left, and append the parent prefixes.
-				$outputAttributes = $this->prepareComponentAttribute($component, $newComponentName, $realComponentName, $parent);
+				$outputAttributes = $this->prepareComponentAttribute($component, $newComponentName, $realComponentName, $newParent);
 			}
 
 			// Populate the output recursively.
@@ -558,21 +559,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			);
 		}
 
-		// Add the current block attributes to the output.
-		if (isset($manifest['blockName'])) {
-			$output = array_merge(
-				$output,
-				$this->prepareComponentAttribute($manifest, '', '')
-			);
-		} else {
-			// Add the current component attributes to the output.
-			$output = array_merge(
-				$output,
-				$this->prepareComponentAttribute($manifest, '', $name, $parent, true)
-			);
-		}
-
-		return $output;
+		return array_merge(
+			$output,
+			$this->prepareComponentAttribute($manifest, '', $name, $newParent, true)
+		);
 	}
 
 	/**

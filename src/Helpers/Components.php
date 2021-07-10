@@ -229,16 +229,9 @@ class Components
 	 */
 	public static function checkAttr(string $key, array $attributes, array $manifest)
 	{
-		// Check if there is prefix in the attributes object.
-		$prefix = $attributes['prefix'] ?? '';
-		$newKey = $key;
 
-		// If there is no prefix return the key as it was.
-		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
-		if ($prefix !== '') {
-			// No need to test if this is block or component because on top level block there is no prefix.
-			$newKey = str_replace(Components::kebabToCamelCase($manifest['componentName']), $prefix, $key);
-		}
+			// Get the correct key for the check in the attributes object.
+		$newKey = self::getAttrKey($key, $attributes, $manifest);
 
 		// If key exists in the attributes object, just return that key value.
 		if (isset($attributes[$newKey])) {
@@ -321,8 +314,20 @@ class Components
 	{
 		$prefix = $attributes['prefix'] ?? '';
 
-		if ($prefix === '') {
+		// Just skip if attribute is wrapper.
+		if (strpos($key, 'wrapper') !== false) {
 			return $key;
+		}
+
+		// Skip if using this helper in block.
+		if (isset($manifest['blockName'])) {
+			return $key;
+		}
+
+		// Populate prefix key for recursive checks of attribute names.
+		// If prefix is empty use blockName as prefix.
+		if ($prefix === '') {
+			$prefix = $manifest['blockName'] ?? '';
 		}
 
 		// No need to test if this is block or component because on top level block there is no prefix.
@@ -902,12 +907,13 @@ class Components
 			'uniqueWrapperId',
 		];
 
+		$blockName = $attributes['blockName'] ?? '';
+
 		// Populate prefix key for recursive checks of attribute names.
-		if (!isset($attributes['prefix'])) {
-			$output['prefix'] = self::kebabToCamelCase($newName);
-		} else {
-			$output['prefix'] = $attributes['prefix'] . ucfirst(self::kebabToCamelCase($newName));
-		}
+		$prefix = (!isset($attributes['prefix'])) ? self::kebabToCamelCase($blockName) : $attributes['prefix'];
+
+		// Set component prefix.
+		$output['prefix'] = $prefix . ucfirst(self::kebabToCamelCase($newName));
 
 		// Iterate over the attributes.
 		foreach ($attributes as $key => $value) {
@@ -922,7 +928,7 @@ class Components
 			}
 		}
 
-		// Check if you have manual array and prepare the attribute keys and merge them with the original attributes for output.
+		// Check if you have manual object and prepare the attribute keys and merge them with the original attributes for output.
 		if ($manual) {
 			// Iterate manual attributes.
 			foreach ($manual as $key => $value) {
@@ -936,7 +942,7 @@ class Components
 				$manual[$output['prefix'] . $newKey] = $value;
 			}
 
-			// Merge manual and output arrays to one.
+			// Merge manual and output objects to one.
 			$output = array_merge($output, $manual);
 		}
 
