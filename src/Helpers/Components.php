@@ -117,7 +117,7 @@ class Components
 		}
 
 		if ($useComponentDefaults && isset($manifest['attributes'])) {
-			$attributes =  self::getDefaultRenderAttributes($manifest, $attributes);
+			$attributes = self::getDefaultRenderAttributes($manifest, $attributes);
 		}
 
 		ob_start();
@@ -151,8 +151,11 @@ class Components
 		$defaultAttributes = [];
 
 		foreach ($manifest['attributes'] as $itemKey => $itemValue) {
+			// Get the correct key for the check in the attributes object.
+			$newKey = self::getAttrKey($itemKey, $attributes, $manifest);
+
 			if (isset($itemValue['default'])) {
-				$defaultAttributes[$itemKey] = $itemValue['default'];
+				$defaultAttributes[$newKey] = $itemValue['default'];
 			}
 		}
 
@@ -230,7 +233,7 @@ class Components
 	public static function checkAttr(string $key, array $attributes, array $manifest)
 	{
 
-			// Get the correct key for the check in the attributes object.
+		// Get the correct key for the check in the attributes object.
 		$newKey = self::getAttrKey($key, $attributes, $manifest);
 
 		// If key exists in the attributes object, just return that key value.
@@ -920,6 +923,7 @@ class Components
 			// Include attributes from iteration.
 			if (in_array($key, $includes, true)) {
 				$output[$key] = $value;
+				continue;
 			}
 
 			// If attribute starts with the prefix key leave it in the object if not remove it.
@@ -932,6 +936,12 @@ class Components
 		if ($manual) {
 			// Iterate manual attributes.
 			foreach ($manual as $key => $value) {
+				// Include attributes from iteration.
+				if (in_array($key, $includes, true)) {
+					$output[$key] = $value;
+					continue;
+				}
+
 				// Remove the current component name from the attribute name.
 				$newKey = str_replace(lcfirst(self::kebabToCamelCase($newName)), '', $key);
 
