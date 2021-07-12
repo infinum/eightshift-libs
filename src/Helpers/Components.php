@@ -905,6 +905,7 @@ class Components
 			'blockFullName',
 			'blockClass',
 			'blockJsClass',
+			'componentJsClass',
 			'selectorClass',
 			'additionalClass',
 			'uniqueWrapperId',
