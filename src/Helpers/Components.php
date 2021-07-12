@@ -917,7 +917,11 @@ class Components
 		$prefix = (!isset($attributes['prefix'])) ? self::kebabToCamelCase($blockName) : $attributes['prefix'];
 
 		// Set component prefix.
-		$output['prefix'] = $prefix . ucfirst(self::kebabToCamelCase($newName));
+		if (empty($prefix)) {
+			$output['prefix'] = self::kebabToCamelCase($newName);
+		} else {
+			$output['prefix'] = $prefix . ucfirst(self::kebabToCamelCase($newName));
+		}
 
 		// Iterate over the attributes.
 		foreach ($attributes as $key => $value) {
