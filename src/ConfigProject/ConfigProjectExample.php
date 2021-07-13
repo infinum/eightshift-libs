@@ -10,7 +10,7 @@
  */
 
 // phpcs:disable
-if (! defined('WP_ENVIRONMENT_TYPE')) {
+if (!defined('WP_ENVIRONMENT_TYPE')) {
 	return false;
 }
 
@@ -32,9 +32,11 @@ define('AUTOSAVE_INTERVAL', 240);
 // Disable automatic updating of plugins.
 define('AUTOMATIC_UPDATER_DISABLED', true);
 
-// Enable debug and error logging.
-define('WP_DEBUG', true);
-define('WP_DEBUG_LOG', true);
+if (WP_ENVIRONMENT_TYPE !== 'production') {
+	// Enable debug and error logging.
+	define('WP_DEBUG', true);
+	define('WP_DEBUG_LOG', true);
+}
 
 // Environment based setup.
 if (WP_ENVIRONMENT_TYPE === 'development' || WP_ENVIRONMENT_TYPE === 'local') {

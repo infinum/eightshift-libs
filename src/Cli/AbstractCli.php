@@ -28,6 +28,16 @@ abstract class AbstractCli implements CliInterface
 	protected $commandParentName;
 
 	/**
+	 * Contents of the example class
+	 *
+	 * When some of the renaming classes will be called, contents will get
+	 * stored in this variable. That way we can chain the commands.
+	 *
+	 * @var string
+	 */
+	protected $fileContents;
+
+	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
@@ -108,15 +118,17 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function registerCommand(): void
 	{
-		if (! class_exists($this->getClassName())) {
+		if (!class_exists($this->getClassName())) {
 			throw new \RuntimeException('Class doesn\'t exist');
 		}
 
 		try {
 			$reflectionClass = new \ReflectionClass($this->getClassName());
+			// @codeCoverageIgnoreStart
 		} catch (\ReflectionException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
+			self::cliError("{$e->getCode()}: {$e->getMessage()}");
 		}
+		// @codeCoverageIgnoreEnd
 
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
@@ -167,10 +179,6 @@ abstract class AbstractCli implements CliInterface
 
 		$lastElement = end($arr);
 
-		if (empty($lastElement)) {
-			throw new \RuntimeException('No class name given.');
-		}
-
 		return str_replace('Cli', '', $lastElement);
 	}
 
@@ -182,5 +190,734 @@ abstract class AbstractCli implements CliInterface
 	public function getCommandName(): string
 	{
 		return 'create_' . strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
+	}
+
+	/**
+	 * Generate correct class name from provided string
+	 *
+	 * Remove _, - and empty space. Create a camelcase from string.
+	 *
+	 * @param string $fileName File name from string.
+	 *
+	 * @return string
+	 */
+	public function getFileName(string $fileName): string
+	{
+		$class = explode('_', str_replace('-', '_', str_replace(' ', '_', $fileName)));
+
+		$className = array_map(
+			function ($item) {
+				return ucfirst($item);
+			},
+			$class
+		);
+
+		return implode('', $className);
+	}
+
+	/**
+	 * Get template file content and throw error if template is missing
+	 *
+	 * @param string $currentDir Absolute path to dir where example is.
+	 * @param string $fileName File Name of example.
+	 * @param bool   $skipMissing Skip existing file.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): self
+	{
+		$path = "{$currentDir}/{$this->getExampleFileName( $fileName )}.php";
+
+		// If you pass file name with extension the version will be used.
+		if (strpos($fileName, '.') !== false) {
+			$path = "{$currentDir}/{$fileName}";
+		}
+
+		$templateFile = '';
+
+		// Read the template contents, and replace the placeholders with provided variables.
+		if (file_exists($path)) {
+			$templateFile = file_get_contents($path);
+		} else {
+			if ($skipMissing) {
+				$this->fileContents = '';
+			} else {
+				self::cliError("The template {$path} seems to be missing.");
+			}
+		}
+
+		$this->fileContents = (string)$templateFile;
+
+		return $this;
+	}
+
+	/**
+	 * Generate example template file/class name
+	 *
+	 * @param string $string File name.
+	 *
+	 * @return string
+	 */
+	public function getExampleFileName(string $string): string
+	{
+		return "{$string}Example";
+	}
+
+	/**
+	 * Open an updated file and create it on output location
+	 *
+	 * @param string $outputDir Absolute path to output from project root dir.
+	 * @param string $outputFile Absolute path to output file.
+	 * @param array  $args Optional arguments.
+	 *
+	 * @return void
+	 */
+	public function outputWrite(string $outputDir, string $outputFile, array $args = []): void
+	{
+
+		// Set optional arguments.
+		$skipExisting = $this->getSkipExisting($args);
+
+		// Set output paths.
+		$outputDir = $this->getOutputDir($outputDir);
+
+		// Set output file path.
+		$outputFile = $this->getOutputFile($outputFile);
+		$outputFile = "{$outputDir}{$outputFile}";
+
+		// Bailout if file already exists.
+		if (file_exists($outputFile) && $skipExisting === false) {
+			self::cliError("The file {$outputFile} can\'t be generated because it already exists.");
+		}
+
+		// Create output dir if it doesn't exist.
+		if (!is_dir($outputDir)) {
+			mkdir($outputDir, 0755, true);
+		}
+
+		// Open a new file on output.
+		// If there is any error bailout. For example, user permission.
+		if (fopen($outputFile, "wb") !== false) {
+			$fp = fopen($outputFile, "wb");
+
+			// Write and close.
+			fwrite($fp, $this->fileContents);
+			fclose($fp);
+
+			// Return success.
+			if ($skipExisting) {
+				\WP_CLI::success("File {$outputFile} successfully renamed.");
+			} else {
+				\WP_CLI::success("File {$outputFile} successfully created.");
+			}
+			return;
+		}
+
+		self::cliError("File {$outputFile} couldn\'t be created. There was an error.");
+	}
+
+	/**
+	 * Get full output dir path
+	 *
+	 * @param string $path Project specific path.
+	 *
+	 * @return string
+	 */
+	public function getOutputDir(string $path = ''): string
+	{
+		if (function_exists('\add_action') && !getenv('TEST')) {
+			$root = $this->getProjectRootPath();
+		} else {
+			$root = $this->getProjectRootPath(true) . '/cliOutput';
+		}
+
+		$root = rtrim($root, '/');
+		$root = trim($root, '/');
+
+		$path = rtrim($path, '/');
+		$path = trim($path, '/');
+
+		return "/{$root}/{$path}";
+	}
+
+	/**
+	 * Get full output dir path
+	 *
+	 * @param string $file File name.
+	 *
+	 * @return string
+	 */
+	public function getOutputFile(string $file): string
+	{
+		$file = rtrim($file, '/');
+		$file = trim($file, '/');
+
+		if (strpos($file, '.') !== false) {
+			return "/{$file}";
+		}
+
+		return "/{$file}.php";
+	}
+
+	/**
+	 * Replace namespace EightshiftBoilerplateVendor\ in class
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameNamespace(array $args = []): self
+	{
+		$output = $this->fileContents;
+		$namespace = $this->getNamespace($args);
+		$vendorPrefix = $this->getVendorPrefix($args);
+
+		if (function_exists('\add_action') && !getenv('TEST')) {
+			$output = str_replace(
+				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
+				"namespace {$namespace}\\",
+				$output
+			);
+		} else {
+			$output = str_replace(
+				'namespace EightshiftBoilerplate\\',
+				"namespace {$namespace}\\",
+				$output
+			);
+		}
+
+		$this->fileContents = $output;
+
+		return $this;
+	}
+
+	/**
+	 * Replace use in class
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameUse(array $args = []): self
+	{
+		$output = $this->fileContents;
+
+		$vendorPrefix = $this->getVendorPrefix($args);
+		$namespace = $this->getNamespace($args);
+
+		$prefixUse = 'use';
+		$prefixPackage = '@package';
+
+		if (function_exists('\add_action')) {
+			$output = str_replace(
+				"{$prefixUse} EightshiftBoilerplateVendor\\",
+				"{$prefixUse} {$vendorPrefix}\\",
+				$output
+			);
+
+			$output = str_replace(
+				"{$prefixUse} {$vendorPrefix}\EightshiftBoilerplate\\",
+				"{$prefixUse} {$namespace}\\",
+				$output
+			);
+		} else {
+			$output = str_replace(
+				"{$prefixUse} EightshiftBoilerplate\\",
+				"{$prefixUse} {$namespace}\\",
+				$output
+			);
+		}
+
+		$output = str_replace(
+			"{$prefixPackage} EightshiftBoilerplate",
+			"{$prefixPackage} {$namespace}",
+			$output
+		);
+
+		$this->fileContents = $output;
+
+		return $this;
+	}
+
+	/**
+	 * Replace use in frontend libs views.
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameUseFrontendLibs(array $args = []): self
+	{
+		$output = $this->fileContents;
+
+		$vendorPrefix = $this->getVendorPrefix($args);
+		$namespace = $this->getNamespace($args);
+
+		$prefixUse = 'use';
+		$prefixPackage = '@package';
+
+		$output = str_replace(
+			"{$prefixUse} EightshiftBoilerplateVendor\\",
+			"{$prefixUse} {$vendorPrefix}\\",
+			$output
+		);
+
+		$output = str_replace(
+			"{$prefixUse} EightshiftBoilerplate\\",
+			"{$prefixUse} {$namespace}\\",
+			$output
+		);
+
+		$output = str_replace(
+			"{$prefixPackage} EightshiftBoilerplate",
+			"{$prefixPackage} {$namespace}",
+			$output
+		);
+
+		$this->fileContents = $output;
+
+		return $this;
+	}
+
+	/**
+	 * Replace text domain in class
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameTextDomain(array $args = []): self
+	{
+		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
+
+		$this->fileContents = str_replace(
+			'eightshift-libs',
+			$namespace,
+			$this->fileContents
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Replace text domain in class for frontend libs
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameTextDomainFrontendLibs(array $args = []): self
+	{
+		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
+
+		$this->fileContents = str_replace(
+			'eightshift-frontend-libs',
+			$namespace,
+			$this->fileContents
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Replace project file name
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameProjectName(array $args = []): self
+	{
+		$projectName = 'eightshift-boilerplate';
+
+		if (function_exists('\add_action') && !getenv('TEST')) {
+			$projectName = basename(dirname(__DIR__, 5));
+		}
+
+		if (isset($args['project_name'])) {
+			$projectName = $args['project_name'];
+		}
+
+		$this->fileContents = str_replace(
+			'eightshift-boilerplate',
+			$projectName,
+			$this->fileContents
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Replace project file type
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameProjectType(array $args = []): self
+	{
+		$projectType = 'themes';
+
+		if (function_exists('\add_action')) {
+			$projectType = basename(dirname(__DIR__, 6));
+		}
+
+		if (isset($args['project_type'])) {
+			$projectType = $args['project_type'];
+		}
+
+		$this->fileContents = str_replace(
+			'themes',
+			$projectType,
+			$this->fileContents
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Change Class full name
+	 *
+	 * @param string $className Class Name.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameClassName(string $className): self
+	{
+		$this->fileContents = str_replace($this->getExampleFileName($className), $className, $this->fileContents);
+
+		return $this;
+	}
+
+	/**
+	 * Change Class full name with prefix
+	 *
+	 * @param string $templateName Current template.
+	 * @param string $newName New Class Name.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameClassNameWithPrefix(string $templateName, string $newName): self
+	{
+		$this->fileContents = str_replace($this->getExampleFileName($templateName), $newName, $this->fileContents);
+
+		return $this;
+	}
+
+	/**
+	 * Search and replace wrapper
+	 *
+	 * This method will do a search and replace in the fileContents member variable and
+	 * return the current instance.
+	 *
+	 * It's a wrapper of str_replace.
+	 *
+	 * @param string $oldString Old string.
+	 * @param string $newString New string.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function searchReplaceString(string $oldString, string $newString): self
+	{
+		$this->fileContents = str_replace($oldString, $newString, $this->fileContents);
+
+		return $this;
+	}
+
+	/**
+	 * Get composer from project or lib
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return array
+	 */
+	public function getComposer(array $args = []): array
+	{
+		if (!isset($args['config_path'])) {
+			if (function_exists('\add_action')) {
+				$composerPath = $this->getProjectRootPath() . '/composer.json';
+			} else {
+				$composerPath = $this->getProjectRootPath(true) . '/composer.json';
+			}
+		} else {
+			$composerPath = $args['config_path'];
+		}
+
+		$composerFile = file_get_contents($composerPath);
+
+		if ($composerFile === false) {
+			self::cliError("The composer on {$composerPath} path seems to be missing.");
+		}
+
+		return json_decode((string)$composerFile, true);
+	}
+
+	/**
+	 * Get composers defined namespace
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return string
+	 */
+	public function getNamespace(array $args = []): string
+	{
+		$namespace = '';
+
+		if (isset($args['namespace'])) {
+			$namespace = $args['namespace'];
+		}
+
+		if (empty($namespace)) {
+			$composer = $this->getComposer($args);
+
+			$namespace = rtrim(array_key_first($composer['autoload']['psr-4']), '\\');
+		}
+
+		return $namespace;
+	}
+
+	/**
+	 * Get composers defined vendor prefix
+	 *
+	 * @param array $args CLI args array.
+	 *
+	 * @return string
+	 */
+	public function getVendorPrefix(array $args = []): string
+	{
+		$vendorPrefix = '';
+
+		if (isset($args['vendor_prefix'])) {
+			$vendorPrefix = $args['vendor_prefix'];
+		}
+
+		if (empty($vendorPrefix)) {
+			$composer = $this->getComposer($args);
+
+			$vendorPrefix = $composer['extra']['imposter']['namespace'] ?? 'EightshiftLibs';
+		}
+
+		return $vendorPrefix;
+	}
+
+	/**
+	 * Convert user input string to slug safe format
+	 *
+	 * Convert _ to -, empty space to - and convert everything to lowercase
+	 * if the string contains empty space.
+	 *
+	 * @param string $string String to convert.
+	 *
+	 * @return string
+	 */
+	public function prepareSlug(string $string): string
+	{
+		if (strpos($string, ' ') !== false) {
+			$string = strtolower($string);
+		}
+
+		return str_replace('_', '-', str_replace(' ', '-', $string));
+	}
+
+	/**
+	 * Loop array of classes and output the commands
+	 *
+	 * @param array $items Array of classes.
+	 * @param bool  $run Run or log output.
+	 *
+	 * @return void
+	 *
+	 * @throws \ReflectionException Error in the case reflection class couldn't be created.
+	 */
+	public function getEvalLoop(array $items = [], bool $run = false): void
+	{
+		foreach ($items as $item) {
+			try {
+				$reflectionClass = new \ReflectionClass($item);
+				// @codeCoverageIgnoreStart
+			} catch (\ReflectionException $e) {
+				self::cliError("{$e->getCode()}: {$e->getMessage()}");
+			}
+			// @codeCoverageIgnoreEnd
+
+			$class = $reflectionClass->newInstanceArgs(['null']);
+
+			if (method_exists($class, 'getCommandName')) {
+				if (!$run) {
+					\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+				} else {
+					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Run reset command in develop mode only
+	 *
+	 * @return void
+	 */
+	public function runReset(): void
+	{
+		$reset = new CliReset('');
+		\WP_CLI::runcommand("eval-file bin/cli.php {$reset->getCommandName()} --skip-wordpress");
+	}
+
+	/**
+	 * Returns projects root folder based on the environment
+	 *
+	 * @param bool $isDev Returns path based on the env.
+	 *
+	 * @return string
+	 */
+	public function getProjectRootPath(bool $isDev = false): string
+	{
+		$output = dirname(__DIR__, 5);
+
+		if ($isDev || getenv('TEST') !== false) {
+			$output = dirname(__DIR__, 2);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Returns projects root where config is installed based on the environment
+	 *
+	 * @param bool $isDev Returns path based on the env.
+	 *
+	 * @return string
+	 */
+	public function getProjectConfigRootPath(bool $isDev = false): string
+	{
+		$output = dirname(__DIR__, 8);
+
+		if ($isDev) {
+			$output = dirname(__DIR__, 2);
+		}
+
+		if (getenv('TEST')) {
+			$output = dirname(__DIR__, 2);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Returns Eightshift frontend libs path
+	 *
+	 * @param string $path Additional path.
+	 *
+	 * @return string
+	 */
+	public function getFrontendLibsPath(string $path = ''): string
+	{
+		return "{$this->getProjectRootPath()}/node_modules/@eightshift/frontend-libs/{$path}";
+	}
+
+	/**
+	 * Returns Eightshift libs path
+	 *
+	 * @param string $path Additional path.
+	 *
+	 * @return string
+	 */
+	public function getLibsPath(string $path = ''): string
+	{
+		if (getenv('TEST')) {
+			return "{$this->getProjectRootPath()}/{$path}";
+		}
+
+		return "{$this->getProjectRootPath()}/vendor/infinum/eightshift-libs/{$path}";
+	}
+
+	/**
+	 * Returns Eightshift frontend libs blocks init path.
+	 *
+	 * @return string
+	 */
+	public function getFrontendLibsBlockPath(): string
+	{
+		return $this->getFrontendLibsPath('blocks/init');
+	}
+
+	/**
+	 * Full blocks files list used for renaming
+	 *
+	 * @param string $name Block name.
+	 *
+	 * @return array
+	 */
+	public function getFullBlocksFiles(string $name): array
+	{
+		return [
+			"{$name}.php",
+			"{$name}-block.js",
+			"{$name}-hooks.js",
+			"{$name}-transforms.js",
+			"{$name}.js",
+			"docs/story.js",
+			"components/{$name}-editor.js",
+			"components/{$name}-toolbar.js",
+			"components/{$name}-options.js",
+		];
+	}
+
+	/**
+	 * Check and prepare default value for skip_existing arg.
+	 *
+	 * @param array $args Optional arguments.
+	 *
+	 * @return boolean
+	 */
+	public function getSkipExisting(array $args): bool
+	{
+		return isset($args['skip_existing']) ? (bool) $args['skip_existing'] : false;
+	}
+
+	/**
+	 * Prepare Command Doc for output
+	 *
+	 * @param array $docs Command docs array.
+	 * @param array $docsGlobal Global docs array.
+	 *
+	 * @throws \RuntimeException Error in case the shortdesc is missing in command docs.
+	 *
+	 * @return array
+	 */
+	public function prepareCommandDocs(array $docs, array $docsGlobal): array
+	{
+		$shortdesc = $docs['shortdesc'] ?? '';
+
+		if (!$shortdesc) {
+			throw new \RuntimeException('CLI Short description is missing.');
+		}
+
+		$synopsis = $docs['synopsis'] ?? [];
+
+		return [
+			'shortdesc' => $shortdesc,
+			'synopsis' => array_merge(
+				$docsGlobal['synopsis'],
+				$synopsis
+			)
+		];
+	}
+
+	/**
+	 * Manually prepare arguments to pass to runcommand method.
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return string
+	 */
+	public function prepareArgsManual(array $args): string
+	{
+		$output = '';
+		foreach ($args as $key => $value) {
+			$output .= "--{$key}='{$value}' ";
+		}
+
+		return $output;
 	}
 }

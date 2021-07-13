@@ -87,19 +87,12 @@ class FieldCli extends AbstractCli
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
-
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		$class = str_replace('example-post-type', $objectType, $class);
-		$class = str_replace('example-field', $fieldName, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameClassNameWithPrefix($this->getClassShortName(), $className)
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs)
+			->searchReplaceString('example-post-type', $objectType)
+			->searchReplaceString('example-field', $fieldName)
+			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }

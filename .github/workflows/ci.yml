@@ -1,111 +1,79 @@
 name: Continuous integration checks
 
 on:
-    pull_request:
-        branches: [master, develop]
-    push:
-        branches: [master]
+  # Run on PRs and pushes, only on significant changes.
+  push:
+    branches:
+      - develop
+      - main
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
 
 jobs:
-    phpcs:
-        name: PHPCS check on PHP ${{ matrix.php }}
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                php: [7.2, 7.3, 7.4]
+  phpcs:
+    name: PHPCS check on PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.3', '7.4']
 
-        steps:
-            # Checkout repository
-            - name: Checkout
-              uses: actions/checkout@v2
+    steps:
+      # Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v2
 
-            # Setup PHP versions, run checks
-            - name: PHP setup
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: ${{ matrix.php }}
-                coverage: pcov
+      # Setup PHP versions, run checks
+      - name: PHP setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: cs2pr
 
-            - name: Get composer cache directory
-              id: composer-cache
-              run: |
-                echo "::set-output name=dir::$(composer config cache-files-dir)"
+      # Install dependencies and handle caching in one go.
+      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: highest
 
-            - name: Cache composer dependencies
-              uses: actions/cache@v1
-              with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: |
-                  ${{ runner.os }}-composer-
+      - name: Check coding standards using PHPCS
+        continue-on-error: true
+        run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
 
-            - name: Install composer packages
-              run: composer install --no-progress
+      - name: Show PHPCS results in PR
+        run: cs2pr ./phpcs-report.xml
 
-            - name: Check coding standards using PHPCS
-              run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}-
+  phpstan:
+    name: PHPStan check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4']
 
-    phpstan:
-        name: PHPStan check
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+    steps:
+     # Checkout repository
+     - name: Checkout
+       uses: actions/checkout@v2
 
-            - name: PHP setup
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: 7.2
-                coverage: pcov
+     # Setup PHP versions, run checks
+     - name: PHP setup
+       uses: shivammathur/setup-php@v2
+       with:
+         php-version: ${{ matrix.php }}
+         coverage: none
 
-            - name: Get composer cache directory
-              id: composer-cache
-              run: |
-                echo "::set-output name=dir::$(composer config cache-files-dir)"
+     # Install dependencies and handle caching in one go.
+     # @link https://github.com/marketplace/actions/install-composer-dependencies
+     - name: Install Composer dependencies
+       uses: ramsey/composer-install@v1
+       with:
+         dependency-versions: highest
 
-            - name: Cache composer dependencies
-              uses: actions/cache@v1
-              with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: |
-                  ${{ runner.os }}-composer-
-
-            - name: Install composer packages
-              run: composer install --no-progress
-
-            - name: Analyse code using phpstan
-              run: composer analyze
-
-    tests:
-        name: Codeception - Unit tests
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
-
-            - name: PHP setup
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: 7.2
-                coverage: pcov
-
-            - name: Get composer cache directory
-              id: composer-cache
-              run: |
-                echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            - name: Cache composer dependencies
-              uses: actions/cache@v1
-              with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: |
-                  ${{ runner.os }}-composer-
-
-            - name: Install composer packages
-              run: composer install --no-progress
-
-            - name: Run unit tests
-              run: composer tests:unit
+     - name: Check code consistency using PHPStan
+       run: composer analyze

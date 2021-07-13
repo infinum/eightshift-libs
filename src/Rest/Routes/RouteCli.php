@@ -99,19 +99,23 @@ class RouteCli extends AbstractCli
 		$className = $this->getFileName($endpointSlug);
 		$className = $className . $this->getClassShortName();
 
+		// If method is invalid throw error.
+		if (!isset(self::VERB_ENUM[$method])) {
+			\WP_CLI::error("Invalid method: $method, please use one of GET, POST, PATCH, PUT, or DELETE");
+		}
+
+		// If slug is empty throw error.
+		if (empty($endpointSlug)) {
+			\WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
+		}
+
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		$class = str_replace('/example-route', "/{$endpointSlug}", $class);
-		$class = str_replace('static::READABLE', static::VERB_ENUM[$method], $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameClassNameWithPrefix($this->getClassShortName(), $className)
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs)
+			->searchReplaceString('/example-route', "/{$endpointSlug}")
+			->searchReplaceString('static::READABLE', static::VERB_ENUM[$method])
+			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }

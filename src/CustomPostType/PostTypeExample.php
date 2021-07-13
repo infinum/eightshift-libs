@@ -73,7 +73,7 @@ class PostTypeExample extends AbstractPostType
 	/**
 	 * Get the arguments that configure the Projects custom post type.
 	 *
-	 * @return array Array of arguments.
+	 * @return array<mixed> Array of arguments.
 	 */
 	protected function getPostTypeArguments(): array
 	{

@@ -38,7 +38,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 */
 	public function setAssetsManifestRaw(): void
 	{
-		if (defined('WP_CLI')) {
+		if (defined('WP_CLI') && !getenv('TEST')) {
 			return;
 		}
 
@@ -74,7 +74,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 */
 	public function getAssetsManifestItem(string $key): string
 	{
-		if (defined('WP_CLI')) {
+		if (defined('WP_CLI') && !getenv('TEST')) {
 			return '';
 		}
 

@@ -17,6 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class BuildCli extends AbstractCli
 {
+	/**
+	 * Init build command name.
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'init_build';
 
 	/**
 	 * Output dir relative path
@@ -32,7 +38,7 @@ class BuildCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_build';
+		return self::COMMAND_NAME;
 	}
 
 	/**
@@ -87,13 +93,9 @@ class BuildCli extends AbstractCli
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameProjectName($assocArgs, $class);
-		$class = $this->renameProjectType($assocArgs, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite($root . 'bin', 'build.sh', $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameProjectName($assocArgs)
+			->renameProjectType($assocArgs)
+			->outputWrite($root . 'bin', 'build.sh', $assocArgs);
 	}
 }

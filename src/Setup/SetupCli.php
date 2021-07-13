@@ -17,6 +17,7 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class SetupCli extends AbstractCli
 {
+	public const SETUP_CLI_COMMAND_NAME = 'init_setup';
 
 	/**
 	 * Output dir relative path.
@@ -32,7 +33,7 @@ class SetupCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_setup';
+		return self::SETUP_CLI_COMMAND_NAME;
 	}
 
 	/**
@@ -74,10 +75,8 @@ class SetupCli extends AbstractCli
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
-		// Get setup.json file.
-		$json = $this->getExampleTemplate(__DIR__, 'setup.json');
-
-		// Output json file to project root.
-		$this->outputWrite($root, 'setup.json', $json, $assocArgs);
+		// Get setup.json example file, and create the one in the project.
+		$this->getExampleTemplate(__DIR__, 'setup.json')
+			->outputWrite($root, 'setup.json', $assocArgs);
 	}
 }

@@ -33,11 +33,9 @@ class LoginExample implements ServiceInterface
 	/**
 	 * Change default logo link with home url.
 	 *
-	 * @param string $loginHeaderUrl Login header logo URL.
-	 *
 	 * @return string Modified login header logo URL.
 	 */
-	public function customLoginUrl(string $loginHeaderUrl): string
+	public function customLoginUrl(): string
 	{
 		return \home_url('/');
 	}

@@ -64,7 +64,7 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * * Example: $localization_array => [
 	 *  'localizationHandler' => [
-	 *      'someValue'    => esc_html__( 'Hi there!', 'text-domain' ),
+	 *      'someValue'    => \esc_html__( 'Hi there!', 'text-domain' ),
 	 *      'anotherValue' => $variableValue,
 	 *  ]
 	 * ];
