@@ -909,6 +909,7 @@ class Components
 			'selectorClass',
 			'additionalClass',
 			'uniqueWrapperId',
+			'parentClass'
 		];
 
 		$blockName = $attributes['blockName'] ?? '';
