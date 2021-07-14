@@ -64,6 +64,6 @@ class Post
 		$readingTime = ceil($wordCount / self::AVERAGE_WORD_COUNT);
 
 		/* translators: %d: number of minutes needed for reading the article. */
-		return sprintf(\esc_html__('%d min reading time', 'eightshift-libs'), $readingTime);
+		return esc_html($readingTime);
 	}
 }
