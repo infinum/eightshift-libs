@@ -315,8 +315,6 @@ class Components
 	 */
 	public static function getAttrKey(string $key, array $attributes, array $manifest): string
 	{
-		$prefix = $attributes['prefix'] ?? '';
-
 		// Just skip if attribute is wrapper.
 		if (strpos($key, 'wrapper') !== false) {
 			return $key;
@@ -327,15 +325,14 @@ class Components
 			return $key;
 		}
 
-		// Populate prefix key for recursive checks of attribute names.
-		// If prefix is empty use blockName as prefix.
-		if ($prefix === '') {
-			$prefix = $manifest['blockName'] ?? '';
+		// If missing prefix or prefix is empty return key.
+		if (!isset($attributes['prefix']) || $attributes['prefix'] === '') {
+			return $key;
 		}
 
 		// No need to test if this is block or component because on top level block there is no prefix.
 		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
-		return str_replace(Components::kebabToCamelCase($manifest['componentName']), $prefix, $key);
+		return str_replace(Components::kebabToCamelCase($manifest['componentName']), $attributes['prefix'], $key);
 	}
 
 	/**
