@@ -13,7 +13,7 @@ use function Tests\setupMocks;
  */
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();  
+	setupMocks();
 
   Functions\when('parse_blocks')
     ->alias(function($blocks) {
@@ -47,13 +47,13 @@ afterEach(function() {
 });
 
 /**
- * Checking if reading time is correct based on the content that appears in 
+ * Checking if reading time is correct based on the content that appears in
  * dataset postsDifferentLength.
  */
 test('Correct get reading time function', function ($posts) {
   Functions\when('get_the_content')
     ->alias(function($more_link_text=null, $strip_teaser=false, $postId) use ($posts) {
-      return $posts[$postId];  
+      return $posts[$postId];
     });
 
   foreach ($posts as $postId => $postContent) {
@@ -64,9 +64,9 @@ test('Correct get reading time function', function ($posts) {
       $wordCount = $wordCount + str_word_count($blockContent);
     }
 
-    $testReadingTime = (int) ceil( $wordCount / Post::AVERAGE_WORD_COUNT) . ' min reading time';
+    $testReadingTime = (int) ceil( $wordCount / Post::AVERAGE_WORD_COUNT);
 
     $this->assertSame($methodReadingTime, $testReadingTime);
-  } 
+  }
 
 })->with('postsDifferentLength');
