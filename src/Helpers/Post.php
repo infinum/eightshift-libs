@@ -35,9 +35,9 @@ class Post
 	 *
 	 * @param int $postID ID of post content to calculate.
 	 *
-	 * @return string reading time string.
+	 * @return int reading time integer.
 	 */
-	public static function getReadingTime(int $postID): string
+	public static function getReadingTime(int $postID): int
 	{
 		$contentBlocks = \parse_blocks(\get_the_content(null, false, $postID));
 
@@ -64,6 +64,6 @@ class Post
 		$readingTime = ceil($wordCount / self::AVERAGE_WORD_COUNT);
 
 		/* translators: %d: number of minutes needed for reading the article. */
-		return esc_html($readingTime);
+		return (int)$readingTime;
 	}
 }

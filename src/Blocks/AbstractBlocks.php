@@ -504,7 +504,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			if (substr((string)$attribute, 0, strlen('wrapper')) === 'wrapper') {
 				$attributeName = $attribute;
 			} else {
-				$attributeName = $newParent . ucfirst($attribute);
+				$attributeName = $newParent . ucfirst((string)$attribute);
 			}
 
 			// Output new attribute names.
