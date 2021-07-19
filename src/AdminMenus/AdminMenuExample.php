@@ -151,5 +151,4 @@ class AdminMenuExample extends AbstractAdminMenu
 			'pageTitle' => \esc_html__('Admin Title', 'eightshift-libs'),
 		];
 	}
-
 }
