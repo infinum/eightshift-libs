@@ -13,7 +13,7 @@ namespace EightshiftBoilerplate\AdminMenus;
 use EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
- * BlockPatternExample class.
+ * AdminMenuExample class.
  */
 class AdminMenuExample extends AbstractAdminMenu
 {
