@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Custom Taxonomy.
+ * Class that registers WPCLI command for custom post type registration.
  *
  * @package EightshiftLibs\CustomPostType
  */
@@ -58,7 +58,7 @@ class PostTypeCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'label',
-					'description' => 'The label of the custom taxonomy to show in WP admin.',
+					'description' => 'The label of the custom post type to show in WP admin.',
 					'optional' => false,
 				],
 				[
