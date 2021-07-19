@@ -18,11 +18,32 @@ use EightshiftLibs\AdminMenus\AbstractAdminMenu;
 class AdminMenuExample extends AbstractAdminMenu
 {
 	/**
-	 * Capability for this post type
+	 * Capability for this admin menu
 	 *
 	 * @var string
 	 */
 	public const ADMIN_MENU_CAPABILITY = 'edit_posts';
+
+	/**
+	 * Menu slug for this admin menu
+	 *
+	 * @var string
+	 */
+	public const ADMIN_MENU_SLUG = 'example-menu-slug';
+
+	/**
+	 * Menu icon for this admin menu
+	 *
+	 * @var string
+	 */
+	public const ADMIN_MENU_ICON = 'dashicons-admin-generic';
+
+	/**
+	 * Menu position for this admin menu
+	 *
+	 * @var string
+	 */
+	public const ADMIN_MENU_POSITION = 100;
 
 	/**
 	 * Get the title to use for the admin page.
@@ -41,7 +62,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Admin Title', 'eightshift-libs');
+		return \esc_html__('Admin Menu Title', 'eightshift-libs');
 	}
 
 	/**
@@ -51,7 +72,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getCapability(): string
 	{
-		return \esc_html__('Admin Title', 'eightshift-libs');
+		return self::ADMIN_MENU_CAPABILITY;
 	}
 
 	/**
@@ -63,7 +84,43 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getMenuSlug(): string
 	{
-		return self::ADMIN_MENU_CAPABILITY;
+		return self::ADMIN_MENU_SLUG;
+	}
+
+	/**
+	 * Get the URL to the icon to be used for this menu
+	 *
+	 * @return string The URL to the icon to be used for this menu.
+	 *                * Pass a base64-encoded SVG using a data URI, which will be colored to match
+	 *                  the color scheme. This should begin with 'data:image/svg+xml;base64,'.
+	 *                * Pass the name of a Dashicons helper class to use a font icon,
+	 *                  e.g. 'dashicons-chart-pie'.
+	 *                * Pass 'none' to leave div.wp-menu-image empty so an icon can be added via CSS.
+	 */
+	protected function getIcon(): string
+	{
+		return self::ADMIN_MENU_ICON;
+	}
+
+	/**
+	 * Get the position of the menu.
+	 *
+	 * @return int Number that indicates the position of the menu.
+	 * 5   - below Posts
+	 * 10  - below Media
+	 * 15  - below Links
+	 * 20  - below Pages
+	 * 25  - below comments
+	 * 60  - below first separator
+	 * 65  - below Plugins
+	 * 70  - below Users
+	 * 75  - below Tools
+	 * 80  - below Settings
+	 * 100 - below second separator
+	 */
+	protected function getPosition(): int
+	{
+		return self::ADMIN_MENU_POSITION;
 	}
 
 	/**
@@ -94,4 +151,5 @@ class AdminMenuExample extends AbstractAdminMenu
 			'pageTitle' => \esc_html__('Admin Title', 'eightshift-libs'),
 		];
 	}
+
 }
