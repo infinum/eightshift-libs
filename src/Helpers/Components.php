@@ -620,6 +620,9 @@ class Components
 		// Define variables from globalManifest.
 		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
 
+		// Sort breakpoints in ascending order.
+		asort($breakpoints);
+
 		// Define variables from manifest.
 		$variables = $manifest['variables'];
 
@@ -744,26 +747,33 @@ class Components
 
 			// Inner object for min values.
 			$itemObjectMin = array_merge(
+				$itemObject,
 				[
 					'type' => 'min',
-				],
-				$itemObject
+					'value' => $minBreakpointValue ?? 0,
+				]
 			);
 
 			// Inner object for max values.
 			$itemObjectMax = array_merge(
+				$itemObject,
 				[
 					'type' => 'max',
-				],
-				$itemObject
+				]
 			);
+
+			// Transfer value to bigger breakpoint.
+			$minBreakpointValue = $itemValue;
 
 			// Push both min and max to the defined arrays.
 			$min[] = $itemObjectMin;
 			$max[] = $itemObjectMax;
 		};
 
-		// Add default object to the top of the array.
+		// Pop largest breakpoint out of min array.
+		array_shift($min);
+
+		// Add default object to the top of the array as minimum.
 		array_unshift(
 			$min,
 			[
@@ -777,7 +787,10 @@ class Components
 		// Reverse order of max array.
 		$max = array_reverse($max);
 
-		// Add default object to the top of the array.
+		// Throw out the largest.
+		array_shift($max);
+
+		// Switch the largest to default.
 		array_unshift(
 			$max,
 			[
