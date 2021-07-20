@@ -613,7 +613,7 @@ class Components
 		}
 
 		// Bailout if manifest is missing variables key.
-		if (!isset($manifest['variables'])) {
+		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
 			return '';
 		}
 
@@ -624,7 +624,7 @@ class Components
 		asort($breakpoints);
 
 		// Define variables from manifest.
-		$variables = $manifest['variables'];
+		$variables = $manifest['variables'] ?? [];
 
 		// Define responsiveAttributes from manifest.
 		$responsiveAttributes = $manifest['responsiveAttributes'] ?? [];
@@ -665,8 +665,10 @@ class Components
 			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest);
 		}
 
-		// Iterate each variable.
-		$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest);
+		if (!empty($variables)) {
+			// Iterate each variable.
+			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest);
+		}
 
 		// Loop data and provide correct selectors from data array.
 		foreach ($data as $values) {
