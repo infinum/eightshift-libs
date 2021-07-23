@@ -34,10 +34,10 @@ test('Register method will call init hooks', function () {
 	$this->assertSame(11, has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->registerBlocks()'), 'The callback registerBlocks should be hooked to init hook with priority 11');
 });
 
-test('Register method will call block_categories hooks', function () {
+test('Register method will call block_categories_all hooks', function () {
 	$this->blocksExample->register();
 
-	$this->assertSame(10, has_filter('block_categories', 'EightshiftBoilerplate\Blocks\BlocksExample->getCustomCategory()'), 'The callback getCustomCategory should be hooked to block_categories hook with priority 10');
+	$this->assertSame(10, has_filter('block_categories_all', 'EightshiftBoilerplate\Blocks\BlocksExample->getCustomCategory()'), 'The callback getCustomCategory should be hooked to block_categories_all hook with priority 10');
 });
 
 test('Register method will call after_setup_theme hooks', function () {
@@ -210,8 +210,8 @@ test('Asserts that renderWrapperView will throw error if path is not valid.', fu
 
 test('Asserts that getCustomCategory will return categories array.', function () {
 
-	$post = \Mockery::mock('WP_Post');
-	$category = $this->blocksExample->getCustomCategory([], $post);
+	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$category = $this->blocksExample->getCustomCategory([], $blockContext);
 
 	$this->assertIsArray($category);
 	$this->assertContains('eightshift', $category[0], "Items array doesn't contain eightshift category");
@@ -219,8 +219,8 @@ test('Asserts that getCustomCategory will return categories array.', function ()
 
 test('Asserts that getCustomCategory will throw error if first argument is not array.', function () {
 
-	$post = \Mockery::mock('WP_Post');
-	$this->blocksExample->getCustomCategory('', $post);
+	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$this->blocksExample->getCustomCategory('', $blockContext);
 
 })->throws(\TypeError::class);
 
