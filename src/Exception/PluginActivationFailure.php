@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Exception;
 
 /**
- * Class Plugin_Activation_Failure.
+ * Class PluginActivationFailure
  */
 final class PluginActivationFailure extends \RuntimeException implements GeneralExceptionInterface
 {
@@ -23,8 +23,8 @@ final class PluginActivationFailure extends \RuntimeException implements General
 	 *
 	 * @return static
 	 */
-	public static function activationMessage(string $message)
+	public static function activationMessage(string $message): PluginActivationFailure
 	{
-		return new static($message);
+		return new PluginActivationFailure($message);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File containing the failure exception class when assets aren't bundled or missing.
+ * File containing the failure exception class when assets aren't bundled or missing
  *
  * @package EightshiftLibs\Exception
  */
@@ -11,21 +11,21 @@ declare(strict_types=1);
 namespace EightshiftLibs\Exception;
 
 /**
- * Class Invalid_Manifest.
+ * Class InvalidManifest
  */
 final class InvalidManifest extends \InvalidArgumentException implements GeneralExceptionInterface
 {
 
 	/**
-	 * Throws error if manifest key is missing.
+	 * Throws error if manifest key is missing
 	 *
 	 * @param string $key Missing manifest key.
 	 *
 	 * @return static
 	 */
-	public static function missingManifestItemException(string $key)
+	public static function missingManifestItemException(string $key): InvalidManifest
 	{
-		return new static(
+		return new InvalidManifest(
 			sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
@@ -38,15 +38,15 @@ final class InvalidManifest extends \InvalidArgumentException implements General
 	}
 
 	/**
-	 * Throws error if manifest.json file is missing.
+	 * Throws error if manifest.json file is missing
 	 *
 	 * @param string $path Missing manifest.json path.
 	 *
 	 * @return static
 	 */
-	public static function missingManifestException(string $path)
+	public static function missingManifestException(string $path): InvalidManifest
 	{
-		return new static(
+		return new InvalidManifest(
 			sprintf(
 			/* translators: %s is replaced by the path where the manifest.json should be */
 				\esc_html__(
@@ -67,8 +67,8 @@ final class InvalidManifest extends \InvalidArgumentException implements General
 	 *
 	 * @return static
 	 */
-	public static function manifestStructureException(string $error)
+	public static function manifestStructureException(string $error): InvalidManifest
 	{
-		return new static($error);
+		return new InvalidManifest($error);
 	}
 }

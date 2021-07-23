@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Exception;
 
 /**
- * Class Invalid_Block.
+ * Class InvalidBlock
  */
 final class InvalidBlock extends \InvalidArgumentException implements GeneralExceptionInterface
 {
@@ -21,9 +21,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingBlocksException()
+	public static function missingBlocksException(): InvalidBlock
 	{
-		return new static(\esc_html__('There are no blocks added in your project.', 'eightshift-libs'));
+		return new InvalidBlock(\esc_html__('There are no blocks added in your project.', 'eightshift-libs'));
 	}
 
 	/**
@@ -31,9 +31,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingComponentsException()
+	public static function missingComponentsException(): InvalidBlock
 	{
-		return new static(\esc_html__('There are no components added in your project.', 'eightshift-libs'));
+		return new InvalidBlock(\esc_html__('There are no components added in your project.', 'eightshift-libs'));
 	}
 
 	/**
@@ -43,9 +43,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingNameException(string $blockPath)
+	public static function missingNameException(string $blockPath): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			sprintf(
 			/* translators: %s will be replaced with the path where the block should be. */
 				\esc_html__('Block in this path %s is missing blockName key in its manifest.json.', 'eightshift-libs'),
@@ -62,9 +62,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingViewException(string $blockName, string $blockPath)
+	public static function missingViewException(string $blockName, string $blockPath): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			sprintf(
 			/* translators: %1$s is going to be replaced with the template name, %2$s with the template path. */
 				\esc_html__(
@@ -84,9 +84,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingRenderViewException(string $blockPath)
+	public static function missingRenderViewException(string $blockPath): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			sprintf(
 			/* translators: %s will be replaced with the block path. */
 				\esc_html__(
@@ -105,9 +105,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingSettingsManifestException(string $settingsManifestPath)
+	public static function missingSettingsManifestException(string $settingsManifestPath): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			sprintf(
 			/* translators: %s will be replaced with the location of the manifest for the block. */
 				\esc_html__('Global blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
@@ -123,9 +123,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingWrapperManifestException(string $settingsManifestPath)
+	public static function missingWrapperManifestException(string $settingsManifestPath): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			sprintf(
 			/* translators: %s will be replaced with the manifest path location. */
 				\esc_html__('Wrapper blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
@@ -141,9 +141,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingComponentManifestException(string $settingsManifestPath)
+	public static function missingComponentManifestException(string $settingsManifestPath): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			sprintf(
 			/* translators: %s will be replaced with the manifest path location. */
 				esc_html__('Component manifest.json is missing on this location: %s.', 'eightshift-libs'),
@@ -159,9 +159,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingWrapperViewException(string $wrapperPath)
+	public static function missingWrapperViewException(string $wrapperPath): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			sprintf(
 			/* translators: %s will be replaced with the view template path location. */
 				\esc_html__('Wrapper view is missing. Template should be located in this path %s', 'eightshift-libs'),
@@ -175,9 +175,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function missingNamespaceException()
+	public static function missingNamespaceException(): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			\esc_html__(
 				'Global Blocks settings manifest.json is missing a key called namespace. This key prefixes all block names.',
 				'eightshift-libs'
@@ -189,16 +189,17 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	 * Throws error if global manifest settings key namespace MarkoVendor\is missing.
 	 *
 	 * @param string $name Block/component name.
-	 * @param string $componentName Component name to chec.
+	 * @param string $componentName Component name to check.
 	 *
 	 * @return static
 	 */
-	public static function wrongComponentNameException(string $name, string $componentName)
+	public static function wrongComponentNameException(string $name, string $componentName): InvalidBlock
 	{
-		return new static(
+		return new InvalidBlock(
 			sprintf(
 				/* translators: %1$s is going to be replaced with the component/block name, %2$s with component name. */
-				\esc_html__('Component specified in %1$s manifest doesn\'t exist in your components list. Please check if you project has %2$s component.', 'eightshift-libs'),
+				\esc_html__('Component specified in %1$s manifest doesn\'t exist in your components list.
+				Please check if you project has %2$s component.', 'eightshift-libs'),
 				$name,
 				$componentName
 			)
