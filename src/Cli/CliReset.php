@@ -29,9 +29,9 @@ class CliReset extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -40,6 +40,7 @@ class CliReset extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$outputDir = $this->getOutputDir('');

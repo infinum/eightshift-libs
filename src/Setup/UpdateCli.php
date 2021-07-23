@@ -31,9 +31,9 @@ class UpdateCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -74,6 +74,7 @@ class UpdateCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		require_once $this->getLibsPath('src/Setup/Setup.php');

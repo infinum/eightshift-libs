@@ -52,14 +52,14 @@ abstract class AbstractTaxonomy implements ServiceInterface
 	/**
 	 * Get the post type slug(s) that use the taxonomy.
 	 *
-	 * @return string|array Custom post type slug or an array of slugs.
+	 * @return string|string[] Custom post type slug or an array of slugs.
 	 */
 	abstract protected function getPostTypeSlug();
 
 	/**
 	 * Get the arguments that configure the custom taxonomy.
 	 *
-	 * @return array Array of arguments.
+	 * @return array<string, mixed> Array of arguments.
 	 */
 	abstract protected function getTaxonomyArguments(): array;
 }

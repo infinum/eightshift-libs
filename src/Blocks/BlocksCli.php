@@ -35,7 +35,7 @@ class BlocksCli extends AbstractCli
 	/**
 	 * List of components
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	public const COMPONENTS = [
 		'button',
@@ -59,7 +59,7 @@ class BlocksCli extends AbstractCli
 	/**
 	 * List of blocks
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	public const BLOCKS = [
 		'button',
@@ -76,7 +76,7 @@ class BlocksCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -85,6 +85,7 @@ class BlocksCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$className = $this->getClassShortName();
@@ -107,7 +108,7 @@ class BlocksCli extends AbstractCli
 	/**
 	 * Copy blocks from Eightshift-frontend-libs to project
 	 *
-	 * @param array $args Arguments array.
+	 * @param string[] $args Arguments array.
 	 *
 	 * @return void
 	 */

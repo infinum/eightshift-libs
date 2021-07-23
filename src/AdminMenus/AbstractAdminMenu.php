@@ -51,7 +51,7 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	 * The echo doesn't need to be escaped since it's escaped
 	 * in the render method.
 	 *
-	 * @param array|string $attr Attributes as passed to the admin menu.
+	 * @param array<string, mixed>|string $attr Attributes as passed to the admin menu.
 	 *
 	 * @return void The rendered content needs to be echoed.
 	 * @throws \Exception Exception in case the component is missing.
@@ -69,7 +69,7 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	/**
 	 * Render the current view.
 	 *
-	 * @param array  $attributes Array of attributes passed to the view.
+	 * @param array<string, mixed>  $attributes Array of attributes passed to the view.
 	 * @param string $innerBlockContent Not used here.
 	 *
 	 * @return string Rendered HTML.
@@ -128,10 +128,10 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	/**
 	 * Process the admin menu attributes.
 	 *
-	 * @param array|string $attr Raw admin menu attributes passed into the
+	 * @param array<string, mixed>|string $attr Raw admin menu attributes passed into the
 	 *                           admin menu function.
 	 *
-	 * @return array Processed admin menu attributes.
+	 * @return array<string, mixed> Processed admin menu attributes.
 	 */
 	abstract protected function processAttributes($attr): array;
 

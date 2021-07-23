@@ -22,7 +22,7 @@ class Components
 	 * Makes sure the output is string. Useful for converting an array of components into a string.
 	 * If you pass an associative array it will output strings with keys, used for generating data-attributes from array.
 	 *
-	 * @param array|string $variable Variable we need to convert into a string.
+	 * @param array<string, mixed>|string[]|string $variable Variable we need to convert into a string.
 	 *
 	 * @throws ComponentException When $variable is not a string or array.
 	 *
@@ -54,7 +54,7 @@ class Components
 	/**
 	 * Converts an array of classes into a string which can be echoed.
 	 *
-	 * @param array $classes Array of classes.
+	 * @param string[] $classes Array of classes.
 	 *
 	 * @return string
 	 */
@@ -71,16 +71,16 @@ class Components
 	 * are set, the component will be wrapped with a <div class="header__logo"></div>.
 	 *
 	 * @param string $component Component's name or full path (ending with .php).
-	 * @param array  $attributes Array of attributes that's implicitly passed to component.
+	 * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
 	 * @param string $parentPath If parent path is provides it will be appended to the file location.
-	 *                            If not get_template_directory_uri() will be used as a default parent path.
-	 * @param bool   $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
+	 *                           If not get_template_directory_uri() will be used as a default parent path.
+	 * @param bool $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
 	 *
 	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return string
 	 */
-	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false)
+	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false): string
 	{
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
@@ -139,16 +139,20 @@ class Components
 	}
 
 	/**
-	 * Merges attributes array with the manifet default attributes.
+	 * Merges attributes array with the manifest default attributes.
 	 *
-	 * @param array $manifest   Block/Component manifest data.
-	 * @param array $attributes Block/Component rendered attributes data.
+	 * @param array<string, mixed> $manifest Block/Component manifest data.
+	 * @param array<string, mixed> $attributes Block/Component rendered attributes data.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public static function getDefaultRenderAttributes(array $manifest, array $attributes): array
 	{
 		$defaultAttributes = [];
+
+		if (!is_iterable($manifest['attributes'])) {
+			return [];
+		}
 
 		foreach ($manifest['attributes'] as $itemKey => $itemValue) {
 			// Get the correct key for the check in the attributes object.
@@ -169,7 +173,7 @@ class Components
 	 *
 	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public static function getManifest(string $path): array
 	{
@@ -192,14 +196,14 @@ class Components
 	 * Output:
 	 * block-column__width-large--4
 	 *
-	 * @param array   $items Array of breakpoints.
-	 * @param string  $selector Selector for this breakpoint.
-	 * @param string  $parent Parent block selector.
+	 * @param array<string, mixed> $items Array of breakpoints.
+	 * @param string $selector Selector for this breakpoint.
+	 * @param string $parent Parent block selector.
 	 * @param boolean $useModifier If false you can use this selector for visibility.
 	 *
 	 * @return string
 	 */
-	public static function responsiveSelectors(array $items, string $selector, string $parent, bool $useModifier = true)
+	public static function responsiveSelectors(array $items, string $selector, string $parent, bool $useModifier = true): string
 	{
 		$output = [];
 
@@ -223,12 +227,12 @@ class Components
 	 * This is used because Block editor will not output attributes that don't have a default value.
 	 *
 	 * @param string $key Key to check.
-	 * @param array  $attributes Array of attributes.
-	 * @param array  $manifest Array of default attributes from manifest.json.
+	 * @param array<string, mixed> $attributes Array of attributes.
+	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
 	 *
-	 * @return mixed
+	 * @return bool|string|string[]|array<string, mixed>
 	 */
 	public static function checkAttr(string $key, array $attributes, array $manifest)
 	{
@@ -273,15 +277,15 @@ class Components
 	 * Map and check attributes for responsive object.
 	 *
 	 * @param string $keyName Key name to find in the responsiveAttributes object.
-	 * @param array  $attributes Array of attributes.
-	 * @param array  $manifest Array of default attributes from manifest.json.
+	 * @param array<string, mixed> $attributes Array of attributes.
+	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
 	 *
 	 * @throws \Exception If missing responsiveAttributes or keyName in responsiveAttributes.
 	 * @throws \Exception If missing keyName in responsiveAttributes.
 	 *
-	 * @return mixed
+	 * @return array<int|string, array<string>|bool|string>
 	 */
-	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest)
+	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest): array
 	{
 		$output = [];
 
@@ -308,8 +312,8 @@ class Components
 	 * Check if the attribute's key has a prefix and output the correct attribute name.
 	 *
 	 * @param string $key Key to check.
-	 * @param array  $attributes Array of attributes.
-	 * @param array  $manifest Components/blocks manifest.json.
+	 * @param array<string, mixed> $attributes Array of attributes.
+	 * @param array<string, mixed> $manifest Components/blocks manifest.json.
 	 *
 	 * @return string
 	 */
@@ -332,20 +336,20 @@ class Components
 
 		// No need to test if this is block or component because on top level block there is no prefix.
 		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
-		return str_replace(Components::kebabToCamelCase($manifest['componentName']), $attributes['prefix'], $key);
+		return (string)str_replace(Components::kebabToCamelCase($manifest['componentName']), $attributes['prefix'], $key);
 	}
 
 	/**
 	 * Return a BEM class selector and check if Condition part is set.
 	 *
-	 * @param mixed  $condition Check condition.
+	 * @param bool $condition Check condition.
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
 	 * @param string $modifier BEM Modifier selector.
 	 *
 	 * @return string
 	 */
-	public static function selector($condition, string $block, string $element = '', string $modifier = ''): string
+	public static function selector(bool $condition, string $block, string $element = '', string $modifier = ''): string
 	{
 		$fullModifier = '';
 		$fullElement = '';
@@ -368,7 +372,8 @@ class Components
 	/**
 	 * Get Global Manifest.json and return globalVariables as css variables.
 	 *
-	 * @param array $globalManifest Array of global variables data.
+	 * @param array<string, mixed> $globalManifest Array of global variables data.
+	 *
 	 * @return string
 	 */
 	public static function outputCssVariablesGlobal(array $globalManifest): string
@@ -401,8 +406,8 @@ class Components
 	/**
 	 * Process and return global css variables based on the type.
 	 *
-	 * @param array  $itemValues Values of data to check.
-	 * @param string $itemKey    Item key to check.
+	 * @param array<string, mixed> $itemValues Values of data to check.
+	 * @param string $itemKey Item key to check.
 	 *
 	 * @return string
 	 */
@@ -436,12 +441,12 @@ class Components
 	/**
 	 * Sets up a breakpoint value to responsive attribute objects from responsiveAttribute object.
 	 *
-	 * @param array   $attributeVariables Array of attribute variables object.
-	 * @param string  $breakpointName Breakpoint name from responsiveAttribute's breakpoint in block's/component's manifest.
+	 * @param array<string, mixed> $attributeVariables Array of attribute variables object.
+	 * @param string $breakpointName Breakpoint name from responsiveAttribute's breakpoint in block's/component's manifest.
 	 * @param integer $breakpointIndex Index of responsiveAttribute's breakpoint in manifest.
 	 * @param integer $numberOfBreakpoints Number of responsiveAttribute breakpoints in block's/component's manifest.
 	 *
-	 * @return array
+	 * @return array<int, mixed>
 	 */
 	private static function setBreakpointResponsiveVariables(
 		array $attributeVariables,
@@ -455,10 +460,10 @@ class Components
 			 * Calculate default breakpoint index based on order of the breakpoint, inverse property
 			 * and number of properties in responsiveAttributeObject.
 			 */
-			$defaultbreakpointIndex = (isset($attributeVariablesObject['inverse']) && $attributeVariablesObject['inverse']) ? 0 : ((int) $numberOfBreakpoints - 1);
+			$defaultBreakpointIndex = (isset($attributeVariablesObject['inverse']) && $attributeVariablesObject['inverse']) ? 0 : ((int) $numberOfBreakpoints - 1);
 
 			// Expanding an object with an additional breakpoint property.
-			$attributeVariablesObject['breakpoint'] = ($breakpointIndex === $defaultbreakpointIndex) ? 'default' : $breakpointName;
+			$attributeVariablesObject['breakpoint'] = ($breakpointIndex === $defaultBreakpointIndex) ? 'default' : $breakpointName;
 			$breakpointAttributeValues[] = $attributeVariablesObject;
 		};
 
@@ -468,10 +473,10 @@ class Components
 	/**
 	 * Iterating through variables matching the keys from responsiveAttributes and translating it to responsive attributes names.
 	 *
-	 * @param array $responsiveAttributes Responsive attributes that are read from component's/block's manifest.
-	 * @param array $variables Object containing objects with component's/block's attribute variables that are read from manifest.
+	 * @param array<string, mixed> $responsiveAttributes Responsive attributes that are read from component's/block's manifest.
+	 * @param array<string, mixed> $variables Object containing objects with component's/block's attribute variables that are read from manifest.
 	 *
-	 * @return array Object prepared for setting all the variables to its breakpoints.
+	 * @return array<string, array<string, mixed>> Array prepared for setting all the variables to its breakpoints.
 	 */
 	private static function setupResponsiveVariables(array $responsiveAttributes, array $variables): array
 	{
@@ -496,7 +501,7 @@ class Components
 			foreach ($responsiveAttributeObject as $breakpointName => $breakpointVariableName) {
 				$breakpointVariables = [];
 
-				// Determins whether array is a key value pair or not.
+				// Determines whether array is a key value pair or not.
 				$isAssociative = array_values($variables[$responsiveAttributeName]) === $variables[$responsiveAttributeName];
 
 				if ($isAssociative) {
@@ -530,7 +535,7 @@ class Components
 			$responsiveAttributesVariables = array_merge($responsiveAttributesVariables, $responsiveAttribute);
 		};
 
-		return $responsiveAttributesVariables;
+		return $responsiveAttributesVariables; // @phpstan-ignore-line
 	}
 
 	/**
@@ -538,9 +543,9 @@ class Components
 	 * Returning the 'min' key with default name for mobile first, and the 'max' key for desktop first version.
 	 * If there are no breakpoints, min and max will be empty strings.
 	 *
-	 * @param array $breakpoints Sorted breakpoints that are read from global manifest.
+	 * @param array<string, mixed> $breakpoints Attributes that are read from component's/block's manifest.
 	 *
-	 * @return array Associative array with min and max keys.
+	 * @return array<string, mixed> Associative array with min and max keys.
 	 */
 	private static function getDefaultBreakpoints(array $breakpoints): array
 	{
@@ -553,13 +558,13 @@ class Components
 	/**
 	 * Iterating through variables matching the keys from responsiveAttributes and translating it to responsive attributes names.
 	 *
-	 * @param array $attributes Attributes that are read from component's/block's manifest.
-	 * @param array $variables Variables that are read from component's/block's manifest.
-	 * @param array $data Predefined structure for adding styles to a specific breakpoint value.
-	 * @param array $manifest Component/block manifest data.
-	 * @param array $defaultBreakpoints Default breakpoints for mobile/desktop first.
+	 * @param array<string, mixed> $attributes Attributes that are read from component's/block's manifest.
+	 * @param array<string, array<string, mixed>> $variables Variables that are read from component's/block's manifest.
+	 * @param array<int|string, mixed> $data Predefined structure for adding styles to a specific breakpoint value.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
+	 * @param array<string, mixed> $defaultBreakpoints Default breakpoints for mobile/desktop first.
 	 *
-	 * @return array Object prepared for setting all the variables to its breakpoints.
+	 * @return array<int|string, mixed> Array prepared for setting all the variables to its breakpoints.
 	 */
 	private static function setVariablesToBreakpoints(array $attributes, array $variables, array $data, array $manifest, array $defaultBreakpoints): array
 	{
@@ -613,10 +618,10 @@ class Components
 	/**
 	 * Get component/block options and process them in CSS variables.
 	 *
-	 * @param array  $attributes Built attributes.
-	 * @param array  $manifest Component/block manifest data.
+	 * @param array<string, mixed> $attributes Built attributes.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
-	 * @param array  $globalManifest Global manifest array.
+	 * @param array<string, mixed> $globalManifest Global manifest array.
 	 *
 	 * @return string
 	 */
@@ -751,9 +756,9 @@ class Components
 	/**
 	 * Create initial array of data to be able to populate later.
 	 *
-	 * @param array $globalBreakpoints Global breakpoints from global manifest to set the correct output.
+	 * @param array<string, mixed> $globalBreakpoints Global breakpoints from global manifest to set the correct output.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	public static function prepareVariableData(array $globalBreakpoints): array
 	{
@@ -834,10 +839,10 @@ class Components
 	/**
 	 * Internal helper to loop CSS Variables from array.
 	 *
-	 * @param array  $variables Array of variables of CSS variables.
+	 * @param array<string, mixed> $variables Array of variables of CSS variables.
 	 * @param mixed $attributeValue Original attribute value used in magic variable.
 	 *
-	 * @return array
+	 * @return array<int, mixed>|string[]
 	 */
 	public static function variablesInner(array $variables, $attributeValue): array
 	{
@@ -904,7 +909,7 @@ class Components
 	/**
 	 * Check if provided array is associative or sequential. Will return true if array is sequential.
 	 *
-	 * @param array $array Array to check.
+	 * @param array<string, mixed>|string[] $array Array to check.
 	 *
 	 * @return boolean
 	 */
@@ -925,10 +930,10 @@ class Components
 	 * Output only attributes that are used in the component and remove everything else.
 	 *
 	 * @param string $newName *New* key to use to rename attributes.
-	 * @param array  $attributes Attributes from the block/component.
-	 * @param array  $manual Array of attributes to change key and merge to the original output.
+	 * @param array<string, mixed> $attributes Attributes from the block/component.
+	 * @param array<string, mixed> $manual Array of attributes to change key and merge to the original output.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public static function props(string $newName, array $attributes, array $manual = []): array
 	{
@@ -1005,9 +1010,9 @@ class Components
 	/**
 	 * Flatten multidimensional array in to a single array.
 	 *
-	 * @param array $array Array to itearate.
+	 * @param array<string, mixed> $array Array to iterate.
 	 *
-	 * @return array
+	 * @return string[]|array<string, mixed>
 	 */
 	public static function flattenArray(array $array): array
 	{

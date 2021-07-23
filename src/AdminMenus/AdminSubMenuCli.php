@@ -28,9 +28,9 @@ class AdminSubMenuCli extends AbstractCli
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -44,9 +44,9 @@ class AdminSubMenuCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -80,13 +80,14 @@ class AdminSubMenuCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'menu_slug',
-					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes, and underscores characters to be compatible with sanitize_key().',
+					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes, and underscores characters to be compatible with sanitize_key().', // phpcs:ignore Generic.Files.LineLength.TooLong
 					'optional' => false,
 				],
 			],
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Arguments.

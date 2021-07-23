@@ -15,6 +15,12 @@ namespace EightshiftLibs\Blocks;
  */
 class BlockComponentCli extends AbstractBlocksCli
 {
+	/**
+	 * CLI command name
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'use_component';
 
 	/**
 	 * Output dir relative path
@@ -30,15 +36,15 @@ class BlockComponentCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_component';
+		return self::COMMAND_NAME;
 	}
 
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -50,7 +56,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -67,6 +73,7 @@ class BlockComponentCli extends AbstractBlocksCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$this->blocksMove($assocArgs, static::OUTPUT_DIR, true);

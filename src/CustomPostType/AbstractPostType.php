@@ -51,7 +51,7 @@ abstract class AbstractPostType implements ServiceInterface
 	/**
 	 * Get the arguments that configure the custom post type.
 	 *
-	 * @return array Array of arguments.
+	 * @return array<string, mixed> Array of arguments.
 	 */
 	abstract protected function getPostTypeArguments(): array;
 }

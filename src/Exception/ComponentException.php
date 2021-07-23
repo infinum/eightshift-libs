@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * Component exception class
+ *
  * File containing the failure exception class when trying to locate a template that doesn't exist.
  *
  * @package EightshiftLibs\Exception
@@ -11,7 +13,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Exception;
 
 /**
- * Class Component_Exception.
+ * Class ComponentException
  */
 final class ComponentException extends \InvalidArgumentException implements GeneralExceptionInterface
 {
@@ -23,7 +25,7 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 	 *
 	 * @return static
 	 */
-	public static function throwNotStringOrArray($variable)
+	public static function throwNotStringOrArray($variable): ComponentException
 	{
 		if (gettype($variable) !== 'object') {
 			$output = sprintf(
@@ -36,7 +38,7 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 			$output = \esc_html__('Object couldn\'t be converted to string. Please provide only string or array.', 'eightshift-libs');
 		}
 
-		return new static($output);
+		return new ComponentException($output);
 	}
 
 	/**
@@ -45,9 +47,9 @@ final class ComponentException extends \InvalidArgumentException implements Gene
 	 * @param string $component Missing component name.
 	 * @return static
 	 */
-	public static function throwUnableToLocateComponent(string $component)
+	public static function throwUnableToLocateComponent(string $component): ComponentException
 	{
-		return new static(
+		return new ComponentException(
 			sprintf(
 			/* translators: %s is replaced with the path of the component. */
 				\esc_html__('Unable to locate component by path: %s', 'eightshift-libs'),

@@ -24,7 +24,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	/**
 	 * Full data of manifest items.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $manifest = [];
 

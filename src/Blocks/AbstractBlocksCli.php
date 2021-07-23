@@ -20,7 +20,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 	/**
 	 * Move block/component to project folder.
 	 *
-	 * @param array $assocArgs Array of arguments from WP-CLI command.
+	 * @param array<string, mixed> $assocArgs Array of arguments from WP-CLI command.
 	 * @param string $outputDir Output dir path.
 	 * @param bool $isComponents Is output used for components.
 	 *
@@ -39,7 +39,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		$sourcePathFolder = "{$rootNode}/{$outputDir}/";
 
-		$blocks = [];
 		$blocks = scandir($sourcePathFolder);
 		$blocksFullList = array_diff((array)$blocks, ['..', '.']);
 
@@ -107,7 +106,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 * @param string $destinationPath Path where to move.
 	 * @param string $sourcePath Path of the block/component.
 	 * @param string $name Name of block/component.
-	 * @param array $assocArgs WP-CLI command arguments.
+	 * @param array<string, mixed> $assocArgs WP-CLI command arguments.
 	 * @param string $path Path to write.
 	 * @param string $typeSingular If block or component output string.
 	 *

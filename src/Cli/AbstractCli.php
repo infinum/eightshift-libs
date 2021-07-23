@@ -74,7 +74,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Define global synopsis for all projects commands
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getGlobalSynopsis(): array
 	{
@@ -147,9 +147,9 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Define default develop props
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -268,7 +268,7 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string $outputDir Absolute path to output from project root dir.
 	 * @param string $outputFile Absolute path to output file.
-	 * @param array  $args Optional arguments.
+	 * @param array<string, mixed> $args Optional arguments.
 	 *
 	 * @return void
 	 */
@@ -362,7 +362,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace namespace EightshiftBoilerplateVendor\ in class
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
@@ -394,7 +394,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace use in class
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
@@ -442,7 +442,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace use in frontend libs views.
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
@@ -482,7 +482,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace text domain in class
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
@@ -502,7 +502,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace text domain in class for frontend libs
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
@@ -522,7 +522,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace project file name
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
@@ -550,7 +550,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Replace project file type
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
@@ -627,9 +627,9 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Get composer from project or lib
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getComposer(array $args = []): array
 	{
@@ -655,7 +655,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Get composers defined namespace
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return string
 	 */
@@ -679,7 +679,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Get composers defined vendor prefix
 	 *
-	 * @param array $args CLI args array.
+	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return string
 	 */
@@ -722,7 +722,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Loop array of classes and output the commands
 	 *
-	 * @param array $items Array of classes.
+	 * @param class-string[] $items Array of classes.
 	 * @param bool  $run Run or log output.
 	 *
 	 * @return void
@@ -846,7 +846,7 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string $name Block name.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function getFullBlocksFiles(string $name): array
 	{
@@ -866,7 +866,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Check and prepare default value for skip_existing arg.
 	 *
-	 * @param array $args Optional arguments.
+	 * @param array<string, mixed> $args Optional arguments.
 	 *
 	 * @return boolean
 	 */
@@ -878,12 +878,12 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Prepare Command Doc for output
 	 *
-	 * @param array $docs Command docs array.
-	 * @param array $docsGlobal Global docs array.
+	 * @param array<string, mixed> $docs Command docs array.
+	 * @param array<string, mixed> $docsGlobal Global docs array.
 	 *
 	 * @throws \RuntimeException Error in case the shortdesc is missing in command docs.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function prepareCommandDocs(array $docs, array $docsGlobal): array
 	{
@@ -907,7 +907,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Manually prepare arguments to pass to runcommand method.
 	 *
-	 * @param array $args Array of arguments.
+	 * @param array<string, mixed> $args Array of arguments.
 	 *
 	 * @return string
 	 */

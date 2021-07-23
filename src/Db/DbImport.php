@@ -16,7 +16,7 @@ if (!function_exists('dbImport')) {
 	 * Importing database.
 	 *
 	 * @param string $projectRootPath Root of the project where config is located.
-	 * @param array  $args Optional arguments.
+	 * @param array<string, mixed> $args Optional arguments.
 	 * @param string $setupFile Define setup file name.
 	 *
 	 * @return void

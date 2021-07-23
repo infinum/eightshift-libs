@@ -49,7 +49,7 @@ abstract class AbstractField implements ServiceInterface
 	 *
 	 * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
 	 *
-	 * @return string|array
+	 * @return string|string[]
 	 */
 	abstract protected function getObjectType();
 
@@ -63,7 +63,7 @@ abstract class AbstractField implements ServiceInterface
 	/**
 	 * Get callback arguments array
 	 *
-	 * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
+	 * @return array<string, mixed> An array of arguments used to handle the registered field.
 	 */
 	abstract protected function getCallbackArguments(): array;
 }

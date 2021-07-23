@@ -40,7 +40,7 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
 	 *
-	 * @return array List of all the script dependencies.
+	 * @return array<string, mixed> List of all the script dependencies.
 	 */
 	protected function getFrontendScriptDependencies(): array
 	{
@@ -52,7 +52,7 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
 	 *
-	 * @return array List of all the script dependencies.
+	 * @return array<string, mixed> List of all the script dependencies.
 	 */
 	protected function getAdminScriptDependencies(): array
 	{
@@ -71,7 +71,7 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_localize_script/
 	 *
-	 * @return array Key value pair of different localizations.
+	 * @return array<string, mixed> Key value pair of different localizations.
 	 */
 	protected function getLocalizations(): array
 	{
@@ -83,7 +83,7 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
 	 *
-	 * @return array List of all the style dependencies.
+	 * @return array<string, mixed> List of all the style dependencies.
 	 */
 	protected function getFrontendStyleDependencies(): array
 	{
@@ -95,7 +95,7 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
 	 *
-	 * @return array List of all the style dependencies.
+	 * @return array<string, mixed> List of all the style dependencies.
 	 */
 	protected function getAdminStyleDependencies(): array
 	{

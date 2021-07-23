@@ -38,9 +38,9 @@ class BlockVariationCli extends AbstractCli
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -52,7 +52,7 @@ class BlockVariationCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -69,6 +69,7 @@ class BlockVariationCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.

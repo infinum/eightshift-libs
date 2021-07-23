@@ -17,6 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class RouteCli extends AbstractCli
 {
+	/**
+	 * CLI command name
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'create_rest_route';
 
 	/**
 	 * Output dir relative path.
@@ -28,7 +34,7 @@ class RouteCli extends AbstractCli
 	/**
 	 * Route method enum.
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public const VERB_ENUM = [
 		'GET' => 'static::READABLE',
@@ -45,15 +51,15 @@ class RouteCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'create_rest_route';
+		return self::COMMAND_NAME;
 	}
 
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -64,9 +70,9 @@ class RouteCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -89,6 +95,7 @@ class RouteCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
