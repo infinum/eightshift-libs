@@ -45,11 +45,13 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		$blocks = [$name];
 
+		// If you pass a name all it will move all blocks/components to the project.
 		if ($name === 'all') {
 			$skipExisting = true;
 			$blocks = $blocksFullList;
 		}
 
+		// Iterate blocks/components.
 		foreach ($blocks as $block) {
 			$path = "{$outputDir}/{$block}";
 			$sourcePath = "{$sourcePathFolder}{$block}";
@@ -65,6 +67,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 			// Source doesn't exist.
 			if (!file_exists($sourcePath)) {
+				// Make a list for output.
 				$blocksList = implode(PHP_EOL, $blocksFullList);
 
 				\WP_CLI::log(
@@ -91,6 +94,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				);
 			}
 
+			// Move all files from library to project.
 			$this->moveBlock($destinationPath, $sourcePath, $block, $assocArgs, $path, $typeSingular);
 		}
 
@@ -111,8 +115,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 */
 	private function moveBlock(string $destinationPath, string $sourcePath, string $name, array $assocArgs, string $path, string $typeSingular): void
 	{
+		// Create folder in project if missing.
 		system("mkdir -p {$destinationPath}/");
 
+		// Move block/component to project folder.
 		system("cp -R {$sourcePath}/. {$destinationPath}/");
 
 		$typeSingular = ucfirst($typeSingular);
@@ -121,6 +127,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		\WP_CLI::log('--------------------------------------------------');
 
+		// Move all files from library to project.
 		foreach ($this->getFullBlocksFiles($name) as $file) {
 			// Set output file path.
 			$class = $this->getExampleTemplate($destinationPath, $file, true);
