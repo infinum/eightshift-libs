@@ -45,7 +45,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		$blocks = [$name];
 
-		// If you pass a name all it will move all blocks/components to the project.
+		// If you pass a name "all" it will move all blocks/components to the project.
 		if ($name === 'all') {
 			$skipExisting = true;
 			$blocks = $blocksFullList;
