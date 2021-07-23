@@ -222,12 +222,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * This category will be shown on all blocks list in "Add Block" button.
 	 *
-	 * @param array[]  $categories Array of all block categories.
-	 * @param \WP_Post $post Post being loaded.
+	 * @param array[] $categories Array of categories for block types.
+	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
 	 *
-	 * @return array[] Array of block categories.
+	 * @return array[] Array of categories for block types.
 	 */
-	public function getCustomCategory(array $categories, \WP_Post $post): array
+	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
 	{
 		return array_merge(
 			$categories,
