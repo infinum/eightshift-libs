@@ -534,16 +534,34 @@ class Components
 	}
 
 	/**
+	 * Extracting the names of default breakpoints depending on the case used in responsive(mobile first/desktop first).
+	 * Returning the 'min' key with default name for mobile first, and the 'max' key for desktop first version.
+	 * If there are no breakpoints, min and max will be empty strings.
+	 *
+	 * @param array $breakpoints Attributes that are read from component's/block's manifest.
+	 *
+	 * @return array Associative array with min and max keys.
+	 */
+	private static function getDefaultBreakpoints(array $breakpoints): array
+	{
+		return [
+			'min' => array_keys($breakpoints)[0] ?? '',
+			'max' => array_keys($breakpoints)[count($breakpoints) - 1] ?? '',
+		];
+	}
+
+	/**
 	 * Iterating through variables matching the keys from responsiveAttributes and translating it to responsive attributes names.
 	 *
 	 * @param array $attributes Attributes that are read from component's/block's manifest.
 	 * @param array $variables Variables that are read from component's/block's manifest.
 	 * @param array $data Predefined structure for adding styles to a specific breakpoint value.
 	 * @param array $manifest Component/block manifest data.
+	 * @param array $defaultBreakpoints Default breakpoints for mobile/desktop first.
 	 *
 	 * @return array Object prepared for setting all the variables to its breakpoints.
 	 */
-	private static function setVariablesToBreakpoints(array $attributes, array $variables, array $data, array $manifest): array
+	private static function setVariablesToBreakpoints(array $attributes, array $variables, array $data, array $manifest, array $defaultBreakpoints): array
 	{
 		foreach ($variables as $variableName => $variableValue) {
 			// Constant for attributes set value (in db or default).
@@ -567,12 +585,16 @@ class Components
 			// Iterate variable array to check breakpoints.
 			foreach ($variableValue as $breakpointItem) {
 				// Define variables from breakpointItem.
-				$breakpoint = $breakpointItem['breakpoint'] ?? 'default'; // If breakpoint is not set use default name.
-				$inverse = $breakpointItem['inverse'] ?? false; // If inverse is not set use mobile first.
 				$variable = $breakpointItem['variable'] ?? [];
 
 				// Check if we are using mobile or desktop first. Mobile first is the default.
-				$type = $inverse ? 'max' : 'min';
+				$isInverse = $breakpointItem['inverse'] ?? false; // If inverse is not set use mobile first.
+				$type = $isInverse ? 'max' : 'min';
+
+				// If breakpoint is not set or if breakpoint is a default breakpoint use default name.
+				$isDefaultBreakpoint = empty($breakpointItem['breakpoint']) || $breakpointItem['breakpoint'] === $defaultBreakpoints[$type];
+				$breakpoint = $isDefaultBreakpoint ? 'default' : $breakpointItem['breakpoint'];
+
 
 				// Iterate each data array to find the correct breakpoint.
 				foreach ($data as $index => $item) {
@@ -623,6 +645,8 @@ class Components
 		// Sort breakpoints in ascending order.
 		asort($breakpoints);
 
+		$defaultBreakpoints = self::getDefaultBreakpoints($breakpoints);
+
 		// Define variables from manifest.
 		$variables = $manifest['variables'] ?? [];
 
@@ -662,12 +686,12 @@ class Components
 
 		if (!empty($responsiveAttributes)) {
 			$responsiveVariables = self::setupResponsiveVariables($responsiveAttributes, $variables);
-			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest);
+			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest, $defaultBreakpoints);
 		}
 
 		if (!empty($variables)) {
 			// Iterate each variable.
-			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest);
+			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
 		}
 
 		// Loop data and provide correct selectors from data array.
