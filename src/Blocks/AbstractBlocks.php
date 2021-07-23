@@ -25,7 +25,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Full data of blocks, settings and wrapper data.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $blocks = [];
 
@@ -95,7 +95,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param string $key Key to get data from array.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getBlocksDataFullRawItem(string $key = 'blocks'): array
 	{
@@ -111,10 +111,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
 	 *
-	 * @param bool|array $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
+	 * @hook allowed_block_types This is a WP 5 - WP 7 compatible hook callback. Will not work with WP 5.8!
+	 *
+	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
 	 * @param \WP_Post   $post The post resource data.
 	 *
-	 * @return bool|array Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
+	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
 	 */
 	public function getAllBlocksList($allowedBlockTypes, \WP_Post $post)
 	{
@@ -133,7 +135,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$allowedBlockTypes[] = 'core/block';
 		$allowedBlockTypes[] = 'core/template';
 
-		return $allowedBlockTypes;
+		return $allowedBlockTypes; // @phpstan-ignore-line
 	}
 
 	/**
@@ -161,7 +163,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * It uses native register_block_type() function from WP.
 	 *
-	 * @param array $blockDetails Full Block Manifest details.
+	 * @param array<string, mixed> $blockDetails Full Block Manifest details.
 	 *
 	 * @return void
 	 */
@@ -179,7 +181,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Provides block registration callback method for rendering when using wrapper option
 	 *
-	 * @param array  $attributes Array of attributes as defined in block's manifest.json.
+	 * @param array<string, mixed>  $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
 	 * @throws InvalidBlock Throws error if block view is missing.
@@ -247,14 +249,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Used to render php block wrapper view.
 	 *
 	 * @param string $src String with URL path to template.
-	 * @param array  $attributes Attributes array to pass in template.
-	 * @param null   $innerBlockContent If using inner blocks content pass the data.
+	 * @param array<string, mixed> $attributes Attributes array to pass in template.
+	 * @param string|null $innerBlockContent If using inner blocks content pass the data.
 	 *
 	 * @throws InvalidBlock Throws an error if wrapper file doesn't exist.
 	 *
 	 * @return void Includes an HTML view, or throws an error if the view is missing.
 	 */
-	public function renderWrapperView(string $src, array $attributes, $innerBlockContent = null): void
+	public function renderWrapperView(string $src, array $attributes, ?string $innerBlockContent = null): void
 	{
 		if (!file_exists($src)) {
 			throw InvalidBlock::missingWrapperViewException($src);
@@ -321,7 +323,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getWrapper(): array
 	{
@@ -338,44 +340,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get all components in the components folder.
-	 *
-	 * @throws InvalidBlock Throws error if there are no components in the project.
-	 *
-	 * @return array
-	 */
-	protected function getComponents(): array
-	{
-
-		$paths = preg_grep('/^([^.])/', (array) scandir($this->getBlocksComponentsPath()) ?? []);
-
-		if (!$paths && !defined('WP_CLI')) {
-			throw InvalidBlock::missingComponentsException();
-		}
-
-		$components = array_diff((array)$paths, ['..', '.']);
-
-		$output = [];
-
-		if (!$components) {
-			return $output;
-		}
-
-		foreach ($components as $component) {
-			$output[] = $this->getComponent((string)$component);
-		}
-
-		return $output;
-	}
-
-	/**
 	 * Get component manifest data from component manifest.json file
 	 *
 	 * @param string $componentName Name of the component.
 	 *
 	 * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getComponent(string $componentName): array
 	{
@@ -399,7 +370,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @throws InvalidBlock Throws error if global manifest settings key namespace is missing.
 	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getSettings(): array
 	{
@@ -426,9 +397,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Default attributes are hardcoded in this lib.
 	 * Block attributes are provided by block manifest.json file.
 	 *
-	 * @param array $blockDetails Block Manifest details.
+	 * @param array<string, mixed> $blockDetails Block Manifest details.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getAttributes(array $blockDetails): array
 	{
@@ -462,13 +433,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Iterate over attributes or example attributes array in block/component manifest and append the parent prefixes.
 	 *
-	 * @param array   $manifest Array of component/block manifest to get data from.
+	 * @param array<string, mixed>   $manifest Array of component/block manifest to get data from.
 	 * @param string  $newName New renamed component name.
 	 * @param string  $realName Original real component name.
 	 * @param string  $parent Parent component key with stacked parent component names for the final output.
 	 * @param boolean $currentAttributes Check if current attribute is a part of the current component.
 	 *
-	 * @return array
+	 * @return  array<int|string, mixed>
 	 */
 	protected function prepareComponentAttribute(array $manifest, string $newName, string $realName, string $parent = '', bool $currentAttributes = false): array
 	{
@@ -518,12 +489,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Iterate over component array in block manifest and check if the component exists in the project.
 	 * If components contains more component this function will run recursively.
 	 *
-	 * @param array  $manifest Array of component/block manifest to get the data from.
+	 * @param array<string, mixed>  $manifest Array of component/block manifest to get the data from.
 	 * @param string $parent Parent component key with stacked parent component names for the final output.
 	 *
 	 * @throws InvalidBlock If the component is wrong, or the name is wrong or it doesn't exist.
 	 *
-	 * @return array
+	 * @return array<int|string, mixed>
 	 */
 	protected function prepareComponentAttributes(array $manifest, string $parent = ''): array
 	{
@@ -545,8 +516,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			if (!$component) {
 				throw InvalidBlock::wrongComponentNameException($name, $realComponentName);
 			}
-
-			$outputAttributes = [];
 
 			// If component has more components do recursive loop.
 			if (isset($component['components'])) {
@@ -570,11 +539,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Throws error if manifest key blockName is missing
+	 * Retrieve block data
 	 *
 	 * @throws InvalidBlock Throws error if block name is missing.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	private function getBlocksData(): array
 	{
@@ -615,7 +584,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @throws InvalidManifest Error in the case json file has errors.
 	 *
-	 * @return array Parsed JSON string into an array.
+	 * @return array<string, mixed> Parsed JSON string into an array.
 	 */
 	private function parseManifest(string $string): array
 	{

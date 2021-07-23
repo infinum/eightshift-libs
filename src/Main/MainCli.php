@@ -24,9 +24,9 @@ class MainCli extends AbstractCli
 	public const OUTPUT_DIR = 'src/Main';
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -35,6 +35,7 @@ class MainCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Read the template contents, and replace the placeholders with provided variables.

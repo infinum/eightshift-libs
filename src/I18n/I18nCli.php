@@ -26,9 +26,9 @@ class I18nCli extends AbstractCli
 	public const OUTPUT_DIR = 'src/I18n';
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -37,6 +37,7 @@ class I18nCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$className = $this->getClassShortName();

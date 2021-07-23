@@ -29,7 +29,7 @@ class CliInitTheme extends AbstractCli
 	/**
 	 * All classes for initial theme setup for project
 	 *
-	 * @var array
+	 * @var class-string[]
 	 */
 	public const INIT_THEME_CLASSES = [
 		ConfigCli::class,
@@ -53,9 +53,9 @@ class CliInitTheme extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -64,6 +64,7 @@ class CliInitTheme extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		if (!function_exists('\add_action')) {

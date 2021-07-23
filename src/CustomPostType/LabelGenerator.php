@@ -64,7 +64,7 @@ final class LabelGenerator
 	 * Get automatically generated labels from a singular and an optional
 	 * plural noun.
 	 *
-	 * @param array $nouns Array of nouns to use for the labels.
+	 * @param array<string, mixed> $nouns Array of nouns to use for the labels.
 	 *
 	 * @return string[] array Array of labels.
 	 * @throws InvalidNouns Invalid nouns exception.

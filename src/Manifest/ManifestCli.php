@@ -24,9 +24,9 @@ class ManifestCli extends AbstractCli
 	public const OUTPUT_DIR = 'src/Manifest';
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -35,6 +35,7 @@ class ManifestCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$className = $this->getClassShortName();

@@ -35,7 +35,7 @@ class CliInitProject extends AbstractCli
 	/**
 	 * All classes for initial theme setup for project
 	 *
-	 * @var array
+	 * @var class-string[]
 	 */
 	public const INIT_PROJECT_CLASSES = [
 		ConfigCli::class,
@@ -65,17 +65,19 @@ class CliInitProject extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project, for example: gitignore file for the full WordPress project, continuous integration exclude files, etc.',
+			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project.
+			For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.',
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		if (!function_exists('\add_action')) {

@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\AdminMenus\AdminMenuCli;
+use EightshiftLibs\AdminMenus\AdminSubMenuCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli, BlocksStorybookCli, BlockVariationCli, BlockWrapperCli};
 use EightshiftLibs\Build\BuildCli;
@@ -48,13 +50,17 @@ class Cli
 	/**
 	 * All classes and commands that can be used on development and public WP CLI.
 	 *
-	 * @var array
+	 * @var class-string[]
 	 */
 	public const CLASSES_LIST = [
+		AdminMenuCli::class,
+		AdminSubMenuCli::class,
+		AcfMetaCli::class,
 		BlocksCli::class,
 		EnqueueAdminCli::class,
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
+		EscapedViewCli::class,
 		ConfigCli::class,
 		PostTypeCli::class,
 		TaxonomyCli::class,
@@ -68,38 +74,36 @@ class Cli
 		FieldCli::class,
 		RouteCli::class,
 		ServiceExampleCli::class,
-		BuildCli::class,
-		ReadmeCli::class,
-		GitIgnoreCli::class,
-		CiExcludeCli::class,
-		SetupCli::class,
-		AcfMetaCli::class,
-		EscapedViewCli::class,
 		ThemeOptionsCli::class,
+		BuildCli::class,
+		CiExcludeCli::class,
 		ConfigProjectCli::class,
+		GitIgnoreCli::class,
+		ReadmeCli::class,
+		SetupCli::class,
 	];
 
 	/**
 	 * All classes and commands used only for WPCLI.
 	 *
-	 * @var array
+	 * @var class-string[]
 	 */
 	public const PUBLIC_CLASSES = [
-		BlockComponentCli::class,
-		BlockWrapperCli::class,
-		BlockVariationCli::class,
-		BlockPatternCli::class,
 		BlockCli::class,
+		BlockComponentCli::class,
+		BlockVariationCli::class,
+		BlockWrapperCli::class,
+		BlockPatternCli::class,
 		BlocksStorybookCli::class,
-		UpdateCli::class,
 		ExportCli::class,
 		ImportCli::class,
+		UpdateCli::class,
 	];
 
 	/**
 	 * All classes and commands used for project setup.
 	 *
-	 * @var array
+	 * @var class-string[]
 	 */
 	public const SETUP_CLASSES = [
 		CliInitTheme::class,
@@ -109,7 +113,7 @@ class Cli
 	/**
 	 * All classes and commands used only for development.
 	 *
-	 * @var array
+	 * @var class-string[]
 	 */
 	public const DEVELOP_CLASSES = [
 		CliReset::class,
@@ -120,7 +124,7 @@ class Cli
 	/**
 	 * Define all classes to register for development.
 	 *
-	 * @return array
+	 * @return class-string[]
 	 */
 	public function getDevelopClasses(): array
 	{
@@ -134,7 +138,7 @@ class Cli
 	/**
 	 * Define all classes to register for normal WP.
 	 *
-	 * @return array
+	 * @return class-string[]
 	 */
 	public function getPublicClasses(): array
 	{
@@ -148,7 +152,7 @@ class Cli
 	/**
 	 * Run all CLI commands for develop.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
 	 * @throws \ReflectionException Exception if the class doesn't exist.
 	 *

@@ -23,7 +23,7 @@ class Autowiring
 	/**
 	 * Array of psr-4 prefixes. Should be provided by Composer's ClassLoader. $ClassLoader->getPsr4Prefixes().
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $psr4Prefixes;
 
@@ -37,12 +37,12 @@ class Autowiring
 	/**
 	 * Autowiring.
 	 *
-	 * @param array $manuallyDefinedDependencies Manually defined dependencies from Main.
-	 * @param bool  $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.
+	 * @param array<string, mixed> $manuallyDefinedDependencies Manually defined dependencies from Main.
+	 * @param bool $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.
 	 *
 	 * @throws \ReflectionException Exception thrown in case class is missing.
 	 *
-	 * @return array<array> Array of fully qualified class names.
+	 * @return  array<string, mixed> Array of fully qualified class names.
 	 */
 	public function buildServiceClasses(array $manuallyDefinedDependencies = [], bool $skipInvalid = false): array
 	{
@@ -88,7 +88,7 @@ class Autowiring
 				}
 
 				$dependencyTree = array_merge(
-					$this->buildDependencyTree($depClass, $filenameIndex, $classInterfaceIndex),
+					$this->buildDependencyTree((string)$depClass, $filenameIndex, $classInterfaceIndex),
 					$dependencyTree
 				);
 			}
@@ -98,16 +98,19 @@ class Autowiring
 		return array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
 	}
 
+	// phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
 	/**
 	 * Builds the dependency tree for a single class ($relevantClass)
 	 *
 	 * @param string $relevantClass Class we're building dependency tree for.
-	 * @param array  $filenameIndex Filename index. Maps filenames to class names.
-	 * @param array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
+	 * @param array<string, mixed> $filenameIndex Filename index. Maps filenames to class names.
+	 * @param array<string, mixed> $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
 	 *
 	 * @throws InvalidAutowireDependency If a primitive dependency is found.
+	 * @throws \ReflectionException If reflection exception happens.
+	 * @throws \Exception General exception.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function buildDependencyTree(string $relevantClass, array $filenameIndex, array $classInterfaceIndex): array
 	{
@@ -116,7 +119,7 @@ class Autowiring
 			return [];
 		}
 
-		// Ignore dependedncies for autowire and main class.
+		// Ignore dependencies for autowire and main class.
 		$ignorePaths = array_flip([
 			'psr4Prefixes',
 			'namespace',
@@ -176,14 +179,15 @@ class Autowiring
 		}
 		return $dependencyTree;
 	}
+	// phpcs:enable
 
 	/**
 	 * Returns all classes in namespace.
 	 *
 	 * @param string $namespace Name of namespace.
-	 * @param array  $psr4Prefixes Array of psr-4 compliant namespaces and their accompanying folders.
+	 * @param array<string, mixed> $psr4Prefixes Array of psr-4 compliant namespaces and their accompanying folders.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	private function getClassesInNamespace(string $namespace, array $psr4Prefixes): array
 	{
@@ -238,8 +242,8 @@ class Autowiring
 	 *
 	 * @param string $filename Filename based on variable name.
 	 * @param string $interfaceName Interface we're trying to match.
-	 * @param array  $filenameIndex Filename index. Maps filenames to class names.
-	 * @param array  $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
+	 * @param array<string, mixed> $filenameIndex Filename index. Maps filenames to class names.
+	 * @param array<string, mixed> $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
 	 *
 	 * @throws InvalidAutowireDependency If we didn't find exactly 1 class when trying to inject interface-based dependencies.
 	 * @throws \Exception If things we're looking for are missing inside filename or classInterface index (which shouldn't happen).
@@ -294,9 +298,9 @@ class Autowiring
 	/**
 	 * Builds the PSR-4 filename index. Maps filenames to class names.
 	 *
-	 * @param array $reflectionClasses Reflection classes of all relevant classes.
+	 * @param array<string, \ReflectionClass<object>> $reflectionClasses Reflection classes of all relevant classes.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function buildFilenameIndex(array $reflectionClasses): array
 	{
@@ -313,11 +317,9 @@ class Autowiring
 	/**
 	 * Builds the PSR-4 class => [$interfaces] index. Maps classes to interfaces they implement.
 	 *
-	 * @param array $reflectionClasses  Reflection classes of all relevant classes.
+	 * @param array<string, \ReflectionClass<object>> $reflectionClasses  Reflection classes of all relevant classes.
 	 *
-	 * @throws \ReflectionException Exception thrown in case class is missing.
-	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function buildClassInterfaceIndex(array $reflectionClasses): array
 	{
@@ -353,9 +355,9 @@ class Autowiring
 	/**
 	 * Takes the dependency tree array and convert's it into PHP-DI's definition list. Recursive.
 	 *
-	 * @param array $dependencyTree Dependency tree.
+	 * @param array<string, mixed> $dependencyTree Dependency tree.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function convertDependencyTreeIntoDefinitionList(array $dependencyTree)
 	{
@@ -368,7 +370,7 @@ class Autowiring
 			}
 		}
 
-		return $classes;
+		return $classes; // @phpstan-ignore-line
 	}
 
 	/**
@@ -377,9 +379,10 @@ class Autowiring
 	 * Validates that all classes/interfaces/traits/etc. provided here are valid (we can build a ReflectionClass
 	 * on them) and return them. Otherwise throw an exception.
 	 *
-	 * @param array $classNames FQCNs found in $this->namespace.
+	 * @param array<string, mixed> $classNames FQCNs found in $this->namespace.
 	 * @param bool  $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.
-	 * @return array
+	 *
+	 * @return array<string, \ReflectionClass<object>>
 	 *
 	 * @throws NonPsr4CompliantClass When a found class/file doesn't match PSR-4 standards (and $skipInvalid is false).
 	 */
@@ -389,7 +392,7 @@ class Autowiring
 		foreach ($classNames as $className) {
 			try {
 				$reflClass = new \ReflectionClass($className);
-				$reflectionClasses[$className] = $reflClass;
+				$reflectionClasses[(string)$className] = $reflClass;
 			} catch (\Exception $e) {
 				if ($skipInvalid) {
 					continue;
@@ -405,9 +408,10 @@ class Autowiring
 	/**
 	 * Filters out manually defined dependencies so we don't autowire them.
 	 *
-	 * @param array $serviceClasses All FQCNs inside the namespace.
-	 * @param array $manuallyDefinedDependencies Manually defined dependency tree.
-	 * @return array
+	 * @param array<string, mixed> $serviceClasses All FQCNs inside the namespace.
+	 * @param array<string, mixed> $manuallyDefinedDependencies Manually defined dependency tree.
+	 *
+	 * @return array<string, mixed>
 	 */
 	private function filterManuallyDefinedDependencies(array $serviceClasses, array $manuallyDefinedDependencies): array
 	{

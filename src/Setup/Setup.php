@@ -14,7 +14,7 @@ use EightshiftLibs\Cli\CliHelpers;
  * Update project and setup all plugins, themes and core
  *
  * @param string $projectRootPath Root of the project where config is located.
- * @param array  $args Optional arguments.
+ * @param array<string, mixed>  $args Optional arguments.
  * @param string $setupFile Define setup file name.
  *
  * @return void

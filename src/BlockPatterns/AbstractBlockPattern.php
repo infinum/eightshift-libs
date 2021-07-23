@@ -50,7 +50,7 @@ abstract class AbstractBlockPattern implements ServiceInterface
 	/**
 	 * Get the pattern categories.
 	 *
-	 * @return array Array of categories.
+	 * @return array<string, mixed> Array of categories.
 	 */
 	protected function getCategories(): array
 	{
@@ -60,7 +60,7 @@ abstract class AbstractBlockPattern implements ServiceInterface
 	/**
 	 * Get the pattern keywords.
 	 *
-	 * @return array Array of keywords.
+	 * @return string[] Array of keywords.
 	 */
 	protected function getKeywords(): array
 	{

@@ -38,9 +38,9 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 	/**
 	 * Add additional taxonomy columns to the columns array.
 	 *
-	 * @param array $columns The existing column names array with default taxonomy columns (title, author, date etc.).
+	 * @param string[] $columns The existing column names array with default taxonomy columns (title, author, date etc.).
 	 *
-	 * @return array Modified column names array.
+	 * @return string[] Modified column names array.
 	 */
 	abstract public function addColumnName(array $columns): array;
 
@@ -58,7 +58,7 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 	/**
 	 * Get the array of slugs of the taxonomies where the additional column should appear.
 	 *
-	 * @return array Array containing the names of the taxonomies.
+	 * @return string[] Array containing the names of the taxonomies.
 	 */
 	abstract protected function getTaxonomySlug(): array;
 }

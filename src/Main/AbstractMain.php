@@ -27,7 +27,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	/**
 	 * Array of instantiated services.
 	 *
-	 * @var array
+	 * @var Object[]
 	 */
 	private $services = [];
 
@@ -41,7 +41,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	/**
 	 * Constructs object and inserts prefixes from composer.
 	 *
-	 * @param array  $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
+	 * @param array<string, mixed> $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
 	 * @param string $namespace Projects namespace.
 	 */
 	public function __construct(array $psr4Prefixes, string $namespace)
@@ -86,7 +86,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * @return Container
 	 * @throws \Exception Exception thrown by the DI container.
 	 */
-	public function buildDiContainer()
+	public function buildDiContainer(): Container
 	{
 		if (empty($this->container)) {
 			$this->container = $this->getDiContainer($this->getServiceClassesPreparedArray());
@@ -101,7 +101,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @throws \ReflectionException Exception thrown in case class is missing.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getServiceClassesWithAutowire(): array
 	{
@@ -111,7 +111,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	/**
 	 * Return array of services with Dependency Injection parameters.
 	 *
-	 * @return array
+	 * @return Object[]
 	 *
 	 * @throws \Exception Exception thrown by the DI container.
 	 */
@@ -135,7 +135,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @throws \ReflectionException Exception thrown in case class is missing.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getServiceClassesPreparedArray(): array
 	{
@@ -150,7 +150,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 			$output[$dependencies] = [];
 		}
 
-		return $output;
+		return $output; // @phpstan-ignore-line
 	}
 
 	/**
@@ -160,13 +160,13 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Wire all the dependencies automatically, based on the provided array of
 	 * class => dependencies from the get_di_items().
 	 *
-	 * @param array $services Array of service.
+	 * @param array<string, mixed> $services Array of service.
 	 *
 	 * @throws \Exception Exception thrown by the DI container.
 	 *
 	 * @return Container
 	 */
-	private function getDiContainer(array $services)
+	private function getDiContainer(array $services): Container
 	{
 		$definitions = [];
 
@@ -189,9 +189,9 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Return prepared Dependency Injection objects.
 	 * If you pass a class use PHP-DI to prepare if not just output it.
 	 *
-	 * @param array $dependencies Array of classes/parameters to push in constructor.
+	 * @param array<string, mixed> $dependencies Array of classes/parameters to push in constructor.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	private function getDiDependencies(array $dependencies): array
 	{
