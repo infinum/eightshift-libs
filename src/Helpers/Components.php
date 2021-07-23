@@ -538,7 +538,7 @@ class Components
 	 * Returning the 'min' key with default name for mobile first, and the 'max' key for desktop first version.
 	 * If there are no breakpoints, min and max will be empty strings.
 	 *
-	 * @param array $breakpoints Attributes that are read from component's/block's manifest.
+	 * @param array $breakpoints Sorted breakpoints that are read from global manifest.
 	 *
 	 * @return array Associative array with min and max keys.
 	 */
