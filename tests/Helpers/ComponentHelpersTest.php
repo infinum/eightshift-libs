@@ -429,7 +429,7 @@ test('Asserts that outputCssVariables returns the correct CSS variables output f
 	$this->assertIsString($output);
 	$this->assertStringContainsString('<style>', $output);
 	$this->assertStringContainsString('--variable-default: default;', $output);
-	$this->assertStringContainsString('@media (min-width: 1200px)', $output);
+	$this->assertStringContainsString('@media (min-width: 1199px)', $output);
 	$this->assertStringContainsString('--variable-default-large: large;', $output);
 	$this->assertStringContainsString('--variable-default-tablet: test;', $output);
 	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
@@ -474,7 +474,7 @@ test('Asserts that outputCssVariables returns the correct CSS variables output f
 	$this->assertIsString($output);
 	$this->assertStringContainsString('<style>', $output);
 	$this->assertStringContainsString('--variable-value-default: default;', $output);
-	$this->assertStringContainsString('@media (min-width: 991px)', $output);
+	$this->assertStringContainsString('@media (min-width: 767px)', $output);
 	$this->assertStringContainsString('--variable-value-tablet: tablet;', $output);
 	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
 });
@@ -814,7 +814,7 @@ test('Asserts that only responsive variables are defined', function () {
 	$this->assertIsString($output);
 	$this->assertStringContainsString('<style>', $output);
 	$this->assertStringContainsString("variable-default-responsive: default-responsive-{$value}", $output);
-	$this->assertStringContainsString('@media (min-width: 1199px)', $output);
+	$this->assertStringContainsString('@media (min-width: 991px)', $output);
 	$this->assertStringContainsString("variable-default: default-responsive-{$value}", $output);
 	$this->assertStringNotContainsString("variable-default-normal: default-desktop-{$value}", $output);
 });
@@ -839,7 +839,7 @@ test('Asserts that responsive variables and default variables are defined', func
 	$this->assertStringContainsString('<style>', $output);
 	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
 	$this->assertStringContainsString('variable-value-default-responsive: value2-responsive', $output);
-	$this->assertStringContainsString('@media (min-width: 1199px)', $output);
+	$this->assertStringContainsString('@media (min-width: 991px)', $output);
 	$this->assertStringContainsString('variable-value-default: value2-desktop', $output);
 	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
 
