@@ -16,6 +16,8 @@ beforeEach(function() {
 
 	$this->config = mock('alias:EightshiftBoilerplate\Config\Config');
 
+	Functions\when('is_wp_version_compatible')->justReturn(true);
+
 	$this->blocksExample = new BlocksExample();
 });
 
@@ -24,6 +26,7 @@ afterEach(function() {
 });
 
 test('Register method will call init hooks', function () {
+
 	$this->config
 		->shouldReceive('getProjectPath')
 		->andReturn('tests/data');
@@ -35,12 +38,14 @@ test('Register method will call init hooks', function () {
 });
 
 test('Register method will call block_categories_all hooks', function () {
+
 	$this->blocksExample->register();
 
 	$this->assertSame(10, has_filter('block_categories_all', 'EightshiftBoilerplate\Blocks\BlocksExample->getCustomCategory()'), 'The callback getCustomCategory should be hooked to block_categories_all hook with priority 10');
 });
 
 test('Register method will call after_setup_theme hooks', function () {
+
 	$this->blocksExample->register();
 
 	$this->assertSame(25, has_action('after_setup_theme', 'EightshiftBoilerplate\Blocks\BlocksExample->addThemeSupport()'), 'The callback addThemeSupport should be hooked to after_setup_theme hook with priority 25');
@@ -48,12 +53,14 @@ test('Register method will call after_setup_theme hooks', function () {
 });
 
 test('Register method will call admin_menu hooks', function () {
+
 	$this->blocksExample->register();
 
 	$this->assertSame(10, has_action('admin_menu', 'EightshiftBoilerplate\Blocks\BlocksExample->addReusableBlocks()'), 'The callback addReusableBlocks should be hooked to admin_menu hook with priority 10');
 });
 
 test('Register method will call custom hooks', function () {
+
 	$this->blocksExample->register();
 
 	$this->assertSame(10, has_filter(BlocksExample::BLOCKS_DEPENDENCY_FILTER_NAME, 'EightshiftBoilerplate\Blocks\BlocksExample->getBlocksDataFullRawItem()'));
@@ -73,20 +80,37 @@ test('addThemeSupport method will call add_theme_support() function with differe
 
 });
 
-test('Asserts that getAllBlocksList first argument is boolean and return the provided attribute as return value.', function () {
+test('Asserts that getAllBlocksList first argument is boolean and return the provided attribute as return value for older WP versions.', function () {
+
+	Functions\when('is_wp_version_compatible')->justReturn(false);
 
 	$post = \Mockery::mock('WP_Post');
 
-	$blocks = $this->blocksExample->getAllBlocksList(true, $post);
+	$blocks = $this->blocksExample->getAllBlocksListOld(true, $post);
 
 	$this->assertSame(true, $blocks);
 
-	$blocks = $this->blocksExample->getAllBlocksList(false, $post);
+	$blocks = $this->blocksExample->getAllBlocksListOld(false, $post);
 
 	$this->assertSame(false, $blocks, "Return value is not false.");
 });
 
-test('Asserts that getAllBlocksList will return only projects blocks.', function () {
+test('Asserts that getAllBlocksList first argument is boolean and return the provided attribute as return value for WP 5.8.', function () {
+
+	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+
+	$blocks = $this->blocksExample->getAllBlocksList(true, $blockContext);
+
+	$this->assertSame(true, $blocks);
+
+	$blocks = $this->blocksExample->getAllBlocksList(false, $blockContext);
+
+	$this->assertSame(false, $blocks, "Return value is not false.");
+});
+
+test('Asserts that getAllBlocksList will return only projects blocks for older versions.', function () {
+
+	Functions\when('is_wp_version_compatible')->justReturn(false);
 
 	$post = \Mockery::mock('WP_Post');
 
@@ -96,7 +120,26 @@ test('Asserts that getAllBlocksList will return only projects blocks.', function
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
-	$list = $this->blocksExample->getAllBlocksList([], $post);
+	$list = $this->blocksExample->getAllBlocksListOld([], $post);
+
+	$this->assertIsArray($list);
+	$this->assertNotContains('core/paragraph', $list, "List array does contain core/paragraph item.");
+	$this->assertContains('eightshift-boilerplate/button', $list, "List array doesn't contain eightshift-boilerplate/button item.");
+	$this->assertContains('core/block', $list, "List array doesn't contain core/block item.");
+	$this->assertContains('core/template', $list, "List array doesn't contain core/template item.");
+});
+
+test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.', function () {
+
+	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+
+	$this->config
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample->getBlocksDataFullRaw();
+
+	$list = $this->blocksExample->getAllBlocksList([], $blockContext);
 
 	$this->assertIsArray($list);
 	$this->assertNotContains('core/paragraph', $list, "List array does contain core/paragraph item.");
@@ -106,6 +149,7 @@ test('Asserts that getAllBlocksList will return only projects blocks.', function
 });
 
 test('Asserts that getBlocksDataFullRawItem will return full details for blocks if key is not provided.', function () {
+
 	$this->config
 		->shouldReceive('getProjectPath')
 		->andReturn('tests/data');
@@ -122,6 +166,7 @@ test('Asserts that getBlocksDataFullRawItem will return full details for blocks 
 });
 
 test('Asserts that getBlocksDataFullRawItem will return all blocks details if key is default.', function () {
+
 	$this->config
 		->shouldReceive('getProjectPath')
 		->andReturn('tests/data');
@@ -170,6 +215,7 @@ test('Asserts that render component will load view template.', function () {
 });
 
 test('Asserts that render will throw error if block view is missing.', function () {
+
 	$blockManifest = [
 		'blockName' => 'fake',
 	];
@@ -182,6 +228,7 @@ test('Asserts that render will throw error if block view is missing.', function 
 })->throws(InvalidBlock::class);
 
 test('Asserts that render will throw error if wrapper view is missing.', function () {
+
 	$blockManifest = [
 		'blockName' => 'fake',
 	];
@@ -195,6 +242,7 @@ test('Asserts that render will throw error if wrapper view is missing.', functio
 })->throws(InvalidBlock::class);
 
 test('Asserts that renderWrapperView will return a valid file.', function () {
+
 	$wrapperManifest = dirname(__FILE__, 2) . '/data/src/Blocks/wrapper/wrapper.php';
 
 	ob_start();
