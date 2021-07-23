@@ -18,7 +18,6 @@ use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
-use EightshiftLibs\Readme\ReadmeCli;
 
 /**
  * Class CliInitTheme
