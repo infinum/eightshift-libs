@@ -17,6 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class RouteCli extends AbstractCli
 {
+	/**
+	 * CLI command name
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'create_rest_route';
 
 	/**
 	 * Output dir relative path.
@@ -45,7 +51,7 @@ class RouteCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'create_rest_route';
+		return self::COMMAND_NAME;
 	}
 
 	/**

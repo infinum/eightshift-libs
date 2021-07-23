@@ -15,6 +15,12 @@ namespace EightshiftLibs\Blocks;
  */
 class BlockComponentCli extends AbstractBlocksCli
 {
+	/**
+	 * CLI command name
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'use_component';
 
 	/**
 	 * Output dir relative path
@@ -30,7 +36,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_component';
+		return self::COMMAND_NAME;
 	}
 
 	/**

@@ -24,6 +24,11 @@ use EightshiftLibs\Menu\MenuCli;
  */
 class CliInitTheme extends AbstractCli
 {
+	/**
+	 * CLI command name
+	 *
+	 * @var string
+	 */
 	public const COMMAND_NAME = 'setup_theme';
 
 	/**
