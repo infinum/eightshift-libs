@@ -54,7 +54,7 @@ class Components
 	/**
 	 * Converts an array of classes into a string which can be echoed.
 	 *
-	 * @param string[] $classes Array of classes.
+	 * @param array<int, array<string>|bool|string> $classes Array of classes.
 	 *
 	 * @return string
 	 */
@@ -196,7 +196,7 @@ class Components
 	 * Output:
 	 * block-column__width-large--4
 	 *
-	 * @param array<string, mixed> $items Array of breakpoints.
+	 * @param array<int|string, array<string>|bool|string> $items Array of breakpoints.
 	 * @param string $selector Selector for this breakpoint.
 	 * @param string $parent Parent block selector.
 	 * @param boolean $useModifier If false you can use this selector for visibility.
@@ -208,12 +208,16 @@ class Components
 		$output = [];
 
 		foreach ($items as $itemKey => $itemValue) {
-			if ((gettype($itemValue) === 'string' && $itemValue === '') || gettype($itemValue) === 'boolean' && $itemValue === false) {
+			if (
+				(gettype($itemValue) === 'string' && $itemValue === '') ||
+				(gettype($itemValue) === 'boolean' && $itemValue === false) ||
+				gettype($itemValue) === 'array'
+			) {
 				continue;
 			}
 
 			if ($useModifier) {
-				$output[] = "{$parent}__{$selector}-{$itemKey}--{$itemValue}";
+				$output[] = "{$parent}__{$selector}-{$itemKey}--{$itemValue}"; // @phpstan-ignore-line Temp bug: https://github.com/phpstan/phpstan/issues/5374
 			} else {
 				$output[] = "{$parent}__{$selector}-{$itemKey}";
 			}
@@ -342,14 +346,15 @@ class Components
 	/**
 	 * Return a BEM class selector and check if Condition part is set.
 	 *
-	 * @param bool $condition Check condition.
+	 * @param array<string>|bool|string $condition Check condition. Must be a truthy value!
+	 *                                             Otherwise the result will be an empty string.
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
 	 * @param string $modifier BEM Modifier selector.
 	 *
 	 * @return string
 	 */
-	public static function selector(bool $condition, string $block, string $element = '', string $modifier = ''): string
+	public static function selector($condition, string $block, string $element = '', string $modifier = ''): string
 	{
 		$fullModifier = '';
 		$fullElement = '';
