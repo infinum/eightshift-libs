@@ -34,7 +34,7 @@ class AdminMenuCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'tile' => $args[1] ?? 'Admin Title',
+			'title' => $args[1] ?? 'Admin Title',
 			'menu_title' => $args[2] ?? 'Admin Title',
 			'capability' => $args[3] ?? 'edit_posts',
 			'menu_slug' => $args[4] ?? 'admin_title',
@@ -55,7 +55,7 @@ class AdminMenuCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'tile',
+					'name' => 'title',
 					'description' => 'The text to be displayed in the title tags of the page when the menu is selected.',
 					'optional' => false,
 				],
@@ -98,7 +98,7 @@ class AdminMenuCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Arguments.
-		$tile = $assocArgs['tile'];
+		$title = $assocArgs['title'];
 		$menuTitle = $assocArgs['menu_title'];
 		$capability = $assocArgs['capability'];
 		$menuSlug = $this->prepareSlug($assocArgs['menu_slug']);
@@ -115,7 +115,7 @@ class AdminMenuCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->searchReplaceString('Admin Title', $tile)
+			->searchReplaceString('Admin Title', $title)
 			->searchReplaceString('Admin Menu Title', $menuTitle)
 			->searchReplaceString("'edit_posts'", "'{$capability}'")
 			->searchReplaceString('example-menu-slug', $menuSlug);

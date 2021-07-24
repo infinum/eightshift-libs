@@ -50,7 +50,7 @@ test('Admin menu CLI command will correctly copy the admin menu example class wi
 test('Admin menu CLI command will correctly copy the admin menu class with set arguments', function () {
 	$cpt = $this->cpt;
 	$cpt([], [
-		'tile' => 'Reusable Blocks',
+		'title' => 'Reusable Blocks',
 		'menu_title' => 'Reusable Blocks',
 		'capability' => 'edit_reusable_blocks',
 		'menu_slug' => 'reusable-blocks',
