@@ -208,16 +208,15 @@ class Components
 		$output = [];
 
 		foreach ($items as $itemKey => $itemValue) {
-			if (
-				(gettype($itemValue) === 'string' && $itemValue === '') ||
-				(gettype($itemValue) === 'boolean' && $itemValue === false) ||
-				gettype($itemValue) === 'array'
+			if ((is_string($itemValue) && $itemValue === '') ||
+				(is_bool($itemValue) && $itemValue === false) ||
+				is_array($itemValue)
 			) {
 				continue;
 			}
 
 			if ($useModifier) {
-				$output[] = "{$parent}__{$selector}-{$itemKey}--{$itemValue}"; // @phpstan-ignore-line Temp bug: https://github.com/phpstan/phpstan/issues/5374
+				$output[] = "{$parent}__{$selector}-{$itemKey}--{$itemValue}";
 			} else {
 				$output[] = "{$parent}__{$selector}-{$itemKey}";
 			}
