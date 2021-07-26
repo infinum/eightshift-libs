@@ -208,7 +208,8 @@ class Components
 		$output = [];
 
 		foreach ($items as $itemKey => $itemValue) {
-			if ((is_string($itemValue) && $itemValue === '') ||
+			if (
+				(is_string($itemValue) && $itemValue === '') ||
 				(is_bool($itemValue) && $itemValue === false) ||
 				is_array($itemValue)
 			) {
