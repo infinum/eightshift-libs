@@ -865,7 +865,7 @@ class Components
 
 			// If value contains magic variable swap that variable with original attribute value.
 			if (strpos($variableValue, '%value%') !== false) {
-				$variableValue = str_replace('%value%', $attributeValue, $variableValue);
+				$variableValue = str_replace('%value%', (string)$attributeValue, $variableValue);
 			}
 
 			// Output the custom CSS variable by adding the attribute key + custom object key.
