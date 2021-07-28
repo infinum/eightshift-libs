@@ -61,7 +61,7 @@ class AdminSubMenuCli extends AbstractCli
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'tile',
+					'name' => 'title',
 					'description' => 'The text to be displayed in the title tags of the page when the menu is selected.',
 					'optional' => false,
 				],
