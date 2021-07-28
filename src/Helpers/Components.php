@@ -230,13 +230,13 @@ class Components
 	 * Check if attribute exist in attributes list and add default value if not.
 	 * This is used because Block editor will not output attributes that don't have a default value.
 	 *
-	 * @param string $key Key to check.
+	 * @param string               $key Key to check.
 	 * @param array<string, mixed> $attributes Array of attributes.
 	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
 	 *
-	 * @return bool|string|string[]|array<string, mixed>
+	 * @return mixed
 	 */
 	public static function checkAttr(string $key, array $attributes, array $manifest)
 	{
