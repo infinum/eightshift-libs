@@ -16,6 +16,7 @@
 /phpcs.xml.dist export-ignore
 /phpstan.neon.dist export-ignore
 /phpunit.xml export-ignore
+/package export-ignore
 
 #
 # Auto detect text files and perform LF normalization
