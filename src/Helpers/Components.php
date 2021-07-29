@@ -60,7 +60,7 @@ class Components
 	 */
 	public static function classnames(array $classes): string
 	{
-		return trim(implode(' ', $classes));
+		return trim(implode(' ', array_filter($classes)));
 	}
 
 	/**
