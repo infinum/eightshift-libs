@@ -287,7 +287,7 @@ class Components
 	 * @throws \Exception If missing responsiveAttributes or keyName in responsiveAttributes.
 	 * @throws \Exception If missing keyName in responsiveAttributes.
 	 *
-	 * @return mixed
+	 * @return array<mixed>
 	 */
 	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest): array
 	{
