@@ -86,7 +86,13 @@ class Blocks implements Service, Renderable_Block {
     remove_filter( 'the_content', 'wpautop' );
 
     // Create new custom category for custom blocks.
-    add_filter( 'block_categories', [ $this, 'get_custom_category' ] );
+
+    // Create new custom category for custom blocks.
+	if (\is_wp_version_compatible('5.8')) {
+		\add_filter('block_categories_all', [$this, 'get_custom_category_new'], 10, 2);
+	} else {
+        \add_filter( 'block_categories', [ $this, 'get_custom_category' ] );
+	}
 
     add_action( 'after_setup_theme', [ $this, 'add_theme_support' ], 25 );
 
@@ -276,16 +282,44 @@ class Blocks implements Service, Renderable_Block {
     return (string) $output;
   }
 
-  /**
-   * Create custom category to assign all custom blocks.
-   * This category will show on all blocks list in "Add Block" button.
-   *
-   * @param array $categories Array of all blocks categories.
-   * @return array
-   *
-   * @since 2.0.0
-   */
-  public function get_custom_category( $categories ) {
+	/**
+	 * Create custom category to assign all custom blocks
+	 *
+	 * This category will be shown on all blocks list in "Add Block" button.
+	 *
+	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
+	 *
+	 * @param array[] $categories Array of categories for block types.
+	 * @param \WP_Post $post Post being loaded.
+	 *
+	 * @return array[] Array of categories for block types.
+	 */
+  public function get_custom_category( $categories, $post ) {
+    return array_merge(
+      $categories,
+      [
+        [
+          'slug'  => 'eightshift',
+          'title' => \esc_html__( 'Eightshift', 'eightshift-libs' ),
+          'icon'  => 'admin-settings',
+        ],
+      ]
+    );
+  }
+
+	/**
+	 * Create custom category to assign all custom blocks
+	 *
+	 * This category will be shown on all blocks list in "Add Block" button.
+	 *
+	 * @hook block_categories_all Available from WP 5.8.
+	 *
+	 * @param array[] $categories Array of categories for block types.
+	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 *
+	 * @return array[] Array of categories for block types.
+	 */
+  public function get_custom_category_new( $categories, $blockEditorContext ) {
     return array_merge(
       $categories,
       [
