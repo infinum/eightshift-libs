@@ -230,15 +230,16 @@ class Components
 	 * Check if attribute exist in attributes list and add default value if not.
 	 * This is used because Block editor will not output attributes that don't have a default value.
 	 *
-	 * @param string               $key Key to check.
+	 * @param string $key Key to check.
 	 * @param array<string, mixed> $attributes Array of attributes.
 	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
+	 * @param bool $undefinedAllowed Allowed detection of undefined values.
 	 *
 	 * @throws \Exception When we're unable to find the component by $component.
 	 *
 	 * @return mixed
 	 */
-	public static function checkAttr(string $key, array $attributes, array $manifest)
+	public static function checkAttr(string $key, array $attributes, array $manifest, bool $undefinedAllowed = false)
 	{
 
 		// Get the correct key for the check in the attributes object.
@@ -257,6 +258,11 @@ class Components
 			} else {
 				throw new \Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation.");
 			}
+		}
+
+		// If undefinedAllowed is true and attribute is missing default just return undefined to be able to unset attribute in block editor.
+		if (empty($manifestKey['default']) && $undefinedAllowed) {
+			return;
 		}
 
 		$defaultType = $manifestKey['type'];
@@ -283,13 +289,14 @@ class Components
 	 * @param string $keyName Key name to find in the responsiveAttributes object.
 	 * @param array<string, mixed> $attributes Array of attributes.
 	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
+	 * @param bool $undefinedAllowed Allowed detection of undefined values.
 	 *
 	 * @throws \Exception If missing responsiveAttributes or keyName in responsiveAttributes.
 	 * @throws \Exception If missing keyName in responsiveAttributes.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest): array
+	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest, bool $undefinedAllowed = false): array
 	{
 		$output = [];
 
@@ -306,7 +313,7 @@ class Components
 		}
 
 		foreach ($manifest['responsiveAttributes'][$keyName] as $key => $value) {
-			$output[$key] = self::checkAttr($value, $attributes, $manifest);
+			$output[$key] = self::checkAttr($value, $attributes, $manifest, $undefinedAllowed);
 		}
 
 		return $output;
