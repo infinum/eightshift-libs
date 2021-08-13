@@ -168,7 +168,7 @@ test('Asserts that checkAttr works in case attribute is boolean', function () {
 
 	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);
 
-	$this->assertIsBool($results, 'THe result should be a boolean');
+	$this->assertIsBool($results, 'The result should be a boolean');
 	$this->assertSame(true, $results, "The set attribute should be {$attributes['buttonIsAnchor']}");
 });
 
@@ -178,8 +178,18 @@ test('Asserts that checkAttr returns false in case attribute is boolean and defa
 
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest);
 
-	$this->assertIsBool($results, 'THe result should be a boolean');
+	$this->assertIsBool($results, 'The result should be a boolean');
 	$this->assertSame(false, $results, "The set attribute should be false");
+});
+
+test('Asserts that checkAttr returns null in case attribute is boolean, default is not set and undefined is allowed', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$attributes['buttonIsAnchor'] = true;
+
+	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest, true);
+
+	$this->assertIsNotBool($results, 'The result should not be a boolean');
+	$this->assertSame(null, $results, "The set attribute should be null");
 });
 
 test('Asserts that checkAttr works in case attribute is array', function () {
@@ -201,6 +211,16 @@ test('Asserts that checkAttr returns empty array in case attribute is array or o
 
 	$this->assertIsArray($results, 'The result should be an empty array');
 	$this->assertSame([], $results, "The set attribute should be empty array");
+});
+
+test('Asserts that checkAttr returns null in case attribute is array or object, default is not set, and undefined is allowed', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$attributes['buttonSize'] = 'large';
+
+	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest, true);
+
+	$this->assertIsNotArray($results, 'The result should not be an empty array');
+	$this->assertSame(null, $results, "The set attribute should be null");
 });
 
 test('Asserts that checkAttr returns default value', function () {
@@ -261,6 +281,23 @@ test('Asserts that checkAttrResponsive returns empty values if attribute is not 
 	$this->assertIsArray($results, 'Result should be an array');
 	$this->assertArrayHasKey('large', $results);
 	$this->assertSame($results['large'], '');
+});
+
+test('Asserts that checkAttrResponsive returns null if default is not set and undefined is allowed.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$attributes = [
+		'headingContentSpacingDesktop' => '2'
+	];
+
+	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, true);
+
+	$this->assertIsArray($results, 'Result should be an array');
+	$this->assertArrayHasKey('large', $results);
+	$this->assertArrayHasKey('desktop', $results);
+	$this->assertArrayHasKey('tablet', $results);
+	$this->assertSame($results['large'], null);
+	$this->assertSame($results['desktop'], '2');
+	$this->assertSame($results['tablet'], null);
 });
 
 test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing.', function () {
