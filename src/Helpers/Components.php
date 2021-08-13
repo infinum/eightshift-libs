@@ -260,7 +260,7 @@ class Components
 			}
 		}
 
-		// If undefinedAllowed is true and attribute is missing default just return undefined to be able to unset attribute in block editor.
+		// If undefinedAllowed is true and attribute is missing default just return null to be able to recognize non set variable.
 		if (empty($manifestKey['default']) && $undefinedAllowed) {
 			return;
 		}
