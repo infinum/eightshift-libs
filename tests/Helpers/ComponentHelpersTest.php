@@ -168,7 +168,7 @@ test('Asserts that checkAttr works in case attribute is boolean', function () {
 
 	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);
 
-	$this->assertIsBool($results, 'THe result should be a boolean');
+	$this->assertIsBool($results, 'The result should be a boolean');
 	$this->assertSame(true, $results, "The set attribute should be {$attributes['buttonIsAnchor']}");
 });
 
@@ -178,7 +178,7 @@ test('Asserts that checkAttr returns false in case attribute is boolean and defa
 
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest);
 
-	$this->assertIsBool($results, 'THe result should be a boolean');
+	$this->assertIsBool($results, 'The result should be a boolean');
 	$this->assertSame(false, $results, "The set attribute should be false");
 });
 
@@ -188,7 +188,7 @@ test('Asserts that checkAttr returns null in case attribute is boolean, default 
 
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest, true);
 
-	$this->assertIsNotBool($results, 'THe result should not be a boolean');
+	$this->assertIsNotBool($results, 'The result should not be a boolean');
 	$this->assertSame(null, $results, "The set attribute should be null");
 });
 
