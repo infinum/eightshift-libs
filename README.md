@@ -5,7 +5,7 @@
 [![GitHub tag](https://img.shields.io/github/tag/infinum/eightshift-libs.svg?style=for-the-badge)](https://github.com/infinum/eightshift-libs)
 [![GitHub stars](https://img.shields.io/github/stars/infinum/eightshift-libs.svg?style=for-the-badge&label=Stars)](https://github.com/infinum/eightshift-libs)
 [![license](https://img.shields.io/github/license/infinum/eightshift-libs.svg?style=for-the-badge)](https://github.com/infinum/eightshift-libs)
-[![codecov](https://img.shields.io/codecov/c/gh/infinum/eightshift-libs/release/3.1.0?label=Codecov&style=for-the-badge&token=d4wKeqf1r0)](https://codecov.io/gh/infinum/eightshift-libs)
+[![codecov](https://img.shields.io/codecov/c/gh/infinum/eightshift-libs/develop?label=Codecov&style=for-the-badge&token=d4wKeqf1r0)](https://codecov.io/gh/infinum/eightshift-libs)
 
 # Eightshift Libs
 
