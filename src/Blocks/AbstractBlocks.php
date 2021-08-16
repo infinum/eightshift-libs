@@ -13,6 +13,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -24,23 +25,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Full data of blocks, settings and wrapper data.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $blocks = [];
-
-	/**
-	 * Block view filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCK_VIEW_FILTER_NAME = 'block-view-data';
-
-	/**
-	 * Block attributes override filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCK_ATTRIBUTES_FILTER_NAME = 'block-attributes-override';
 
 	/**
 	 * Create custom project color palette
@@ -86,7 +73,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					// Add additional data to the block settings.
 					$namespace = $block['namespace'] ?? '';
 
-					// Check if namespace is defined in block or in global manifest settings.
+					// Check if namespace RedesignVendor\is defined in block or in global manifest settings.
 					$block['namespace'] = !empty($namespace) ? $namespace : $settings['namespace'];
 					$block['blockFullName'] = "{$block['namespace']}/{$block['blockName']}";
 
@@ -96,11 +83,27 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			);
 
 			$this->blocks = [
-				'settings' => $settings,
-				'wrapper' => $wrapper,
 				'blocks' => $blocks,
+				'wrapper' => $wrapper,
+				'settings' => $settings,
 			];
 		}
+	}
+
+	/**
+	 * Get blocks full data in raw format by item. Used with filter on the frontend.
+	 *
+	 * @param string $key Key to get data from array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getBlocksDataFullRawItem(string $key = 'blocks'): array
+	{
+		if (defined('WP_CLI') && !getenv('TEST')) {
+			return [];
+		}
+
+		return $key ? $this->blocks[$key] : $this->blocks;
 	}
 
 	/**
@@ -108,25 +111,63 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
 	 *
-	 * @param bool|array $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
-	 * @param \WP_Post   $post The post resource data.
+	 * @hook allowed_block_types_all Available from WP 5.8.
 	 *
-	 * @return bool|array Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
+	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
+	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 *
+	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
 	 */
-	public function getAllBlocksList($allowedBlockTypes, \WP_Post $post)
+	public function getAllBlocksList($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
 	{
+		if (gettype($allowedBlockTypes) === 'boolean') {
+			return $allowedBlockTypes;
+		}
+
 		$allowedBlockTypes = array_map(
 			function ($block) {
 				return $block['blockFullName'];
 			},
-			$this->blocks['blocks']
+			$this->blocks['blocks'] ?? []
 		);
 
 		// Allow reusable block.
 		$allowedBlockTypes[] = 'core/block';
 		$allowedBlockTypes[] = 'core/template';
 
-		return $allowedBlockTypes;
+		return $allowedBlockTypes; // @phpstan-ignore-line
+	}
+
+	/**
+	 * Get all blocks with full block name
+	 *
+	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
+	 *
+	 * @hook allowed_block_types This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
+	 *
+	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
+	 * @param \WP_Post $post The post resource data.
+	 *
+	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
+	 */
+	public function getAllBlocksListOld($allowedBlockTypes, \WP_Post $post)
+	{
+		if (gettype($allowedBlockTypes) === 'boolean') {
+			return $allowedBlockTypes;
+		}
+
+		$allowedBlockTypes = array_map(
+			function ($block) {
+				return $block['blockFullName'];
+			},
+			$this->blocks['blocks'] ?? []
+		);
+
+		// Allow reusable block.
+		$allowedBlockTypes[] = 'core/block';
+		$allowedBlockTypes[] = 'core/template';
+
+		return $allowedBlockTypes; // @phpstan-ignore-line
 	}
 
 	/**
@@ -138,9 +179,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function registerBlocks(): void
 	{
-		$blocks = $this->blocks['blocks'];
+		$blocks = $this->blocks['blocks'] ?? [];
 
-		if (empty($blocks)) {
+		if (!$blocks) {
 			throw InvalidBlock::missingBlocksException();
 		}
 
@@ -154,7 +195,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * It uses native register_block_type() function from WP.
 	 *
-	 * @param array $blockDetails Full Block Manifest details.
+	 * @param array<string, mixed> $blockDetails Full Block Manifest details.
 	 *
 	 * @return void
 	 */
@@ -172,7 +213,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Provides block registration callback method for rendering when using wrapper option
 	 *
-	 * @param array  $attributes Array of attributes as defined in block's manifest.json.
+	 * @param array<string, mixed>  $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
 	 * @throws InvalidBlock Throws error if block view is missing.
@@ -215,12 +256,40 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * This category will be shown on all blocks list in "Add Block" button.
 	 *
-	 * @param array[]  $categories Array of all block categories.
+	 * @hook block_categories_all Available from WP 5.8.
+	 *
+	 * @param array[] $categories Array of categories for block types.
+	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 *
+	 * @return array[] Array of categories for block types.
+	 */
+	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
+	{
+		return array_merge(
+			$categories,
+			[
+				[
+					'slug' => 'eightshift',
+					'title' => \esc_html__('Eightshift', 'eightshift-libs'),
+					'icon' => 'admin-settings',
+				],
+			]
+		);
+	}
+
+	/**
+	 * Create custom category to assign all custom blocks
+	 *
+	 * This category will be shown on all blocks list in "Add Block" button.
+	 *
+	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
+	 *
+	 * @param array[] $categories Array of categories for block types.
 	 * @param \WP_Post $post Post being loaded.
 	 *
-	 * @return array[] Array of block categories.
+	 * @return array[] Array of categories for block types.
 	 */
-	public function getCustomCategory(array $categories, \WP_Post $post): array
+	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
 	{
 		return array_merge(
 			$categories,
@@ -240,14 +309,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Used to render php block wrapper view.
 	 *
 	 * @param string $src String with URL path to template.
-	 * @param array  $attributes Attributes array to pass in template.
-	 * @param null   $innerBlockContent If using inner blocks content pass the data.
+	 * @param array<string, mixed> $attributes Attributes array to pass in template.
+	 * @param string|null $innerBlockContent If using inner blocks content pass the data.
 	 *
 	 * @throws InvalidBlock Throws an error if wrapper file doesn't exist.
 	 *
 	 * @return void Includes an HTML view, or throws an error if the view is missing.
 	 */
-	public function renderWrapperView(string $src, array $attributes, $innerBlockContent = null): void
+	public function renderWrapperView(string $src, array $attributes, ?string $innerBlockContent = null): void
 	{
 		if (!file_exists($src)) {
 			throw InvalidBlock::missingWrapperViewException($src);
@@ -314,7 +383,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getWrapper(): array
 	{
@@ -331,16 +400,18 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get wrapper manifest data from wrapper manifest.json file
+	 * Get component manifest data from component manifest.json file
 	 *
 	 * @param string $componentName Name of the component.
 	 *
 	 * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getComponent(string $componentName): array
 	{
+		$componentName = Components::camelToKebabCase($componentName);
+
 		$manifestPath = "{$this->getBlocksComponentsPath()}/{$componentName}/manifest.json";
 
 		if (!file_exists($manifestPath) && !defined('WP_CLI')) {
@@ -359,7 +430,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @throws InvalidBlock Throws error if global manifest settings key namespace is missing.
 	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getSettings(): array
 	{
@@ -386,9 +457,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Default attributes are hardcoded in this lib.
 	 * Block attributes are provided by block manifest.json file.
 	 *
-	 * @param array $blockDetails Block Manifest details.
+	 * @param array<string, mixed> $blockDetails Block Manifest details.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function getAttributes(array $blockDetails): array
 	{
@@ -415,83 +486,124 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			],
 			$this->getSettings()['attributes'] ?? [],
 			$this->blocks['wrapper']['attributes'],
-			$this->prepareComponentAttributes($blockDetails),
-			$blockDetails['attributes']
+			$this->prepareComponentAttributes($blockDetails)
 		);
 	}
 
 	/**
-	 * Iterate over component object in block manifest and search and replace the component attributes with new one.
-	 * Search and replace the component attributes with new one.
+	 * Iterate over attributes or example attributes array in block/component manifest and append the parent prefixes.
 	 *
-	 * @param array  $component Object of component manifests to iterate.
-	 * @param string $realComponentName Reacl component name defined in the component manifest.
-	 * @param string $newComponentName New component name to search and replace the original.
-	 */
-	protected function prepareComponentAttribute(array $component, string $realComponentName, string $newComponentName): array
-	{
-		$componentAttributes = $component['attributes'];
-
-		if ($realComponentName === $newComponentName) {
-			return $componentAttributes;
-		}
-
-		return array_reduce(
-			array_keys($componentAttributes),
-			static function ($output, $name) use ($realComponentName, $newComponentName, $componentAttributes) {
-				$output[str_replace($realComponentName, $newComponentName, $name)] = $componentAttributes[$name];
-				return $output;
-			},
-			[]
-		);
-	}
-
-	/**
-	 * Iterate over component object in block manifest and check if the component exists in the project.
-	 * If components contains more component this function will run recursively.
+	 * @param array<string, mixed>   $manifest Array of component/block manifest to get data from.
+	 * @param string  $newName New renamed component name.
+	 * @param string  $realName Original real component name.
+	 * @param string  $parent Parent component key with stacked parent component names for the final output.
+	 * @param boolean $currentAttributes Check if current attribute is a part of the current component.
 	 *
-	 * @param array $blockDetails Object of component manifests to iterate.
+	 * @return  array<int|string, mixed>
 	 */
-	protected function prepareComponentAttributes(array $blockDetails): array
+	protected function prepareComponentAttribute(array $manifest, string $newName, string $realName, string $parent = '', bool $currentAttributes = false): array
 	{
 		$output = [];
-		$componentAttributes = [];
 
-		if (!isset($blockDetails['components'])) {
+		// Define different data entry point for attributes or example.
+		$componentAttributes = $manifest['attributes'] ?? [];
+
+		// If the attributes or example key is missing in the manifest - bailout.
+		if (!$componentAttributes) {
 			return $output;
 		}
 
-		if (isset($blockDetails['attributes'])) {
-			$componentAttributes = $blockDetails['attributes'];
-		}
+		// Make sure the case is always correct for parent.
+		$newParent = Components::kebabToCamelCase($parent);
 
-		foreach ($blockDetails['components'] as $newComponentName => $realComponentName) {
-			$component = $this->getComponent($realComponentName);
+		// Iterate each attribute and attach parent prefixes.
+		$componentAttributeKeys = array_keys($componentAttributes);
+		foreach ($componentAttributeKeys as $componentAttribute) {
+			$attribute = $componentAttribute;
 
-			$outputAttributes = [];
-
-			if (isset($component['components'])) {
-				$outputAttributes = $this->prepareComponentAttributes($component);
-			} else {
-				$outputAttributes = $this->prepareComponentAttribute($component, $realComponentName, $newComponentName);
+			// If there is an attribute name switch, use the new one.
+			if ($newName !== $realName) {
+				$attribute = str_replace($realName, $newName, (string) $componentAttribute);
 			}
 
-			$output = array_merge(
-				$output,
-				$outputAttributes,
-				$componentAttributes
-			);
+			// Check if current attribute is used strip component prefix from attribute and replace it with parent prefix.
+			if ($currentAttributes) {
+				$attribute = str_replace(lcfirst(Components::kebabToCamelCase($realName)), '', (string) $componentAttribute);
+			}
+
+			// Determine if parent is empty and if parent name is the same as component/block name and skip wrapper attributes.
+			if (substr((string)$attribute, 0, strlen('wrapper')) === 'wrapper') {
+				$attributeName = $attribute;
+			} else {
+				$attributeName = $newParent . ucfirst((string)$attribute);
+			}
+
+			// Output new attribute names.
+			$output[$attributeName] = $componentAttributes[$componentAttribute];
 		}
 
 		return $output;
 	}
 
 	/**
-	 * Throws error if manifest key blockName is missing
+	 * Iterate over component array in block manifest and check if the component exists in the project.
+	 * If components contains more component this function will run recursively.
+	 *
+	 * @param array<string, mixed>  $manifest Array of component/block manifest to get the data from.
+	 * @param string $parent Parent component key with stacked parent component names for the final output.
+	 *
+	 * @throws InvalidBlock If the component is wrong, or the name is wrong or it doesn't exist.
+	 *
+	 * @return array<int|string, mixed>
+	 */
+	protected function prepareComponentAttributes(array $manifest, string $parent = ''): array
+	{
+		$output = [];
+
+		// Determine if this is component or block and provide the name, not used for anything important but only to output the error msg.
+		$name = $manifest['blockName'] ?? $manifest['componentName'];
+
+		$components = $manifest['components'] ?? [];
+
+		$newParent = ($parent === '') ? $name : $parent;
+
+		// Iterate over components key in manifest recursively and check component names.
+		foreach ($components as $newComponentName => $realComponentName) {
+			// Filter components real name.
+			$component = $this->getComponent(Components::camelToKebabCase($realComponentName));
+
+			// Bailout if component doesn't exist.
+			if (!$component) {
+				throw InvalidBlock::wrongComponentNameException($name, $realComponentName);
+			}
+
+			// If component has more components do recursive loop.
+			if (isset($component['components'])) {
+				$outputAttributes = $this->prepareComponentAttributes($component, $newParent . ucfirst(Components::camelToKebabCase($newComponentName)));
+			} else {
+				// Output the component attributes if there is no nesting left, and append the parent prefixes.
+				$outputAttributes = $this->prepareComponentAttribute($component, $newComponentName, $realComponentName, $newParent);
+			}
+
+			// Populate the output recursively.
+			$output = array_merge(
+				$output,
+				$outputAttributes
+			);
+		}
+
+		return array_merge(
+			$output,
+			$this->prepareComponentAttribute($manifest, '', $name, $newParent, true)
+		);
+	}
+
+	/**
+	 * Retrieve block data
 	 *
 	 * @throws InvalidBlock Throws error if block name is missing.
 	 *
-	 * @return array
+	 * @return array<int, array<string, mixed>>
 	 */
 	private function getBlocksData(): array
 	{
@@ -532,7 +644,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @throws InvalidManifest Error in the case json file has errors.
 	 *
-	 * @return array Parsed JSON string into an array.
+	 * @return array<string, mixed> Parsed JSON string into an array.
 	 */
 	private function parseManifest(string $string): array
 	{
@@ -543,31 +655,31 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				$error = '';
 				break;
 			case JSON_ERROR_DEPTH:
-				$error = esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs');
+				$error = \esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_STATE_MISMATCH:
-				$error = esc_html__('Invalid or malformed JSON.', 'eightshift-libs');
+				$error = \esc_html__('Invalid or malformed JSON.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_CTRL_CHAR:
-				$error = esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs');
+				$error = \esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_SYNTAX:
-				$error = esc_html__('Syntax error, malformed JSON.', 'eightshift-libs');
+				$error = \esc_html__('Syntax error, malformed JSON.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_UTF8:
-				$error = esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs');
+				$error = \esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_RECURSION:
-				$error = esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs');
+				$error = \esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_INF_OR_NAN:
-				$error = esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs');
+				$error = \esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs');
 				break;
 			case JSON_ERROR_UNSUPPORTED_TYPE:
-				$error = esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs');
+				$error = \esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs');
 				break;
 			default:
-				$error = esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
+				$error = \esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
 				break;
 		}
 

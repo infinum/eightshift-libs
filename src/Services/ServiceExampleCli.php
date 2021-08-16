@@ -31,9 +31,9 @@ class ServiceExampleCli extends AbstractCli
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -44,9 +44,9 @@ class ServiceExampleCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -69,6 +69,7 @@ class ServiceExampleCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
@@ -79,17 +80,7 @@ class ServiceExampleCli extends AbstractCli
 		$className = $this->getClassShortName();
 		$classNameNew = $this->getFileName($fileName);
 
-		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, static::TEMPLATE);
-
-		// Replace stuff in file.
-		$class = str_replace($className, $classNameNew, $class);
-
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		// Create new namespace from folder structure.
+		// Create new namespace from the folder structure.
 		$folderParts = array_map(
 			function ($item) {
 				return ucfirst($item);
@@ -98,9 +89,13 @@ class ServiceExampleCli extends AbstractCli
 		);
 
 		$newNamespace = '\\' . implode('\\', $folderParts);
-		$class = str_replace('\\Services;', "{$newNamespace};", $class);
 
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR . '/' . $folder, $classNameNew, $class, $assocArgs);
+		// Read the template contents, and replace the placeholders with provided variables.
+		$this->getExampleTemplate(__DIR__, static::TEMPLATE)
+			->searchReplaceString($className, $classNameNew)
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs)
+			->searchReplaceString('\\Services;', "{$newNamespace};")
+			->outputWrite(static::OUTPUT_DIR . '/' . $folder, $classNameNew, $assocArgs);
 	}
 }

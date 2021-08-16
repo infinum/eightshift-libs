@@ -1,0 +1,17 @@
+{
+  "urls": {
+    "develop": "http://testing.test",
+    "staging": "https://testing-staging.com",
+    "production": "https://testing.com"
+  },
+  "core": "5.6.1",
+  "plugins": {
+    "core": {
+      "query-monitor": "3.6.4",
+    },
+    "github": {
+      "infinum/eightshift-gdpr": "1.0.1"
+    }
+  },
+  "themes": {}
+}

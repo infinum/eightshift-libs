@@ -14,7 +14,7 @@ use EightshiftLibs\Cli\CliHelpers;
  * Update project and setup all plugins, themes and core
  *
  * @param string $projectRootPath Root of the project where config is located.
- * @param array  $args Optional arguments.
+ * @param array<string, mixed>  $args Optional arguments.
  * @param string $setupFile Define setup file name.
  *
  * @return void
@@ -87,8 +87,13 @@ function setup(string $projectRootPath, array $args = [], string $setupFile = 's
 				// Install github plugins.
 				if (!empty($pluginsGithub)) {
 					foreach ($pluginsGithub as $name => $version) {
-						WP_CLI::runcommand("plugin install https://github.com/{$name}/archive/{$version}.zip --force");
+						$shortName = CliHelpers::getGithubPluginName($name);
+						$filePath = getcwd() . "/{$shortName}.zip";
+						$releaseZip = file_get_contents("https://github.com/{$name}/releases/download/{$version}/release.zip"); // phpcs:ignore WordPress.WP.AlternativeFunctions
+						file_put_contents($filePath, $releaseZip); // phpcs:ignore WordPress.WP.AlternativeFunctions
+						WP_CLI::runcommand("plugin install {$filePath} --force");
 						WP_CLI::log('--------------------------------------------------');
+						unlink($filePath);
 					}
 				} else {
 					WP_CLI::warning('No Github plugins are defined. Skipping.');

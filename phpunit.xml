@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+		 bootstrap="vendor/autoload.php"
+		 colors="true"
+>
+	<testsuites>
+		<testsuite name="Unit Test Suite">
+			<directory suffix="Test.php">./tests</directory>
+		</testsuite>
+	</testsuites>
+	<php>
+        <env name="TEST" value="true" force="true" />
+    </php>
+	<coverage processUncoveredFiles="true">
+		<include>
+			<directory suffix=".php">./src</directory>
+		</include>
+		<exclude>
+			<file>./src/Build/BuildExample.php</file>
+			<file>./src/Menu/BemMenuWalker.php</file>
+			<file>./src/ConfigProject/ConfigProjectExample.php</file>
+		</exclude>
+		<report>
+			<clover outputFile="tests/coverage/clover.xml"/>
+			<html outputDirectory="tests/coverage/html" lowUpperBound="50" highLowerBound="90"/>
+		</report>
+	</coverage>
+</phpunit>

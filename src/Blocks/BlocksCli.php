@@ -19,6 +19,13 @@ class BlocksCli extends AbstractCli
 {
 
 	/**
+	 * Toggle to see if this is running inside tests or not
+	 *
+	 * @var bool
+	 */
+	private $isTest;
+
+	/**
 	 * Output dir relative path
 	 *
 	 * @var string
@@ -28,7 +35,7 @@ class BlocksCli extends AbstractCli
 	/**
 	 * List of components
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	public const COMPONENTS = [
 		'button',
@@ -42,7 +49,6 @@ class BlocksCli extends AbstractCli
 		'heading',
 		'image',
 		'layout-three-columns',
-		'link',
 		'lists',
 		'logo',
 		'menu',
@@ -53,7 +59,7 @@ class BlocksCli extends AbstractCli
 	/**
 	 * List of blocks
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	public const BLOCKS = [
 		'button',
@@ -63,7 +69,6 @@ class BlocksCli extends AbstractCli
 		'group',
 		'heading',
 		'image',
-		'link',
 		'lists',
 		'paragraph',
 	];
@@ -71,7 +76,7 @@ class BlocksCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -80,38 +85,34 @@ class BlocksCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $className);
+		$class = $this->getExampleTemplate(__DIR__, $className)
+			->renameClassName($className)
+			->renameNamespace($assocArgs)
+			->renameTextDomainFrontendLibs($assocArgs)
+			->renameUse($assocArgs);
 
-		// Replace stuff in file.
-		$class = $this->renameClassName($className, $class);
-
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		if (function_exists('\add_action')) {
+		if (!$this->isTest && function_exists('\add_action')) {
 			$this->blocksInit($assocArgs);
 		}
 
 		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 
 	/**
 	 * Copy blocks from Eightshift-frontend-libs to project
 	 *
-	 * @param array $args Arguments array.
+	 * @param string[] $args Arguments array.
 	 *
 	 * @return void
 	 */
-	public function blocksInit(array $args): void
+	private function blocksInit(array $args): void
 	{
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
@@ -148,5 +149,15 @@ class BlocksCli extends AbstractCli
 		}
 
 		\WP_CLI::success('Blocks successfully set.');
+	}
+
+	/**
+	 * Used when running tests.
+	 *
+	 * @return void
+	 */
+	public function setTest(): void
+	{
+		$this->isTest = true;
 	}
 }

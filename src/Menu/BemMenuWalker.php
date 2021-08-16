@@ -57,16 +57,16 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	/**
 	 * Display element for walker
 	 *
-	 * @see \Walker::display_element()
-	 *
-	 * @param object $element           Data object.
-     * @param array  $children_elements List of elements to continue traversing (passed by reference).
-     * @param int    $max_depth         Max depth to traverse.
-     * @param int    $depth             Depth of current element.
-     * @param array  $args              An array of arguments.
-     * @param string $output            Used to append additional content (passed by reference).
+	 * @param object $element Data object.
+	 * @param Array[] $children_elements List of elements to continue traversing (passed by reference).
+	 * @param int $max_depth Max depth to traverse.
+	 * @param int $depth Depth of current element.
+	 * @param Object[] $args An array of arguments.
+	 * @param string $output Used to append additional content (passed by reference).
 	 *
 	 * @return void Parent Display element
+	 *@see \Walker::display_element()
+	 *
 	 */
 	public function display_element( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
 		$element,
@@ -122,16 +122,16 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	/**
 	 * Add main/sub classes to li's and links.
 	 *
-	 * @see \Walker_Nav_Menu::start_el()
-	 *
-     * @param string         $output Used to append additional content (passed by reference).
-     * @param \WP_Post       $item   Menu item data object.
-     * @param int            $depth  Depth of menu item. Used for padding.
-     * @param \stdClass|null $args   An object of wp_nav_menu() arguments.
-     * @param int            $id     Current item ID.
+	 * @param string $output Used to append additional content (passed by reference).
+	 * @param \WP_Post $item Menu item data object.
+	 * @param int $depth Depth of menu item. Used for padding.
+	 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
+	 * @param int $id Current item ID.
 	 *
 	 * @return void
-	 */
+	 * @see \Walker_Nav_Menu::start_el()
+	 *
+     */
 	public function start_el( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
 		&$output,
 		$item,

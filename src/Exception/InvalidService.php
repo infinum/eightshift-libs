@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Exception;
 
 /**
- * Class Invalid_Service.
+ * Class InvalidService
  */
 final class InvalidService extends \InvalidArgumentException implements GeneralExceptionInterface
 {
@@ -24,14 +24,14 @@ final class InvalidService extends \InvalidArgumentException implements GeneralE
 	 *
 	 * @return static
 	 */
-	public static function fromService(string $service)
+	public static function fromService(string $service): InvalidService
 	{
 		$message = sprintf(
 		/* translators: %s is replaced with name of the service. */
-			esc_html__('The service %s is not recognized and cannot be registered.', 'eightshift-libs'),
+			\esc_html__('The service %s is not recognized and cannot be registered.', 'eightshift-libs'),
 			$service
 		);
 
-		return new static($message);
+		return new InvalidService($message);
 	}
 }

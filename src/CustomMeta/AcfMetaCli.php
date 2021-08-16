@@ -28,9 +28,9 @@ class AcfMetaCli extends AbstractCli
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -40,9 +40,9 @@ class AcfMetaCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -59,6 +59,7 @@ class AcfMetaCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
@@ -69,15 +70,10 @@ class AcfMetaCli extends AbstractCli
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameClassNameWithPrefix($this->getClassShortName(), $className)
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs)
+			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }

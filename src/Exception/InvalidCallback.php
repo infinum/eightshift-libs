@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Exception;
 
 /**
- * Class Invalid_Callback.
+ * Class InvalidCallback
  */
 final class InvalidCallback extends \InvalidArgumentException implements GeneralExceptionInterface
 {
@@ -24,14 +24,14 @@ final class InvalidCallback extends \InvalidArgumentException implements General
 	 *
 	 * @return static
 	 */
-	public static function fromCallback(string $callback)
+	public static function fromCallback(string $callback): InvalidCallback
 	{
 		$message = sprintf(
 		/* translators: %s is replaced with callback name. */
-			esc_html__('The callback %s is not recognized and cannot be registered.', 'eightshift-libs'),
+			\esc_html__('The callback %s is not recognized and cannot be registered.', 'eightshift-libs'),
 			$callback
 		);
 
-		return new static($message);
+		return new InvalidCallback($message);
 	}
 }

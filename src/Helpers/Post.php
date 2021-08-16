@@ -16,6 +16,14 @@ namespace EightshiftLibs\Helpers;
  */
 class Post
 {
+
+	/**
+	 * Average reading speed.
+	 *
+	 * @var int
+	 */
+	public const AVERAGE_WORD_COUNT = 200;
+
 	/**
 	 * Return content reading time
 	 *
@@ -27,9 +35,9 @@ class Post
 	 *
 	 * @param int $postID ID of post content to calculate.
 	 *
-	 * @return string reading time string.
+	 * @return int reading time integer.
 	 */
-	public static function getReadingTime(int $postID): string
+	public static function getReadingTime(int $postID): int
 	{
 		$contentBlocks = \parse_blocks(\get_the_content(null, false, $postID));
 
@@ -53,9 +61,9 @@ class Post
 		});
 
 		$wordCount = str_word_count(\wp_strip_all_tags(implode('', $content)));
-		$readingTime = ceil($wordCount / 200);
+		$readingTime = ceil($wordCount / self::AVERAGE_WORD_COUNT);
 
 		/* translators: %d: number of minutes needed for reading the article. */
-		return sprintf(\esc_html__('%d min reading time', 'eightshift-libs'), $readingTime);
+		return (int)$readingTime;
 	}
 }

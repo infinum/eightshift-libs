@@ -30,7 +30,7 @@ interface CliInterface
 	 *
 	 * @return void
 	 */
-	public function __invoke(array $args, array $assocArgs);
+	public function __invoke(array $args, array $assocArgs); // @phpstan-ignore-line
 
 	/**
 	 * Method that creates actual WPCLI command in terminal.
@@ -54,9 +54,9 @@ interface CliInterface
 	public function getClassName(): string;
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array;
 }

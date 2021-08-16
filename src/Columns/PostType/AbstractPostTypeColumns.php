@@ -38,9 +38,9 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	/**
 	 * Add additional post columns to the columns array.
 	 *
-	 * @param array $columns The existing column names array with default post columns (title, author, date etc.).
+	 * @param string[] $columns The existing column names array with default post columns (title, author, date etc.).
 	 *
-	 * @return array Modified column names array.
+	 * @return string[] Modified column names array.
 	 */
 	abstract public function addColumnName(array $columns): array;
 
@@ -57,7 +57,7 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	/**
 	 * Get the slug of the post type where the additional column should appear.
 	 *
-	 * @return array The name of the post type.
+	 * @return string[] The name of the post type.
 	 */
 	abstract protected function getPostTypeSlugs(): array;
 }

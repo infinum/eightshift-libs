@@ -36,9 +36,23 @@ class BlockVariationCli extends AbstractCli
 	}
 
 	/**
+	 * Define default develop props.
+	 *
+	 * @param string[] $args WPCLI eval-file arguments.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getDevelopArgs(array $args): array
+	{
+		return [
+			'name' => $args[1] ?? 'button',
+		];
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -55,6 +69,7 @@ class BlockVariationCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
@@ -69,7 +84,12 @@ class BlockVariationCli extends AbstractCli
 		$path = static::OUTPUT_DIR . '/' . $name;
 		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
 		$sourcePath = "{$sourcePathFolder}{$name}";
-		$destinationPath = $root . '/' . $path;
+
+		if (!getenv('TEST')) {
+			$destinationPath = $root . '/' . $path;
+		} else {
+			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
+		}
 
 		// Source doesn't exist.
 		if (!file_exists($sourcePath)) {
@@ -118,17 +138,12 @@ class BlockVariationCli extends AbstractCli
 			// Set output file path.
 			$class = $this->getExampleTemplate($destinationPath, $file, true);
 
-			if (!empty($class)) {
-				$class = $this->renameProjectName($assocArgs, $class);
-
-				$class = $this->renameNamespace($assocArgs, $class);
-
-				$class = $this->renameTextDomainFrontendLibs($assocArgs, $class);
-
-				$class = $this->renameUseFrontendLibs($assocArgs, $class);
-
-				// Output final class to new file/folder and finish.
-				$this->outputWrite($path, $file, $class, ['skip_existing' => true]);
+			if (!empty($class->fileContents)) {
+				$class->renameProjectName($assocArgs)
+				->renameNamespace($assocArgs)
+				->renameTextDomainFrontendLibs($assocArgs)
+				->renameUseFrontendLibs($assocArgs)
+				->outputWrite($path, $file, ['skip_existing' => true]);
 			}
 		}
 

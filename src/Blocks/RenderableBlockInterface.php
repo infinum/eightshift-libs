@@ -21,7 +21,7 @@ interface RenderableBlockInterface
 	/**
 	 * Provides block registration render callback method.
 	 *
-	 * @param array  $attributes Array of attributes as defined in block's manifest.json.
+	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
 	 * @return string

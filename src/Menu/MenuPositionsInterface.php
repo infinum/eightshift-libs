@@ -21,7 +21,7 @@ interface MenuPositionsInterface
 	/**
 	 * Return all menu positions
 	 *
-	 * @return array Of menu positions with name and slug.
+	 * @return array<string, mixed> Of menu positions with name and slug.
 	 */
 	public function getMenuPositions(): array;
 }

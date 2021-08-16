@@ -35,9 +35,9 @@ abstract class AbstractUserColumns implements ServiceInterface
 	/**
 	 * Add additional user columns to the columns array.
 	 *
-	 * @param array $columns The existing column names array with default user columns (title, author, date etc.).
+	 * @param string[] $columns The existing column names array with default user columns (title, author, date etc.).
 	 *
-	 * @return array Modified column names array.
+	 * @return string[] Modified column names array.
 	 */
 	abstract public function addColumnName(array $columns): array;
 
@@ -55,9 +55,9 @@ abstract class AbstractUserColumns implements ServiceInterface
 	/**
 	 * Make user columns sortable
 	 *
-	 * @param array $columns Array of columns.
+	 * @param string[] $columns Array of columns.
 	 *
-	 * @return array Modified array of columns.
+	 * @return string[] Modified array of columns.
 	 */
 	abstract public function sortAddedColumns(array $columns): array;
 }

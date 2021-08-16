@@ -18,18 +18,23 @@ use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
-use EightshiftLibs\Readme\ReadmeCli;
 
 /**
  * Class CliInitTheme
  */
 class CliInitTheme extends AbstractCli
 {
+	/**
+	 * CLI command name
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'setup_theme';
 
 	/**
 	 * All classes for initial theme setup for project
 	 *
-	 * @var array
+	 * @var class-string[]
 	 */
 	public const INIT_THEME_CLASSES = [
 		ConfigCli::class,
@@ -40,7 +45,6 @@ class CliInitTheme extends AbstractCli
 		EnqueueThemeCli::class,
 		MenuCli::class,
 		BlocksCli::class,
-		ReadmeCli::class,
 	];
 
 	/**
@@ -50,13 +54,13 @@ class CliInitTheme extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'setup_theme';
+		return self::COMMAND_NAME;
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -65,6 +69,7 @@ class CliInitTheme extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		if (!function_exists('\add_action')) {
@@ -75,9 +80,12 @@ class CliInitTheme extends AbstractCli
 		foreach (static::INIT_THEME_CLASSES as $item) {
 			try {
 				$reflectionClass = new \ReflectionClass($item);
+				// @codeCoverageIgnoreStart
+				// See the explanation in the CliInitProject.
 			} catch (\ReflectionException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
+				CliHelpers::cliError("{$e->getCode()}: {$e->getMessage()}");
 			}
+			// @codeCoverageIgnoreEnd
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Exception;
 
 /**
- * Class Failed_To_Load_View.
+ * Class FailedToLoadView
  */
 final class FailedToLoadView extends \RuntimeException implements GeneralExceptionInterface
 {
@@ -26,15 +26,15 @@ final class FailedToLoadView extends \RuntimeException implements GeneralExcepti
 	 *
 	 * @return static
 	 */
-	public static function viewException(string $uri, \Exception $exception)
+	public static function viewException(string $uri, \Exception $exception): FailedToLoadView
 	{
 		$message = sprintf(
 		/* translators: %1$s will be replaced with view URI, and %2$s with error. */
-			esc_html__('Could not load the View URI: %1$s. Reason: %2$s.', 'eightshift-libs'),
+			\esc_html__('Could not load the View URI: %1$s. Reason: %2$s.', 'eightshift-libs'),
 			$uri,
 			$exception->getMessage()
 		);
 
-		return new static($message, $exception->getCode(), $exception);
+		return new FailedToLoadView($message, $exception->getCode(), $exception);
 	}
 }

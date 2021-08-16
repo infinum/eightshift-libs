@@ -26,6 +26,13 @@ class BlocksExample extends AbstractBlocks
 	public const REUSABLE_BLOCKS_CAPABILITY = 'edit_reusable_blocks';
 
 	/**
+	 * Blocks dependency filter name constant.
+	 *
+	 * @var string
+	 */
+	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'blocks_dependency';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -40,7 +47,11 @@ class BlocksExample extends AbstractBlocks
 		remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		\add_filter('block_categories', [$this, 'getCustomCategory'], 10, 2);
+		if (\is_wp_version_compatible('5.8')) {
+			\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
+		} else {
+			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
+		}
 
 		// Register custom theme support options.
 		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 25);
@@ -50,6 +61,9 @@ class BlocksExample extends AbstractBlocks
 
 		// Register Reusable blocks side menu.
 		\add_action('admin_menu', [$this, 'addReusableBlocks']);
+
+		// Register blocks internal filter for props helper.
+		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
 	}
 
 	/**
@@ -76,7 +90,7 @@ class BlocksExample extends AbstractBlocks
 			\esc_html__('Blocks', 'eightshift-libs'),
 			self::REUSABLE_BLOCKS_CAPABILITY,
 			'edit.php?post_type=wp_block',
-			'',
+			'', // @phpstan-ignore-line
 			'dashicons-editor-table',
 			4
 		);

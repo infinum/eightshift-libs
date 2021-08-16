@@ -30,11 +30,12 @@ use EightshiftLibs\Setup\SetupCli;
  */
 class CliInitProject extends AbstractCli
 {
+	public const COMMAND_NAME = 'setup_project';
 
 	/**
 	 * All classes for initial theme setup for project
 	 *
-	 * @var array
+	 * @var class-string[]
 	 */
 	public const INIT_PROJECT_CLASSES = [
 		ConfigCli::class,
@@ -60,21 +61,23 @@ class CliInitProject extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'setup_project';
+		return self::COMMAND_NAME;
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project, for example: gitignore file for the full WordPress project, continuous integration exclude files, etc.',
+			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project.
+			For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.',
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		if (!function_exists('\add_action')) {
@@ -85,9 +88,14 @@ class CliInitProject extends AbstractCli
 		foreach (static::INIT_PROJECT_CLASSES as $item) {
 			try {
 				$reflectionClass = new \ReflectionClass($item);
+				// @codeCoverageIgnoreStart
+				// There is no way that I found to mock an internal PHP class that gets instantiated directly.
+				// The only way to mock this would to generate a Reflection factory which could be mocked.
+				// And I really feel we would be pushing the abstraction too far without much being gained.
 			} catch (\ReflectionException $e) {
-				exit("{$e->getCode()}: {$e->getMessage()}");
+				CliHelpers::cliError("{$e->getCode()}: {$e->getMessage()}");
 			}
+			// @codeCoverageIgnoreEnd
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 

@@ -17,6 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class RouteCli extends AbstractCli
 {
+	/**
+	 * CLI command name
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'create_rest_route';
 
 	/**
 	 * Output dir relative path.
@@ -28,7 +34,7 @@ class RouteCli extends AbstractCli
 	/**
 	 * Route method enum.
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public const VERB_ENUM = [
 		'GET' => 'static::READABLE',
@@ -45,15 +51,15 @@ class RouteCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'create_rest_route';
+		return self::COMMAND_NAME;
 	}
 
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -64,9 +70,9 @@ class RouteCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -89,6 +95,7 @@ class RouteCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
@@ -99,19 +106,23 @@ class RouteCli extends AbstractCli
 		$className = $this->getFileName($endpointSlug);
 		$className = $className . $this->getClassShortName();
 
+		// If method is invalid throw error.
+		if (!isset(self::VERB_ENUM[$method])) {
+			\WP_CLI::error("Invalid method: $method, please use one of GET, POST, PATCH, PUT, or DELETE");
+		}
+
+		// If slug is empty throw error.
+		if (empty($endpointSlug)) {
+			\WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
+		}
+
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		$class = str_replace('/example-route', "/{$endpointSlug}", $class);
-		$class = str_replace('static::READABLE', static::VERB_ENUM[$method], $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameClassNameWithPrefix($this->getClassShortName(), $className)
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs)
+			->searchReplaceString('/example-route', "/{$endpointSlug}")
+			->searchReplaceString('static::READABLE', static::VERB_ENUM[$method])
+			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }

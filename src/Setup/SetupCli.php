@@ -17,6 +17,7 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class SetupCli extends AbstractCli
 {
+	public const SETUP_CLI_COMMAND_NAME = 'init_setup';
 
 	/**
 	 * Output dir relative path.
@@ -32,15 +33,15 @@ class SetupCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_setup';
+		return self::SETUP_CLI_COMMAND_NAME;
 	}
 
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -50,9 +51,9 @@ class SetupCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -69,15 +70,14 @@ class SetupCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
-		// Get setup.json file.
-		$json = $this->getExampleTemplate(__DIR__, 'setup.json');
-
-		// Output json file to project root.
-		$this->outputWrite($root, 'setup.json', $json, $assocArgs);
+		// Get setup.json example file, and create the one in the project.
+		$this->getExampleTemplate(__DIR__, 'setup.json')
+			->outputWrite($root, 'setup.json', $assocArgs);
 	}
 }

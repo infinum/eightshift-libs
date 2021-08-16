@@ -30,9 +30,9 @@ class ImportCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -55,6 +55,7 @@ class ImportCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		require $this->getLibsPath('src/Db/DbImport.php');
@@ -68,7 +69,7 @@ class ImportCli extends AbstractCli
 				]
 			);
 		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}");
+			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 		}
 	}
 }

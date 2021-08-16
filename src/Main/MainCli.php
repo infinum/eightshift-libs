@@ -24,9 +24,9 @@ class MainCli extends AbstractCli
 	public const OUTPUT_DIR = 'src/Main';
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -35,19 +35,14 @@ class MainCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameClassName($this->getClassShortName(), $class);
-
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameClassName($this->getClassShortName())
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs)
+			->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $assocArgs);
 	}
 }

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Exception;
 
 /**
- * Class Invalid_Nouns.
+ * Class InvalidNouns
  */
 final class InvalidNouns extends \InvalidArgumentException implements GeneralExceptionInterface
 {
@@ -24,14 +24,14 @@ final class InvalidNouns extends \InvalidArgumentException implements GeneralExc
 	 *
 	 * @return static
 	 */
-	public static function fromKey(string $key)
+	public static function fromKey(string $key): InvalidNouns
 	{
 		$message = sprintf(
 		/* translators: %s is replaced with name of the noun. */
-			esc_html__('The array of nouns passed into the Label_Generator is missing the %s noun.', 'eightshift-libs'),
+			\esc_html__('The array of nouns passed into the Label_Generator is missing the %s noun.', 'eightshift-libs'),
 			$key
 		);
 
-		return new static($message);
+		return new InvalidNouns($message);
 	}
 }

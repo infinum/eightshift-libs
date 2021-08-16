@@ -38,9 +38,9 @@ class CiExcludeCli extends AbstractCli
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -52,7 +52,7 @@ class CiExcludeCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -81,19 +81,16 @@ class CiExcludeCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, 'ci-exclude.txt');
-
-		// Replace stuff in file.
-		$class = $this->renameProjectName($assocArgs, $class);
-		$class = $this->renameProjectType($assocArgs, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite($root, 'ci-exclude.txt', $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, 'ci-exclude.txt')
+			->renameProjectName($assocArgs)
+			->renameProjectType($assocArgs)
+			->outputWrite($root, 'ci-exclude.txt', $assocArgs);
 	}
 }

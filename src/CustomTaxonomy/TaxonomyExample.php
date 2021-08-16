@@ -45,7 +45,7 @@ class TaxonomyExample extends AbstractTaxonomy
 	/**
 	 * Get the post type slug(s) that use the taxonomy.
 	 *
-	 * @return string|array Custom post type slug or an array of slugs.
+	 * @return string|array<string> Custom post type slug or an array of slugs.
 	 */
 	protected function getPostTypeSlug()
 	{
@@ -55,7 +55,7 @@ class TaxonomyExample extends AbstractTaxonomy
 	/**
 	 * Get the arguments that configure the custom taxonomy.
 	 *
-	 * @return array Array of arguments.
+	 * @return array<mixed> Array of arguments.
 	 */
 	protected function getTaxonomyArguments(): array
 	{

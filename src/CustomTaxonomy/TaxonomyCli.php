@@ -28,9 +28,9 @@ class TaxonomyCli extends AbstractCli
 	/**
 	 * Define default develop props.
 	 *
-	 * @param array $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -43,9 +43,9 @@ class TaxonomyCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WPCLI command doc
 	 *
-	 * @return array
+	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
@@ -80,6 +80,7 @@ class TaxonomyCli extends AbstractCli
 		];
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
@@ -93,23 +94,16 @@ class TaxonomyCli extends AbstractCli
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName());
-
-		// Replace stuff in file.
-		$class = $this->renameClassNameWithPrefix($this->getClassShortName(), $className, $class);
-
-		$class = $this->renameNamespace($assocArgs, $class);
-
-		$class = $this->renameUse($assocArgs, $class);
-
-		$class = $this->renameTextDomain($assocArgs, $class);
-
-		$class = str_replace('example-slug', $slug, $class);
-		$class = str_replace('example-endpoint-slug', $restEndpointSlug, $class);
-		$class = str_replace("'post'", "'{$postTypeSlug}'", $class);
-		$class = str_replace('Example Name', $label, $class);
-
-		// Output final class to new file/folder and finish.
-		$this->outputWrite(static::OUTPUT_DIR, $className, $class, $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->renameClassNameWithPrefix($this->getClassShortName(), $className)
+			->renameNamespace($assocArgs)
+			->renameUse($assocArgs)
+			->renameTextDomain($assocArgs)
+			->searchReplaceString('example-slug', $slug)
+			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
+			->searchReplaceString("'post'", "'{$postTypeSlug}'")
+			->searchReplaceString('Example Name', $label)
+			->searchReplaceString('Blog_Taxonomy', $className)
+			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }
