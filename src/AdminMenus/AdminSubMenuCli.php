@@ -3,7 +3,7 @@
 /**
  * Class that registers WPCLI command for admin sub menu creation.
  *
- * @package EightshiftLibs\CustomPostType
+ * @package EightshiftLibs\AdminMenus
  */
 
 declare(strict_types=1);
