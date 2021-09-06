@@ -3,7 +3,7 @@
 /**
  * File that holds class for admin menu example.
  *
- * @package EightshiftLibs\AdminMenus
+ * @package EightshiftBoilerplate\AdminMenus
  */
 
 declare(strict_types=1);
