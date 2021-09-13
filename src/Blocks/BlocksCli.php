@@ -30,7 +30,7 @@ class BlocksCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks';
 
 	/**
 	 * List of components
