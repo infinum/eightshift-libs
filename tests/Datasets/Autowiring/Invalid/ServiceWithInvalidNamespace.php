@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Datasets\Autowiring\Invalid;
+namespace Tests\Datasets\Autowiring\Invalid\DoesNotExist;
 
 use EightshiftLibs\Services\ServiceInterface;
 
