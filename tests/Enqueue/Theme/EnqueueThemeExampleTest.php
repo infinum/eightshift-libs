@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Enqueue\Theme;
+namespace Tests\Unit\Enqueue\Theme;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
