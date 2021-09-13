@@ -23,7 +23,7 @@ class BlockVariationCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks/variations';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'variations';
 
 	/**
 	 * Get WPCLI command name

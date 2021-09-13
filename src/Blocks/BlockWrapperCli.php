@@ -23,7 +23,7 @@ class BlockWrapperCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks/wrapper';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'wrapper';
 
 	/**
 	 * Get WPCLI command name

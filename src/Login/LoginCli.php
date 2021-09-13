@@ -21,7 +21,7 @@ class LoginCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src/Login';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Login';
 
 	/**
 	 * Get WPCLI command doc.

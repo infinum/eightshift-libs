@@ -23,7 +23,7 @@ class I18nCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/I18n';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'I18n';
 
 	/**
 	 * Get WPCLI command doc.

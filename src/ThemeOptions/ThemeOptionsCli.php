@@ -21,7 +21,7 @@ class ThemeOptionsCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src/ThemeOptions';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'ThemeOptions';
 
 	/**
 	 * Get WPCLI command doc.

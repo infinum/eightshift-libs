@@ -24,7 +24,7 @@ class BlockPatternCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/BlockPatterns';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'BlockPatterns';
 
 	/**
 	 * Define default develop props.

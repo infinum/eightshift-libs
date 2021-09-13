@@ -23,7 +23,7 @@ class TaxonomyCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/CustomTaxonomy';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomTaxonomy';
 
 	/**
 	 * Define default develop props.

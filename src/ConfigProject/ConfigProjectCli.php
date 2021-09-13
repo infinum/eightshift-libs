@@ -21,7 +21,7 @@ class ConfigProjectCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = '../../../';
+	public const OUTPUT_DIR = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
 
 	/**
 	 * Get WPCLI command name

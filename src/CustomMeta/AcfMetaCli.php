@@ -23,7 +23,7 @@ class AcfMetaCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/CustomMeta';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomMeta';
 
 	/**
 	 * Define default develop props.

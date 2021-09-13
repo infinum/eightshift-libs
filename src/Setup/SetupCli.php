@@ -24,7 +24,7 @@ class SetupCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = '../../../';
+	public const OUTPUT_DIR = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
 
 	/**
 	 * Get WPCLI command name

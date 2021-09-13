@@ -23,7 +23,7 @@ class RouteCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Rest/Routes';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Rest' . DIRECTORY_SEPARATOR . 'Routes';
 
 	/**
 	 * Route method enum.
