@@ -11,7 +11,7 @@ use EightshiftBoilerplate\Manifest\ManifestExample;
 use function Tests\setupMocks;
 use function Tests\mock;
 
-class EnqueueThemeTest extends EnqueueThemeExample {
+class EnqueueThemeExampleTest extends EnqueueThemeExample {
 
 	public function __construct(ManifestInterface $manifest)
 	{
@@ -61,7 +61,7 @@ beforeEach(function() {
 	// We need to 'kickstart' the manifest registration manually during tests.
 	$manifest->setAssetsManifestRaw();
 
-	$this->themeEnqueue = new EnqueueThemeTest($manifest);
+	$this->themeEnqueue = new EnqueueThemeExampleTest($manifest);
 });
 
 afterEach(function() {
@@ -78,10 +78,10 @@ afterEach(function() {
 test('Register method will call wp_enqueue_scripts hook', function () {
 	$this->themeEnqueue->register();
 
-	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeTest->enqueueStyles()'));
-	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeTest->enqueueScripts()'));
-	$this->assertNotSame(10, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeTest->enqueueStyles()'));
-	$this->assertNotSame(10, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeTest->enqueueScripts()'));
+	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeExampleTest->enqueueStyles()'));
+	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeExampleTest->enqueueScripts()'));
+	$this->assertNotSame(10, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeExampleTest->enqueueStyles()'));
+	$this->assertNotSame(10, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Theme\EnqueueThemeExampleTest->enqueueScripts()'));
 });
 
 test('getAssetsPrefix method will return string', function () {

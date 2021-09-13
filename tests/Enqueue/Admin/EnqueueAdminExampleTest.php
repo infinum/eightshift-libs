@@ -12,7 +12,7 @@ use EightshiftLibs\Manifest\ManifestInterface;
 use function Tests\mock;
 use function Tests\setupMocks;
 
-class EnqueueAdminTest extends EnqueueAdminExample {
+class EnqueueAdminExampleTest extends EnqueueAdminExample {
 
 	public function __construct(ManifestInterface $manifest)
 	{
@@ -63,7 +63,7 @@ beforeEach(function() {
 	// We need to 'kickstart' the manifest registration manually during tests.
 	$manifest->setAssetsManifestRaw();
 
-	$this->adminEnqueue = new EnqueueAdminTest($manifest);
+	$this->adminEnqueue = new EnqueueAdminExampleTest($manifest);
 
 	$this->hookSuffix = 'test';
 });
@@ -82,11 +82,11 @@ afterEach(function() {
 test('Register method will call login_enqueue_scripts and admin_enqueue_scripts hook', function () {
 	$this->adminEnqueue->register();
 
-	$this->assertSame(10, has_action('login_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminTest->enqueueStyles()'));
-	$this->assertSame(50, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminTest->enqueueStyles()'));
-	$this->assertSame(10, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminTest->enqueueScripts()'));
-	$this->assertNotSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminTest->enqueueStyles()'));
-	$this->assertNotSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminTest->enqueueScripts()'));
+	$this->assertSame(10, has_action('login_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueStyles()'));
+	$this->assertSame(50, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueStyles()'));
+	$this->assertSame(10, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueScripts()'));
+	$this->assertNotSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueStyles()'));
+	$this->assertNotSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueScripts()'));
 });
 
 test('getAssetsPrefix method will return string', function () {
