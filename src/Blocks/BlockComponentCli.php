@@ -27,7 +27,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks/components';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'components';
 
 	/**
 	 * Get WPCLI command name

@@ -23,7 +23,7 @@ class EnqueueBlocksCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Enqueue/Blocks';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Enqueue' . DIRECTORY_SEPARATOR . 'Blocks';
 
 	/**
 	 * Get WPCLI command doc

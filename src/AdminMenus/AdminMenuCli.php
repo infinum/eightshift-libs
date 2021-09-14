@@ -22,7 +22,7 @@ class AdminMenuCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/AdminMenus';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'AdminMenus';
 
 	/**
 	 * Define default develop props.

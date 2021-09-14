@@ -11,7 +11,7 @@ use EightshiftBoilerplate\Manifest\ManifestExample;
 use function Tests\setupMocks;
 use function Tests\mock;
 
-class EnqueueBlocksTest extends EnqueueBlocksExample {
+class EnqueueBlockExampleTest extends EnqueueBlocksExample {
 
 	public function __construct(ManifestInterface $manifest)
 	{
@@ -83,7 +83,7 @@ beforeEach(function() {
 	// We need to 'kickstart' the manifest registration manually during tests.
 	$manifest->setAssetsManifestRaw();
 
-	$this->blockEnqueue = new EnqueueBlocksTest($manifest);
+	$this->blockEnqueue = new EnqueueBlockExampleTest($manifest);
 });
 
 /**
@@ -105,10 +105,10 @@ afterEach(function() {
 test('Enqueue Blocks\' register method will set hooks.', function () {
 	$this->blockEnqueue->register();
 
-	$this->assertSame(10, has_action('enqueue_block_editor_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlocksTest->enqueueBlockEditorScript()'));
-	$this->assertSame(50, has_action('enqueue_block_editor_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlocksTest->enqueueBlockEditorStyle()'));
-	$this->assertSame(50, has_action('enqueue_block_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlocksTest->enqueueBlockStyle()'));
-	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Blocks\EnqueueBlocksTest->enqueueBlockScript()'));
+	$this->assertSame(10, has_action('enqueue_block_editor_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockEditorScript()'));
+	$this->assertSame(50, has_action('enqueue_block_editor_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockEditorStyle()'));
+	$this->assertSame(50, has_action('enqueue_block_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockStyle()'));
+	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockScript()'));
 });
 
 /**
