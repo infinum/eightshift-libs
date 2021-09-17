@@ -464,6 +464,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	protected function getAttributes(array $blockDetails): array
 	{
 		$blockName = $blockDetails['blockName'];
+		$blockClassPrefix = $this->getSettings()['blockClassPrefix'] ?? 'block';
 
 		return array_merge(
 			[
@@ -477,11 +478,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				],
 				'blockClass' => [
 					'type' => 'string',
-					'default' => "block-{$blockName}",
+					'default' => "{$blockClassPrefix}-{$blockName}",
 				],
 				'blockJsClass' => [
 					'type' => 'string',
-					'default' => "js-block-{$blockName}",
+					'default' => "js-{$blockClassPrefix}-{$blockName}",
 				],
 			],
 			$this->getSettings()['attributes'] ?? [],
