@@ -40,17 +40,21 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 */
 	public function enqueueStyles(string $hookSuffix): void
 	{
-		$handle = "{$this->getAssetsPrefix()}-styles";
+		$screen = \get_current_screen();
 
-		\wp_register_style(
-			$handle,
-			$this->manifest->getAssetsManifestItem(static::ADMIN_STYLE_URI),
-			$this->getAdminStyleDependencies(),
-			$this->getAssetsVersion(),
-			$this->getMedia()
-		);
-
-		\wp_enqueue_style($handle);
+		if (is_admin() && !$screen->is_block_editor) {
+			$handle = "{$this->getAssetsPrefix()}-styles";
+	
+			\wp_register_style(
+				$handle,
+				$this->manifest->getAssetsManifestItem(static::ADMIN_STYLE_URI),
+				$this->getAdminStyleDependencies(),
+				$this->getAssetsVersion(),
+				$this->getMedia()
+			);
+	
+			\wp_enqueue_style($handle);
+		}
 	}
 
 	/**
