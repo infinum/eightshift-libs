@@ -40,7 +40,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	{
 		if (!$this->getConditionUse()) {
 			$handle = "{$this->getAssetsPrefix()}-styles";
-	
+
 			\wp_register_style(
 				$handle,
 				$this->manifest->getAssetsManifestItem(static::ADMIN_STYLE_URI),
@@ -48,7 +48,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 				$this->getAssetsVersion(),
 				$this->getMedia()
 			);
-	
+
 			\wp_enqueue_style($handle);
 		}
 	}
@@ -92,7 +92,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 		$screen = \get_current_screen();
 
-		if ($screen->is_block_editor) {
+		if (is_object($screen) && $screen->is_block_editor) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 			return true;
 		}
 
