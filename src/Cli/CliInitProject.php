@@ -72,8 +72,7 @@ class CliInitProject extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project.
-			For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.',
+			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project. For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.',
 		];
 	}
 
