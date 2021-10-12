@@ -942,6 +942,300 @@ test('Asserts that manifest has responsive variables defined but without appeara
 	$this->assertStringNotContainsString("variable-default-responsive: default-responsive-{$value}", $output);
 });
 
+test('Asserts that outputCssVariables returns the correct output for an integer with a value of 0.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableInteger' => 0,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-integer: 0;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for an integer with a regular non-zero value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableInteger' => 3,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-integer: 3;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for an integer with a null value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableInteger' => null,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('<style>', $output);
+	$this->assertStringNotContainsString('--variable-integer', $output);
+	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a string with a zero value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableString' => '0',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-string: 0;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a string with a regular text value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableString' => 'demo',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-string: demo;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for an empty string.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableString' => '',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('<style>', $output);
+	$this->assertStringNotContainsString('--variable-string', $output);
+	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a string with a null value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableString' => null,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('<style>', $output);
+	$this->assertStringNotContainsString('--variable-string', $output);
+	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a boolean with a correct value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableBoolean' => false,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-boolean: false;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a boolean with a null value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableBoolean' => null,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('<style>', $output);
+	$this->assertStringNotContainsString('--variable-boolean', $output);
+	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a number with a correct integer value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableNumber' => 3,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-number: 3;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a number with a correct decimal value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableNumber' => 3.4,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-number: 3.4;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a number with a zero integer value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableNumber' => 0,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-number: 0;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a number with a zero decimal value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableNumber' => 0.0,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString('<style>', $output);
+	$this->assertStringContainsString('--variable-number: 0;', $output);
+	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+});
+
+test('Asserts that outputCssVariables returns the correct output for a number with a null value.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableNumber' => null,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringNotContainsString('<style>', $output);
+	$this->assertStringNotContainsString('--variable-number', $output);
+	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+});
+
 /**
  * Components::getUnique tests
  */
