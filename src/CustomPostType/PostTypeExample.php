@@ -90,7 +90,7 @@ class PostTypeExample extends AbstractPostType
 			'hierarchical' => false,
 			'menu_icon' => static::MENU_ICON,
 			'menu_position' => static::MENU_POSITION,
-			'supports' => ['title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments'],
+			'supports' => ['title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'revisions'],
 			'show_in_rest' => true,
 			'rest_base' => static::REST_API_ENDPOINT_SLUG,
 		];
