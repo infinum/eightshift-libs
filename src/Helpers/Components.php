@@ -616,7 +616,7 @@ class Components
 				// Iterate each data array to find the correct breakpoint.
 				foreach ($data as $index => $item) {
 					// Check if breakpoint and type match.
-					if ($item['name'] === $breakpoint && $item['type'] === $type && (!empty((string) $attributeValue) || gettype($attributeValue) === 'integer' || gettype($attributeValue) === 'float' || gettype($attributeValue) === 'double' || $attributeValue === '0')) {
+					if ($item['name'] === $breakpoint && $item['type'] === $type && (!empty((string) $attributeValue) || gettype($attributeValue) === 'integer' || gettype($attributeValue) === 'float' || gettype($attributeValue) === 'double' || $attributeValue === '0')) { // phpcs:ignore Generic.Files.LineLength.TooLong
 						// Merge data variables with the new variables array.
 						$data[$index]['variable'] = array_merge($item['variable'], self::variablesInner($variable, $attributeValue));
 					}

@@ -328,6 +328,32 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
+	 * Removes paragraph block from the php part if the content is empty
+	 *
+	 * Useful when setting the default paragraph block.
+	 *
+	 * @param array<string, mixed> $parsedBlock Array of block details.
+	 * @param array<string, mixed> $sourceBlock Array of block source details.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function filterBlocksContent(array $parsedBlock, array $sourceBlock): array
+	{
+		$namespace = $this->getSettings()['namespace'];
+		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
+			if (
+				!isset($parsedBlock['attrs']['paragraphParagraphContent']) ||
+				empty($parsedBlock['attrs']['paragraphParagraphContent'])
+			) {
+				$parsedBlock['attrs']['wrapperDisable'] = true;
+				$parsedBlock['attrs']['paragraphUse'] = false;
+			}
+		}
+
+		return $parsedBlock;
+	}
+
+	/**
 	 * Get blocks absolute path
 	 *
 	 * Prefix path is defined by project config.
