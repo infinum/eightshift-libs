@@ -86,7 +86,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 */
 	public function getConditionUse(): bool
 	{
-		if (!is_admin()) {
+		if (!\is_admin()) {
 			return false;
 		}
 

@@ -40,8 +40,16 @@ beforeEach(function() {
 			'getProjectVersion' => '1.0',
 		]);
 
+	Functions\when('is_admin')->justReturn(true);
+
 	Functions\when('wp_register_style')->alias(function($args) {
 		putenv("REGISTER_STYLE={$args}");
+	});
+
+	Functions\when('get_current_screen')->alias(function() {
+		return new class{
+			public $is_block_editor = false; // We're not in the block editor.
+		};
 	});
 
 	Functions\when('wp_enqueue_style')->alias(function($args) {
@@ -102,6 +110,7 @@ test('getAssetsVersion method will return string', function () {
 });
 
 test('enqueueStyles method enqueue styles in WP Admin', function () {
+
 	$this->adminEnqueue->enqueueStyles($this->hookSuffix);
 
 	$this->assertSame(getenv('REGISTER_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to register style');
