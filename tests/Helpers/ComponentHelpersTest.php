@@ -1430,3 +1430,26 @@ test('Asserts props will correctly leave only the the needed attributes', functi
 	$this->assertIsArray($output);
 	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
 });
+
+test('Asserts props will correctly generate manual keys in camelCase', function () {
+	$attributes = [
+		'componentName' => 'mock-card',
+		'mockCardHeadingContent' => 'mock heading content',
+		'mockCardParagraphContent' => 'mock paragraph content',
+	];
+
+	$manual = [
+		'buttonContent' => 'mock button content',  
+	];
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props('mock-card', $attributes, $manual);
+	$this->assertIsArray($output);
+	$this->assertContains('mockCardButtonContent', array_keys($output), "Manual key is not properly converted to camelCase");
+	$this->assertNotContains('mockCardbuttonContent', array_keys($output), "Manual key is not properly converted to camelCase");
+});
