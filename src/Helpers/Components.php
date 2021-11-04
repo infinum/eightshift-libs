@@ -1008,7 +1008,7 @@ class Components
 				unset($manual[$key]);
 
 				// Add new key to the output with prepared attribute name.
-				$manual[$output['prefix'] . $newKey] = $value;
+				$manual[$output['prefix'] . ucfirst($newKey)] = $value;
 			}
 
 			// Merge manual and output objects to one.
