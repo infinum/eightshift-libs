@@ -183,7 +183,9 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		$builder = new ContainerBuilder();
 
 		if (defined('WP_ENVIRONMENT_TYPE') && (WP_ENVIRONMENT_TYPE === 'production' || WP_ENVIRONMENT_TYPE === 'staging')) {
-			$builder->enableCompilation(__DIR__ . '/Cache');
+			$file = explode('\\', $this->namespace);
+
+			$builder->enableCompilation(__DIR__ . '/Cache', "{$file[0]}CompiledContainer");
 		}
 
 		return $builder->addDefinitions($definitions)->build();
