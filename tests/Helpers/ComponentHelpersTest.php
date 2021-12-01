@@ -1236,6 +1236,27 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
 });
 
+test('Asserts that outputCssVariables returns the correct output selector for provided prop.', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableNumber' => 3.4,
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest,
+		'wp-block'
+	);
+
+	$this->assertIsString($output);
+	$this->assertStringContainsString(".wp-block[data-id='uniqueString']", $output);
+	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+});
+
 /**
  * Components::getUnique tests
  */

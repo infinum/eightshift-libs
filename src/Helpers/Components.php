@@ -634,10 +634,11 @@ class Components
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
 	 * @param array<string, mixed> $globalManifest Global manifest array.
+	 * @param string $customSelector Output custom selector to use as a style prefix.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest, string $customSelector = ''): string
 	{
 		$output = '';
 
@@ -675,6 +676,10 @@ class Components
 
 		// Check if component or block.
 		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
+
+		if ($customSelector !== '') {
+			$name = $customSelector;
+		}
 
 		// Check manifest for the attributes with variable key.
 		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
