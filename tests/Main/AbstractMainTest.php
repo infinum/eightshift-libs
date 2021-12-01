@@ -72,8 +72,8 @@ test('Caching compiled services works', function() {
 	$mainClass->buildDiContainer();
 
 	// Check if compiled container was created.
-	$this->assertFileExists(dirname(__FILE__, 3) . '/src/Main/Cache/CompiledContainer.php', 'Compiled container was not created');
+	$this->assertFileExists(dirname(__FILE__, 3) . '/src/Main/Cache/TestsCompiledContainer.php', 'Compiled container was not created');
 	// Delete it if it has been created. Because it will be created in the code, and we do not want to commit it.
-	unlink(dirname(__FILE__, 3) . '/src/Main/Cache/CompiledContainer.php');
+	unlink(dirname(__FILE__, 3) . '/src/Main/Cache/TestsCompiledContainer.php');
 	rmdir(dirname(__FILE__, 3) . '/src/Main/Cache');
 });
