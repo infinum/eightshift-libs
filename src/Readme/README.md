@@ -50,11 +50,11 @@ URL: `{local-project.test}`
 
 Built and deployed automatically from the `staging` branch using CI.
 
-URL: `{project-name.byinfinum.co}`
+URL: `{staging URL}`
 
 #### Production 
 
-Built automatically from the `master` branch using CI. Manually deployed lead developer.
+Built automatically from the `main` branch using CI. Manually deployed lead developer.
 
 URL: `{production URL}`
 
