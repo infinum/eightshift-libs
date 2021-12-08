@@ -88,7 +88,6 @@ body:
       id: plugin
       attributes:
           label: Please confirm that your bug occurs with all plugins uninstalled and with the default WordPress theme active.
-          description: You can do this by searching https://infinum.github.io/eightshift-docs/.
           multiple: false
           options:
              - 'Yes'
