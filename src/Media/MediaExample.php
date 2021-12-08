@@ -41,7 +41,9 @@ class MediaExample implements ServiceInterface
 	public function addThemeSupport(): void
 	{
 		\add_theme_support('title-tag');
-		\add_theme_support('html5');
+		\add_theme_support('html5', ['style', 'script']);
+		// Enables HTML5 markup support and explicitly states support for script and style tags, so WP doesn't insert the type attribute on those tags.
+		// Registering the type attribute is not compliant with the HTML5 specification.
 		\add_theme_support('post-thumbnails');
 	}
 }
