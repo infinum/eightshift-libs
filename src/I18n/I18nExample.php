@@ -29,6 +29,7 @@ class I18nExample implements ServiceInterface
 	public function register(): void
 	{
 		\add_action('after_setup_theme', [$this, 'loadThemeTextdomain'], 20);
+		\add_action('enqueue_block_editor_assets', [$this, 'setScriptTranslations'], 20);
 	}
 
 	/**
@@ -39,6 +40,26 @@ class I18nExample implements ServiceInterface
 	public function loadThemeTextdomain(): void
 	{
 		\load_theme_textdomain(
+			Config::getProjectName(),
+			Config::getProjectPath('src/I18n/languages')
+		);
+	}
+
+
+	/**
+	 * Load the theme text domain for JavaScript translations.
+	 * You should export your locales as a JED file named
+	 * {textdomain}-{locale}-{handle}.json into the project path
+	 * defined below.
+	 *
+	 * @return void
+	 */
+	public function setScriptTranslations(): void
+	{
+
+		$handle = "{$this->getAssetsPrefix()}-block-editor-scripts";
+		\wp_set_script_translations(
+			$handle,
 			Config::getProjectName(),
 			Config::getProjectPath('src/I18n/languages')
 		);
