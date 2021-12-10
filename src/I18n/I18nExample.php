@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftBoilerplate\I18n;
 
 use EightshiftBoilerplate\Config\Config;
+use EightshiftBoilerplate\Enqueue\Assets;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -56,8 +57,8 @@ class I18nExample implements ServiceInterface
 	 */
 	public function setScriptTranslations(): void
 	{
-
-		$handle = "{$this->getAssetsPrefix()}-block-editor-scripts";
+		$assetsPrefix = Assets::getAssetsPrefix();
+		$handle = "{$assetsPrefix}-block-editor-scripts";
 		\wp_set_script_translations(
 			$handle,
 			Config::getProjectName(),
