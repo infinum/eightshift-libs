@@ -46,9 +46,9 @@ class I18nExample implements ServiceInterface
 		);
 	}
 
-
 	/**
-	 * Load the theme text domain for JavaScript translations.
+	 * Load the theme text domain for JavaScript translations
+	 *
 	 * You should export your locales as a JED file named
 	 * {textdomain}-{locale}-{handle}.json into the project path
 	 * defined below.
