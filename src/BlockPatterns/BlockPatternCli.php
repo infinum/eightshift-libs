@@ -18,7 +18,6 @@ use EightshiftLibs\Cli\CliHelpers;
  */
 class BlockPatternCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *

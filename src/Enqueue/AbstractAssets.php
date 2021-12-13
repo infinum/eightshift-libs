@@ -22,7 +22,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractAssets implements ServiceInterface
 {
-
 	/**
 	 * Media style const
 	 */

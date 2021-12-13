@@ -18,7 +18,6 @@ use EightshiftLibs\Manifest\ManifestInterface;
  */
 abstract class AbstractEnqueueBlocks extends AbstractAssets
 {
-
 	public const BLOCKS_EDITOR_SCRIPT_URI = 'applicationBlocksEditor.js';
 	public const BLOCKS_EDITOR_STYLE_URI = 'applicationBlocksEditor.css';
 

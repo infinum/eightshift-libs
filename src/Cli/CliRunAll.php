@@ -17,7 +17,6 @@ namespace EightshiftLibs\Cli;
  */
 class CliRunAll extends AbstractCli
 {
-
 	/**
 	 * Get WPCLI command name
 	 *

@@ -21,7 +21,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 class I18nExample implements ServiceInterface
 {
-
 	/**
 	 * Register all the hooks
 	 *

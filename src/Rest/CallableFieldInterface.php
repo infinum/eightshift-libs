@@ -15,7 +15,6 @@ namespace EightshiftLibs\Rest;
  */
 interface CallableFieldInterface
 {
-
 	/**
 	 * Method that returns rest response for custom fields get_callback callable
 	 *

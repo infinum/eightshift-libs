@@ -15,7 +15,6 @@ namespace EightshiftLibs\Exception;
  */
 final class InvalidNouns extends \InvalidArgumentException implements GeneralExceptionInterface
 {
-
 	/**
 	 * Create a new instance of the exception for an array of nouns that is
 	 * missing a required key.

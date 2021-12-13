@@ -19,7 +19,6 @@ use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
  */
 class EnqueueBlocksExample extends AbstractEnqueueBlocks
 {
-
 	/**
 	 * Create a new admin instance.
 	 *

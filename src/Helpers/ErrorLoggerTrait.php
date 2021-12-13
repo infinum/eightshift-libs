@@ -15,7 +15,6 @@ namespace EightshiftLibs\Helpers;
  */
 trait ErrorLoggerTrait
 {
-
 	/**
 	 * Ensure correct response for rest using handler function.
 	 *

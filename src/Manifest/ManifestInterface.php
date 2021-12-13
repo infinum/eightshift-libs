@@ -17,7 +17,6 @@ namespace EightshiftLibs\Manifest;
  */
 interface ManifestInterface
 {
-
 	/**
 	 * Return full path for specific asset from manifest.json
 	 * This is used for cache busting assets.

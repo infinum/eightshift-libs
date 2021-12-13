@@ -17,7 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class EscapedViewCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 */

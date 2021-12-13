@@ -15,7 +15,6 @@ namespace EightshiftLibs\Rest;
  */
 interface RouteInterface
 {
-
 	/**
 	 * Alias for GET transport method.
 	 *

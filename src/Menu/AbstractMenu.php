@@ -17,7 +17,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 {
-
 	/**
 	 * Register All Menu positions
 	 *

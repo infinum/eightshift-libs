@@ -17,7 +17,6 @@ namespace EightshiftLibs\Blocks;
  */
 interface RenderableBlockInterface
 {
-
 	/**
 	 * Provides block registration render callback method.
 	 *

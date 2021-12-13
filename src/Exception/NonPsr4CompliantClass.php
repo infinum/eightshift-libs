@@ -15,7 +15,6 @@ namespace EightshiftLibs\Exception;
  */
 final class NonPsr4CompliantClass extends \InvalidArgumentException implements GeneralExceptionInterface
 {
-
 	/**
 	 * Throws exception if class has non psr-4 compliant namespace.
 	 *

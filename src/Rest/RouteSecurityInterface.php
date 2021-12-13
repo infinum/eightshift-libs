@@ -17,7 +17,6 @@ namespace EightshiftLibs\Rest;
  */
 interface RouteSecurityInterface
 {
-
 	/**
 	 * Authenticate the access of the endpoint
 	 *

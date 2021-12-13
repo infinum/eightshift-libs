@@ -17,7 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class AcfMetaCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *

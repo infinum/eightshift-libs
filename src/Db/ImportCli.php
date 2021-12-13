@@ -18,7 +18,6 @@ use WP_CLI\ExitException;
  */
 class ImportCli extends AbstractCli
 {
-
 	/**
 	 * Get WPCLI command name
 	 *

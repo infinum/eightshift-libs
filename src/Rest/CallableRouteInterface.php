@@ -15,7 +15,6 @@ namespace EightshiftLibs\Rest;
  */
 interface CallableRouteInterface
 {
-
 	/**
 	 * Method that returns rest response
 	 *

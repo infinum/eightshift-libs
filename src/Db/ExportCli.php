@@ -17,7 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class ExportCli extends AbstractCli
 {
-
 	/**
 	 * Get WPCLI command name
 	 *
