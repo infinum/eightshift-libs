@@ -18,7 +18,6 @@ use EightshiftLibs\Rest\CallableFieldInterface;
  */
 class FieldExample extends AbstractField implements CallableFieldInterface
 {
-
 	/**
 	 * Method that returns field object type
 	 *

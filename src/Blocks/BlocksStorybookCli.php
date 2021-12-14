@@ -17,7 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class BlocksStorybookCli extends AbstractCli
 {
-
 	/**
 	 * Get WPCLI command doc
 	 *

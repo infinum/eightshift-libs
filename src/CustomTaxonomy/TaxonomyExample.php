@@ -17,7 +17,6 @@ use EightshiftLibs\CustomTaxonomy\AbstractTaxonomy;
  */
 class TaxonomyExample extends AbstractTaxonomy
 {
-
 	/**
 	 * Taxonomy slug constant.
 	 *

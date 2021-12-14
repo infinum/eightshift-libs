@@ -20,7 +20,6 @@ use EightshiftLibs\Manifest\ManifestInterface;
  */
 abstract class AbstractEnqueueAdmin extends AbstractAssets
 {
-
 	public const ADMIN_SCRIPT_URI = 'applicationAdmin.js';
 	public const ADMIN_STYLE_URI = 'applicationAdmin.css';
 

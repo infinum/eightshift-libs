@@ -18,7 +18,6 @@ use EightshiftLibs\Manifest\ManifestInterface;
  */
 abstract class AbstractEnqueueTheme extends AbstractAssets
 {
-
 	public const THEME_SCRIPT_URI = 'application.js';
 	public const THEME_STYLE_URI = 'application.css';
 

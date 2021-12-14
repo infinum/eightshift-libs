@@ -20,7 +20,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 {
-
 	/**
 	 * Full data of manifest items.
 	 *

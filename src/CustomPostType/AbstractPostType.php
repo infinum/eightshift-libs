@@ -17,7 +17,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractPostType implements ServiceInterface
 {
-
 	/**
 	 * Register custom post type.
 	 *

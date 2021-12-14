@@ -17,7 +17,6 @@ namespace EightshiftLibs\Exception;
  */
 final class ComponentException extends \InvalidArgumentException implements GeneralExceptionInterface
 {
-
 	/**
 	 * Throws exception if ensure_string argument is invalid.
 	 *

@@ -17,7 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class EnqueueAdminCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 */

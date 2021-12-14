@@ -21,7 +21,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
-
 	/**
 	 * Full data of blocks, settings and wrapper data.
 	 *

@@ -17,7 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class CiExcludeCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path
 	 *

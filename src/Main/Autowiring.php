@@ -19,7 +19,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 class Autowiring
 {
-
 	/**
 	 * Array of psr-4 prefixes. Should be provided by Composer's ClassLoader. $ClassLoader->getPsr4Prefixes().
 	 *

@@ -19,7 +19,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 class MediaExample implements ServiceInterface
 {
-
 	/**
 	 * Register all the hooks
 	 *

@@ -26,7 +26,6 @@ use EightshiftLibs\Main\AbstractMain;
  */
 class MainExample extends AbstractMain
 {
-
 	/**
 	 * Register the project with the WordPress system.
 	 *

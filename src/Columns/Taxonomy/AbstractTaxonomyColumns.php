@@ -19,7 +19,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractTaxonomyColumns implements ServiceInterface
 {
-
 	/**
 	 * Register the taxonomy columns and content in them.
 	 *

@@ -17,7 +17,6 @@ use EightshiftLibs\Exception\ComponentException;
  */
 class Components
 {
-
 	/**
 	 * Makes sure the output is string. Useful for converting an array of components into a string.
 	 * If you pass an associative array it will output strings with keys, used for generating data-attributes from array.

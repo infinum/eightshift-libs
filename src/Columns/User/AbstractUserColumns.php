@@ -19,7 +19,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractUserColumns implements ServiceInterface
 {
-
 	/**
 	 * Register the user columns and content in them.
 	 *
