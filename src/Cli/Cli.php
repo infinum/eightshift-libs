@@ -59,6 +59,7 @@ use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
+use EightshiftLibs\ThemeOptions\GdprSettingsCli;
 use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -113,6 +114,7 @@ class Cli
 		RouteCli::class,
 		ServiceExampleCli::class,
 		ThemeOptionsCli::class,
+		GdprSettingsCli::class,
 		BuildCli::class,
 		CiExcludeCli::class,
 		ConfigProjectCli::class,
