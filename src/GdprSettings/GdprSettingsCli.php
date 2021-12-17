@@ -3,12 +3,12 @@
 /**
  * Class that registers WPCLI command for GdprSettings using ACF.
  *
- * @package EightshiftLibs\ThemeOptions
+ * @package EightshiftLibs\GdprSettings
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\ThemeOptions;
+namespace EightshiftLibs\GdprSettings;
 
 use EightshiftLibs\Cli\AbstractCli;
 
@@ -22,7 +22,7 @@ class GdprSettingsCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'ThemeOptions';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'GdprSettings';
 
 	/**
 	 * Get WPCLI command name
@@ -42,7 +42,7 @@ class GdprSettingsCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates project GDPR Settings class using ACF. Requires Theme Options to work.',
+			'shortdesc' => 'Generates project GDPR Settings class using ACF.',
 		];
 	}
 

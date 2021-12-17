@@ -3,12 +3,12 @@
 /**
  * Class that adds GdprSettingsExample capability.
  *
- * @package EightshiftBoilerplate\ThemeOptions
+ * @package EightshiftBoilerplate\GdprSettings
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\ThemeOptions;
+namespace EightshiftBoilerplate\GdprSettings;
 
 use EightshiftLibs\Services\ServiceInterface;
 
@@ -17,7 +17,7 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 class GdprSettingsExample implements ServiceInterface
 {
-	public const GDPR_SLUG = 'gdpr-options';
+	public const GDPR_SLUG = 'gdpr-settings';
 
 	public const GROUP_GENERAL = 'general';
 	public const GROUP_REQUIRED_LEVEL = 'required_level';
@@ -35,6 +35,11 @@ class GdprSettingsExample implements ServiceInterface
 	public const ADDITIONAL_LINK = 'additional_link';
 
 	/**
+	 * GDPR Settings ACF Capability Name.
+	 */
+	public const GDPR_SETTINGS_CAPABILITY = 'edit_theme_options';
+
+	/**
 	 * Register all the hooks.
 	 *
 	 * @return void
@@ -46,21 +51,24 @@ class GdprSettingsExample implements ServiceInterface
 			return;
 		}
 
-		add_action('acf/init', [$this, 'createGdprOptionsPage'], 20);
-		add_action('acf/init', [$this, 'registerGdprOptions'], 20);
+		add_action('acf/init', [$this, 'createGdprSettingsPage'], 20);
+		add_action('acf/init', [$this, 'registerGdprSettings'], 20);
 	}
 
 	/**
-	 * Create a GDPR options subpage.
+	 * Create a GDPR Settings page.
 	 */
-	public function createGdprOptionsPage(): void
+	public function createGdprSettingsPage(): void
 	{
-		\acf_add_options_sub_page(
+		\acf_add_options_page(
 			[
-				'page_title' => esc_html__('GDPR Settings', 'eightshift-libs'),
-				'menu_title' => esc_html__('GDPR Settings', 'eightshift-libs'),
-				'menu_slug' => self::GDPR_SLUG,
-				'parent_slug' => ThemeOptions::THEME_OPTIONS_SLUG,
+				'page_title' => \esc_html__('GDPR Settings', 'eightshift-libs'),
+				'menu_title' => \esc_html__('GDPR Settings', 'eightshift-libs'),
+				'menu_slug'  => static::GDPR_SLUG,
+				'capability' => static::GDPR_SETTINGS_CAPABILITY,
+				'redirect'   => false,
+				'icon_url'   => 'dashicons-clipboard',
+				'autoload'   => true,
 			]
 		);
 	}
@@ -68,7 +76,7 @@ class GdprSettingsExample implements ServiceInterface
 	/**
 	 * Register the GDP settings.
 	 */
-	public function registerGdprOptions(): void
+	public function registerGdprSettings(): void
 	{
 		\acf_add_local_field_group(
 			[
