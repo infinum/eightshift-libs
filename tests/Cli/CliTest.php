@@ -93,4 +93,3 @@ test('Running load command works', function() {
 	// We could add all 36 of the public CLI classes, but I don't think that makes sense ¯\_(ツ)_/¯.
 	$this->assertSame(10, has_action('cli_init', 'EightshiftLibs\Menu\MenuCli->registerCommand()'));
 });
-
