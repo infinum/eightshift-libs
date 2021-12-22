@@ -110,6 +110,20 @@ abstract class AbstractCustomCommand implements ServiceInterface
 	}
 
 	/**
+	 * Get WPCLI command doc
+	 *
+	 * @return array<string, array<int, array<string, bool|string>>|string>
+	 */
+	abstract protected function getDoc(): array;
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	abstract protected function getCommandName(): string;
+
+	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
 	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
