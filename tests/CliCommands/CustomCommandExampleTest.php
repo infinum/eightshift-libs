@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\CliCommands;
 
-use EightshiftLibs\CliCommands\CustomCommandCli;
+use EightshiftBoilerplate\CliCommands\CustomCommandExample;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
@@ -21,7 +21,7 @@ beforeEach(function () {
 		->shouldReceive('error')
 		->andReturnArg(0);
 
-	$this->customCommand = new CustomCommandCli('boilerplate');
+	$this->customCommand = new CustomCommandExample();
 });
 
 /**
@@ -34,31 +34,67 @@ afterEach(function () {
 });
 
 
-test('Custom command example CLI command will correctly copy the Custom command class with defaults', function () {
-	$customCommand = $this->customCommand;
-	$customCommand([], $customCommand->getDevelopArgs([]));
+test('Register method will call init hook', function () {
+	$this->customCommand->register();
 
-	// Check the output dir if the generated method is correctly generated.
-	$customCommand = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CliCommands/TestCustomCommand.php');
-
-	$this->assertStringContainsString('class TestCustomCommand extends AbstractCustomCommand', $customCommand);
-	$this->assertStringContainsString('function getCommandName', $customCommand);
-	$this->assertStringContainsString('function getDoc', $customCommand);
-	$this->assertStringContainsString('function __invoke', $customCommand);
+	$this->assertSame(10, has_action('cli_init', 'EightshiftBoilerplate\CliCommands\CustomCommandExample->registerCommand()'));
 });
 
 
-test('Custom command example CLI documentation is correct', function () {
+test('Prepare command docs fails if shortdesc doesn\'t exist', function() {
+	$customCommand = $this->customCommand;
+
+	$customCommand->prepareCommandDocs([], []);
+})->throws(\RuntimeException::class, 'CLI Short description is missing.');
+
+
+test('Prepare command docs returns correct doc', function() {
+	$customCommand = $this->customCommand;
+
+	$docs = [
+		'shortdesc' => 'Some description',
+		'synopsis' => [
+			[
+				'type' => 'assoc',
+				'name' => 'random',
+				'description' => 'Random description.',
+				'optional' => true,
+			],
+		],
+	];
+
+	$preparedDocs = $customCommand->prepareCommandDocs($docs, $customCommand->getGlobalSynopsis());
+
+	$this->assertIsArray($preparedDocs);
+	$this->assertArrayHasKey('shortdesc', $preparedDocs);
+	$this->assertArrayHasKey('synopsis', $preparedDocs);
+
+	$addedSynopsis = array_filter($preparedDocs['synopsis'], function($descArr) {
+		return $descArr['name'] === 'random';
+	});
+	// Check if the synopsis was added to the global one.
+	$this->assertNotEmpty($addedSynopsis);
+});
+
+
+test('Custom command example command name is correct', function () {
+	$customCommand = $this->customCommand;
+
+	$commandName = $customCommand->getCommandName();
+
+	$this->assertIsString($commandName);
+	$this->assertSame($this->customCommand::COMMAND_NAME, $commandName);
+});
+
+
+test('Custom command example documentation is correct', function () {
 	$customCommand = $this->customCommand;
 
 	$documentation = $customCommand->getDoc();
 
 	$descKey = 'shortdesc';
-	$synopsisKey = 'synopsis';
 
 	$this->assertIsArray($documentation);
 	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertArrayHasKey($synopsisKey, $documentation);
-	$this->assertIsArray($documentation[$synopsisKey]);
 	$this->assertSame('Generates custom WPCLI command in your project.', $documentation[$descKey]);
 });
