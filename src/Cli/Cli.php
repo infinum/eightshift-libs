@@ -41,6 +41,7 @@ use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
+use EightshiftLibs\CliCommands\CustomCommandCli;
 
 /**
  * Class Cli
@@ -81,6 +82,7 @@ class Cli
 		GitIgnoreCli::class,
 		ReadmeCli::class,
 		SetupCli::class,
+		CustomCommandCli::class,
 	];
 
 	/**
