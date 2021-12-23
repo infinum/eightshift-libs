@@ -12,6 +12,12 @@ on:
     paths-ignore:
       - '**.md'
 
+# Prevent multiple unnecessary CI runs on the same branch.
+# Link: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests:
     name: Unit tests
