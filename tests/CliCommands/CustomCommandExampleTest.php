@@ -4,8 +4,21 @@ namespace Tests\Unit\CliCommands;
 
 use EightshiftBoilerplate\CliCommands\CustomCommandExample;
 
+use EightshiftLibs\CliCommands\AbstractCustomCommand;
 use function Tests\deleteCliOutput;
 use function Tests\mock;
+
+class AbstractTest extends AbstractCustomCommand {
+	public function getCommandName(): string
+	{
+		return 'command_name';
+	}
+
+	public function getDoc(): array
+	{
+		return [];
+	}
+};
 
 /**
  * Mock before tests.
@@ -74,6 +87,30 @@ test('Prepare command docs returns correct doc', function() {
 	});
 	// Check if the synopsis was added to the global one.
 	$this->assertNotEmpty($addedSynopsis);
+});
+
+
+test('Custom command example class name is correct', function () {
+	$customCommand = $this->customCommand;
+
+	$commandName = $customCommand->getClassName();
+
+	$this->assertIsString($commandName);
+	$this->assertStringContainsString('CustomCommandExample', $commandName);
+});
+
+
+test('Register command fails if class doesn\'t exist', function() {
+	$abstractMock = new AbstractTest();
+
+	$abstractMock->registerCommand();
+})->throws(\RuntimeException::class);
+
+
+test('Custom command class is callable', function() {
+	$customCommand = $this->customCommand;
+
+	expect($customCommand)->toBeCallable();
 });
 
 
