@@ -74,7 +74,7 @@ class GdprSettingsExample implements ServiceInterface
 	}
 
 	/**
-	 * Register the GDP settings.
+	 * Register the GDPR settings.
 	 */
 	public function registerGdprSettings(): void
 	{
