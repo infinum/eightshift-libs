@@ -26,6 +26,7 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'height' => true,
 			'width' => true,
 			'class' => true,
+			'fill' => true,
 		],
 		'defs' => true,
 		'path' => [
