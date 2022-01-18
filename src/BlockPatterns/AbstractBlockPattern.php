@@ -17,7 +17,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractBlockPattern implements ServiceInterface
 {
-
 	/**
 	 * Register block pattern.
 	 *

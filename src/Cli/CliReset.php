@@ -17,7 +17,6 @@ namespace EightshiftLibs\Cli;
  */
 class CliReset extends AbstractCli
 {
-
 	/**
 	 * Get WPCLI command name.
 	 *

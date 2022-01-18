@@ -15,7 +15,6 @@ namespace EightshiftLibs\Helpers;
  */
 class Shortcode
 {
-
 	/**
 	 * Call a shortcode function by tag name.
 	 *

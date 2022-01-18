@@ -20,7 +20,6 @@ use EightshiftLibs\Manifest\AbstractManifest;
  */
 class ManifestExample extends AbstractManifest
 {
-
 	/**
 	 * Manifest item filter name constant.
 	 *

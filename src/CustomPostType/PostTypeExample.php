@@ -17,7 +17,6 @@ use EightshiftLibs\CustomPostType\AbstractPostType;
  */
 class PostTypeExample extends AbstractPostType
 {
-
 	/**
 	 * Post type slug constant.
 	 *

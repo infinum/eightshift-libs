@@ -12,7 +12,6 @@ namespace EightshiftLibs\Cli;
 
 interface CliInterface
 {
-
 	/**
 	 * Register method for WPCLI command
 	 *

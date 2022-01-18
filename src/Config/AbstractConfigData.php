@@ -17,7 +17,6 @@ use EightshiftLibs\Exception\InvalidPath;
  */
 abstract class AbstractConfigData implements ConfigDataInterface
 {
-
 	/**
 	 * Return project absolute path.
 	 *

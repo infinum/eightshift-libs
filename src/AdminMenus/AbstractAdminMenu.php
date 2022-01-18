@@ -21,7 +21,6 @@ use EightshiftLibs\Blocks\RenderableBlockInterface;
  */
 abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInterface
 {
-
 	/**
 	 * Register all the hooks
 	 *

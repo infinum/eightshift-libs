@@ -19,7 +19,6 @@ use EightshiftLibs\Rest\CallableRouteInterface;
  */
 class RouteExample extends AbstractRoute implements CallableRouteInterface
 {
-
 	/**
 	 * Method that returns project Route namespace.
 	 *

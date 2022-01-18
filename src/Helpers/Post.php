@@ -16,7 +16,6 @@ namespace EightshiftLibs\Helpers;
  */
 class Post
 {
-
 	/**
 	 * Average reading speed.
 	 *

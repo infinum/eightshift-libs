@@ -17,7 +17,6 @@ namespace EightshiftLibs\Config;
  */
 interface ConfigDataInterface
 {
-
 	/**
 	 * Method that returns project name.
 	 *

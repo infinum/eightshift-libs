@@ -17,7 +17,6 @@ use EightshiftLibs\BlockPatterns\AbstractBlockPattern;
  */
 class BlockPatternExample extends AbstractBlockPattern
 {
-
 	/**
 	 * Get the pattern categories.
 	 *

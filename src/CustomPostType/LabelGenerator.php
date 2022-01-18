@@ -19,7 +19,6 @@ use EightshiftLibs\Exception\InvalidNouns;
  */
 final class LabelGenerator
 {
-
 	/**
 	 * Singular name UC Constant
 	 *

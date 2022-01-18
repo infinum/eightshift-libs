@@ -19,7 +19,6 @@ use EightshiftLibs\Blocks\AbstractBlocks;
  */
 class BlocksExample extends AbstractBlocks
 {
-
 	/**
 	 * Reusable blocks Capability Name.
 	 */

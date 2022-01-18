@@ -17,7 +17,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractTaxonomy implements ServiceInterface
 {
-
 	/**
 	 * Register custom taxonomy.
 	 *

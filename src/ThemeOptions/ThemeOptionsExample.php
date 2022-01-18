@@ -17,7 +17,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 class ThemeOptionsExample implements ServiceInterface
 {
-
 	/**
 	 * Theme options api page slug
 	 *

@@ -23,7 +23,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractMain extends Autowiring implements ServiceInterface
 {
-
 	/**
 	 * Array of instantiated services.
 	 *

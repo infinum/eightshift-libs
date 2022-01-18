@@ -17,7 +17,6 @@ namespace EightshiftLibs\AdminMenus;
  */
 abstract class AbstractAdminSubMenu extends AbstractAdminMenu
 {
-
 	/**
 	 * Register all the hooks
 	 *

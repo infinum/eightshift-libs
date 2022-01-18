@@ -20,7 +20,6 @@ use EightshiftLibs\Config\AbstractConfigData;
  */
 class ConfigExample extends AbstractConfigData
 {
-
 	/**
 	 * Method that returns project name.
 	 *

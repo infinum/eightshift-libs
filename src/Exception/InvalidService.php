@@ -15,7 +15,6 @@ namespace EightshiftLibs\Exception;
  */
 final class InvalidService extends \InvalidArgumentException implements GeneralExceptionInterface
 {
-
 	/**
 	 * Create a new instance of the exception for a service class name that is
 	 * not recognized.

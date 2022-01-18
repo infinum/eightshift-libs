@@ -17,7 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class ManifestCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 */

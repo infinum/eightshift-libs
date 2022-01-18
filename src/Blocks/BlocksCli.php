@@ -17,7 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class BlocksCli extends AbstractCli
 {
-
 	/**
 	 * Toggle to see if this is running inside tests or not
 	 *

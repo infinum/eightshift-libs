@@ -17,7 +17,6 @@ use EightshiftLibs\Menu\AbstractMenu;
  */
 class MenuExample extends AbstractMenu
 {
-
 	/**
 	 * Register all the hooks
 	 *

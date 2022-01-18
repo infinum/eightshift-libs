@@ -17,7 +17,6 @@ namespace EightshiftLibs\Menu;
  */
 interface MenuPositionsInterface
 {
-
 	/**
 	 * Return all menu positions
 	 *
