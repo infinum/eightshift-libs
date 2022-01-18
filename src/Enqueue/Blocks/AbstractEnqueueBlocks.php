@@ -18,12 +18,13 @@ use EightshiftLibs\Manifest\ManifestInterface;
  */
 abstract class AbstractEnqueueBlocks extends AbstractAssets
 {
-
 	public const BLOCKS_EDITOR_SCRIPT_URI = 'applicationBlocksEditor.js';
 	public const BLOCKS_EDITOR_STYLE_URI = 'applicationBlocksEditor.css';
 
 	public const BLOCKS_STYLE_URI = 'applicationBlocks.css';
 	public const BLOCKS_SCRIPT_URI = 'applicationBlocks.js';
+
+	public const BLOCKS_FRONTEND_STYLE_URI = 'applicationBlocksFrontend.css';
 
 	/**
 	 * Instance variable of manifest data.
@@ -119,6 +120,26 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		foreach ($this->getLocalizations() as $objectName => $dataArray) {
 			\wp_localize_script($handle, $objectName, $dataArray);
 		}
+	}
+
+	/**
+	 * Enqueue blocks style for frontend only.
+	 *
+	 * @return void
+	 */
+	public function enqueueBlockFrontendStyle(): void
+	{
+		$handler = "{$this->getAssetsPrefix()}-block-fontend-style";
+
+		\wp_register_style(
+			$handler,
+			$this->manifest->getAssetsManifestItem(static::BLOCKS_FRONTEND_STYLE_URI),
+			$this->getFrontendStyleDependencies(),
+			$this->getAssetsVersion(),
+			$this->getMedia()
+		);
+
+		\wp_enqueue_style($handler);
 	}
 
 	/**
