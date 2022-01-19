@@ -37,6 +37,7 @@ class BlocksCli extends AbstractCli
 	 * @var string[]
 	 */
 	public const COMPONENTS = [
+		'accordion',
 		'button',
 		'card',
 		'copyright',
@@ -46,13 +47,25 @@ class BlocksCli extends AbstractCli
 		'head',
 		'header',
 		'heading',
+		'icon',
 		'image',
+		'jumbotron',
 		'layout-three-columns',
 		'lists',
+		'loader',
 		'logo',
 		'menu',
+		'modal',
 		'page-overlay',
 		'paragraph',
+		'quote',
+		'scroll-to-top',
+		'search-bar',
+		'share',
+		'social-links',
+		'tracking-before-body-end',
+		'tracking-head',
+		'video',
 	];
 
 	/**
@@ -61,15 +74,23 @@ class BlocksCli extends AbstractCli
 	 * @var string[]
 	 */
 	public const BLOCKS = [
+		'accordion',
 		'button',
 		'card',
+		'carousel',
 		'column',
 		'columns',
+		'example',
+		'featured-categories',
+		'featured-posts',
 		'group',
 		'heading',
 		'image',
+		'jumbotron',
 		'lists',
 		'paragraph',
+		'quote',
+		'video',
 	];
 
 	/**
