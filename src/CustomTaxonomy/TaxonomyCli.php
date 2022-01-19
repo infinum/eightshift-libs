@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\CustomTaxonomy;
 
+use EightshiftBoilerplate\CustomTaxonomy\TaxonomyExample;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
@@ -83,10 +84,10 @@ class TaxonomyCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$label = $assocArgs['label'] ?? '';
-		$slug = $this->prepareSlug($assocArgs['slug'] ?? '');
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? '');
-		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug'] ?? '');
+		$label = $assocArgs['label'] ?? 'Example Name';
+		$slug = $this->prepareSlug($assocArgs['slug'] ?? TaxonomyExample::TAXONOMY_SLUG);
+		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? TaxonomyExample::REST_API_ENDPOINT_SLUG);
+		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug'] ?? TaxonomyExample::TAXONOMY_POST_TYPE_SLUG);
 
 		// Get full class name.
 		$className = $this->getFileName($slug);

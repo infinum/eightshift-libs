@@ -25,6 +25,13 @@ class TaxonomyExample extends AbstractTaxonomy
 	public const TAXONOMY_SLUG = 'example-slug';
 
 	/**
+	 * Taxonomy post type slug constant.
+	 *
+	 * @var string
+	 */
+	public const TAXONOMY_POST_TYPE_SLUG = 'post';
+
+	/**
 	 * Rest API Endpoint slug constant.
 	 *
 	 * @var string
@@ -48,7 +55,7 @@ class TaxonomyExample extends AbstractTaxonomy
 	 */
 	protected function getPostTypeSlug()
 	{
-		return 'post';
+		return self::TAXONOMY_POST_TYPE_SLUG;
 	}
 
 	/**

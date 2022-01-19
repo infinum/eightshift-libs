@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\CustomPostType;
 
+use EightshiftBoilerplate\CustomPostType\PostTypeExample;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
@@ -104,13 +105,13 @@ class PostTypeCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$label = $assocArgs['label'] ?? '';
-		$slug = $this->prepareSlug($assocArgs['slug'] ?? '');
-		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url'] ?? '');
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? '');
-		$capability = $assocArgs['capability'] ?? '';
-		$menuPosition = (string) ($assocArgs['menu_position'] ?? '');
-		$menuIcon = $assocArgs['menu_icon'] ?? '';
+		$label = $assocArgs['label'] ?? 'Example Name';
+		$slug = $this->prepareSlug($assocArgs['slug'] ?? PostTypeExample::POST_TYPE_SLUG);
+		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url'] ?? PostTypeExample::POST_TYPE_URL_SLUG);
+		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? PostTypeExample::REST_API_ENDPOINT_SLUG);
+		$capability = $assocArgs['capability'] ?? PostTypeExample::POST_CAPABILITY_TYPE;
+		$menuPosition = (string) ($assocArgs['menu_position'] ?? PostTypeExample::MENU_POSITION);
+		$menuIcon = $assocArgs['menu_icon'] ?? PostTypeExample::MENU_ICON;
 
 		// Get full class name.
 		$className = $this->getFileName($slug);

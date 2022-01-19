@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\AdminMenus;
 
+use EightshiftBoilerplate\AdminMenus\AdminSubMenuExample;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
@@ -90,11 +91,11 @@ class AdminSubMenuCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Arguments.
-		$parentSlug = $assocArgs['parent_slug'] ?? '';
-		$title = $assocArgs['title'] ?? '';
-		$menuTitle = $assocArgs['menu_title'] ?? '';
-		$capability = $assocArgs['capability'] ?? '';
-		$menuSlug = $this->prepareSlug($assocArgs['menu_slug'] ?? '');
+		$parentSlug = $assocArgs['parent_slug'] ?? AdminSubMenuExample::PARENT_MENU_SLUG;
+		$title = $assocArgs['title'] ?? 'Admin Title';
+		$menuTitle = $assocArgs['menu_title'] ?? 'Admin Sub Menu Title';
+		$capability = $assocArgs['capability'] ?? AdminSubMenuExample::ADMIN_MENU_CAPABILITY;
+		$menuSlug = $this->prepareSlug($assocArgs['menu_slug'] ?? AdminSubMenuExample::ADMIN_MENU_SLUG);
 
 		// Get full class name.
 		$className = $this->getFileName($menuSlug);
