@@ -52,7 +52,7 @@ class AcfMetaCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'The name of the custom meta slug. Example: title.',
-					'optional' => false,
+					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				],
 			],
 		];

@@ -67,7 +67,7 @@ class BlockComponentCli extends AbstractBlocksCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify component name.',
-					'optional' => false,
+					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				],
 			],
 		];

@@ -83,13 +83,13 @@ class RouteCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'endpoint_slug',
 					'description' => 'The name of the endpoint slug. Example: test-route.',
-					'optional' => false,
+					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'method',
 					'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
-					'optional' => false,
+					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				],
 			],
 		];

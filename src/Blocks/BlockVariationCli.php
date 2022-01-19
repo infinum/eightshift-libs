@@ -62,7 +62,7 @@ class BlockVariationCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify variation name.',
-					'optional' => false,
+					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				],
 			],
 		];
