@@ -83,10 +83,10 @@ class TaxonomyCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$label = $assocArgs['label'];
-		$slug = $this->prepareSlug($assocArgs['slug']);
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug']);
-		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug']);
+		$label = $assocArgs['label'] ?? '';
+		$slug = $this->prepareSlug($assocArgs['slug'] ?? '');
+		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? '');
+		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug'] ?? '');
 
 		// Get full class name.
 		$className = $this->getFileName($slug);

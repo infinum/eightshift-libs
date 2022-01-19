@@ -72,8 +72,8 @@ class ServiceExampleCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$folder = $assocArgs['folder'];
-		$fileName = $this->prepareSlug($assocArgs['file_name']);
+		$folder = $assocArgs['folder'] ?? '';
+		$fileName = $this->prepareSlug($assocArgs['file_name'] ?? '');
 
 		// Get full class name.
 		$className = $this->getClassShortName();

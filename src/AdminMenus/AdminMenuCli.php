@@ -98,10 +98,10 @@ class AdminMenuCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Arguments.
-		$title = $assocArgs['title'];
-		$menuTitle = $assocArgs['menu_title'];
-		$capability = $assocArgs['capability'];
-		$menuSlug = $this->prepareSlug($assocArgs['menu_slug']);
+		$title = $assocArgs['title'] ?? '';
+		$menuTitle = $assocArgs['menu_title'] ?? '';
+		$capability = $assocArgs['capability'] ?? '';
+		$menuSlug = $this->prepareSlug($assocArgs['menu_slug'] ?? '');
 		$menuIcon = $assocArgs['menu_icon'] ?? '';
 		$menuPosition = (string)($assocArgs['menu_position'] ?? '');
 

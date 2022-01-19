@@ -99,8 +99,8 @@ class RouteCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug']);
-		$method = strtoupper($assocArgs['method']);
+		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? '');
+		$method = strtoupper($assocArgs['method'] ?? '');
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
