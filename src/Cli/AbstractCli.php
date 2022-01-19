@@ -724,12 +724,13 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param class-string[] $items Array of classes.
 	 * @param bool  $run Run or log output.
+	 * @param array $args CLI command args.
 	 *
 	 * @return void
 	 *
 	 * @throws \ReflectionException Error in the case reflection class couldn't be created.
 	 */
-	public function getEvalLoop(array $items = [], bool $run = false): void
+	public function getEvalLoop(array $items = [], bool $run = false, array $args = []): void
 	{
 		foreach ($items as $item) {
 			try {
@@ -743,10 +744,14 @@ abstract class AbstractCli implements CliInterface
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
 			if (method_exists($class, 'getCommandName')) {
-				if (!$run) {
-					\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+				if (function_exists('\add_action')) {
+					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
 				} else {
-					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+					if (!$run) {
+						\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+					} else {
+						\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+					}
 				}
 			}
 		}
