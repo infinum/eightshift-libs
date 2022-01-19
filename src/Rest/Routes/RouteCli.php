@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Rest\RouteInterface;
 
 /**
  * Class RouteCli
@@ -99,8 +100,8 @@ class RouteCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? '');
-		$method = strtoupper($assocArgs['method'] ?? '');
+		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? 'example-route');
+		$method = strtoupper($assocArgs['method'] ?? 'GET');
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
