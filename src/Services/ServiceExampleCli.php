@@ -56,13 +56,13 @@ class ServiceExampleCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'folder',
 					'description' => 'The output folder path relative to src folder. Example: main or `main` or `config` or nested `main/config`',
-					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'file_name',
 					'description' => 'The output file name. Example: Main',
-					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];

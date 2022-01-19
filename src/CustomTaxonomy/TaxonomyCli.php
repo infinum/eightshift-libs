@@ -56,25 +56,25 @@ class TaxonomyCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom taxonomy to show in WP admin.',
-					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The name of the custom taxonomy slug. Example: location.',
-					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom taxonomy REST-API endpoint slug. Example: locations.',
-					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'post_type_slug',
 					'description' => 'The position where to assign the new custom taxonomy. Example: post.',
-					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];

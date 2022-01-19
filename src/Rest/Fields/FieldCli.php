@@ -63,13 +63,13 @@ class FieldCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'field_name',
 					'description' => 'The name of the endpoint slug. Example: title.',
-					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'object_type',
 					'description' => 'Object(s) the field is being registered to. Example: post.',
-					'optional' => !getenv('DEVELOP_MODE') ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];

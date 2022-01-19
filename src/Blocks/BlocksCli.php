@@ -117,8 +117,10 @@ class BlocksCli extends AbstractCli
 			->renameTextDomainFrontendLibs($assocArgs)
 			->renameUse($assocArgs);
 
-		if (!$this->isTest && function_exists('\add_action')) {
-			$this->blocksInit($assocArgs);
+		if (! \defined('ES_DEVELOP_MODE')) {
+			if (!$this->isTest && function_exists('\add_action')) {
+				$this->blocksInit($assocArgs);
+			}
 		}
 
 		// Output final class to new file/folder and finish.
