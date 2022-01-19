@@ -42,10 +42,8 @@ abstract class AbstractConfigData implements ConfigDataInterface
 			}
 		}
 
-		if (! \defined('ES_DEVELOP_MODE')) {
-			if (!is_readable($path)) {
-				throw InvalidPath::fromUri($path);
-			}
+		if (!is_readable($path)) {
+			throw InvalidPath::fromUri($path);
 		}
 
 		return $path;
