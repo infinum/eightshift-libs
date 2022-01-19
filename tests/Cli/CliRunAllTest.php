@@ -3,7 +3,6 @@
 namespace Tests\Unit\Cli;
 
 use Brain\Monkey;
-use Brain\Monkey\Functions;
 
 use EightshiftLibs\Cli\CliRunAll;
 

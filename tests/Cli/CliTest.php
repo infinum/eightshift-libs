@@ -14,7 +14,6 @@ use EightshiftLibs\Cli\CliRunAll;
 use EightshiftLibs\Cli\CliShowAll;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
-use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\Setup\UpdateCli;
 
 use function Tests\deleteCliOutput;

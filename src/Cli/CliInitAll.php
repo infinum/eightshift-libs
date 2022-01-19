@@ -10,39 +10,26 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Build\BuildCli;
-use EightshiftLibs\CiExclude\CiExcludeCli;
-use EightshiftLibs\ConfigProject\ConfigProjectCli;
-use EightshiftLibs\GitIgnore\GitIgnoreCli;
-use EightshiftLibs\Readme\ReadmeCli;
-use EightshiftLibs\Setup\SetupCli;
+use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
+use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
+use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
+use EightshiftLibs\Main\MainCli;
+use EightshiftLibs\Manifest\ManifestCli;
+use EightshiftLibs\Menu\MenuCli;
 
 /**
- * Class CliInitProject
+ * Class CliInitAll
  */
-class CliInitProject extends AbstractCli
+class CliInitAll extends AbstractCli
 {
 	/**
 	 * CLI command name
 	 *
 	 * @var string
 	 */
-	public const COMMAND_NAME = 'setup_project';
-
-	/**
-	 * All classes for initial theme setup for project.
-	 * Append INIT_THEME_CLASSES in the final output.
-	 *
-	 * @var class-string[]
-	 */
-	public const INIT_PROJECT_CLASSES = [
-		GitIgnoreCli::class,
-		SetupCli::class,
-		CiExcludeCli::class,
-		BuildCli::class,
-		ReadmeCli::class,
-		ConfigProjectCli::class,
-	];
+	public const COMMAND_NAME = 'setup_all';
 
 	/**
 	 * Get WPCLI command name
@@ -62,7 +49,7 @@ class CliInitProject extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project. For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.', // phpcs:ignore Generic.Files.LineLength.TooLong
+			'shortdesc' => 'Generates initial setup for all service classes in the WordPress theme project.',
 		];
 	}
 
@@ -75,8 +62,9 @@ class CliInitProject extends AbstractCli
 		}
 
 		$classes = array_merge(
-			CliInitTheme::INIT_THEME_CLASSES,
-			self::INIT_PROJECT_CLASSES
+			Cli::CLASSES_LIST,
+			Cli::PUBLIC_CLASSES,
+			Cli::SETUP_CLASSES
 		);
 
 		$this->getEvalLoop($classes, true, $assocArgs);
