@@ -132,6 +132,7 @@ test('Asserts that getAllBlocksList will return only projects blocks for older v
 test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.', function () {
 
 	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$blockContext->post = null;
 
 	$this->config
 		->shouldReceive('getProjectPath')
