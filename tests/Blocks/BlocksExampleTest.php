@@ -149,6 +149,17 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 	$this->assertContains('core/template', $list, "List array doesn't contain core/template item.");
 });
 
+test('Asserts that getAllBlocksList will return bool if there are eightshift-forms blocks for WP 5.8.', function () {
+
+	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$blockContext->post = \Mockery::mock('WP_Post');
+	$blockContext->post->post_type = 'eightshift-forms';
+
+	$getAllBlocksList = $this->blocksExample->getAllBlocksList([], $blockContext);
+
+	$this->assertIsBool($getAllBlocksList);
+});
+
 test('Asserts that getBlocksDataFullRawItem will return full details for blocks if key is not provided.', function () {
 
 	$this->config
