@@ -108,7 +108,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Get all blocks with full block name
 	 *
-	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
+	 * Used to limit what blocks are going to be used in your project using allowed_block_types_all filter.
 	 *
 	 * @hook allowed_block_types_all Available from WP 5.8.
 	 *
@@ -121,6 +121,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		if (gettype($allowedBlockTypes) === 'boolean') {
 			return $allowedBlockTypes;
+		}
+
+		if (
+			$blockEditorContext->post instanceof \WP_Post &&
+			isset($blockEditorContext->post->post_type) &&
+			$blockEditorContext->post->post_type === 'eightshift-forms'
+		) {
+			return true;
 		}
 
 		$allowedBlockTypes = array_map(
