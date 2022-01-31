@@ -125,6 +125,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		if (
 			$blockEditorContext->post instanceof \WP_Post &&
+			isset($blockEditorContext->post->post_type) &&
 			$blockEditorContext->post->post_type === 'eightshift-forms'
 		) {
 			return true;
