@@ -262,12 +262,40 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * This category will be shown on all blocks list in "Add Block" button.
 	 *
-	 * @param array[]  $categories Array of all block categories.
+	 * @hook block_categories_all Available from WP 5.8.
+	 *
+	 * @param array[] $categories Array of categories for block types.
+	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 *
+	 * @return array[] Array of categories for block types.
+	 */
+	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
+	{
+		return array_merge(
+			$categories,
+			[
+				[
+					'slug' => 'eightshift',
+					'title' => \esc_html__('Eightshift', 'eightshift-libs'),
+					'icon' => 'admin-settings',
+				],
+			]
+		);
+	}
+
+	/**
+	 * Create custom category to assign all custom blocks
+	 *
+	 * This category will be shown on all blocks list in "Add Block" button.
+	 *
+	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
+	 *
+	 * @param array[] $categories Array of categories for block types.
 	 * @param \WP_Post $post Post being loaded.
 	 *
-	 * @return array[] Array of block categories.
+	 * @return array[] Array of categories for block types.
 	 */
-	public function getCustomCategory(array $categories, \WP_Post $post): array
+	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
 	{
 		return array_merge(
 			$categories,
