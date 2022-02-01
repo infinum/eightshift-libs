@@ -3,6 +3,49 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.0] - 2022-02-01
+
+### Added
+
+- Added two methods that will make libs work with WP 5.8+ and older versions
+
+WP 5.8 made a breaking change in two hooks `block_categories` -> `block_categories_all` and `allowed_block_types` -> `allowed_block_types_all`.
+
+Implementation:
+
+```php
+// Create new custom category for custom blocks.
+if (\is_wp_version_compatible('5.8')) {
+    \add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
+} else {
+    \add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
+}
+
+// Only allow custom-built blocks.
+if (\is_wp_version_compatible('5.8')) {
+    \add_filter('allowed_block_types_all', [$this, 'allowOnlyCustomBlocks'], 21, 2);
+} else {
+    \add_filter('allowed_block_types', [$this, 'allowOnlyCustomBlocksOld'], 21, 2);
+}
+```
+
+## [3.0.8] - 2021-09-14
+
+### Added 
+
+- Admin menu and submenu CLI commands
+
+### Fixed
+
+- Make CLI commands cross-os compatible
+- Update test class names so that they adhere to PSR-4
+
+## [3.0.7] - 2021-07-14
+
+### Fixed
+
+- Minor improvements
+
 ## [3.0.6] - 2021-03-17
 
 ### Fixed
