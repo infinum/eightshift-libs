@@ -117,12 +117,46 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
 	 *
-	 * @param bool|array $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
-	 * @param \WP_Post   $post The post resource data.
+	 * @hook allowed_block_types_all Available from WP 5.8.
 	 *
-	 * @return bool|array Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
+	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
+	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 *
+	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
 	 */
-	public function getAllBlocksList($allowedBlockTypes, \WP_Post $post)
+	public function getAllBlocksList($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
+	{
+		if (gettype($allowedBlockTypes) === 'boolean') {
+			return $allowedBlockTypes;
+		}
+
+		$allowedBlockTypes = array_map(
+			function ($block) {
+				return $block['blockFullName'];
+			},
+			$this->blocks['blocks'] ?? []
+		);
+
+		// Allow reusable block.
+		$allowedBlockTypes[] = 'core/block';
+		$allowedBlockTypes[] = 'core/template';
+
+		return $allowedBlockTypes;
+	}
+
+	/**
+	 * Get all blocks with full block name
+	 *
+	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
+	 *
+	 * @hook allowed_block_types This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
+	 *
+	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
+	 * @param \WP_Post $post The post resource data.
+	 *
+	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
+	 */
+	public function getAllBlocksListOld($allowedBlockTypes, \WP_Post $post)
 	{
 		if (gettype($allowedBlockTypes) === 'boolean') {
 			return $allowedBlockTypes;
