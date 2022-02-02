@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class BlockVariationCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks/variations';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'variations';
 
 	/**
 	 * Get WPCLI command name

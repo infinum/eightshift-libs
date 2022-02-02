@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class BlockWrapperCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Blocks/wrapper';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'wrapper';
 
 	/**
 	 * Get WPCLI command name

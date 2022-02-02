@@ -19,7 +19,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractPostTypeColumns implements ServiceInterface
 {
-
 	/**
 	 * Register the post columns and content in them.
 	 *

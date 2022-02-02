@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class I18nCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/I18n';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'I18n';
 
 	/**
 	 * Get WPCLI command doc

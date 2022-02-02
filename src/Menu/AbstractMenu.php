@@ -17,7 +17,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 {
-
 	/**
 	 * Register All Menu positions
 	 *
@@ -83,6 +82,6 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 			return '';
 		}
 
-		return \wp_nav_menu($args);
+		return \wp_nav_menu($args); // @phpstan-ignore-line
 	}
 }

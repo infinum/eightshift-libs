@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class EnqueueBlocksCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Enqueue/Blocks';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Enqueue' . DIRECTORY_SEPARATOR . 'Blocks';
 
 	/**
 	 * Get WPCLI command doc

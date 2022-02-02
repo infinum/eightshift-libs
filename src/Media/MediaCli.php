@@ -17,11 +17,10 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class MediaCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src/Media';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Media';
 
 	/**
 	 * Get WPCLI command doc

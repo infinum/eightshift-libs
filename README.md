@@ -1,6 +1,5 @@
-<p align="center">
-	<img alt="Eightshift Libs" src="https://repository-images.githubusercontent.com/179663878/66868fb7-5aa9-4e2a-a179-1d25ff91bda9"/>
-</p>
+![image](https://user-images.githubusercontent.com/77000136/146528930-21c00f0d-a2c7-42a4-8f6d-cfab382433e9.png#gh-light-mode-only)
+![image](https://user-images.githubusercontent.com/77000136/146528957-20e3ed0c-e95e-4883-91da-1bbb1f809979.png#gh-dark-mode-only)
 
 [![GitHub tag](https://img.shields.io/github/tag/infinum/eightshift-libs.svg?style=for-the-badge)](https://github.com/infinum/eightshift-libs)
 [![GitHub stars](https://img.shields.io/github/stars/infinum/eightshift-libs.svg?style=for-the-badge&label=Stars)](https://github.com/infinum/eightshift-libs)

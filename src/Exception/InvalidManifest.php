@@ -15,7 +15,6 @@ namespace EightshiftLibs\Exception;
  */
 final class InvalidManifest extends \InvalidArgumentException implements GeneralExceptionInterface
 {
-
 	/**
 	 * Throws error if manifest key is missing
 	 *

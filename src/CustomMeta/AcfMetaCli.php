@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class AcfMetaCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/CustomMeta';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomMeta';
 
 	/**
 	 * Define default develop props.

@@ -17,11 +17,10 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class ManifestCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src/Manifest';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Manifest';
 
 	/**
 	 * Get WPCLI command doc

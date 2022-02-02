@@ -132,6 +132,7 @@ test('Asserts that getAllBlocksList will return only projects blocks for older v
 test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.', function () {
 
 	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$blockContext->post = null;
 
 	$this->config
 		->shouldReceive('getProjectPath')
@@ -146,6 +147,17 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 	$this->assertContains('eightshift-boilerplate/button', $list, "List array doesn't contain eightshift-boilerplate/button item.");
 	$this->assertContains('core/block', $list, "List array doesn't contain core/block item.");
 	$this->assertContains('core/template', $list, "List array doesn't contain core/template item.");
+});
+
+test('Asserts that getAllBlocksList will return bool if there are eightshift-forms blocks for WP 5.8.', function () {
+
+	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$blockContext->post = \Mockery::mock('WP_Post');
+	$blockContext->post->post_type = 'eightshift-forms';
+
+	$getAllBlocksList = $this->blocksExample->getAllBlocksList([], $blockContext);
+
+	$this->assertIsBool($getAllBlocksList);
 });
 
 test('Asserts that getBlocksDataFullRawItem will return full details for blocks if key is not provided.', function () {
@@ -310,6 +322,151 @@ test('registerBlocks method will register all blocks.', function () {
 	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no sideaffects');
 });
 
-test('registerBlocks method will throws error if blocks are not registered.', function () {
+test('registerBlocks method will throw error if blocks are not registered.', function () {
 	$this->blocksExample->registerBlocks();
 })->throws(InvalidBlock::class);
+
+test('getCustomCategoryOld method will return an array.', function () {
+	$post = \Mockery::mock('WP_Post');
+
+	$categoryList = $this->blocksExample->getCustomCategoryOld([], $post);
+
+	$this->assertIsArray($categoryList, 'The result is not an array');
+	$this->assertArrayHasKey('slug', $categoryList[0], 'Key slug must be present in the array');
+	$this->assertArrayHasKey('title', $categoryList[0], 'Key title must be present in the array');
+	$this->assertArrayHasKey('icon', $categoryList[0], 'Key icon must be present in the array');
+});
+
+test('filterBlocksContent method will return an array.', function () {
+	$this->config
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$parsedBlock = [
+		'blockName' => 'eightshift-boilerplate/jumbotron',
+		'attrs' =>
+			[
+				'jumbotronHeadingContent' => 'Some text goes here',
+				'jumbotronImageUrl' => 'test.jpeg',
+			],
+		'innerBlocks' =>
+			[
+				0 =>
+					[
+						'blockName' => 'eightshift-boilerplate/description-link',
+						'attrs' =>
+							[
+								'wrapperDisable' => true,
+								'descriptionLinkDescriptionLinkIntroContent' => 'Test',
+								'descriptionLinkDescriptionLinkIntroSize' => 'regular',
+								'descriptionLinkDescriptionLinkParagraphContent' => 'Test',
+								'descriptionLinkDescriptionLinkParagraphSize' => 'tiny',
+								'descriptionLinkDescriptionLinkImageUrl' => 'test.svg',
+								'descriptionLinkDescriptionLinkImageAlt' => 'Check alt text',
+								'descriptionLinkDescriptionLinkImageFull' => true,
+								'descriptionLinkDescriptionLinkUrl' => 'https://example.com',
+								'descriptionLinkDescriptionLinkIsClean' => true,
+							],
+						'innerBlocks' =>
+							[],
+						'innerHTML' => '',
+						'innerContent' =>
+							[],
+					],
+				1 =>
+					[
+						'blockName' => 'eightshift-boilerplate/description-link',
+						'attrs' =>
+							[
+								'wrapperDisable' => true,
+								'descriptionLinkDescriptionLinkIntroContent' => 'Test',
+								'descriptionLinkDescriptionLinkIntroSize' => 'regular',
+								'descriptionLinkDescriptionLinkParagraphContent' => 'Content',
+								'descriptionLinkDescriptionLinkParagraphSize' => 'tiny',
+								'descriptionLinkDescriptionLinkImageUrl' => 'test.svg',
+								'descriptionLinkDescriptionLinkImageFull' => true,
+								'descriptionLinkDescriptionLinkIsClean' => true,
+							],
+						'innerBlocks' =>
+							[],
+						'innerHTML' => '',
+						'innerContent' =>
+							[],
+					],
+			],
+		'innerHTML' => '',
+		'innerContent' =>
+			[
+				0 => '',
+				1 => null,
+				2 => '',
+				3 => null,
+				4 => '',
+				5 => null,
+				6 => '',
+				7 => null,
+				8 => '',
+			],
+	];
+
+	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
+
+	$this->assertIsArray($filteredBlockContent, 'The result is not an array');
+});
+
+test('filterBlocksContent method will not filter out the paragraph with content.', function () {
+	$this->config
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$parsedBlock = [
+		'blockName' => 'eightshift-boilerplate/paragraph',
+		'attrs' =>
+			[
+				'paragraphParagraphContent' => 'Some text goes here',
+			],
+		'innerBlocks' =>
+			'',
+		'innerHTML' => '',
+		'innerContent' =>
+			[
+				0 => '',
+			],
+	];
+
+	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
+
+	$this->assertArrayHasKey('blockName', $filteredBlockContent, 'Key blockName must be present in the array');
+	$this->assertArrayHasKey('attrs', $filteredBlockContent, 'Key attrs must be present in the array');
+	$this->assertArrayHasKey('paragraphParagraphContent', $filteredBlockContent['attrs'], 'Key paragraphParagraphContent must be present in the attributes array');
+});
+
+test('filterBlocksContent method will filter out the paragraph without content.', function () {
+	$this->config
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$parsedBlock = [
+		'blockName' => 'eightshift-boilerplate/paragraph',
+		'attrs' =>
+			[
+				'paragraphParagraphContent' => '',
+			],
+		'innerBlocks' =>
+			'',
+		'innerHTML' => '',
+		'innerContent' =>
+			[
+				0 => '',
+			],
+	];
+
+	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
+
+	$this->assertArrayHasKey('blockName', $filteredBlockContent, 'Key blockName must be present in the array');
+	$this->assertArrayHasKey('attrs', $filteredBlockContent, 'Key attrs must be present in the array');
+	$this->assertArrayHasKey('wrapperDisable', $filteredBlockContent['attrs'], 'Key wrapperDisable must be present in the attributes array');
+	$this->assertArrayHasKey('paragraphUse', $filteredBlockContent['attrs'], 'Key paragraphUse must be present in the attributes array');
+	$this->assertTrue($filteredBlockContent['attrs']['wrapperDisable'], 'wrapperDisable must be set to true.');
+	$this->assertFalse($filteredBlockContent['attrs']['paragraphUse'], 'paragraphUse must be set to false.');
+});

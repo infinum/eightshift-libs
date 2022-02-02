@@ -15,7 +15,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractEscapedView implements ServiceInterface
 {
-
 	/**
 	 * Tags that are allowed to be rendered for SVG.
 	 */
@@ -27,6 +26,7 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'height' => true,
 			'width' => true,
 			'class' => true,
+			'fill' => true,
 		],
 		'defs' => true,
 		'path' => [

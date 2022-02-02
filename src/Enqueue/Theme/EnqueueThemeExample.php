@@ -19,7 +19,6 @@ use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
  */
 class EnqueueThemeExample extends AbstractEnqueueTheme
 {
-
 	/**
 	 * Create a new admin instance.
 	 *

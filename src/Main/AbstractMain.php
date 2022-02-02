@@ -23,7 +23,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractMain extends Autowiring implements ServiceInterface
 {
-
 	/**
 	 * Array of instantiated services.
 	 *
@@ -181,6 +180,12 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		}
 
 		$builder = new ContainerBuilder();
+
+		if (defined('WP_ENVIRONMENT_TYPE') && (WP_ENVIRONMENT_TYPE === 'production' || WP_ENVIRONMENT_TYPE === 'staging')) {
+			$file = explode('\\', $this->namespace);
+
+			$builder->enableCompilation(__DIR__ . '/Cache', "{$file[0]}CompiledContainer");
+		}
 
 		return $builder->addDefinitions($definitions)->build();
 	}

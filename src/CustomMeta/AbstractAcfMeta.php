@@ -17,7 +17,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractAcfMeta implements ServiceInterface
 {
-
 	/**
 	 * Register custom acf meta.
 	 *

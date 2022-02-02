@@ -17,11 +17,10 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class MenuCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src/Menu';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Menu';
 
 	/**
 	 * Get WPCLI command doc

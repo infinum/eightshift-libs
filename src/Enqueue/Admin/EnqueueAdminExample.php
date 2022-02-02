@@ -21,7 +21,6 @@ use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
  */
 class EnqueueAdminExample extends AbstractEnqueueAdmin
 {
-
 	/**
 	 * Create a new admin instance.
 	 *

@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class GitIgnoreCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = '../../../';
+	public const OUTPUT_DIR = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
 
 	/**
 	 * Get WPCLI command name

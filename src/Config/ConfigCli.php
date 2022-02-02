@@ -17,11 +17,10 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class ConfigCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src/Config';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Config';
 
 	/**
 	 * Define default develop props.

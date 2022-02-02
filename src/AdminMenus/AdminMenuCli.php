@@ -3,7 +3,7 @@
 /**
  * Class that registers WPCLI command for Admin menu creation.
  *
- * @package EightshiftLibs\CustomPostType
+ * @package EightshiftLibs\AdminMenus
  */
 
 declare(strict_types=1);
@@ -22,7 +22,7 @@ class AdminMenuCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/AdminMenus';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'AdminMenus';
 
 	/**
 	 * Define default develop props.

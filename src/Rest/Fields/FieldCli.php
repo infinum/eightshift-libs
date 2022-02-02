@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class FieldCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/Rest/Fields';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Rest' . DIRECTORY_SEPARATOR . 'Fields';
 
 	/**
 	 * Get WPCLI command name

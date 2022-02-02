@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class TaxonomyCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/CustomTaxonomy';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomTaxonomy';
 
 	/**
 	 * Define default develop props.

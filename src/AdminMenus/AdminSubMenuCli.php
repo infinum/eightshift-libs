@@ -3,7 +3,7 @@
 /**
  * Class that registers WPCLI command for admin sub menu creation.
  *
- * @package EightshiftLibs\CustomPostType
+ * @package EightshiftLibs\AdminMenus
  */
 
 declare(strict_types=1);
@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class AdminSubMenuCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/AdminMenus';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'AdminMenus';
 
 	/**
 	 * Define default develop props.
@@ -37,7 +36,7 @@ class AdminSubMenuCli extends AbstractCli
 		return [
 			'parent_slug' => $args[1] ?? 'example-menu-slug',
 			'title' => $args[2] ?? 'Admin Title',
-			'menu_title' => $args[3] ?? 'Admin Title',
+			'menu_title' => $args[3] ?? 'Admin Sub Menu Title',
 			'capability' => $args[4] ?? 'edit_posts',
 			'menu_slug' => $args[5] ?? 'admin_title',
 		];
@@ -109,7 +108,7 @@ class AdminSubMenuCli extends AbstractCli
 			->renameTextDomain($assocArgs)
 			->searchReplaceString('example-parent-slug', $parentSlug)
 			->searchReplaceString('Admin Title', $title)
-			->searchReplaceString('Admin Menu Title', $menuTitle)
+			->searchReplaceString('Admin Sub Menu Title', $menuTitle)
 			->searchReplaceString("'edit_posts'", "'{$capability}'")
 			->searchReplaceString('example-menu-slug', $menuSlug);
 

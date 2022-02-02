@@ -18,13 +18,12 @@ use EightshiftLibs\Cli\CliHelpers;
  */
 class BlockPatternCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/BlockPatterns';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'BlockPatterns';
 
 	/**
 	 * Define default develop props.

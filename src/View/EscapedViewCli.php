@@ -17,11 +17,10 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class EscapedViewCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src/View';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'View';
 
 	/**
 	 * Get WPCLI command doc

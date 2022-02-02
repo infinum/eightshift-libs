@@ -262,7 +262,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
-[Unreleased]: https://github.com/infinum/eightshift-libs/compare/master...HEAD
+[Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
 [4.0.0]: https://github.com/infinum/eightshift-libs/compare/3.0.6...v4.0.0
 [3.0.6]: https://github.com/infinum/eightshift-libs/compare/3.0.5...v3.0.6

@@ -17,13 +17,12 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class PostTypeCli extends AbstractCli
 {
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src/CustomPostType';
+	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomPostType';
 
 	/**
 	 * Define default develop props.

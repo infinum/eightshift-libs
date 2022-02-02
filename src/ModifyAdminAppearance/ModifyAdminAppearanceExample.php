@@ -19,7 +19,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 class ModifyAdminAppearanceExample implements ServiceInterface
 {
-
 	/**
 	 * List of admin color schemes.
 	 *

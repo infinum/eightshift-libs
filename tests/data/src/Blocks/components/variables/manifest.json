@@ -2,8 +2,7 @@
 	"componentName": "variables",
 	"title": "Variables",
 	"componentClass": "variables",
-	"example": {
-	},
+	"example": {},
 	"attributes": {
 		"variableDefault": {
 			"type": "string"
@@ -34,11 +33,22 @@
 		},
 		"variableValueNotSetValue": {
 			"type": "string"
+		},
+		"variableInteger": {
+			"type": "integer"
+		},
+		"variableString": {
+			"type": "string"
+		},
+		"variableBoolean": {
+			"type": "boolean"
+		},
+		"variableNumber": {
+			"type": "number"
 		}
 	},
 	"variables": {
-		"variableValueNotSetValue": {
-		},
+		"variableValueNotSetValue": {},
 		"variableValueNotArray": {
 			"aaa": ""
 		},
@@ -82,7 +92,6 @@
 				}
 			]
 		},
-
 		"variableValue": {
 			"value1": [
 				{
@@ -118,6 +127,34 @@
 					}
 				}
 			]
-		}
+		},
+		"variableInteger": [
+			{
+				"variable": {
+					"variable-integer": "%value%"
+				}
+			}
+		],
+		"variableString": [
+			{
+				"variable": {
+					"variable-string": "%value%"
+				}
+			}
+		],
+		"variableBoolean": [
+			{
+				"variable": {
+					"variable-boolean": "%value%"
+				}
+			}
+		],
+		"variableNumber": [
+			{
+				"variable": {
+					"variable-number": "%value%"
+				}
+			}
+		]
 	}
 }

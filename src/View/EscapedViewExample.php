@@ -16,7 +16,6 @@ use EightshiftLibs\View\AbstractEscapedView;
  */
 class EscapedViewExample extends AbstractEscapedView implements ServiceInterface
 {
-
 	/**
 	 * Register all the hooks
 	 */

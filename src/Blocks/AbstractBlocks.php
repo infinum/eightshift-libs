@@ -21,7 +21,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
-
 	/**
 	 * Full data of blocks, settings and wrapper data.
 	 *
@@ -109,7 +108,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Get all blocks with full block name
 	 *
-	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
+	 * Used to limit what blocks are going to be used in your project using allowed_block_types_all filter.
 	 *
 	 * @hook allowed_block_types_all Available from WP 5.8.
 	 *
@@ -120,6 +119,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getAllBlocksList($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
 	{
+		// Allow forms to be used correctly.
+		if (
+			$blockEditorContext->post instanceof \WP_Post &&
+			isset($blockEditorContext->post->post_type) &&
+			$blockEditorContext->post->post_type === 'eightshift-forms'
+		) {
+			return true;
+		}
+
 		if (gettype($allowedBlockTypes) === 'boolean') {
 			return $allowedBlockTypes;
 		}
@@ -328,6 +336,32 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
+	 * Removes paragraph block from the php part if the content is empty
+	 *
+	 * Useful when setting the default paragraph block.
+	 *
+	 * @param array<string, mixed> $parsedBlock Array of block details.
+	 * @param array<string, mixed> $sourceBlock Array of block source details.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function filterBlocksContent(array $parsedBlock, array $sourceBlock): array
+	{
+		$namespace = $this->getSettings()['namespace'];
+		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
+			if (
+				!isset($parsedBlock['attrs']['paragraphParagraphContent']) ||
+				empty($parsedBlock['attrs']['paragraphParagraphContent'])
+			) {
+				$parsedBlock['attrs']['wrapperDisable'] = true;
+				$parsedBlock['attrs']['paragraphUse'] = false;
+			}
+		}
+
+		return $parsedBlock;
+	}
+
+	/**
 	 * Get blocks absolute path
 	 *
 	 * Prefix path is defined by project config.
@@ -464,6 +498,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	protected function getAttributes(array $blockDetails): array
 	{
 		$blockName = $blockDetails['blockName'];
+		$blockClassPrefix = $this->getSettings()['blockClassPrefix'] ?? 'block';
 
 		return array_merge(
 			[
@@ -477,11 +512,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				],
 				'blockClass' => [
 					'type' => 'string',
-					'default' => "block-{$blockName}",
+					'default' => "{$blockClassPrefix}-{$blockName}",
 				],
 				'blockJsClass' => [
 					'type' => 'string',
-					'default' => "js-block-{$blockName}",
+					'default' => "js-{$blockClassPrefix}-{$blockName}",
 				],
 			],
 			$this->getSettings()['attributes'] ?? [],

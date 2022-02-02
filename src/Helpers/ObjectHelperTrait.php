@@ -16,7 +16,6 @@ namespace EightshiftLibs\Helpers;
  */
 trait ObjectHelperTrait
 {
-
 	/**
 	 * Check if XML is valid file used for svg.
 	 *

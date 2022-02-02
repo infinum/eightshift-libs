@@ -3,7 +3,7 @@
 /**
  * File that holds base abstract class for admin menus generation.
  *
- * @package EightshiftLibs\BlockPatterns
+ * @package EightshiftLibs\AdminMenus
  */
 
 declare(strict_types=1);
@@ -21,7 +21,6 @@ use EightshiftLibs\Blocks\RenderableBlockInterface;
  */
 abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInterface
 {
-
 	/**
 	 * Register all the hooks
 	 *

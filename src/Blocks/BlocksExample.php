@@ -19,7 +19,6 @@ use EightshiftLibs\Blocks\AbstractBlocks;
  */
 class BlocksExample extends AbstractBlocks
 {
-
 	/**
 	 * Reusable blocks Capability Name.
 	 */
@@ -64,6 +63,9 @@ class BlocksExample extends AbstractBlocks
 
 		// Register blocks internal filter for props helper.
 		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
+
+		// Filter block content.
+		\add_filter('render_block_data', [$this, 'filterBlocksContent'], 10, 2);
 	}
 
 	/**

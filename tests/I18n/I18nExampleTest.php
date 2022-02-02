@@ -24,11 +24,12 @@ test('Register method will call init hook', function () {
 	$this->i18n->register();
 
 	$this->assertSame(20, has_action('after_setup_theme', 'EightshiftBoilerplate\I18n\I18nExample->loadThemeTextdomain()'));
+	$this->assertSame(20, has_action('enqueue_block_editor_assets', 'EightshiftBoilerplate\I18n\I18nExample->setScriptTranslations()'));
 });
 
 test('Registering load_theme_textdomain works', function () {
 
-	// Set up a side-affect.
+	// Set up a side effect.
 	putenv('I18N_ABSTRACTED=false');
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
@@ -41,5 +42,27 @@ test('Registering load_theme_textdomain works', function () {
 
 	$this->i18n->loadThemeTextdomain();
 
-	$this->assertSame(getenv('I18N_ABSTRACTED'), 'true', 'Calling void method load_theme_textdomain caused no sideaffects');
+	$this->assertSame(getenv('I18N_ABSTRACTED'), 'true', 'Calling void method loadThemeTextdomain caused no side effects');
+});
+
+test('Registering wp_set_script_translations works', function () {
+
+	// Set up a side effect.
+	putenv('GUT_I18N_ABSTRACTED=false');
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectName', 'getProjectPath')
+		->andReturn('CoolProject', 'projectPath');
+
+	mock('alias:EightshiftBoilerplate\Enqueue\Assets')
+		->shouldReceive('getAssetsPrefix')
+		->andReturn('cool-project');
+
+	Functions\when('wp_set_script_translations')->alias(function () {
+		putenv('GUT_I18N_ABSTRACTED=true');
+	});
+
+	$this->i18n->setScriptTranslations();
+
+	$this->assertSame(getenv('I18N_ABSTRACTED'), 'true', 'Calling void method setScriptTranslations caused no side effects');
 });

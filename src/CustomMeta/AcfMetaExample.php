@@ -17,7 +17,6 @@ use EightshiftLibs\CustomMeta\AbstractAcfMeta;
  */
 class AcfMetaExample extends AbstractAcfMeta
 {
-
 	/**
 	 * Render acf fields.
 	 *

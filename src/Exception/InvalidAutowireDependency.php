@@ -18,7 +18,6 @@ namespace EightshiftLibs\Exception;
  */
 final class InvalidAutowireDependency extends \InvalidArgumentException implements GeneralExceptionInterface
 {
-
 	/**
 	 * Throws exception if we cant guess the class to inject.
 	 *
