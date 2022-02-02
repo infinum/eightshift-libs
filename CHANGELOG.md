@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Added
 - Eightshift-forms as default allow block types.
 - New WP-CLI command to create custom WP-CLI command. Example: `wp boilerplate create_cli_command`.
-- New prop to outputCssVariables called $customSelector.
+- New attribute to `outputCssVariables` called `$customSelector`.
 - DI container caching on production or staging.
 - Option to remove default paragraph block placeholder from the frontend if the content is empty.
 - Custom post type revisions as default.
