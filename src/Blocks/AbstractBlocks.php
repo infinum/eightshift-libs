@@ -119,16 +119,17 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getAllBlocksList($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
 	{
-		if (gettype($allowedBlockTypes) === 'boolean') {
-			return $allowedBlockTypes;
-		}
-
+		// Allow forms to be used correctly.
 		if (
 			$blockEditorContext->post instanceof \WP_Post &&
 			isset($blockEditorContext->post->post_type) &&
 			$blockEditorContext->post->post_type === 'eightshift-forms'
 		) {
 			return true;
+		}
+
+		if (gettype($allowedBlockTypes) === 'boolean') {
+			return $allowedBlockTypes;
 		}
 
 		$allowedBlockTypes = array_map(
