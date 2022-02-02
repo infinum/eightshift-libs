@@ -12,7 +12,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - DI container caching on production or staging.
 - Option to remove default paragraph block placeholder from the frontend if the content is empty.
 - Custom post type revisions as default.
-- Limit enqueue admin only to admin area and not block editor.
+- Limit enqueue admin only to admin area but not to the block editor.
 - Option to override default block class prefix in the blocks global settings manifest.
 - More tests.
 
