@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [4.1.0] - 2022-02-02
+
+### Added
+- Eightshift-forms as default allow block types.
+- New WP-CLI command to create custom WP-CLI command. Example: `wp boilerplate create_cli_command`.
+- New prop to outputCssVariables called $customSelector.
+- DI container caching on production, or staging.
+- Option to remove default paragraph block placeholder from the frontend if the content is empty.
+- Custom post type revisions as default.
+- Limit enqueue admin only to admin area and not block editor.
+- Option ot override default block class prefix in the blocks global settings manifest.
+- More tests.
+
+### Fixed
+- Changed directory separator from `\` to `DIRECTORY_SEPARATOR` constant to be able to work cross-platform.
+- Various fixes and improvements.
+
 ## [4.0.0] - 2021-08-16
 - Major braking changes do to updates on css variables, and helpers.
 
@@ -264,6 +281,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[4.1.0]: https://github.com/infinum/eightshift-libs/compare/4.0.0...v4.1.0
 [4.0.0]: https://github.com/infinum/eightshift-libs/compare/3.0.6...v4.0.0
 [3.0.6]: https://github.com/infinum/eightshift-libs/compare/3.0.5...v3.0.6
 [3.0.5]: https://github.com/infinum/eightshift-libs/compare/3.0.4...v3.0.5
