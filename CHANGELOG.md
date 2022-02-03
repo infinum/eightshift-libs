@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [4.1.0] - 2022-02-02
+## [4.1.0] - 2022-02-03
 
 ### Added
 - Eightshift-forms as default allow block types.
@@ -12,16 +12,34 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - DI container caching on production or staging.
 - Option to remove default paragraph block placeholder from the frontend if the content is empty.
 - Custom post type revisions as default.
-- Limit enqueue admin only to admin area but not to the block editor.
 - Option to override default block class prefix in the blocks global settings manifest.
-- More tests.
 
 ### Fixed
 - Changed directory separator from `/` to `DIRECTORY_SEPARATOR` constant to be able to work cross-platform.
 - Various fixes and improvements.
 
+### Changed
+- Limit enqueue admin only to admin area but not to the block editor.
+
 ## [4.0.0] - 2021-08-16
+
+### Changed
 - Major braking changes do to updates on css variables, and helpers.
+
+## [3.1.0] - 2022-30-01
+
+### Added
+- Two methods that will make libs work with WP 5.8+ and older versions.
+
+## [3.0.8] - 2021-10-14
+
+### Fixed
+- Make CLI commands cross-os compatible
+
+## [3.0.7] - 2021-07-14
+
+### Changes
+- Minor improvements
 
 ## [3.0.6] - 2021-03-17
 
@@ -78,6 +96,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 MAYOR BREAKING CHANGES
 
 - You should not try to update from version 2 to 3 because they are not compatible.
+
+## [2.5.0] - 2020-08-10
+
+### Changed
+- This will enable old packages who are on libs < 3 to update to WP 5.8 due to the breaking block hooks change.
 
 ## [2.4.1] - 2020-07-10
 
@@ -282,14 +305,18 @@ Init setup
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
 [4.1.0]: https://github.com/infinum/eightshift-libs/compare/4.0.0...v4.1.0
-[4.0.0]: https://github.com/infinum/eightshift-libs/compare/3.0.6...v4.0.0
+[4.0.0]: https://github.com/infinum/eightshift-libs/compare/3.1.0...v4.0.0
+[3.1.0]: https://github.com/infinum/eightshift-libs/compare/3.0.8...v3.1.0
+[3.0.8]: https://github.com/infinum/eightshift-libs/compare/3.0.7...v3.0.8
+[3.0.7]: https://github.com/infinum/eightshift-libs/compare/3.0.6...v3.0.7
 [3.0.6]: https://github.com/infinum/eightshift-libs/compare/3.0.5...v3.0.6
 [3.0.5]: https://github.com/infinum/eightshift-libs/compare/3.0.4...v3.0.5
 [3.0.4]: https://github.com/infinum/eightshift-libs/compare/3.0.3...v3.0.4
 [3.0.3]: https://github.com/infinum/eightshift-libs/compare/3.0.2...v3.0.3
 [3.0.2]: https://github.com/infinum/eightshift-libs/compare/3.0.1...v3.0.2
 [3.0.1]: https://github.com/infinum/eightshift-libs/compare/3.0.0...v3.0.1
-[3.0.0]: https://github.com/infinum/eightshift-libs/compare/2.4.1...v3.0.0
+[3.0.0]: https://github.com/infinum/eightshift-libs/compare/2.5.0...v3.0.0
+[2.5.0]: https://github.com/infinum/eightshift-libs/compare/2.4.1...v2.5.0
 [2.4.1]: https://github.com/infinum/eightshift-libs/compare/2.4.0...v2.4.1
 [2.4.0]: https://github.com/infinum/eightshift-libs/compare/2.3.0...v2.4.0
 [2.3.0]: https://github.com/infinum/eightshift-libs/compare/2.2.2...v2.3.0
