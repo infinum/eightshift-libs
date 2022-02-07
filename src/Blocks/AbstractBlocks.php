@@ -65,7 +65,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		if (!$this->blocks) {
 			$settings = $this->getSettings();
-			$wrapper = $this->getWrapper();
 
 			$blocks = array_map(
 				function ($block) use ($settings) {
@@ -83,8 +82,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			$this->blocks = [
 				'blocks' => $blocks,
-				'wrapper' => $wrapper,
-				'settings' => $settings,
+				'components' => $this->getComponentsManifest(),
+				'config' => [
+					'outputCssVariablesGlobally' => $settings['config']['outputCssVariablesGlobally'] ?? true,
+				],
+				'wrapper' => $this->getWrapper(),
+				'globalManifest' => $settings,
+				'styles' => [],
 			];
 		}
 	}
@@ -188,6 +192,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public function registerBlocks(): void
 	{
 		$blocks = $this->blocks['blocks'] ?? [];
+
+		var_dump($blocks);
 
 		if (!$blocks) {
 			throw InvalidBlock::missingBlocksException();
@@ -667,6 +673,31 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				return $block;
 			},
 			(array)glob("{$this->getBlocksCustomPath()}/*/manifest.json")
+		);
+	}
+
+	/**
+	 * Retrieve components data
+	 *
+	 * @throws InvalidBlock Throws error if block name is missing.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getComponentsManifest(): array
+	{
+		return array_map(
+			function (string $componentPath) {
+				$component = implode(' ', (array)file(($componentPath)));
+
+				$component = $this->parseManifest($component);
+
+				if (!isset($component['componentName'])) {
+					throw InvalidBlock::missingComponentNameException($componentPath);
+				}
+
+				return $component;
+			},
+			(array)glob("{$this->getBlocksComponentsPath()}/*/manifest.json")
 		);
 	}
 

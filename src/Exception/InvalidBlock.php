@@ -54,6 +54,24 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
+	 * Throws error if manifest key componentName is missing.
+	 *
+	 * @param string $componmentPath Full component path for the missing name.
+	 *
+	 * @return static
+	 */
+	public static function missingComponentNameException(string $componmentPath): InvalidBlock
+	{
+		return new InvalidBlock(
+			sprintf(
+			/* translators: %s will be replaced with the path where the block should be. */
+				\esc_html__('Component in this path %s is missing componentName key in its manifest.json.', 'eightshift-libs'),
+				$componmentPath
+			)
+		);
+	}
+
+	/**
 	 * Throws error if block view is missing.
 	 *
 	 * @param string $blockName Block name for the missing view.
