@@ -138,34 +138,6 @@ class Components
 	}
 
 	/**
-	 * Merges attributes array with the manifest default attributes.
-	 *
-	 * @param array<string, mixed> $manifest Block/Component manifest data.
-	 * @param array<string, mixed> $attributes Block/Component rendered attributes data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getDefaultRenderAttributes(array $manifest, array $attributes): array
-	{
-		$defaultAttributes = [];
-
-		if (!is_iterable($manifest['attributes'])) {
-			return [];
-		}
-
-		foreach ($manifest['attributes'] as $itemKey => $itemValue) {
-			// Get the correct key for the check in the attributes object.
-			$newKey = self::getAttrKey($itemKey, $attributes, $manifest);
-
-			if (isset($itemValue['default'])) {
-				$defaultAttributes[$newKey] = $itemValue['default'];
-			}
-		}
-
-		return array_merge($defaultAttributes, $attributes);
-	}
-
-	/**
 	 * Get manifest json. Generally used for getting block/components manifest.
 	 *
 	 * @param string $path Absolute path to manifest folder.
@@ -415,6 +387,418 @@ class Components
 	}
 
 	/**
+	 * Get component/block options and process them in CSS variables.
+	 *
+	 * @param array<string, mixed> $attributes Built attributes.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
+	 * @param string $unique Unique key.
+	 * @param array<string, mixed> $globalManifest Global manifest array.
+	 * @param string $customSelector Output custom selector to use as a style prefix.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest, string $customSelector = ''): string
+	{
+		$output = '';
+
+		// Bailout if global breakpoints are missing.
+		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
+			return '';
+		}
+
+		// Bailout if attributes or manifest is missing.
+		if (!$attributes || !$manifest) {
+			return '';
+		}
+
+		// Bailout if manifest is missing variables key.
+		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
+			return '';
+		}
+
+		// Define variables from globalManifest.
+		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
+
+		// Sort breakpoints in ascending order.
+		asort($breakpoints);
+
+		$defaultBreakpoints = self::getDefaultBreakpoints($breakpoints);
+
+		// Define variables from manifest.
+		$variables = $manifest['variables'] ?? [];
+
+		// Define responsiveAttributes from manifest.
+		$responsiveAttributes = $manifest['responsiveAttributes'] ?? [];
+
+		// Get the initial data array.
+		$data = self::prepareVariableData($breakpoints);
+
+		// Check if component or block.
+		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
+
+		if ($customSelector !== '') {
+			$name = $customSelector;
+		}
+
+		// Check manifest for the attributes with variable key.
+		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
+		$defaultAttributes = array_keys(
+			array_filter(
+				$variables,
+				function ($key) use ($attributes) {
+					return !isset($attributes[$key]);
+				},
+				ARRAY_FILTER_USE_KEY
+			)
+		);
+
+		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
+		if ($defaultAttributes) {
+			$default = [];
+
+			foreach ($defaultAttributes as $key) {
+				if (isset($attributes[$key]['default'])) {
+					$default[$key] = $attributes[$key]['default'];
+				}
+			}
+
+			$attributes = array_merge($default, $attributes);
+		}
+
+		if (!empty($responsiveAttributes)) {
+			$responsiveVariables = self::setupResponsiveVariables($responsiveAttributes, $variables);
+			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest, $defaultBreakpoints);
+		}
+
+		if (!empty($variables)) {
+			// Iterate each variable.
+			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
+		}
+
+		// Loop data and provide correct selectors from data array.
+		foreach ($data as $values) {
+			// Define variables from values.
+			$type = $values['type'];
+			$value = $values['value'];
+			$variable = $values['variable'];
+
+			// Bailout if variables are empty.
+			if (!$variable) {
+				continue;
+			}
+
+			// Merge array of variables to string.
+			$breakpointData = implode("\n", $variable);
+
+			// If breakpoint value is 0 then don't wrap the media query around it.
+			if ($value === 0) {
+				$output .= ".{$name}[data-id='{$unique}'] {
+						{$breakpointData}
+					}
+				";
+			} else {
+				$output .= "@media ({$type}-width: {$value}px) {
+						.{$name}[data-id='{$unique}'] {
+							{$breakpointData}
+						}
+					}
+				";
+			}
+		}
+
+		// Output manual output from the array of variables.
+		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
+
+		// Prepare final output for testing.
+		$fullOutput = "
+			{$output}
+			{$manual}
+		";
+
+		// Check if final output is empty and and remove if it is.
+		if (empty(trim($fullOutput))) {
+			return '';
+		}
+
+		// Prepare output for manual variables.
+		$finalManualOutput = $manual ? ".{$name}[data-id='{$unique}'] {
+			{$manual}
+		}" : '';
+
+		// Output the style for CSS variables.
+		return "<style>{$output} {$finalManualOutput}</style>";
+	}
+
+	/**
+	 * Return unique ID for block processing.
+	 *
+	 * @return string
+	 */
+	public static function getUnique(): string
+	{
+		return md5(uniqid((string)\wp_rand(), true));
+	}
+
+	/**
+	 * Convert string from camel to kebab case
+	 *
+	 * @param string $string String to convert.
+	 *
+	 * @return string
+	 */
+	public static function camelToKebabCase(string $string): string
+	{
+		$replace = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
+		return ltrim(strtolower($replace), '-');
+	}
+
+	/**
+	 * Convert string from kebab to camel case
+	 *
+	 * @param string $string    String to convert.
+	 * @param string $separator Separator to use for conversion.
+	 *
+	 * @return string
+	 */
+	public static function kebabToCamelCase(string $string, string $separator = '-'): string
+	{
+		return lcfirst(str_replace($separator, '', ucwords($string, $separator)));
+	}
+
+	/**
+	 * Check if provided array is associative or sequential. Will return true if array is sequential.
+	 *
+	 * @param array<string, mixed>|string[] $array Array to check.
+	 *
+	 * @return boolean
+	 */
+	public static function arrayIsList(array $array): bool
+	{
+		$expectedKey = 0;
+		foreach ($array as $i => $value) {
+			if ($i !== $expectedKey) {
+				return false;
+			}
+			$expectedKey++;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Output only attributes that are used in the component and remove everything else.
+	 *
+	 * @param string $newName *New* key to use to rename attributes.
+	 * @param array<string, mixed> $attributes Attributes from the block/component.
+	 * @param array<string, mixed> $manual Array of attributes to change key and merge to the original output.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function props(string $newName, array $attributes, array $manual = []): array
+	{
+
+		$output = [];
+
+		// Check what attributes we need to includes.
+		$includes = [
+			'blockName',
+			'blockFullName',
+			'blockClass',
+			'blockJsClass',
+			'componentJsClass',
+			'selectorClass',
+			'additionalClass',
+			'uniqueWrapperId',
+			'parentClass'
+		];
+
+		$blockName = $attributes['blockName'] ?? '';
+
+		// Populate prefix key for recursive checks of attribute names.
+		$prefix = (!isset($attributes['prefix'])) ? self::kebabToCamelCase($blockName) : $attributes['prefix'];
+
+		// Set component prefix.
+		if (empty($prefix)) {
+			$output['prefix'] = self::kebabToCamelCase($newName);
+		} else {
+			$output['prefix'] = $prefix . ucfirst(self::kebabToCamelCase($newName));
+		}
+
+		// Iterate over the attributes.
+		foreach ($attributes as $key => $value) {
+			// Include attributes from iteration.
+			if (in_array($key, $includes, true)) {
+				$output[$key] = $value;
+				continue;
+			}
+
+			// If attribute starts with the prefix key leave it in the object if not remove it.
+			if (substr((string)$key, 0, strlen($output['prefix'])) === $output['prefix']) {
+				$output[$key] = $value;
+			}
+		}
+
+		// Check if you have manual object and prepare the attribute keys and merge them with the original attributes for output.
+		if ($manual) {
+			// Iterate manual attributes.
+			foreach ($manual as $key => $value) {
+				// Include attributes from iteration.
+				if (in_array($key, $includes, true)) {
+					$output[$key] = $value;
+					continue;
+				}
+
+				// Remove the current component name from the attribute name.
+				$newKey = str_replace(lcfirst(self::kebabToCamelCase($newName)), '', $key);
+
+				// Remove the old key.
+				unset($manual[$key]);
+
+				// Add new key to the output with prepared attribute name.
+				$manual[$output['prefix'] . ucfirst($newKey)] = $value;
+			}
+
+			// Merge manual and output objects to one.
+			$output = array_merge($output, $manual);
+		}
+
+		// Return the original attribute for optimization purposes.
+		return $output;
+	}
+
+	/**
+	 * Flatten multidimensional array in to a single array.
+	 *
+	 * @param array<string, mixed> $array Array to iterate.
+	 *
+	 * @return string[]|array<string, mixed>
+	 */
+	public static function flattenArray(array $array): array
+	{
+		$return = [];
+
+		array_walk_recursive(
+			$array,
+			function ($a) use (&$return) {
+				$return[] = $a;
+			}
+		);
+
+		return $return;
+	}
+
+	/**
+	 * Merges attributes array with the manifest default attributes.
+	 *
+	 * @param array<string, mixed> $manifest Block/Component manifest data.
+	 * @param array<string, mixed> $attributes Block/Component rendered attributes data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function getDefaultRenderAttributes(array $manifest, array $attributes): array
+	{
+		$defaultAttributes = [];
+
+		if (!is_iterable($manifest['attributes'])) {
+			return [];
+		}
+
+		foreach ($manifest['attributes'] as $itemKey => $itemValue) {
+			// Get the correct key for the check in the attributes object.
+			$newKey = self::getAttrKey($itemKey, $attributes, $manifest);
+
+			if (isset($itemValue['default'])) {
+				$defaultAttributes[$newKey] = $itemValue['default'];
+			}
+		}
+
+		return array_merge($defaultAttributes, $attributes);
+	}
+
+	/**
+	 * Create initial array of data to be able to populate later.
+	 *
+	 * @param array<string, mixed> $globalBreakpoints Global breakpoints from global manifest to set the correct output.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function prepareVariableData(array $globalBreakpoints): array
+	{
+
+		// Define the min and max arrays.
+		$min = [];
+		$max = [];
+
+		// Loop the global breakpoints and populate the data.
+		foreach ($globalBreakpoints as $itemKey => $itemValue) {
+			// Initial inner object.
+			$itemObject = [
+				'name' => $itemKey,
+				'value' => $itemValue,
+				'variable' => [],
+			];
+
+			// Inner object for min values.
+			$itemObjectMin = array_merge(
+				$itemObject,
+				[
+					'type' => 'min',
+					'value' => $minBreakpointValue ?? 0,
+				]
+			);
+
+			// Inner object for max values.
+			$itemObjectMax = array_merge(
+				$itemObject,
+				[
+					'type' => 'max',
+				]
+			);
+
+			// Transfer value to bigger breakpoint.
+			$minBreakpointValue = $itemValue;
+
+			// Push both min and max to the defined arrays.
+			$min[] = $itemObjectMin;
+			$max[] = $itemObjectMax;
+		};
+
+		// Pop largest breakpoint out of min array.
+		array_shift($min);
+
+		// Add default object to the top of the array as minimum.
+		array_unshift(
+			$min,
+			[
+				'type' => 'min',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			]
+		);
+
+		// Reverse order of max array.
+		$max = array_reverse($max);
+
+		// Throw out the largest.
+		array_shift($max);
+
+		// Switch the largest to default.
+		array_unshift(
+			$max,
+			[
+				'type' => 'max',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			]
+		);
+
+		// Merge both arrays.
+		return array_merge($min, $max);
+	}
+
+	/**
 	 * Process and return global css variables based on the type.
 	 *
 	 * @param array<string, mixed> $itemValues Values of data to check.
@@ -422,7 +806,7 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function globalInner(array $itemValues, string $itemKey): string
+	private static function globalInner(array $itemValues, string $itemKey): string
 	{
 		$output = '';
 
@@ -444,6 +828,40 @@ class Components
 					$output .= "--global-{$itemKey}-{$key}: {$value};\n";
 					break;
 			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Internal helper to loop CSS Variables from array.
+	 *
+	 * @param array<string, mixed> $variables Array of variables of CSS variables.
+	 * @param mixed $attributeValue Original attribute value used in magic variable.
+	 *
+	 * @return array<int, mixed>|string[]
+	 */
+	private static function variablesInner(array $variables, $attributeValue): array
+	{
+		$output = [];
+
+		// Bailout if provided list is not an object.
+		if (self::arrayIsList($variables)) {
+			return $output;
+		}
+
+		// Iterate each attribute and make corrections.
+		foreach ($variables as $variableKey => $variableValue) {
+			// Convert to correct case.
+			$internalKey = self::camelToKebabCase($variableKey);
+
+			// If value contains magic variable swap that variable with original attribute value.
+			if (strpos($variableValue, '%value%') !== false) {
+				$variableValue = str_replace('%value%', (string) $attributeValue, $variableValue);
+			}
+
+			// Output the custom CSS variable by adding the attribute key + custom object key.
+			$output[] = "--{$internalKey}: ${variableValue};";
 		}
 
 		return $output;
@@ -624,423 +1042,5 @@ class Components
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Get component/block options and process them in CSS variables.
-	 *
-	 * @param array<string, mixed> $attributes Built attributes.
-	 * @param array<string, mixed> $manifest Component/block manifest data.
-	 * @param string $unique Unique key.
-	 * @param array<string, mixed> $globalManifest Global manifest array.
-	 * @param string $customSelector Output custom selector to use as a style prefix.
-	 *
-	 * @return string
-	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest, string $customSelector = ''): string
-	{
-		$output = '';
-
-		// Bailout if global breakpoints are missing.
-		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
-			return '';
-		}
-
-		// Bailout if attributes or manifest is missing.
-		if (!$attributes || !$manifest) {
-			return '';
-		}
-
-		// Bailout if manifest is missing variables key.
-		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
-			return '';
-		}
-
-		// Define variables from globalManifest.
-		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
-
-		// Sort breakpoints in ascending order.
-		asort($breakpoints);
-
-		$defaultBreakpoints = self::getDefaultBreakpoints($breakpoints);
-
-		// Define variables from manifest.
-		$variables = $manifest['variables'] ?? [];
-
-		// Define responsiveAttributes from manifest.
-		$responsiveAttributes = $manifest['responsiveAttributes'] ?? [];
-
-		// Get the initial data array.
-		$data = self::prepareVariableData($breakpoints);
-
-		// Check if component or block.
-		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
-
-		if ($customSelector !== '') {
-			$name = $customSelector;
-		}
-
-		// Check manifest for the attributes with variable key.
-		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
-		$defaultAttributes = array_keys(
-			array_filter(
-				$variables,
-				function ($key) use ($attributes) {
-					return !isset($attributes[$key]);
-				},
-				ARRAY_FILTER_USE_KEY
-			)
-		);
-
-		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
-		if ($defaultAttributes) {
-			$default = [];
-
-			foreach ($defaultAttributes as $key) {
-				if (isset($attributes[$key]['default'])) {
-					$default[$key] = $attributes[$key]['default'];
-				}
-			}
-
-			$attributes = array_merge($default, $attributes);
-		}
-
-		if (!empty($responsiveAttributes)) {
-			$responsiveVariables = self::setupResponsiveVariables($responsiveAttributes, $variables);
-			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest, $defaultBreakpoints);
-		}
-
-		if (!empty($variables)) {
-			// Iterate each variable.
-			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
-		}
-
-		// Loop data and provide correct selectors from data array.
-		foreach ($data as $values) {
-			// Define variables from values.
-			$type = $values['type'];
-			$value = $values['value'];
-			$variable = $values['variable'];
-
-			// Bailout if variables are empty.
-			if (!$variable) {
-				continue;
-			}
-
-			// Merge array of variables to string.
-			$breakpointData = implode("\n", $variable);
-
-			// If breakpoint value is 0 then don't wrap the media query around it.
-			if ($value === 0) {
-				$output .= ".{$name}[data-id='{$unique}'] {
-						{$breakpointData}
-					}
-				";
-			} else {
-				$output .= "@media ({$type}-width: {$value}px) {
-						.{$name}[data-id='{$unique}'] {
-							{$breakpointData}
-						}
-					}
-				";
-			}
-		}
-
-		// Output manual output from the array of variables.
-		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
-
-		// Prepare final output for testing.
-		$fullOutput = "
-			{$output}
-			{$manual}
-		";
-
-		// Check if final output is empty and and remove if it is.
-		if (empty(trim($fullOutput))) {
-			return '';
-		}
-
-		// Prepare output for manual variables.
-		$finalManualOutput = $manual ? ".{$name}[data-id='{$unique}'] {
-			{$manual}
-		}" : '';
-
-		// Output the style for CSS variables.
-		return "<style>{$output} {$finalManualOutput}</style>";
-	}
-
-	/**
-	 * Create initial array of data to be able to populate later.
-	 *
-	 * @param array<string, mixed> $globalBreakpoints Global breakpoints from global manifest to set the correct output.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public static function prepareVariableData(array $globalBreakpoints): array
-	{
-
-		// Define the min and max arrays.
-		$min = [];
-		$max = [];
-
-		// Loop the global breakpoints and populate the data.
-		foreach ($globalBreakpoints as $itemKey => $itemValue) {
-			// Initial inner object.
-			$itemObject = [
-				'name' => $itemKey,
-				'value' => $itemValue,
-				'variable' => [],
-			];
-
-			// Inner object for min values.
-			$itemObjectMin = array_merge(
-				$itemObject,
-				[
-					'type' => 'min',
-					'value' => $minBreakpointValue ?? 0,
-				]
-			);
-
-			// Inner object for max values.
-			$itemObjectMax = array_merge(
-				$itemObject,
-				[
-					'type' => 'max',
-				]
-			);
-
-			// Transfer value to bigger breakpoint.
-			$minBreakpointValue = $itemValue;
-
-			// Push both min and max to the defined arrays.
-			$min[] = $itemObjectMin;
-			$max[] = $itemObjectMax;
-		};
-
-		// Pop largest breakpoint out of min array.
-		array_shift($min);
-
-		// Add default object to the top of the array as minimum.
-		array_unshift(
-			$min,
-			[
-				'type' => 'min',
-				'name' => 'default',
-				'value' => 0,
-				'variable' => [],
-			]
-		);
-
-		// Reverse order of max array.
-		$max = array_reverse($max);
-
-		// Throw out the largest.
-		array_shift($max);
-
-		// Switch the largest to default.
-		array_unshift(
-			$max,
-			[
-				'type' => 'max',
-				'name' => 'default',
-				'value' => 0,
-				'variable' => [],
-			]
-		);
-
-		// Merge both arrays.
-		return array_merge($min, $max);
-	}
-
-	/**
-	 * Internal helper to loop CSS Variables from array.
-	 *
-	 * @param array<string, mixed> $variables Array of variables of CSS variables.
-	 * @param mixed $attributeValue Original attribute value used in magic variable.
-	 *
-	 * @return array<int, mixed>|string[]
-	 */
-	public static function variablesInner(array $variables, $attributeValue): array
-	{
-		$output = [];
-
-		// Bailout if provided list is not an object.
-		if (self::arrayIsList($variables)) {
-			return $output;
-		}
-
-		// Iterate each attribute and make corrections.
-		foreach ($variables as $variableKey => $variableValue) {
-			// Convert to correct case.
-			$internalKey = self::camelToKebabCase($variableKey);
-
-			// If value contains magic variable swap that variable with original attribute value.
-			if (strpos($variableValue, '%value%') !== false) {
-				$variableValue = str_replace('%value%', (string) $attributeValue, $variableValue);
-			}
-
-			// Output the custom CSS variable by adding the attribute key + custom object key.
-			$output[] = "--{$internalKey}: ${variableValue};";
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Return unique ID for block processing.
-	 *
-	 * @return string
-	 */
-	public static function getUnique(): string
-	{
-		return md5(uniqid((string)\wp_rand(), true));
-	}
-
-	/**
-	 * Convert string from camel to kebab case
-	 *
-	 * @param string $string String to convert.
-	 *
-	 * @return string
-	 */
-	public static function camelToKebabCase(string $string): string
-	{
-		$replace = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
-		return ltrim(strtolower($replace), '-');
-	}
-
-	/**
-	 * Convert string from kebab to camel case
-	 *
-	 * @param string $string    String to convert.
-	 * @param string $separator Separator to use for conversion.
-	 *
-	 * @return string
-	 */
-	public static function kebabToCamelCase(string $string, string $separator = '-'): string
-	{
-		return lcfirst(str_replace($separator, '', ucwords($string, $separator)));
-	}
-
-	/**
-	 * Check if provided array is associative or sequential. Will return true if array is sequential.
-	 *
-	 * @param array<string, mixed>|string[] $array Array to check.
-	 *
-	 * @return boolean
-	 */
-	public static function arrayIsList(array $array): bool
-	{
-		$expectedKey = 0;
-		foreach ($array as $i => $value) {
-			if ($i !== $expectedKey) {
-				return false;
-			}
-			$expectedKey++;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Output only attributes that are used in the component and remove everything else.
-	 *
-	 * @param string $newName *New* key to use to rename attributes.
-	 * @param array<string, mixed> $attributes Attributes from the block/component.
-	 * @param array<string, mixed> $manual Array of attributes to change key and merge to the original output.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function props(string $newName, array $attributes, array $manual = []): array
-	{
-
-		$output = [];
-
-		// Check what attributes we need to includes.
-		$includes = [
-			'blockName',
-			'blockFullName',
-			'blockClass',
-			'blockJsClass',
-			'componentJsClass',
-			'selectorClass',
-			'additionalClass',
-			'uniqueWrapperId',
-			'parentClass'
-		];
-
-		$blockName = $attributes['blockName'] ?? '';
-
-		// Populate prefix key for recursive checks of attribute names.
-		$prefix = (!isset($attributes['prefix'])) ? self::kebabToCamelCase($blockName) : $attributes['prefix'];
-
-		// Set component prefix.
-		if (empty($prefix)) {
-			$output['prefix'] = self::kebabToCamelCase($newName);
-		} else {
-			$output['prefix'] = $prefix . ucfirst(self::kebabToCamelCase($newName));
-		}
-
-		// Iterate over the attributes.
-		foreach ($attributes as $key => $value) {
-			// Include attributes from iteration.
-			if (in_array($key, $includes, true)) {
-				$output[$key] = $value;
-				continue;
-			}
-
-			// If attribute starts with the prefix key leave it in the object if not remove it.
-			if (substr((string)$key, 0, strlen($output['prefix'])) === $output['prefix']) {
-				$output[$key] = $value;
-			}
-		}
-
-		// Check if you have manual object and prepare the attribute keys and merge them with the original attributes for output.
-		if ($manual) {
-			// Iterate manual attributes.
-			foreach ($manual as $key => $value) {
-				// Include attributes from iteration.
-				if (in_array($key, $includes, true)) {
-					$output[$key] = $value;
-					continue;
-				}
-
-				// Remove the current component name from the attribute name.
-				$newKey = str_replace(lcfirst(self::kebabToCamelCase($newName)), '', $key);
-
-				// Remove the old key.
-				unset($manual[$key]);
-
-				// Add new key to the output with prepared attribute name.
-				$manual[$output['prefix'] . ucfirst($newKey)] = $value;
-			}
-
-			// Merge manual and output objects to one.
-			$output = array_merge($output, $manual);
-		}
-
-		// Return the original attribute for optimization purposes.
-		return $output;
-	}
-
-	/**
-	 * Flatten multidimensional array in to a single array.
-	 *
-	 * @param array<string, mixed> $array Array to iterate.
-	 *
-	 * @return string[]|array<string, mixed>
-	 */
-	public static function flattenArray(array $array): array
-	{
-		$return = [];
-
-		array_walk_recursive(
-			$array,
-			function ($a) use (&$return) {
-				$return[] = $a;
-			}
-		);
-
-		return $return;
 	}
 }
