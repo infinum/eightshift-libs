@@ -100,7 +100,7 @@ class PostTypeCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'plural_label',
-					'description' => 'The plural label of the custom post type. Used for label generation. If not specified the plural will have appended s at the end of the label.',
+					'description' => 'The plural label of the custom post type. Used for label generation. If not specified the plural will have appended s at the end of the label.', // phpcs:ignore Generic.Files.LineLength.TooLong
 					'optional' => true,
 				],
 			],
