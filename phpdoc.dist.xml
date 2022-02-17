@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor
+		configVersion="3"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns="https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd"
+>
+	<title>Eightshift Libs</title>
+	<paths>
+		<output>docs/.build</output>
+	</paths>
+
+	<version number="3.0.0">
+		<api>
+			<source dsn=".">
+				<path>src</path>
+			</source>
+			<output>api</output>
+			<ignore hidden="true" symlinks="true">
+				<path>tests/**/*</path>
+				<path>vendor/**/*</path>
+				<path>.github/**/*</path>
+			</ignore>
+			<extensions>
+				<extension>php</extension>
+			</extensions>
+		</api>
+	</version>
+	<template name="default"/>
+</phpdocumentor>
