@@ -38,7 +38,7 @@
     "pestphp/pest": "^1.2",
     "phpunit/phpunit": "^9.5",
     "roave/security-advisories": "dev-master",
-    "szepeviktor/phpstan-wordpress": "^0.7",
+    "szepeviktor/phpstan-wordpress": "^1.0.2",
     "wp-cli/wp-cli": "^2.4"
   },
   "suggest": {
@@ -61,7 +61,11 @@
   "config": {
     "sort-packages": true,
     "optimize-autoloader": true,
-    "process-timeout": 2000
+    "process-timeout": 2000,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "pestphp/pest-plugin": true
+    }
   },
   "scripts": {
     "analyze": "@php ./vendor/bin/phpstan analyze",
