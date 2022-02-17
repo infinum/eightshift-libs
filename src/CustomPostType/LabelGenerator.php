@@ -50,7 +50,7 @@ final class LabelGenerator
 	/**
 	 * Required Nons Constant
 	 *
-	 * @var string
+	 * @var string[]
 	 */
 	public const REQUIRED_NOUNS = [
 		self::SINGULAR_NAME_UC,

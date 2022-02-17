@@ -726,19 +726,11 @@ abstract class AbstractCli implements CliInterface
 	 * @param bool  $run Run or log output.
 	 *
 	 * @return void
-	 *
-	 * @throws \ReflectionException Error in the case reflection class couldn't be created.
 	 */
 	public function getEvalLoop(array $items = [], bool $run = false): void
 	{
 		foreach ($items as $item) {
-			try {
-				$reflectionClass = new \ReflectionClass($item);
-				// @codeCoverageIgnoreStart
-			} catch (\ReflectionException $e) {
-				self::cliError("{$e->getCode()}: {$e->getMessage()}");
-			}
-			// @codeCoverageIgnoreEnd
+			$reflectionClass = new \ReflectionClass($item);
 
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
