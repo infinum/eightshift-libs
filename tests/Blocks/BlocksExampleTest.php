@@ -117,6 +117,7 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 
 	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
 	$blockContext->post = \Mockery::mock('WP_Post');
+	$blockContext->post->post_type = 'post';
 
 	$blocks = $this->blocksExample->getAllBlocksList(true, $blockContext);
 
