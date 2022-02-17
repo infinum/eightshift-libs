@@ -86,3 +86,51 @@ test('Custom post type CLI documentation is correct', function () {
 	$this->assertArrayHasKey('synopsis', $documentation);
 	$this->assertSame('Generates custom post type class file.', $documentation[$key]);
 });
+
+
+test('Registered post type will have properly created labels', function() {
+
+	$cpt = $this->cpt;
+	$cpt([], [
+		'label' => 'Book',
+		'slug' => 'book',
+		'rewrite_url' => 'book',
+		'rest_endpoint_slug' => 'books',
+		'capability' => 'post',
+		'menu_position' => 50,
+		'menu_icon' => 'dashicons-book',
+		'plural_label' => 'All books'
+	]);
+
+	// Check the output dir if the generated method is correctly generated.
+	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
+
+	$this->assertStringContainsString('book', $generatedCPT);
+	$this->assertStringContainsString('books', $generatedCPT);
+	$this->assertStringContainsString('All books', $generatedCPT);
+	$this->assertStringContainsString('all books', $generatedCPT);
+	$this->assertStringContainsString('$labels', $generatedCPT);
+	$this->assertStringContainsString('$nouns[self::SINGULAR_NAME_UC]', $generatedCPT);
+});
+
+
+test('Registered post type will have properly created plural label if the plural is not defined', function() {
+
+	$cpt = $this->cpt;
+	$cpt([], [
+		'label' => 'Book',
+		'slug' => 'book',
+		'rewrite_url' => 'book',
+		'rest_endpoint_slug' => 'books',
+		'capability' => 'post',
+		'menu_position' => 50,
+		'menu_icon' => 'dashicons-book',
+	]);
+
+	// Check the output dir if the generated method is correctly generated.
+	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
+
+	$this->assertStringContainsString('book', $generatedCPT);
+	$this->assertStringContainsString('books', $generatedCPT);
+	$this->assertStringContainsString('Books', $generatedCPT);
+});
