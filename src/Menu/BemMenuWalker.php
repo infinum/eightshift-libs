@@ -58,7 +58,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	 * Display element for walker
 	 *
 	 * @param object $element Data object.
-	 * @param Array[] $children_elements List of elements to continue traversing (passed by reference).
+	 * @param array<int, array<int, object>> $children_elements List of elements to continue traversing (passed by reference).
 	 * @param int $max_depth Max depth to traverse.
 	 * @param int $depth Depth of current element.
 	 * @param Object[] $args An array of arguments.
