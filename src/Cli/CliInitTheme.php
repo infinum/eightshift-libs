@@ -78,14 +78,7 @@ class CliInitTheme extends AbstractCli
 		}
 
 		foreach (static::INIT_THEME_CLASSES as $item) {
-			try {
-				$reflectionClass = new \ReflectionClass($item);
-				// @codeCoverageIgnoreStart
-				// See the explanation in the CliInitProject.
-			} catch (\ReflectionException $e) {
-				CliHelpers::cliError("{$e->getCode()}: {$e->getMessage()}");
-			}
-			// @codeCoverageIgnoreEnd
+			$reflectionClass = new \ReflectionClass($item);
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
