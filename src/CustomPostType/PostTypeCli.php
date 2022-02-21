@@ -34,13 +34,14 @@ class PostTypeCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'label' => $args[1] ?? 'Products',
+			'label' => $args[1] ?? 'Product',
 			'slug' => $args[2] ?? 'product',
 			'rewrite_url' => $args[3] ?? 'product',
 			'rest_endpoint_slug' => $args[4] ?? 'products',
 			'capability' => $args[5] ?? 'post',
 			'menu_position' => $args[6] ?? 40,
 			'menu_icon' => $args[7] ?? 'admin-settings',
+			'plural_label' => $args[8] ?? 'Products',
 		];
 	}
 
@@ -96,6 +97,12 @@ class PostTypeCli extends AbstractCli
 					'description' => 'The default menu icon for the custom post types. Example: dashicons-analytics.',
 					'optional' => true,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'plural_label',
+					'description' => 'The plural label of the custom post type. Used for label generation. If not specified the plural will have appended s at the end of the label.', // phpcs:ignore Generic.Files.LineLength.TooLong
+					'optional' => true,
+				],
 			],
 		];
 	}
@@ -111,6 +118,7 @@ class PostTypeCli extends AbstractCli
 		$capability = $assocArgs['capability'] ?? '';
 		$menuPosition = (string) ($assocArgs['menu_position'] ?? '');
 		$menuIcon = $assocArgs['menu_icon'] ?? '';
+		$pluralLabel = $assocArgs['plural_label'] ?? $label . 's';
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
@@ -125,7 +133,10 @@ class PostTypeCli extends AbstractCli
 			->searchReplaceString('example-slug', $slug)
 			->searchReplaceString('example-url-slug', $rewriteUrl)
 			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
-			->searchReplaceString('Example Name', $label);
+			->searchReplaceString('Singular Name', $label)
+			->searchReplaceString('singular name', strtolower($label))
+			->searchReplaceString('Plural Name', $pluralLabel)
+			->searchReplaceString('plural name', strtolower($pluralLabel));
 
 		if (!empty($capability)) {
 			$class->searchReplaceString("'post'", "'{$capability}'");
