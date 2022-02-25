@@ -381,6 +381,32 @@ class Components
 	}
 
 	/**
+	 * Convert a hex color into RGB values.
+	 *
+	 * @param string $hex Input hex color.
+	 *
+	 * @return string
+	 */
+	public static function hexToRgb($hex) {
+		$hex = str_replace('#', '', $hex);
+		$length = strlen($hex);
+
+		if ($length === 3) {
+			$r = hexdec(str_repeat(substr($hex, 0, 1), 2));
+			$g = hexdec(str_repeat(substr($hex, 1, 1), 2));
+			$b = hexdec(str_repeat(substr($hex, 2, 1), 2));
+		} elseif ($length === 6) {
+			$r = hexdec(substr($hex, 0, 2));
+			$g = hexdec(substr($hex, 2, 2));
+			$b = hexdec(substr($hex, 4, 2));
+		} else {
+			return '0 0 0';
+		}
+
+		return "{$r} {$g} {$b}";
+	 }
+
+	/**
 	 * Get Global Manifest.json and return globalVariables as css variables.
 	 *
 	 * @param array<string, mixed> $globalManifest Array of global variables data.
@@ -433,6 +459,9 @@ class Components
 			switch ($itemKey) {
 				case 'colors':
 					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
+
+					$rgbValues = self::hexToRgb($value['color']);
+					$output .= "--global-{$itemKey}-{$value['slug']}-values: {$rgbValues};\n";
 					break;
 				case 'gradients':
 					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
