@@ -350,6 +350,7 @@ test('Asserts that outputCssVariablesGlobal returns the correct CSS variables fr
 	$this->assertStringContainsString('<style>', $output);
 	$this->assertStringContainsString(':root {', $output);
 	$this->assertStringContainsString('--global-colors-primary: #C3151B;', $output);
+	$this->assertStringContainsString('--global-colors-primary-values: 195 21 27;', $output);
 	$this->assertStringNotContainsString('--button-content:', $output);
 });
 
@@ -373,6 +374,7 @@ test('Asserts that globalInner returns the correct css variable for color', func
 
 	$this->assertIsString($output);
 	$this->assertStringContainsString('--global-colors-primary: #C3151B;', $output);
+	$this->assertStringContainsString('--global-colors-primary-values: 195 21 27;', $output);
 });
 
 test('Asserts that globalInner returns the correct css variable for gradients', function () {
@@ -1473,4 +1475,18 @@ test('Asserts props will correctly generate manual keys in camelCase', function 
 	$this->assertIsArray($output);
 	$this->assertContains('mockCardButtonContent', array_keys($output), "Manual key is not properly converted to camelCase");
 	$this->assertNotContains('mockCardbuttonContent', array_keys($output), "Manual key is not properly converted to camelCase");
+});
+
+test('Check that hexToRgb returns the correct output for a correctly formatted hex code', function () {
+	$shorthand = Components::hexToRgb('#fff');
+	$fullHex = Components::hexToRgb('#ffffff');
+
+	$this->assertEquals('255 255 255', $shorthand);
+	$this->assertEquals('255 255 255', $fullHex);
+});
+
+test('Check that hexToRgb returns the fallback for an incorrectly formatted hex code', function () {
+	$incorrectFormat = Components::hexToRgb('#0000');
+
+	$this->assertEquals('0 0 0', $incorrectFormat);
 });
