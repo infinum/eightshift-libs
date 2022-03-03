@@ -387,7 +387,8 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function hexToRgb($hex) {
+	public static function hexToRgb($hex)
+	{
 		$hex = str_replace('#', '', $hex);
 		$length = strlen($hex);
 
@@ -404,7 +405,7 @@ class Components
 		}
 
 		return "{$r} {$g} {$b}";
-	 }
+	}
 
 	/**
 	 * Get Global Manifest.json and return globalVariables as css variables.
