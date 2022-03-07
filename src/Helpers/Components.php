@@ -26,6 +26,13 @@ class Components
 	public static $namespace = '';
 
 	/**
+	 * Directory separator used for cross compatibility.
+	 *
+	 * @var string
+	 */
+	private static $sep = DIRECTORY_SEPARATOR;
+
+	/**
 	 * Makes sure the output is string. Useful for converting an array of components into a string.
 	 * If you pass an associative array it will output strings with keys, used for generating data-attributes from array.
 	 *
@@ -89,7 +96,7 @@ class Components
 	 */
 	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false): string
 	{
-		$separator = DIRECTORY_SEPARATOR;
+		$sep = self::$sep;
 
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
@@ -108,16 +115,16 @@ class Components
 		 * parentClass__componentName.php
 		 */
 		if (strpos($component, '.php') !== false) {
-			$componentPath = "{$parentPath}{$separator}$component";
+			$componentPath = "{$parentPath}{$sep}$component";
 
 			if ($useComponentDefaults) {
 				$manifest = self::getManifest($parentPath);
 			}
 		} else {
-			$componentPath = "{$parentPath}{$separator}src{$separator}Blocks{$separator}components{$separator}{$component}{$separator}{$component}.php";
+			$componentPath = "{$parentPath}{$sep}src{$sep}Blocks{$sep}components{$sep}{$component}{$sep}{$component}.php";
 
 			if ($useComponentDefaults) {
-				$manifest = self::getManifest("{$parentPath}{$separator}src{$separator}Blocks{$separator}components{$separator}{$component}");
+				$manifest = self::getManifest("{$parentPath}{$sep}src{$sep}Blocks{$sep}components{$sep}{$component}");
 			}
 		}
 
@@ -161,36 +168,36 @@ class Components
 	{
 		// Get manifest by directly getting the file.
 		if ($useGlobal) {
-			return self::getManifestDirect($path);
+			return self::getManifestDirect($path) ?? [];
 		}
 
 		$path = rtrim($path, '/');
 
-		$path = explode(DIRECTORY_SEPARATOR, $path);
+		$path = explode(self::$sep, $path);
 
 		// Find last item to get name.
 		$item = $path[count($path) - 1] ?? '';
 
 		// Global settings.
 		if ($item === 'Blocks') {
-			return self::getSettings('settings');
+			return self::getSettings('settings') ?? [];
 		}
 
 		// Wrapper details.
 		if ($item === 'wrapper') {
-			return self::getSettings('wrapper');
+			return self::getSettings('wrapper') ?? [];
 		}
 
 		$type = $path[count($path) - 2] ?? '';
 
 		// Components settings.
 		if ($type === 'components') {
-			return self::getSettings('component', $item);
+			return self::getSettings('component', $item) ?? [];
 		}
 
 		// Blocks settings.
 		if ($type === 'custom') {
-			return self::getSettings('block', $item);
+			return self::getSettings('block', $item) ?? [];
 		}
 
 		return [];
@@ -827,7 +834,7 @@ class Components
 	 *
 	 * @throws InvalidBlock If settings key is missing.
 	 *
-	 * @return mixed
+	 * @return string|array<mixed>
 	 */
 	public static function getSettings(string $type, string $item = '', $namespace = '')
 	{
@@ -861,26 +868,18 @@ class Components
 				$items = reset($items);
 			}
 
-			if (!$items) {
-				return [];
-			}
-
-			return $items;
+			return $items ?? [];
 		}
 
 		// If searching for one item.
 		if ($item) {
-			$items = $details[$type][$item] ?? [];
-
 			if (!isset($details[$type][$item])) {
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
 			}
 
-			if (!$items) {
-				return [];
-			}
+			$items = $details[$type][$item] ?? [];
 
-			return $details[$type][$item];
+			return $items;
 		}
 
 		if (!isset($details[$type])) {
@@ -889,11 +888,7 @@ class Components
 
 		$items = $details[$type] ?? [];
 
-		if (!$items) {
-			return [];
-		}
-
-		return $details[$type];
+		return $items;
 	}
 
 	/**
@@ -1267,8 +1262,8 @@ class Components
 			return self::$namespace;
 		}
 
-		$separator = DIRECTORY_SEPARATOR;
-		$manifestPath = dirname(__DIR__, 5) . "{$separator}src{$separator}Blocks{$separator}manifest.json";
+		$sep = self::$sep;
+		$manifestPath = dirname(__DIR__, 5) . "{$sep}src{$sep}Blocks{$sep}manifest.json";
 
 		if (!file_exists($manifestPath)) {
 			throw InvalidBlock::missingSettingsManifestException($manifestPath);
@@ -1298,8 +1293,8 @@ class Components
 	{
 		$path = rtrim($path, '/');
 
-		$separator = DIRECTORY_SEPARATOR;
-		$manifest = "{$path}{$separator}manifest.json";
+		$sep = self::$sep;
+		$manifest = "{$path}{$sep}manifest.json";
 
 		if (!file_exists($manifest)) {
 			throw ComponentException::throwUnableToLocateComponent($manifest);

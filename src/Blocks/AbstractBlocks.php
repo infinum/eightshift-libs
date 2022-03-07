@@ -29,6 +29,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	protected $namespace = '';
 
 	/**
+	 * Directory separator used for cross compatibility.
+	 *
+	 * @var string
+	 */
+	private $sep = DIRECTORY_SEPARATOR;
+
+	/**
 	 * Create custom project color palette
 	 *
 	 * These colors are fetched from the main manifest.json file located in src/blocks folder.
@@ -70,16 +77,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		$namespace = $settings['namespace'];
 
-		// Save namespace to internal variable.
-		$this->namespace = $namespace;
-
 		// If namespace is missing bailout.
 		if (isset($esBlocks[$namespace])) {
 			return;
 		}
 
+		// Save namespace to internal variable.
+		$this->namespace = $namespace;
+
 		$blocks = array_map(
-			function ($block) use ($namespace) {
+			static function ($block) use ($namespace) {
 				// Check if blocks-namespace is defined in block or in global manifest settings.
 				$block['namespace'] = $namespace;
 				$block['blockFullName'] = "{$namespace}/{$block['blockName']}";
@@ -235,8 +242,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$templatePath = $this->getBlockViewPath($blockName);
 
 		// Get block wrapper view path.
-		$separator = DIRECTORY_SEPARATOR;
-		$wrapperPath = "{$this->getWrapperPath()}{$separator}wrapper.php";
+		$wrapperPath = "{$this->getWrapperPath()}{$this->sep}wrapper.php";
 
 		// Check if wrapper component exists.
 		if (!file_exists($wrapperPath)) {
@@ -369,8 +375,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksPath(): string
 	{
-		$separator = DIRECTORY_SEPARATOR;
-		return dirname(__DIR__, 5) . "{$separator}src{$separator}Blocks";
+		return dirname(__DIR__, 5) . "{$this->sep}src{$this->sep}Blocks";
 	}
 
 	/**
@@ -380,8 +385,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksCustomPath(): string
 	{
-		$separator = DIRECTORY_SEPARATOR;
-		return "{$this->getBlocksPath()}{$separator}custom";
+		return "{$this->getBlocksPath()}{$this->sep}custom";
 	}
 
 	/**
@@ -391,8 +395,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksComponentsPath(): string
 	{
-		$separator = DIRECTORY_SEPARATOR;
-		return "{$this->getBlocksPath()}{$separator}components";
+		return "{$this->getBlocksPath()}{$this->sep}components";
 	}
 
 	/**
@@ -404,8 +407,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlockViewPath(string $blockName): string
 	{
-		$separator = DIRECTORY_SEPARATOR;
-		return "{$this->getBlocksCustomPath()}{$separator}{$blockName}{$separator}{$blockName}.php";
+		return "{$this->getBlocksCustomPath()}{$this->sep}{$blockName}{$this->sep}{$blockName}.php";
 	}
 
 	/**
@@ -415,8 +417,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getWrapperPath(): string
 	{
-		$separator = DIRECTORY_SEPARATOR;
-		return "{$this->getBlocksPath()}{$separator}wrapper";
+		return "{$this->getBlocksPath()}{$this->sep}wrapper";
 	}
 
 	/**
@@ -428,8 +429,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getWrapper(): array
 	{
-		$separator = DIRECTORY_SEPARATOR;
-		$manifestPath = "{$this->getWrapperPath()}{$separator}manifest.json";
+		$manifestPath = "{$this->getWrapperPath()}{$this->sep}manifest.json";
 
 		if (!file_exists($manifestPath)) {
 			throw InvalidBlock::missingWrapperManifestException($manifestPath);
@@ -454,8 +454,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$componentName = Components::camelToKebabCase($componentName);
 
-		$separator = DIRECTORY_SEPARATOR;
-		$manifestPath = "{$this->getBlocksComponentsPath()}{$separator}{$componentName}{$separator}manifest.json";
+		$manifestPath = "{$this->getBlocksComponentsPath()}{$this->sep}{$componentName}{$this->sep}manifest.json";
 
 		if (!file_exists($manifestPath) && !defined('WP_CLI')) {
 			throw InvalidBlock::missingComponentManifestException($manifestPath);
@@ -477,8 +476,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getGlobalSettings(): array
 	{
-		$separator = DIRECTORY_SEPARATOR;
-		$manifestPath = "{$this->getBlocksPath()}{$separator}manifest.json";
+		$manifestPath = "{$this->getBlocksPath()}{$this->sep}manifest.json";
 
 		if (!file_exists($manifestPath)) {
 			throw InvalidBlock::missingSettingsManifestException($manifestPath);
@@ -653,7 +651,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksData(): array
 	{
-		$separator = DIRECTORY_SEPARATOR;
 		return array_map(
 			function (string $blockPath) {
 				$block = implode(' ', (array)file(($blockPath)));
@@ -678,7 +675,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 				return $block;
 			},
-			(array)glob("{$this->getBlocksCustomPath()}{$separator}*{$separator}manifest.json")
+			(array)glob("{$this->getBlocksCustomPath()}{$this->sep}*{$this->sep}manifest.json")
 		);
 	}
 
@@ -691,7 +688,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getComponentsManifest(): array
 	{
-		$separator = DIRECTORY_SEPARATOR;
 		return array_map(
 			function (string $componentPath) {
 				$component = implode(' ', (array)file(($componentPath)));
@@ -704,7 +700,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 				return $component;
 			},
-			(array)glob("{$this->getBlocksComponentsPath()}{$separator}*{$separator}manifest.json")
+			(array)glob("{$this->getBlocksComponentsPath()}{$this->sep}*{$this->sep}manifest.json")
 		);
 	}
 
