@@ -22,11 +22,11 @@ use EightshiftLibs\Services\ServiceInterface;
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
-	 * Blocks namespace constant
+	 * Blocks namespace constant.
 	 *
 	 * @var string
 	 */
-	public $namespace = '';
+	protected $namespace = '';
 
 	/**
 	 * Create custom project color palette
@@ -65,12 +65,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		global $esBlocks;
 
+		// Get global settings direct from file.
 		$settings = $this->getGlobalSettings();
 
 		$namespace = $settings['namespace'];
 
+		// Save namespace to internal variable.
 		$this->namespace = $namespace;
 
+		// If namespace is missing bailout.
 		if (isset($esBlocks[$namespace])) {
 			return;
 		}
@@ -86,11 +89,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$this->getBlocksData()
 		);
 
+		// Populate global state with all the data.
 		$esBlocks[$namespace] = [
 			'blocks' => $blocks,
 			'components' => $this->getComponentsManifest(),
 			'config' => [
 				'outputCssVariablesGlobally' => $settings['config']['outputCssVariablesGlobally'] ?? true,
+				'outputCssVariablesGloballyOptimize' => $settings['config']['outputCssVariablesGloballyOptimize'] ?? true,
 			],
 			'wrapper' => $this->getWrapper(),
 			'settings' => $settings,

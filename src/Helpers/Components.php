@@ -168,11 +168,8 @@ class Components
 
 		$path = explode(DIRECTORY_SEPARATOR, $path);
 
+		// Find last item to get name.
 		$item = $path[count($path) - 1] ?? '';
-
-		if (!$item) {
-			return [];
-		}
 
 		// Global settings.
 		if ($item === 'Blocks') {
@@ -185,10 +182,6 @@ class Components
 		}
 
 		$type = $path[count($path) - 2] ?? '';
-
-		if (!$type) {
-			return [];
-		}
 
 		// Components settings.
 		if ($type === 'components') {
@@ -441,7 +434,9 @@ class Components
 	{
 		$output = '';
 
+		// Find global settings flag.
 		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
+		$outputGloballyOptimizeFlag = self::getSettings('config', 'outputCssVariablesGloballyOptimize');
 
 		$namespace = $globalManifest['namespace'];
 
@@ -550,7 +545,7 @@ class Components
 						'value' => $value,
 					];
 				} else {
-					$output .= " .{$name}[data-id='{$unique}']{{$breakpointData}}";
+					$output .= "\n .{$name}[data-id='{$unique}']{\n{$breakpointData}\n}";
 				}
 			} else {
 				if ($outputGloballyFlag) {
@@ -560,7 +555,7 @@ class Components
 						'value' => $value,
 					];
 				} else {
-					$output .= " @media ({$type}-width:{$value}px){.{$name}[data-id='{$unique}']{{$breakpointData}}}";
+					$output .= "\n @media ({$type}-width:{$value}px){\n.{$name}[data-id='{$unique}']{\n{$breakpointData}\n}\n}";
 				}
 			}
 		}
@@ -595,10 +590,12 @@ class Components
 		}
 
 		// Prepare output for manual variables.
-		$finalManualOutput = $manual ? " .{$name}[data-id='{$unique}']{{$manual}}" : '';
+		$finalManualOutput = $manual ? "\n .{$name}[data-id='{$unique}']{\n{$manual}\n}" : '';
 
-		$output = str_replace(["\n", "\r"], '', $output);
-		$finalManualOutput = str_replace(["\n", "\r"], '', $finalManualOutput);
+		if ($outputGloballyOptimizeFlag) {
+			$output = str_replace(["\n", "\r"], '', $output);
+			$finalManualOutput = str_replace(["\n", "\r"], '', $finalManualOutput);
+		}
 
 		// Output the style for CSS variables.
 		return "<style>{$output} {$finalManualOutput}</style>";
@@ -614,6 +611,7 @@ class Components
 		$output = '';
 
 		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
+		$outputGloballyOptimizeFlag = self::getSettings('config', 'outputCssVariablesGloballyOptimize');
 
 		if (!$outputGloballyFlag) {
 			return '';
@@ -645,16 +643,18 @@ class Components
 				}
 
 				if ($type === '' && $value === 0) {
-					$outputItem .= "\n.{$name}[data-id='{$unique}']{{$variable}}";
+					$outputItem .= "\n .{$name}[data-id='{$unique}']{\n{$variable}\n}";
 				} else {
-					$outputItem .= "\n @media ({$type}-width:{$value}px){.{$name}[data-id='{$unique}']{{$variable}}}";
+					$outputItem .= "\n @media ({$type}-width:{$value}px){\n.{$name}[data-id='{$unique}']{\n{$variable}\n}\n}";
 				}
 			}
 
 			$output .= $outputItem;
 		}
 
-		$output = str_replace(["\n", "\r"], '', $output);
+		if ($outputGloballyOptimizeFlag) {
+			$output = str_replace(["\n", "\r"], '', $output);
+		}
 
 		return "<style id='esCssVariables'>{$output}</style>";
 	}
@@ -833,12 +833,14 @@ class Components
 	{
 		global $esBlocks;
 
+		// If namespace is not set try to determin namespace from path or local constant.
 		if (!$namespace) {
 			$namespace = self::getBlocksNamespace();
 		}
 
 		$details = $esBlocks[$namespace] ?? [];
 
+		// If type is block or component.
 		if ($type === 'block' || $type === 'component') {
 			$keyName = 'blockName';
 			$keyDetails = 'blocks';
@@ -866,6 +868,7 @@ class Components
 			return $items;
 		}
 
+		// If searching for one item.
 		if ($item) {
 			$items = $details[$type][$item] ?? [];
 
@@ -1251,7 +1254,7 @@ class Components
 	}
 
 	/**
-	 * Get blocks global settings namespace data from settings manifest.json file.
+	 * Get blocks global settings namespace data from settings manifest.json file or local constant.
 	 *
 	 * @throws InvalidBlock Throws error if global manifest settings key block-namespace is missing.
 	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
@@ -1283,7 +1286,7 @@ class Components
 
 	/**
 	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
-	 * Used in combination with getManifest helper
+	 * Used in combination with getManifest helper.
 	 *
 	 * @param string $path Absolute path to manifest folder.
 	 *
