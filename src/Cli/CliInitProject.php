@@ -10,10 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
+use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
+use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
+use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
+use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\Main\MainCli;
+use EightshiftLibs\Manifest\ManifestCli;
+use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
 
@@ -22,20 +30,22 @@ use EightshiftLibs\Setup\SetupCli;
  */
 class CliInitProject extends AbstractCli
 {
-	/**
-	 * CLI command name
-	 *
-	 * @var string
-	 */
 	public const COMMAND_NAME = 'setup_project';
 
 	/**
-	 * All classes for initial theme setup for project.
-	 * Append INIT_THEME_CLASSES in the final output.
+	 * All classes for initial theme setup for project
 	 *
 	 * @var class-string[]
 	 */
 	public const INIT_PROJECT_CLASSES = [
+		ConfigCli::class,
+		MainCli::class,
+		ManifestCli::class,
+		EnqueueAdminCli::class,
+		EnqueueBlocksCli::class,
+		EnqueueThemeCli::class,
+		MenuCli::class,
+		BlocksCli::class,
 		GitIgnoreCli::class,
 		SetupCli::class,
 		CiExcludeCli::class,
@@ -74,12 +84,19 @@ class CliInitProject extends AbstractCli
 			\WP_CLI::log('--------------------------------------------------');
 		}
 
-		$classes = array_merge(
-			CliInitTheme::INIT_THEME_CLASSES,
-			self::INIT_PROJECT_CLASSES
-		);
+		foreach (static::INIT_PROJECT_CLASSES as $item) {
+			$reflectionClass = new \ReflectionClass($item);
 
-		$this->getEvalLoop($classes, true, $assocArgs);
+			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+
+			if (method_exists($class, 'getCommandName')) {
+				if (function_exists('\add_action')) {
+					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
+				} else {
+					\WP_CLI::runcommand("eval-file bin" . DIRECTORY_SEPARATOR . "cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
+				}
+			}
+		}
 
 		\WP_CLI::log('--------------------------------------------------');
 

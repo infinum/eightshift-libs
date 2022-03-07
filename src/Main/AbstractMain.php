@@ -87,9 +87,8 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 */
 	public function buildDiContainer(): Container
 	{
-		if (empty($this->container)) {
-			$this->container = $this->getDiContainer($this->getServiceClassesPreparedArray());
-		}
+		$this->container = $this->getDiContainer($this->getServiceClassesPreparedArray());
+
 		return $this->container;
 	}
 
@@ -149,7 +148,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 			$output[$dependencies] = [];
 		}
 
-		return $output; // @phpstan-ignore-line
+		return $output;
 	}
 
 	/**

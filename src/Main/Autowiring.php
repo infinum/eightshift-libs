@@ -126,7 +126,7 @@ class Autowiring
 
 		$dependencyTree = [];
 		$reflClass = new \ReflectionClass($relevantClass);
-		// If this class has dependencies, we need to figure those out. Otherwise
+		// If this class has dependencies, we need to figure those out. Otherwise,
 		// we just add it to the dependency tree as a class without dependencies.
 		if (!empty($reflClass->getConstructor()) && !empty($reflClass->getConstructor()->getParameters())) {
 			// Go through each constructor parameter.
@@ -369,7 +369,7 @@ class Autowiring
 			}
 		}
 
-		return $classes; // @phpstan-ignore-line
+		return $classes;
 	}
 
 	/**

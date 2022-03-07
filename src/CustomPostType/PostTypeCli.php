@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\CustomPostType;
 
-use EightshiftBoilerplate\CustomPostType\PostTypeExample;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
@@ -35,13 +34,14 @@ class PostTypeCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'label' => $args[1] ?? 'Products',
+			'label' => $args[1] ?? 'Product',
 			'slug' => $args[2] ?? 'product',
 			'rewrite_url' => $args[3] ?? 'product',
 			'rest_endpoint_slug' => $args[4] ?? 'products',
 			'capability' => $args[5] ?? 'post',
 			'menu_position' => $args[6] ?? 40,
 			'menu_icon' => $args[7] ?? 'admin-settings',
+			'plural_label' => $args[8] ?? 'Products',
 		];
 	}
 
@@ -59,25 +59,25 @@ class PostTypeCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom post type to show in WP admin.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The custom post type slug. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rewrite_url',
 					'description' => 'The custom post type url. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom post type REST-API endpoint slug. Example: locations.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
@@ -97,6 +97,12 @@ class PostTypeCli extends AbstractCli
 					'description' => 'The default menu icon for the custom post types. Example: dashicons-analytics.',
 					'optional' => true,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'plural_label',
+					'description' => 'The plural label of the custom post type. Used for label generation. If not specified the plural will have appended s at the end of the label.', // phpcs:ignore Generic.Files.LineLength.TooLong
+					'optional' => true,
+				],
 			],
 		];
 	}
@@ -105,13 +111,14 @@ class PostTypeCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$label = $assocArgs['label'] ?? 'Example Name';
-		$slug = $this->prepareSlug($assocArgs['slug'] ?? PostTypeExample::POST_TYPE_SLUG);
-		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url'] ?? PostTypeExample::POST_TYPE_URL_SLUG);
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? PostTypeExample::REST_API_ENDPOINT_SLUG);
-		$capability = $assocArgs['capability'] ?? PostTypeExample::POST_CAPABILITY_TYPE;
-		$menuPosition = (string) ($assocArgs['menu_position'] ?? PostTypeExample::MENU_POSITION);
-		$menuIcon = $assocArgs['menu_icon'] ?? PostTypeExample::MENU_ICON;
+		$label = $assocArgs['label'];
+		$slug = $this->prepareSlug($assocArgs['slug']);
+		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url']);
+		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug']);
+		$capability = $assocArgs['capability'] ?? '';
+		$menuPosition = (string) ($assocArgs['menu_position'] ?? '');
+		$menuIcon = $assocArgs['menu_icon'] ?? '';
+		$pluralLabel = $assocArgs['plural_label'] ?? $label . 's';
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
@@ -126,7 +133,10 @@ class PostTypeCli extends AbstractCli
 			->searchReplaceString('example-slug', $slug)
 			->searchReplaceString('example-url-slug', $rewriteUrl)
 			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
-			->searchReplaceString('Example Name', $label);
+			->searchReplaceString('Singular Name', $label)
+			->searchReplaceString('singular name', strtolower($label))
+			->searchReplaceString('Plural Name', $pluralLabel)
+			->searchReplaceString('plural name', strtolower($pluralLabel));
 
 		if (!empty($capability)) {
 			$class->searchReplaceString("'post'", "'{$capability}'");

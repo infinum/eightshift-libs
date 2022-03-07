@@ -108,7 +108,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Get all blocks with full block name
 	 *
-	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
+	 * Used to limit what blocks are going to be used in your project using allowed_block_types_all filter.
 	 *
 	 * @hook allowed_block_types_all Available from WP 5.8.
 	 *
@@ -119,6 +119,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getAllBlocksList($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
 	{
+		// Allow forms to be used correctly.
+		if (
+			$blockEditorContext->post instanceof \WP_Post &&
+			$blockEditorContext->post->post_type === 'eightshift-forms'
+		) {
+			return true;
+		}
+
 		if (gettype($allowedBlockTypes) === 'boolean') {
 			return $allowedBlockTypes;
 		}
@@ -134,7 +142,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$allowedBlockTypes[] = 'core/block';
 		$allowedBlockTypes[] = 'core/template';
 
-		return $allowedBlockTypes; // @phpstan-ignore-line
+		return $allowedBlockTypes;
 	}
 
 	/**
@@ -166,7 +174,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$allowedBlockTypes[] = 'core/block';
 		$allowedBlockTypes[] = 'core/template';
 
-		return $allowedBlockTypes; // @phpstan-ignore-line
+		return $allowedBlockTypes;
 	}
 
 	/**
@@ -257,10 +265,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @hook block_categories_all Available from WP 5.8.
 	 *
-	 * @param array[] $categories Array of categories for block types.
+	 * @param array<int, array<string, string|null>> $categories Array of categories for block types.
 	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
 	 *
-	 * @return array[] Array of categories for block types.
+	 * @return array<int, array<string, string|null>> Array of categories for block types.
 	 */
 	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
 	{
@@ -283,10 +291,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
 	 *
-	 * @param array[] $categories Array of categories for block types.
+	 * @param array<int, array<string, string|null>> $categories Array of categories for block types.
 	 * @param \WP_Post $post Post being loaded.
 	 *
-	 * @return array[] Array of categories for block types.
+	 * @return array<int, array<string, string|null>> Array of categories for block types.
 	 */
 	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
 	{

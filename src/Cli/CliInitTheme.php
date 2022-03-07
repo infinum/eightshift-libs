@@ -77,7 +77,19 @@ class CliInitTheme extends AbstractCli
 			\WP_CLI::log('--------------------------------------------------');
 		}
 
-		$this->getEvalLoop(static::INIT_THEME_CLASSES, true, $assocArgs);
+		foreach (static::INIT_THEME_CLASSES as $item) {
+			$reflectionClass = new \ReflectionClass($item);
+
+			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+
+			if (method_exists($class, 'getCommandName')) {
+				if (function_exists('\add_action')) {
+					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
+				} else {
+					\WP_CLI::runcommand("eval-file bin" . DIRECTORY_SEPARATOR . "cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
+				}
+			}
+		}
 
 		\WP_CLI::log('--------------------------------------------------');
 

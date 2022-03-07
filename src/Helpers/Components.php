@@ -53,7 +53,7 @@ class Components
 	/**
 	 * Converts an array of classes into a string which can be echoed.
 	 *
-	 * @param array<int, array<string>|bool|string> $classes Array of classes.
+	 * @param array<string> $classes Array of classes.
 	 *
 	 * @return string
 	 */
@@ -546,7 +546,7 @@ class Components
 			$responsiveAttributesVariables = array_merge($responsiveAttributesVariables, $responsiveAttribute);
 		};
 
-		return $responsiveAttributesVariables; // @phpstan-ignore-line
+		return $responsiveAttributesVariables;
 	}
 
 	/**

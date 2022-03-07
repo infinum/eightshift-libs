@@ -68,7 +68,7 @@ afterEach(function () {
 test('Cli getDevelopClasses return correct class list', function () {
 	$developClasses = $this->cli->getDevelopClasses();
 
-	$numberOfDevClasses = 33;
+	$numberOfDevClasses = 34;
 
 	$this->assertIsArray($developClasses);
 	$this->assertTrue(count($developClasses) === $numberOfDevClasses, 'Total number of classes is correct');
@@ -86,7 +86,7 @@ test('Cli getDevelopClasses return correct class list', function () {
 test('Cli getPublicClasses return correct class list', function () {
 	$publicClasses = $this->cli->getPublicClasses();
 
-	$numberOfPublicClasses = 39;
+	$numberOfPublicClasses = 40;
 
 	$this->assertIsArray($publicClasses);
 	$this->assertTrue(count($publicClasses) === $numberOfPublicClasses, 'Total number of classes is correct');
