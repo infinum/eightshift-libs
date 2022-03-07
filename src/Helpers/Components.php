@@ -11,12 +11,20 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
+use EightshiftLibs\Exception\InvalidBlock;
 
 /**
  * Helpers for components
  */
 class Components
 {
+	/**
+	 * Blocks namespace constant
+	 *
+	 * @var string
+	 */
+	public static $namespace = '';
+
 	/**
 	 * Makes sure the output is string. Useful for converting an array of components into a string.
 	 * If you pass an associative array it will output strings with keys, used for generating data-attributes from array.
@@ -81,6 +89,8 @@ class Components
 	 */
 	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false): string
 	{
+		$separator = DIRECTORY_SEPARATOR;
+
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
 		}
@@ -98,16 +108,16 @@ class Components
 		 * parentClass__componentName.php
 		 */
 		if (strpos($component, '.php') !== false) {
-			$componentPath = "{$parentPath}/$component";
+			$componentPath = "{$parentPath}{$separator}$component";
 
 			if ($useComponentDefaults) {
 				$manifest = self::getManifest($parentPath);
 			}
 		} else {
-			$componentPath = "{$parentPath}/src/Blocks/components/{$component}/{$component}.php";
+			$componentPath = "{$parentPath}{$separator}src{$separator}Blocks{$separator}components{$separator}{$component}{$separator}{$component}.php";
 
 			if ($useComponentDefaults) {
-				$manifest = self::getManifest("{$parentPath}/src/Blocks/components/{$component}");
+				$manifest = self::getManifest("{$parentPath}{$separator}src{$separator}Blocks{$separator}components{$separator}{$component}");
 			}
 		}
 
@@ -148,14 +158,41 @@ class Components
 	 */
 	public static function getManifest(string $path): array
 	{
+		$path = explode(DIRECTORY_SEPARATOR, $path);
 
-		$manifest = "{$path}/manifest.json";
+		$item = $path[count($path) - 1] ?? '';
 
-		if (!file_exists($manifest)) {
-			throw ComponentException::throwUnableToLocateComponent($manifest);
+		if (!$item) {
+			return [];
 		}
 
-		return json_decode(implode(' ', (array)file($manifest)), true);
+		// Global settings.
+		if ($item === 'Blocks') {
+			return self::getSettings('settings');
+		}
+
+		// Wrapper details.
+		if ($item === 'wrapper') {
+			return self::getSettings('wrapper');
+		}
+
+		$type = $path[count($path) - 2] ?? '';
+
+		if (!$type) {
+			return [];
+		}
+
+		// Components settings.
+		if ($type === 'components') {
+			return self::getSettings('component', $item);
+		}
+
+		// Blocks settings.
+		if ($type === 'custom') {
+			return self::getSettings('block', $item);
+		}
+
+		return [];
 	}
 
 	/**
@@ -378,12 +415,7 @@ class Components
 		}
 
 		return $output ? "
-			<style>
-				:root {
-					{$output}
-				}
-			</style>
-		" : '';
+			<style>:root {{$output}}</style>" : '';
 	}
 
 	/**
@@ -400,6 +432,10 @@ class Components
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest, string $customSelector = ''): string
 	{
 		$output = '';
+
+		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
+
+		$namespace = $globalManifest['namespace'];
 
 		// Bailout if global breakpoints are missing.
 		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
@@ -475,6 +511,13 @@ class Components
 			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
 		}
 
+		// Prepare output style object.
+		$styles = [
+			'name' => $name,
+			'unique' => $unique,
+			'variables' => [],
+		];
+
 		// Loop data and provide correct selectors from data array.
 		foreach ($data as $values) {
 			// Define variables from values.
@@ -492,18 +535,41 @@ class Components
 
 			// If breakpoint value is 0 then don't wrap the media query around it.
 			if ($value === 0) {
-				$output .= ".{$name}[data-id='{$unique}'] {
-						{$breakpointData}
-					}
-				";
+				if ($outputGloballyFlag) {
+					$styles['variables'][] = [
+						'type' => '',
+						'variable' => $breakpointData,
+						'value' => $value,
+					];
+				} else {
+					$output .= " .{$name}[data-id='{$unique}']{{$breakpointData}}";
+				}
 			} else {
-				$output .= "@media ({$type}-width: {$value}px) {
-						.{$name}[data-id='{$unique}'] {
-							{$breakpointData}
-						}
-					}
-				";
+				if ($outputGloballyFlag) {
+					$styles['variables'][] = [
+						'type' => $type,
+						'variable' => $breakpointData,
+						'value' => $value,
+					];
+				} else {
+					$output .= " @media ({$type}-width:{$value}px){.{$name}[data-id='{$unique}']{{$breakpointData}}}";
+				}
 			}
+		}
+
+		// Output to global if flag is set.
+		if ($outputGloballyFlag) {
+			$styles['variables'][] = [
+				'type' => '',
+				'variable' => isset($manifest['variablesCustom']) ?? '',
+				'value' => 0,
+			];
+
+			global $esBlocks;
+
+			$esBlocks[$namespace]['styles'][] = $styles;
+
+			return '';
 		}
 
 		// Output manual output from the array of variables.
@@ -521,12 +587,68 @@ class Components
 		}
 
 		// Prepare output for manual variables.
-		$finalManualOutput = $manual ? ".{$name}[data-id='{$unique}'] {
-			{$manual}
-		}" : '';
+		$finalManualOutput = $manual ? " .{$name}[data-id='{$unique}']{{$manual}}" : '';
+
+		$output = str_replace(["\n", "\r"], '', $output);
+		$finalManualOutput = str_replace(["\n", "\r"], '', $finalManualOutput);
 
 		// Output the style for CSS variables.
 		return "<style>{$output} {$finalManualOutput}</style>";
+	}
+
+	/**
+	 * Output css variables as a one inline style tag.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariablesCombined(): string
+	{
+		$output = '';
+
+		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
+
+		if (!$outputGloballyFlag) {
+			return '';
+		}
+
+		$styles = self::getSettings('styles');
+
+		if (!$styles) {
+			return '';
+		}
+
+		foreach ($styles as $style) {
+			$outputItem = '';
+			$name = $style['name'] ?? '';
+			$unique = $style['unique'] ?? '';
+			$variables = $style['variables'] ?? [];
+
+			if (!$variables) {
+				continue;
+			}
+
+			foreach ($variables as $data) {
+				$type = $data['type'] ?? '';
+				$value = $data['value'] ?? '';
+				$variable = $data['variable'] ?? '';
+
+				if (!$variable) {
+					continue;
+				}
+
+				if ($type === '' && $value === 0) {
+					$outputItem .= "\n.{$name}[data-id='{$unique}']{{$variable}}";
+				} else {
+					$outputItem .= "\n @media ({$type}-width:{$value}px){.{$name}[data-id='{$unique}']{{$variable}}}";
+				}
+			}
+
+			$output .= $outputItem;
+		}
+
+		$output = str_replace(["\n", "\r"], '', $output);
+
+		return "<style id='esCssVariables'>{$output}</style>";
 	}
 
 	/**
@@ -605,6 +727,7 @@ class Components
 			'blockFullName',
 			'blockClass',
 			'blockJsClass',
+			'blockStyles',
 			'componentJsClass',
 			'selectorClass',
 			'additionalClass',
@@ -688,6 +811,81 @@ class Components
 	}
 
 	/**
+	 * Return project blocks details based on the provided key.
+	 *
+	 * @param string $type Type to get.
+	 * @param string $item Array key to get.
+	 * @param string $namespace Namespace of blocks.
+	 *
+	 * @throws InvalidBlock If settings key is missing.
+	 *
+	 * @return mixed
+	 */
+	public static function getSettings(string $type, string $item = '', $namespace = '')
+	{
+		global $esBlocks;
+
+		if (!$namespace) {
+			$namespace = self::getBlocksNamespace();
+		}
+
+		$details = $esBlocks[$namespace];
+
+		if ($type === 'block' || $type === 'component') {
+			$keyName = 'blockName';
+			$keyDetails = 'blocks';
+
+			if ($type === 'component') {
+				$keyName = 'componentName';
+				$keyDetails = 'components';
+			}
+
+			$items = array_filter(
+				$details[$keyDetails],
+				static function ($manifest) use ($item, $keyName) {
+					return $manifest[$keyName] === $item;
+				}
+			);
+
+			if ($items) {
+				$items = reset($items);
+			}
+
+			if (!$items) {
+				return [];
+			}
+
+			return $items;
+		}
+
+		if ($item) {
+			$items = $details[$type][$item] ?? [];
+
+			if (!isset($details[$type][$item])) {
+				throw InvalidBlock::missingSettingsKeyException($type, $item);
+			}
+
+			if (!$items) {
+				return [];
+			}
+
+			return $details[$type][$item];
+		}
+
+		if (!isset($details[$type])) {
+			throw InvalidBlock::missingSettingsKeyException($type);
+		}
+
+		$items = $details[$type] ?? [];
+
+		if (!$items) {
+			return [];
+		}
+
+		return $details[$type];
+	}
+
+	/**
 	 * Merges attributes array with the manifest default attributes.
 	 *
 	 * @param array<string, mixed> $manifest Block/Component manifest data.
@@ -713,89 +911,6 @@ class Components
 		}
 
 		return array_merge($defaultAttributes, $attributes);
-	}
-
-	/**
-	 * Create initial array of data to be able to populate later.
-	 *
-	 * @param array<string, mixed> $globalBreakpoints Global breakpoints from global manifest to set the correct output.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private static function prepareVariableData(array $globalBreakpoints): array
-	{
-
-		// Define the min and max arrays.
-		$min = [];
-		$max = [];
-
-		// Loop the global breakpoints and populate the data.
-		foreach ($globalBreakpoints as $itemKey => $itemValue) {
-			// Initial inner object.
-			$itemObject = [
-				'name' => $itemKey,
-				'value' => $itemValue,
-				'variable' => [],
-			];
-
-			// Inner object for min values.
-			$itemObjectMin = array_merge(
-				$itemObject,
-				[
-					'type' => 'min',
-					'value' => $minBreakpointValue ?? 0,
-				]
-			);
-
-			// Inner object for max values.
-			$itemObjectMax = array_merge(
-				$itemObject,
-				[
-					'type' => 'max',
-				]
-			);
-
-			// Transfer value to bigger breakpoint.
-			$minBreakpointValue = $itemValue;
-
-			// Push both min and max to the defined arrays.
-			$min[] = $itemObjectMin;
-			$max[] = $itemObjectMax;
-		};
-
-		// Pop largest breakpoint out of min array.
-		array_shift($min);
-
-		// Add default object to the top of the array as minimum.
-		array_unshift(
-			$min,
-			[
-				'type' => 'min',
-				'name' => 'default',
-				'value' => 0,
-				'variable' => [],
-			]
-		);
-
-		// Reverse order of max array.
-		$max = array_reverse($max);
-
-		// Throw out the largest.
-		array_shift($max);
-
-		// Switch the largest to default.
-		array_unshift(
-			$max,
-			[
-				'type' => 'max',
-				'name' => 'default',
-				'value' => 0,
-				'variable' => [],
-			]
-		);
-
-		// Merge both arrays.
-		return array_merge($min, $max);
 	}
 
 	/**
@@ -828,40 +943,6 @@ class Components
 					$output .= "--global-{$itemKey}-{$key}: {$value};\n";
 					break;
 			}
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Internal helper to loop CSS Variables from array.
-	 *
-	 * @param array<string, mixed> $variables Array of variables of CSS variables.
-	 * @param mixed $attributeValue Original attribute value used in magic variable.
-	 *
-	 * @return array<int, mixed>|string[]
-	 */
-	private static function variablesInner(array $variables, $attributeValue): array
-	{
-		$output = [];
-
-		// Bailout if provided list is not an object.
-		if (self::arrayIsList($variables)) {
-			return $output;
-		}
-
-		// Iterate each attribute and make corrections.
-		foreach ($variables as $variableKey => $variableValue) {
-			// Convert to correct case.
-			$internalKey = self::camelToKebabCase($variableKey);
-
-			// If value contains magic variable swap that variable with original attribute value.
-			if (strpos($variableValue, '%value%') !== false) {
-				$variableValue = str_replace('%value%', (string) $attributeValue, $variableValue);
-			}
-
-			// Output the custom CSS variable by adding the attribute key + custom object key.
-			$output[] = "--{$internalKey}: ${variableValue};";
 		}
 
 		return $output;
@@ -1042,5 +1123,153 @@ class Components
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Create initial array of data to be able to populate later.
+	 *
+	 * @param array<string, mixed> $globalBreakpoints Global breakpoints from global manifest to set the correct output.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function prepareVariableData(array $globalBreakpoints): array
+	{
+
+		// Define the min and max arrays.
+		$min = [];
+		$max = [];
+
+		// Loop the global breakpoints and populate the data.
+		foreach ($globalBreakpoints as $itemKey => $itemValue) {
+			// Initial inner object.
+			$itemObject = [
+				'name' => $itemKey,
+				'value' => $itemValue,
+				'variable' => [],
+			];
+
+			// Inner object for min values.
+			$itemObjectMin = array_merge(
+				$itemObject,
+				[
+					'type' => 'min',
+					'value' => $minBreakpointValue ?? 0,
+				]
+			);
+
+			// Inner object for max values.
+			$itemObjectMax = array_merge(
+				$itemObject,
+				[
+					'type' => 'max',
+				]
+			);
+
+			// Transfer value to bigger breakpoint.
+			$minBreakpointValue = $itemValue;
+
+			// Push both min and max to the defined arrays.
+			$min[] = $itemObjectMin;
+			$max[] = $itemObjectMax;
+		};
+
+		// Pop largest breakpoint out of min array.
+		array_shift($min);
+
+		// Add default object to the top of the array as minimum.
+		array_unshift(
+			$min,
+			[
+				'type' => 'min',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			]
+		);
+
+		// Reverse order of max array.
+		$max = array_reverse($max);
+
+		// Throw out the largest.
+		array_shift($max);
+
+		// Switch the largest to default.
+		array_unshift(
+			$max,
+			[
+				'type' => 'max',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			]
+		);
+
+		// Merge both arrays.
+		return array_merge($min, $max);
+	}
+
+	/**
+	 * Internal helper to loop CSS Variables from array.
+	 *
+	 * @param array<string, mixed> $variables Array of variables of CSS variables.
+	 * @param mixed $attributeValue Original attribute value used in magic variable.
+	 *
+	 * @return array<int, mixed>|string[]
+	 */
+	private static function variablesInner(array $variables, $attributeValue): array
+	{
+		$output = [];
+
+		// Bailout if provided list is not an object.
+		if (self::arrayIsList($variables)) {
+			return $output;
+		}
+
+		// Iterate each attribute and make corrections.
+		foreach ($variables as $variableKey => $variableValue) {
+			// Convert to correct case.
+			$internalKey = self::camelToKebabCase($variableKey);
+
+			// If value contains magic variable swap that variable with original attribute value.
+			if (strpos($variableValue, '%value%') !== false) {
+				$variableValue = str_replace('%value%', (string) $attributeValue, $variableValue);
+			}
+
+			// Output the custom CSS variable by adding the attribute key + custom object key.
+			$output[] = "--{$internalKey}: ${variableValue};";
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get blocks global settings namespace data from settings manifest.json file.
+	 *
+	 * @throws InvalidBlock Throws error if global manifest settings key block-namespace is missing.
+	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
+	 *
+	 * @return string
+	 */
+	private static function getBlocksNamespace(): string
+	{
+		if (self::$namespace) {
+			return self::$namespace;
+		}
+
+		$separator = DIRECTORY_SEPARATOR;
+		$manifestPath = dirname(__DIR__, 5) . "{$separator}src{$separator}Blocks{$separator}manifest.json";
+
+		if (!file_exists($manifestPath)) {
+			throw InvalidBlock::missingSettingsManifestException($manifestPath);
+		}
+
+		$settings = implode(' ', (array)file(($manifestPath)));
+		$settings = json_decode($settings, true);
+
+		if (!isset($settings['namespace'])) {
+			throw InvalidBlock::missingNamespaceException();
+		}
+
+		return $settings['namespace'];
 	}
 }

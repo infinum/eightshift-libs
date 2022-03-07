@@ -203,7 +203,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
-	 * Throws error if global manifest settings key namespace MarkoVendor\is missing.
+	 * Throws error if global manifest settings key is missing.
 	 *
 	 * @param string $name Block/component name.
 	 * @param string $componentName Component name to check.
@@ -219,6 +219,50 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 				Please check if you project has %2$s component.', 'eightshift-libs'),
 				$name,
 				$componentName
+			)
+		);
+	}
+
+	/**
+	 * Throws error if key is not found in the block settings array.
+	 *
+	 * @param string $key Key to find.
+	 * @param string $item Array item to find.
+	 *
+	 * @return static
+	 */
+	public static function missingSettingsKeyException(string $key, string $item = ''): InvalidBlock
+	{
+
+		if ($key === 'block' || $key === 'component') {
+			return new InvalidBlock(
+				sprintf(
+					/* translators: %1$s is going to be replaced with the key name. */
+					\esc_html__('Block/component %1$s not found in the blocks settings or the output data is empty.
+					Please check if the provided key and parent is correct.', 'eightshift-libs'),
+					$item
+				)
+			);
+		}
+
+		if ($item) {
+			return new InvalidBlock(
+				sprintf(
+					/* translators: %1$s is going to be replaced with the key name. */
+					\esc_html__('Key %1$s not found in the %2$s array blocks settings or the output data is empty.
+					Please check if the provided key and parent is correct.', 'eightshift-libs'),
+					$item,
+					$key
+				)
+			);
+		}
+
+		return new InvalidBlock(
+			sprintf(
+				/* translators: %1$s is going to be replaced with the key name. */
+				\esc_html__('Key %1$s not found in the blocks settings or the output data is empty.
+				Please check if the provided key is correct.', 'eightshift-libs'),
+				$key,
 			)
 		);
 	}
