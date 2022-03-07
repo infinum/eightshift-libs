@@ -151,13 +151,21 @@ class Components
 	 * Get manifest json. Generally used for getting block/components manifest.
 	 *
 	 * @param string $path Absolute path to manifest folder.
+	 * @param bool $useGlobal Use global blocks settings.
 	 *
 	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getManifest(string $path): array
+	public static function getManifest(string $path, $useGlobal = true): array
 	{
+		// Get manifest by directly getting the file.
+		if ($useGlobal) {
+			return self::getManifestDirect($path);
+		}
+
+		$path = rtrim($path, '/');
+
 		$path = explode(DIRECTORY_SEPARATOR, $path);
 
 		$item = $path[count($path) - 1] ?? '';
@@ -1271,5 +1279,29 @@ class Components
 		}
 
 		return $settings['namespace'];
+	}
+
+	/**
+	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
+	 * Used in combination with getManifest helper
+	 *
+	 * @param string $path Absolute path to manifest folder.
+	 *
+	 * @throws ComponentException When we're unable to find the component by $component.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function getManifestDirect(string $path): array
+	{
+		$path = rtrim($path, '/');
+
+		$separator = DIRECTORY_SEPARATOR;
+		$manifest = "{$path}{$separator}manifest.json";
+
+		if (!file_exists($manifest)) {
+			throw ComponentException::throwUnableToLocateComponent($manifest);
+		}
+
+		return json_decode(implode(' ', (array)file($manifest)), true);
 	}
 }
