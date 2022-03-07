@@ -19,7 +19,7 @@ use EightshiftLibs\Exception\InvalidBlock;
 class Components
 {
 	/**
-	 * Blocks namespace constant
+	 * Blocks-namespace constant.
 	 *
 	 * @var string
 	 */
@@ -547,7 +547,7 @@ class Components
 			if ($value === 0) {
 				if ($outputGloballyFlag) {
 					$styles['variables'][] = [
-						'type' => '',
+						'type' => $type,
 						'variable' => $breakpointData,
 						'value' => $value,
 					];
@@ -572,11 +572,13 @@ class Components
 
 		// Output to global if flag is set.
 		if ($outputGloballyFlag) {
-			$styles['variables'][] = [
-				'type' => '',
-				'variable' => $manual,
-				'value' => 0,
-			];
+			if ($manual) {
+				$styles['variables'][] = [
+					'type' => 'min',
+					'variable' => $manual,
+					'value' => 0,
+				];
+			}
 
 			global $esBlocks;
 
@@ -615,27 +617,63 @@ class Components
 	 */
 	public static function outputCssVariablesCombined(): string
 	{
-		$output = '';
-
 		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
+
 		$outputGloballyOptimizeFlag = self::getSettings('config', 'outputCssVariablesGloballyOptimize');
 
+		// Bailout if not using this feature.
 		if (!$outputGloballyFlag) {
 			return '';
 		}
 
 		$styles = self::getSettings('styles');
 
+		// Bailout if styles are missing.
 		if (!$styles) {
 			return '';
 		}
 
+		// Define variables from globalManifest.
+		$breakpointsData = self::getSettings('settings', 'globalVariables')['breakpoints'];
+
+		// Sort breakpoints in ascending order.
+		asort($breakpointsData);
+
+		// Populate min values.
+		$breakpointsMin = array_map(
+			static function ($item) {
+				return "min---{$item}";
+			},
+			array_values($breakpointsData)
+		);
+		// Append 0 value.
+		array_unshift($breakpointsMin, 'min---0');
+
+		// Populate max values.
+		$breakpointsMax = array_map(
+			static function ($item) {
+				return "max---{$item}";
+			},
+			array_reverse(array_values($breakpointsData))
+		);
+		// Append 0 value.
+		array_unshift($breakpointsMax, 'max---0');
+
+		// Return empty array of items.
+		$breakpoints = array_map(
+			static function () {
+				return '';
+			},
+			array_flip(array_values(array_merge($breakpointsMin, $breakpointsMax)))
+		);
+
+		// Loop styles.
 		foreach ($styles as $style) {
-			$outputItem = '';
 			$name = $style['name'] ?? '';
 			$unique = $style['unique'] ?? '';
 			$variables = $style['variables'] ?? [];
 
+			// Bailout if variables are missing.
 			if (!$variables) {
 				continue;
 			}
@@ -645,20 +683,45 @@ class Components
 				$value = $data['value'] ?? '';
 				$variable = $data['variable'] ?? '';
 
+				// Bailout if variable is missing.
 				if (!$variable) {
 					continue;
 				}
 
-				if ($type === '' && $value === 0) {
-					$outputItem .= "\n .{$name}[data-id='{$unique}']{\n{$variable}\n}";
-				} else {
-					$outputItem .= "\n @media ({$type}-width:{$value}px){\n.{$name}[data-id='{$unique}']{\n{$variable}\n}\n}";
+				// Bailout if breakpont is missing.
+				if (!isset($breakpoints["{$type}---{$value}"])) {
+					continue;
 				}
-			}
 
-			$output .= $outputItem;
+				// Populate breakpoint.
+				$breakpoints["{$type}---{$value}"] .= "\n.{$name}[data-id='{$unique}']{\n{$variable}\n} ";
+			}
 		}
 
+		// Prepare final output.
+		$output = '';
+
+		// Loop breakpoints in correct order.
+		foreach ($breakpoints as $breakpointKey => $breakpointValue) {
+			$breakpointKey = explode('---', $breakpointKey);
+
+			$type = $breakpointKey[0] ?? '';
+			$value = $breakpointKey[1] ?? '';
+
+			// Bailout if empty value.
+			if (!$breakpointValue) {
+				continue;
+			}
+
+			// If value is 0 then this breakpoint has no media query.
+			if ($value === '0') {
+				$output .= "{$breakpointValue}\n";
+			} else {
+				$output .= "\n@media ({$type}-width:{$value}px){{$breakpointValue}}\n ";
+			}
+		}
+
+		// Remove newlines is config is set.
 		if ($outputGloballyOptimizeFlag) {
 			$output = str_replace(["\n", "\r"], '', $output);
 		}
@@ -840,7 +903,7 @@ class Components
 	{
 		global $esBlocks;
 
-		// If namespace is not set try to determin namespace from path or local constant.
+		// If block-namespace is not set try to determin block-namespace from path or local constant.
 		if (!$namespace) {
 			$namespace = self::getBlocksNamespace();
 		}
@@ -1249,7 +1312,7 @@ class Components
 	}
 
 	/**
-	 * Get blocks global settings namespace data from settings manifest.json file or local constant.
+	 * Get blocks global settings block-namespace data from settings manifest.json file or local constant.
 	 *
 	 * @throws InvalidBlock Throws error if global manifest settings key block-namespace is missing.
 	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
