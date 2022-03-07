@@ -557,11 +557,14 @@ class Components
 			}
 		}
 
+		// Output manual output from the array of variables.
+		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
+
 		// Output to global if flag is set.
 		if ($outputGloballyFlag) {
 			$styles['variables'][] = [
 				'type' => '',
-				'variable' => isset($manifest['variablesCustom']) ?? '',
+				'variable' => $manual,
 				'value' => 0,
 			];
 
@@ -571,9 +574,6 @@ class Components
 
 			return '';
 		}
-
-		// Output manual output from the array of variables.
-		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
 
 		// Prepare final output for testing.
 		$fullOutput = "
@@ -829,7 +829,7 @@ class Components
 			$namespace = self::getBlocksNamespace();
 		}
 
-		$details = $esBlocks[$namespace];
+		$details = $esBlocks[$namespace] ?? [];
 
 		if ($type === 'block' || $type === 'component') {
 			$keyName = 'blockName';
