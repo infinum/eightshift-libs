@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use FilesystemIterator;
 
 /**
  * Abstract class used for Blocks and Components
@@ -115,10 +116,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 	private function moveBlock(string $destinationPath, string $sourcePath, string $name, array $assocArgs, string $path, string $typeSingular): void
 	{
 		// Create folder in project if missing.
-		system("mkdir -p {$destinationPath}/");
+		mkdir("{$destinationPath}/");
 
 		// Move block/component to project folder.
-		system("cp -R {$sourcePath}/. {$destinationPath}/");
+		$this->copyRecursively($sourcePath, "{$destinationPath}/");
 
 		$typeSingular = ucfirst($typeSingular);
 
