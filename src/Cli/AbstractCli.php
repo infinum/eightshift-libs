@@ -10,6 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 /**
  * Class AbstractCli
  */
@@ -911,5 +915,31 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Recursive copy helper
+	 *
+	 * @link https://stackoverflow.com/a/7775949/629127
+	 *
+	 * @param string $source Source path.
+	 * @param string $destination Destination path.
+	 *
+	 * @return void
+	 */
+	protected function copyRecursively(string $source, string $destination): void
+	{
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
+			RecursiveIteratorIterator::SELF_FIRST
+		);
+
+		foreach ($iterator as $item) {
+			if ($item->isDir()) {
+				mkdir($destination . DIRECTORY_SEPARATOR . $iterator->getSubPathname());
+			} else {
+				copy($item->getPathname(), $destination . DIRECTORY_SEPARATOR . $iterator->getSubPathname());
+			}
+		}
 	}
 }
