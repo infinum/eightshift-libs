@@ -29,7 +29,7 @@ abstract class AbstractAcfMeta implements ServiceInterface
 			return;
 		}
 
-		if (!is_admin()) {
+		if (!\is_admin()) {
 			return;
 		}
 
