@@ -84,9 +84,9 @@ test('Variation CLI command will fail if Variation doesn\'t exist', function () 
 
 	$mock = $variationMock->getMock();
 
-	$mock([], ['name' => 'ivan']);
+	$mock([], ['name' => 'testing']);
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/ivan/ivan.php';
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/testing/testing.php';
 
 	$this->assertFileDoesNotExist($outputPath);
 });

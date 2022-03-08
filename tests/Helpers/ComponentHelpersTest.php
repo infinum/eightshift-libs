@@ -524,6 +524,8 @@ test('Asserts that outputCssVariables returns the correct CSS variables output f
 		'variableValue' => 'value3',
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -532,11 +534,9 @@ test('Asserts that outputCssVariables returns the correct CSS variables output f
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-value-default: default;', $output);
-	$this->assertStringContainsString('@media (max-width: 991px)', $output);
-	$this->assertStringContainsString('--variable-value-tablet: tablet;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns empty for empty variables.', function () {
@@ -601,7 +601,7 @@ test('Asserts that outputCssVariables returns empty if none of attributes have v
 
 	$output = Components::outputCssVariables(
 		[
-			"variablesWithoutVariable" => "ivan",
+			"variablesWithoutVariable" => "testing",
 		],
 		$manifest,
 		'uniqueString',
@@ -619,7 +619,7 @@ test('Asserts that outputCssVariables returns empty if attributes variables opti
 
 	$output = Components::outputCssVariables(
 		[
-			"variableValueNotSetValue" => "ivan",
+			"variableValueNotSetValue" => "testing",
 		],
 		$manifest,
 		'uniqueString',
@@ -685,6 +685,8 @@ test('Asserts that outputCssVariables returns empty if variables array is not ar
 test('Asserts that outputCssVariables returns empty globalManifest is not set.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		[
 			"variableDefault" => "aaa",
@@ -695,8 +697,9 @@ test('Asserts that outputCssVariables returns empty globalManifest is not set.',
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns variable for attributes which expect booleans.', function () {
@@ -707,6 +710,8 @@ test('Asserts that outputCssVariables returns variable for attributes which expe
 		'variableBool' => true,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -715,8 +720,9 @@ test('Asserts that outputCssVariables returns variable for attributes which expe
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-created-by-boolean: value-when-true;', $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 
 	$attributes = [
 		'variableBool' => false,
@@ -730,8 +736,9 @@ test('Asserts that outputCssVariables returns variable for attributes which expe
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-created-by-boolean: value-when-false;', $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that manifest has responsive attributes defined but without variables definition', function () {
@@ -779,6 +786,8 @@ test('Asserts that manifest has responsive attributes defined but without respon
 		'variableValueMobile' => 'value1',
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -787,9 +796,9 @@ test('Asserts that manifest has responsive attributes defined but without respon
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
-	$this->assertStringNotContainsString('variable-value-default-responsive: value1-responsive', $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 
 	$value = '2';
 
@@ -805,9 +814,9 @@ test('Asserts that manifest has responsive attributes defined but without respon
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString("variable-default-normal: default-desktop-{$value}", $output);
-	$this->assertStringNotContainsString("variable-default-responsive: default-responsive-{$value}", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that only responsive variables are defined', function () {
@@ -823,6 +832,8 @@ test('Asserts that only responsive variables are defined', function () {
 		'variableValueMobile' => 'value1',
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -831,9 +842,9 @@ test('Asserts that only responsive variables are defined', function () {
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
-	$this->assertStringNotContainsString('variable-value-default: value1-mobile', $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 
 	$value = '2';
 
@@ -849,11 +860,9 @@ test('Asserts that only responsive variables are defined', function () {
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString("variable-default-responsive: default-responsive-{$value}", $output);
-	$this->assertStringContainsString('@media (min-width: 991px)', $output);
-	$this->assertStringContainsString("variable-default: default-responsive-{$value}", $output);
-	$this->assertStringNotContainsString("variable-default-normal: default-desktop-{$value}", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that responsive variables and default variables are defined', function () {
@@ -865,6 +874,8 @@ test('Asserts that responsive variables and default variables are defined', func
 		'variableValueDesktop' => 'value2',
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -873,12 +884,9 @@ test('Asserts that responsive variables and default variables are defined', func
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
-	$this->assertStringContainsString('variable-value-default-responsive: value2-responsive', $output);
-	$this->assertStringContainsString('@media (min-width: 991px)', $output);
-	$this->assertStringContainsString('variable-value-default: value2-desktop', $output);
-	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 
 	$value = '2';
 
@@ -894,12 +902,9 @@ test('Asserts that responsive variables and default variables are defined', func
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-default:', $output);
-	$this->assertStringContainsString("variable-default: default-mobile-{$value}", $output);
-	$this->assertStringContainsString("variable-default: default-responsive-{$value}", $output);
-	$this->assertStringContainsString("variable-default-responsive: default-responsive-{$value}", $output);
-	$this->assertStringContainsString("variable-default-normal: default-mobile-{$value}", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that manifest has responsive variables defined but without appearance of responsiveAttributes', function () {
@@ -911,6 +916,8 @@ test('Asserts that manifest has responsive variables defined but without appeara
 		'variableValueMobile' => 'value1',
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -919,9 +926,9 @@ test('Asserts that manifest has responsive variables defined but without appeara
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
-	$this->assertStringNotContainsString('variable-value-default-responsive: value1-responsive', $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 
 	$value = '2';
 
@@ -929,6 +936,7 @@ test('Asserts that manifest has responsive variables defined but without appeara
 		'variableDefaultDesktop' => $value,
 	];
 
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -937,9 +945,9 @@ test('Asserts that manifest has responsive variables defined but without appeara
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString("variable-default-normal: default-desktop-{$value}", $output);
-	$this->assertStringNotContainsString("variable-default-responsive: default-responsive-{$value}", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for an integer with a value of 0.', function () {
@@ -950,6 +958,8 @@ test('Asserts that outputCssVariables returns the correct output for an integer 
 		'variableInteger' => 0,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -958,9 +968,9 @@ test('Asserts that outputCssVariables returns the correct output for an integer 
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-integer: 0;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for an integer with a regular non-zero value.', function () {
@@ -971,6 +981,8 @@ test('Asserts that outputCssVariables returns the correct output for an integer 
 		'variableInteger' => 3,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -979,9 +991,9 @@ test('Asserts that outputCssVariables returns the correct output for an integer 
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-integer: 3;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for an integer with a null value.', function () {
@@ -992,6 +1004,8 @@ test('Asserts that outputCssVariables returns the correct output for an integer 
 		'variableInteger' => null,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1000,9 +1014,9 @@ test('Asserts that outputCssVariables returns the correct output for an integer 
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-integer', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a string with a zero value.', function () {
@@ -1013,6 +1027,8 @@ test('Asserts that outputCssVariables returns the correct output for a string wi
 		'variableString' => '0',
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1021,9 +1037,9 @@ test('Asserts that outputCssVariables returns the correct output for a string wi
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-string: 0;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a string with a regular text value.', function () {
@@ -1034,6 +1050,8 @@ test('Asserts that outputCssVariables returns the correct output for a string wi
 		'variableString' => 'demo',
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1042,9 +1060,9 @@ test('Asserts that outputCssVariables returns the correct output for a string wi
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-string: demo;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for an empty string.', function () {
@@ -1055,6 +1073,8 @@ test('Asserts that outputCssVariables returns the correct output for an empty st
 		'variableString' => '',
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1063,9 +1083,9 @@ test('Asserts that outputCssVariables returns the correct output for an empty st
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-string', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a string with a null value.', function () {
@@ -1076,6 +1096,8 @@ test('Asserts that outputCssVariables returns the correct output for a string wi
 		'variableString' => null,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1084,9 +1106,9 @@ test('Asserts that outputCssVariables returns the correct output for a string wi
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-string', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a boolean with a correct value.', function () {
@@ -1097,6 +1119,8 @@ test('Asserts that outputCssVariables returns the correct output for a boolean w
 		'variableBoolean' => false,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1105,9 +1129,9 @@ test('Asserts that outputCssVariables returns the correct output for a boolean w
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-boolean: false;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a boolean with a null value.', function () {
@@ -1118,6 +1142,8 @@ test('Asserts that outputCssVariables returns the correct output for a boolean w
 		'variableBoolean' => null,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1126,9 +1152,9 @@ test('Asserts that outputCssVariables returns the correct output for a boolean w
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-boolean', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a number with a correct integer value.', function () {
@@ -1139,6 +1165,8 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 		'variableNumber' => 3,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1147,9 +1175,9 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-number: 3;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a number with a correct decimal value.', function () {
@@ -1160,6 +1188,8 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 		'variableNumber' => 3.4,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1168,9 +1198,9 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-number: 3.4;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a number with a zero integer value.', function () {
@@ -1181,6 +1211,8 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 		'variableNumber' => 0,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1189,9 +1221,9 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-number: 0;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a number with a zero decimal value.', function () {
@@ -1202,6 +1234,8 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 		'variableNumber' => 0.0,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1210,9 +1244,9 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-number: 0;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output for a number with a null value.', function () {
@@ -1223,6 +1257,8 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 		'variableNumber' => null,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1231,9 +1267,9 @@ test('Asserts that outputCssVariables returns the correct output for a number wi
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-number', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 test('Asserts that outputCssVariables returns the correct output selector for provided prop.', function () {
@@ -1244,6 +1280,8 @@ test('Asserts that outputCssVariables returns the correct output selector for pr
 		'variableNumber' => 3.4,
 	];
 
+	global $esBlocks;
+
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
@@ -1253,8 +1291,9 @@ test('Asserts that outputCssVariables returns the correct output selector for pr
 	);
 
 	$this->assertIsString($output);
-	$this->assertStringContainsString(".wp-block[data-id='uniqueString']", $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
+	$this->assertEmpty($output);
+	$this->assertNotEmpty($esBlocks);
+	$this->assertIsArray($esBlocks);
 });
 
 /**
@@ -1294,9 +1333,9 @@ test('Asserts that camelToKebabCase returns the correct output', function () {
 });
 
 test('Asserts that camelToKebabCase returns the wrong output', function () {
-	$output = Components::camelToKebabCase('super_CoolTest-String ivan');
+	$output = Components::camelToKebabCase('super_CoolTest-String testing');
 
-	$this->assertNotEquals('super-cool-test-string-ivan', $output);
+	$this->assertNotEquals('super-cool-test-string-testing', $output);
 });
 
 /**
@@ -1460,7 +1499,7 @@ test('Asserts props will correctly generate manual keys in camelCase', function 
 	];
 
 	$manual = [
-		'buttonContent' => 'mock button content',  
+		'buttonContent' => 'mock button content',
 	];
 
 	mock('alias:EightshiftBoilerplate\Config\Config')

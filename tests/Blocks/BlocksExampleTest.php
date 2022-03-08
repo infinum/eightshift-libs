@@ -7,6 +7,8 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Exception\InvalidBlock;
 
+use EightshiftLibs\Helpers\Components;
+
 use function Tests\mock;
 use function Tests\setupMocks;
 
@@ -59,13 +61,6 @@ test('Register method will call admin_menu hooks', function () {
 	$this->assertSame(10, has_action('admin_menu', 'EightshiftBoilerplate\Blocks\BlocksExample->addReusableBlocks()'), 'The callback addReusableBlocks should be hooked to admin_menu hook with priority 10');
 });
 
-test('Register method will call custom hooks', function () {
-
-	$this->blocksExample->register();
-
-	$this->assertSame(10, has_filter(BlocksExample::BLOCKS_DEPENDENCY_FILTER_NAME, 'EightshiftBoilerplate\Blocks\BlocksExample->getBlocksDataFullRawItem()'));
-});
-
 test('addThemeSupport method will call add_theme_support() function with different arguments', function () {
 
 	Functions\when('add_theme_support')->alias(function($arg) {
@@ -84,7 +79,7 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 
 	Functions\when('is_wp_version_compatible')->justReturn(false);
 
-	$post = \Mockery::mock('WP_Post');
+	$post = mock('WP_Post');
 
 	$blocks = $this->blocksExample->getAllBlocksListOld(true, $post);
 
@@ -97,15 +92,15 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 
 test('Asserts that getAllBlocksList will return true if post type is eightshift-forms for WP 5.8.', function () {
 
-	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
-	$blockContext->post = \Mockery::mock('WP_Post');
+	$blockContext = mock('WP_Block_Editor_Context');
+	$blockContext->post = mock('WP_Post');
 	$blockContext->post->post_type = 'eightshift-forms';
 
 	$blocks = $this->blocksExample->getAllBlocksList(true, $blockContext);
 
 	$this->assertSame(true, $blocks);
 
-	$blockContext->post = \Mockery::mock('WP_Post');
+	$blockContext->post = mock('WP_Post');
 	$blockContext->post->post_type = 'post';
 
 	$blocks = $this->blocksExample->getAllBlocksList(false, $blockContext);
@@ -115,8 +110,8 @@ test('Asserts that getAllBlocksList will return true if post type is eightshift-
 
 test('Asserts that getAllBlocksList first argument is boolean and return the provided attribute as return value for WP 5.8.', function () {
 
-	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
-	$blockContext->post = \Mockery::mock('WP_Post');
+	$blockContext = mock('WP_Block_Editor_Context');
+	$blockContext->post = mock('WP_Post');
 	$blockContext->post->post_type = 'post';
 
 	$blocks = $this->blocksExample->getAllBlocksList(true, $blockContext);
@@ -132,7 +127,7 @@ test('Asserts that getAllBlocksList will return only projects blocks for older v
 
 	Functions\when('is_wp_version_compatible')->justReturn(false);
 
-	$post = \Mockery::mock('WP_Post');
+	$post = mock(\WP_Post::class);
 
 	$this->config
 		->shouldReceive('getProjectPath')
@@ -151,7 +146,7 @@ test('Asserts that getAllBlocksList will return only projects blocks for older v
 
 test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.', function () {
 
-	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$blockContext = mock(\WP_Block_Editor_Context::class);
 	$blockContext->post = null;
 
 	$this->config
@@ -167,56 +162,6 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 	$this->assertContains('eightshift-boilerplate/button', $list, "List array doesn't contain eightshift-boilerplate/button item.");
 	$this->assertContains('core/block', $list, "List array doesn't contain core/block item.");
 	$this->assertContains('core/template', $list, "List array doesn't contain core/template item.");
-});
-
-test('Asserts that getBlocksDataFullRawItem will return full details for blocks if key is not provided.', function () {
-
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
-
-	$this->blocksExample->getBlocksDataFullRaw();
-
-	$items = $this->blocksExample->getBlocksDataFullRawItem('');
-
-	$this->assertIsArray($items);
-	$this->assertNotContains('button', array_keys($items), "Items array contains button key");
-	$this->assertContains('blocks', array_keys($items), "Items array doesn't contain blocks key");
-	$this->assertContains('wrapper', array_keys($items), "Items array doesn't contain wrapper key");
-	$this->assertContains('settings', array_keys($items), "Items array doesn't contain settings key");
-});
-
-test('Asserts that getBlocksDataFullRawItem will return all blocks details if key is default.', function () {
-
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
-
-	$this->blocksExample->getBlocksDataFullRaw();
-
-	$items = $this->blocksExample->getBlocksDataFullRawItem();
-
-	$this->assertIsArray($items);
-	$this->assertContains('blockName', array_keys($items[0]), "Items array doesn't contain blockName key");
-	$this->assertSame('button', $items[0]['blockName'], "Items array doesn't contain blockName key with value button");
-	$this->assertNotContains('componentName', array_keys($items[0]), "Items array does contain componentName key");
-	$this->assertNotEquals('test', $items[0]['blockName'], "Items array contain blockName key with value test");
-});
-
-test('Asserts that getBlocksDataFullRawItem will return empty array if code is run using WP_CLI.', function () {
-
-	if (!defined('WP_CLI')) {
-		define('WP_CLI', true);
-	}
-
-	putenv('TEST');
-
-	$items = $this->blocksExample->getBlocksDataFullRawItem();
-
-	$this->assertIsArray($items);
-	$this->assertEmpty($items);
-	$this->assertNotContains('componentName', $items, "Items array contains componentName");
-	putenv('TEST=1');
 });
 
 test('Asserts that render component will load view template.', function () {
@@ -279,7 +224,7 @@ test('Asserts that renderWrapperView will throw error if path is not valid.', fu
 
 test('Asserts that getCustomCategory will return categories array.', function () {
 
-	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$blockContext = mock('WP_Block_Editor_Context');
 	$category = $this->blocksExample->getCustomCategory([], $blockContext);
 
 	$this->assertIsArray($category);
@@ -288,7 +233,7 @@ test('Asserts that getCustomCategory will return categories array.', function ()
 
 test('Asserts that getCustomCategory will throw error if first argument is not array.', function () {
 
-	$blockContext = \Mockery::mock('WP_Block_Editor_Context');
+	$blockContext = mock('WP_Block_Editor_Context');
 	$this->blocksExample->getCustomCategory('', $blockContext);
 
 })->throws(\TypeError::class);
@@ -328,7 +273,7 @@ test('registerBlocks method will register all blocks.', function () {
 
 	$this->blocksExample->registerBlocks();
 
-	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no sideaffects');
+	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no side affects');
 });
 
 test('registerBlocks method will throw error if blocks are not registered.', function () {
@@ -336,7 +281,7 @@ test('registerBlocks method will throw error if blocks are not registered.', fun
 })->throws(InvalidBlock::class);
 
 test('getCustomCategoryOld method will return an array.', function () {
-	$post = \Mockery::mock('WP_Post');
+	$post = mock('WP_Post');
 
 	$categoryList = $this->blocksExample->getCustomCategoryOld([], $post);
 
@@ -461,14 +406,17 @@ test('filterBlocksContent method will filter out the paragraph without content.'
 			[
 				'paragraphParagraphContent' => '',
 			],
-		'innerBlocks' =>
-			'',
+		'innerBlocks' => '',
 		'innerHTML' => '',
 		'innerContent' =>
 			[
 				0 => '',
 			],
+		'wrapperDisable' => false
 	];
+
+	// Set namespace data.
+	$this->blocksExample->getBlocksDataFullRaw();
 
 	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
 

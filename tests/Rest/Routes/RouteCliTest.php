@@ -5,12 +5,12 @@ namespace Tests\Unit\CustomPostType;
 use EightshiftLibs\Rest\Routes\RouteCli;
 
 use function Tests\deleteCliOutput;
-
+use function Tests\mock;
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')

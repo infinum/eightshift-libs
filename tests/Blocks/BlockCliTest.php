@@ -86,9 +86,9 @@ test('Block CLI command will fail if block doesn\'t exist', function () {
 
 	$mock = $blockMock->getMock();
 
-	$mock([], ['name' => 'ivan']);
+	$mock([], ['name' => 'testing']);
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/ivan/ivan.php';
+	$outputPath = dirname(__FILE__, 3) . '/cliOutput/testing/testing.php';
 
 	$this->assertFileDoesNotExist($outputPath);
 });
