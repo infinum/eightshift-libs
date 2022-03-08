@@ -39,10 +39,10 @@ class BlocksStorybookCli extends AbstractCli
 			$folder = "{$root}/.storybook";
 
 			if (!file_exists($folder)) {
-				system("mkdir -p {$folder}");
+				mkdir($folder);
 			}
 
-			system("cp -R {$rootNode}/storybook/. {$folder}/");
+			$this->copyRecursively("{$rootNode}/storybook/", "{$folder}/");
 
 			\WP_CLI::success('Storybook config successfully set.');
 
