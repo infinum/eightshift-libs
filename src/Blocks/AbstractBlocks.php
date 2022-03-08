@@ -26,14 +26,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @var string
 	 */
-	protected $namespace = '';
+	private string $namespace = '';
 
 	/**
 	 * Directory separator used for cross compatibility.
 	 *
 	 * @var string
 	 */
-	private $sep = DIRECTORY_SEPARATOR;
+	private string $sep = DIRECTORY_SEPARATOR;
 
 	/**
 	 * Create custom project color palette
@@ -352,10 +352,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function filterBlocksContent(array $parsedBlock, array $sourceBlock): array
 	{
-		$namespace = $this->namespace;
-		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
+		if ($parsedBlock['blockName'] === "{$this->namespace}/paragraph") {
 			if (
-				!isset($parsedBlock['attrs']['paragraphParagraphContent']) ||
 				empty($parsedBlock['attrs']['paragraphParagraphContent'])
 			) {
 				$parsedBlock['attrs']['wrapperDisable'] = true;
@@ -375,7 +373,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksPath(): string
 	{
-		return dirname(__DIR__, 5) . "{$this->sep}src{$this->sep}Blocks";
+		$blocksPath = dirname(__DIR__, 5) . "{$this->sep}src{$this->sep}Blocks";
+
+		if (getenv('TEST')) {
+			$blocksPath = dirname(__DIR__, 2) . "{$this->sep}tests{$this->sep}data{$this->sep}src{$this->sep}Blocks";
+		}
+
+		return $blocksPath;
 	}
 
 	/**
