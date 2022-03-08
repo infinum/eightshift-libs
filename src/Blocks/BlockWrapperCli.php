@@ -78,10 +78,10 @@ class BlockWrapperCli extends AbstractCli
 				)
 			);
 		} else {
-			system("mkdir -p {$destinationPath}/");
+			mkdir("{$destinationPath}/");
 		}
 
-		system("cp -R {$sourcePath}/. {$destinationPath}/");
+		$this->copyRecursively($sourcePath, "{$destinationPath}/");
 
 		\WP_CLI::success('Wrapper successfully moved to your project.');
 
