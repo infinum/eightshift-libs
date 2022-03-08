@@ -127,7 +127,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		// Allow forms to be used correctly.
 		if (
 			$blockEditorContext->post instanceof \WP_Post &&
-			isset($blockEditorContext->post->post_type) &&
+			!empty($blockEditorContext->post->post_type) &&
 			$blockEditorContext->post->post_type === 'eightshift-forms'
 		) {
 			return true;
@@ -141,7 +141,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			function ($block) {
 				return $block['blockFullName'];
 			},
-			Components::getSettings('blocks', '', $this->namespace) ?? []
+			Components::getSettings('blocks', '', $this->namespace)
 		);
 
 		// Allow reusable block.
@@ -173,7 +173,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			function ($block) {
 				return $block['blockFullName'];
 			},
-			Components::getSettings('blocks', '', $this->namespace) ?? []
+			Components::getSettings('blocks', '', $this->namespace)
 		);
 
 		// Allow reusable block.

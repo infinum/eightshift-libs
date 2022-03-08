@@ -168,7 +168,7 @@ class Components
 	{
 		// Get manifest by directly getting the file.
 		if ($useGlobal) {
-			return self::getManifestDirect($path) ?? [];
+			return self::getManifestDirect($path);
 		}
 
 		$path = rtrim($path, '/');
@@ -180,24 +180,24 @@ class Components
 
 		// Global settings.
 		if ($item === 'Blocks') {
-			return self::getSettings('settings') ?? [];
+			return self::getSettings('settings');
 		}
 
 		// Wrapper details.
 		if ($item === 'wrapper') {
-			return self::getSettings('wrapper') ?? [];
+			return self::getSettings('wrapper');
 		}
 
 		$type = $path[count($path) - 2] ?? '';
 
 		// Components settings.
 		if ($type === 'components') {
-			return self::getSettings('component', $item) ?? [];
+			return self::getSettings('component', $item);
 		}
 
 		// Blocks settings.
 		if ($type === 'custom') {
-			return self::getSettings('block', $item) ?? [];
+			return self::getSettings('block', $item);
 		}
 
 		return [];
@@ -898,7 +898,7 @@ class Components
 	 * @param string $item Array key to get.
 	 * @param string $namespace Namespace of blocks.
 	 *
-	 * @return string|array
+	 * @return string|array<string, mixed>
 	 *@throws InvalidBlock If settings key is missing.
 	 *
 	 */
