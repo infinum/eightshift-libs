@@ -160,11 +160,11 @@ class Components
 	 * @param string $path Absolute path to manifest folder.
 	 * @param bool $useGlobal Use global blocks settings.
 	 *
-	 * @throws ComponentException When we're unable to find the component by $component.
-	 *
 	 * @return array<string, mixed>
+	 *@throws ComponentException When we're unable to find the component by $component.
+	 *
 	 */
-	public static function getManifest(string $path, $useGlobal = true): array
+	public static function getManifest(string $path, bool $useGlobal = true): array
 	{
 		// Get manifest by directly getting the file.
 		if ($useGlobal) {
@@ -448,7 +448,10 @@ class Components
 		$namespace = $globalManifest['namespace'];
 
 		// Bailout if global breakpoints are missing.
-		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
+		if (
+			!isset($globalManifest['globalVariables']) ||
+			!isset($globalManifest['globalVariables']['breakpoints'])
+		) {
 			return '';
 		}
 
@@ -895,15 +898,15 @@ class Components
 	 * @param string $item Array key to get.
 	 * @param string $namespace Namespace of blocks.
 	 *
-	 * @throws InvalidBlock If settings key is missing.
+	 * @return string|array
+	 *@throws InvalidBlock If settings key is missing.
 	 *
-	 * @return string|array<mixed>
 	 */
-	public static function getSettings(string $type, string $item = '', $namespace = '')
+	public static function getSettings(string $type, string $item = '', string $namespace = '')
 	{
 		global $esBlocks;
 
-		// If block-namespace is not set try to determin block-namespace from path or local constant.
+		// If block-namespace is not set try to determine block-namespace from path or local constant.
 		if (!$namespace) {
 			$namespace = self::getBlocksNamespace();
 		}
@@ -940,18 +943,14 @@ class Components
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
 			}
 
-			$items = $details[$type][$item] ?? [];
-
-			return $items;
+			return $details[$type][$item] ?? [];
 		}
 
 		if (!isset($details[$type])) {
 			throw InvalidBlock::missingSettingsKeyException($type);
 		}
 
-		$items = $details[$type] ?? [];
-
-		return $items;
+		return $details[$type] ?? [];
 	}
 
 	/**
@@ -1326,7 +1325,12 @@ class Components
 		}
 
 		$sep = self::$sep;
+
 		$manifestPath = dirname(__DIR__, 5) . "{$sep}src{$sep}Blocks{$sep}manifest.json";
+
+		if (getenv('TEST')) {
+			$manifestPath = dirname(__DIR__, 2) . "{$sep}tests{$sep}data{$sep}src{$sep}Blocks{$sep}manifest.json";
+		}
 
 		if (!file_exists($manifestPath)) {
 			throw InvalidBlock::missingSettingsManifestException($manifestPath);
