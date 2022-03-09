@@ -266,4 +266,22 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 			)
 		);
 	}
+
+	/**
+	 * Throws error if the block file is missing.
+	 *
+	 * @param string $sourcePath Missing file path.
+	 *
+	 * @return static
+	 */
+	public static function missingFileException(string $sourcePath): InvalidBlock
+	{
+		return new InvalidBlock(
+			sprintf(
+				/* translators: %s is going to be replaced with the missing file path. */
+				\esc_html__('Failed to open path %s. No such file or directory.', 'eightshift-libs'),
+				$sourcePath,
+			)
+		);
+	}
 }
