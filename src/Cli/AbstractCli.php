@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\Exception\InvalidBlock;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -929,16 +930,25 @@ abstract class AbstractCli implements CliInterface
 	 */
 	protected function copyRecursively(string $source, string $destination): void
 	{
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
-			RecursiveIteratorIterator::SELF_FIRST
-		);
+		try {
+			$iterator = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
+				RecursiveIteratorIterator::SELF_FIRST
+			);
+		} catch (\UnexpectedValueException $exception) {
+			throw InvalidBlock::missingFileException($source);
+		}
 
 		foreach ($iterator as $item) {
+			$subPathName = $iterator->getSubPathname();
+			$destinationPath = rtrim($destination, '/') . DIRECTORY_SEPARATOR . $subPathName;
+
 			if ($item->isDir()) {
-				mkdir($destination . DIRECTORY_SEPARATOR . $iterator->getSubPathname());
+				if (!file_exists($destinationPath)) {
+					mkdir($destinationPath, 0777, true);
+				}
 			} else {
-				copy($item->getPathname(), $destination . DIRECTORY_SEPARATOR . $iterator->getSubPathname());
+				copy($item->getPathname(), $destinationPath);
 			}
 		}
 	}
