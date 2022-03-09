@@ -128,7 +128,7 @@ class BlockVariationCli extends AbstractCli
 		}
 
 		// Move block/component to project folder.
-		$this->copyRecursively($sourcePath, "{$destinationPath}/");
+		$this->copyRecursively($sourcePath, $destinationPath);
 
 		\WP_CLI::success('Variation successfully moved to your project.');
 
