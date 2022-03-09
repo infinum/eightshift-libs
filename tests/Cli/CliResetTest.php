@@ -37,15 +37,14 @@ afterEach(function () {
 
 
 test('CliReset works', function () {
-	Functions\when('system')->alias(function ($args) {
-		putenv("SYSTEM_CALLED={$args}");
-	});
+	if (!is_dir($this->cliReset->getOutputDir(''))) {
+		mkdir($this->cliReset->getOutputDir(''));
+	}
 
 	$cliReset = $this->cliReset;
 	$cliReset([], []);
 
-	$this->assertSame('Output directory successfully removed.', getenv('SUCCESS'));
-	$this->assertStringContainsString('rm -rf', getenv('SYSTEM_CALLED'));
+	$this->assertDirectoryDoesNotExist($this->cliReset->getOutputDir(''));
 });
 
 

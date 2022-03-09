@@ -4,28 +4,32 @@ namespace Tests\Unit\Block;
 
 use EightshiftLibs\Blocks\BlockVariationCli;
 
+use EightshiftLibs\Exception\InvalidBlock;
+
 use function Tests\deleteCliOutput;
 use function Tests\mock;
+use function Tests\setupMocks;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
+	setupMocks();
 	$wpCliMock = mock('alias:WP_CLI');
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('success')
+		->andReturnArg(0);
 
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('error')
+		->andReturnArg(0);
 
-$wpCliMock
-	->shouldReceive('log')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('log')
+		->andReturnArg(0);
 
-$this->variation = new BlockVariationCli('boilerplate');
+	$this->variation = new BlockVariationCli('boilerplate');
 });
 
 /**
@@ -37,7 +41,7 @@ afterEach(function () {
 	deleteCliOutput($output);
 });
 
- test('Variation CLI command will correctly copy the Variation class with defaults', function () {
+ test('Variation CLI command will correctly copy the variation class with defaults', function () {
 	$variationMock = mock(BlockVariationCli::class)
 		->makePartial()
 		->shouldReceive('getFrontendLibsBlockPath')
@@ -60,7 +64,8 @@ afterEach(function () {
 	$variation = $this->variation;
 	$result = $variation->getCommandName();
 
-	$this->assertStringContainsString('use_variation', $result);
+	expect($result)
+		->toContain('use_variation');
 });
 
 test('Variation CLI documentation is correct', function () {
@@ -85,8 +90,4 @@ test('Variation CLI command will fail if Variation doesn\'t exist', function () 
 	$mock = $variationMock->getMock();
 
 	$mock([], ['name' => 'testing']);
-
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/testing/testing.php';
-
-	$this->assertFileDoesNotExist($outputPath);
-});
+})->expectException(InvalidBlock::class);

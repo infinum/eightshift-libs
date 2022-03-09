@@ -276,10 +276,6 @@ test('registerBlocks method will register all blocks.', function () {
 	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no side affects');
 });
 
-test('registerBlocks method will throw error if blocks are not registered.', function () {
-	$this->blocksExample->registerBlocks();
-})->throws(InvalidBlock::class);
-
 test('getCustomCategoryOld method will return an array.', function () {
 	$post = mock('WP_Post');
 

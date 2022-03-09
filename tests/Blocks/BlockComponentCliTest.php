@@ -4,28 +4,33 @@ namespace Tests\Unit\Block;
 
 use EightshiftLibs\Blocks\BlockComponentCli;
 
+use EightshiftLibs\Exception\InvalidBlock;
+
 use function Tests\deleteCliOutput;
 use function Tests\mock;
+use function Tests\setupMocks;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
+	setupMocks();
+
 	$wpCliMock = mock('alias:WP_CLI');
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('success')
+		->andReturnArg(0);
 
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('error')
+		->andReturnArg(0);
 
-$wpCliMock
-	->shouldReceive('log')
-	->andReturnArg(0);
+	$wpCliMock
+		->shouldReceive('log')
+		->andReturnArg(0);
 
-$this->component = new BlockComponentCli('boilerplate');
+	$this->component = new BlockComponentCli('boilerplate');
 });
 
 /**
@@ -85,8 +90,4 @@ test('Component CLI command will fail if Component doesn\'t exist', function () 
 	$mock = $componentMock->getMock();
 
 	$mock([], ['name' => 'testing']);
-
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/testing/testing.php';
-
-	$this->assertFileDoesNotExist($outputPath);
-});
+})->expectException(InvalidBlock::class);
