@@ -64,7 +64,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Get blocks full data from global settings, blocks and wrapper
 	 *
-	 * You should never call this method directly. Instead you should call $this->blocks.
+	 * You should never call this method directly. Instead, you should call $this->blocks.
 	 *
 	 * @return void
 	 */
@@ -77,7 +77,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		$namespace = $settings['namespace'];
 
-		// If namespace is missing bailout.
+		// If namespace is set, this method was called already.
 		if (isset($esBlocks[$namespace])) {
 			return;
 		}
@@ -193,10 +193,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public function registerBlocks(): void
 	{
 		$blocks = Components::getSettings('blocks', '', $this->namespace);
-
-		if (!$blocks) {
-			throw InvalidBlock::missingBlocksException();
-		}
 
 		foreach ($blocks as $block) {
 			$this->registerBlock($block);
@@ -352,7 +348,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function filterBlocksContent(array $parsedBlock, array $sourceBlock): array
 	{
-		if ($parsedBlock['blockName'] === "{$this->namespace}/paragraph") {
+		global $esBlocks;
+
+		$namespace = array_key_first($esBlocks);
+
+		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
 			if (
 				empty($parsedBlock['attrs']['paragraphParagraphContent'])
 			) {
