@@ -79,13 +79,14 @@ class BlockVariationCli extends AbstractCli
 
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
+		$ds = DIRECTORY_SEPARATOR;
 
-		$path = static::OUTPUT_DIR . '/' . $name;
-		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
+		$path = static::OUTPUT_DIR . $ds . $name;
+		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
 		$sourcePath = "{$sourcePathFolder}{$name}";
 
 		if (!getenv('TEST')) {
-			$destinationPath = $root . '/' . $path;
+			$destinationPath = $root . $ds . $path;
 		} else {
 			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
 		}

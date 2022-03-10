@@ -336,13 +336,15 @@ abstract class AbstractCli implements CliInterface
 			$root = $this->getProjectRootPath(true) . '/cliOutput';
 		}
 
-		$root = rtrim($root, '/');
-		$root = trim($root, '/');
+		$ds = DIRECTORY_SEPARATOR;
 
-		$path = rtrim($path, '/');
-		$path = trim($path, '/');
+		$root = rtrim($root, $ds);
+		$root = trim($root, $ds);
 
-		return "/{$root}/{$path}";
+		$path = rtrim($path, $ds);
+		$path = trim($path, $ds);
+
+		return "{$ds}{$root}{$ds}{$path}";
 	}
 
 	/**
@@ -354,14 +356,16 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputFile(string $file): string
 	{
-		$file = rtrim($file, '/');
-		$file = trim($file, '/');
+		$ds = DIRECTORY_SEPARATOR;
+
+		$file = rtrim($file, $ds);
+		$file = trim($file, $ds);
 
 		if (strpos($file, '.') !== false) {
-			return "/{$file}";
+			return "{$ds}{$file}";
 		}
 
-		return "/{$file}.php";
+		return "{$ds}{$file}.php";
 	}
 
 	/**
@@ -939,9 +943,11 @@ abstract class AbstractCli implements CliInterface
 			throw InvalidBlock::missingFileException($source);
 		}
 
+		$ds = DIRECTORY_SEPARATOR;
+
 		foreach ($iterator as $item) {
 			$subPathName = $iterator->getSubPathname();
-			$destinationPath = rtrim($destination, '/') . DIRECTORY_SEPARATOR . $subPathName;
+			$destinationPath = rtrim($destination, $ds) . $ds . $subPathName;
 
 			if ($item->isDir()) {
 				if (!file_exists($destinationPath)) {
