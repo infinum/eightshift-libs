@@ -3,6 +3,7 @@
 namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
+use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
 
 use Brain\Monkey;
@@ -18,6 +19,18 @@ beforeAll(function () {
 
 afterAll(function() {
 	Monkey\tearDown();
+
+	$esBlocks = null;
+});
+
+beforeEach(function() {
+	global $esBlocks;
+	$esBlocks = null;
+});
+
+afterEach(function() {
+	global $esBlocks;
+	$esBlocks = null;
 });
 
 test('Asserts ensure string returns a correct result', function ($args) {
@@ -162,8 +175,6 @@ test('Asserts that checkAttr returns null in case attribute is boolean, default 
 		->toBeNull();
 });
 
-// To do: refactor the rest
-
 
 test('Asserts that checkAttr works in case attribute is array', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -171,10 +182,15 @@ test('Asserts that checkAttr works in case attribute is array', function () {
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'The result should be an array');
-	$this->assertSame('attr 1', $results[0], 'The value in the array is not correct');
-	$this->assertSame('attr 2', $results[1], 'The value in the array is not correct');
+	expect($results)
+		->toBeArray();
+
+	expect($results[0])
+		->toBe('attr 1');
+	expect($results[1])
+		->toBe('attr 2');
 });
+
 
 test('Asserts that checkAttr returns empty array in case attribute is array or object and default is not set', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -182,9 +198,12 @@ test('Asserts that checkAttr returns empty array in case attribute is array or o
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'The result should be an empty array');
-	$this->assertSame([], $results, "The set attribute should be empty array");
+
+	expect($results)
+		->toBeArray()
+		->toBe([]);
 });
+
 
 test('Asserts that checkAttr returns null in case attribute is array or object, default is not set, and undefined is allowed', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -192,9 +211,11 @@ test('Asserts that checkAttr returns null in case attribute is array or object, 
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest, true);
 
-	$this->assertIsNotArray($results, 'The result should not be an empty array');
-	$this->assertSame(null, $results, "The set attribute should be null");
+	expect($results)
+		->not->toBeArray()
+		->toBeNull();
 });
+
 
 test('Asserts that checkAttr returns default value', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -202,9 +223,11 @@ test('Asserts that checkAttr returns default value', function () {
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest, 'button');
 
-	$this->assertIsString($results, 'The default value should be a string');
-	$this->assertSame('left', $results, 'The default value should be left');
+	expect($results)
+		->toBeString()
+		->toBe('left');
 });
+
 
 test('Asserts that checkAttr throws exception if manifest key is not set', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -212,6 +235,7 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
 })->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation.");
+
 
 test('Asserts that checkAttr returns attribute based on prefix if set', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -222,13 +246,12 @@ test('Asserts that checkAttr returns attribute based on prefix if set', function
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
 
-	$this->assertIsString($results, 'Result should be a string');
-	$this->assertSame('right', $results, "The set attribute should be {$attributes['prefixedMultipleTimesButtonAlign']}");
+	expect($results)
+		->toBeString()
+		->toBe('right');
 });
 
-/**
- * Components::checkAttrResponsive tests
- */
+
 test('Asserts that checkAttrResponsive returns the correct output.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [
@@ -240,10 +263,14 @@ test('Asserts that checkAttrResponsive returns the correct output.', function ()
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'Result should be an array');
-	$this->assertArrayHasKey('large', $results);
-	$this->assertSame($results['large'], '10');
+	expect($results)
+		->toBeArray()
+		->toHaveKey('large');
+
+	expect($results['large'])
+		->toBe('10');
 });
+
 
 test('Asserts that checkAttrResponsive returns empty values if attribute is not provided.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
@@ -251,10 +278,14 @@ test('Asserts that checkAttrResponsive returns empty values if attribute is not 
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'Result should be an array');
-	$this->assertArrayHasKey('large', $results);
-	$this->assertSame($results['large'], '');
+	expect($results)
+		->toBeArray()
+		->toHaveKey('large');
+
+	expect($results['large'])
+		->toBe('');
 });
+
 
 test('Asserts that checkAttrResponsive returns null if default is not set and undefined is allowed.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
@@ -264,14 +295,20 @@ test('Asserts that checkAttrResponsive returns null if default is not set and un
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, true);
 
-	$this->assertIsArray($results, 'Result should be an array');
-	$this->assertArrayHasKey('large', $results);
-	$this->assertArrayHasKey('desktop', $results);
-	$this->assertArrayHasKey('tablet', $results);
-	$this->assertSame($results['large'], null);
-	$this->assertSame($results['desktop'], '2');
-	$this->assertSame($results['tablet'], null);
+	expect($results)
+		->toBeArray()
+		->toHaveKey('large')
+		->toHaveKey('desktop')
+		->toHaveKey('tablet');
+
+	expect($results['large'])
+		->toBeNull();
+	expect($results['desktop'])
+		->toBe('2');
+	expect($results['tablet'])
+		->toBeNull();
 });
+
 
 test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -280,6 +317,7 @@ test('Asserts that checkAttrResponsive throws error if responsiveAttribute key i
 	Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, 'button');
 })->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your button component manifest.');
 
+
 test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [];
@@ -287,26 +325,105 @@ test('Asserts that checkAttrResponsive throws error if keyName key is missing re
 	Components::checkAttrResponsive('testAttribute', $attributes, $manifest, 'button');
 })->throws(\Exception::class, 'It looks like you are missing the testAttribute key in your manifest responsiveAttributes array.');
 
-/**
- * Components::selector tests
- */
+
 test('Asserts that selectorBlock returns the correct class when attributes are set', function () {
 	$selector = Components::selector('button', 'button', 'icon', 'blue');
 
-	$this->assertIsString($selector);
-	$this->assertSame('button__icon--blue', $selector);
+	expect($selector)
+		->toBeString()
+		->toBe('button__icon--blue');
 });
+
 
 test('Asserts that selector returns the correct class when only block class is set', function () {
 	$selector = Components::selector('button', 'button');
 
-	$this->assertIsString($selector);
-	$this->assertSame('button', $selector);
+	expect($selector)
+		->toBeString()
+		->toBe('button');
 });
+
 
 test('Asserts that selector returns the correct class when element is an empty string', function () {
 	$selector = Components::selector('button', 'button', '    ');
 
-	$this->assertIsString($selector);
-	$this->assertSame('button', $selector);
+	expect($selector)
+		->toBeString()
+		->toBe('button');
+});
+
+
+test('Asserts that outputCssVariablesGlobal returns the correct CSS variables from global manifest', function () {
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$output = Components::outputCssVariablesGlobal($globalManifest);
+
+	expect($output)
+		->toBeString()
+		->toContain('<style>')
+		->toContain(':root {')
+		->toContain('--global-colors-primary: #C3151B;')
+		->not->toContain('--button-content:');
+});
+
+
+test('Asserts that outputCssVariablesGlobal returns empty string if global manifest data is not provided', function () {
+	$output = Components::outputCssVariablesGlobal([]);
+
+	expect($output)
+		->toBeString()
+		->not->toContain('<style>');
+});
+
+
+test('Asserts that outputCssVariables throws exception if the global block details aren\'t set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+})->throws(InvalidBlock::class);
+
+
+test('Asserts that getManifest throws exception for paths in case the global details aren\'t set', function ($path) {
+	Components::getManifest($path, false);
+})->throws(InvalidBlock::class)->with([
+	dirname(__FILE__, 2) . '/data/src/Blocks',
+	dirname(__FILE__, 2) . '/data/src/Blocks/wrapper',
+	dirname(__FILE__, 2) . '/data/src/Blocks/components/button',
+	dirname(__FILE__, 2) . '/data/src/Blocks/custom/button',
+]);
+
+
+test('Asserts that getManifest returns empty array in case of a wrong path', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src', false);
+
+	expect($manifest)
+		->toBeArray()
+		->toBeEmpty();
+});
+
+
+test('Asserts that getSettings throws exception in case the global details aren\'t set', function () {
+	Components::getSettings('component');
+})->throws(InvalidBlock::class);
+
+
+test('Asserts that getSettings works', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$settings = Components::getSettings('config', 'outputCssVariablesGlobally');
+
+	expect($settings)
+		->toBeBool()
+		->toBeTrue();
 });
