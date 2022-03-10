@@ -7,10 +7,10 @@ use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
 
 use Brain\Monkey;
+use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 
 use function Tests\setupMocks;
-use function Tests\mock;
 
 beforeAll(function () {
 	Monkey\setUp();
@@ -19,8 +19,6 @@ beforeAll(function () {
 
 afterAll(function() {
 	Monkey\tearDown();
-
-	$esBlocks = null;
 });
 
 beforeEach(function() {
@@ -138,6 +136,14 @@ test('Asserts that checkAttr works in case attribute is string', function () {
 		->toBeString()
 		->toBe('right');
 });
+
+
+test('checkAttr will throw an exception in the case that the block name is missing in the manifest', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/button/');
+	$attributes['buttonText'] = 'left';
+
+	Components::checkAttr('buttonAlign', $attributes, $manifest);
+})->throws(\Exception::class, 'buttonAlign key does not exist in the button block manifest. Please check your implementation.');
 
 
 test('Asserts that checkAttr works in case attribute is boolean', function () {
@@ -310,7 +316,7 @@ test('Asserts that checkAttrResponsive returns null if default is not set and un
 });
 
 
-test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing.', function () {
+test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes = [];
 
@@ -318,12 +324,20 @@ test('Asserts that checkAttrResponsive throws error if responsiveAttribute key i
 })->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your button component manifest.');
 
 
-test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array.', function () {
+test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [];
 
 	Components::checkAttrResponsive('testAttribute', $attributes, $manifest, 'button');
 })->throws(\Exception::class, 'It looks like you are missing the testAttribute key in your manifest responsiveAttributes array.');
+
+
+test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array for blockName', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading/');
+	$attributes = [];
+
+	Components::checkAttrResponsive('bla', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your heading block manifest.');
 
 
 test('Asserts that selectorBlock returns the correct class when attributes are set', function () {
@@ -426,4 +440,58 @@ test('Asserts that getSettings works', function () {
 	expect($settings)
 		->toBeBool()
 		->toBeTrue();
+});
+
+
+test('Asserts that getAttrKey will return the key in case of the wrapper', function () {
+
+	$attributeKey = Components::getAttrKey('wrapper', [], []);
+
+	expect($attributeKey)
+		->toBeString()
+		->toBe('wrapper');
+});
+
+
+test('Asserts that getUnique function will return some random string', function () {
+
+	Functions\when('wp_rand')->justReturn(mt_rand());
+	$unique = Components::getUnique();
+
+	expect($unique)
+		->toBeString();
+});
+
+
+test('Asserts that arrayIsList function will correctly identify lists', function () {
+
+	$isList = Components::arrayIsList([1, 2, 3]);
+	$isNotList = Components::arrayIsList(['a' => 1, 'b' => 2, 'c' => 3]);
+
+	expect($isList)
+		->toBeBool()
+		->toBeTrue();
+
+	expect($isNotList)
+		->toBeBool()
+		->not->toBeTrue();
+});
+
+
+test('Asserts that getDefaultRenderAttributes function will return empty array on non iterable manifest', function () {
+
+	$output = Components::render('button-false', [], '', true);
+
+	expect($output)
+		->toBeString();
+});
+
+
+test('Asserts that flattenArray will return the flattened array', function () {
+
+	$array = Components::flattenArray(['a' => ['b', 'c' => [1, 2, 3]]]);
+
+	expect($array)
+		->toBeArray()
+		->toBe(['b', 1, 2, 3]);
 });
