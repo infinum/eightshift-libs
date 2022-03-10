@@ -161,7 +161,7 @@ class Components
 	 * @param bool $useGlobal Use global blocks settings.
 	 *
 	 * @return array<string, mixed>
-	 *@throws ComponentException When we're unable to find the component by $component.
+	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 */
 	public static function getManifest(string $path, bool $useGlobal = true): array
@@ -171,7 +171,7 @@ class Components
 			return self::getManifestDirect($path);
 		}
 
-		$path = rtrim($path, '/');
+		$path = rtrim($path, DIRECTORY_SEPARATOR);
 
 		$path = explode(self::$sep, $path);
 
@@ -899,12 +899,16 @@ class Components
 	 * @param string $namespace Namespace of blocks.
 	 *
 	 * @return string|array<string, mixed>
-	 *@throws InvalidBlock If settings key is missing.
+	 * @throws InvalidBlock If settings key is missing.
 	 *
 	 */
 	public static function getSettings(string $type, string $item = '', string $namespace = '')
 	{
 		global $esBlocks;
+
+		if (empty($esBlocks)) {
+			throw InvalidBlock::missingGlobalBlockDetailsException();
+		}
 
 		// If block-namespace is not set try to determine block-namespace from path or local constant.
 		if (!$namespace) {
@@ -938,7 +942,7 @@ class Components
 		}
 
 		// If searching for one item.
-		if ($item) {
+		if (!empty($item)) {
 			if (!isset($details[$type][$item])) {
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
 			}
@@ -1358,7 +1362,7 @@ class Components
 	 */
 	private static function getManifestDirect(string $path): array
 	{
-		$path = rtrim($path, '/');
+		$path = rtrim($path, self::$sep);
 
 		$sep = self::$sep;
 		$manifest = "{$path}{$sep}manifest.json";
