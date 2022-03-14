@@ -389,7 +389,9 @@ class Components
 	 */
 	public static function hexToRgb($hex)
 	{
-		$hex = str_replace('#', '', $hex);
+		// Remove the # at the beginning and filter out invalid hex characters.
+		$hex = preg_replace("/[^0-9A-Fa-f]/", '', $hex);
+
 		$length = strlen($hex);
 
 		if ($length === 3) {
