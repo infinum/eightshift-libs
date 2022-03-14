@@ -227,3 +227,17 @@ dataset('getGithubPluginNameWrong', [
 	['infinum/something-else/simple', 'infinum/something-else'],
 	['infinum/something-else/simple', 'something-else/simple'],
 ]);
+
+dataset('hexToRgbValid', [
+	['#FFF', '255 255 255'],
+	['#000000', '0 0 0'],
+	['#123456', '18 52 86'],
+]);
+
+dataset('hexToRgbInvalid', [
+	['', '0 0 0'],
+	['#', '0 0 0'],
+	['#1234', '0 0 0'],
+	['#mnopqr', '0 0 0'],
+	['#ESHIFT', '0 0 0'],
+]);
