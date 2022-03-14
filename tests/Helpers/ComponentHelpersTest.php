@@ -1477,16 +1477,16 @@ test('Asserts props will correctly generate manual keys in camelCase', function 
 	$this->assertNotContains('mockCardbuttonContent', array_keys($output), "Manual key is not properly converted to camelCase");
 });
 
-test('Check that hexToRgb returns the correct output for a correctly formatted hex code', function () {
-	$shorthand = Components::hexToRgb('#fff');
-	$fullHex = Components::hexToRgb('#ffffff');
+test('Check that hexToRgb returns the correct output for a valid hex code', function ($input, $output) {
+	$converted = Components::hexToRgb($input);
 
-	$this->assertEquals('255 255 255', $shorthand);
-	$this->assertEquals('255 255 255', $fullHex);
-});
+	$this->assertIsString($converted);
+	$this->assertSame($converted, $output);
+})->with('hexToRgbValid');
 
-test('Check that hexToRgb returns the fallback for an incorrectly formatted hex code', function () {
-	$incorrectFormat = Components::hexToRgb('#0000');
+test('Check that hexToRgb returns the fallback for an invalid hex code', function ($input, $output) {
+	$converted = Components::hexToRgb($input);
 
-	$this->assertEquals('0 0 0', $incorrectFormat);
-});
+	$this->assertIsString($converted);
+	$this->assertSame($converted, $output);
+})->with('hexToRgbInvalid');
