@@ -24,7 +24,7 @@ class SetupCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
 
 	/**
 	 * Get WPCLI command name
@@ -71,7 +71,7 @@ class SetupCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;

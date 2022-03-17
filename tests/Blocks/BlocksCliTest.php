@@ -29,7 +29,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -38,10 +38,10 @@ test('Blocks CLI command will correctly copy the Blocks class with defaults', fu
 	$blocks = $this->blocks;
 	$blocks([], []);
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/Blocks/Blocks.php';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/Blocks/Blocks.php';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedBlocks = file_get_contents($outputPath);
+	$generatedBlocks = \file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class Blocks extends AbstractBlocks', $generatedBlocks);
 	$this->assertStringContainsString('@package EightshiftLibs\Blocks', $generatedBlocks);
@@ -57,7 +57,7 @@ test('Blocks CLI command will correctly copy the Blocks class with set arguments
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedBlocks = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Blocks/Blocks.php');
+	$generatedBlocks = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Blocks/Blocks.php');
 
 	$this->assertStringContainsString('namespace CoolTheme\Blocks;', $generatedBlocks);
 });

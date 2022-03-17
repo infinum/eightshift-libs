@@ -20,6 +20,6 @@ afterEach(function() {
 
 
 test('Escaped view class has register method', function () {
-	$this->assertTrue(method_exists($this->example, 'register'));
+	$this->assertTrue(\method_exists($this->example, 'register'));
 	$this->assertEmpty($this->example->register());
 });

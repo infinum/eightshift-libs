@@ -22,7 +22,7 @@ class PostTypeCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomPostType';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomPostType';
 
 	/**
 	 * Define default develop props.
@@ -108,7 +108,7 @@ class PostTypeCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$label = $assocArgs['label'];
@@ -134,9 +134,9 @@ class PostTypeCli extends AbstractCli
 			->searchReplaceString('example-url-slug', $rewriteUrl)
 			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
 			->searchReplaceString('Singular Name', $label)
-			->searchReplaceString('singular name', strtolower($label))
+			->searchReplaceString('singular name', \strtolower($label))
 			->searchReplaceString('Plural Name', $pluralLabel)
-			->searchReplaceString('plural name', strtolower($pluralLabel));
+			->searchReplaceString('plural name', \strtolower($pluralLabel));
 
 		if (!empty($capability)) {
 			$class->searchReplaceString("'post'", "'{$capability}'");

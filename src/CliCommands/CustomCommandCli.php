@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\CliCommands;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI;
 
 /**
  * Class CustomCommandCli
@@ -29,7 +30,7 @@ class CustomCommandCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CliCommands';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CliCommands';
 
 	/**
 	 * Get WPCLI command name
@@ -76,7 +77,7 @@ class CustomCommandCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$commandName = $this->prepareSlug($assocArgs['command_name']);
@@ -87,7 +88,7 @@ class CustomCommandCli extends AbstractCli
 
 		// If slug is empty throw error.
 		if (empty($commandName)) {
-			\WP_CLI::error("Empty command name provided, please set the command name using --command_name=\"command-name\"");
+			WP_CLI::error("Empty command name provided, please set the command name using --command_name=\"command-name\"");
 		}
 
 		// Read the template contents, and replace the placeholders with provided variables.

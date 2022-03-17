@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Services\ServiceInterface;
+use WP_REST_Server;
 
 /**
  * Abstract base field class
@@ -30,11 +31,11 @@ abstract class AbstractField implements ServiceInterface
 	/**
 	 * Method that register rest field that is used inside rest_api_init hook.
 	 *
-	 * @param \WP_REST_Server $wpRestServer Server object.
+	 * @param WP_REST_Server $wpRestServer Server object.
 	 *
 	 * @return void
 	 */
-	public function fieldRegisterCallback(\WP_REST_Server $wpRestServer): void
+	public function fieldRegisterCallback(WP_REST_Server $wpRestServer): void
 	{
 		\register_rest_field(
 			$this->getObjectType(),

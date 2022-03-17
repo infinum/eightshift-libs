@@ -27,7 +27,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'components';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR . 'components';
 
 	/**
 	 * Get WPCLI command name
@@ -74,7 +74,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		$this->blocksMove($assocArgs, static::OUTPUT_DIR, true);
 	}

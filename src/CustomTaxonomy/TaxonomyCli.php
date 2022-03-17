@@ -23,7 +23,7 @@ class TaxonomyCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomTaxonomy';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomTaxonomy';
 
 	/**
 	 * Define default develop props.
@@ -81,7 +81,7 @@ class TaxonomyCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$label = $assocArgs['label'] ?? 'Example Name';

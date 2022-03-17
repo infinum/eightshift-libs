@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 4) . '/cliOutput';
+	$output = \dirname(__FILE__, 4) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -38,7 +38,7 @@ test('Custom Enqueue Admin CLI command will correctly copy the Enqueue Admin cla
 	$admin([], $admin->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedAdmin = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Admin/EnqueueAdmin.php');
+	$generatedAdmin = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Admin/EnqueueAdmin.php');
 
 	$this->assertStringContainsString('class EnqueueAdmin extends AbstractEnqueueAdmin', $generatedAdmin);
 	$this->assertStringContainsString('admin_enqueue_scripts', $generatedAdmin);

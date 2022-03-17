@@ -37,7 +37,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -46,16 +46,16 @@ afterEach(function () {
 	$blockMock = mock(BlockCli::class)
 		->makePartial()
 		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(dirname(__FILE__, 2) . '/data');
+		->andReturn(\dirname(__FILE__, 2) . '/data');
 
 	$mock = $blockMock->getMock();
 
 	$mock([], [$this->block->getDevelopArgs([])]);
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/button/button.php';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button/button.php';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedBlock = file_get_contents($outputPath);
+	$generatedBlock = \file_get_contents($outputPath);
 
 	$this->assertStringContainsString('Template for the Button Block view.', $generatedBlock);
 	$this->assertStringContainsString('@package EightshiftBoilerplate', $generatedBlock);
@@ -87,7 +87,7 @@ test('Block CLI command will fail if block doesn\'t exist', function () {
 	$blockMock = mock(BlockCli::class)
 		->makePartial()
 		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(dirname(__FILE__, 2) . '/data');
+		->andReturn(\dirname(__FILE__, 2) . '/data');
 
 	$mock = $blockMock->getMock();
 

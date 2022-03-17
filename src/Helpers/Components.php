@@ -12,6 +12,7 @@ namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Exception\InvalidBlock;
+use Exception;
 
 /**
  * Helpers for components
@@ -39,17 +40,17 @@ class Components
 	{
 		$output = '';
 
-		if (is_array($variable)) {
-			$isAssociative = array_values($variable) === $variable;
+		if (\is_array($variable)) {
+			$isAssociative = \array_values($variable) === $variable;
 
 			if ($isAssociative) {
-				$output = implode('', $variable);
+				$output = \implode('', $variable);
 			} else {
 				foreach ($variable as $key => $value) {
-					$output .= $key . '="' . htmlspecialchars($value) . '" ';
+					$output .= $key . '="' . \htmlspecialchars($value) . '" ';
 				}
 			}
-		} elseif (is_string($variable)) {
+		} elseif (\is_string($variable)) {
 			$output = $variable;
 		} else {
 			throw ComponentException::throwNotStringOrArray($variable);
@@ -67,7 +68,7 @@ class Components
 	 */
 	public static function classnames(array $classes): string
 	{
-		return trim(implode(' ', array_filter($classes)));
+		return \trim(\implode(' ', \array_filter($classes)));
 	}
 
 	/**
@@ -89,7 +90,7 @@ class Components
 	 */
 	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false): string
 	{
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
@@ -107,7 +108,7 @@ class Components
 		 *
 		 * parentClass__componentName.php
 		 */
-		if (strpos($component, '.php') !== false) {
+		if (\strpos($component, '.php') !== false) {
 			$componentPath = "{$parentPath}{$sep}$component";
 
 			if ($useComponentDefaults) {
@@ -121,7 +122,7 @@ class Components
 			}
 		}
 
-		if (!file_exists($componentPath)) {
+		if (!\file_exists($componentPath)) {
 			throw ComponentException::throwUnableToLocateComponent($componentPath);
 		}
 
@@ -129,13 +130,13 @@ class Components
 			$attributes = self::getDefaultRenderAttributes($manifest, $attributes);
 		}
 
-		ob_start();
+		\ob_start();
 
 		// Wrap component with parent BEM selector if parent's class is provided. Used
 		// for setting specific styles for components rendered inside other components.
 		if (isset($attributes['parentClass'])) {
-			$component = str_replace('.php', '', $component);
-			printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}")); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
+			$component = \str_replace('.php', '', $component);
+			\printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}")); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 		}
 
 		require $componentPath;
@@ -144,7 +145,7 @@ class Components
 			echo '</div>'; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 		}
 
-		return trim((string) ob_get_clean());
+		return \trim((string) \ob_get_clean());
 	}
 
 	/**
@@ -164,12 +165,12 @@ class Components
 			return self::getManifestDirect($path);
 		}
 
-		$path = rtrim($path, DIRECTORY_SEPARATOR);
+		$path = \trim($path, \DIRECTORY_SEPARATOR);
 
-		$path = explode(DIRECTORY_SEPARATOR, $path);
+		$path = \explode(\DIRECTORY_SEPARATOR, $path);
 
 		// Find last item to get name.
-		$item = $path[count($path) - 1] ?? '';
+		$item = $path[\count($path) - 1] ?? '';
 
 		// Global settings.
 		if ($item === 'Blocks') {
@@ -181,7 +182,7 @@ class Components
 			return self::getSettings('wrapper');
 		}
 
-		$type = $path[count($path) - 2] ?? '';
+		$type = $path[\count($path) - 2] ?? '';
 
 		// Components settings.
 		if ($type === 'components') {
@@ -218,9 +219,9 @@ class Components
 
 		foreach ($items as $itemKey => $itemValue) {
 			if (
-				(is_string($itemValue) && $itemValue === '') ||
-				(is_bool($itemValue) && $itemValue === false) ||
-				is_array($itemValue)
+				(\is_string($itemValue) && $itemValue === '') ||
+				(\is_bool($itemValue) && $itemValue === false) ||
+				\is_array($itemValue)
 			) {
 				continue;
 			}
@@ -244,7 +245,7 @@ class Components
 	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
 	 * @param bool $undefinedAllowed Allowed detection of undefined values.
 	 *
-	 * @throws \Exception When we're unable to find the component by $component.
+	 * @throws Exception When we're unable to find the component by $component.
 	 *
 	 * @return mixed
 	 */
@@ -262,10 +263,10 @@ class Components
 		$manifestKey = $manifest['attributes'][$key] ?? null;
 
 		if ($manifestKey === null) {
-			if (isset($manifest['blockName']) || array_key_exists('blockName', $manifest)) {
-				throw new \Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation.");
+			if (isset($manifest['blockName']) || \array_key_exists('blockName', $manifest)) {
+				throw new Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation.");
 			} else {
-				throw new \Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation.");
+				throw new Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation.");
 			}
 		}
 
@@ -300,8 +301,8 @@ class Components
 	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
 	 * @param bool $undefinedAllowed Allowed detection of undefined values.
 	 *
-	 * @throws \Exception If missing responsiveAttributes or keyName in responsiveAttributes.
-	 * @throws \Exception If missing keyName in responsiveAttributes.
+	 * @throws Exception If missing responsiveAttributes or keyName in responsiveAttributes.
+	 * @throws Exception If missing keyName in responsiveAttributes.
 	 *
 	 * @return array<mixed>
 	 */
@@ -310,15 +311,15 @@ class Components
 		$output = [];
 
 		if (!isset($manifest['responsiveAttributes'])) {
-			if (isset($manifest['blockName']) || array_key_exists('blockName', $manifest)) {
-				throw new \Exception("It looks like you are missing responsiveAttributes key in your {$manifest['blockName']} block manifest.");
+			if (isset($manifest['blockName']) || \array_key_exists('blockName', $manifest)) {
+				throw new Exception("It looks like you are missing responsiveAttributes key in your {$manifest['blockName']} block manifest.");
 			} else {
-				throw new \Exception("It looks like you are missing responsiveAttributes key in your {$manifest['componentName']} component manifest.");
+				throw new Exception("It looks like you are missing responsiveAttributes key in your {$manifest['componentName']} component manifest.");
 			}
 		}
 
 		if (!isset($manifest['responsiveAttributes'][$keyName])) {
-			throw new \Exception("It looks like you are missing the {$keyName} key in your manifest responsiveAttributes array.");
+			throw new Exception("It looks like you are missing the {$keyName} key in your manifest responsiveAttributes array.");
 		}
 
 		foreach ($manifest['responsiveAttributes'][$keyName] as $key => $value) {
@@ -340,7 +341,7 @@ class Components
 	public static function getAttrKey(string $key, array $attributes, array $manifest): string
 	{
 		// Just skip if attribute is wrapper.
-		if (strpos($key, 'wrapper') !== false) {
+		if (\strpos($key, 'wrapper') !== false) {
 			return $key;
 		}
 
@@ -356,7 +357,7 @@ class Components
 
 		// No need to test if this is block or component because on top level block there is no prefix.
 		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
-		return (string)str_replace(Components::kebabToCamelCase($manifest['componentName']), $attributes['prefix'], $key);
+		return (string)\str_replace(Components::kebabToCamelCase($manifest['componentName']), $attributes['prefix'], $key);
 	}
 
 	/**
@@ -375,9 +376,9 @@ class Components
 		$fullModifier = '';
 		$fullElement = '';
 
-		$element = trim($element);
-		$modifier = trim($modifier);
-		$block = trim($block);
+		$element = \trim($element);
+		$modifier = \trim($modifier);
+		$block = \trim($block);
 
 		if (!empty($element)) {
 			$fullElement = "__{$element}";
@@ -408,7 +409,7 @@ class Components
 		foreach ($globalManifest['globalVariables'] as $itemKey => $itemValue) {
 			$itemKey = self::camelToKebabCase($itemKey);
 
-			if (gettype($itemValue) === 'array') {
+			if (\gettype($itemValue) === 'array') {
 				$output .= self::globalInner($itemValue, $itemKey);
 			} else {
 				$output .= "--global-{$itemKey}: {$itemValue};\n";
@@ -462,7 +463,7 @@ class Components
 		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
 
 		// Sort breakpoints in ascending order.
-		asort($breakpoints);
+		\asort($breakpoints);
 
 		$defaultBreakpoints = self::getDefaultBreakpoints($breakpoints);
 
@@ -484,13 +485,13 @@ class Components
 
 		// Check manifest for the attributes with variable key.
 		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
-		$defaultAttributes = array_keys(
-			array_filter(
+		$defaultAttributes = \array_keys(
+			\array_filter(
 				$variables,
 				static function ($key) use ($attributes) {
 					return !isset($attributes[$key]);
 				},
-				ARRAY_FILTER_USE_KEY
+				\ARRAY_FILTER_USE_KEY
 			)
 		);
 
@@ -504,7 +505,7 @@ class Components
 				}
 			}
 
-			$attributes = array_merge($default, $attributes);
+			$attributes = \array_merge($default, $attributes);
 		}
 
 		if (!empty($responsiveAttributes)) {
@@ -537,7 +538,7 @@ class Components
 			}
 
 			// Merge array of variables to string.
-			$breakpointData = implode("\n", $variable);
+			$breakpointData = \implode("\n", $variable);
 
 			// If breakpoint value is 0 then don't wrap the media query around it.
 			if ($outputGloballyFlag) {
@@ -556,7 +557,7 @@ class Components
 		}
 
 		// Output manual output from the array of variables.
-		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
+		$manual = isset($manifest['variablesCustom']) ? \esc_html(\implode(";\n", $manifest['variablesCustom'])) : '';
 
 		// Output to global if flag is set.
 		if ($outputGloballyFlag) {
@@ -582,7 +583,7 @@ class Components
 		";
 
 		// Check if final output is empty and and remove if it is.
-		if (empty(trim($fullOutput))) {
+		if (empty(\trim($fullOutput))) {
 			return '';
 		}
 
@@ -590,8 +591,8 @@ class Components
 		$finalManualOutput = $manual ? "\n .{$name}[data-id='{$unique}']{\n{$manual}\n}" : '';
 
 		if ($outputGloballyOptimizeFlag) {
-			$output = str_replace(["\n", "\r"], '', $output);
-			$finalManualOutput = str_replace(["\n", "\r"], '', $finalManualOutput);
+			$output = \str_replace(["\n", "\r"], '', $output);
+			$finalManualOutput = \str_replace(["\n", "\r"], '', $finalManualOutput);
 		}
 
 		// Output the style for CSS variables.
@@ -624,34 +625,34 @@ class Components
 		$breakpointsData = self::getSettings('settings', 'globalVariables')['breakpoints'];
 
 		// Sort breakpoints in ascending order.
-		asort($breakpointsData);
+		\asort($breakpointsData);
 
 		// Populate min values.
-		$breakpointsMin = array_map(
+		$breakpointsMin = \array_map(
 			static function ($item) {
 				return "min---{$item}";
 			},
-			array_values($breakpointsData)
+			\array_values($breakpointsData)
 		);
 		// Append 0 value.
-		array_unshift($breakpointsMin, 'min---0');
+		\array_unshift($breakpointsMin, 'min---0');
 
 		// Populate max values.
-		$breakpointsMax = array_map(
+		$breakpointsMax = \array_map(
 			static function ($item) {
 				return "max---{$item}";
 			},
-			array_reverse(array_values($breakpointsData))
+			\array_reverse(\array_values($breakpointsData))
 		);
 		// Append 0 value.
-		array_unshift($breakpointsMax, 'max---0');
+		\array_unshift($breakpointsMax, 'max---0');
 
 		// Return empty array of items.
-		$breakpoints = array_map(
+		$breakpoints = \array_map(
 			static function () {
 				return '';
 			},
-			array_flip(array_values(array_merge($breakpointsMin, $breakpointsMax)))
+			\array_flip(\array_values(\array_merge($breakpointsMin, $breakpointsMax)))
 		);
 
 		// Loop styles.
@@ -690,7 +691,7 @@ class Components
 
 		// Loop breakpoints in correct order.
 		foreach ($breakpoints as $breakpointKey => $breakpointValue) {
-			$breakpointKey = explode('---', $breakpointKey);
+			$breakpointKey = \explode('---', $breakpointKey);
 
 			$type = $breakpointKey[0] ?? '';
 			$value = $breakpointKey[1] ?? '';
@@ -710,7 +711,7 @@ class Components
 
 		// Remove newlines is config is set.
 		if ($outputGloballyOptimizeFlag) {
-			$output = str_replace(["\n", "\r"], '', $output);
+			$output = \str_replace(["\n", "\r"], '', $output);
 		}
 
 	  $selector = self::getSettings('config', 'outputCssVariablesSelectorName');
@@ -725,7 +726,7 @@ class Components
 	 */
 	public static function getUnique(): string
 	{
-		return md5(uniqid((string)\wp_rand(), true));
+		return \md5(\uniqid((string)\wp_rand(), true));
 	}
 
 	/**
@@ -737,8 +738,8 @@ class Components
 	 */
 	public static function camelToKebabCase(string $string): string
 	{
-		$replace = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
-		return ltrim(strtolower($replace), '-');
+		$replace = \preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
+		return l\trim(\strtolower($replace), '-');
 	}
 
 	/**
@@ -751,7 +752,7 @@ class Components
 	 */
 	public static function kebabToCamelCase(string $string, string $separator = '-'): string
 	{
-		return lcfirst(str_replace($separator, '', ucwords($string, $separator)));
+		return \lcfirst(\str_replace($separator, '', \ucwords($string, $separator)));
 	}
 
 	/**
@@ -811,19 +812,19 @@ class Components
 		if (empty($prefix)) {
 			$output['prefix'] = self::kebabToCamelCase($newName);
 		} else {
-			$output['prefix'] = $prefix . ucfirst(self::kebabToCamelCase($newName));
+			$output['prefix'] = $prefix . \ucfirst(self::kebabToCamelCase($newName));
 		}
 
 		// Iterate over the attributes.
 		foreach ($attributes as $key => $value) {
 			// Include attributes from iteration.
-			if (in_array($key, $includes, true)) {
+			if (\in_array($key, $includes, true)) {
 				$output[$key] = $value;
 				continue;
 			}
 
 			// If attribute starts with the prefix key leave it in the object if not remove it.
-			if (substr((string)$key, 0, strlen($output['prefix'])) === $output['prefix']) {
+			if (\substr((string)$key, 0, \strlen($output['prefix'])) === $output['prefix']) {
 				$output[$key] = $value;
 			}
 		}
@@ -833,23 +834,23 @@ class Components
 			// Iterate manual attributes.
 			foreach ($manual as $key => $value) {
 				// Include attributes from iteration.
-				if (in_array($key, $includes, true)) {
+				if (\in_array($key, $includes, true)) {
 					$output[$key] = $value;
 					continue;
 				}
 
 				// Remove the current component name from the attribute name.
-				$newKey = str_replace(lcfirst(self::kebabToCamelCase($newName)), '', $key);
+				$newKey = \str_replace(\lcfirst(self::kebabToCamelCase($newName)), '', $key);
 
 				// Remove the old key.
 				unset($manual[$key]);
 
 				// Add new key to the output with prepared attribute name.
-				$manual[$output['prefix'] . ucfirst($newKey)] = $value;
+				$manual[$output['prefix'] . \ucfirst($newKey)] = $value;
 			}
 
 			// Merge manual and output objects to one.
-			$output = array_merge($output, $manual);
+			$output = \array_merge($output, $manual);
 		}
 
 		// Return the original attribute for optimization purposes.
@@ -867,7 +868,7 @@ class Components
 	{
 		$return = [];
 
-		array_walk_recursive(
+		\array_walk_recursive(
 			$array,
 			function ($a) use (&$return) {
 				$return[] = $a;
@@ -913,7 +914,7 @@ class Components
 				$keyDetails = 'components';
 			}
 
-			$items = array_filter(
+			$items = \array_filter(
 				$details[$keyDetails],
 				static function ($manifest) use ($item, $keyName) {
 					return $manifest[$keyName] === $item;
@@ -924,7 +925,7 @@ class Components
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
 			}
 
-			return reset($items);
+			return \reset($items);
 		}
 
 		// If searching for one item in array.
@@ -960,7 +961,7 @@ class Components
 	{
 		$defaultAttributes = [];
 
-		if (!is_iterable($manifest['attributes'])) {
+		if (!\is_iterable($manifest['attributes'])) {
 			return [];
 		}
 
@@ -973,7 +974,7 @@ class Components
 			}
 		}
 
-		return array_merge($defaultAttributes, $attributes);
+		return \array_merge($defaultAttributes, $attributes);
 	}
 
 	/**
@@ -1066,7 +1067,7 @@ class Components
 			}
 
 			// Used for determination of default breakpoint.
-			$numberOfBreakpoints = count($responsiveAttributeObject);
+			$numberOfBreakpoints = \count($responsiveAttributeObject);
 			$responsiveAttribute = [];
 			$breakpointIndex = 0;
 
@@ -1078,7 +1079,7 @@ class Components
 				$breakpointVariables = [];
 
 				// Determines whether array is a key value pair or not.
-				$isAssociative = array_values($variables[$responsiveAttributeName]) === $variables[$responsiveAttributeName];
+				$isAssociative = \array_values($variables[$responsiveAttributeName]) === $variables[$responsiveAttributeName];
 
 				if ($isAssociative) {
 					// Array represents direct value(default or value).
@@ -1108,7 +1109,7 @@ class Components
 				$breakpointIndex++;
 			}
 			// Merge multiple responsive attributes to one array.
-			$responsiveAttributesVariables = array_merge($responsiveAttributesVariables, $responsiveAttribute);
+			$responsiveAttributesVariables = \array_merge($responsiveAttributesVariables, $responsiveAttribute);
 		};
 
 		return $responsiveAttributesVariables;
@@ -1126,8 +1127,8 @@ class Components
 	private static function getDefaultBreakpoints(array $breakpoints): array
 	{
 		return [
-			'min' => array_keys($breakpoints)[0] ?? '',
-			'max' => array_keys($breakpoints)[count($breakpoints) - 1] ?? '',
+			'min' => \array_keys($breakpoints)[0] ?? '',
+			'max' => \array_keys($breakpoints)[\count($breakpoints) - 1] ?? '',
 		];
 	}
 
@@ -1149,7 +1150,7 @@ class Components
 			$attributeValue = $attributes[self::getAttrKey($variableName, $attributes, $manifest)] ?? '';
 
 			// Make sure this works correctly for attributes which are toggles (booleans).
-			if (is_bool($attributeValue)) {
+			if (\is_bool($attributeValue)) {
 				$attributeValue = $attributeValue ? 'true' : 'false';
 			}
 
@@ -1159,7 +1160,7 @@ class Components
 			}
 
 			// Bailout if wrong type is provided.
-			if (!is_array($variableValue)) {
+			if (!\is_array($variableValue)) {
 				continue;
 			}
 
@@ -1180,9 +1181,19 @@ class Components
 				// Iterate each data array to find the correct breakpoint.
 				foreach ($data as $index => $item) {
 					// Check if breakpoint and type match.
-					if ($item['name'] === $breakpoint && $item['type'] === $type && (!empty((string) $attributeValue) || gettype($attributeValue) === 'integer' || gettype($attributeValue) === 'float' || gettype($attributeValue) === 'double' || $attributeValue === '0')) { // phpcs:ignore Generic.Files.LineLength.TooLong
+					if (
+						$item['name'] === $breakpoint &&
+						$item['type'] === $type &&
+						(
+							!empty((string) $attributeValue) ||
+							\gettype($attributeValue) === 'integer' ||
+							\gettype($attributeValue) === 'float' ||
+							\gettype($attributeValue) === 'double' ||
+							$attributeValue === '0'
+						)
+					) {
 						// Merge data variables with the new variables array.
-						$data[$index]['variable'] = array_merge($item['variable'], self::variablesInner($variable, $attributeValue));
+						$data[$index]['variable'] = \array_merge($item['variable'], self::variablesInner($variable, $attributeValue));
 					}
 				}
 			}
@@ -1215,7 +1226,7 @@ class Components
 			];
 
 			// Inner object for min values.
-			$itemObjectMin = array_merge(
+			$itemObjectMin = \array_merge(
 				$itemObject,
 				[
 					'type' => 'min',
@@ -1224,7 +1235,7 @@ class Components
 			);
 
 			// Inner object for max values.
-			$itemObjectMax = array_merge(
+			$itemObjectMax = \array_merge(
 				$itemObject,
 				[
 					'type' => 'max',
@@ -1240,10 +1251,10 @@ class Components
 		};
 
 		// Pop largest breakpoint out of min array.
-		array_shift($min);
+		\array_shift($min);
 
 		// Add default object to the top of the array as minimum.
-		array_unshift(
+		\array_unshift(
 			$min,
 			[
 				'type' => 'min',
@@ -1254,13 +1265,13 @@ class Components
 		);
 
 		// Reverse order of max array.
-		$max = array_reverse($max);
+		$max = \array_reverse($max);
 
 		// Throw out the largest.
-		array_shift($max);
+		\array_shift($max);
 
 		// Switch the largest to default.
-		array_unshift(
+		\array_unshift(
 			$max,
 			[
 				'type' => 'max',
@@ -1271,7 +1282,7 @@ class Components
 		);
 
 		// Merge both arrays.
-		return array_merge($min, $max);
+		return \array_merge($min, $max);
 	}
 
 	/**
@@ -1297,8 +1308,8 @@ class Components
 			$internalKey = self::camelToKebabCase($variableKey);
 
 			// If value contains magic variable swap that variable with original attribute value.
-			if (strpos($variableValue, '%value%') !== false) {
-				$variableValue = str_replace('%value%', (string) $attributeValue, $variableValue);
+			if (\strpos($variableValue, '%value%') !== false) {
+				$variableValue = \str_replace('%value%', (string) $attributeValue, $variableValue);
 			}
 
 			// Output the custom CSS variable by adding the attribute key + custom object key.
@@ -1322,20 +1333,20 @@ class Components
 			return self::$namespace;
 		}
 
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 
-		$manifestPath = dirname(__DIR__, 5) . "{$sep}src{$sep}Blocks{$sep}manifest.json";
+		$manifestPath = \dirname(__DIR__, 5) . "{$sep}src{$sep}Blocks{$sep}manifest.json";
 
-		if (getenv('TEST')) {
-			$manifestPath = dirname(__DIR__, 2) . "{$sep}tests{$sep}data{$sep}src{$sep}Blocks{$sep}manifest.json";
+		if (\getenv('TEST')) {
+			$manifestPath = \dirname(__DIR__, 2) . "{$sep}tests{$sep}data{$sep}src{$sep}Blocks{$sep}manifest.json";
 		}
 
-		if (!file_exists($manifestPath)) {
+		if (!\file_exists($manifestPath)) {
 			throw InvalidBlock::missingSettingsManifestException($manifestPath);
 		}
 
-		$settings = implode(' ', (array)file(($manifestPath)));
-		$settings = json_decode($settings, true);
+		$settings = \implode(' ', (array)\file(($manifestPath)));
+		$settings = \json_decode($settings, true);
 
 		if (!isset($settings['namespace'])) {
 			throw InvalidBlock::missingNamespaceException();
@@ -1356,15 +1367,15 @@ class Components
 	 */
 	private static function getManifestDirect(string $path): array
 	{
-		$sep = DIRECTORY_SEPARATOR;
-		$path = rtrim($path, $sep);
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = \trim($path, $sep);
 
 		$manifest = "{$path}{$sep}manifest.json";
 
-		if (!file_exists($manifest)) {
+		if (!\file_exists($manifest)) {
 			throw ComponentException::throwUnableToLocateComponent($manifest);
 		}
 
-		return json_decode(implode(' ', (array)file($manifest)), true);
+		return \json_decode(\implode(' ', (array)\file($manifest)), true);
 	}
 }

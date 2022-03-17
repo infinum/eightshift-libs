@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -40,7 +40,7 @@ test('Build CLI will correctly copy the build script with defaults', function ()
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedFile = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/bin/build.sh');
+	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/bin/build.sh');
 	$this->assertStringNotContainsString('random string', $generatedFile);
 });
 
@@ -51,7 +51,7 @@ test('Build CLI will correctly copy the build script to a given folder', functio
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedFile = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/test/bin/build.sh');
+	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/test/bin/build.sh');
 	$this->assertStringNotContainsString('random string', $generatedFile);
 });
 

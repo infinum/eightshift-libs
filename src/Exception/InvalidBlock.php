@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
+use InvalidArgumentException;
+
 /**
  * Class InvalidBlock
  */
-final class InvalidBlock extends \InvalidArgumentException implements GeneralExceptionInterface
+final class InvalidBlock extends InvalidArgumentException implements GeneralExceptionInterface
 {
 	/**
 	 * Throws error if blocks are missing.
@@ -45,7 +47,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingNameException(string $blockPath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 			/* translators: %s will be replaced with the path where the block should be. */
 				\esc_html__('Block in this path %s is missing blockName key in its manifest.json.', 'eightshift-libs'),
 				$blockPath
@@ -63,7 +65,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingComponentNameException(string $componmentPath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 			/* translators: %s will be replaced with the path where the block should be. */
 				\esc_html__('Component at %s is missing the "componentName" key in its manifest.json.', 'eightshift-libs'),
 				$componmentPath
@@ -82,7 +84,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingViewException(string $blockName, string $blockPath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 			/* translators: %1$s is going to be replaced with the template name, %2$s with the template path. */
 				\esc_html__(
 					'Block with this name %1$s is missing view template. Template name should be called %1$s.php, and it should be located in this path %2$s',
@@ -104,7 +106,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingRenderViewException(string $blockPath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 			/* translators: %s will be replaced with the block path. */
 				\esc_html__(
 					'Block view is missing in the provided path. Please check if %s is the right path for your block view.',
@@ -125,7 +127,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingSettingsManifestException(string $settingsManifestPath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 			/* translators: %s will be replaced with the location of the manifest for the block. */
 				\esc_html__('Global blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
 				$settingsManifestPath
@@ -143,7 +145,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingWrapperManifestException(string $settingsManifestPath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 			/* translators: %s will be replaced with the manifest path location. */
 				\esc_html__('Wrapper blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
 				$settingsManifestPath
@@ -161,9 +163,9 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingComponentManifestException(string $settingsManifestPath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 			/* translators: %s will be replaced with the manifest path location. */
-				esc_html__('Component manifest.json is missing on this location: %s.', 'eightshift-libs'),
+				\esc_html__('Component manifest.json is missing on this location: %s.', 'eightshift-libs'),
 				$settingsManifestPath
 			)
 		);
@@ -179,7 +181,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingWrapperViewException(string $wrapperPath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 			/* translators: %s will be replaced with the view template path location. */
 				\esc_html__('Wrapper view is missing. Template should be located in this path %s', 'eightshift-libs'),
 				$wrapperPath
@@ -213,7 +215,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function wrongComponentNameException(string $name, string $componentName): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 				/* translators: %1$s is going to be replaced with the component/block name, %2$s with component name. */
 				\esc_html__('Component specified in %1$s manifest doesn\'t exist in your components list.
 				Please check if you project has %2$s component.', 'eightshift-libs'),
@@ -236,7 +238,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 
 		if ($key === 'block' || $key === 'component') {
 			return new InvalidBlock(
-				sprintf(
+				\sprintf(
 					/* translators: %1$s is going to be replaced with the key name. */
 					\esc_html__('Block/component %1$s not found in the blocks settings or the output data is empty.
 					Please check if the provided key and parent is correct.', 'eightshift-libs'),
@@ -247,7 +249,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 
 		if ($item) {
 			return new InvalidBlock(
-				sprintf(
+				\sprintf(
 					/* translators: %1$s is going to be replaced with the key name. */
 					\esc_html__('Key %1$s not found in the %2$s array blocks settings or the output data is empty.
 					Please check if the provided key and parent is correct.', 'eightshift-libs'),
@@ -258,7 +260,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 		}
 
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 				/* translators: %1$s is going to be replaced with the key name. */
 				\esc_html__('Key %1$s not found in the blocks settings or the output data is empty.
 				Please check if the provided key is correct.', 'eightshift-libs'),
@@ -277,7 +279,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingFileException(string $sourcePath): InvalidBlock
 	{
 		return new InvalidBlock(
-			sprintf(
+			\sprintf(
 				/* translators: %s is going to be replaced with the missing file path. */
 				\esc_html__('Failed to open path %s. No such file or directory.', 'eightshift-libs'),
 				$sourcePath,

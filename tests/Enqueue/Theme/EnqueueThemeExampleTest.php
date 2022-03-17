@@ -98,14 +98,14 @@ test('getAssetsVersion method will return string', function () {
 
 test('enqueueStyles method will enqueue styles in a theme', function () {
 	$this->themeEnqueue->enqueueStyles();
-	$this->assertSame(getenv('REGISTER_STYLE'), 'MyProject-theme-styles', 'Method enqueueStyles() failed to register style');
-	$this->assertSame(getenv('ENQUEUE_STYLE'), 'MyProject-theme-styles', 'Method enqueueStyles() failed to enqueue style');
+	$this->assertSame(\getenv('REGISTER_STYLE'), 'MyProject-theme-styles', 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_STYLE'), 'MyProject-theme-styles', 'Method enqueueStyles() failed to enqueue style');
 });
 
 test('enqueueScripts method will enqueue scripts in a theme', function () {
 
 	$this->themeEnqueue->enqueueScripts();
-	$this->assertSame(getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
-	$this->assertSame(getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
-	$this->assertSame(getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
+	$this->assertSame(\getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
+	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
 });

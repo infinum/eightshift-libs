@@ -13,7 +13,12 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\AdminMenus\AdminMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
-use EightshiftLibs\Blocks\{BlocksCli, BlockComponentCli, BlockCli, BlocksStorybookCli, BlockVariationCli, BlockWrapperCli};
+use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Blocks\BlockComponentCli;
+use EightshiftLibs\Blocks\BlockCli;
+use EightshiftLibs\Blocks\BlocksStorybookCli;
+use EightshiftLibs\Blocks\BlockVariationCli;
+use EightshiftLibs\Blocks\BlockWrapperCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Config\ConfigCli;
@@ -36,12 +41,14 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
-use EightshiftLibs\Db\{ExportCli, ImportCli};
+use EightshiftLibs\Db\ExportCli;
+use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\CliCommands\CustomCommandCli;
+use ReflectionClass;
 
 /**
  * Class Cli
@@ -131,7 +138,7 @@ class Cli
 	 */
 	public function getDevelopClasses(): array
 	{
-		return array_merge(
+		return \array_merge(
 			static::CLASSES_LIST,
 			static::DEVELOP_CLASSES,
 			static::SETUP_CLASSES
@@ -145,7 +152,7 @@ class Cli
 	 */
 	public function getPublicClasses(): array
 	{
-		return array_merge(
+		return \array_merge(
 			static::CLASSES_LIST,
 			static::PUBLIC_CLASSES,
 			static::SETUP_CLASSES
@@ -157,7 +164,7 @@ class Cli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @throws \ReflectionException Exception if the class doesn't exist.
+	 * @throws ReflectionException Exception if the class doesn't exist.
 	 *
 	 * @return void
 	 */
@@ -170,10 +177,10 @@ class Cli
 		}
 
 		foreach ($this->getDevelopClasses() as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
-			if (method_exists($class, 'getCommandName') && method_exists($class, 'getDevelopArgs') && method_exists($class, '__invoke')) {
+			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getDevelopArgs') && \method_exists($class, '__invoke')) {
 				if ($class->getCommandName() === $commandName) {
 					$class->__invoke(
 						[],
@@ -191,14 +198,14 @@ class Cli
 	 *
 	 * @param string $commandParentName Define top level commands name.
 	 *
-	 * @throws \ReflectionException Exception if the class doesn't exist.
+	 * @throws ReflectionException Exception if the class doesn't exist.
 	 *
 	 * @return void
 	 */
 	public function load(string $commandParentName): void
 	{
 		foreach ($this->getPublicClasses() as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([$commandParentName]);
 
 			if ($class instanceof CliInterface) {

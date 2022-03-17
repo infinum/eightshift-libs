@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -39,7 +39,7 @@ test('Admin submenu CLI command will correctly copy the admin menu example class
 	$cpt([], $cpt->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminTitleAdminSubMenu.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminTitleAdminSubMenu.php');
 
 	$this->assertStringContainsString('class AdminTitleAdminSubMenu extends AbstractAdminSubMenu', $generatedCPT, 'Class name not correctly set');
 	$this->assertStringContainsString('Admin Title', $generatedCPT, 'Menu title not correctly replaced');
@@ -58,7 +58,7 @@ test('Admin submenu CLI command will correctly copy the admin menu class with se
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/ReusableBlockOptionsAdminSubMenu.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/ReusableBlockOptionsAdminSubMenu.php');
 
 	$this->assertStringContainsString('class ReusableBlockOptionsAdminSubMenu extends AbstractAdminSubMenu', $generatedCPT, 'Class name not correctly set');
 	$this->assertStringContainsString('Options', $generatedCPT, 'Menu title not correctly replaced');

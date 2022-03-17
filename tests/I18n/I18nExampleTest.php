@@ -42,7 +42,7 @@ test('Registering load_theme_textdomain works', function () {
 
 	$this->i18n->loadThemeTextdomain();
 
-	$this->assertSame(getenv('I18N_ABSTRACTED'), 'true', 'Calling void method loadThemeTextdomain caused no side effects');
+	$this->assertSame(\getenv('I18N_ABSTRACTED'), 'true', 'Calling void method loadThemeTextdomain caused no side effects');
 });
 
 test('Registering wp_set_script_translations works', function () {
@@ -64,5 +64,5 @@ test('Registering wp_set_script_translations works', function () {
 
 	$this->i18n->setScriptTranslations();
 
-	$this->assertSame(getenv('I18N_ABSTRACTED'), 'true', 'Calling void method setScriptTranslations caused no side effects');
+	$this->assertSame(\getenv('I18N_ABSTRACTED'), 'true', 'Calling void method setScriptTranslations caused no side effects');
 });

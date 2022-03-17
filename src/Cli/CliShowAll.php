@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use WP_CLI;
+
 /**
  * Class CliShowAll
  */
@@ -40,32 +42,32 @@ class CliShowAll extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
-		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli and development:%n'));
+		WP_CLI::log(WP_CLI::colorize('%mCommands for wp-cli and development:%n'));
 
 		$this->getEvalLoop(Cli::CLASSES_LIST);
 
-		\WP_CLI::log('-----------------------------------------');
+		WP_CLI::log('-----------------------------------------');
 
-		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli only:%n'));
+		WP_CLI::log(WP_CLI::colorize('%mCommands for wp-cli only:%n'));
 
 		$this->getEvalLoop(Cli::PUBLIC_CLASSES);
 
-		\WP_CLI::log('-----------------------------------------');
+		WP_CLI::log('-----------------------------------------');
 
-		\WP_CLI::log(\WP_CLI::colorize('%mCommands for development:%n'));
+		WP_CLI::log(WP_CLI::colorize('%mCommands for development:%n'));
 
 		$this->getEvalLoop(Cli::DEVELOP_CLASSES);
 
-		\WP_CLI::log('-----------------------------------------');
+		WP_CLI::log('-----------------------------------------');
 
-		\WP_CLI::log(\WP_CLI::colorize('%mCommands for project setup:%n'));
+		WP_CLI::log(WP_CLI::colorize('%mCommands for project setup:%n'));
 
 		$this->getEvalLoop(Cli::SETUP_CLASSES);
 
-		\WP_CLI::log('-----------------------------------------');
+		WP_CLI::log('-----------------------------------------');
 
-		\WP_CLI::success('All commands are outputted.');
+		WP_CLI::success('All commands are outputted.');
 	}
 }

@@ -35,7 +35,7 @@ beforeEach(function() {
 
 	$this->main = new MainExample([
 		'Tests\\Datasets\\Autowiring\\' => [
-			dirname( __FILE__, 2 ) . '/Datasets/Autowiring',
+			\dirname( __FILE__, 2 ) . '/Datasets/Autowiring',
 		],
 	], 'Tests\Datasets\Autowiring');
 
@@ -79,7 +79,7 @@ beforeEach(function() {
 test('Building service classes works', function () {
 	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
 	$this->assertIsArray($dependencyTree);
-	$this->assertGreaterThan(0, count($dependencyTree));
+	$this->assertGreaterThan(0, \count($dependencyTree));
 });
 
 test('Service classes are correctly included in the list', function () {

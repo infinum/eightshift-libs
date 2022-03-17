@@ -32,7 +32,7 @@ test('if taxonomy is registered', function () {
 
 	$this->example->taxonomyRegisterCallback();
 
-	$this->assertSame(getenv('SIDEAFFECT'), $action);
+	$this->assertSame(\getenv('SIDEAFFECT'), $action);
 
 	// Cleanup.
 	putenv('SIDEAFFECT=');

@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -39,7 +39,7 @@ test('Custom command CLI command will correctly copy the Custom command class wi
 	$customCommand([], $customCommand->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$customCommand = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CliCommands/TestCustomCommand.php');
+	$customCommand = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CliCommands/TestCustomCommand.php');
 
 	$this->assertStringContainsString('class TestCustomCommand extends AbstractCustomCommand', $customCommand);
 	$this->assertStringContainsString('function getCommandName', $customCommand);

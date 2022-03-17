@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
+use InvalidArgumentException;
+
 /**
  * InvalidPath class
  */
-final class InvalidPath extends \InvalidArgumentException implements GeneralExceptionInterface
+final class InvalidPath extends InvalidArgumentException implements GeneralExceptionInterface
 {
 	/**
 	 * Create a new instance of the exception for a file that is not accessible
@@ -26,7 +28,7 @@ final class InvalidPath extends \InvalidArgumentException implements GeneralExce
 	 */
 	public static function fromUri(string $uri): InvalidPath
 	{
-		$message = sprintf(
+		$message = \sprintf(
 			/* translators: %s will be replaced by path. */
 			\esc_html__('The URI "%s" is not accessible or readable.', 'eightshift-libs'),
 			$uri

@@ -50,7 +50,7 @@ test('CliRunAll works', function () {
 	$cliRunAll = $this->cliRunAll;
 	$cliRunAll([], []);
 
-	$this->assertSame('All commands are finished.', getenv('SUCCESS'));
+	$this->assertSame('All commands are finished.', \getenv('SUCCESS'));
 });
 
 

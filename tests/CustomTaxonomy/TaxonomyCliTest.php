@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -39,7 +39,7 @@ test('Custom taxonomy CLI command will correctly copy the Taxonomy class', funct
 	$taxonomyCli([], $taxonomyCli->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedTaxonomy = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
+	$generatedTaxonomy = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
 
 	$this->assertStringContainsString('The LocationTaxonomy specific functionality.', $generatedTaxonomy);
 	$this->assertStringContainsString('class LocationTaxonomy extends AbstractTaxonomy', $generatedTaxonomy);

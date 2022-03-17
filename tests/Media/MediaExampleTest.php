@@ -34,8 +34,8 @@ test('addThemeSupport method will call add_theme_support() function with differe
 
 	$this->media->addThemeSupport();
 
-	$this->assertSame(getenv('TITLE_TAG'), 'true', "Method addThemeSupport() didn't add theme support for title-tag");
-	$this->assertSame(getenv('HTML5'), 'true', "Method addThemeSupport() didn't add theme support for html5");
-	$this->assertSame(getenv('POST_THUMBNAILS'), 'true', "Method addThemeSupport() didn't add theme support for post-thumbnails");
+	$this->assertSame(\getenv('TITLE_TAG'), 'true', "Method addThemeSupport() didn't add theme support for title-tag");
+	$this->assertSame(\getenv('HTML5'), 'true', "Method addThemeSupport() didn't add theme support for html5");
+	$this->assertSame(\getenv('POST_THUMBNAILS'), 'true', "Method addThemeSupport() didn't add theme support for post-thumbnails");
 
 });

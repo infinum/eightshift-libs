@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
+use RuntimeException;
+
 /**
  * Class PluginActivationFailure
  */
-final class PluginActivationFailure extends \RuntimeException implements GeneralExceptionInterface
+final class PluginActivationFailure extends RuntimeException implements GeneralExceptionInterface
 {
 	/**
 	 * Create a new instance of the exception in case plugin cannot be activated.

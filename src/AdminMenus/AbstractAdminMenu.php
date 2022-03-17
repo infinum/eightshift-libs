@@ -13,6 +13,7 @@ namespace EightshiftLibs\AdminMenus;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Blocks\RenderableBlockInterface;
+use Exception;
 
 /**
  * Abstract class AbstractAdminMenu class.
@@ -53,7 +54,7 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	 * @param array<string, mixed>|string $attr Attributes as passed to the admin menu.
 	 *
 	 * @return void The rendered content needs to be echoed.
-	 * @throws \Exception Exception in case the component is missing.
+	 * @throws Exception Exception in case the component is missing.
 	 */
 	public function processAdminMenu($attr): void
 	{
@@ -72,15 +73,15 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	 * @param string $innerBlockContent Not used here.
 	 *
 	 * @return string Rendered HTML.
-	 * @throws \Exception On missing attributes OR missing template.
+	 * @throws Exception On missing attributes OR missing template.
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
 		try {
 			return Components::render($this->getViewComponent(), $attributes);
-		} catch (\Exception $exception) { // To do: once new libs are released, replace with ComponentException.
+		} catch (Exception $exception) { // To do: once new libs are released, replace with ComponentException.
 			// Don't let exceptions bubble up. Just render the exception message into the admin menu.
-			return sprintf(
+			return \sprintf(
 				'<pre>%s</pre>',
 				$exception->getMessage()
 			);
@@ -141,14 +142,14 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	 */
 	protected function renderNonce()
 	{
-		ob_start();
+		\ob_start();
 
 		\wp_nonce_field(
 			$this->getNonceAction(),
 			$this->getNonceName()
 		);
 
-		return ob_get_clean();
+		return \ob_get_clean();
 	}
 
 	/**

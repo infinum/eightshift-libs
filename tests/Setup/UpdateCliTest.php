@@ -3,6 +3,7 @@
 namespace Tests\Unit\Setup;
 
 use EightshiftLibs\Setup\UpdateCli;
+use Exception;
 
 use function Brain\Monkey\Functions\when;
 use function Tests\deleteCliOutput;
@@ -39,7 +40,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -48,7 +49,7 @@ afterEach(function () {
 test('Update CLI command will correctly throw an exception if setup.json does not exist or has the wrong filename', function () {
 	$update = $this->update;
 	$update([], []);
-})->throws(\Exception::class);
+})->throws(Exception::class);
 
 test('Update CLI documentation is correct', function () {
 	$update = $this->update;

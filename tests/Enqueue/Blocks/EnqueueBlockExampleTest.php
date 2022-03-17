@@ -132,29 +132,29 @@ test('Enqueue Blocks will get assets version.', function () {
 test('enqueueBlockEditorScript method will enqueue scripts for block editor', function () {
 	$this->blockEnqueue->enqueueBlockEditorScript();
 
-	$this->assertSame(getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-editor-scripts", 'Method enqueueStyles() failed to register style');
-	$this->assertSame(getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-editor-scripts", 'Method enqueueScripts() failed to enqueue style');
-	$this->assertSame(getenv('SIDEAFFECT'), 'localize', "Method wp_localize_script() failed");
+	$this->assertSame(\getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-editor-scripts", 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-editor-scripts", 'Method enqueueScripts() failed to enqueue style');
+	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', "Method wp_localize_script() failed");
 });
 
 test('enqueueBlockEditorStyle method will enqueue styles for block editor', function () {
 	$this->blockEnqueue->enqueueBlockEditorStyle();
 
-	$this->assertSame(getenv('REGISTER_STYLE'), "{$this->projectName}-block-editor-style", 'Method enqueueStyles() failed to register style');
-	$this->assertSame(getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-editor-style", 'Method enqueueStyles() failed to enqueue style');
+	$this->assertSame(\getenv('REGISTER_STYLE'), "{$this->projectName}-block-editor-style", 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-editor-style", 'Method enqueueStyles() failed to enqueue style');
 });
 
 test('enqueueBlockStyle method will enqueue styles for a block', function () {
 	$this->blockEnqueue->enqueueBlockStyle();
 
-	$this->assertSame(getenv('REGISTER_STYLE'), "{$this->projectName}-block-style", 'Method enqueueStyles() failed to register style');
-	$this->assertSame(getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-style", 'Method enqueueStyles() failed to enqueue style');
+	$this->assertSame(\getenv('REGISTER_STYLE'), "{$this->projectName}-block-style", 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-style", 'Method enqueueStyles() failed to enqueue style');
 });
 
 test('enqueueBlockScript method will enqueue scripts for a block', function () {
 	$this->blockEnqueue->enqueueBlockScript();
 
-	$this->assertSame(getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-scripts", 'Method enqueueStyles() failed to register style');
-	$this->assertSame(getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-scripts", 'Method enqueueScripts() failed to enqueue style');
-	$this->assertSame(getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
+	$this->assertSame(\getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-scripts", 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-scripts", 'Method enqueueScripts() failed to enqueue style');
+	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
 });

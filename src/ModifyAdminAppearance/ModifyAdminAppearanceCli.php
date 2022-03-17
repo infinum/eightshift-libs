@@ -20,7 +20,7 @@ class ModifyAdminAppearanceCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'ModifyAdminAppearance';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'ModifyAdminAppearance';
 
 	/**
 	 * Get WPCLI command doc
@@ -35,7 +35,7 @@ class ModifyAdminAppearanceCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		$className = $this->getClassShortName();
 

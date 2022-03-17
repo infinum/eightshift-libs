@@ -24,5 +24,5 @@ test('Service Example test register method', function () {
 });
 
 test('Service Example contains register method', function () {
-	$this->assertTrue(method_exists($this->service, 'register'));
+	$this->assertTrue(\method_exists($this->service, 'register'));
 });

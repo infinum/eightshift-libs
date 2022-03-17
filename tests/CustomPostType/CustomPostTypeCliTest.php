@@ -32,7 +32,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -43,7 +43,7 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 	$cpt([], $cpt->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/ProductPostType.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/ProductPostType.php');
 
 	$this->assertStringContainsString('class ProductPostType extends AbstractPostType', $generatedCPT);
 	$this->assertStringContainsString('admin-settings', $generatedCPT);
@@ -64,7 +64,7 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
 
 	$this->assertStringContainsString('class BookPostType extends AbstractPostType', $generatedCPT);
 	$this->assertStringContainsString('Book', $generatedCPT);
@@ -107,7 +107,7 @@ test('Registered post type will have properly created labels', function() {
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
 
 	$this->assertStringContainsString('book', $generatedCPT);
 	$this->assertStringContainsString('books', $generatedCPT);
@@ -132,7 +132,7 @@ test('Registered post type will have properly created plural label if the plural
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
 
 	$this->assertStringContainsString('book', $generatedCPT);
 	$this->assertStringContainsString('books', $generatedCPT);
@@ -154,11 +154,11 @@ test('Missing required noun will trigger the invalid nouns exception', function(
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
 
 	preg_match_all('/\$nouns\s=\s([^]]+)\]/m', $generatedCPT, $matches);
 
-	$newClass = str_replace($matches[0][0]. ';', '', $generatedCPT);
+	$newClass = \str_replace($matches[0][0]. ';', '', $generatedCPT);
 
 	/**
 	 * This part is a bit of a dirty hack.
@@ -173,7 +173,7 @@ test('Missing required noun will trigger the invalid nouns exception', function(
 	 *
 	 * So we need to make sure that the error will indeed be thrown.
 	 */
-	require_once dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php';
+	require_once \dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php';
 
 	$cptInstance = new \EightshiftLibs\CustomPostType\BookPostType();
 

@@ -36,7 +36,7 @@ test('Register method will call init hook', function () {
 test('Manifest example contains correct manifest file path', function () {
 	$manifestFilePath = $this->example->getManifestFilePath();
 
-	$manifestData = json_decode(file_get_contents($manifestFilePath), true);
+	$manifestData = \json_decode(\file_get_contents($manifestFilePath), true);
 
 	$this->assertStringContainsString('tests/data/public/manifest.json', $manifestFilePath);
 	$this->assertIsArray($manifestData);

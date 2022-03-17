@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Theme;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
-use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class Enqueue

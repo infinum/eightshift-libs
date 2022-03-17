@@ -69,7 +69,7 @@ class ServiceExampleCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$folder = $assocArgs['folder'] ?? '';
@@ -78,17 +78,17 @@ class ServiceExampleCli extends AbstractCli
 		// Get full class name.
 		$className = $this->getClassShortName();
 		$classNameNew = $this->getFileName($fileName);
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 
 		// Create new namespace from the folder structure.
-		$folderParts = array_map(
+		$folderParts = \array_map(
 			function ($item) {
-				return ucfirst($item);
+				return \ucfirst($item);
 			},
-			explode($ds, $folder)
+			\explode($ds, $folder)
 		);
 
-		$newNamespace = '\\' . implode('\\', $folderParts);
+		$newNamespace = '\\' . \implode('\\', $folderParts);
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, static::TEMPLATE)

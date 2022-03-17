@@ -3,6 +3,7 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\Rest\Fields\FieldCli;
+use Exception;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
@@ -28,7 +29,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -39,7 +40,7 @@ test('REST field CLI command will correctly copy the field class with defaults',
 	$field([], $field->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedField = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Rest/Fields/TitleField.php');
+	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Fields/TitleField.php');
 
 	$this->assertStringContainsString('class TitleField extends AbstractField implements CallableFieldInterface', $generatedField);
 	$this->assertStringContainsString('return \'title\';', $generatedField);
@@ -56,7 +57,7 @@ test('REST field CLI command will correctly copy the field class with arguments'
 	$objectType = $fieldNameArguments['object_type'];
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedField = file_get_contents(dirname(__FILE__, 4) . "/cliOutput/src/Rest/Fields/{$fullFieldName}.php");
+	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . "/cliOutput/src/Rest/Fields/{$fullFieldName}.php");
 
 	$this->assertStringContainsString("class {$fullFieldName} extends AbstractField implements CallableFieldInterface", $generatedField);
 	$this->assertStringContainsString("return '{$objectType}';", $generatedField);
@@ -67,4 +68,4 @@ test('REST field CLI command will correctly copy the field class with arguments'
 test('REST field CLI command will throw error on missing / invalid arguments', function ($fieldNameArguments) {
 	$field = $this->field;
 	$field([], $fieldNameArguments);
-})->with('errorFieldNameArguments')->throws(\Exception::class);
+})->with('errorFieldNameArguments')->throws(Exception::class);
