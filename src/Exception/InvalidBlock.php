@@ -293,7 +293,10 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	public static function missingGlobalBlockDetailsException(): InvalidBlock
 	{
 		return new InvalidBlock(
-				\esc_html__('Global variable $esBlocks is missing. Did you hook your callbacks correctly? Make sure the global is generated early on in your request lifecycle.', 'eightshift-libs'),
+			\esc_html__('
+				Global variable $esBlocks is missing. Did you hook your callbacks correctly?
+				Make sure the global is generated early on in your request lifecycle.
+			', 'eightshift-libs'),
 		);
 	}
 }

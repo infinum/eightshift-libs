@@ -930,6 +930,8 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $source Source path.
 	 * @param string $destination Destination path.
 	 *
+	 * @throws InvalidBlock If block file is missing.
+	 *
 	 * @return void
 	 */
 	protected function copyRecursively(string $source, string $destination): void

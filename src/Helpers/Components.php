@@ -160,9 +160,9 @@ class Components
 	 * @param string $path Absolute path to manifest folder.
 	 * @param bool $useGlobal Use global blocks settings.
 	 *
-	 * @return array<string, mixed>
 	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
+	 * @return array<string, mixed>
 	 */
 	public static function getManifest(string $path, bool $useGlobal = true): array
 	{
@@ -898,9 +898,9 @@ class Components
 	 * @param string $item Array key to get.
 	 * @param string $namespace Namespace of blocks.
 	 *
-	 * @return string|array<string, mixed>
 	 * @throws InvalidBlock If settings key is missing.
 	 *
+	 * @return string|array<string, mixed>
 	 */
 	public static function getSettings(string $type, string $item = '', string $namespace = '')
 	{
@@ -934,27 +934,31 @@ class Components
 				}
 			);
 
-			if ($items) {
-				$items = reset($items);
-			}
-
-			return $items ?? [];
-		}
-
-		// If searching for one item.
-		if (!empty($item)) {
-			if (!isset($details[$type][$item])) {
+			if (!$items) {
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
 			}
 
-			return $details[$type][$item] ?? [];
+			return reset($items);
 		}
 
-		if (!isset($details[$type])) {
+		// If searching for one item.
+		if ($item) {
+			$items = $details[$type][$item] ?? [];
+
+			if (!$items) {
+				throw InvalidBlock::missingSettingsKeyException($type, $item);
+			}
+
+			return $items;
+		}
+
+		$items = $details[$type] ?? [];
+
+		if (!$items) {
 			throw InvalidBlock::missingSettingsKeyException($type);
 		}
 
-		return $details[$type] ?? [];
+		return $items;
 	}
 
 	/**

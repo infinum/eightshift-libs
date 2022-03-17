@@ -26,14 +26,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @var string
 	 */
-	private string $namespace = '';
+	private string $namespace = ''; // phpcs:ignore PHPCompatibility.Classes.NewTypedProperties.Found
 
 	/**
 	 * Directory separator used for cross compatibility.
 	 *
 	 * @var string
 	 */
-	private string $sep = DIRECTORY_SEPARATOR;
+	private string $sep = DIRECTORY_SEPARATOR; // phpcs:ignore PHPCompatibility.Classes.NewTypedProperties.Found
 
 	/**
 	 * Create custom project color palette
