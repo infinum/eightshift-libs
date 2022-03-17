@@ -26,13 +26,6 @@ class Components
 	public static $namespace = '';
 
 	/**
-	 * Directory separator used for cross compatibility.
-	 *
-	 * @var string
-	 */
-	private static $sep = DIRECTORY_SEPARATOR;
-
-	/**
 	 * Makes sure the output is string. Useful for converting an array of components into a string.
 	 * If you pass an associative array it will output strings with keys, used for generating data-attributes from array.
 	 *
@@ -96,7 +89,7 @@ class Components
 	 */
 	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false): string
 	{
-		$sep = self::$sep;
+		$sep = DIRECTORY_SEPARATOR;
 
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
@@ -173,7 +166,7 @@ class Components
 
 		$path = rtrim($path, DIRECTORY_SEPARATOR);
 
-		$path = explode(self::$sep, $path);
+		$path = explode(DIRECTORY_SEPARATOR, $path);
 
 		// Find last item to get name.
 		$item = $path[count($path) - 1] ?? '';
@@ -1332,7 +1325,7 @@ class Components
 			return self::$namespace;
 		}
 
-		$sep = self::$sep;
+		$sep = DIRECTORY_SEPARATOR;
 
 		$manifestPath = dirname(__DIR__, 5) . "{$sep}src{$sep}Blocks{$sep}manifest.json";
 
@@ -1366,9 +1359,9 @@ class Components
 	 */
 	private static function getManifestDirect(string $path): array
 	{
-		$path = rtrim($path, self::$sep);
+		$sep = DIRECTORY_SEPARATOR;
+		$path = rtrim($path, $sep);
 
-		$sep = self::$sep;
 		$manifest = "{$path}{$sep}manifest.json";
 
 		if (!file_exists($manifest)) {

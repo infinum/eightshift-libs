@@ -273,7 +273,7 @@ test('registerBlocks method will register all blocks.', function () {
 
 	$this->blocksExample->registerBlocks();
 
-	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no side affects');
+	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no side effects');
 });
 
 test('getCustomCategoryOld method will return an array.', function () {
