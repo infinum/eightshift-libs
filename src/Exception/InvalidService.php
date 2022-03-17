@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
+use InvalidArgumentException;
+
 /**
  * Class InvalidService
  */
-final class InvalidService extends \InvalidArgumentException implements GeneralExceptionInterface
+final class InvalidService extends InvalidArgumentException implements GeneralExceptionInterface
 {
 	/**
 	 * Create a new instance of the exception for a service class name that is
@@ -25,7 +27,7 @@ final class InvalidService extends \InvalidArgumentException implements GeneralE
 	 */
 	public static function fromService(string $service): InvalidService
 	{
-		$message = sprintf(
+		$message = \sprintf(
 		/* translators: %s is replaced with name of the service. */
 			\esc_html__('The service %s is not recognized and cannot be registered.', 'eightshift-libs'),
 			$service

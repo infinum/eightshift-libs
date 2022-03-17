@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -37,12 +37,12 @@ test('ConfigProject CLI command will correctly copy the ConfigProject class with
 	$configProject = $this->configProject;
 	$configProject([], $configProject->getDevelopArgs([]));
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/wp-config-project.php';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/wp-config-project.php';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedConfigProject = file_get_contents($outputPath);
+	$generatedConfigProject = \file_get_contents($outputPath);
 
-	$this->assertStringContainsString('!defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
+	$this->assertStringContainsString('!\defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
 	$this->assertStringContainsString('@package EightshiftLibs', $generatedConfigProject);
 	$this->assertStringNotContainsString('footer.php', $generatedConfigProject);
 	$this->assertFileExists($outputPath);
@@ -62,9 +62,9 @@ test('ConfigProject CLI command will correctly copy the ConfigProject class with
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedConfigProject = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/test/wp-config-project.php');
+	$generatedConfigProject = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/test/wp-config-project.php');
 
-	$this->assertStringContainsString('!defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
+	$this->assertStringContainsString('!\defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
 });
 
 test('ConfigProject CLI documentation is correct', function () {

@@ -5,6 +5,7 @@ namespace Tests\Unit\Exception;
 use EightshiftLibs\Exception\FailedToLoadView;
 
 use Brain\Monkey;
+use Exception;
 
 use function Tests\setupMocks;
 
@@ -20,7 +21,7 @@ afterAll(function() {
 test('Checks if the viewException method will return correct response.', function () {
 
 	$uri = 'https://random.uri';
-	$exception = new \Exception('Error message');
+	$exception = new Exception('Error message');
 
 	$exceptionObject = FailedToLoadView::viewException($uri, $exception);
 

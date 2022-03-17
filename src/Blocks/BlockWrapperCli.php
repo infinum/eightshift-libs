@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI;
 
 /**
  * Class BlockWrapperCli
@@ -22,7 +23,7 @@ class BlockWrapperCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'wrapper';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR . 'wrapper';
 
 	/**
 	 * Get WPCLI command name
@@ -47,7 +48,7 @@ class BlockWrapperCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$name = 'wrapper';
@@ -58,36 +59,36 @@ class BlockWrapperCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 
 		$path = static::OUTPUT_DIR;
 		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
 		$sourcePath = "{$sourcePathFolder}";
 
-		if (!getenv('TEST')) {
+		if (!\getenv('TEST')) {
 			$destinationPath = $root . $ds . $path;
 		} else {
 			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
 		}
 
 		// Destination exists.
-		if (file_exists($destinationPath) && $skipExisting === false) {
+		if (\file_exists($destinationPath) && $skipExisting === false) {
 			self::cliError(
 				/* translators: %s will be replaced with the path. */
-				sprintf(
+				\sprintf(
 					'The wrapper exists in your project on this "%s" path. Please check or remove that folder before running this command again.',
 					$destinationPath
 				)
 			);
 		} else {
-			mkdir("{$destinationPath}/");
+			\mkdir("{$destinationPath}/");
 		}
 
 		$this->copyRecursively($sourcePath, "{$destinationPath}/");
 
-		\WP_CLI::success('Wrapper successfully moved to your project.');
+		WP_CLI::success('Wrapper successfully moved to your project.');
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
 		foreach ($this->getFullBlocksFiles($name) as $file) {
 			// Set output file path.
@@ -102,8 +103,8 @@ class BlockWrapperCli extends AbstractCli
 			}
 		}
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
-		\WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
+		WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
 	}
 }

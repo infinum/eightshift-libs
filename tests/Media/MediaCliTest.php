@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -39,7 +39,7 @@ test('Media CLI command will correctly copy the Media class with defaults', func
 	$media([], $media->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMedia = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Media/Media.php');
+	$generatedMedia = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Media/Media.php');
 
 	$this->assertStringContainsString('class Media implements ServiceInterface', $generatedMedia);
 	$this->assertStringContainsString('after_setup_theme', $generatedMedia, 'Created class does not contain after_setup_theme hook');

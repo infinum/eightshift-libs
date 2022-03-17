@@ -41,7 +41,7 @@ test('Register post type method will be called', function() {
 
 	$this->example->postTypeRegisterCallback();
 
-	$this->assertSame(getenv('SIDEAFFECT'), $action);
+	$this->assertSame(\getenv('SIDEAFFECT'), $action);
 
 	// Cleanup.
 	putenv('SIDEAFFECT=');

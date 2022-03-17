@@ -55,12 +55,12 @@ class ImportCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		require $this->getLibsPath('src/Db/DbImport.php');
 
 		try {
-			dbImport(
+			dbImport( // phpcs:ignore
 				$this->getProjectConfigRootPath(),
 				[
 					'from' => $assocArgs['from'] ?? '',
@@ -68,7 +68,7 @@ class ImportCli extends AbstractCli
 				]
 			);
 		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
+			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		}
 	}
 }

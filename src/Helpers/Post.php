@@ -40,27 +40,27 @@ class Post
 	{
 		$contentBlocks = \parse_blocks(\get_the_content(null, false, $postID));
 
-		$contentBlocksRendered = array_map(
+		$contentBlocksRendered = \array_map(
 			function ($block) {
 				return \wp_kses_post(\apply_filters('the_content', \render_block($block)));
 			},
 			$contentBlocks
 		);
 
-		$contentBlocksCleaned = array_map(
+		$contentBlocksCleaned = \array_map(
 			function ($item) {
-				return preg_replace('/\s+/', ' ', trim($item));
+				return \preg_replace('/\s+/', ' ', \trim($item));
 			},
 			$contentBlocksRendered
 		);
 
 		// Remove arrays with empty strings. These are usually remnants from returns (spaces).
-		$content = array_filter($contentBlocksCleaned, function ($str) {
+		$content = \array_filter($contentBlocksCleaned, function ($str) {
 			return $str !== "";
 		});
 
-		$wordCount = str_word_count(\wp_strip_all_tags(implode('', $content)));
-		$readingTime = ceil($wordCount / self::AVERAGE_WORD_COUNT);
+		$wordCount = \str_word_count(\wp_strip_all_tags(\implode('', $content)));
+		$readingTime = \ceil($wordCount / self::AVERAGE_WORD_COUNT);
 
 		/* translators: %d: number of minutes needed for reading the article. */
 		return (int)$readingTime;

@@ -5,6 +5,8 @@ namespace Tests;
 use Brain\Monkey\Functions;
 use Mockery;
 use Mockery\MockInterface;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Helper function that will setup some repeating mocks in every tests.
@@ -18,10 +20,10 @@ function setupMocks() {
 	Functions\stubEscapeFunctions();
 
 	// Mock the template dir location.
-	Functions\when('get_template_directory')->justReturn(dirname(__FILE__) . '/data');
+	Functions\when('get_template_directory')->justReturn(\dirname(__FILE__) . '/data');
 
 	// Mock the template dir location.
-	Functions\when('get_stylesheet_directory')->justReturn(dirname(__FILE__) . '/');
+	Functions\when('get_stylesheet_directory')->justReturn(\dirname(__FILE__) . '/');
 
 	// Mock escaping function.
 	Functions\when('wp_kses_post')->returnArg();
@@ -66,12 +68,12 @@ function setupMocks() {
  */
 function deleteCliOutput(string $dir) : void
 {
-	if (!is_dir($dir)) {
+	if (!\is_dir($dir)) {
 		return;
 	}
 
-	$iterator = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
-	$files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST);
+	$iterator = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+	$files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
 
 	foreach ($files as $file) {
 		if ($file->isDir()) {
@@ -86,5 +88,5 @@ function deleteCliOutput(string $dir) : void
 
 function mock(string $class): MockInterface
 {
-    return Mockery::mock($class);
+	return Mockery::mock($class);
 }

@@ -22,7 +22,7 @@ class FieldCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Rest' . DIRECTORY_SEPARATOR . 'Fields';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Fields';
 
 	/**
 	 * Get WPCLI command name
@@ -76,7 +76,7 @@ class FieldCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$fieldName = $this->prepareSlug($assocArgs['field_name'] ?? '');

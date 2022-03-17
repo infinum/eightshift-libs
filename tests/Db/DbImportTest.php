@@ -3,6 +3,7 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\Db\ImportCli;
+use Exception;
 
 use function Tests\setupMocks;
 use function Tests\mock;
@@ -18,7 +19,7 @@ beforeEach(function() {
 		->shouldReceive('error')
 		->andReturnUsing(
             function ($errorMessage) {
-                throw new \Exception($errorMessage);
+                throw new Exception($errorMessage);
             }
 	);
 
@@ -32,7 +33,7 @@ test('Importing DB functionality fails if --from parameter is not specified', fu
 	$dbImport = $this->import;
 
 	$dbImport([], []);
-})->throws(\Exception::class, '--from parameter is mandatory. Please provide one url key from setup.json file.');
+})->throws(Exception::class, '--from parameter is mandatory. Please provide one url key from setup.json file.');
 
 
 test('Importing DB functionality fails if --to parameter is not specified', function () {
@@ -41,7 +42,7 @@ test('Importing DB functionality fails if --to parameter is not specified', func
 	$dbImport([], [
 		'from' => 'staging'
 	]);
-})->throws(\Exception::class, '--to parameter is mandatory. Please provide one url key from setup.json file.');
+})->throws(Exception::class, '--to parameter is mandatory. Please provide one url key from setup.json file.');
 
 
 test('Importing DB functionality fails if setup.json is missing', function () {
@@ -51,4 +52,4 @@ test('Importing DB functionality fails if setup.json is missing', function () {
 		'from' => 'staging',
 		'to' => 'production'
 	]);
-})->throws(\Exception::class, 'setup.json is missing at this path: setup.json');
+})->throws(Exception::class, 'setup.json is missing at this path: setup.json');

@@ -9,7 +9,7 @@
 use EightshiftLibs\Cli\Cli;
 use WP_CLI\ExitException;
 
-$root = dirname(__DIR__, 1);
+$root = \dirname(__DIR__, 1);
 
 require "{$root}/vendor/autoload.php";
 require  "{$root}/src/Cli/Cli.php";

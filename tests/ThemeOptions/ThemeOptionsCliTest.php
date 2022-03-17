@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -39,7 +39,7 @@ test('Custom theme options CLI command will correctly copy the theme options cla
 	$themeOptions([], []);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMeta = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/ThemeOptions/ThemeOptions.php');
+	$generatedMeta = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/ThemeOptions/ThemeOptions.php');
 
 	$this->assertStringContainsString('class ThemeOptions implements ServiceInterface', $generatedMeta);
 	$this->assertStringContainsString('acf_add_options_page', $generatedMeta);

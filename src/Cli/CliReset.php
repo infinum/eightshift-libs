@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use WP_CLI;
+
 /**
  * Class CliReset
  */
@@ -40,14 +42,14 @@ class CliReset extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		$outputDir = $this->getOutputDir('');
 
-		if (is_dir($outputDir)) {
-			rmdir($outputDir);
+		if (\is_dir($outputDir)) {
+			\rmdir($outputDir);
 
-			\WP_CLI::success('Output directory successfully removed.');
+			WP_CLI::success('Output directory successfully removed.');
 		}
 	}
 }

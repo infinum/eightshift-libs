@@ -28,7 +28,7 @@ $this->gitignore = new GitIgnoreCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -37,10 +37,10 @@ test('GitIgnore CLI command will correctly copy the .gitignore file with default
 	$gitignore = $this->gitignore;
 	$gitignore([], $gitignore->getDevelopArgs([]));
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/.gitignore';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/.gitignore';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedIgnore = file_get_contents($outputPath);
+	$generatedIgnore = \file_get_contents($outputPath);
 
 	$this->assertStringContainsString('wp-admin', $generatedIgnore);
 	$this->assertStringNotContainsString('footer.php', $generatedIgnore);
@@ -60,7 +60,7 @@ test('GitIgnore CLI command will correctly copy the .gitignore file in the custo
 		'root' => './test',
 	]);
 
-	$this->assertFileExists(dirname(__FILE__, 3) . '/cliOutput/test/.gitignore');
+	$this->assertFileExists(\dirname(__FILE__, 3) . '/cliOutput/test/.gitignore');
 });
 
 

@@ -5,6 +5,8 @@ namespace Tests\Unit\CliCommands;
 use EightshiftBoilerplate\CliCommands\CustomCommandExample;
 
 use EightshiftLibs\CliCommands\AbstractCustomCommand;
+use RuntimeException;
+
 use function Tests\deleteCliOutput;
 use function Tests\mock;
 
@@ -41,7 +43,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -58,7 +60,7 @@ test('Prepare command docs fails if shortdesc doesn\'t exist', function() {
 	$customCommand = $this->customCommand;
 
 	$customCommand->prepareCommandDocs([], []);
-})->throws(\RuntimeException::class, 'CLI Short description is missing.');
+})->throws(RuntimeException::class, 'CLI Short description is missing.');
 
 
 test('Prepare command docs returns correct doc', function() {
@@ -82,7 +84,7 @@ test('Prepare command docs returns correct doc', function() {
 	$this->assertArrayHasKey('shortdesc', $preparedDocs);
 	$this->assertArrayHasKey('synopsis', $preparedDocs);
 
-	$addedSynopsis = array_filter($preparedDocs['synopsis'], function($descArr) {
+	$addedSynopsis = \array_filter($preparedDocs['synopsis'], function($descArr) {
 		return $descArr['name'] === 'random';
 	});
 	// Check if the synopsis was added to the global one.
@@ -104,7 +106,7 @@ test('Register command fails if class doesn\'t exist', function() {
 	$abstractMock = new AbstractTest();
 
 	$abstractMock->registerCommand();
-})->throws(\RuntimeException::class);
+})->throws(RuntimeException::class);
 
 
 test('Custom command class is callable', function() {

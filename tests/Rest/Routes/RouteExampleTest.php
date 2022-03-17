@@ -66,7 +66,7 @@ test('Route registers the callback properly', function () {
 
 	$this->route->routeRegisterCallback($this->wpRestServer);
 
-	$this->assertSame(getenv('SIDEAFFECT'), $action);
+	$this->assertSame(\getenv('SIDEAFFECT'), $action);
 
 	// Cleanup.
 	putenv('SIDEAFFECT=');

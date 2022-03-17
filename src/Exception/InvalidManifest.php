@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
+use InvalidArgumentException;
+
 /**
  * Class InvalidManifest
  */
-final class InvalidManifest extends \InvalidArgumentException implements GeneralExceptionInterface
+final class InvalidManifest extends InvalidArgumentException implements GeneralExceptionInterface
 {
 	/**
 	 * Throws error if manifest key is missing
@@ -25,7 +27,7 @@ final class InvalidManifest extends \InvalidArgumentException implements General
 	public static function missingManifestItemException(string $key): InvalidManifest
 	{
 		return new InvalidManifest(
-			sprintf(
+			\sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
 					'%s key does not exist in manifest.json. Please check if provided key is correct.',
@@ -46,7 +48,7 @@ final class InvalidManifest extends \InvalidArgumentException implements General
 	public static function missingManifestException(string $path): InvalidManifest
 	{
 		return new InvalidManifest(
-			sprintf(
+			\sprintf(
 			/* translators: %s is replaced by the path where the manifest.json should be */
 				\esc_html__(
 					'manifest.json is missing at this path: %s. Bundle the theme before using it. Or your bundling process is returning an error.',

@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -38,7 +38,7 @@ test('Manifest CLI command will correctly copy the Manifest class with defaults'
 	$manifest([], []);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedManifest = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Manifest/Manifest.php');
+	$generatedManifest = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Manifest/Manifest.php');
 	$this->assertStringContainsString('class Manifest extends AbstractManifest', $generatedManifest);
 	$this->assertStringContainsString('setAssetsManifestRaw', $generatedManifest);
 	$this->assertStringContainsString('manifest-item', $generatedManifest);
@@ -52,7 +52,7 @@ test('Manifest CLI command will correctly copy the Manifest class with set argum
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedManifest = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Manifest/Manifest.php');
+	$generatedManifest = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Manifest/Manifest.php');
 
 	$this->assertStringContainsString('namespace MyTheme\Manifest;', $generatedManifest);
 });

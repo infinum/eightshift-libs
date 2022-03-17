@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
-use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class EnqueueAdmin
@@ -91,7 +90,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 		$screen = \get_current_screen();
 
-		if (is_object($screen) && $screen->is_block_editor) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+		if (\is_object($screen) && $screen->is_block_editor) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 			return true;
 		}
 

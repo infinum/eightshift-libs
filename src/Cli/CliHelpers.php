@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use WP_CLI;
 use WP_CLI\ExitException;
 
 /**
@@ -29,11 +30,11 @@ trait CliHelpers
 	public static function cliError(string $errorMessage): void
 	{
 		try {
-			\WP_CLI::error($errorMessage);
+			WP_CLI::error($errorMessage);
 			// @codeCoverageIgnoreStart
 			// Cannot test the exit.
 		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
+			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 			// @codeCoverageIgnoreEnd
 		}
 	}
@@ -46,9 +47,9 @@ trait CliHelpers
 	 */
 	public static function camelCaseToKebabCase(string $input): string
 	{
-		$output = ltrim(strtolower((string)preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
-		$output = str_replace(['_', ' '], '-', $output);
-		return str_replace('--', '-', $output);
+		$output = \ltrim(\strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
+		$output = \str_replace(['_', ' '], '-', $output);
+		return \str_replace('--', '-', $output);
 	}
 
 	/**
@@ -61,7 +62,7 @@ trait CliHelpers
 	 */
 	public static function kebabToCamelCase(string $string, string $separator = '-'): string
 	{
-		return lcfirst(str_replace($separator, '', ucwords(mb_strtolower($string), $separator)));
+		return \lcfirst(\str_replace($separator, '', \ucwords(mb_\strtolower($string), $separator)));
 	}
 
 	/**
@@ -74,12 +75,12 @@ trait CliHelpers
 	{
 
 		// If the plugin doesn't have a namespace, we're good, just return it.
-		if (strpos($name, '/') === false) {
+		if (\strpos($name, '/') === false) {
 			return $name;
 		}
 
-		$splitName = explode('/', $name);
+		$splitName = \explode('/', $name);
 
-		return $splitName[count($splitName) - 1];
+		return $splitName[\count($splitName) - 1];
 	}
 }

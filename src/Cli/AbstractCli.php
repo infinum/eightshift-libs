@@ -14,6 +14,11 @@ use EightshiftLibs\Exception\InvalidBlock;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use ReflectionClass;
+use ReflectionException;
+use RuntimeException;
+use UnexpectedValueException;
+use WP_CLI;
 
 /**
  * Class AbstractCli
@@ -116,33 +121,34 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
+	 * @throws Exception Exception in case the WP_CLI::add_command fails.
 	 *
 	 * @return void
-	 *  phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing
+	 *
+	 * phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing
 	 */
 	public function registerCommand(): void
 	{
-		if (!class_exists($this->getClassName())) {
-			throw new \RuntimeException('Class doesn\'t exist');
+		if (!\class_exists($this->getClassName())) {
+			throw new RuntimeException('Class doesn\'t exist');
 		}
 
 		try {
-			$reflectionClass = new \ReflectionClass($this->getClassName());
+			$reflectionClass = new ReflectionClass($this->getClassName());
 			// @codeCoverageIgnoreStart
-		} catch (\ReflectionException $e) {
+		} catch (ReflectionException $e) {
 			self::cliError("{$e->getCode()}: {$e->getMessage()}");
 		}
 		// @codeCoverageIgnoreEnd
 
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-		if (!is_callable($class)) {
-			$className = get_class($class);
+		if (!\is_callable($class)) {
+			$className = \get_class($class);
 			self::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
 		}
 
-		\WP_CLI::add_command(
+		WP_CLI::add_command(
 			$this->commandParentName . ' ' . $this->getCommandName(),
 			$class,
 			$this->prepareCommandDocs($this->getDoc(), $this->getGlobalSynopsis())
@@ -168,23 +174,23 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getClassName(): string
 	{
-		return get_class($this);
+		return \get_class($this);
 	}
 
 	/**
 	 * Get short class name for current class
 	 *
-	 * @throws \RuntimeException Exception in the case the class name is missing.
+	 * @throws RuntimeException Exception in the case the class name is missing.
 	 *
 	 * @return string
 	 */
 	public function getClassShortName(): string
 	{
-		$arr = explode('\\', $this->getClassName());
+		$arr = \explode('\\', $this->getClassName());
 
-		$lastElement = end($arr);
+		$lastElement = \end($arr);
 
-		return str_replace('Cli', '', $lastElement);
+		return \str_replace('Cli', '', $lastElement);
 	}
 
 	/**
@@ -194,7 +200,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getCommandName(): string
 	{
-		return 'create_' . strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
+		return 'create_' . \strtolower((string)\preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
 	}
 
 	/**
@@ -208,16 +214,16 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getFileName(string $fileName): string
 	{
-		$class = explode('_', str_replace('-', '_', str_replace(' ', '_', $fileName)));
+		$class = \explode('_', \str_replace('-', '_', \str_replace(' ', '_', $fileName)));
 
-		$className = array_map(
+		$className = \array_map(
 			function ($item) {
-				return ucfirst($item);
+				return \ucfirst($item);
 			},
 			$class
 		);
 
-		return implode('', $className);
+		return \implode('', $className);
 	}
 
 	/**
@@ -234,15 +240,15 @@ abstract class AbstractCli implements CliInterface
 		$path = "{$currentDir}/{$this->getExampleFileName( $fileName )}.php";
 
 		// If you pass file name with extension the version will be used.
-		if (strpos($fileName, '.') !== false) {
+		if (\strpos($fileName, '.') !== false) {
 			$path = "{$currentDir}/{$fileName}";
 		}
 
 		$templateFile = '';
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		if (file_exists($path)) {
-			$templateFile = file_get_contents($path);
+		if (\file_exists($path)) {
+			$templateFile = \file_get_contents($path);
 		} else {
 			if ($skipMissing) {
 				$this->fileContents = '';
@@ -291,29 +297,29 @@ abstract class AbstractCli implements CliInterface
 		$outputFile = "{$outputDir}{$outputFile}";
 
 		// Bailout if file already exists.
-		if (file_exists($outputFile) && $skipExisting === false) {
+		if (\file_exists($outputFile) && $skipExisting === false) {
 			self::cliError("The file {$outputFile} can\'t be generated because it already exists.");
 		}
 
 		// Create output dir if it doesn't exist.
-		if (!is_dir($outputDir)) {
-			mkdir($outputDir, 0755, true);
+		if (!\is_dir($outputDir)) {
+			\mkdir($outputDir, 0755, true);
 		}
 
 		// Open a new file on output.
 		// If there is any error bailout. For example, user permission.
-		if (fopen($outputFile, "wb") !== false) {
-			$fp = fopen($outputFile, "wb");
+		if (\fopen($outputFile, "wb") !== false) {
+			$fp = \fopen($outputFile, "wb");
 
 			// Write and close.
-			fwrite($fp, $this->fileContents);
-			fclose($fp);
+			\fwrite($fp, $this->fileContents);
+			\fclose($fp);
 
 			// Return success.
 			if ($skipExisting) {
-				\WP_CLI::success("File {$outputFile} successfully renamed.");
+				WP_CLI::success("File {$outputFile} successfully renamed.");
 			} else {
-				\WP_CLI::success("File {$outputFile} successfully created.");
+				WP_CLI::success("File {$outputFile} successfully created.");
 			}
 			return;
 		}
@@ -330,19 +336,19 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputDir(string $path = ''): string
 	{
-		if (function_exists('\add_action') && !getenv('TEST')) {
+		if (\function_exists('\add_action') && !\getenv('TEST')) {
 			$root = $this->getProjectRootPath();
 		} else {
 			$root = $this->getProjectRootPath(true) . '/cliOutput';
 		}
 
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 
-		$root = rtrim($root, $ds);
-		$root = trim($root, $ds);
+		$root = \rtrim($root, $ds);
+		$root = \trim($root, $ds);
 
-		$path = rtrim($path, $ds);
-		$path = trim($path, $ds);
+		$path = \rtrim($path, $ds);
+		$path = \trim($path, $ds);
 
 		return "{$ds}{$root}{$ds}{$path}";
 	}
@@ -356,12 +362,12 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputFile(string $file): string
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 
-		$file = rtrim($file, $ds);
-		$file = trim($file, $ds);
+		$file = \rtrim($file, $ds);
+		$file = \trim($file, $ds);
 
-		if (strpos($file, '.') !== false) {
+		if (\strpos($file, '.') !== false) {
 			return "{$ds}{$file}";
 		}
 
@@ -381,14 +387,14 @@ abstract class AbstractCli implements CliInterface
 		$namespace = $this->getNamespace($args);
 		$vendorPrefix = $this->getVendorPrefix($args);
 
-		if (function_exists('\add_action') && !getenv('TEST')) {
-			$output = str_replace(
+		if (\function_exists('\add_action') && !\getenv('TEST')) {
+			$output = \str_replace(
 				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
 				"namespace {$namespace}\\",
 				$output
 			);
 		} else {
-			$output = str_replace(
+			$output = \str_replace(
 				'namespace EightshiftBoilerplate\\',
 				"namespace {$namespace}\\",
 				$output
@@ -417,27 +423,27 @@ abstract class AbstractCli implements CliInterface
 		$prefixUse = 'use';
 		$prefixPackage = '@package';
 
-		if (function_exists('\add_action')) {
-			$output = str_replace(
+		if (\function_exists('\add_action')) {
+			$output = \str_replace(
 				"{$prefixUse} EightshiftBoilerplateVendor\\",
 				"{$prefixUse} {$vendorPrefix}\\",
 				$output
 			);
 
-			$output = str_replace(
+			$output = \str_replace(
 				"{$prefixUse} {$vendorPrefix}\EightshiftBoilerplate\\",
 				"{$prefixUse} {$namespace}\\",
 				$output
 			);
 		} else {
-			$output = str_replace(
+			$output = \str_replace(
 				"{$prefixUse} EightshiftBoilerplate\\",
 				"{$prefixUse} {$namespace}\\",
 				$output
 			);
 		}
 
-		$output = str_replace(
+		$output = \str_replace(
 			"{$prefixPackage} EightshiftBoilerplate",
 			"{$prefixPackage} {$namespace}",
 			$output
@@ -465,19 +471,19 @@ abstract class AbstractCli implements CliInterface
 		$prefixUse = 'use';
 		$prefixPackage = '@package';
 
-		$output = str_replace(
+		$output = \str_replace(
 			"{$prefixUse} EightshiftBoilerplateVendor\\",
 			"{$prefixUse} {$vendorPrefix}\\",
 			$output
 		);
 
-		$output = str_replace(
+		$output = \str_replace(
 			"{$prefixUse} EightshiftBoilerplate\\",
 			"{$prefixUse} {$namespace}\\",
 			$output
 		);
 
-		$output = str_replace(
+		$output = \str_replace(
 			"{$prefixPackage} EightshiftBoilerplate",
 			"{$prefixPackage} {$namespace}",
 			$output
@@ -499,7 +505,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
 
-		$this->fileContents = str_replace(
+		$this->fileContents = \str_replace(
 			'eightshift-libs',
 			$namespace,
 			$this->fileContents
@@ -519,7 +525,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
 
-		$this->fileContents = str_replace(
+		$this->fileContents = \str_replace(
 			'eightshift-frontend-libs',
 			$namespace,
 			$this->fileContents
@@ -539,15 +545,15 @@ abstract class AbstractCli implements CliInterface
 	{
 		$projectName = 'eightshift-boilerplate';
 
-		if (function_exists('\add_action') && !getenv('TEST')) {
-			$projectName = basename(dirname(__DIR__, 5));
+		if (\function_exists('\add_action') && !\getenv('TEST')) {
+			$projectName = \basename(\dirname(__DIR__, 5));
 		}
 
 		if (isset($args['project_name'])) {
 			$projectName = $args['project_name'];
 		}
 
-		$this->fileContents = str_replace(
+		$this->fileContents = \str_replace(
 			'eightshift-boilerplate',
 			$projectName,
 			$this->fileContents
@@ -567,15 +573,15 @@ abstract class AbstractCli implements CliInterface
 	{
 		$projectType = 'themes';
 
-		if (function_exists('\add_action')) {
-			$projectType = basename(dirname(__DIR__, 6));
+		if (\function_exists('\add_action')) {
+			$projectType = \basename(\dirname(__DIR__, 6));
 		}
 
 		if (isset($args['project_type'])) {
 			$projectType = $args['project_type'];
 		}
 
-		$this->fileContents = str_replace(
+		$this->fileContents = \str_replace(
 			'themes',
 			$projectType,
 			$this->fileContents
@@ -593,7 +599,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameClassName(string $className): self
 	{
-		$this->fileContents = str_replace($this->getExampleFileName($className), $className, $this->fileContents);
+		$this->fileContents = \str_replace($this->getExampleFileName($className), $className, $this->fileContents);
 
 		return $this;
 	}
@@ -608,7 +614,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameClassNameWithPrefix(string $templateName, string $newName): self
 	{
-		$this->fileContents = str_replace($this->getExampleFileName($templateName), $newName, $this->fileContents);
+		$this->fileContents = \str_replace($this->getExampleFileName($templateName), $newName, $this->fileContents);
 
 		return $this;
 	}
@@ -628,7 +634,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function searchReplaceString(string $oldString, string $newString): self
 	{
-		$this->fileContents = str_replace($oldString, $newString, $this->fileContents);
+		$this->fileContents = \str_replace($oldString, $newString, $this->fileContents);
 
 		return $this;
 	}
@@ -643,7 +649,7 @@ abstract class AbstractCli implements CliInterface
 	public function getComposer(array $args = []): array
 	{
 		if (!isset($args['config_path'])) {
-			if (function_exists('\add_action')) {
+			if (\function_exists('\add_action')) {
 				$composerPath = $this->getProjectRootPath() . '/composer.json';
 			} else {
 				$composerPath = $this->getProjectRootPath(true) . '/composer.json';
@@ -652,13 +658,13 @@ abstract class AbstractCli implements CliInterface
 			$composerPath = $args['config_path'];
 		}
 
-		$composerFile = file_get_contents($composerPath);
+		$composerFile = \file_get_contents($composerPath);
 
 		if ($composerFile === false) {
 			self::cliError("The composer on {$composerPath} path seems to be missing.");
 		}
 
-		return json_decode((string)$composerFile, true);
+		return \json_decode((string)$composerFile, true);
 	}
 
 	/**
@@ -679,7 +685,7 @@ abstract class AbstractCli implements CliInterface
 		if (empty($namespace)) {
 			$composer = $this->getComposer($args);
 
-			$namespace = rtrim(array_key_first($composer['autoload']['psr-4']), '\\');
+			$namespace = \rtrim(\array_key_first($composer['autoload']['psr-4']), '\\');
 		}
 
 		return $namespace;
@@ -721,11 +727,11 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function prepareSlug(string $string): string
 	{
-		if (strpos($string, ' ') !== false) {
-			$string = strtolower($string);
+		if (\strpos($string, ' ') !== false) {
+			$string = \strtolower($string);
 		}
 
-		return str_replace('_', '-', str_replace(' ', '-', $string));
+		return \str_replace('_', '-', \str_replace(' ', '-', $string));
 	}
 
 	/**
@@ -740,7 +746,7 @@ abstract class AbstractCli implements CliInterface
 	public function getEvalLoop(array $items = [], bool $run = false, array $args = []): void
 	{
 		foreach ($items as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			$reflectionClass = new ReflectionClass($item);
 
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
@@ -766,7 +772,7 @@ abstract class AbstractCli implements CliInterface
 	public function runReset(): void
 	{
 		$reset = new CliReset('');
-		\WP_CLI::runcommand("eval-file bin/cli.php {$reset->getCommandName()} --skip-wordpress");
+		WP_CLI::runcommand("eval-file bin/cli.php {$reset->getCommandName()} --skip-wordpress");
 	}
 
 	/**
@@ -778,10 +784,10 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getProjectRootPath(bool $isDev = false): string
 	{
-		$output = dirname(__DIR__, 5);
+		$output = \dirname(__DIR__, 5);
 
-		if ($isDev || getenv('TEST') !== false) {
-			$output = dirname(__DIR__, 2);
+		if ($isDev || \getenv('TEST') !== false) {
+			$output = \dirname(__DIR__, 2);
 		}
 
 		return $output;
@@ -796,14 +802,14 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getProjectConfigRootPath(bool $isDev = false): string
 	{
-		$output = dirname(__DIR__, 8);
+		$output = \dirname(__DIR__, 8);
 
 		if ($isDev) {
-			$output = dirname(__DIR__, 2);
+			$output = \dirname(__DIR__, 2);
 		}
 
-		if (getenv('TEST')) {
-			$output = dirname(__DIR__, 2);
+		if (\getenv('TEST')) {
+			$output = \dirname(__DIR__, 2);
 		}
 
 		return $output;
@@ -830,7 +836,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getLibsPath(string $path = ''): string
 	{
-		if (getenv('TEST')) {
+		if (\getenv('TEST')) {
 			return "{$this->getProjectRootPath()}/{$path}";
 		}
 
@@ -887,7 +893,7 @@ abstract class AbstractCli implements CliInterface
 	 * @param array<string, mixed> $docs Command docs array.
 	 * @param array<string, mixed> $docsGlobal Global docs array.
 	 *
-	 * @throws \RuntimeException Error in case the shortdesc is missing in command docs.
+	 * @throws RuntimeException Error in case the shortdesc is missing in command docs.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -896,14 +902,14 @@ abstract class AbstractCli implements CliInterface
 		$shortdesc = $docs['shortdesc'] ?? '';
 
 		if (!$shortdesc) {
-			throw new \RuntimeException('CLI Short description is missing.');
+			throw new RuntimeException('CLI Short description is missing.');
 		}
 
 		$synopsis = $docs['synopsis'] ?? [];
 
 		return [
 			'shortdesc' => $shortdesc,
-			'synopsis' => array_merge(
+			'synopsis' => \array_merge(
 				$docsGlobal['synopsis'],
 				$synopsis
 			)
@@ -946,22 +952,22 @@ abstract class AbstractCli implements CliInterface
 				new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
 				RecursiveIteratorIterator::SELF_FIRST
 			);
-		} catch (\UnexpectedValueException $exception) {
+		} catch (UnexpectedValueException $exception) {
 			throw InvalidBlock::missingFileException($source);
 		}
 
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 
 		foreach ($iterator as $item) {
 			$subPathName = $iterator->getSubPathname();
-			$destinationPath = rtrim($destination, $ds) . $ds . $subPathName;
+			$destinationPath = \rtrim($destination, $ds) . $ds . $subPathName;
 
 			if ($item->isDir()) {
 				if (!file_exists($destinationPath)) {
 					mkdir($destinationPath, 0755, true);
 				}
 			} else {
-				copy($item->getPathname(), $destinationPath);
+				\copy($item->getPathname(), $destinationPath);
 			}
 		}
 	}

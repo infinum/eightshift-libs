@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use FilesystemIterator;
+use WP_CLI;
 
 /**
  * Abstract class used for Blocks and Components
@@ -40,8 +40,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		$sourcePathFolder = "{$rootNode}/{$outputDir}/";
 
-		$blocks = scandir($sourcePathFolder);
-		$blocksFullList = array_diff((array)$blocks, ['..', '.']);
+		$blocks = \scandir($sourcePathFolder);
+		$blocksFullList = \array_diff((array)$blocks, ['..', '.']);
 
 		$blocks = [$name];
 
@@ -56,8 +56,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$path = "{$outputDir}/{$block}";
 			$sourcePath = "{$sourcePathFolder}{$block}";
 
-			if (!getenv('TEST')) {
-				$destinationPath = $root . DIRECTORY_SEPARATOR . $path;
+			if (!\getenv('TEST')) {
+				$destinationPath = $root . \DIRECTORY_SEPARATOR . $path;
 			} else {
 				$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
 			}
@@ -66,17 +66,17 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$typeSingular = !$isComponents ?  'block' : 'component';
 
 			// Source doesn't exist.
-			if (!file_exists($sourcePath)) {
+			if (!\file_exists($sourcePath)) {
 				// Make a list for output.
-				$blocksList = implode(PHP_EOL, $blocksFullList);
+				$blocksList = \implode(\PHP_EOL, $blocksFullList);
 
-				\WP_CLI::log(
+				WP_CLI::log(
 					"Please check the docs for all available {$typePlural}."
 				);
-				\WP_CLI::log(
+				WP_CLI::log(
 					"You can find all available {$typePlural} on this link: https://infinum.github.io/eightshift-docs/storybook/."
 				);
-				\WP_CLI::log(
+				WP_CLI::log(
 					"Or here is the list of all available {$typeSingular} names: \n{$blocksList}"
 				);
 
@@ -84,9 +84,9 @@ abstract class AbstractBlocksCli extends AbstractCli
 			}
 
 			// Destination exists.
-			if (file_exists($destinationPath) && $skipExisting === false) {
+			if (\file_exists($destinationPath) && $skipExisting === false) {
 				self::cliError(
-					sprintf(
+					\sprintf(
 						'The %s in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
 						$typeSingular,
 						$destinationPath,
@@ -98,7 +98,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$this->moveBlock($destinationPath, $sourcePath, $block, $assocArgs, $path, $typeSingular);
 		}
 
-		\WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
+		WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
 	}
 
 	/**
@@ -116,16 +116,16 @@ abstract class AbstractBlocksCli extends AbstractCli
 	private function moveBlock(string $destinationPath, string $sourcePath, string $name, array $assocArgs, string $path, string $typeSingular): void
 	{
 		// Create folder in project if missing.
-		mkdir("{$destinationPath}/");
+		\mkdir("{$destinationPath}/");
 
 		// Move block/component to project folder.
 		$this->copyRecursively($sourcePath, "{$destinationPath}/");
 
-		$typeSingular = ucfirst($typeSingular);
+		$typeSingular = \ucfirst($typeSingular);
 
-		\WP_CLI::success("{$typeSingular} successfully moved to your project.");
+		WP_CLI::success("{$typeSingular} successfully moved to your project.");
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
 		// Move all files from library to project.
 		foreach ($this->getFullBlocksFiles($name) as $file) {
@@ -141,6 +141,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 			}
 		}
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 	}
 }

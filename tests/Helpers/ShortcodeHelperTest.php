@@ -17,9 +17,9 @@ test('Shortcode helper will call the shortcode callback', function() {
 		echo "Hello {$args['name']}!";
 	}
 	
-	ob_start();
+	\ob_start();
 	$this->shortcode->getShortcode('sayHello', ['name' => 'John']);
-	$result = ob_get_clean();
+	$result = \ob_get_clean();
 
 	$this->assertSame('Hello John!', $result);
 });

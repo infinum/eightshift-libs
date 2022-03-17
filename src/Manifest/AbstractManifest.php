@@ -37,23 +37,23 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 */
 	public function setAssetsManifestRaw(): void
 	{
-		if (defined('WP_CLI') && !getenv('TEST')) {
+		if (\defined('WP_CLI') && !\getenv('TEST')) {
 			return;
 		}
 
 		$path = $this->getManifestFilePath();
 
-		if (!file_exists($path)) {
+		if (!\file_exists($path)) {
 			throw InvalidManifest::missingManifestException($path);
 		}
 
-		$data = json_decode(implode(' ', (array)file($path)), true);
+		$data = \json_decode(\implode(' ', (array)\file($path)), true);
 
 		if (empty($data)) {
 			return;
 		}
 
-		$this->manifest = array_map(
+		$this->manifest = \array_map(
 			function ($manifestItem) {
 				return "{$this->getAssetsManifestOutputPrefix()}{$manifestItem}";
 			},
@@ -73,7 +73,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 */
 	public function getAssetsManifestItem(string $key): string
 	{
-		if (defined('WP_CLI') && !getenv('TEST')) {
+		if (\defined('WP_CLI') && !\getenv('TEST')) {
 			return '';
 		}
 

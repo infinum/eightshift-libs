@@ -20,23 +20,23 @@ afterEach(function() {
 
 test('Is project name defined and a string', function () {
 	$this->assertNotEmpty($this->example::getProjectName());
-	$this->assertIsString(gettype($this->example::getProjectName()));
+	$this->assertIsString(\gettype($this->example::getProjectName()));
 });
 
 test('Is project version defined and a string', function () {
 	$this->assertNotEmpty($this->example::getProjectVersion());
-	$this->assertIsString(gettype($this->example::getProjectVersion()));
+	$this->assertIsString(\gettype($this->example::getProjectVersion()));
 });
 
 test('Is project REST namespace defined, a string and same as project name', function () {
 	$this->assertNotEmpty($this->example::getProjectRoutesNamespace());
-	$this->assertIsString(gettype($this->example::getProjectRoutesNamespace()));
+	$this->assertIsString(\gettype($this->example::getProjectRoutesNamespace()));
 	$this->assertSame($this->example::getProjectName(), $this->example::getProjectRoutesNamespace());
 });
 
 test('Is project REST route version defined and a string', function () {
 	$this->assertNotEmpty($this->example::getProjectRoutesVersion());
-	$this->assertIsString(gettype($this->example::getProjectRoutesVersion()));
+	$this->assertIsString(\gettype($this->example::getProjectRoutesVersion()));
 	$this->assertStringContainsString('v', $this->example::getProjectRoutesVersion());
 });
 

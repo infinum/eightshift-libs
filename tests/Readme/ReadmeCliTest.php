@@ -28,7 +28,7 @@ $this->readme = new ReadmeCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -37,10 +37,10 @@ test('Readme CLI command will correctly copy the readme file with defaults', fun
 	$readme = $this->readme;
 	$readme([], $readme->getDevelopArgs([]));
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/README.md';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/README.md';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedReadme = file_get_contents($outputPath);
+	$generatedReadme = \file_get_contents($outputPath);
 
 	$this->assertStringContainsString('This is the official repository of the {Project name}.', $generatedReadme);
 	$this->assertStringNotContainsString('footer.php', $generatedReadme);
@@ -60,7 +60,7 @@ test('Readme CLI command will correctly copy the readme in the custom folder wit
 		'root' => './test',
 	]);
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/test/README.md';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/test/README.md';
 
 	$this->assertFileExists($outputPath);
 });

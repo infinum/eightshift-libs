@@ -23,7 +23,7 @@ class AdminSubMenuCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'AdminMenus';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AdminMenus';
 
 	/**
 	 * Define default develop props.
@@ -88,7 +88,7 @@ class AdminSubMenuCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Arguments.
 		$parentSlug = $assocArgs['parent_slug'] ?? AdminSubMenuExample::PARENT_MENU_SLUG;

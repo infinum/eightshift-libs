@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
+use WP_Error;
+
 /**
  * Error logger trait.
  */
@@ -23,7 +25,7 @@ trait ErrorLoggerTrait
 	 * @param string|null $msg Response Message.
 	 * @param array|null  $data Response additional data.
 	 *
-	 * @return \WP_REST_Response|\WP_Error If response generated an error, WP_Error,
+	 * @return WP_REST_Response|WP_Error If response generated an error, WP_Error,
 	 *                                     if response is already an instance, WP_REST_Response,
 	 *                                     otherwise returns a new WP_REST_Response instance.
 	 */
@@ -37,13 +39,13 @@ trait ErrorLoggerTrait
 		];
 
 		if ($code >= 200 && $code < 300) {
-			ob_start();
+			\ob_start();
 			\wp_send_json_success($output, $code);
-			$response = ob_get_clean();
+			$response = \ob_get_clean();
 		} else {
-			ob_start();
-			\wp_send_json_error(new \WP_Error($output), $code);
-			$response = ob_get_clean();
+			\ob_start();
+			\wp_send_json_error(new WP_Error($output), $code);
+			$response = \ob_get_clean();
 		}
 
 		return \rest_ensure_response($response);

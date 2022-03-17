@@ -54,7 +54,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 
@@ -71,7 +71,7 @@ test('Cli getDevelopClasses return correct class list', function () {
 	$numberOfDevClasses = 34;
 
 	$this->assertIsArray($developClasses);
-	$this->assertTrue(count($developClasses) === $numberOfDevClasses, 'Total number of classes is correct');
+	$this->assertTrue(\count($developClasses) === $numberOfDevClasses, 'Total number of classes is correct');
 	$this->assertArrayNotHasKey(BlockComponentCli::class, $developClasses, 'Public class found');
 	$this->assertArrayNotHasKey(BlockWrapperCli::class, $developClasses, 'Public class found');
 	$this->assertArrayNotHasKey(BlockVariationCli::class, $developClasses, 'Public class found');
@@ -89,7 +89,7 @@ test('Cli getPublicClasses return correct class list', function () {
 	$numberOfPublicClasses = 40;
 
 	$this->assertIsArray($publicClasses);
-	$this->assertTrue(count($publicClasses) === $numberOfPublicClasses, 'Total number of classes is correct');
+	$this->assertTrue(\count($publicClasses) === $numberOfPublicClasses, 'Total number of classes is correct');
 	$this->assertArrayNotHasKey(CliReset::class, $publicClasses, 'Development class found');
 	$this->assertArrayNotHasKey(CliRunAll::class, $publicClasses, 'Development class found');
 	$this->assertArrayNotHasKey(CliShowAll::class, $publicClasses, 'Development class found');
@@ -99,14 +99,14 @@ test('Cli getPublicClasses return correct class list', function () {
 test('Running develop commands throws error if command name is not specified', function() {
 	$this->cli->loadDevelop();
 
-	$this->assertSame('First argument must be a valid command name.', getenv('ERROR_HAPPENED'));
+	$this->assertSame('First argument must be a valid command name.', \getenv('ERROR_HAPPENED'));
 });
 
 test('Running develop commands runs a particular command successfully', function() {
 	$this->cli->loadDevelop(['create_menu']);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMenu = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/Menu/Menu.php');
+	$generatedMenu = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Menu/Menu.php');
 	$this->assertStringContainsString('class Menu extends AbstractMenu', $generatedMenu);
 	$this->assertStringContainsString('header_main_nav', $generatedMenu);
 	$this->assertStringNotContainsString('footer_main_nav', $generatedMenu);

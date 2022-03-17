@@ -31,21 +31,19 @@ abstract class AbstractConfigData implements ConfigDataInterface
 	public static function getProjectPath(string $path = ''): string
 	{
 		$locations = [
-			\trailingslashit(dirname(__DIR__, 5)) . $path,
+			\trailingslashit(\dirname(__DIR__, 5)) . $path,
 			\trailingslashit(\get_stylesheet_directory()) . $path,
 			\trailingslashit(\get_template_directory()) . $path,
 		];
 
 		foreach ($locations as $location) {
-			if (is_readable($location)) {
+			if (\is_readable($location)) {
 				return $location;
 			}
 		}
 
-		if (! \defined('ES_DEVELOP_MODE')) {
-			if (!is_readable($path)) {
-				throw InvalidPath::fromUri($path);
-			}
+		if (!\is_readable($path)) {
+			throw InvalidPath::fromUri($path);
 		}
 
 		return $path;

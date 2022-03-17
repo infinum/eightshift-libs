@@ -12,6 +12,7 @@ namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\CliHelpers;
+use WP_CLI;
 use WP_CLI\ExitException;
 
 /**
@@ -76,12 +77,12 @@ class UpdateCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 
 		$setupFilename = 'setup.json';
 
-		if (getenv('TEST') !== false) {
+		if (\getenv('TEST') !== false) {
 			$setupFilename = $this->getProjectConfigRootPath() . '/cliOutput/setup.json';
 		}
 
@@ -98,7 +99,7 @@ class UpdateCli extends AbstractCli
 				$setupFilename
 			);
 		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
+			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		}
 	}
 
@@ -122,19 +123,19 @@ class UpdateCli extends AbstractCli
 		$skipThemes = $args['skip_themes'] ?? false;
 
 		// Change execution folder.
-		if (!is_dir($projectRootPath)) {
+		if (!\is_dir($projectRootPath)) {
 			CliHelpers::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
 		}
 
-		chdir($projectRootPath);
+		\chdir($projectRootPath);
 
 		// Check if setup exists.
-		if (!file_exists($setupFile)) {
+		if (!\file_exists($setupFile)) {
 			CliHelpers::cliError("setup.json is missing at this path: {$setupFile}.");
 		}
 
 		// Parse json file to array.
-		$data = json_decode(implode(' ', (array)file($setupFile)), true);
+		$data = \json_decode(\implode(' ', (array)\file($setupFile)), true);
 
 		if (empty($data)) {
 			CliHelpers::cliError("{$setupFile} is empty.");
@@ -146,10 +147,10 @@ class UpdateCli extends AbstractCli
 
 			// Install core version.
 			if (!empty($core)) {
-				\WP_CLI::runcommand("core update --version={$core} --force");
-				\WP_CLI::log('--------------------------------------------------');
+				WP_CLI::runcommand("core update --version={$core} --force");
+				WP_CLI::log('--------------------------------------------------');
 			} else {
-				\WP_CLI::warning('No core version is defined. Skipping.');
+				WP_CLI::warning('No core version is defined. Skipping.');
 			}
 		}
 
@@ -165,11 +166,11 @@ class UpdateCli extends AbstractCli
 					// Install core plugins.
 					if (!empty($pluginsCore)) {
 						foreach ($pluginsCore as $name => $version) {
-							\WP_CLI::runcommand("plugin install {$name} --version={$version} --force");
-							\WP_CLI::log('--------------------------------------------------');
+							WP_CLI::runcommand("plugin install {$name} --version={$version} --force");
+							WP_CLI::log('--------------------------------------------------');
 						}
 					} else {
-						\WP_CLI::warning('No core plugins are defined. Skipping.');
+						WP_CLI::warning('No core plugins are defined. Skipping.');
 					}
 				}
 
@@ -181,15 +182,15 @@ class UpdateCli extends AbstractCli
 					if (!empty($pluginsGithub)) {
 						foreach ($pluginsGithub as $name => $version) {
 							$shortName = CliHelpers::getGithubPluginName($name);
-							$filePath = getcwd() . "/{$shortName}.zip";
-							$releaseZip = file_get_contents("https://github.com/{$name}/releases/download/{$version}/release.zip"); // phpcs:ignore WordPress.WP.AlternativeFunctions
-							file_put_contents($filePath, $releaseZip); // phpcs:ignore WordPress.WP.AlternativeFunctions
-							\WP_CLI::runcommand("plugin install {$filePath} --force");
-							\WP_CLI::log('--------------------------------------------------');
-							unlink($filePath);
+							$filePath = \getcwd() . "/{$shortName}.zip";
+							$releaseZip = \file_get_contents("https://github.com/{$name}/releases/download/{$version}/release.zip"); // phpcs:ignore WordPress.WP.AlternativeFunctions
+							\file_put_contents($filePath, $releaseZip); // phpcs:ignore WordPress.WP.AlternativeFunctions
+							WP_CLI::runcommand("plugin install {$filePath} --force");
+							WP_CLI::log('--------------------------------------------------');
+							\unlink($filePath);
 						}
 					} else {
-						\WP_CLI::warning('No Github plugins are defined. Skipping.');
+						WP_CLI::warning('No Github plugins are defined. Skipping.');
 					}
 				}
 			}
@@ -202,15 +203,15 @@ class UpdateCli extends AbstractCli
 			// Install themes.
 			if (!empty($themes)) {
 				foreach ($themes as $name => $version) {
-					\WP_CLI::runcommand("theme install {$name} --version={$version} --force");
-					\WP_CLI::log('--------------------------------------------------');
+					WP_CLI::runcommand("theme install {$name} --version={$version} --force");
+					WP_CLI::log('--------------------------------------------------');
 				}
 			} else {
-				\WP_CLI::warning('No themes are defined. Skipping.');
+				WP_CLI::warning('No themes are defined. Skipping.');
 			}
 		}
 
-		\WP_CLI::success('All commands are finished.');
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::success('All commands are finished.');
+		WP_CLI::log('--------------------------------------------------');
 	}
 }

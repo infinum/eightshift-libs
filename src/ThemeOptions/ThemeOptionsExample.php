@@ -35,12 +35,12 @@ class ThemeOptionsExample implements ServiceInterface
 	public function register(): void
 	{
 		// Silently exit if no ACF is installed.
-		if (!class_exists('ACF')) {
+		if (!\class_exists('ACF')) {
 			return;
 		}
 
-		add_action('acf/init', [$this, 'createThemeOptionsPage']);
-		add_action('acf/init', [$this, 'registerThemeOptions']);
+		\add_action('acf/init', [$this, 'createThemeOptionsPage']);
+		\add_action('acf/init', [$this, 'registerThemeOptions']);
 	}
 
 	/**
@@ -50,7 +50,7 @@ class ThemeOptionsExample implements ServiceInterface
 	 */
 	public function createThemeOptionsPage(): void
 	{
-		if (function_exists('acf_add_options_page')) {
+		if (\function_exists('acf_add_options_page')) {
 			\acf_add_options_page(
 				[
 					'page_title' => \esc_html__('General Settings', 'eightshift-libs'),
@@ -72,11 +72,11 @@ class ThemeOptionsExample implements ServiceInterface
 	 */
 	public function registerThemeOptions(): void
 	{
-		if (function_exists('acf_add_local_field_group')) {
-			acf_add_local_field_group(
+		if (\function_exists('acf_add_local_field_group')) {
+			\acf_add_local_field_group(
 				[
 					'key' => 'group_5fcab51c7138c',
-					'title' => esc_html__('Theme Options', 'eightshift-libs'),
+					'title' => \esc_html__('Theme Options', 'eightshift-libs'),
 					'fields' => [],
 					'location' => [
 						[

@@ -22,7 +22,7 @@ class AcfMetaCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomMeta';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomMeta';
 
 	/**
 	 * Define default develop props.
@@ -59,7 +59,7 @@ class AcfMetaCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$fieldName = $this->prepareSlug($assocArgs['name'] ?? '');

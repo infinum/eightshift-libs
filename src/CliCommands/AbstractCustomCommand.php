@@ -12,6 +12,10 @@ namespace EightshiftLibs\CliCommands;
 
 use EightshiftLibs\Cli\CliHelpers;
 use EightshiftLibs\Services\ServiceInterface;
+use ReflectionClass;
+use ReflectionException;
+use RuntimeException;
+use WP_CLI;
 
 /**
  * Abstract base custom command class
@@ -40,7 +44,7 @@ abstract class AbstractCustomCommand implements ServiceInterface
 	 */
 	public function getClassName(): string
 	{
-		return get_class($this);
+		return \get_class($this);
 	}
 
 	/**
@@ -49,7 +53,7 @@ abstract class AbstractCustomCommand implements ServiceInterface
 	 * @param array<string, mixed> $docs Command docs array.
 	 * @param array<string, mixed> $docsGlobal Global docs array.
 	 *
-	 * @throws \RuntimeException Error in case the shortdesc is missing in command docs.
+	 * @throws RuntimeException Error in case the shortdesc is missing in command docs.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -58,14 +62,14 @@ abstract class AbstractCustomCommand implements ServiceInterface
 		$shortdesc = $docs['shortdesc'] ?? '';
 
 		if (!$shortdesc) {
-			throw new \RuntimeException('CLI Short description is missing.');
+			throw new RuntimeException('CLI Short description is missing.');
 		}
 
 		$synopsis = $docs['synopsis'] ?? [];
 
 		return [
 			'shortdesc' => $shortdesc,
-			'synopsis' => array_merge(
+			'synopsis' => \array_merge(
 				$docsGlobal['synopsis'],
 				$synopsis
 			)
@@ -126,33 +130,33 @@ abstract class AbstractCustomCommand implements ServiceInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
+	 * @throws Exception Exception in case the WP_CLI::add_command fails.
 	 *
 	 * @return void
 	 *  phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing
 	 */
 	public function registerCommand(): void
 	{
-		if (!class_exists($this->getClassName())) {
-			throw new \RuntimeException('Class doesn\'t exist');
+		if (!\class_exists($this->getClassName())) {
+			throw new RuntimeException('Class doesn\'t exist');
 		}
 
 		try {
-			$reflectionClass = new \ReflectionClass($this->getClassName());
+			$reflectionClass = new ReflectionClass($this->getClassName());
 			// @codeCoverageIgnoreStart
-		} catch (\ReflectionException $e) {
+		} catch (ReflectionException $e) {
 			self::cliError("{$e->getCode()}: {$e->getMessage()}");
 		}
 		// @codeCoverageIgnoreEnd
 
 		$class = $reflectionClass->newInstanceArgs();
 
-		if (!is_callable($class)) {
-			$className = get_class($class);
+		if (!\is_callable($class)) {
+			$className = \get_class($class);
 			self::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
 		}
 
-		\WP_CLI::add_command(
+		WP_CLI::add_command(
 			'boilerplate' . ' ' . $this->getCommandName(),
 			$class,
 			$this->prepareCommandDocs($this->getDoc(), $this->getGlobalSynopsis())

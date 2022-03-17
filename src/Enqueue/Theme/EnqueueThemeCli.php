@@ -20,7 +20,7 @@ class EnqueueThemeCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Enqueue' . DIRECTORY_SEPARATOR . 'Theme';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Enqueue' . \DIRECTORY_SEPARATOR . 'Theme';
 
 	/**
 	 * Get WPCLI command doc
@@ -35,7 +35,7 @@ class EnqueueThemeCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		$className = $this->getClassShortName();
 

@@ -23,7 +23,7 @@ class AdminMenuCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'AdminMenus';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AdminMenus';
 
 	/**
 	 * Define default develop props.
@@ -96,7 +96,7 @@ class AdminMenuCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Arguments.
 		$title = $assocArgs['title'] ?? 'Admin Title';
