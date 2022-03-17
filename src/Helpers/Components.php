@@ -487,7 +487,7 @@ class Components
 		$defaultAttributes = array_keys(
 			array_filter(
 				$variables,
-				function ($key) use ($attributes) {
+				static function ($key) use ($attributes) {
 					return !isset($attributes[$key]);
 				},
 				ARRAY_FILTER_USE_KEY
