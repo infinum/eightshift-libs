@@ -11,6 +11,7 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeAll(function () {
 	Monkey\setUp();
@@ -390,23 +391,6 @@ test('Asserts that outputCssVariablesGlobal returns empty string if global manif
 });
 
 
-test('Asserts that outputCssVariables throws exception if the global block details aren\'t set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableValue' => 'value3',
-	];
-
-	Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-})->throws(InvalidBlock::class);
-
-
 test('Asserts that getManifest throws exception for paths in case the global details aren\'t set', function ($path) {
 	Components::getManifest($path, false);
 })->throws(InvalidBlock::class)->with([
@@ -441,6 +425,60 @@ test('Asserts that getSettings works', function () {
 		->toBeBool()
 		->toBeTrue();
 });
+
+
+test('getSettings parses items correctly in the the case the type is block', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$settings = Components::getSettings('block', 'button');
+
+	expect($settings)
+		->toBeArray()
+		->toHaveKey('blockName');
+
+	expect($settings['blockName'])
+		->toBe('button');
+});
+
+
+test('getSettings parses items correctly in the the case the type is component', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$settings = Components::getSettings('component', 'button');
+
+	expect($settings)
+		->toBeArray()
+		->toHaveKey('componentName');
+
+	expect($settings['componentName'])
+		->toBe('button');
+});
+
+
+test('getSettings throws exception when key is missing', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	Components::getSettings('component', 'button-nonexistent');
+})->throws(InvalidBlock::class);
+
+
+test('getSettings throws exception when type is not block or component and the item is missing', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	Components::getSettings('settings', 'testing');
+})->throws(InvalidBlock::class);
+
+
+test('getSettings throws exception when the method is called with the non existent key from the global settings array', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	Components::getSettings('what');
+})->throws(InvalidBlock::class);
 
 
 test('Asserts that getAttrKey will return the key in case of the wrapper', function () {
@@ -494,4 +532,418 @@ test('Asserts that flattenArray will return the flattened array', function () {
 	expect($array)
 		->toBeArray()
 		->toBe(['b', 1, 2, 3]);
+});
+
+
+test('Asserts props for heading block will return only heading attributes', function () {
+	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
+	$headingComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading');
+	$typographyComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = array_merge(
+		$headingBlock['attributes'],
+		$headingComponent['attributes'],
+		$typographyComponent['attributes']
+	);
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props($headingBlock['blockName'], $attributes);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('headingAlign')
+		->not->toHaveKey('typographySize');
+});
+
+
+test('Asserts props for heading component will return only typography attributes', function () {
+	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
+	$headingComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading');
+	$typographyComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = array_merge(
+		$headingBlock['attributes'],
+		$headingComponent['attributes'],
+		$typographyComponent['attributes']
+	);
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props('typography', $attributes);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('typographyContent')
+		->not->toHaveKey('headingSize');
+});
+
+
+test('Asserts props will correctly build the prefix', function () {
+	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
+	$headingComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading');
+	$typographyComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
+
+	$attributes = array_merge(
+		$headingBlock['attributes'],
+		$headingComponent['attributes'],
+		$typographyComponent['attributes']
+	);
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props('heading', $attributes);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('prefix');
+
+	expect($output['prefix'])
+		->toBe('heading');
+
+	// Next level
+	$output = Components::props('typography', $output);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('prefix');
+
+	expect($output['prefix'])
+		->toBe('headingTypography');
+});
+
+
+test('Asserts props will correctly leave only the the needed attributes', function () {
+	$attributes = [
+		'componentName' => 'mock-card',
+		'mockCardHeadingTypographyContent' => 'mock heading content',
+		'mockCardParagraphTypographyContent' => 'mock paragraph content',
+	];
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props('mock-card', $attributes);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardHeadingTypographyContent')
+		->toHaveKey('mockCardParagraphTypographyContent');
+
+	// Now let's pass these to mock heading
+	$output = Components::props('heading', $output);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardHeadingTypographyContent')
+		->not->toHaveKey('mockCardParagraphTypographyContent');
+
+	$output = Components::props('typography', $output);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardHeadingTypographyContent');
+});
+
+
+test('Asserts props will correctly generate manual keys in camelCase', function () {
+	$attributes = [
+		'componentName' => 'mock-card',
+		'mockCardHeadingContent' => 'mock heading content',
+		'mockCardParagraphContent' => 'mock paragraph content',
+	];
+
+	$manual = [
+		'buttonContent' => 'mock button content',
+	];
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props('mock-card', $attributes, $manual);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardButtonContent')
+		->not->toHaveKey('mockCardbuttonContent');
+});
+
+
+test('Props will include the correct attribute in the manual case', function () {
+	$attributes = [
+		'componentName' => 'mock-card',
+		'componentJsClass' => 'js-mock-card',
+		'mockCardHeadingContent' => 'mock heading content',
+		'mockCardParagraphContent' => 'mock paragraph content',
+	];
+
+	$manual = [
+		'buttonContent' => 'mock button content',
+		'selectorClass' => 'selector',
+	];
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props('mock-card', $attributes, $manual);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardButtonContent')
+		->toHaveKey('selectorClass')
+		->toHaveKey('componentJsClass');
+});
+
+
+test('Asserts that outputCssVariables throws exception if the global block details aren\'t set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+})->throws(InvalidBlock::class);
+
+
+test('outputCssVariables returns empty string if global breakpoints are missing', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$output = Components::outputCssVariables(
+		[],
+		[],
+		'uniqueString',
+		['namespace' => 'eightshift']
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+});
+
+
+test('outputCssVariables returns empty string if global attributes or manifest are missing', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$output = Components::outputCssVariables(
+		['attribute'],
+		[],
+		'uniqueString',
+		$globalManifest
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+
+	$outputSecond = Components::outputCssVariables(
+		[],
+		['manifest'],
+		'uniqueString',
+		$globalManifest
+	);
+
+	expect($outputSecond)
+		->toBeString()
+		->toBeEmpty();
+});
+
+
+test('outputCssVariables returns empty string if variable keys are missing in manifest', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$output = Components::outputCssVariables(
+		['attribute'],
+		['manifest'],
+		'uniqueString',
+		$globalManifest
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+});
+
+
+test('outputCssVariables works when correct attributes are passed to it', function () {
+	global $esBlocks;
+
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+
+	// The output is put in the global variable.
+	expect($esBlocks)
+		->toBeArray()
+		->toHaveKey($globalManifest['namespace']);
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'])
+		->toBeArray();
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0])
+		->toBeArray()
+		->toHaveKey('name')
+		->toHaveKey('unique')
+		->toHaveKey('variables');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['name'])
+		->toBeString()
+		->toBe('variables');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['unique'])
+		->toBeString()
+		->toBe('uniqueString');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'])
+		->toBeArray();
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][0])
+		->toBeArray()
+		->toHaveKey('type')
+		->toHaveKey('variable')
+		->toHaveKey('value');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1])
+		->toBeArray()
+		->toHaveKey('type')
+		->toHaveKey('variable')
+		->toHaveKey('value');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['type'])
+		->toBeString()
+		->toBe('max');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['variable'])
+		->toBeString()
+		->toBe('--variable-value-tablet: tablet;');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['value'])
+		->toBeInt()
+		->toBe(991);
+});
+
+
+test('outputCssVariables works when correct attributes are passed to it and has a unique name', function () {
+	global $esBlocks;
+
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest,
+		'customNameAttribute'
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+
+	// The output is put in the global variable.
+	expect($esBlocks)
+		->toBeArray()
+		->toHaveKey($globalManifest['namespace']);
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'])
+		->toBeArray();
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0])
+		->toBeArray()
+		->toHaveKey('name')
+		->toHaveKey('unique')
+		->toHaveKey('variables');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['name'])
+		->toBeString()
+		->toBe('customNameAttribute');
+});
+
+
+test('outputCssVariables outputs the style tag if the outputCssVariablesGlobally is set to false', function () {
+	global $esBlocks;
+
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+	$esBlocks[$globalManifest['namespace']]['config']['outputCssVariablesGlobally'] = false;
+
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest,
+		'customNameAttribute'
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+
 });
