@@ -768,7 +768,7 @@ class Components
 	public static function camelToKebabCase(string $string): string
 	{
 		$replace = \preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
-		return l\trim(\strtolower($replace), '-');
+		return \ltrim(\strtolower($replace), '-');
 	}
 
 	/**
