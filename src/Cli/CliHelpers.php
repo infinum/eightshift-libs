@@ -47,7 +47,7 @@ trait CliHelpers
 	 */
 	public static function camelCaseToKebabCase(string $input): string
 	{
-		$output = \ltrim(\strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
+		$output = \ltrim(\mb_strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
 		$output = \str_replace(['_', ' '], '-', $output);
 		return \str_replace('--', '-', $output);
 	}
@@ -62,7 +62,7 @@ trait CliHelpers
 	 */
 	public static function kebabToCamelCase(string $string, string $separator = '-'): string
 	{
-		return \lcfirst(\str_replace($separator, '', \ucwords(mb_\strtolower($string), $separator)));
+		return \lcfirst(\str_replace($separator, '', \ucwords(\mb_strtolower($string), $separator)));
 	}
 
 	/**
