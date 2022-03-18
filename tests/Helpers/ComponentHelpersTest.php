@@ -378,6 +378,7 @@ test('Asserts that outputCssVariablesGlobal returns the correct CSS variables fr
 		->toContain('<style>')
 		->toContain(':root {')
 		->toContain('--global-colors-primary: #C3151B;')
+		->toContain('--global-colors-primary-values: 195 21 27;')
 		->not->toContain('--button-content:');
 });
 
