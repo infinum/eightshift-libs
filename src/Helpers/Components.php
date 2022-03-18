@@ -398,21 +398,21 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function hexToRgb($hex)
+	public static function hexToRgb(string $hex): string
 	{
 		// Remove the # at the beginning and filter out invalid hex characters.
-		$hex = preg_replace("/[^0-9A-Fa-f]/", '', $hex);
+		$hex = \preg_replace("/[^0-9A-Fa-f]/", '', $hex);
 
-		$length = strlen($hex);
+		$length = \strlen($hex);
 
 		if ($length === 3) {
-			$r = hexdec(str_repeat(substr($hex, 0, 1), 2));
-			$g = hexdec(str_repeat(substr($hex, 1, 1), 2));
-			$b = hexdec(str_repeat(substr($hex, 2, 1), 2));
+			$r = \hexdec(\str_repeat(\substr($hex, 0, 1), 2));
+			$g = \hexdec(\str_repeat(\substr($hex, 1, 1), 2));
+			$b = \hexdec(\str_repeat(\substr($hex, 2, 1), 2));
 		} elseif ($length === 6) {
-			$r = hexdec(substr($hex, 0, 2));
-			$g = hexdec(substr($hex, 2, 2));
-			$b = hexdec(substr($hex, 4, 2));
+			$r = \hexdec(\substr($hex, 0, 2));
+			$g = \hexdec(\substr($hex, 2, 2));
+			$b = \hexdec(\substr($hex, 4, 2));
 		} else {
 			return '0 0 0';
 		}
@@ -743,7 +743,7 @@ class Components
 			$output = \str_replace(["\n", "\r"], '', $output);
 		}
 
-	  $selector = self::getSettings('config', 'outputCssVariablesSelectorName');
+		$selector = self::getSettings('config', 'outputCssVariablesSelectorName');
 
 		return "<style id='{$selector}'>{$output}</style>";
 	}
