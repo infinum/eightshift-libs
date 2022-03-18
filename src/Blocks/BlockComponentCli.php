@@ -74,7 +74,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore Eightshift.Commenting.FunctionComment.WrongStyle
 	{
 		$this->blocksMove($assocArgs, static::OUTPUT_DIR, true);
 	}
