@@ -927,7 +927,7 @@ class Components
 				}
 			);
 
-			if (!$items) {
+			if (\gettype($items) === 'array' && empty($items)) {
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
 			}
 
@@ -938,7 +938,7 @@ class Components
 		if ($item) {
 			$items = $details[$type][$item] ?? [];
 
-			if (!$items) {
+			if (\gettype($items) === 'array' && empty($items)) {
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
 			}
 
@@ -947,7 +947,7 @@ class Components
 
 		$items = $details[$type] ?? [];
 
-		if (!$items) {
+		if (\gettype($items) === 'array' && empty($items)) {
 			throw InvalidBlock::missingSettingsKeyException($type);
 		}
 
