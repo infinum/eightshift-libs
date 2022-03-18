@@ -52,7 +52,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	/**
 	 * Register the individual services with optional dependency injection.
 	 *
-	 * @throws Exception Exception thrown by DI container.
+	 * @throws \Exception Exception thrown by DI container.
 	 *
 	 * @return void
 	 */
@@ -83,7 +83,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Allows it to be used in different context (for example in tests outside of WP environment).
 	 *
 	 * @return Container
-	 * @throws Exception Exception thrown by the DI container.
+	 * @throws \Exception Exception thrown by the DI container.
 	 */
 	public function buildDiContainer(): Container
 	{
@@ -111,7 +111,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @return Object[]
 	 *
-	 * @throws Exception Exception thrown by the DI container.
+	 * @throws \Exception Exception thrown by the DI container.
 	 */
 	private function getServiceClassesWithDi(): array
 	{
@@ -160,7 +160,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @param array<string, mixed> $services Array of service.
 	 *
-	 * @throws Exception Exception thrown by the DI container.
+	 * @throws \Exception Exception thrown by the DI container.
 	 *
 	 * @return Container
 	 */

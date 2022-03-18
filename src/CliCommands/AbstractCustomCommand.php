@@ -130,7 +130,7 @@ abstract class AbstractCustomCommand implements ServiceInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @throws Exception Exception in case the WP_CLI::add_command fails.
+	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
 	 *
 	 * @return void
 	 *  phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing

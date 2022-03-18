@@ -121,7 +121,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @throws Exception Exception in case the WP_CLI::add_command fails.
+	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
 	 *
 	 * @return void
 	 *
