@@ -98,7 +98,7 @@ class CliInitTheme extends AbstractCli
 		if (!\getenv('TEST')) {
 			WP_CLI::log((string)shell_exec('npm run start')); // phpcs:ignore
 		}
-		
+
 		WP_CLI::log('--------------------------------------------------');
 
 		WP_CLI::success('All commands are finished.');
