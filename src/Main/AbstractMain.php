@@ -58,6 +58,11 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 */
 	public function registerServices()
 	{
+		// Bail early is function is called via WP-CLI.
+		if (\defined('WP_CLI')) {
+			return;
+		}
+
 		// Bail early so we don't instantiate services twice.
 		if (!empty($this->services)) {
 			return;
