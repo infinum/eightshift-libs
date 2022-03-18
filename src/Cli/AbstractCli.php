@@ -307,7 +307,7 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		// Open a new file on output.
-		// If there is any error bailout. For example, user permission.
+		// If there is any error, bailout. For example, user permission.
 		if (\fopen($outputFile, "wb") !== false) {
 			$fp = \fopen($outputFile, "wb");
 
