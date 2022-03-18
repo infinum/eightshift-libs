@@ -111,10 +111,10 @@ class PostTypeCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$label = $assocArgs['label'];
-		$slug = $this->prepareSlug($assocArgs['slug']);
-		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url']);
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug']);
+		$label = $assocArgs['label'] ?? 'Custom Post Type';
+		$slug = $this->prepareSlug($assocArgs['slug'] ?? 'custom-post-type');
+		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url'] ?? 'custom-post-type');
+		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? 'custom-post-type');
 		$capability = $assocArgs['capability'] ?? '';
 		$menuPosition = (string) ($assocArgs['menu_position'] ?? '');
 		$menuIcon = $assocArgs['menu_icon'] ?? '';

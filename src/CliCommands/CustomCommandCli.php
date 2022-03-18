@@ -79,7 +79,7 @@ class CustomCommandCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$commandName = $this->prepareSlug($assocArgs['command_name']);
+		$commandName = $this->prepareSlug($assocArgs['command_name'] ?? 'custom-command');
 
 		// Get full class name.
 		$className = $this->getFileName($commandName);
