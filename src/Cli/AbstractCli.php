@@ -953,7 +953,7 @@ abstract class AbstractCli implements CliInterface
 
 			if ($item->isDir()) {
 				if (!file_exists($destinationPath)) {
-					mkdir($destinationPath, 0777, true);
+					mkdir($destinationPath, 0755, true);
 				}
 			} else {
 				copy($item->getPathname(), $destinationPath);
