@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Blocks;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
+use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Enqueue_Blocks class.
@@ -30,7 +31,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 *
 	 * @var ManifestInterface
 	 */
-	protected $manifest;
+	protected ManifestInterface $manifest;
 
 	/**
 	 * Enqueue blocks script for editor only.

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
+use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class EnqueueAdmin
@@ -27,7 +28,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 *
 	 * @var ManifestInterface
 	 */
-	protected $manifest;
+	protected ManifestInterface $manifest;
 
 	/**
 	 * Register the Stylesheets for the admin area.
