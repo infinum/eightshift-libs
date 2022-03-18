@@ -7,6 +7,7 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Rest\Routes\RouteExample;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();
@@ -19,7 +20,7 @@ beforeEach(function() {
 	$this->mockRequestValue = 'here is the value';
 
 	// Setting up Eightshift Boilerplate Config class mock.
-	$config = \Mockery::mock('alias:EightshiftBoilerplate\Config\Config');
+	$config = mock('alias:EightshiftBoilerplate\Config\Config');
 
 	// Mocking functions from EB Config.
 	$config
@@ -30,8 +31,8 @@ beforeEach(function() {
 		->shouldReceive('getProjectRoutesVersion')
 		->andReturn($this->projectVersion);
 
-	$this->wpRestServer = \Mockery::mock('alias:WP_REST_Server');
-	$this->wpRestRequest = \Mockery::mock('alias:WP_REST_Request');
+	$this->wpRestServer = mock('alias:WP_REST_Server');
+	$this->wpRestRequest = mock('alias:WP_REST_Request');
 
 	$this->wpRestRequest
 		->shouldReceive('get_body')

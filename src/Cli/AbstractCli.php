@@ -10,6 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\Exception\InvalidBlock;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 /**
  * Class AbstractCli
  */
@@ -331,13 +336,15 @@ abstract class AbstractCli implements CliInterface
 			$root = $this->getProjectRootPath(true) . '/cliOutput';
 		}
 
-		$root = rtrim($root, '/');
-		$root = trim($root, '/');
+		$ds = DIRECTORY_SEPARATOR;
 
-		$path = rtrim($path, '/');
-		$path = trim($path, '/');
+		$root = rtrim($root, $ds);
+		$root = trim($root, $ds);
 
-		return "/{$root}/{$path}";
+		$path = rtrim($path, $ds);
+		$path = trim($path, $ds);
+
+		return "{$ds}{$root}{$ds}{$path}";
 	}
 
 	/**
@@ -349,14 +356,16 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputFile(string $file): string
 	{
-		$file = rtrim($file, '/');
-		$file = trim($file, '/');
+		$ds = DIRECTORY_SEPARATOR;
+
+		$file = rtrim($file, $ds);
+		$file = trim($file, $ds);
 
 		if (strpos($file, '.') !== false) {
-			return "/{$file}";
+			return "{$ds}{$file}";
 		}
 
-		return "/{$file}.php";
+		return "{$ds}{$file}.php";
 	}
 
 	/**
@@ -724,10 +733,11 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param class-string[] $items Array of classes.
 	 * @param bool  $run Run or log output.
+	 * @param array $args CLI command args.
 	 *
 	 * @return void
 	 */
-	public function getEvalLoop(array $items = [], bool $run = false): void
+	public function getEvalLoop(array $items = [], bool $run = false, array $args = []): void
 	{
 		foreach ($items as $item) {
 			$reflectionClass = new \ReflectionClass($item);
@@ -735,10 +745,14 @@ abstract class AbstractCli implements CliInterface
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
 			if (method_exists($class, 'getCommandName')) {
-				if (!$run) {
-					\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+				if (function_exists('\add_action')) {
+					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
 				} else {
-					\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+					if (!$run) {
+						\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+					} else {
+						\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+					}
 				}
 			}
 		}
@@ -911,5 +925,44 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Recursive copy helper
+	 *
+	 * @link https://stackoverflow.com/a/7775949/629127
+	 *
+	 * @param string $source Source path.
+	 * @param string $destination Destination path.
+	 *
+	 * @throws InvalidBlock If block file is missing.
+	 *
+	 * @return void
+	 */
+	protected function copyRecursively(string $source, string $destination): void
+	{
+		try {
+			$iterator = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
+				RecursiveIteratorIterator::SELF_FIRST
+			);
+		} catch (\UnexpectedValueException $exception) {
+			throw InvalidBlock::missingFileException($source);
+		}
+
+		$ds = DIRECTORY_SEPARATOR;
+
+		foreach ($iterator as $item) {
+			$subPathName = $iterator->getSubPathname();
+			$destinationPath = rtrim($destination, $ds) . $ds . $subPathName;
+
+			if ($item->isDir()) {
+				if (!file_exists($destinationPath)) {
+					mkdir($destinationPath, 0755, true);
+				}
+			} else {
+				copy($item->getPathname(), $destinationPath);
+			}
+		}
 	}
 }

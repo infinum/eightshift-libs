@@ -4,13 +4,18 @@ namespace Tests\Unit\Block;
 
 use EightshiftLibs\Blocks\BlockCli;
 
+use EightshiftLibs\Exception\InvalidBlock;
+
 use function Tests\deleteCliOutput;
 use function Tests\mock;
+use function Tests\setupMocks;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
+	setupMocks();
+
 	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
@@ -86,9 +91,5 @@ test('Block CLI command will fail if block doesn\'t exist', function () {
 
 	$mock = $blockMock->getMock();
 
-	$mock([], ['name' => 'ivan']);
-
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/ivan/ivan.php';
-
-	$this->assertFileDoesNotExist($outputPath);
-});
+	$mock([], ['name' => 'testing']);
+})->expectException(InvalidBlock::class);

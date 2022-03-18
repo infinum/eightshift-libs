@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\AdminMenus;
 
+use EightshiftBoilerplate\AdminMenus\AdminSubMenuExample;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
@@ -56,31 +57,31 @@ class AdminSubMenuCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'parent_slug',
 					'description' => 'The slug name for the parent menu (or the file name of a standard WordPress admin page)',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'The text to be displayed in the title tags of the page when the menu is selected.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_title',
 					'description' => 'The text to be used for the menu.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'capability',
 					'description' => 'The capability required for this menu to be displayed to the user.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_slug',
 					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes, and underscores characters to be compatible with sanitize_key().', // phpcs:ignore Generic.Files.LineLength.TooLong
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];
@@ -90,11 +91,11 @@ class AdminSubMenuCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Arguments.
-		$parentSlug = $assocArgs['parent_slug'];
-		$title = $assocArgs['title'];
-		$menuTitle = $assocArgs['menu_title'];
-		$capability = $assocArgs['capability'];
-		$menuSlug = $this->prepareSlug($assocArgs['menu_slug']);
+		$parentSlug = $assocArgs['parent_slug'] ?? AdminSubMenuExample::PARENT_MENU_SLUG;
+		$title = $assocArgs['title'] ?? 'Admin Title';
+		$menuTitle = $assocArgs['menu_title'] ?? 'Admin Sub Menu Title';
+		$capability = $assocArgs['capability'] ?? AdminSubMenuExample::ADMIN_MENU_CAPABILITY;
+		$menuSlug = $this->prepareSlug($assocArgs['menu_slug'] ?? AdminSubMenuExample::ADMIN_MENU_SLUG);
 
 		// Get full class name.
 		$className = $this->getFileName($menuSlug);

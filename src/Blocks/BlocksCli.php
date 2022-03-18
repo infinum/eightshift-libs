@@ -37,6 +37,7 @@ class BlocksCli extends AbstractCli
 	 * @var string[]
 	 */
 	public const COMPONENTS = [
+		'accordion',
 		'button',
 		'card',
 		'copyright',
@@ -46,13 +47,25 @@ class BlocksCli extends AbstractCli
 		'head',
 		'header',
 		'heading',
+		'icon',
 		'image',
+		'jumbotron',
 		'layout-three-columns',
 		'lists',
+		'loader',
 		'logo',
 		'menu',
+		'modal',
 		'page-overlay',
 		'paragraph',
+		'quote',
+		'scroll-to-top',
+		'search-bar',
+		'share',
+		'social-links',
+		'tracking-before-body-end',
+		'tracking-head',
+		'video',
 	];
 
 	/**
@@ -61,15 +74,23 @@ class BlocksCli extends AbstractCli
 	 * @var string[]
 	 */
 	public const BLOCKS = [
+		'accordion',
 		'button',
 		'card',
+		'carousel',
 		'column',
 		'columns',
+		'example',
+		'featured-categories',
+		'featured-posts',
 		'group',
 		'heading',
 		'image',
+		'jumbotron',
 		'lists',
 		'paragraph',
+		'quote',
+		'video',
 	];
 
 	/**
@@ -96,8 +117,10 @@ class BlocksCli extends AbstractCli
 			->renameTextDomainFrontendLibs($assocArgs)
 			->renameUse($assocArgs);
 
-		if (!$this->isTest && function_exists('\add_action')) {
-			$this->blocksInit($assocArgs);
+		if (! \defined('ES_DEVELOP_MODE')) {
+			if (!$this->isTest && function_exists('\add_action')) {
+				$this->blocksInit($assocArgs);
+			}
 		}
 
 		// Output final class to new file/folder and finish.
@@ -127,15 +150,14 @@ class BlocksCli extends AbstractCli
 
 		foreach ($folders as $folder) {
 			if (!file_exists($folder)) {
-				system("mkdir -p {$folder}");
+				mkdir($folder);
 			}
 		}
 
-		system("cp -R {$rootNode}/assets/. {$folders['assetsGlobal']}/");
-
-		system("cp -R {$rootNode}/src/Blocks/assets/. {$folders['assets']}/");
-		system("cp -R {$rootNode}/src/Blocks/variations/. {$folders['variations']}/");
-		system("cp -R {$rootNode}/src/Blocks/manifest.json {$folders['blocks']}/");
+		$this->copyRecursively("{$rootNode}/assets/", "{$folders['assetsGlobal']}/");
+		$this->copyRecursively("{$rootNode}/src/Blocks/assets/", "{$folders['assets']}/");
+		$this->copyRecursively("{$rootNode}/src/Blocks/variations/", "{$folders['variations']}/");
+		$this->copyRecursively("{$rootNode}/src/Blocks/manifest.json", "{$folders['blocks']}/");
 
 		\WP_CLI::runcommand("{$this->commandParentName} use_wrapper {$this->prepareArgsManual($args)}");
 

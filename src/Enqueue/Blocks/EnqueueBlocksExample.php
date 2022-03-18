@@ -45,6 +45,9 @@ class EnqueueBlocksExample extends AbstractEnqueueBlocks
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockScript']);
+
+		// Frontend only style.
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyle'], 50);
 	}
 
 	/**

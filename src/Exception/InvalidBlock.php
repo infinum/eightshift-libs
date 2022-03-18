@@ -54,6 +54,24 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
+	 * Throws error if manifest key componentName is missing.
+	 *
+	 * @param string $componmentPath Full component path for the missing name.
+	 *
+	 * @return static
+	 */
+	public static function missingComponentNameException(string $componmentPath): InvalidBlock
+	{
+		return new InvalidBlock(
+			sprintf(
+			/* translators: %s will be replaced with the path where the block should be. */
+				\esc_html__('Component at %s is missing the "componentName" key in its manifest.json.', 'eightshift-libs'),
+				$componmentPath
+			)
+		);
+	}
+
+	/**
 	 * Throws error if block view is missing.
 	 *
 	 * @param string $blockName Block name for the missing view.
@@ -185,7 +203,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 	}
 
 	/**
-	 * Throws error if global manifest settings key namespace MarkoVendor\is missing.
+	 * Throws error if global manifest settings key is missing.
 	 *
 	 * @param string $name Block/component name.
 	 * @param string $componentName Component name to check.
@@ -202,6 +220,83 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 				$name,
 				$componentName
 			)
+		);
+	}
+
+	/**
+	 * Throws error if key is not found in the block settings array.
+	 *
+	 * @param string $key Key to find.
+	 * @param string $item Array item to find.
+	 *
+	 * @return static
+	 */
+	public static function missingSettingsKeyException(string $key, string $item = ''): InvalidBlock
+	{
+
+		if ($key === 'block' || $key === 'component') {
+			return new InvalidBlock(
+				sprintf(
+					/* translators: %1$s is going to be replaced with the key name. */
+					\esc_html__('Block/component %1$s not found in the blocks settings or the output data is empty.
+					Please check if the provided key and parent is correct.', 'eightshift-libs'),
+					$item
+				)
+			);
+		}
+
+		if ($item) {
+			return new InvalidBlock(
+				sprintf(
+					/* translators: %1$s is going to be replaced with the key name. */
+					\esc_html__('Key %1$s not found in the %2$s array blocks settings or the output data is empty.
+					Please check if the provided key and parent is correct.', 'eightshift-libs'),
+					$item,
+					$key
+				)
+			);
+		}
+
+		return new InvalidBlock(
+			sprintf(
+				/* translators: %1$s is going to be replaced with the key name. */
+				\esc_html__('Key %1$s not found in the blocks settings or the output data is empty.
+				Please check if the provided key is correct.', 'eightshift-libs'),
+				$key,
+			)
+		);
+	}
+
+	/**
+	 * Throws error if the block file is missing.
+	 *
+	 * @param string $sourcePath Missing file path.
+	 *
+	 * @return static
+	 */
+	public static function missingFileException(string $sourcePath): InvalidBlock
+	{
+		return new InvalidBlock(
+			sprintf(
+				/* translators: %s is going to be replaced with the missing file path. */
+				\esc_html__('Failed to open path %s. No such file or directory.', 'eightshift-libs'),
+				$sourcePath,
+			)
+		);
+	}
+
+	/**
+	 * Throws error if the block global details array is missing.
+	 *
+	 * @return static
+	 */
+	public static function missingGlobalBlockDetailsException(): InvalidBlock
+	{
+		return new InvalidBlock(
+			\esc_html__('
+				Global variable $esBlocks is missing. Did you hook your callbacks correctly?
+				Make sure the global is generated early on in your request lifecycle.
+			', 'eightshift-libs'),
 		);
 	}
 }

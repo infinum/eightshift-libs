@@ -7,6 +7,7 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Rest\Fields\FieldExample;
 
 use function Tests\setupMocks;
+use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();
@@ -14,7 +15,7 @@ beforeEach(function() {
 
 	$this->field = new FieldExample();
 
-	$this->wpRestServer = \Mockery::mock('alias:WP_REST_Server');
+	$this->wpRestServer = mock('alias:WP_REST_Server');
 });
 
 afterEach(function() {

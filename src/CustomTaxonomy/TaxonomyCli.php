@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\CustomTaxonomy;
 
+use EightshiftBoilerplate\CustomTaxonomy\TaxonomyExample;
 use EightshiftLibs\Cli\AbstractCli;
 
 /**
@@ -55,25 +56,25 @@ class TaxonomyCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom taxonomy to show in WP admin.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The name of the custom taxonomy slug. Example: location.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom taxonomy REST-API endpoint slug. Example: locations.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'post_type_slug',
 					'description' => 'The position where to assign the new custom taxonomy. Example: post.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];
@@ -83,10 +84,10 @@ class TaxonomyCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$label = $assocArgs['label'];
-		$slug = $this->prepareSlug($assocArgs['slug']);
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug']);
-		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug']);
+		$label = $assocArgs['label'] ?? 'Example Name';
+		$slug = $this->prepareSlug($assocArgs['slug'] ?? TaxonomyExample::TAXONOMY_SLUG);
+		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? TaxonomyExample::REST_API_ENDPOINT_SLUG);
+		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug'] ?? TaxonomyExample::TAXONOMY_POST_TYPE_SLUG);
 
 		// Get full class name.
 		$className = $this->getFileName($slug);

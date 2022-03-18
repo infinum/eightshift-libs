@@ -56,13 +56,13 @@ class ServiceExampleCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'folder',
 					'description' => 'The output folder path relative to src folder. Example: main or `main` or `config` or nested `main/config`',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'file_name',
 					'description' => 'The output file name. Example: Main',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];
@@ -72,19 +72,20 @@ class ServiceExampleCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$folder = $assocArgs['folder'];
-		$fileName = $this->prepareSlug($assocArgs['file_name']);
+		$folder = $assocArgs['folder'] ?? '';
+		$fileName = $this->prepareSlug($assocArgs['file_name'] ?? '');
 
 		// Get full class name.
 		$className = $this->getClassShortName();
 		$classNameNew = $this->getFileName($fileName);
+		$ds = DIRECTORY_SEPARATOR;
 
 		// Create new namespace from the folder structure.
 		$folderParts = array_map(
 			function ($item) {
 				return ucfirst($item);
 			},
-			explode('/', $folder)
+			explode($ds, $folder)
 		);
 
 		$newNamespace = '\\' . implode('\\', $folderParts);
@@ -95,6 +96,6 @@ class ServiceExampleCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->searchReplaceString('\\Services;', "{$newNamespace};")
-			->outputWrite(static::OUTPUT_DIR . '/' . $folder, $classNameNew, $assocArgs);
+			->outputWrite(static::OUTPUT_DIR . $ds . $folder, $classNameNew, $assocArgs);
 	}
 }

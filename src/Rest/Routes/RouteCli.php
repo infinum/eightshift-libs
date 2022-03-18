@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Rest\RouteInterface;
 
 /**
  * Class RouteCli
@@ -83,13 +84,13 @@ class RouteCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'endpoint_slug',
 					'description' => 'The name of the endpoint slug. Example: test-route.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'method',
 					'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];
@@ -99,8 +100,8 @@ class RouteCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug']);
-		$method = strtoupper($assocArgs['method']);
+		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? 'example-route');
+		$method = strtoupper($assocArgs['method'] ?? 'GET');
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);

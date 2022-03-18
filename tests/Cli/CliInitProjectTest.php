@@ -3,7 +3,6 @@
 namespace Tests\Unit\Cli;
 
 use Brain\Monkey;
-use Brain\Monkey\Functions;
 use EightshiftLibs\Cli\CliInitProject;
 
 use function Patchwork\{redefine, always};
@@ -75,15 +74,10 @@ test('CliInitProject CLI documentation is correct', function () {
 
 
 test('InitProject CLI command will correctly copy the project classes', function () {
-	Functions\when('shell_exec')->alias(function ($args) {
-		putenv("SHELL_CALLED={$args}");
-	});
-
 	$configProject = $this->cliInitProject;
 	$configProject([], []);
 
 	$this->assertSame('true', getenv('INIT_CALLED'));
-	$this->assertSame('npm run start', getenv('SHELL_CALLED'));
 	$this->assertSame('All commands are finished.', getenv('SUCCESS'));
 });
 

@@ -56,7 +56,7 @@ class BlockPatternCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'Pattern title',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 				[
 					'type' => 'assoc',
@@ -84,7 +84,7 @@ class BlockPatternCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$title = $assocArgs['title'];
+		$title = $assocArgs['title'] ?? '';
 		$name = isset($assocArgs['name']) ? $assocArgs['name'] : $this->generateName($title);
 		$content = $assocArgs['content'] ?? '';
 		$description = isset($assocArgs['description']) ? $assocArgs['description'] : 'Description of this pattern';

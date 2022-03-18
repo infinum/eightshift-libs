@@ -67,7 +67,7 @@ class BlockCli extends AbstractBlocksCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify block name.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];

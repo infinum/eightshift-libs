@@ -62,7 +62,7 @@ class BlockVariationCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify variation name.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];
@@ -79,13 +79,14 @@ class BlockVariationCli extends AbstractCli
 
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
+		$ds = DIRECTORY_SEPARATOR;
 
-		$path = static::OUTPUT_DIR . '/' . $name;
-		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
+		$path = static::OUTPUT_DIR . $ds . $name;
+		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
 		$sourcePath = "{$sourcePathFolder}{$name}";
 
 		if (!getenv('TEST')) {
-			$destinationPath = $root . '/' . $path;
+			$destinationPath = $root . $ds . $path;
 		} else {
 			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
 		}
@@ -127,7 +128,8 @@ class BlockVariationCli extends AbstractCli
 			);
 		}
 
-		system("cp -R {$sourcePath}/. {$destinationPath}/");
+		// Move block/component to project folder.
+		$this->copyRecursively($sourcePath, $destinationPath);
 
 		\WP_CLI::success('Variation successfully moved to your project.');
 

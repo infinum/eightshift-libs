@@ -52,7 +52,7 @@ class AcfMetaCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'The name of the custom meta slug. Example: title.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];
@@ -62,7 +62,7 @@ class AcfMetaCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['name']);
+		$fieldName = $this->prepareSlug($assocArgs['name'] ?? '');
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);
