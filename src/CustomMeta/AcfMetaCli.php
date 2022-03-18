@@ -52,7 +52,7 @@ class AcfMetaCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'The name of the custom meta slug. Example: title.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? ES_DEVELOP_MODE : false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 			],
 		];

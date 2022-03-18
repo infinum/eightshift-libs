@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use WP_CLI;
+
 /**
  * Class CliInitAll
  */
@@ -47,12 +49,12 @@ class CliInitAll extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		if (!function_exists('\add_action')) {
+		if (!\function_exists('\add_action')) {
 			$this->runReset();
-			\WP_CLI::log('--------------------------------------------------');
+			WP_CLI::log('--------------------------------------------------');
 		}
 
-		$classes = array_merge(
+		$classes = \array_merge(
 			Cli::CLASSES_LIST,
 			Cli::PUBLIC_CLASSES,
 			Cli::SETUP_CLASSES
@@ -60,12 +62,12 @@ class CliInitAll extends AbstractCli
 
 		$this->getEvalLoop($classes, true, $assocArgs);
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
-		\WP_CLI::log((string)shell_exec('npm run start')); // phpcs:ignore
+		WP_CLI::log((string)shell_exec('npm run start')); // phpcs:ignore
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
-		\WP_CLI::success('All commands are finished.');
+		WP_CLI::success('All commands are finished.');
 	}
 }

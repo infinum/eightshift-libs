@@ -11,7 +11,7 @@ use function Tests\deleteCliOutput;
 use function Tests\mock;
 
 class AbstractTest extends AbstractCli {
-	protected $fileContents = 'use EightshiftBoilerplateVendor\Service; use EightshiftBoilerplate\Test;';
+	protected string $fileContents = 'use EightshiftBoilerplateVendor\Service; use EightshiftBoilerplate\Test;';
 
 	public function __construct(string $commandParentName)
 	{

@@ -56,13 +56,13 @@ class ServiceExampleCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'folder',
 					'description' => 'The output folder path relative to src folder. Example: main or `main` or `config` or nested `main/config`',
-					'optional' => \defined('ES_DEVELOP_MODE') ? ES_DEVELOP_MODE : false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'file_name',
 					'description' => 'The output file name. Example: Main',
-					'optional' => \defined('ES_DEVELOP_MODE') ? ES_DEVELOP_MODE : false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 			],
 		];

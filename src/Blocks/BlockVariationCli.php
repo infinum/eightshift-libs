@@ -63,7 +63,7 @@ class BlockVariationCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify variation name.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? ES_DEVELOP_MODE : false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 			],
 		];

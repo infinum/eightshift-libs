@@ -56,7 +56,7 @@ class BlockPatternCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'Pattern title',
-					'optional' => \defined('ES_DEVELOP_MODE') ? ES_DEVELOP_MODE : false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',

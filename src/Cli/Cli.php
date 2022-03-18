@@ -49,6 +49,8 @@ use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\CliCommands\CustomCommandCli;
 use ReflectionClass;
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use Exception;
 
 /**
  * Class Cli
@@ -164,7 +166,7 @@ class Cli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @throws \Exception Exception if the class doesn't exist.
+	 * @throws Exception Exception if the class doesn't exist.
 	 *
 	 * @return void
 	 */
@@ -198,7 +200,7 @@ class Cli
 	 *
 	 * @param string $commandParentName Define top level commands name.
 	 *
-	 * @throws \Exception Exception if the class doesn't exist.
+	 * @throws Exception Exception if the class doesn't exist.
 	 *
 	 * @return void
 	 */

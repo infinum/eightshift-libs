@@ -35,17 +35,17 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @var string
 	 */
-	protected $commandParentName;
+	protected string $commandParentName;
 
 	/**
 	 * Contents of the example class
 	 *
-	 * When some of the renaming classes will be called, contents will get
+	 * When some renaming classes will be called, contents will get
 	 * stored in this variable. That way we can chain the commands.
 	 *
 	 * @var string
 	 */
-	protected $fileContents;
+	protected string $fileContents;
 
 	/**
 	 * Output dir relative path.
