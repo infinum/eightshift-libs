@@ -24,7 +24,7 @@ interface RenderableBlockInterface
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
 	 * @return string
-	 * @throws Exception On missing attributes OR missing template.
+	 * @throws \Exception On missing attributes OR missing template.
 	 */
 	public function render(array $attributes, string $innerBlockContent): string;
 }

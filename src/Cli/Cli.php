@@ -164,7 +164,7 @@ class Cli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @throws ReflectionException Exception if the class doesn't exist.
+	 * @throws \Exception Exception if the class doesn't exist.
 	 *
 	 * @return void
 	 */
@@ -198,7 +198,7 @@ class Cli
 	 *
 	 * @param string $commandParentName Define top level commands name.
 	 *
-	 * @throws ReflectionException Exception if the class doesn't exist.
+	 * @throws \Exception Exception if the class doesn't exist.
 	 *
 	 * @return void
 	 */

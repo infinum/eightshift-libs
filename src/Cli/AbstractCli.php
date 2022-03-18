@@ -738,10 +738,11 @@ abstract class AbstractCli implements CliInterface
 	 * Loop array of classes and output the commands
 	 *
 	 * @param class-string[] $items Array of classes.
-	 * @param bool  $run Run or log output.
-	 * @param array $args CLI command args.
+	 * @param bool $run Run or log output.
+	 * @param array<string, mixed> $args CLI command args.
 	 *
 	 * @return void
+	 * @throws \ReflectionException Reflection exception.
 	 */
 	public function getEvalLoop(array $items = [], bool $run = false, array $args = []): void
 	{
