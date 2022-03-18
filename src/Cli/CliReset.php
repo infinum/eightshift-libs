@@ -44,8 +44,10 @@ class CliReset extends AbstractCli
 	{
 		$outputDir = $this->getOutputDir('');
 
-		system('rm -rf ' . escapeshellarg($outputDir));
+		if (is_dir($outputDir)) {
+			rmdir($outputDir);
 
-		\WP_CLI::success('Output directory successfully removed.');
+			\WP_CLI::success('Output directory successfully removed.');
+		}
 	}
 }

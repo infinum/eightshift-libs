@@ -3,9 +3,11 @@
 namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
+use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
 
 use Brain\Monkey;
+use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 
 use function Tests\setupMocks;
@@ -20,66 +22,71 @@ afterAll(function() {
 	Monkey\tearDown();
 });
 
-/**
- * Components::ensureString tests
- */
+beforeEach(function() {
+	global $esBlocks;
+	$esBlocks = null;
+});
+
+afterEach(function() {
+	global $esBlocks;
+	$esBlocks = null;
+});
+
 test('Asserts ensure string returns a correct result', function ($args) {
 	$this->assertIsString(Components::ensureString($args));
 })->with('correctArguments');
 
+
 test('Throws type exception if wrong argument type is passed to ensureString', function ($argument) {
 	Components::ensureString($argument);
-})
-->throws(ComponentException::class)
-->with('errorStringArguments');
+})->throws(ComponentException::class)
+	->with('errorStringArguments');
 
-/**
- * Components::classnames tests
- */
+
 test('Asserts classnames returns a string', function ($args) {
 	$this->assertIsString(Components::classnames($args));
 })->with('classesArray');
 
-test('Throws type exception if wrong argument type is passed to classnames',
-	function ($argument) {
-		Components::classnames($argument);
-	})
-	->throws(\TypeError::class)
+
+test('Throws type exception if wrong argument type is passed to classnames', function ($argument) {
+	Components::classnames($argument);
+})->throws(\TypeError::class)
 	->with('errorStringArguments');
 
 
-/**
- * Components::getManifest tests
- */
 test('Asserts that reading manifest.json using getManifest will return an array', function () {
 	$results = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
-	$this->assertIsArray($results, 'The result is not an array');
-	$this->assertArrayHasKey('componentName', $results, 'Missing a key from the manifest.json file');
+	expect($results)
+		->toBeArray()
+		->toHaveKey('componentName');
 });
+
 
 test('Asserts that not specifying the path in getManifest will throw an exception', function () {
 	Components::getManifest(dirname(__FILE__));
 })->throws(ComponentException::class);
 
-/**
- * Components::render tests
- */
+
 test('Asserts that rendering a component works', function () {
 	$results = Components::render('button', []);
 
-	$this->assertNotEmpty($results, 'Component should be rendered here');
-	$this->assertStringContainsString('Hello!', $results, 'Component should contain a string');
+	expect($results)
+		->not->toBeEmpty()
+		->toContain('Hello!');
 });
+
 
 test('Asserts that rendering a component will output a wrapper if parentClass is provided', function () {
 	$results = Components::render('button', ['parentClass' => 'test']);
 
-	$this->assertNotEmpty($results, 'Component should be rendered here');
-	$this->assertStringContainsString('Hello!', $results, 'Component should contain a string');
-	$this->assertStringNotContainsString('test__button.php', $results, 'Component should contain a class name, not file type');
-	$this->assertStringContainsString('test__button', $results, 'Component should contain a class name');
+	expect($results)
+		->not->toBeEmpty()
+		->toContain('Hello!')
+		->not->toContain('test__button.php')
+		->toContain('test__button');
 });
+
 
 test('Asserts that providing a missing component will throw an exception without extension', function () {
 	Components::render('component', []);
@@ -92,34 +99,12 @@ test('Asserts that providing a missing component will throw an exception', funct
 test('Asserts that render used components defaults', function () {
 	$results = Components::render('button', [], '', true);
 
-	$this->assertNotEmpty($results, 'Component should be rendered here');
-	$this->assertStringContainsString('Hello!', $results, 'Component should contain a string');
+	expect($results)
+		->not->toBeEmpty()
+		->toContain('Hello!');
 });
 
-/**
- * Components::getDefaultRenderAttributes tests
- */
-test('Asserts that getDefaultRenderAttributes will merge rendered attributes with manifest attributes that have default values', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 
-	$output = Components::getDefaultRenderAttributes(
-		$manifest,
-		[
-			'buttonContent' => 'test',
-			'buttonColor' => 'black',
-		]
-	);
-
-	$this->assertIsArray($output);
-	$this->assertArrayHasKey('buttonContent', $output);
-	$this->assertArrayHasKey('buttonColor', $output);
-	$this->assertArrayHasKey('buttonSize', $output);
-	$this->assertArrayNotHasKey('buttonId', $output);
-});
-
-/**
- * Components::responsiveSelectors tests
- */
 test('Asserts that using responsive selectors will work', function () {
 	$modifiers = ['mobile' => '12', 'tablet' => '12', 'desktop' => '6'];
 	$modifiersAlt = ['mobile' => '12', 'tablet' => '12', 'desktop' => ''];
@@ -128,39 +113,39 @@ test('Asserts that using responsive selectors will work', function () {
 	$withoutModifier = Components::responsiveSelectors($modifiers, 'width', 'column', false);
 	$withEmptyString = Components::responsiveSelectors($modifiersAlt, 'width', 'column');
 
-	$this->assertIsString($withModifier, 'Result should be a string');
-	$this->assertIsString($withoutModifier, 'Result should be a string');
-	$this->assertIsString($withEmptyString, 'Result should be a string');
+	expect($withModifier)
+		->toBeString()
+		->toBe('column__width-mobile--12 column__width-tablet--12 column__width-desktop--6');
 
-	$this->assertSame(
-		'column__width-mobile--12 column__width-tablet--12 column__width-desktop--6'
-		, $withModifier,
-		'Strings are not equal in the case of modifiers added'
-	);
-	$this->assertSame(
-		'column__width-mobile column__width-tablet column__width-desktop',
-		$withoutModifier,
-		'Strings are not equal in the case there is no modifier'
-	);
-	$this->assertSame(
-		'column__width-mobile--12 column__width-tablet--12',
-		$withEmptyString,
-		'Strings are not equal when one option is empty'
-	);
+	expect($withoutModifier)
+		->toBeString()
+		->toBe('column__width-mobile column__width-tablet column__width-desktop');
+
+	expect($withEmptyString)
+		->toBeString()
+		->toBe('column__width-mobile--12 column__width-tablet--12');
 });
 
-/**
- * Components::checkAttr tests
- */
+
 test('Asserts that checkAttr works in case attribute is string', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonAlign'] = 'right';
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
 
-	$this->assertIsString($results, 'Result should be a string');
-	$this->assertSame('right', $results, "The set attribute should be {$attributes['buttonAlign']}");
+	expect($results)
+		->toBeString()
+		->toBe('right');
 });
+
+
+test('checkAttr will throw an exception in the case that the block name is missing in the manifest', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/button/');
+	$attributes['buttonText'] = 'left';
+
+	Components::checkAttr('buttonAlign', $attributes, $manifest);
+})->throws(\Exception::class, 'buttonAlign key does not exist in the button block manifest. Please check your implementation.');
+
 
 test('Asserts that checkAttr works in case attribute is boolean', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -168,9 +153,11 @@ test('Asserts that checkAttr works in case attribute is boolean', function () {
 
 	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);
 
-	$this->assertIsBool($results, 'The result should be a boolean');
-	$this->assertSame(true, $results, "The set attribute should be {$attributes['buttonIsAnchor']}");
+	expect($results)
+		->toBeBool()
+		->toBeTrue();
 });
+
 
 test('Asserts that checkAttr returns false in case attribute is boolean and default is not set', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -178,9 +165,11 @@ test('Asserts that checkAttr returns false in case attribute is boolean and defa
 
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest);
 
-	$this->assertIsBool($results, 'The result should be a boolean');
-	$this->assertSame(false, $results, "The set attribute should be false");
+	expect($results)
+		->toBeBool()
+		->toBeFalse();
 });
+
 
 test('Asserts that checkAttr returns null in case attribute is boolean, default is not set and undefined is allowed', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -188,9 +177,11 @@ test('Asserts that checkAttr returns null in case attribute is boolean, default 
 
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest, true);
 
-	$this->assertIsNotBool($results, 'The result should not be a boolean');
-	$this->assertSame(null, $results, "The set attribute should be null");
+	expect($results)
+		->not->toBeBool()
+		->toBeNull();
 });
+
 
 test('Asserts that checkAttr works in case attribute is array', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -198,10 +189,15 @@ test('Asserts that checkAttr works in case attribute is array', function () {
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'The result should be an array');
-	$this->assertSame('attr 1', $results[0], 'The value in the array is not correct');
-	$this->assertSame('attr 2', $results[1], 'The value in the array is not correct');
+	expect($results)
+		->toBeArray();
+
+	expect($results[0])
+		->toBe('attr 1');
+	expect($results[1])
+		->toBe('attr 2');
 });
+
 
 test('Asserts that checkAttr returns empty array in case attribute is array or object and default is not set', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -209,9 +205,12 @@ test('Asserts that checkAttr returns empty array in case attribute is array or o
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'The result should be an empty array');
-	$this->assertSame([], $results, "The set attribute should be empty array");
+
+	expect($results)
+		->toBeArray()
+		->toBe([]);
 });
+
 
 test('Asserts that checkAttr returns null in case attribute is array or object, default is not set, and undefined is allowed', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -219,9 +218,11 @@ test('Asserts that checkAttr returns null in case attribute is array or object, 
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest, true);
 
-	$this->assertIsNotArray($results, 'The result should not be an empty array');
-	$this->assertSame(null, $results, "The set attribute should be null");
+	expect($results)
+		->not->toBeArray()
+		->toBeNull();
 });
+
 
 test('Asserts that checkAttr returns default value', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -229,9 +230,11 @@ test('Asserts that checkAttr returns default value', function () {
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest, 'button');
 
-	$this->assertIsString($results, 'The default value should be a string');
-	$this->assertSame('left', $results, 'The default value should be left');
+	expect($results)
+		->toBeString()
+		->toBe('left');
 });
+
 
 test('Asserts that checkAttr throws exception if manifest key is not set', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -239,6 +242,7 @@ test('Asserts that checkAttr throws exception if manifest key is not set', funct
 
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
 })->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation.");
+
 
 test('Asserts that checkAttr returns attribute based on prefix if set', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
@@ -249,13 +253,12 @@ test('Asserts that checkAttr returns attribute based on prefix if set', function
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
 
-	$this->assertIsString($results, 'Result should be a string');
-	$this->assertSame('right', $results, "The set attribute should be {$attributes['prefixedMultipleTimesButtonAlign']}");
+	expect($results)
+		->toBeString()
+		->toBe('right');
 });
 
-/**
- * Components::checkAttrResponsive tests
- */
+
 test('Asserts that checkAttrResponsive returns the correct output.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [
@@ -267,10 +270,14 @@ test('Asserts that checkAttrResponsive returns the correct output.', function ()
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'Result should be an array');
-	$this->assertArrayHasKey('large', $results);
-	$this->assertSame($results['large'], '10');
+	expect($results)
+		->toBeArray()
+		->toHaveKey('large');
+
+	expect($results['large'])
+		->toBe('10');
 });
+
 
 test('Asserts that checkAttrResponsive returns empty values if attribute is not provided.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
@@ -278,10 +285,14 @@ test('Asserts that checkAttrResponsive returns empty values if attribute is not 
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
 
-	$this->assertIsArray($results, 'Result should be an array');
-	$this->assertArrayHasKey('large', $results);
-	$this->assertSame($results['large'], '');
+	expect($results)
+		->toBeArray()
+		->toHaveKey('large');
+
+	expect($results['large'])
+		->toBe('');
 });
+
 
 test('Asserts that checkAttrResponsive returns null if default is not set and undefined is allowed.', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
@@ -291,1059 +302,240 @@ test('Asserts that checkAttrResponsive returns null if default is not set and un
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, true);
 
-	$this->assertIsArray($results, 'Result should be an array');
-	$this->assertArrayHasKey('large', $results);
-	$this->assertArrayHasKey('desktop', $results);
-	$this->assertArrayHasKey('tablet', $results);
-	$this->assertSame($results['large'], null);
-	$this->assertSame($results['desktop'], '2');
-	$this->assertSame($results['tablet'], null);
+	expect($results)
+		->toBeArray()
+		->toHaveKey('large')
+		->toHaveKey('desktop')
+		->toHaveKey('tablet');
+
+	expect($results['large'])
+		->toBeNull();
+	expect($results['desktop'])
+		->toBe('2');
+	expect($results['tablet'])
+		->toBeNull();
 });
 
-test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing.', function () {
+
+test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes = [];
 
 	Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, 'button');
 })->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your button component manifest.');
 
-test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array.', function () {
+
+test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array', function () {
 	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [];
 
 	Components::checkAttrResponsive('testAttribute', $attributes, $manifest, 'button');
 })->throws(\Exception::class, 'It looks like you are missing the testAttribute key in your manifest responsiveAttributes array.');
 
-/**
- * Components::selector tests
- */
+
+test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array for blockName', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading/');
+	$attributes = [];
+
+	Components::checkAttrResponsive('bla', $attributes, $manifest, 'button');
+})->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your heading block manifest.');
+
+
 test('Asserts that selectorBlock returns the correct class when attributes are set', function () {
 	$selector = Components::selector('button', 'button', 'icon', 'blue');
 
-	$this->assertIsString($selector);
-	$this->assertSame('button__icon--blue', $selector);
+	expect($selector)
+		->toBeString()
+		->toBe('button__icon--blue');
 });
+
 
 test('Asserts that selector returns the correct class when only block class is set', function () {
 	$selector = Components::selector('button', 'button');
 
-	$this->assertIsString($selector);
-	$this->assertSame('button', $selector);
+	expect($selector)
+		->toBeString()
+		->toBe('button');
 });
+
 
 test('Asserts that selector returns the correct class when element is an empty string', function () {
 	$selector = Components::selector('button', 'button', '    ');
 
-	$this->assertIsString($selector);
-	$this->assertSame('button', $selector);
+	expect($selector)
+		->toBeString()
+		->toBe('button');
 });
 
-/**
- * Components::outputCssVariablesGlobal tests
- */
+
 test('Asserts that outputCssVariablesGlobal returns the correct CSS variables from global manifest', function () {
 	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariablesGlobal($globalManifest);
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString(':root {', $output);
-	$this->assertStringContainsString('--global-colors-primary: #C3151B;', $output);
-	$this->assertStringNotContainsString('--button-content:', $output);
+	expect($output)
+		->toBeString()
+		->toContain('<style>')
+		->toContain(':root {')
+		->toContain('--global-colors-primary: #C3151B;')
+		->toContain('--global-colors-primary-values: 195 21 27;')
+		->not->toContain('--button-content:');
 });
+
 
 test('Asserts that outputCssVariablesGlobal returns empty string if global manifest data is not provided', function () {
 	$output = Components::outputCssVariablesGlobal([]);
 
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
+	expect($output)
+		->toBeString()
+		->not->toContain('<style>');
 });
 
-/**
- * Components::globalInner tests
- */
-test('Asserts that globalInner returns the correct css variable for color', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$output = Components::globalInner(
-		$globalManifest['globalVariables']['colors'],
-		'colors'
-	);
+test('Asserts that getManifest throws exception for paths in case the global details aren\'t set', function ($path) {
+	Components::getManifest($path, false);
+})->throws(InvalidBlock::class)->with([
+	dirname(__FILE__, 2) . '/data/src/Blocks',
+	dirname(__FILE__, 2) . '/data/src/Blocks/wrapper',
+	dirname(__FILE__, 2) . '/data/src/Blocks/components/button',
+	dirname(__FILE__, 2) . '/data/src/Blocks/custom/button',
+]);
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('--global-colors-primary: #C3151B;', $output);
+
+test('Asserts that getManifest returns empty array in case of a wrong path', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src', false);
+
+	expect($manifest)
+		->toBeArray()
+		->toBeEmpty();
 });
 
-test('Asserts that globalInner returns the correct css variable for gradients', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$output = Components::globalInner(
-		$globalManifest['globalVariables']['gradients'],
-		'gradients'
-	);
+test('Asserts that getSettings throws exception in case the global details aren\'t set', function () {
+	Components::getSettings('component');
+})->throws(InvalidBlock::class);
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('--global-gradients-black: #000000;', $output);
+
+test('Asserts that getSettings works', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$settings = Components::getSettings('config', 'outputCssVariablesGlobally');
+
+	expect($settings)
+		->toBeBool()
+		->toBeTrue();
 });
 
-test('Asserts that globalInner returns the correct css variable for fontSizes', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$output = Components::globalInner(
-		$globalManifest['globalVariables']['fontSizes'],
-		'fontSizes'
-	);
+test('getSettings parses items correctly in the the case the type is block', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('--global-font-sizes-normal: normal;', $output);
+	$settings = Components::getSettings('block', 'button');
+
+	expect($settings)
+		->toBeArray()
+		->toHaveKey('blockName');
+
+	expect($settings['blockName'])
+		->toBe('button');
 });
 
-test('Asserts that globalInner returns the correct css variable for generic value', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$output = Components::globalInner(
-		$globalManifest['globalVariables']['gutters'],
-		'gutters'
-	);
+test('getSettings parses items correctly in the the case the type is component', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('--global-gutters-none: 0;', $output);
-	$this->assertStringContainsString('--global-gutters-default: 1.25em;', $output);
-	$this->assertStringContainsString('--global-gutters-big: 2.5em;', $output);
+	$settings = Components::getSettings('component', 'button');
+
+	expect($settings)
+		->toBeArray()
+		->toHaveKey('componentName');
+
+	expect($settings['componentName'])
+		->toBe('button');
 });
 
-test('Asserts that globalInner provided data si wrong', function () {
 
-	$output = Components::globalInner(
-		[],
-		''
-	);
+test('getSettings throws exception when key is missing', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
 
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('--global', $output);
+	Components::getSettings('component', 'button-nonexistent');
+})->throws(InvalidBlock::class);
+
+
+test('getSettings throws exception when type is not block or component and the item is missing', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	Components::getSettings('settings', 'testing');
+})->throws(InvalidBlock::class);
+
+
+test('getSettings throws exception when the method is called with the non existent key from the global settings array', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	Components::getSettings('what');
+})->throws(InvalidBlock::class);
+
+
+test('Asserts that getAttrKey will return the key in case of the wrapper', function () {
+
+	$attributeKey = Components::getAttrKey('wrapper', [], []);
+
+	expect($attributeKey)
+		->toBeString()
+		->toBe('wrapper');
 });
 
-/**
- * Components::outputCssVariables tests
- */
-test('Asserts that outputCssVariables returns the correct CSS variables output for default type no responsive', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$attributes = [
-		'variableDefault' => 'test',
-	];
+test('Asserts that getUnique function will return some random string', function () {
 
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
+	Functions\when('wp_rand')->justReturn(mt_rand());
+	$unique = Components::getUnique();
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-default: default;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	expect($unique)
+		->toBeString();
 });
 
-test('Asserts that outputCssVariables returns the correct CSS variables output for default type with responsive', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$attributes = [
-		'variableDefault' => 'test',
-	];
+test('Asserts that arrayIsList function will correctly identify lists', function () {
 
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
+	$isList = Components::arrayIsList([1, 2, 3]);
+	$isNotList = Components::arrayIsList(['a' => 1, 'b' => 2, 'c' => 3]);
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-default: default;', $output);
-	$this->assertStringContainsString('@media (min-width: 1199px)', $output);
-	$this->assertStringContainsString('--variable-default-large: large;', $output);
-	$this->assertStringContainsString('--variable-default-tablet: test;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	expect($isList)
+		->toBeBool()
+		->toBeTrue();
+
+	expect($isNotList)
+		->toBeBool()
+		->not->toBeTrue();
 });
 
-test('Asserts that outputCssVariables returns the correct CSS variables output for value type no responsive', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$attributes = [
-		'variableValue' => 'value1',
-	];
+test('Asserts that getDefaultRenderAttributes function will return empty array on non iterable manifest', function () {
 
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
+	$output = Components::render('button-false', [], '', true);
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-value-default: default;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	expect($output)
+		->toBeString();
 });
 
-test('Asserts that outputCssVariables returns the correct CSS variables output for value type with responsive.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$attributes = [
-		'variableValue' => 'value2',
-	];
+test('Asserts that flattenArray will return the flattened array', function () {
 
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
+	$array = Components::flattenArray(['a' => ['b', 'c' => [1, 2, 3]]]);
 
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-value-default: default;', $output);
-	$this->assertStringContainsString('@media (min-width: 767px)', $output);
-	$this->assertStringContainsString('--variable-value-tablet: tablet;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
+	expect($array)
+		->toBeArray()
+		->toBe(['b', 1, 2, 3]);
 });
 
-test('Asserts that outputCssVariables returns the correct CSS variables output for value type with responsive inverse order.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
 
-	$attributes = [
-		'variableValue' => 'value3',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-value-default: default;', $output);
-	$this->assertStringContainsString('@media (max-width: 991px)', $output);
-	$this->assertStringContainsString('--variable-value-tablet: tablet;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns empty for empty variables.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableEmpty' => 'value3',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns empty for missing variables.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableMissing' => 'value3',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns array of attributes if default is set.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$output = Components::outputCssVariables(
-		[],
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns empty if none of attributes have variables.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$output = Components::outputCssVariables(
-		[
-			"variablesWithoutVariable" => "ivan",
-		],
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns empty if attributes variables option is not set.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$output = Components::outputCssVariables(
-		[
-			"variableValueNotSetValue" => "ivan",
-		],
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns empty for missing attributes array.', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$output = Components::outputCssVariables(
-		[],
-		[],
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns empty for missing variables array.', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/typography');
-
-	$output = Components::outputCssVariables(
-		[
-			"test" => "1",
-		],
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns empty if variables array is not array.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$output = Components::outputCssVariables(
-		[
-			"variableValueNotArray" => "aaa",
-		],
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns empty globalManifest is not set.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-
-	$output = Components::outputCssVariables(
-		[
-			"variableDefault" => "aaa",
-		],
-		$manifest,
-		'uniqueString',
-		[]
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-value-default: default;', $output);
-});
-
-test('Asserts that outputCssVariables returns variable for attributes which expect booleans.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableBool' => true,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-created-by-boolean: value-when-true;', $output);
-
-	$attributes = [
-		'variableBool' => false,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-created-by-boolean: value-when-false;', $output);
-});
-
-test('Asserts that manifest has responsive attributes defined but without variables definition', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-	unset($manifest['variables']);
-	$attributes = [
-		'variableValueMobile' => 'value1',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-
-	$value = '2';
-
-	$attributes = [
-		'variableDefaultDesktop' => $value,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString("variable-default-normal: default-desktop-{$value}", $output);
-});
-
-test('Asserts that manifest has responsive attributes defined but without responsive variables definition', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-	unset($manifest['variables']['responsiveVariableDefault']);
-	unset($manifest['variables']['responsiveVariableValue']);
-	$attributes = [
-		'variableValueMobile' => 'value1',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
-	$this->assertStringNotContainsString('variable-value-default-responsive: value1-responsive', $output);
-
-	$value = '2';
-
-	$attributes = [
-		'variableDefaultDesktop' => $value,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString("variable-default-normal: default-desktop-{$value}", $output);
-	$this->assertStringNotContainsString("variable-default-responsive: default-responsive-{$value}", $output);
-});
-
-test('Asserts that only responsive variables are defined', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-	unset($manifest['variables']['variableDefaultLarge']);
-	unset($manifest['variables']['variableDefaultDesktop']);
-	unset($manifest['variables']['variableDefaultMobile']);
-	unset($manifest['variables']['variableValueDesktop']);
-	unset($manifest['variables']['variableValueMobile']);
-
-	$attributes = [
-		'variableValueMobile' => 'value1',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
-	$this->assertStringNotContainsString('variable-value-default: value1-mobile', $output);
-
-	$value = '2';
-
-	$attributes = [
-		'variableDefaultDesktop' => $value,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString("variable-default-responsive: default-responsive-{$value}", $output);
-	$this->assertStringContainsString('@media (min-width: 991px)', $output);
-	$this->assertStringContainsString("variable-default: default-responsive-{$value}", $output);
-	$this->assertStringNotContainsString("variable-default-normal: default-desktop-{$value}", $output);
-});
-
-test('Asserts that responsive variables and default variables are defined', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableValueMobile' => 'value1',
-		'variableValueDesktop' => 'value2',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-value-default-responsive: value1-responsive', $output);
-	$this->assertStringContainsString('variable-value-default-responsive: value2-responsive', $output);
-	$this->assertStringContainsString('@media (min-width: 991px)', $output);
-	$this->assertStringContainsString('variable-value-default: value2-desktop', $output);
-	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
-
-	$value = '2';
-
-	$attributes = [
-		'variableDefaultMobile' => $value,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-default:', $output);
-	$this->assertStringContainsString("variable-default: default-mobile-{$value}", $output);
-	$this->assertStringContainsString("variable-default: default-responsive-{$value}", $output);
-	$this->assertStringContainsString("variable-default-responsive: default-responsive-{$value}", $output);
-	$this->assertStringContainsString("variable-default-normal: default-mobile-{$value}", $output);
-});
-
-test('Asserts that manifest has responsive variables defined but without appearance of responsiveAttributes', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/responsiveVariables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-	unset($manifest['responsiveAttributes']);
-
-	$attributes = [
-		'variableValueMobile' => 'value1',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('variable-value-default: value1-mobile', $output);
-	$this->assertStringNotContainsString('variable-value-default-responsive: value1-responsive', $output);
-
-	$value = '2';
-
-	$attributes = [
-		'variableDefaultDesktop' => $value,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString("variable-default-normal: default-desktop-{$value}", $output);
-	$this->assertStringNotContainsString("variable-default-responsive: default-responsive-{$value}", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for an integer with a value of 0.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableInteger' => 0,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-integer: 0;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for an integer with a regular non-zero value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableInteger' => 3,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-integer: 3;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for an integer with a null value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableInteger' => null,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-integer', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a string with a zero value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableString' => '0',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-string: 0;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a string with a regular text value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableString' => 'demo',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-string: demo;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for an empty string.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableString' => '',
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-string', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a string with a null value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableString' => null,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-string', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a boolean with a correct value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableBoolean' => false,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-boolean: false;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a boolean with a null value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableBoolean' => null,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-boolean', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a number with a correct integer value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableNumber' => 3,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-number: 3;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a number with a correct decimal value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableNumber' => 3.4,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-number: 3.4;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a number with a zero integer value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableNumber' => 0,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-number: 0;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a number with a zero decimal value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableNumber' => 0.0,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('<style>', $output);
-	$this->assertStringContainsString('--variable-number: 0;', $output);
-	$this->assertStringContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output for a number with a null value.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableNumber' => null,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringNotContainsString('<style>', $output);
-	$this->assertStringNotContainsString('--variable-number', $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-test('Asserts that outputCssVariables returns the correct output selector for provided prop.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableNumber' => 3.4,
-	];
-
-	$output = Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest,
-		'wp-block'
-	);
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString(".wp-block[data-id='uniqueString']", $output);
-	$this->assertStringNotContainsString(".variables[data-id='uniqueString']", $output);
-});
-
-/**
- * Components::getUnique tests
- */
-test('Asserts that getUnique returns the correct output', function () {
-	$output = Components::getUnique();
-
-	$this->assertIsString($output);
-	$this->assertMatchesRegularExpression('/[a-z0-9]{1,32}/m', $output);
-});
-
-/**
- * Components::arrayIsList tests
- */
-test('Asserts that arrayIsList returns the correct output for correct input', function ($input) {
-	$case = Components::arrayIsList($input);
-
-	$this->assertIsBool($case);
-	$this->assertTrue($case);
-})->with('arrayIsListWrong');
-
-test('Asserts that arrayIsList returns the correct output for wrong input', function ($input) {
-	$case = Components::arrayIsList($input);
-
-	$this->assertIsBool($case);
-	$this->assertFalse($case);
-})->with('arrayIsListCorrect');
-
-/**
- * Components::camelToKebabCase tests
- */
-test('Asserts that camelToKebabCase returns the correct output', function () {
-	$output = Components::camelToKebabCase('superCoolTestString');
-
-	$this->assertSame('super-cool-test-string', $output);
-});
-
-test('Asserts that camelToKebabCase returns the wrong output', function () {
-	$output = Components::camelToKebabCase('super_CoolTest-String ivan');
-
-	$this->assertNotEquals('super-cool-test-string-ivan', $output);
-});
-
-/**
- * Components::kebabToCamelCase tests
- */
-test('Asserts that kebabToCamelCase returns the correct output', function () {
-	$output = Components::kebabToCamelCase('super-cool-test-string');
-
-	$this->assertSame('superCoolTestString', $output);
-});
-
-test('Asserts that kebabToCamelCase returns the wrong output', function () {
-	$output = Components::kebabToCamelCase('super-cool-test-string-goc');
-
-	$this->assertNotEquals('super_CoolTest-String goc', $output);
-});
-
-/**
- * Components::kebabToCamelCase tests
- */
-test('Asserts that kebabToCamelCase returns the correct output with a different separator', function () {
-	$output = Components::kebabToCamelCase('super_cool_test_string', '_');
-
-	$this->assertSame('superCoolTestString', $output);
-});
-
-/**
- * Components::kebabToCamelCase tests
- */
-test('Asserts that kebabToCamelCase returns the correct output with numbers as a string', function () {
-	$output = Components::kebabToCamelCase('123-456-789');
-
-	$this->assertSame('123456789', $output);
-});
-
-/**
- * Components::kebabToCamelCase tests
- */
-test('Asserts that kebabToCamelCase returns the correct output with a non-kebab-case string', function () {
-	$output = Components::kebabToCamelCase('non kebab string');
-
-	$this->assertSame('non kebab string', $output);
-});
-
-/**
- * Components::props tests
- */
 test('Asserts props for heading block will return only heading attributes', function () {
 	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
 	$headingComponent = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading');
@@ -1363,10 +555,12 @@ test('Asserts props for heading block will return only heading attributes', func
 	$this->blocksExample->getBlocksDataFullRaw();
 	$output = Components::props($headingBlock['blockName'], $attributes);
 
-	$this->assertIsArray($output);
-	$this->assertContains('headingAlign', array_keys($output), "Output array doesn't contain headingAlign attribute key.");
-	$this->assertNotContains('typographySize', array_keys($output), "Output array does contain typographySize attribute key.");
+	expect($output)
+		->toBeArray()
+		->toHaveKey('headingAlign')
+		->not->toHaveKey('typographySize');
 });
+
 
 test('Asserts props for heading component will return only typography attributes', function () {
 	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
@@ -1387,10 +581,12 @@ test('Asserts props for heading component will return only typography attributes
 	$this->blocksExample->getBlocksDataFullRaw();
 	$output = Components::props('typography', $attributes);
 
-	$this->assertIsArray($output);
-	$this->assertContains('typographyContent', array_keys($output), "Output array doesn't contain typographyContent attribute key.");
-	$this->assertNotContains('headingSize', array_keys($output), "Output array does contain headingSize attribute key.");
+	expect($output)
+		->toBeArray()
+		->toHaveKey('typographyContent')
+		->not->toHaveKey('headingSize');
 });
+
 
 test('Asserts props will correctly build the prefix', function () {
 	$headingBlock = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading');
@@ -1411,16 +607,24 @@ test('Asserts props will correctly build the prefix', function () {
 	$this->blocksExample->getBlocksDataFullRaw();
 	$output = Components::props('heading', $attributes);
 
-	$this->assertIsArray($output);
-	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
-	$this->assertSame('heading', $output['prefix']);
+	expect($output)
+		->toBeArray()
+		->toHaveKey('prefix');
+
+	expect($output['prefix'])
+		->toBe('heading');
 
 	// Next level
 	$output = Components::props('typography', $output);
-	$this->assertIsArray($output);
-	$this->assertContains('prefix', array_keys($output), "Output array doesn't contain prefix attribute key.");
-	$this->assertSame('headingTypography', $output['prefix']);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('prefix');
+
+	expect($output['prefix'])
+		->toBe('headingTypography');
 });
+
 
 test('Asserts props will correctly leave only the the needed attributes', function () {
 	$attributes = [
@@ -1437,20 +641,26 @@ test('Asserts props will correctly leave only the the needed attributes', functi
 	$this->blocksExample->getBlocksDataFullRaw();
 	$output = Components::props('mock-card', $attributes);
 
-	$this->assertIsArray($output);
-	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
-	$this->assertContains('mockCardParagraphTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardHeadingTypographyContent')
+		->toHaveKey('mockCardParagraphTypographyContent');
 
 	// Now let's pass these to mock heading
 	$output = Components::props('heading', $output);
-	$this->assertIsArray($output);
-	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
-	$this->assertNotContains('mockCardParagraphTypographyContent', array_keys($output), "Output array contains attribute that should have been purged.");
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardHeadingTypographyContent')
+		->not->toHaveKey('mockCardParagraphTypographyContent');
 
 	$output = Components::props('typography', $output);
-	$this->assertIsArray($output);
-	$this->assertContains('mockCardHeadingTypographyContent', array_keys($output), "Output array doesn't contain required attribute.");
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardHeadingTypographyContent');
 });
+
 
 test('Asserts props will correctly generate manual keys in camelCase', function () {
 	$attributes = [
@@ -1460,7 +670,7 @@ test('Asserts props will correctly generate manual keys in camelCase', function 
 	];
 
 	$manual = [
-		'buttonContent' => 'mock button content',  
+		'buttonContent' => 'mock button content',
 	];
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
@@ -1470,7 +680,271 @@ test('Asserts props will correctly generate manual keys in camelCase', function 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
 	$output = Components::props('mock-card', $attributes, $manual);
-	$this->assertIsArray($output);
-	$this->assertContains('mockCardButtonContent', array_keys($output), "Manual key is not properly converted to camelCase");
-	$this->assertNotContains('mockCardbuttonContent', array_keys($output), "Manual key is not properly converted to camelCase");
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardButtonContent')
+		->not->toHaveKey('mockCardbuttonContent');
+});
+
+
+test('Props will include the correct attribute in the manual case', function () {
+	$attributes = [
+		'componentName' => 'mock-card',
+		'componentJsClass' => 'js-mock-card',
+		'mockCardHeadingContent' => 'mock heading content',
+		'mockCardParagraphContent' => 'mock paragraph content',
+	];
+
+	$manual = [
+		'buttonContent' => 'mock button content',
+		'selectorClass' => 'selector',
+	];
+
+	mock('alias:EightshiftBoilerplate\Config\Config')
+		->shouldReceive('getProjectPath')
+		->andReturn('tests/data');
+
+	$this->blocksExample = new BlocksExample();
+	$this->blocksExample->getBlocksDataFullRaw();
+	$output = Components::props('mock-card', $attributes, $manual);
+
+	expect($output)
+		->toBeArray()
+		->toHaveKey('mockCardButtonContent')
+		->toHaveKey('selectorClass')
+		->toHaveKey('componentJsClass');
+});
+
+
+test('Asserts that outputCssVariables throws exception if the global block details aren\'t set', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+})->throws(InvalidBlock::class);
+
+
+test('outputCssVariables returns empty string if global breakpoints are missing', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$output = Components::outputCssVariables(
+		[],
+		[],
+		'uniqueString',
+		['namespace' => 'eightshift']
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+});
+
+
+test('outputCssVariables returns empty string if global attributes or manifest are missing', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$output = Components::outputCssVariables(
+		['attribute'],
+		[],
+		'uniqueString',
+		$globalManifest
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+
+	$outputSecond = Components::outputCssVariables(
+		[],
+		['manifest'],
+		'uniqueString',
+		$globalManifest
+	);
+
+	expect($outputSecond)
+		->toBeString()
+		->toBeEmpty();
+});
+
+
+test('outputCssVariables returns empty string if variable keys are missing in manifest', function () {
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$output = Components::outputCssVariables(
+		['attribute'],
+		['manifest'],
+		'uniqueString',
+		$globalManifest
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+});
+
+
+test('outputCssVariables works when correct attributes are passed to it', function () {
+	global $esBlocks;
+
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+
+	// The output is put in the global variable.
+	expect($esBlocks)
+		->toBeArray()
+		->toHaveKey($globalManifest['namespace']);
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'])
+		->toBeArray();
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0])
+		->toBeArray()
+		->toHaveKey('name')
+		->toHaveKey('unique')
+		->toHaveKey('variables');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['name'])
+		->toBeString()
+		->toBe('variables');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['unique'])
+		->toBeString()
+		->toBe('uniqueString');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'])
+		->toBeArray();
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][0])
+		->toBeArray()
+		->toHaveKey('type')
+		->toHaveKey('variable')
+		->toHaveKey('value');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1])
+		->toBeArray()
+		->toHaveKey('type')
+		->toHaveKey('variable')
+		->toHaveKey('value');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['type'])
+		->toBeString()
+		->toBe('max');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['variable'])
+		->toBeString()
+		->toBe('--variable-value-tablet: tablet;');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['value'])
+		->toBeInt()
+		->toBe(991);
+});
+
+
+test('outputCssVariables works when correct attributes are passed to it and has a unique name', function () {
+	global $esBlocks;
+
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest,
+		'customNameAttribute'
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+
+	// The output is put in the global variable.
+	expect($esBlocks)
+		->toBeArray()
+		->toHaveKey($globalManifest['namespace']);
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'])
+		->toBeArray();
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0])
+		->toBeArray()
+		->toHaveKey('name')
+		->toHaveKey('unique')
+		->toHaveKey('variables');
+
+	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['name'])
+		->toBeString()
+		->toBe('customNameAttribute');
+});
+
+
+test('outputCssVariables outputs the style tag if the outputCssVariablesGlobally is set to false', function () {
+	global $esBlocks;
+
+	// Arrange - fill the $esBlocks global variable.
+	(new BlocksExample())->getBlocksDataFullRaw();
+
+	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+	$esBlocks[$globalManifest['namespace']]['config']['outputCssVariablesGlobally'] = false;
+
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest,
+		'customNameAttribute'
+	);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+
 });

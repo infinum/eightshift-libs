@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Blocks;
 
-use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Blocks\AbstractBlocks;
 
 /**
@@ -23,13 +22,6 @@ class BlocksExample extends AbstractBlocks
 	 * Reusable blocks Capability Name.
 	 */
 	public const REUSABLE_BLOCKS_CAPABILITY = 'edit_reusable_blocks';
-
-	/**
-	 * Blocks dependency filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCKS_DEPENDENCY_FILTER_NAME = 'blocks_dependency';
 
 	/**
 	 * Register all the hooks
@@ -61,23 +53,8 @@ class BlocksExample extends AbstractBlocks
 		// Register Reusable blocks side menu.
 		\add_action('admin_menu', [$this, 'addReusableBlocks']);
 
-		// Register blocks internal filter for props helper.
-		\add_filter(static::BLOCKS_DEPENDENCY_FILTER_NAME, [$this, 'getBlocksDataFullRawItem']);
-
 		// Filter block content.
 		\add_filter('render_block_data', [$this, 'filterBlocksContent'], 10, 2);
-	}
-
-	/**
-	 * Get blocks absolute path
-	 *
-	 * Prefix path is defined by project config.
-	 *
-	 * @return string
-	 */
-	protected function getBlocksPath(): string
-	{
-		return Config::getProjectPath() . '/src/Blocks';
 	}
 
 	/**

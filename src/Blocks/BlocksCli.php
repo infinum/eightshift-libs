@@ -150,15 +150,14 @@ class BlocksCli extends AbstractCli
 
 		foreach ($folders as $folder) {
 			if (!file_exists($folder)) {
-				system("mkdir -p {$folder}");
+				mkdir($folder);
 			}
 		}
 
-		system("cp -R {$rootNode}/assets/. {$folders['assetsGlobal']}/");
-
-		system("cp -R {$rootNode}/src/Blocks/assets/. {$folders['assets']}/");
-		system("cp -R {$rootNode}/src/Blocks/variations/. {$folders['variations']}/");
-		system("cp -R {$rootNode}/src/Blocks/manifest.json {$folders['blocks']}/");
+		$this->copyRecursively("{$rootNode}/assets/", "{$folders['assetsGlobal']}/");
+		$this->copyRecursively("{$rootNode}/src/Blocks/assets/", "{$folders['assets']}/");
+		$this->copyRecursively("{$rootNode}/src/Blocks/variations/", "{$folders['variations']}/");
+		$this->copyRecursively("{$rootNode}/src/Blocks/manifest.json", "{$folders['blocks']}/");
 
 		\WP_CLI::runcommand("{$this->commandParentName} use_wrapper {$this->prepareArgsManual($args)}");
 

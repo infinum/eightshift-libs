@@ -2,6 +2,8 @@
   "redefinable-internals": [
     "shell_exec",
     "system",
-    "function_exists"
+    "function_exists",
+    "file_get_contents",
+    "file_put_contents"
   ]
 }

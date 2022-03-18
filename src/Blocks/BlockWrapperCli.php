@@ -58,12 +58,14 @@ class BlockWrapperCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
+		$ds = DIRECTORY_SEPARATOR;
+
 		$path = static::OUTPUT_DIR;
-		$sourcePathFolder = $rootNode . '/' . static::OUTPUT_DIR . '/';
+		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
 		$sourcePath = "{$sourcePathFolder}";
 
 		if (!getenv('TEST')) {
-			$destinationPath = $root . '/' . $path;
+			$destinationPath = $root . $ds . $path;
 		} else {
 			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
 		}
@@ -78,10 +80,10 @@ class BlockWrapperCli extends AbstractCli
 				)
 			);
 		} else {
-			system("mkdir -p {$destinationPath}/");
+			mkdir("{$destinationPath}/");
 		}
 
-		system("cp -R {$sourcePath}/. {$destinationPath}/");
+		$this->copyRecursively($sourcePath, "{$destinationPath}/");
 
 		\WP_CLI::success('Wrapper successfully moved to your project.');
 

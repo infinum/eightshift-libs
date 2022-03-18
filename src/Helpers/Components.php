@@ -11,12 +11,20 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
+use EightshiftLibs\Exception\InvalidBlock;
 
 /**
  * Helpers for components
  */
 class Components
 {
+	/**
+	 * Blocks-namespace constant.
+	 *
+	 * @var string
+	 */
+	public static $namespace = '';
+
 	/**
 	 * Makes sure the output is string. Useful for converting an array of components into a string.
 	 * If you pass an associative array it will output strings with keys, used for generating data-attributes from array.
@@ -81,6 +89,8 @@ class Components
 	 */
 	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false): string
 	{
+		$sep = DIRECTORY_SEPARATOR;
+
 		if (empty($parentPath)) {
 			$parentPath = \get_template_directory();
 		}
@@ -98,16 +108,16 @@ class Components
 		 * parentClass__componentName.php
 		 */
 		if (strpos($component, '.php') !== false) {
-			$componentPath = "{$parentPath}/$component";
+			$componentPath = "{$parentPath}{$sep}$component";
 
 			if ($useComponentDefaults) {
 				$manifest = self::getManifest($parentPath);
 			}
 		} else {
-			$componentPath = "{$parentPath}/src/Blocks/components/{$component}/{$component}.php";
+			$componentPath = "{$parentPath}{$sep}src{$sep}Blocks{$sep}components{$sep}{$component}{$sep}{$component}.php";
 
 			if ($useComponentDefaults) {
-				$manifest = self::getManifest("{$parentPath}/src/Blocks/components/{$component}");
+				$manifest = self::getManifest("{$parentPath}{$sep}src{$sep}Blocks{$sep}components{$sep}{$component}");
 			}
 		}
 
@@ -138,52 +148,52 @@ class Components
 	}
 
 	/**
-	 * Merges attributes array with the manifest default attributes.
-	 *
-	 * @param array<string, mixed> $manifest Block/Component manifest data.
-	 * @param array<string, mixed> $attributes Block/Component rendered attributes data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getDefaultRenderAttributes(array $manifest, array $attributes): array
-	{
-		$defaultAttributes = [];
-
-		if (!is_iterable($manifest['attributes'])) {
-			return [];
-		}
-
-		foreach ($manifest['attributes'] as $itemKey => $itemValue) {
-			// Get the correct key for the check in the attributes object.
-			$newKey = self::getAttrKey($itemKey, $attributes, $manifest);
-
-			if (isset($itemValue['default'])) {
-				$defaultAttributes[$newKey] = $itemValue['default'];
-			}
-		}
-
-		return array_merge($defaultAttributes, $attributes);
-	}
-
-	/**
 	 * Get manifest json. Generally used for getting block/components manifest.
 	 *
 	 * @param string $path Absolute path to manifest folder.
+	 * @param bool $useGlobal Use global blocks settings.
 	 *
 	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getManifest(string $path): array
+	public static function getManifest(string $path, bool $useGlobal = true): array
 	{
-
-		$manifest = "{$path}/manifest.json";
-
-		if (!file_exists($manifest)) {
-			throw ComponentException::throwUnableToLocateComponent($manifest);
+		// Get manifest by directly getting the file.
+		if ($useGlobal) {
+			return self::getManifestDirect($path);
 		}
 
-		return json_decode(implode(' ', (array)file($manifest)), true);
+		$path = rtrim($path, DIRECTORY_SEPARATOR);
+
+		$path = explode(DIRECTORY_SEPARATOR, $path);
+
+		// Find last item to get name.
+		$item = $path[count($path) - 1] ?? '';
+
+		// Global settings.
+		if ($item === 'Blocks') {
+			return self::getSettings('settings');
+		}
+
+		// Wrapper details.
+		if ($item === 'wrapper') {
+			return self::getSettings('wrapper');
+		}
+
+		$type = $path[count($path) - 2] ?? '';
+
+		// Components settings.
+		if ($type === 'components') {
+			return self::getSettings('component', $item);
+		}
+
+		// Blocks settings.
+		if ($type === 'custom') {
+			return self::getSettings('block', $item);
+		}
+
+		return [];
 	}
 
 	/**
@@ -406,12 +416,564 @@ class Components
 		}
 
 		return $output ? "
-			<style>
-				:root {
-					{$output}
+			<style>:root {{$output}}</style>" : '';
+	}
+
+	/**
+	 * Get component/block options and process them in CSS variables.
+	 *
+	 * @param array<string, mixed> $attributes Built attributes.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
+	 * @param string $unique Unique key.
+	 * @param array<string, mixed> $globalManifest Global manifest array.
+	 * @param string $customSelector Output custom selector to use as a style prefix.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest, string $customSelector = ''): string
+	{
+		$output = '';
+
+		// Find global settings flag.
+		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
+		$outputGloballyOptimizeFlag = self::getSettings('config', 'outputCssVariablesGloballyOptimize');
+
+		$namespace = $globalManifest['namespace'];
+
+		// Bailout if global breakpoints are missing.
+		if (
+			!isset($globalManifest['globalVariables']) ||
+			!isset($globalManifest['globalVariables']['breakpoints'])
+		) {
+			return '';
+		}
+
+		// Bailout if attributes or manifest is missing.
+		if (!$attributes || !$manifest) {
+			return '';
+		}
+
+		// Bailout if manifest is missing variables key.
+		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
+			return '';
+		}
+
+		// Define variables from globalManifest.
+		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
+
+		// Sort breakpoints in ascending order.
+		asort($breakpoints);
+
+		$defaultBreakpoints = self::getDefaultBreakpoints($breakpoints);
+
+		// Define variables from manifest.
+		$variables = $manifest['variables'] ?? [];
+
+		// Define responsiveAttributes from manifest.
+		$responsiveAttributes = $manifest['responsiveAttributes'] ?? [];
+
+		// Get the initial data array.
+		$data = self::prepareVariableData($breakpoints);
+
+		// Check if component or block.
+		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
+
+		if ($customSelector !== '') {
+			$name = $customSelector;
+		}
+
+		// Check manifest for the attributes with variable key.
+		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
+		$defaultAttributes = array_keys(
+			array_filter(
+				$variables,
+				static function ($key) use ($attributes) {
+					return !isset($attributes[$key]);
+				},
+				ARRAY_FILTER_USE_KEY
+			)
+		);
+
+		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
+		if ($defaultAttributes) {
+			$default = [];
+
+			foreach ($defaultAttributes as $key) {
+				if (isset($attributes[$key]['default'])) {
+					$default[$key] = $attributes[$key]['default'];
 				}
-			</style>
-		" : '';
+			}
+
+			$attributes = array_merge($default, $attributes);
+		}
+
+		if (!empty($responsiveAttributes)) {
+			$responsiveVariables = self::setupResponsiveVariables($responsiveAttributes, $variables);
+			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest, $defaultBreakpoints);
+		}
+
+		if (!empty($variables)) {
+			// Iterate each variable.
+			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
+		}
+
+		// Prepare output style object.
+		$styles = [
+			'name' => $name,
+			'unique' => $unique,
+			'variables' => [],
+		];
+
+		// Loop data and provide correct selectors from data array.
+		foreach ($data as $values) {
+			// Define variables from values.
+			$type = $values['type'];
+			$value = $values['value'];
+			$variable = $values['variable'];
+
+			// Bailout if variables are empty.
+			if (!$variable) {
+				continue;
+			}
+
+			// Merge array of variables to string.
+			$breakpointData = implode("\n", $variable);
+
+			// If breakpoint value is 0 then don't wrap the media query around it.
+			if ($outputGloballyFlag) {
+				$styles['variables'][] = [
+					'type' => $type,
+					'variable' => $breakpointData,
+					'value' => $value,
+				];
+			} else {
+				if ($value === 0) {
+					$output .= "\n .{$name}[data-id='{$unique}']{\n{$breakpointData}\n}";
+				} else {
+					$output .= "\n @media ({$type}-width:{$value}px){\n.{$name}[data-id='{$unique}']{\n{$breakpointData}\n}\n}";
+				}
+			}
+		}
+
+		// Output manual output from the array of variables.
+		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
+
+		// Output to global if flag is set.
+		if ($outputGloballyFlag) {
+			if ($manual) {
+				$styles['variables'][] = [
+					'type' => 'min',
+					'variable' => $manual,
+					'value' => 0,
+				];
+			}
+
+			global $esBlocks;
+
+			$esBlocks[$namespace]['styles'][] = $styles;
+
+			return '';
+		}
+
+		// Prepare final output for testing.
+		$fullOutput = "
+			{$output}
+			{$manual}
+		";
+
+		// Check if final output is empty and and remove if it is.
+		if (empty(trim($fullOutput))) {
+			return '';
+		}
+
+		// Prepare output for manual variables.
+		$finalManualOutput = $manual ? "\n .{$name}[data-id='{$unique}']{\n{$manual}\n}" : '';
+
+		if ($outputGloballyOptimizeFlag) {
+			$output = str_replace(["\n", "\r"], '', $output);
+			$finalManualOutput = str_replace(["\n", "\r"], '', $finalManualOutput);
+		}
+
+		// Output the style for CSS variables.
+		return "<style>{$output} {$finalManualOutput}</style>";
+	}
+
+	/**
+	 * Output css variables as a one inline style tag.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariablesCombined(): string
+	{
+		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
+		$outputGloballyOptimizeFlag = self::getSettings('config', 'outputCssVariablesGloballyOptimize');
+
+		// Bailout if not using this feature.
+		if (!$outputGloballyFlag) {
+			return '';
+		}
+
+		$styles = self::getSettings('styles');
+
+		// Bailout if styles are missing.
+		if (!$styles) {
+			return '';
+		}
+
+		// Define variables from globalManifest.
+		$breakpointsData = self::getSettings('settings', 'globalVariables')['breakpoints'];
+
+		// Sort breakpoints in ascending order.
+		asort($breakpointsData);
+
+		// Populate min values.
+		$breakpointsMin = array_map(
+			static function ($item) {
+				return "min---{$item}";
+			},
+			array_values($breakpointsData)
+		);
+		// Append 0 value.
+		array_unshift($breakpointsMin, 'min---0');
+
+		// Populate max values.
+		$breakpointsMax = array_map(
+			static function ($item) {
+				return "max---{$item}";
+			},
+			array_reverse(array_values($breakpointsData))
+		);
+		// Append 0 value.
+		array_unshift($breakpointsMax, 'max---0');
+
+		// Return empty array of items.
+		$breakpoints = array_map(
+			static function () {
+				return '';
+			},
+			array_flip(array_values(array_merge($breakpointsMin, $breakpointsMax)))
+		);
+
+		// Loop styles.
+		foreach ($styles as $style) {
+			$name = $style['name'] ?? '';
+			$unique = $style['unique'] ?? '';
+			$variables = $style['variables'] ?? [];
+
+			// Bailout if variables are missing.
+			if (!$variables) {
+				continue;
+			}
+
+			foreach ($variables as $data) {
+				$type = $data['type'] ?? '';
+				$value = $data['value'] ?? '';
+				$variable = $data['variable'] ?? '';
+
+				// Bailout if variable is missing.
+				if (!$variable) {
+					continue;
+				}
+
+				// Bailout if breakpont is missing.
+				if (!isset($breakpoints["{$type}---{$value}"])) {
+					continue;
+				}
+
+				// Populate breakpoint.
+				$breakpoints["{$type}---{$value}"] .= "\n.{$name}[data-id='{$unique}']{\n{$variable}\n} ";
+			}
+		}
+
+		// Prepare final output.
+		$output = '';
+
+		// Loop breakpoints in correct order.
+		foreach ($breakpoints as $breakpointKey => $breakpointValue) {
+			$breakpointKey = explode('---', $breakpointKey);
+
+			$type = $breakpointKey[0] ?? '';
+			$value = $breakpointKey[1] ?? '';
+
+			// Bailout if empty value.
+			if (!$breakpointValue) {
+				continue;
+			}
+
+			// If value is 0 then this breakpoint has no media query.
+			if ($value === '0') {
+				$output .= "{$breakpointValue}\n";
+			} else {
+				$output .= "\n@media ({$type}-width:{$value}px){{$breakpointValue}}\n ";
+			}
+		}
+
+		// Remove newlines is config is set.
+		if ($outputGloballyOptimizeFlag) {
+			$output = str_replace(["\n", "\r"], '', $output);
+		}
+
+	  $selector = self::getSettings('config', 'outputCssVariablesSelectorName');
+
+		return "<style id='{$selector}'>{$output}</style>";
+	}
+
+	/**
+	 * Return unique ID for block processing.
+	 *
+	 * @return string
+	 */
+	public static function getUnique(): string
+	{
+		return md5(uniqid((string)\wp_rand(), true));
+	}
+
+	/**
+	 * Convert string from camel to kebab case
+	 *
+	 * @param string $string String to convert.
+	 *
+	 * @return string
+	 */
+	public static function camelToKebabCase(string $string): string
+	{
+		$replace = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
+		return ltrim(strtolower($replace), '-');
+	}
+
+	/**
+	 * Convert string from kebab to camel case
+	 *
+	 * @param string $string    String to convert.
+	 * @param string $separator Separator to use for conversion.
+	 *
+	 * @return string
+	 */
+	public static function kebabToCamelCase(string $string, string $separator = '-'): string
+	{
+		return lcfirst(str_replace($separator, '', ucwords($string, $separator)));
+	}
+
+	/**
+	 * Check if provided array is associative or sequential. Will return true if array is sequential.
+	 *
+	 * @param array<string, mixed>|string[] $array Array to check.
+	 *
+	 * @return boolean
+	 */
+	public static function arrayIsList(array $array): bool
+	{
+		$expectedKey = 0;
+		foreach ($array as $i => $value) {
+			if ($i !== $expectedKey) {
+				return false;
+			}
+			$expectedKey++;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Output only attributes that are used in the component and remove everything else.
+	 *
+	 * @param string $newName *New* key to use to rename attributes.
+	 * @param array<string, mixed> $attributes Attributes from the block/component.
+	 * @param array<string, mixed> $manual Array of attributes to change key and merge to the original output.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function props(string $newName, array $attributes, array $manual = []): array
+	{
+
+		$output = [];
+
+		// Check what attributes we need to includes.
+		$includes = [
+			'blockName',
+			'blockFullName',
+			'blockClass',
+			'blockJsClass',
+			'blockStyles',
+			'componentJsClass',
+			'selectorClass',
+			'additionalClass',
+			'uniqueWrapperId',
+			'parentClass'
+		];
+
+		$blockName = $attributes['blockName'] ?? '';
+
+		// Populate prefix key for recursive checks of attribute names.
+		$prefix = (!isset($attributes['prefix'])) ? self::kebabToCamelCase($blockName) : $attributes['prefix'];
+
+		// Set component prefix.
+		if (empty($prefix)) {
+			$output['prefix'] = self::kebabToCamelCase($newName);
+		} else {
+			$output['prefix'] = $prefix . ucfirst(self::kebabToCamelCase($newName));
+		}
+
+		// Iterate over the attributes.
+		foreach ($attributes as $key => $value) {
+			// Include attributes from iteration.
+			if (in_array($key, $includes, true)) {
+				$output[$key] = $value;
+				continue;
+			}
+
+			// If attribute starts with the prefix key leave it in the object if not remove it.
+			if (substr((string)$key, 0, strlen($output['prefix'])) === $output['prefix']) {
+				$output[$key] = $value;
+			}
+		}
+
+		// Check if you have manual object and prepare the attribute keys and merge them with the original attributes for output.
+		if ($manual) {
+			// Iterate manual attributes.
+			foreach ($manual as $key => $value) {
+				// Include attributes from iteration.
+				if (in_array($key, $includes, true)) {
+					$output[$key] = $value;
+					continue;
+				}
+
+				// Remove the current component name from the attribute name.
+				$newKey = str_replace(lcfirst(self::kebabToCamelCase($newName)), '', $key);
+
+				// Remove the old key.
+				unset($manual[$key]);
+
+				// Add new key to the output with prepared attribute name.
+				$manual[$output['prefix'] . ucfirst($newKey)] = $value;
+			}
+
+			// Merge manual and output objects to one.
+			$output = array_merge($output, $manual);
+		}
+
+		// Return the original attribute for optimization purposes.
+		return $output;
+	}
+
+	/**
+	 * Flatten multidimensional array in to a single array.
+	 *
+	 * @param array<string, mixed> $array Array to iterate.
+	 *
+	 * @return string[]|array<string, mixed>
+	 */
+	public static function flattenArray(array $array): array
+	{
+		$return = [];
+
+		array_walk_recursive(
+			$array,
+			function ($a) use (&$return) {
+				$return[] = $a;
+			}
+		);
+
+		return $return;
+	}
+
+	/**
+	 * Return project blocks details based on the provided key.
+	 *
+	 * @param string $type Type to get.
+	 * @param string $item Array key to get.
+	 * @param string $namespace Namespace of blocks.
+	 *
+	 * @throws InvalidBlock If settings key is missing.
+	 *
+	 * @return string|array<string, mixed>
+	 */
+	public static function getSettings(string $type, string $item = '', string $namespace = '')
+	{
+		global $esBlocks;
+
+		if (empty($esBlocks)) {
+			throw InvalidBlock::missingGlobalBlockDetailsException();
+		}
+
+		// If block-namespace is not set try to determine block-namespace from path or local constant.
+		if (!$namespace) {
+			$namespace = self::getBlocksNamespace();
+		}
+
+		$details = $esBlocks[$namespace] ?? [];
+
+		// If type is block or component.
+		if ($type === 'block' || $type === 'component') {
+			$keyName = 'blockName';
+			$keyDetails = 'blocks';
+
+			if ($type === 'component') {
+				$keyName = 'componentName';
+				$keyDetails = 'components';
+			}
+
+			$items = array_filter(
+				$details[$keyDetails],
+				static function ($manifest) use ($item, $keyName) {
+					return $manifest[$keyName] === $item;
+				}
+			);
+
+			if (\gettype($items) === 'array' && empty($items)) {
+				throw InvalidBlock::missingSettingsKeyException($type, $item);
+			}
+
+			return reset($items);
+		}
+
+		// If searching for one item in array.
+		if ($item) {
+			$items = $details[$type][$item] ?? [];
+
+			if (\gettype($items) === 'array' && empty($items)) {
+				throw InvalidBlock::missingSettingsKeyException($type, $item);
+			}
+
+			return $items;
+		}
+
+		// If searching for one item only.
+		$items = $details[$type] ?? [];
+
+		if (\gettype($items) === 'array' && empty($items)) {
+			throw InvalidBlock::missingSettingsKeyException($type);
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Merges attributes array with the manifest default attributes.
+	 *
+	 * @param array<string, mixed> $manifest Block/Component manifest data.
+	 * @param array<string, mixed> $attributes Block/Component rendered attributes data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function getDefaultRenderAttributes(array $manifest, array $attributes): array
+	{
+		$defaultAttributes = [];
+
+		if (!is_iterable($manifest['attributes'])) {
+			return [];
+		}
+
+		foreach ($manifest['attributes'] as $itemKey => $itemValue) {
+			// Get the correct key for the check in the attributes object.
+			$newKey = self::getAttrKey($itemKey, $attributes, $manifest);
+
+			if (isset($itemValue['default'])) {
+				$defaultAttributes[$newKey] = $itemValue['default'];
+			}
+		}
+
+		return array_merge($defaultAttributes, $attributes);
 	}
 
 	/**
@@ -422,7 +984,7 @@ class Components
 	 *
 	 * @return string
 	 */
-	public static function globalInner(array $itemValues, string $itemKey): string
+	private static function globalInner(array $itemValues, string $itemKey): string
 	{
 		$output = '';
 
@@ -433,6 +995,9 @@ class Components
 			switch ($itemKey) {
 				case 'colors':
 					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
+
+					$rgbValues = self::hexToRgb($value['color']);
+					$output .= "--global-{$itemKey}-{$value['slug']}-values: {$rgbValues};\n";
 					break;
 				case 'gradients':
 					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
@@ -627,156 +1192,13 @@ class Components
 	}
 
 	/**
-	 * Get component/block options and process them in CSS variables.
-	 *
-	 * @param array<string, mixed> $attributes Built attributes.
-	 * @param array<string, mixed> $manifest Component/block manifest data.
-	 * @param string $unique Unique key.
-	 * @param array<string, mixed> $globalManifest Global manifest array.
-	 * @param string $customSelector Output custom selector to use as a style prefix.
-	 *
-	 * @return string
-	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest, string $customSelector = ''): string
-	{
-		$output = '';
-
-		// Bailout if global breakpoints are missing.
-		if (!isset($globalManifest['globalVariables']) || !isset($globalManifest['globalVariables']['breakpoints'])) {
-			return '';
-		}
-
-		// Bailout if attributes or manifest is missing.
-		if (!$attributes || !$manifest) {
-			return '';
-		}
-
-		// Bailout if manifest is missing variables key.
-		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
-			return '';
-		}
-
-		// Define variables from globalManifest.
-		$breakpoints = $globalManifest['globalVariables']['breakpoints'];
-
-		// Sort breakpoints in ascending order.
-		asort($breakpoints);
-
-		$defaultBreakpoints = self::getDefaultBreakpoints($breakpoints);
-
-		// Define variables from manifest.
-		$variables = $manifest['variables'] ?? [];
-
-		// Define responsiveAttributes from manifest.
-		$responsiveAttributes = $manifest['responsiveAttributes'] ?? [];
-
-		// Get the initial data array.
-		$data = self::prepareVariableData($breakpoints);
-
-		// Check if component or block.
-		$name = $manifest['componentClass'] ?? $attributes['blockClass'];
-
-		if ($customSelector !== '') {
-			$name = $customSelector;
-		}
-
-		// Check manifest for the attributes with variable key.
-		// As this is not JS we can't simply get this data from attributes array so we need to do it manually.
-		$defaultAttributes = array_keys(
-			array_filter(
-				$variables,
-				function ($key) use ($attributes) {
-					return !isset($attributes[$key]);
-				},
-				ARRAY_FILTER_USE_KEY
-			)
-		);
-
-		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
-		if ($defaultAttributes) {
-			$default = [];
-
-			foreach ($defaultAttributes as $key) {
-				if (isset($attributes[$key]['default'])) {
-					$default[$key] = $attributes[$key]['default'];
-				}
-			}
-
-			$attributes = array_merge($default, $attributes);
-		}
-
-		if (!empty($responsiveAttributes)) {
-			$responsiveVariables = self::setupResponsiveVariables($responsiveAttributes, $variables);
-			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest, $defaultBreakpoints);
-		}
-
-		if (!empty($variables)) {
-			// Iterate each variable.
-			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
-		}
-
-		// Loop data and provide correct selectors from data array.
-		foreach ($data as $values) {
-			// Define variables from values.
-			$type = $values['type'];
-			$value = $values['value'];
-			$variable = $values['variable'];
-
-			// Bailout if variables are empty.
-			if (!$variable) {
-				continue;
-			}
-
-			// Merge array of variables to string.
-			$breakpointData = implode("\n", $variable);
-
-			// If breakpoint value is 0 then don't wrap the media query around it.
-			if ($value === 0) {
-				$output .= ".{$name}[data-id='{$unique}'] {
-						{$breakpointData}
-					}
-				";
-			} else {
-				$output .= "@media ({$type}-width: {$value}px) {
-						.{$name}[data-id='{$unique}'] {
-							{$breakpointData}
-						}
-					}
-				";
-			}
-		}
-
-		// Output manual output from the array of variables.
-		$manual = isset($manifest['variablesCustom']) ? \esc_html(implode(";\n", $manifest['variablesCustom'])) : '';
-
-		// Prepare final output for testing.
-		$fullOutput = "
-			{$output}
-			{$manual}
-		";
-
-		// Check if final output is empty and and remove if it is.
-		if (empty(trim($fullOutput))) {
-			return '';
-		}
-
-		// Prepare output for manual variables.
-		$finalManualOutput = $manual ? ".{$name}[data-id='{$unique}'] {
-			{$manual}
-		}" : '';
-
-		// Output the style for CSS variables.
-		return "<style>{$output} {$finalManualOutput}</style>";
-	}
-
-	/**
 	 * Create initial array of data to be able to populate later.
 	 *
 	 * @param array<string, mixed> $globalBreakpoints Global breakpoints from global manifest to set the correct output.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public static function prepareVariableData(array $globalBreakpoints): array
+	private static function prepareVariableData(array $globalBreakpoints): array
 	{
 
 		// Define the min and max arrays.
@@ -860,7 +1282,7 @@ class Components
 	 *
 	 * @return array<int, mixed>|string[]
 	 */
-	public static function variablesInner(array $variables, $attributeValue): array
+	private static function variablesInner(array $variables, $attributeValue): array
 	{
 		$output = [];
 
@@ -887,160 +1309,62 @@ class Components
 	}
 
 	/**
-	 * Return unique ID for block processing.
+	 * Get blocks global settings block-namespace data from settings manifest.json file or local constant.
+	 *
+	 * @throws InvalidBlock Throws error if global manifest settings key block-namespace is missing.
+	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
 	 *
 	 * @return string
 	 */
-	public static function getUnique(): string
+	private static function getBlocksNamespace(): string
 	{
-		return md5(uniqid((string)\wp_rand(), true));
-	}
-
-	/**
-	 * Convert string from camel to kebab case
-	 *
-	 * @param string $string String to convert.
-	 *
-	 * @return string
-	 */
-	public static function camelToKebabCase(string $string): string
-	{
-		$replace = preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
-		return ltrim(strtolower($replace), '-');
-	}
-
-	/**
-	 * Convert string from kebab to camel case
-	 *
-	 * @param string $string    String to convert.
-	 * @param string $separator Separator to use for conversion.
-	 *
-	 * @return string
-	 */
-	public static function kebabToCamelCase(string $string, string $separator = '-'): string
-	{
-		return lcfirst(str_replace($separator, '', ucwords($string, $separator)));
-	}
-
-	/**
-	 * Check if provided array is associative or sequential. Will return true if array is sequential.
-	 *
-	 * @param array<string, mixed>|string[] $array Array to check.
-	 *
-	 * @return boolean
-	 */
-	public static function arrayIsList(array $array): bool
-	{
-		$expectedKey = 0;
-		foreach ($array as $i => $value) {
-			if ($i !== $expectedKey) {
-				return false;
-			}
-			$expectedKey++;
+		if (self::$namespace) {
+			return self::$namespace;
 		}
 
-		return true;
+		$sep = DIRECTORY_SEPARATOR;
+
+		$manifestPath = dirname(__DIR__, 5) . "{$sep}src{$sep}Blocks{$sep}manifest.json";
+
+		if (getenv('TEST')) {
+			$manifestPath = dirname(__DIR__, 2) . "{$sep}tests{$sep}data{$sep}src{$sep}Blocks{$sep}manifest.json";
+		}
+
+		if (!file_exists($manifestPath)) {
+			throw InvalidBlock::missingSettingsManifestException($manifestPath);
+		}
+
+		$settings = implode(' ', (array)file(($manifestPath)));
+		$settings = json_decode($settings, true);
+
+		if (!isset($settings['namespace'])) {
+			throw InvalidBlock::missingNamespaceException();
+		}
+
+		return $settings['namespace'];
 	}
 
 	/**
-	 * Output only attributes that are used in the component and remove everything else.
+	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
+	 * Used in combination with getManifest helper.
 	 *
-	 * @param string $newName *New* key to use to rename attributes.
-	 * @param array<string, mixed> $attributes Attributes from the block/component.
-	 * @param array<string, mixed> $manual Array of attributes to change key and merge to the original output.
+	 * @param string $path Absolute path to manifest folder.
+	 *
+	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function props(string $newName, array $attributes, array $manual = []): array
+	private static function getManifestDirect(string $path): array
 	{
+		$sep = DIRECTORY_SEPARATOR;
+		$path = rtrim($path, $sep);
 
-		$output = [];
+		$manifest = "{$path}{$sep}manifest.json";
 
-		// Check what attributes we need to includes.
-		$includes = [
-			'blockName',
-			'blockFullName',
-			'blockClass',
-			'blockJsClass',
-			'componentJsClass',
-			'selectorClass',
-			'additionalClass',
-			'uniqueWrapperId',
-			'parentClass'
-		];
-
-		$blockName = $attributes['blockName'] ?? '';
-
-		// Populate prefix key for recursive checks of attribute names.
-		$prefix = (!isset($attributes['prefix'])) ? self::kebabToCamelCase($blockName) : $attributes['prefix'];
-
-		// Set component prefix.
-		if (empty($prefix)) {
-			$output['prefix'] = self::kebabToCamelCase($newName);
-		} else {
-			$output['prefix'] = $prefix . ucfirst(self::kebabToCamelCase($newName));
+		if (!file_exists($manifest)) {
+			throw ComponentException::throwUnableToLocateComponent($manifest);
 		}
 
-		// Iterate over the attributes.
-		foreach ($attributes as $key => $value) {
-			// Include attributes from iteration.
-			if (in_array($key, $includes, true)) {
-				$output[$key] = $value;
-				continue;
-			}
-
-			// If attribute starts with the prefix key leave it in the object if not remove it.
-			if (substr((string)$key, 0, strlen($output['prefix'])) === $output['prefix']) {
-				$output[$key] = $value;
-			}
-		}
-
-		// Check if you have manual object and prepare the attribute keys and merge them with the original attributes for output.
-		if ($manual) {
-			// Iterate manual attributes.
-			foreach ($manual as $key => $value) {
-				// Include attributes from iteration.
-				if (in_array($key, $includes, true)) {
-					$output[$key] = $value;
-					continue;
-				}
-
-				// Remove the current component name from the attribute name.
-				$newKey = str_replace(lcfirst(self::kebabToCamelCase($newName)), '', $key);
-
-				// Remove the old key.
-				unset($manual[$key]);
-
-				// Add new key to the output with prepared attribute name.
-				$manual[$output['prefix'] . ucfirst($newKey)] = $value;
-			}
-
-			// Merge manual and output objects to one.
-			$output = array_merge($output, $manual);
-		}
-
-		// Return the original attribute for optimization purposes.
-		return $output;
-	}
-
-	/**
-	 * Flatten multidimensional array in to a single array.
-	 *
-	 * @param array<string, mixed> $array Array to iterate.
-	 *
-	 * @return string[]|array<string, mixed>
-	 */
-	public static function flattenArray(array $array): array
-	{
-		$return = [];
-
-		array_walk_recursive(
-			$array,
-			function ($a) use (&$return) {
-				$return[] = $a;
-			}
-		);
-
-		return $return;
+		return json_decode(implode(' ', (array)file($manifest)), true);
 	}
 }

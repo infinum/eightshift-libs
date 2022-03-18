@@ -5,12 +5,13 @@ namespace Tests\Unit\Media;
 use EightshiftLibs\Media\MediaCli;
 
 use function Tests\deleteCliOutput;
+use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	$wpCliMock = \Mockery::mock('alias:WP_CLI');
+	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
 		->shouldReceive('success')

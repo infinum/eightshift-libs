@@ -3,10 +3,10 @@
 namespace Tests\Unit\CustomMeta;
 
 use Brain\Monkey;
+use Brain\Monkey\Functions;
 use EightshiftBoilerplate\CustomMeta\AcfMetaExample;
 
 use function Tests\setupMocks;
-use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();
@@ -26,6 +26,8 @@ test('Register method will bail out if ACF is not registered/activated', functio
 
 
 test('Register method will call acf init hook', function () {
+	Functions\when('is_admin')->justReturn(true);
+
 	$this->getMockBuilder(\ACF::class)->getMock();
 
 	$this->example->register();

@@ -1,16 +1,16 @@
 {
   "urls": {
-    "develop": "http://dev.boilerplate.com",
+    "develop": "https://dev.boilerplate.com",
     "staging": "https://staging.boilerplate.com",
-    "production": "https://boilerplate.com/"
+    "production": "https://boilerplate.com"
   },
-  "core": "5.4.2",
+  "core": "5.9.1",
   "plugins": {
     "core": {
       "contact-form-7": "5.1.8"
     },
     "github": {
-      "infinum/eightshift-forms": "0.2.2"
+      "infinum/eightshift-forms": "1.0.0"
     }
   },
   "themes": {
