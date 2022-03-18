@@ -54,7 +54,7 @@ class CliInitAll extends AbstractCli
 
 		$classes = array_merge(
 			Cli::CLASSES_LIST,
-			Cli::PUBLIC_CLASSES,
+			Cli::BLOCKS_CLASSES,
 			Cli::SETUP_CLASSES
 		);
 

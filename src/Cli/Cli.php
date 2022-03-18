@@ -86,17 +86,25 @@ class Cli
 	];
 
 	/**
-	 * All classes and commands used only for WPCLI.
+	 * All classes and commands used only for WPCLI - blocks.
 	 *
 	 * @var class-string[]
 	 */
-	public const PUBLIC_CLASSES = [
+	public const BLOCKS_CLASSES = [
 		BlockCli::class,
 		BlockComponentCli::class,
 		BlockVariationCli::class,
 		BlockWrapperCli::class,
 		BlockPatternCli::class,
 		BlocksStorybookCli::class,
+	];
+
+	/**
+	 * All classes and commands used only for WPCLI - project.
+	 *
+	 * @var class-string[]
+	 */
+	public const PROJECT_CLASSES = [
 		ExportCli::class,
 		ImportCli::class,
 		UpdateCli::class,
@@ -147,7 +155,8 @@ class Cli
 	{
 		return array_merge(
 			static::CLASSES_LIST,
-			static::PUBLIC_CLASSES,
+			static::BLOCKS_CLASSES,
+			static::PROJECT_CLASSES,
 			static::SETUP_CLASSES
 		);
 	}

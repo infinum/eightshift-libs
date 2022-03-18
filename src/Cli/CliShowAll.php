@@ -48,9 +48,15 @@ class CliShowAll extends AbstractCli
 
 		\WP_CLI::log('-----------------------------------------');
 
-		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli only:%n'));
+		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli only - blocks:%n'));
 
-		$this->getEvalLoop(Cli::PUBLIC_CLASSES);
+		$this->getEvalLoop(Cli::BLOCKS_CLASSES);
+
+		\WP_CLI::log('-----------------------------------------');
+
+		\WP_CLI::log(\WP_CLI::colorize('%mCommands for wp-cli only - project:%n'));
+
+		$this->getEvalLoop(Cli::PROJECT_CLASSES);
 
 		\WP_CLI::log('-----------------------------------------');
 
