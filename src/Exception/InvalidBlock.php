@@ -65,7 +65,7 @@ final class InvalidBlock extends \InvalidArgumentException implements GeneralExc
 		return new InvalidBlock(
 			sprintf(
 			/* translators: %s will be replaced with the path where the block should be. */
-				\esc_html__('Component in this path %s is missing componentName key in its manifest.json.', 'eightshift-libs'),
+				\esc_html__('Component at %s is missing the "componentName" key in its manifest.json.', 'eightshift-libs'),
 				$componmentPath
 			)
 		);
