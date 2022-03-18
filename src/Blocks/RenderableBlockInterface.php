@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use Exception;
+
 /**
  * Interface Renderable Block.
  *
@@ -24,7 +27,7 @@ interface RenderableBlockInterface
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
 	 * @return string
-	 * @throws \Exception On missing attributes OR missing template.
+	 * @throws Exception On missing attributes OR missing template.
 	 */
 	public function render(array $attributes, string $innerBlockContent): string;
 }

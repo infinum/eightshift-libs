@@ -18,6 +18,8 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
 use ReflectionNamedType;
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use ReflectionException;
 
 /**
  * The file that defines the autowiring process
@@ -44,7 +46,7 @@ class Autowiring
 	 * @param array<string, mixed> $manuallyDefinedDependencies Manually defined dependencies from Main.
 	 * @param bool $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.
 	 *
-	 * @throws \Exception Exception thrown in case class is missing.
+	 * @throws Exception Exception thrown in case class is missing.
 	 *
 	 * @return  array<string, mixed> Array of fully qualified class names.
 	 */
@@ -111,7 +113,7 @@ class Autowiring
 	 * @param array<string, mixed> $classInterfaceIndex Class interface index. Map classes to interface they implement.
 	 *
 	 * @throws InvalidAutowireDependency If a primitive dependency is found.
-	 * @throws \ReflectionException If reflection exception happens.
+	 * @throws ReflectionException If reflection exception happens.
 	 * @throws Exception General exception.
 	 *
 	 * @return array<string, mixed>

@@ -29,7 +29,7 @@ class I18nExample implements ServiceInterface
 	public function register(): void
 	{
 		\add_action('after_setup_theme', [$this, 'loadThemeTextdomain'], 20);
-		// \add_action('enqueue_block_editor_assets', [$this, 'setScriptTranslations'], 20);
+		\add_action('enqueue_block_editor_assets', [$this, 'setScriptTranslations'], 20);
 	}
 
 	/**
@@ -54,14 +54,14 @@ class I18nExample implements ServiceInterface
 	 *
 	 * @return void
 	 */
-	// public function setScriptTranslations(): void
-	// {
-	// 	$assetsPrefix = Assets::getAssetsPrefix();
-	// 	$handle = "{$assetsPrefix}-block-editor-scripts";
-	// 	\wp_set_script_translations(
-	// 		$handle,
-	// 		Config::getProjectName(),
-	// 		Config::getProjectPath('src/I18n/languages')
-	// 	);
-	// }
+	public function setScriptTranslations(): void
+	{
+		$assetsPrefix = Assets::getAssetsPrefix();
+		$handle = "{$assetsPrefix}-block-editor-scripts";
+		\wp_set_script_translations(
+			$handle,
+			Config::getProjectName(),
+			Config::getProjectPath('src/I18n/languages')
+		);
+	}
 }

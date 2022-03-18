@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\AdminMenus;
 
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use Exception;
+
 /**
  * Abstract class AbstractAdminSubMenu class.
  *
@@ -48,7 +51,7 @@ abstract class AbstractAdminSubMenu extends AbstractAdminMenu
 	 * @param array<string, mixed>|string $attr Attributes as passed to the admin menu.
 	 *
 	 * @return void The rendered content needs to be echoed.
-	 * @throws \Exception Exception in case the component is missing.
+	 * @throws Exception Exception in case the component is missing.
 	 */
 	public function processAdminSubmenu($attr): void
 	{

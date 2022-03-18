@@ -19,6 +19,8 @@ use ReflectionException;
 use RuntimeException;
 use UnexpectedValueException;
 use WP_CLI;
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use Exception;
 
 /**
  * Class AbstractCli
@@ -121,7 +123,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
+	 * @throws Exception Exception in case the WP_CLI::add_command fails.
 	 *
 	 * @return void
 	 *
@@ -742,7 +744,7 @@ abstract class AbstractCli implements CliInterface
 	 * @param array<string, mixed> $args CLI command args.
 	 *
 	 * @return void
-	 * @throws \ReflectionException Reflection exception.
+	 * @throws ReflectionException Reflection exception.
 	 */
 	public function getEvalLoop(array $items = [], bool $run = false, array $args = []): void
 	{
@@ -751,14 +753,14 @@ abstract class AbstractCli implements CliInterface
 
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
-			if (method_exists($class, 'getCommandName')) {
-				if (function_exists('\add_action')) {
-					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
+			if (\method_exists($class, 'getCommandName')) {
+				if (\function_exists('\add_action')) {
+					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
 				} else {
 					if (!$run) {
-						\WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+						WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
 					} else {
-						\WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+						WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
 					}
 				}
 			}
@@ -885,7 +887,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getSkipExisting(array $args): bool
 	{
-		return isset($args['skip_existing']) ? (bool) $args['skip_existing'] : false;
+		return isset($args['skip_existing']) && $args['skip_existing'];
 	}
 
 	/**
@@ -964,8 +966,8 @@ abstract class AbstractCli implements CliInterface
 			$destinationPath = \rtrim($destination, $ds) . $ds . $subPathName;
 
 			if ($item->isDir()) {
-				if (!file_exists($destinationPath)) {
-					mkdir($destinationPath, 0755, true);
+				if (!\file_exists($destinationPath)) {
+					\mkdir($destinationPath, 0755, true);
 				}
 			} else {
 				\copy($item->getPathname(), $destinationPath);

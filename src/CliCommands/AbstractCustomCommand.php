@@ -16,6 +16,8 @@ use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
 use WP_CLI;
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use Exception;
 
 /**
  * Abstract base custom command class
@@ -130,7 +132,7 @@ abstract class AbstractCustomCommand implements ServiceInterface
 	/**
 	 * Method that creates actual WPCLI command in terminal
 	 *
-	 * @throws \Exception Exception in case the WP_CLI::add_command fails.
+	 * @throws Exception Exception in case the WP_CLI::add_command fails.
 	 *
 	 * @return void
 	 *  phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing

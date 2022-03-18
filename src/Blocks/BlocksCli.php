@@ -119,7 +119,7 @@ class BlocksCli extends AbstractCli
 			->renameUse($assocArgs);
 
 		if (! \defined('ES_DEVELOP_MODE')) {
-			if (!$this->isTest && function_exists('\add_action')) {
+			if (!$this->isTest && \function_exists('\add_action')) {
 				$this->blocksInit($assocArgs);
 			}
 		}
