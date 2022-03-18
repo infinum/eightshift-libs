@@ -69,7 +69,7 @@ class CustomCommandCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'command_name',
 					'description' => 'The name of cli command name. Example: command_name.',
-					'optional' => false,
+					'optional' => \defined('ES_DEVELOP_MODE') ?? false
 				],
 			],
 		];

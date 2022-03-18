@@ -10,15 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Blocks\BlocksCli;
-use EightshiftLibs\Config\ConfigCli;
-use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
-use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
-use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
-use EightshiftLibs\Main\MainCli;
-use EightshiftLibs\Manifest\ManifestCli;
-use EightshiftLibs\Menu\MenuCli;
-
 /**
  * Class CliInitAll
  */
