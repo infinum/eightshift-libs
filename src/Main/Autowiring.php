@@ -36,7 +36,7 @@ class Autowiring
 	 *
 	 * @var string
 	 */
-	protected $namespace;
+	protected string $namespace;
 
 	/**
 	 * Autowiring.
@@ -44,7 +44,7 @@ class Autowiring
 	 * @param array<string, mixed> $manuallyDefinedDependencies Manually defined dependencies from Main.
 	 * @param bool $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.
 	 *
-	 * @throws ReflectionException Exception thrown in case class is missing.
+	 * @throws \Exception Exception thrown in case class is missing.
 	 *
 	 * @return  array<string, mixed> Array of fully qualified class names.
 	 */
@@ -65,7 +65,7 @@ class Autowiring
 		$classInterfaceIndex = $this->buildClassInterfaceIndex($projectReflectionClasses);
 
 		foreach ($projectReflectionClasses as $projectClass => $reflClass) {
-			// Skip abstract classes, interfaces & traits, and non service classes.
+			// Skip abstract classes, interfaces & traits, and non-service classes.
 			if (
 				$reflClass->isAbstract() ||
 				$reflClass->isInterface() ||
@@ -108,10 +108,10 @@ class Autowiring
 	 *
 	 * @param string $relevantClass Class we're building dependency tree for.
 	 * @param array<string, mixed> $filenameIndex Filename index. Maps filenames to class names.
-	 * @param array<string, mixed> $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
+	 * @param array<string, mixed> $classInterfaceIndex Class interface index. Map classes to interface they implement.
 	 *
 	 * @throws InvalidAutowireDependency If a primitive dependency is found.
-	 * @throws ReflectionException If reflection exception happens.
+	 * @throws \ReflectionException If reflection exception happens.
 	 * @throws Exception General exception.
 	 *
 	 * @return array<string, mixed>
@@ -158,7 +158,7 @@ class Autowiring
 					$reflClassForParam = new ReflectionClass($className);
 
 					// If the expected type is interface, try guessing based on var name.
-					// Otherwise just inject that class.
+					// Otherwise, just inject that class.
 					if ($reflClassForParam->isInterface()) {
 						$matchedClass = $this->tryToFindMatchingClass(
 							$reflParam->getName(),
@@ -247,7 +247,7 @@ class Autowiring
 	 * @param string $filename Filename based on variable name.
 	 * @param string $interfaceName Interface we're trying to match.
 	 * @param array<string, mixed> $filenameIndex Filename index. Maps filenames to class names.
-	 * @param array<string, mixed> $classInterfaceIndex Class interface index. Maps classes to interfaces they implement.
+	 * @param array<string, mixed> $classInterfaceIndex Class interface index. Map classes to interface they implement.
 	 *
 	 * @throws InvalidAutowireDependency If we didn't find exactly 1 class when trying to inject interface-based dependencies.
 	 * @throws Exception If things we're looking for are missing inside filename or classInterface index (which shouldn't happen).
@@ -267,7 +267,7 @@ class Autowiring
 			throw InvalidAutowireDependency::throwUnableToFindClass($className, $interfaceName);
 		}
 
-		// Lets go through each file that's called $filename and check which interfaces that class
+		// Let's go through each file that's called $filename and check which interfaces that class
 		// implements (if any).
 		$matches = 0;
 		$match = '';
@@ -319,7 +319,7 @@ class Autowiring
 	}
 
 	/**
-	 * Builds the PSR-4 class => [$interfaces] index. Maps classes to interfaces they implement.
+	 * Builds the PSR-4 class => [$interfaces] index. Map classes to interface they implement.
 	 *
 	 * @param array<string, ReflectionClass<object>> $reflectionClasses  Reflection classes of all relevant classes.
 	 *
@@ -363,7 +363,7 @@ class Autowiring
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function convertDependencyTreeIntoDefinitionList(array $dependencyTree)
+	private function convertDependencyTreeIntoDefinitionList(array $dependencyTree): array
 	{
 		$classes = [];
 		foreach ($dependencyTree as $className => $dependencies) {
@@ -381,7 +381,7 @@ class Autowiring
 	 * Validates all classes.
 	 *
 	 * Validates that all classes/interfaces/traits/etc. provided here are valid (we can build a ReflectionClass
-	 * on them) and return them. Otherwise throw an exception.
+	 * on them) and return them. Otherwise, throw an exception.
 	 *
 	 * @param array<string, mixed> $classNames FQCNs found in $this->namespace.
 	 * @param bool  $skipInvalid Skip invalid namespaces rather than throwing an exception. Used for tests.

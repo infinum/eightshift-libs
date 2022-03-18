@@ -97,7 +97,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * You can override autowired definition lists in $this->getServiceClasses().
 	 *
-	 * @throws ReflectionException Exception thrown in case class is missing.
+	 * @throws \Exception Exception thrown in case class is missing.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -131,7 +131,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Get services classes array and prepare it for dependency injection.
 	 * Key should be a class name, and value should be an empty array or the dependencies of the class.
 	 *
-	 * @throws ReflectionException Exception thrown in case class is missing.
+	 * @throws \Exception Exception thrown in case class is missing.
 	 *
 	 * @return array<string, mixed>
 	 */
