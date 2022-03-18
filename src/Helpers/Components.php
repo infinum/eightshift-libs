@@ -995,6 +995,9 @@ class Components
 			switch ($itemKey) {
 				case 'colors':
 					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
+
+					$rgbValues = self::hexToRgb($value['color']);
+					$output .= "--global-{$itemKey}-{$value['slug']}-values: {$rgbValues};\n";
 					break;
 				case 'gradients':
 					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
