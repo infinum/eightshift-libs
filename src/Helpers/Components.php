@@ -540,23 +540,15 @@ class Components
 			$breakpointData = implode("\n", $variable);
 
 			// If breakpoint value is 0 then don't wrap the media query around it.
-			if ($value === 0) {
-				if ($outputGloballyFlag) {
-					$styles['variables'][] = [
-						'type' => $type,
-						'variable' => $breakpointData,
-						'value' => $value,
-					];
-				} else {
-					$output .= "\n .{$name}[data-id='{$unique}']{\n{$breakpointData}\n}";
-				}
+			if ($outputGloballyFlag) {
+				$styles['variables'][] = [
+					'type' => $type,
+					'variable' => $breakpointData,
+					'value' => $value,
+				];
 			} else {
-				if ($outputGloballyFlag) {
-					$styles['variables'][] = [
-						'type' => $type,
-						'variable' => $breakpointData,
-						'value' => $value,
-					];
+				if ($value === 0) {
+					$output .= "\n .{$name}[data-id='{$unique}']{\n{$breakpointData}\n}";
 				} else {
 					$output .= "\n @media ({$type}-width:{$value}px){\n.{$name}[data-id='{$unique}']{\n{$breakpointData}\n}\n}";
 				}
@@ -614,7 +606,6 @@ class Components
 	public static function outputCssVariablesCombined(): string
 	{
 		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
-
 		$outputGloballyOptimizeFlag = self::getSettings('config', 'outputCssVariablesGloballyOptimize');
 
 		// Bailout if not using this feature.
@@ -722,7 +713,9 @@ class Components
 			$output = str_replace(["\n", "\r"], '', $output);
 		}
 
-		return "<style id='esCssVariables'>{$output}</style>";
+	  $selector = self::getSettings('config', 'outputCssVariablesSelectorName');
+
+		return "<style id='{$selector}'>{$output}</style>";
 	}
 
 	/**
@@ -934,7 +927,7 @@ class Components
 			return reset($items);
 		}
 
-		// If searching for one item.
+		// If searching for one item in array.
 		if ($item) {
 			$items = $details[$type][$item] ?? [];
 
@@ -945,6 +938,7 @@ class Components
 			return $items;
 		}
 
+		// If searching for one item only.
 		$items = $details[$type] ?? [];
 
 		if (\gettype($items) === 'array' && empty($items)) {

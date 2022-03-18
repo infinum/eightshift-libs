@@ -96,6 +96,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			'config' => [
 				'outputCssVariablesGlobally' => $settings['config']['outputCssVariablesGlobally'] ?? false,
 				'outputCssVariablesGloballyOptimize' => $settings['config']['outputCssVariablesGloballyOptimize'] ?? false,
+				'outputCssVariablesSelectorName' => $settings['config']['outputCssVariablesSelectorName'] ?? 'esCssVariables',
 			],
 			'wrapper' => $this->getWrapper(),
 			'settings' => $settings,
