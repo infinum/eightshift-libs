@@ -158,7 +158,7 @@ class BlocksCli extends AbstractCli
 		$this->copyRecursively("{$rootNode}/assets/", "{$folders['assetsGlobal']}/");
 		$this->copyRecursively("{$rootNode}/src/Blocks/assets/", "{$folders['assets']}/");
 		$this->copyRecursively("{$rootNode}/src/Blocks/variations/", "{$folders['variations']}/");
-		$this->copyRecursively("{$rootNode}/src/Blocks/manifest.json", "{$folders['blocks']}/");
+		$this->copyRecursively("{$rootNode}/src/Blocks/", "{$folders['blocks']}/");
 
 		WP_CLI::runcommand("{$this->commandParentName} use_wrapper {$this->prepareArgsManual($args)}");
 
