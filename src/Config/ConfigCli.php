@@ -20,7 +20,7 @@ class ConfigCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Config';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Config';
 
 	/**
 	 * Define default develop props.
@@ -71,7 +71,7 @@ class ConfigCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$name = $assocArgs['name'] ?? '';

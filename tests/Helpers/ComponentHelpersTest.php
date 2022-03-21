@@ -9,6 +9,7 @@ use EightshiftLibs\Helpers\Components;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
+use Exception;
 
 use function Tests\setupMocks;
 use function Tests\mock;
@@ -55,7 +56,7 @@ test('Throws type exception if wrong argument type is passed to classnames', fun
 
 
 test('Asserts that reading manifest.json using getManifest will return an array', function () {
-	$results = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+	$results = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
 
 	expect($results)
 		->toBeArray()
@@ -64,7 +65,7 @@ test('Asserts that reading manifest.json using getManifest will return an array'
 
 
 test('Asserts that not specifying the path in getManifest will throw an exception', function () {
-	Components::getManifest(dirname(__FILE__));
+	Components::getManifest(\dirname(__FILE__));
 })->throws(ComponentException::class);
 
 
@@ -128,7 +129,7 @@ test('Asserts that using responsive selectors will work', function () {
 
 
 test('Asserts that checkAttr works in case attribute is string', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonAlign'] = 'right';
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest);
@@ -140,15 +141,15 @@ test('Asserts that checkAttr works in case attribute is string', function () {
 
 
 test('checkAttr will throw an exception in the case that the block name is missing in the manifest', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/custom/button/');
 	$attributes['buttonText'] = 'left';
 
 	Components::checkAttr('buttonAlign', $attributes, $manifest);
-})->throws(\Exception::class, 'buttonAlign key does not exist in the button block manifest. Please check your implementation.');
+})->throws(Exception::class, 'buttonAlign key does not exist in the button block manifest. Please check your implementation.');
 
 
 test('Asserts that checkAttr works in case attribute is boolean', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonIsAnchor'] = true;
 
 	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);
@@ -160,7 +161,7 @@ test('Asserts that checkAttr works in case attribute is boolean', function () {
 
 
 test('Asserts that checkAttr returns false in case attribute is boolean and default is not set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonIsAnchor'] = true;
 
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest);
@@ -172,7 +173,7 @@ test('Asserts that checkAttr returns false in case attribute is boolean and defa
 
 
 test('Asserts that checkAttr returns null in case attribute is boolean, default is not set and undefined is allowed', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonIsAnchor'] = true;
 
 	$results = Components::checkAttr('buttonIsNewTab', $attributes, $manifest, true);
@@ -184,7 +185,7 @@ test('Asserts that checkAttr returns null in case attribute is boolean, default 
 
 
 test('Asserts that checkAttr works in case attribute is array', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonAttrs'] = ['attr 1', 'attr 2'];
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
@@ -200,7 +201,7 @@ test('Asserts that checkAttr works in case attribute is array', function () {
 
 
 test('Asserts that checkAttr returns empty array in case attribute is array or object and default is not set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonSize'] = 'large';
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest);
@@ -213,7 +214,7 @@ test('Asserts that checkAttr returns empty array in case attribute is array or o
 
 
 test('Asserts that checkAttr returns null in case attribute is array or object, default is not set, and undefined is allowed', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['buttonSize'] = 'large';
 
 	$results = Components::checkAttr('buttonAttrs', $attributes, $manifest, true);
@@ -225,7 +226,7 @@ test('Asserts that checkAttr returns null in case attribute is array or object, 
 
 
 test('Asserts that checkAttr returns default value', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['title'] = 'Some attribute';
 
 	$results = Components::checkAttr('buttonAlign', $attributes, $manifest, 'button');
@@ -237,15 +238,15 @@ test('Asserts that checkAttr returns default value', function () {
 
 
 test('Asserts that checkAttr throws exception if manifest key is not set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes['title'] = 'Some attribute';
 
 	Components::checkAttr('bla', $attributes, $manifest, 'button');
-})->throws(\Exception::class, "bla key does not exist in the button component manifest. Please check your implementation.");
+})->throws(Exception::class, "bla key does not exist in the button component manifest. Please check your implementation.");
 
 
 test('Asserts that checkAttr returns attribute based on prefix if set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes = [
 		'prefix' => 'prefixedMultipleTimesButton',
 		'prefixedMultipleTimesButtonAlign' => 'right'
@@ -260,7 +261,7 @@ test('Asserts that checkAttr returns attribute based on prefix if set', function
 
 
 test('Asserts that checkAttrResponsive returns the correct output.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [
 		'headingContentSpacingLarge' => '10',
 		'headingContentSpacingDesktop' => '5',
@@ -280,7 +281,7 @@ test('Asserts that checkAttrResponsive returns the correct output.', function ()
 
 
 test('Asserts that checkAttrResponsive returns empty values if attribute is not provided.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [];
 
 	$results = Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest);
@@ -295,7 +296,7 @@ test('Asserts that checkAttrResponsive returns empty values if attribute is not 
 
 
 test('Asserts that checkAttrResponsive returns null if default is not set and undefined is allowed.', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [
 		'headingContentSpacingDesktop' => '2'
 	];
@@ -318,27 +319,27 @@ test('Asserts that checkAttrResponsive returns null if default is not set and un
 
 
 test('Asserts that checkAttrResponsive throws error if responsiveAttribute key is missing', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
 	$attributes = [];
 
 	Components::checkAttrResponsive('headingContentSpacing', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your button component manifest.');
+})->throws(Exception::class, 'It looks like you are missing responsiveAttributes key in your button component manifest.');
 
 
 test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/heading/');
 	$attributes = [];
 
 	Components::checkAttrResponsive('testAttribute', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are missing the testAttribute key in your manifest responsiveAttributes array.');
+})->throws(Exception::class, 'It looks like you are missing the testAttribute key in your manifest responsiveAttributes array.');
 
 
 test('Asserts that checkAttrResponsive throws error if keyName key is missing responsiveAttributes array for blockName', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading/');
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/custom/heading/');
 	$attributes = [];
 
 	Components::checkAttrResponsive('bla', $attributes, $manifest, 'button');
-})->throws(\Exception::class, 'It looks like you are missing responsiveAttributes key in your heading block manifest.');
+})->throws(Exception::class, 'It looks like you are missing responsiveAttributes key in your heading block manifest.');
 
 
 test('Asserts that selectorBlock returns the correct class when attributes are set', function () {
@@ -369,7 +370,7 @@ test('Asserts that selector returns the correct class when element is an empty s
 
 
 test('Asserts that outputCssVariablesGlobal returns the correct CSS variables from global manifest', function () {
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
+	$globalManifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks');
 
 	$output = Components::outputCssVariablesGlobal($globalManifest);
 
@@ -391,19 +392,34 @@ test('Asserts that outputCssVariablesGlobal returns empty string if global manif
 		->not->toContain('<style>');
 });
 
+test('Asserts that outputCssVariables throws exception if the global block details aren\'t set', function () {
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$globalManifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		$globalManifest
+	);
+})->throws(InvalidBlock::class);
 
 test('Asserts that getManifest throws exception for paths in case the global details aren\'t set', function ($path) {
 	Components::getManifest($path, false);
 })->throws(InvalidBlock::class)->with([
-	dirname(__FILE__, 2) . '/data/src/Blocks',
-	dirname(__FILE__, 2) . '/data/src/Blocks/wrapper',
-	dirname(__FILE__, 2) . '/data/src/Blocks/components/button',
-	dirname(__FILE__, 2) . '/data/src/Blocks/custom/button',
+	\dirname(__FILE__, 2) . '/data/src/Blocks',
+	\dirname(__FILE__, 2) . '/data/src/Blocks/wrapper',
+	\dirname(__FILE__, 2) . '/data/src/Blocks/components/button',
+	\dirname(__FILE__, 2) . '/data/src/Blocks/custom/button',
 ]);
 
 
 test('Asserts that getManifest returns empty array in case of a wrong path', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src', false);
+	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src', false);
 
 	expect($manifest)
 		->toBeArray()
@@ -715,23 +731,6 @@ test('Props will include the correct attribute in the manual case', function () 
 		->toHaveKey('selectorClass')
 		->toHaveKey('componentJsClass');
 });
-
-
-test('Asserts that outputCssVariables throws exception if the global block details aren\'t set', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks');
-
-	$attributes = [
-		'variableValue' => 'value3',
-	];
-
-	Components::outputCssVariables(
-		$attributes,
-		$manifest,
-		'uniqueString',
-		$globalManifest
-	);
-})->throws(InvalidBlock::class);
 
 
 test('outputCssVariables returns empty string if global breakpoints are missing', function () {

@@ -42,7 +42,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 
@@ -77,8 +77,8 @@ test('InitProject CLI command will correctly copy the project classes', function
 	$configProject = $this->cliInitProject;
 	$configProject([], []);
 
-	$this->assertSame('true', getenv('INIT_CALLED'));
-	$this->assertSame('All commands are finished.', getenv('SUCCESS'));
+	$this->assertSame('true', \getenv('INIT_CALLED'));
+	$this->assertSame('All commands are finished.', \getenv('SUCCESS'));
 });
 
 
@@ -89,5 +89,5 @@ test('InitProject CLI command runs in case WP is not installed', function () {
 	$configProject = $this->cliInitProject;
 	$configProject([], []);
 
-	$this->assertSame('true', getenv('INIT_CALLED'));
+	$this->assertSame('true', \getenv('INIT_CALLED'));
 });

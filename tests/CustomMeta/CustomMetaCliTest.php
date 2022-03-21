@@ -28,7 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -39,7 +39,7 @@ test('Custom acf meta CLI command will correctly copy the ACF meta class with de
 	$meta([], $meta->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMeta = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/CustomMeta/TitleAcfMeta.php');
+	$generatedMeta = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomMeta/TitleAcfMeta.php');
 
 	$this->assertStringContainsString('class TitleAcfMeta extends AbstractAcfMeta', $generatedMeta);
 	$this->assertStringContainsString('acf_add_local_field_group', $generatedMeta);

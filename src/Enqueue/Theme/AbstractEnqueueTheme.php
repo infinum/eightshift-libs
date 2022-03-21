@@ -26,7 +26,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 	 *
 	 * @var ManifestInterface
 	 */
-	protected $manifest;
+	protected ManifestInterface $manifest;
 
 	/**
 	 * Register the Stylesheets for the front end of the theme.

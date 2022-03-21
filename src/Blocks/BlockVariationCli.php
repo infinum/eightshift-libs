@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI;
 
 /**
  * Class BlockVariationCli
@@ -22,7 +23,7 @@ class BlockVariationCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'variations';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR . 'variations';
 
 	/**
 	 * Get WPCLI command name
@@ -62,14 +63,14 @@ class BlockVariationCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify variation name.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 			],
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$name = $assocArgs['name'] ?? '';
@@ -79,38 +80,38 @@ class BlockVariationCli extends AbstractCli
 
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 
 		$path = static::OUTPUT_DIR . $ds . $name;
 		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
 		$sourcePath = "{$sourcePathFolder}{$name}";
 
-		if (!getenv('TEST')) {
+		if (!\getenv('TEST')) {
 			$destinationPath = $root . $ds . $path;
 		} else {
 			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
 		}
 
 		// Source doesn't exist.
-		if (!file_exists($sourcePath)) {
+		if (!\file_exists($sourcePath)) {
 			$nameList = '';
-			$filesList = scandir($sourcePathFolder);
+			$filesList = \scandir($sourcePathFolder);
 
 			if (!$filesList) {
 				self::cliError("The folder in the '{$sourcePath}' seems to be empty.");
 			}
 
-			foreach (array_diff((array)$filesList, ['..', '.']) as $item) {
+			foreach (\array_diff((array)$filesList, ['..', '.']) as $item) {
 				$nameList .= "- {$item} \n";
 			}
 
-			\WP_CLI::log(
+			WP_CLI::log(
 				"Please check the docs for all available variations."
 			);
-			\WP_CLI::log(
+			WP_CLI::log(
 				"You can find all available variations on this link: https://infinum.github.io/eightshift-docs/storybook/."
 			);
-			\WP_CLI::log(
+			WP_CLI::log(
 				"Or here is the list of all available variation names: \n{$nameList}"
 			);
 
@@ -118,10 +119,10 @@ class BlockVariationCli extends AbstractCli
 		}
 
 		// Destination exists.
-		if (file_exists($destinationPath) && $skipExisting === false) {
+		if (\file_exists($destinationPath) && $skipExisting === false) {
 			self::cliError(
 				/* translators: %s will be replaced with the path. */
-				sprintf(
+				\sprintf(
 					'The variation in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
 					$destinationPath
 				)
@@ -131,9 +132,9 @@ class BlockVariationCli extends AbstractCli
 		// Move block/component to project folder.
 		$this->copyRecursively($sourcePath, $destinationPath);
 
-		\WP_CLI::success('Variation successfully moved to your project.');
+		WP_CLI::success('Variation successfully moved to your project.');
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
 		foreach ($this->getFullBlocksFiles($name) as $file) {
 			// Set output file path.
@@ -148,8 +149,8 @@ class BlockVariationCli extends AbstractCli
 			}
 		}
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
-		\WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
+		WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
 	}
 }

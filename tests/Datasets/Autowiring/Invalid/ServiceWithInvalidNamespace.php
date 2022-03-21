@@ -6,7 +6,7 @@ namespace Tests\Datasets\Autowiring\Invalid\DoesNotExist;
 
 use EightshiftLibs\Services\ServiceInterface;
 
-if ( ! class_exists( ServiceWithInvalidNamespace::class ) ) {
+if ( ! \class_exists( ServiceWithInvalidNamespace::class ) ) {
 	class ServiceWithInvalidNamespace implements ServiceInterface
 	{
 		/**

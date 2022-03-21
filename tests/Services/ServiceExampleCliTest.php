@@ -28,7 +28,7 @@ $this->services = new ServiceExampleCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -37,10 +37,10 @@ test('Services CLI command will correctly copy the Services class with defaults'
 	$services = $this->services;
 	$services([], $services->getDevelopArgs([]));
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/TestFolder/TMP/TestTest.php';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/TestFolder/TMP/TestTest.php';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedService = file_get_contents($outputPath);
+	$generatedService = \file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class TestTest implements ServiceInterface', $generatedService);
 	$this->assertStringContainsString('namespace EightshiftLibs\TestFolder\TMP', $generatedService);
@@ -57,10 +57,10 @@ test('Services CLI command will correctly copy the Services class with set argum
 		'file_name' => 'FileName',
 	]);
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/FolderName/FileName.php';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/FolderName/FileName.php';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedService = file_get_contents($outputPath);
+	$generatedService = \file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class FileName implements ServiceInterface', $generatedService);
 	$this->assertStringContainsString('namespace CoolTheme\FolderName', $generatedService);

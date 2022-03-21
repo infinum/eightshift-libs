@@ -15,7 +15,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Option to override default block class prefix in the blocks global settings manifest.
 
 ### Fixed
-- Changed directory separator from `/` to `DIRECTORY_SEPARATOR` constant to be able to work cross-platform.
+- Changed directory separator from `/` to `\DIRECTORY_SEPARATOR` constant to be able to work cross-platform.
 - Various fixes and improvements.
 
 ### Changed

@@ -113,16 +113,16 @@ test('enqueueStyles method enqueue styles in WP Admin', function () {
 
 	$this->adminEnqueue->enqueueStyles($this->hookSuffix);
 
-	$this->assertSame(getenv('REGISTER_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to register style');
-	$this->assertSame(getenv('ENQUEUE_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to enqueue style');
+	$this->assertSame(\getenv('REGISTER_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to enqueue style');
 });
 
 test('enqueueScripts method enqueue scripts in WP Admin', function () {
 	$this->adminEnqueue->enqueueScripts($this->hookSuffix);
 
-	$this->assertSame(getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
-	$this->assertSame(getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
-	$this->assertSame(getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
+	$this->assertSame(\getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
+	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
 });
 
 test('Localization will return empty array if not initialized', function() {

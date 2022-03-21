@@ -27,7 +27,7 @@ class BlockCli extends AbstractBlocksCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'custom';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR . 'custom';
 
 	/**
 	 * Get WPCLI command name
@@ -67,14 +67,14 @@ class BlockCli extends AbstractBlocksCli
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify block name.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 			],
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs) // phpcs:ignore Eightshift.Commenting.FunctionComment.WrongStyle
 	{
 		$this->blocksMove($assocArgs, static::OUTPUT_DIR);
 	}

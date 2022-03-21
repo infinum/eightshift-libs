@@ -22,7 +22,7 @@ class FieldCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Rest' . DIRECTORY_SEPARATOR . 'Fields';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Fields';
 
 	/**
 	 * Get WPCLI command name
@@ -63,24 +63,24 @@ class FieldCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'field_name',
 					'description' => 'The name of the endpoint slug. Example: title.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'object_type',
 					'description' => 'Object(s) the field is being registered to. Example: post.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
 				],
 			],
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['field_name'] ?? '');
-		$objectType = $this->prepareSlug($assocArgs['object_type'] ?? '');
+		$fieldName = $this->prepareSlug($assocArgs['field_name']);
+		$objectType = $this->prepareSlug($assocArgs['object_type']);
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);

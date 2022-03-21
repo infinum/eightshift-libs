@@ -36,7 +36,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -45,16 +45,16 @@ afterEach(function () {
 	$variationMock = mock(BlockVariationCli::class)
 		->makePartial()
 		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(dirname(__FILE__, 2) . '/data');
+		->andReturn(\dirname(__FILE__, 2) . '/data');
 
 	$mock = $variationMock->getMock();
 
 	$mock([], [$this->variation->getDevelopArgs([])]);
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/button-block/manifest.json';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button-block/manifest.json';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedVariation = file_get_contents($outputPath);
+	$generatedVariation = \file_get_contents($outputPath);
 
 	$this->assertStringContainsString('"parentName": "button"', $generatedVariation);
 	$this->assertFileExists($outputPath);
@@ -85,7 +85,7 @@ test('Variation CLI command will fail if Variation doesn\'t exist', function () 
 	$variationMock = mock(BlockVariationCli::class)
 		->makePartial()
 		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(dirname(__FILE__, 2) . '/data');
+		->andReturn(\dirname(__FILE__, 2) . '/data');
 
 	$mock = $variationMock->getMock();
 

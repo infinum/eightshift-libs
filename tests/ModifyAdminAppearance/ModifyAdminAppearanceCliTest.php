@@ -28,7 +28,7 @@ $this->modifyAdminAppearance = new ModifyAdminAppearanceCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -37,10 +37,10 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 	$modifyAdminAppearance = $this->modifyAdminAppearance;
 	$modifyAdminAppearance([], []);
 
-	$outputPath = dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php';
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedModifyAdminAppearance = file_get_contents($outputPath);
+	$generatedModifyAdminAppearance = \file_get_contents($outputPath);
 
 	$this->assertStringContainsString('class ModifyAdminAppearance implements ServiceInterface', $generatedModifyAdminAppearance);
 	$this->assertStringContainsString('@package EightshiftLibs\ModifyAdminAppearance', $generatedModifyAdminAppearance);
@@ -56,7 +56,7 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedModifyAdminAppearance = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php');
+	$generatedModifyAdminAppearance = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php');
 
 	$this->assertStringContainsString('namespace CoolTheme\ModifyAdminAppearance;', $generatedModifyAdminAppearance);
 });

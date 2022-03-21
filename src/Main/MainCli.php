@@ -20,7 +20,7 @@ class MainCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Main';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Main';
 
 	/**
 	 * Get WPCLI command doc
@@ -35,7 +35,7 @@ class MainCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())

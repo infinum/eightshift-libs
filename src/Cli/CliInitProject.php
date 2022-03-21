@@ -24,6 +24,8 @@ use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
+use ReflectionClass;
+use WP_CLI;
 
 /**
  * Class CliInitProject
@@ -77,33 +79,35 @@ class CliInitProject extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
-		if (!function_exists('\add_action')) {
+		if (!\function_exists('\add_action')) {
 			$this->runReset();
-			\WP_CLI::log('--------------------------------------------------');
+			WP_CLI::log('--------------------------------------------------');
 		}
 
 		foreach (static::INIT_PROJECT_CLASSES as $item) {
-			$reflectionClass = new \ReflectionClass($item);
+			$reflectionClass = new ReflectionClass($item);
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if (method_exists($class, 'getCommandName')) {
-				if (function_exists('\add_action')) {
-					\WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
+			if (\method_exists($class, 'getCommandName')) {
+				if (\function_exists('\add_action')) {
+					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
 				} else {
-					\WP_CLI::runcommand("eval-file bin" . DIRECTORY_SEPARATOR . "cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
+					WP_CLI::runcommand("eval-file bin" . \DIRECTORY_SEPARATOR . "cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
 				}
 			}
 		}
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
-		\WP_CLI::log((string)shell_exec('npm run start')); // phpcs:ignore
+		if (!\getenv('TEST')) {
+			WP_CLI::log((string)shell_exec('npm run start')); // phpcs:ignore
+		}
 
-		\WP_CLI::log('--------------------------------------------------');
+		WP_CLI::log('--------------------------------------------------');
 
-		\WP_CLI::success('All commands are finished.');
+		WP_CLI::success('All commands are finished.');
 	}
 }

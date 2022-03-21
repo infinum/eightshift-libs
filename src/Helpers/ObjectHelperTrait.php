@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
+use DOMDocument;
+
 /**
  * Class Object Helper
  */
@@ -25,10 +27,10 @@ trait ObjectHelperTrait
 	 */
 	public function isValidXml(string $xml)
 	{
-		libxml_use_internal_errors(true);
-		$doc = new \DOMDocument('1.0', 'utf-8');
+		\libxml_use_internal_errors(true);
+		$doc = new DOMDocument('1.0', 'utf-8');
 		$doc->loadXML($xml);
-		$errors = libxml_get_errors();
+		$errors = \libxml_get_errors();
 		return empty($errors);
 	}
 
@@ -41,8 +43,8 @@ trait ObjectHelperTrait
 	 */
 	public static function isJson(string $string): bool
 	{
-		json_decode($string);
-		return (json_last_error() === JSON_ERROR_NONE);
+		\json_decode($string);
+		return (\json_last_error() === \JSON_ERROR_NONE);
 	}
 
 	/**
@@ -56,7 +58,7 @@ trait ObjectHelperTrait
 	{
 		$output = [];
 
-		array_walk_recursive(
+		\array_walk_recursive(
 			$array,
 			function ($a) use (&$output) {
 				if (!empty($a)) {
@@ -83,7 +85,7 @@ trait ObjectHelperTrait
 		$sanitized = [];
 
 		foreach ($array as $key => $value) {
-			if (is_array($value)) {
+			if (\is_array($value)) {
 				$sanitizedValue = self::sanitizeArray($value, $sanitizationFunction);
 				$sanitized[$key] = $sanitizedValue;
 
@@ -104,7 +106,7 @@ trait ObjectHelperTrait
 	 */
 	public static function sortArrayByOrderKey(array $items): array
 	{
-		usort(
+		\usort(
 			$items,
 			function ($item1, $item2) {
 				return $item1['order'] <=> $item2['order'];

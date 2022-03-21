@@ -28,7 +28,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 *
 	 * @var ManifestInterface
 	 */
-	protected $manifest;
+	protected ManifestInterface $manifest;
 
 	/**
 	 * Register the Stylesheets for the admin area.
@@ -91,7 +91,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 		$screen = \get_current_screen();
 
-		if (is_object($screen) && $screen->is_block_editor) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+		if (\is_object($screen) && $screen->is_block_editor) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 			return true;
 		}
 

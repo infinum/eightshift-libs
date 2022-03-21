@@ -23,7 +23,7 @@ class TaxonomyCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomTaxonomy';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomTaxonomy';
 
 	/**
 	 * Define default develop props.
@@ -56,32 +56,32 @@ class TaxonomyCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom taxonomy to show in WP admin.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The name of the custom taxonomy slug. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom taxonomy REST-API endpoint slug. Example: locations.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'post_type_slug',
 					'description' => 'The position where to assign the new custom taxonomy. Example: post.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 			],
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$label = $assocArgs['label'] ?? 'Example Name';

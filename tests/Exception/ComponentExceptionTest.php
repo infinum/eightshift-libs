@@ -21,7 +21,7 @@ afterAll(function() {
 test('Checks if the throwNotStringOrArray method functions correctly.',
 	function ($argument) {
 		$exceptionObject = ComponentException::throwNotStringOrArray($argument);
-		$type = gettype($argument);
+		$type = \gettype($argument);
 
 		$this->assertIsObject($exceptionObject, "The {$exceptionObject} should be an instance of ComponentException class");
 		$this->assertObjectHasAttribute('message', $exceptionObject, "Object doesn't contain message attribute");

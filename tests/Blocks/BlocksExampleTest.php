@@ -7,7 +7,7 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Exception\InvalidBlock;
 
-use EightshiftLibs\Helpers\Components;
+use WP_Block_Editor_Context;
 
 use function Tests\mock;
 use function Tests\setupMocks;
@@ -71,7 +71,7 @@ test('addThemeSupport method will call add_theme_support() function with differe
 
 	$this->blocksExample->addThemeSupport();
 
-	$this->assertSame(getenv('ALIGN_WIDE'), 'true', "Method addThemeSupport() didn't add theme support for align-wide");
+	$this->assertSame(\getenv('ALIGN_WIDE'), 'true', "Method addThemeSupport() didn't add theme support for align-wide");
 
 });
 
@@ -146,7 +146,7 @@ test('Asserts that getAllBlocksList will return only projects blocks for older v
 
 test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.', function () {
 
-	$blockContext = mock(\WP_Block_Editor_Context::class);
+	$blockContext = mock(WP_Block_Editor_Context::class);
 	$blockContext->post = null;
 
 	$this->config
@@ -209,13 +209,13 @@ test('Asserts that render will throw error if wrapper view is missing.', functio
 
 test('Asserts that renderWrapperView will return a valid file.', function () {
 
-	$wrapperManifest = dirname(__FILE__, 2) . '/data/src/Blocks/wrapper/wrapper.php';
+	$wrapperManifest = \dirname(__FILE__, 2) . '/data/src/Blocks/wrapper/wrapper.php';
 
-	ob_start();
+	\ob_start();
 	$this->blocksExample->renderWrapperView($wrapperManifest, []);
-	$content = ob_get_clean();
+	$content = \ob_get_clean();
 
-	$this->assertSame('<div>Wrapper!</div>', trim($content));
+	$this->assertSame('<div>Wrapper!</div>', \trim($content));
 });
 
 test('Asserts that renderWrapperView will throw error if path is not valid.', function () {
@@ -254,7 +254,7 @@ test('changeEditorColorPalette method will call add_theme_support() function wit
 
 	$this->blocksExample->changeEditorColorPalette();
 
-	$this->assertSame(getenv('EDITOR_COLOR_PALETTE'), 'true', "Method addThemeSupport() didn't add theme support for editor-color-palette");
+	$this->assertSame(\getenv('EDITOR_COLOR_PALETTE'), 'true', "Method addThemeSupport() didn't add theme support for editor-color-palette");
 });
 
 test('registerBlocks method will register all blocks.', function () {
@@ -273,7 +273,7 @@ test('registerBlocks method will register all blocks.', function () {
 
 	$this->blocksExample->registerBlocks();
 
-	$this->assertSame(getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no side effects');
+	$this->assertSame(\getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no side effects');
 });
 
 test('getCustomCategoryOld method will return an array.', function () {

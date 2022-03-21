@@ -37,8 +37,8 @@ afterEach(function () {
 
 
 test('CliReset works', function () {
-	if (!is_dir($this->cliReset->getOutputDir(''))) {
-		mkdir($this->cliReset->getOutputDir(''));
+	if (!\is_dir($this->cliReset->getOutputDir(''))) {
+		\mkdir($this->cliReset->getOutputDir(''));
 	}
 
 	$cliReset = $this->cliReset;

@@ -107,7 +107,7 @@ abstract class AbstractPostType implements ServiceInterface
 	protected function getGeneratedLabels(array $nouns): array
 	{
 		foreach (self::REQUIRED_NOUNS as $nounKey) {
-			if (!array_key_exists($nounKey, $nouns)) {
+			if (!\array_key_exists($nounKey, $nouns)) {
 				throw InvalidNouns::fromKey($nounKey);
 			}
 		}
@@ -174,9 +174,9 @@ abstract class AbstractPostType implements ServiceInterface
 			'filter_by_date' => \esc_html__('Filter by date', 'eightshift-libs'),
 		];
 
-		return array_map(
+		return \array_map(
 			static function ($label) use ($nouns) {
-				return sprintf(
+				return \sprintf(
 					$label,
 					$nouns[self::SINGULAR_NAME_UC],
 					$nouns[self::SINGULAR_NAME_LC],

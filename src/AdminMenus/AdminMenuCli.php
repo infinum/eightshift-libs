@@ -23,7 +23,7 @@ class AdminMenuCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'AdminMenus';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AdminMenus';
 
 	/**
 	 * Define default develop props.
@@ -58,26 +58,26 @@ class AdminMenuCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'The text to be displayed in the title tags of the page when the menu is selected.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_title',
 					'description' => 'The text to be used for the menu.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'capability',
 					'description' => 'The capability required for this menu to be displayed to the user.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_slug',
 					'description' => 'The slug name to refer to this menu by.
 					Should be unique for this menu page and only include lowercase alphanumeric, dashes, and underscores characters to be compatible with sanitize_key().',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
@@ -96,7 +96,7 @@ class AdminMenuCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Arguments.
 		$title = $assocArgs['title'] ?? 'Admin Title';

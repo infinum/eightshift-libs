@@ -4,6 +4,7 @@ namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\Db\ExportCli;
 use Brain\Monkey\Functions;
+use Exception;
 
 use function Tests\setupMocks;
 use function Tests\mock;
@@ -27,7 +28,7 @@ beforeEach(function() {
 		->shouldReceive('error')
 		->andReturnUsing(
             function ($errorMessage) {
-                throw new \Exception($errorMessage);
+                throw new Exception($errorMessage);
             }
 	);
 
@@ -43,5 +44,5 @@ test('Exporting DB functionality fails if --skip_db parameter is not specified',
 
 	$dbExport([], []);
 
-	$this->assertSame('true', getenv('INIT_CALLED'));
+	$this->assertSame('true', \getenv('INIT_CALLED'));
 });

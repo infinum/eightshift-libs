@@ -22,7 +22,7 @@ class PostTypeCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'CustomPostType';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomPostType';
 
 	/**
 	 * Define default develop props.
@@ -59,25 +59,25 @@ class PostTypeCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom post type to show in WP admin.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The custom post type slug. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rewrite_url',
 					'description' => 'The custom post type url. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom post type REST-API endpoint slug. Example: locations.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
@@ -108,7 +108,7 @@ class PostTypeCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$label = $assocArgs['label'] ?? 'Custom Post Type';
@@ -134,9 +134,9 @@ class PostTypeCli extends AbstractCli
 			->searchReplaceString('example-url-slug', $rewriteUrl)
 			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
 			->searchReplaceString('Singular Name', $label)
-			->searchReplaceString('singular name', strtolower($label))
+			->searchReplaceString('singular name', \strtolower($label))
 			->searchReplaceString('Plural Name', $pluralLabel)
-			->searchReplaceString('plural name', strtolower($pluralLabel));
+			->searchReplaceString('plural name', \strtolower($pluralLabel));
 
 		if (!empty($capability)) {
 			$class->searchReplaceString("'post'", "'{$capability}'");

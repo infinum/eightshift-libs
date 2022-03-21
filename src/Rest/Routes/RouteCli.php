@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Rest\RouteInterface;
+use WP_CLI;
 
 /**
  * Class RouteCli
@@ -30,7 +30,7 @@ class RouteCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'Rest' . DIRECTORY_SEPARATOR . 'Routes';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Routes';
 
 	/**
 	 * Route method enum.
@@ -84,24 +84,24 @@ class RouteCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'endpoint_slug',
 					'description' => 'The name of the endpoint slug. Example: test-route.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'method',
 					'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 			],
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? 'example-route');
-		$method = strtoupper($assocArgs['method'] ?? 'GET');
+		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug']);
+		$method = \strtoupper($assocArgs['method']);
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
@@ -109,12 +109,12 @@ class RouteCli extends AbstractCli
 
 		// If method is invalid throw error.
 		if (!isset(self::VERB_ENUM[$method])) {
-			\WP_CLI::error("Invalid method: $method, please use one of GET, POST, PATCH, PUT, or DELETE");
+			WP_CLI::error("Invalid method: $method, please use one of GET, POST, PATCH, PUT, or DELETE");
 		}
 
 		// If slug is empty throw error.
 		if (empty($endpointSlug)) {
-			\WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
+			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
 		}
 
 		// Read the template contents, and replace the placeholders with provided variables.

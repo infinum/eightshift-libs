@@ -18,7 +18,7 @@ beforeEach(function() {
 	mock('Walker_Nav_Menu');
 
 	Functions\when('register_nav_menus')->alias(function($args) {
-		$position = array_key_first($args);
+		$position = \array_key_first($args);
 
 		putenv("REGISTERED_MENU={$position}");
 	});
@@ -55,7 +55,7 @@ test('Menu example contains correct menu position', function () {
 test('Register menu positions will work', function () {
 	$this->example->registerMenuPositions();
 
-	$this->assertSame(getenv('REGISTERED_MENU'), 'header_main_nav');
+	$this->assertSame(\getenv('REGISTERED_MENU'), 'header_main_nav');
 });
 
 
@@ -70,7 +70,7 @@ test('Bem menu will output menu', function () {
 	$this->assertArrayHasKey('items_wrap', $menu, 'Menu arguments is missing the items_wrap key');
 	$this->assertArrayHasKey('echo', $menu, 'Menu arguments is missing the echo key');
 	$this->assertArrayHasKey('walker', $menu, 'Menu arguments is missing the walker key');
-	$this->assertSame('EightshiftLibs\Menu\BemMenuWalker', get_class($menu['walker']));
+	$this->assertSame('EightshiftLibs\Menu\BemMenuWalker', \get_class($menu['walker']));
 });
 
 

@@ -25,7 +25,7 @@ abstract class AbstractAcfMeta implements ServiceInterface
 	public function register(): void
 	{
 		// Silently exit if no ACF is installed.
-		if (!class_exists('ACF')) {
+		if (!\class_exists('ACF')) {
 			return;
 		}
 

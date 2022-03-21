@@ -35,7 +35,7 @@ class BlocksExample extends AbstractBlocks
 		\add_action('init', [$this, 'registerBlocks'], 11);
 
 		// Remove P tags from content.
-		remove_filter('the_content', 'wpautop');
+		\remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
 		if (\is_wp_version_compatible('5.8')) {

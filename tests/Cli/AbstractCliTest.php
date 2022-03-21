@@ -4,12 +4,14 @@ namespace Tests\Unit\Cli;
 
 use Brain\Monkey;
 use EightshiftLibs\Cli\AbstractCli;
+use ReflectionClass;
+use RuntimeException;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
 
 class AbstractTest extends AbstractCli {
-	protected $fileContents = 'use EightshiftBoilerplateVendor\Service; use EightshiftBoilerplate\Test;';
+	protected string $fileContents = 'use EightshiftBoilerplateVendor\Service; use EightshiftBoilerplate\Test;';
 
 	public function __construct(string $commandParentName)
 	{
@@ -61,7 +63,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	$output = \dirname(__FILE__, 3) . '/cliOutput';
 
 	deleteCliOutput($output);
 
@@ -103,7 +105,7 @@ test('Prepare command docs fails if shortdesc doesn\'t exist', function() {
 	$abstractMock = new AbstractTest('test');
 
 	$abstractMock->prepareCommandDocs([], []);
-})->throws(\RuntimeException::class, 'CLI Short description is missing.');
+})->throws(RuntimeException::class, 'CLI Short description is missing.');
 
 
 test('Prepare command docs returns correct doc', function() {
@@ -127,7 +129,7 @@ test('Prepare command docs returns correct doc', function() {
 	$this->assertArrayHasKey('shortdesc', $preparedDocs);
 	$this->assertArrayHasKey('synopsis', $preparedDocs);
 
-	$addedSynopsis = array_filter($preparedDocs['synopsis'], function($descArr) {
+	$addedSynopsis = \array_filter($preparedDocs['synopsis'], function($descArr) {
 		return $descArr['name'] === 'random';
 	});
 	// Check if the synopsis was added to the global one.
@@ -157,15 +159,15 @@ test('Block full file list helper works', function() {
 
 	$this->assertIsArray($output);
 
-	$this->assertTrue(array_key_exists('button.php', array_flip($output)), 'button.php is missing.');
-	$this->assertTrue(array_key_exists('button-block.js', array_flip($output)), 'button-block.js is missing.');
-	$this->assertTrue(array_key_exists('button-hooks.js', array_flip($output)), 'button-hooks.js is missing.');
-	$this->assertTrue(array_key_exists('button-transforms.js', array_flip($output)), 'button-transforms.js is missing.');
-	$this->assertTrue(array_key_exists('button.js', array_flip($output)), 'button.js is missing.');
-	$this->assertTrue(array_key_exists('docs/story.js', array_flip($output)), 'docs/story.js is missing.');
-	$this->assertTrue(array_key_exists('components/button-editor.js', array_flip($output)), 'components/button-editor.js is missing.');
-	$this->assertTrue(array_key_exists('components/button-toolbar.js', array_flip($output)), 'components/button-toolbar.js is missing.');
-	$this->assertTrue(array_key_exists('components/button-options.js', array_flip($output)), 'components/button-options.js is missing.');
+	$this->assertTrue(\array_key_exists('button.php', \array_flip($output)), 'button.php is missing.');
+	$this->assertTrue(\array_key_exists('button-block.js', \array_flip($output)), 'button-block.js is missing.');
+	$this->assertTrue(\array_key_exists('button-hooks.js', \array_flip($output)), 'button-hooks.js is missing.');
+	$this->assertTrue(\array_key_exists('button-transforms.js', \array_flip($output)), 'button-transforms.js is missing.');
+	$this->assertTrue(\array_key_exists('button.js', \array_flip($output)), 'button.js is missing.');
+	$this->assertTrue(\array_key_exists('docs/story.js', \array_flip($output)), 'docs/story.js is missing.');
+	$this->assertTrue(\array_key_exists('components/button-editor.js', \array_flip($output)), 'components/button-editor.js is missing.');
+	$this->assertTrue(\array_key_exists('components/button-toolbar.js', \array_flip($output)), 'components/button-toolbar.js is missing.');
+	$this->assertTrue(\array_key_exists('components/button-options.js', \array_flip($output)), 'components/button-options.js is missing.');
 });
 
 
@@ -231,8 +233,8 @@ test('Preparing slug works', function($slugs) {
 	$output = $abstractMock->prepareSlug($slugs);
 
 	$this->assertIsString($output);
-	$this->assertFalse(strpos($output, '_'), 'Prepared string contains _');
-	$this->assertFalse(strpos($output, ' '), 'Prepared string contains empty space');
+	$this->assertFalse(\strpos($output, '_'), 'Prepared string contains _');
+	$this->assertFalse(\strpos($output, ' '), 'Prepared string contains empty space');
 })->with('inputSlugs');
 
 
@@ -240,7 +242,7 @@ test('Register command fails if class doesn\'t exist', function() {
 	$abstractMock = new AbstractTest('nonexistent');
 
 	$abstractMock->registerCommand();
-})->throws(\RuntimeException::class);
+})->throws(RuntimeException::class);
 
 
 test('Getting vendor prefix works correctly if set', function() {
@@ -258,7 +260,7 @@ test('Replacing use in frontend libs views works', function() {
 
 	$abstractMock->renameUseFrontendLibs([]);
 
-	$reflection = new \ReflectionClass($abstractMock);
+	$reflection = new ReflectionClass($abstractMock);
 	$property = $reflection->getProperty('fileContents');
     $property->setAccessible(true);
     $contents = $property->getValue($abstractMock);

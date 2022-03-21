@@ -35,7 +35,7 @@ test('Register block pattern method will be called', function() {
 
 	$this->example->registerBlockPattern();
 
-	$this->assertSame(getenv('SIDEAFFECT'), $action);
+	$this->assertSame(\getenv('SIDEAFFECT'), $action);
 
 	// Cleanup.
 	putenv('SIDEAFFECT=');

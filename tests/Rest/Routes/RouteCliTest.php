@@ -3,6 +3,8 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\Rest\Routes\RouteCli;
+use Exception;
+use InvalidArgumentException;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
@@ -20,7 +22,7 @@ beforeEach(function () {
 		->shouldReceive('error')
 		->andReturnUsing(
 			function ($errorMessage) {
-					throw new \InvalidArgumentException($errorMessage);
+					throw new InvalidArgumentException($errorMessage);
 			}
 	);
 
@@ -31,7 +33,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = dirname(__FILE__, 4) . '/cliOutput';
+	$output = \dirname(__FILE__, 4) . '/cliOutput';
 
 	deleteCliOutput($output);
 });
@@ -42,7 +44,7 @@ test('REST route CLI command will correctly copy the field class with defaults',
 	$route([], $route->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedField = file_get_contents(dirname(__FILE__, 4) . '/cliOutput/src/Rest/Routes/TestRoute.php');
+	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Routes/TestRoute.php');
 
 	$this->assertStringContainsString('class TestRoute extends AbstractRoute implements CallableRouteInterface', $generatedField);
 	$this->assertStringContainsString('\'methods\' => ', $generatedField);
@@ -58,10 +60,10 @@ test('REST route CLI command will correctly copy the field class with arguments'
 	$route([], $routeArguments);
 
 	$full_route_name = "{$this->route->getFileName($routeArguments['endpoint_slug'])}Route";
-	$method_to_const = RouteCli::VERB_ENUM[strtolower($routeArguments['method'])] ?? '';
+	$method_to_const = RouteCli::VERB_ENUM[\strtolower($routeArguments['method'])] ?? '';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedField = file_get_contents(dirname(__FILE__, 4) . "/cliOutput/src/Rest/Routes/{$full_route_name}.php");
+	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . "/cliOutput/src/Rest/Routes/{$full_route_name}.php");
 
 	$this->assertStringContainsString("class {$full_route_name} extends AbstractRoute implements CallableRouteInterface", $generatedField);
 	$this->assertStringContainsString("'methods' => {$method_to_const}", $generatedField);
@@ -71,10 +73,10 @@ test('REST route CLI command will correctly copy the field class with arguments'
 test('REST route CLI command will throw error on missing / invalid arguments', function ($routeArguments) {
 	$route = $this->route;
 	$route([], $routeArguments);
-})->with('errorRouteArguments')->throws(\Exception::class);
+})->with('errorRouteArguments')->throws(Exception::class);
 
 
 test('REST CLI command will throw WP_Error when arguments fail validation', function ($routeArguments) {
 	$route = $this->route;
 	$route([], $routeArguments);
-})->with('invalidRouteArguments')->throws(\InvalidArgumentException::class);
+})->with('invalidRouteArguments')->throws(InvalidArgumentException::class);

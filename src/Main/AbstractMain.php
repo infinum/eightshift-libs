@@ -15,6 +15,8 @@ use DI\ContainerBuilder;
 use DI\Definition\Helper\AutowireDefinitionHelper;
 use DI\Definition\Reference;
 use EightshiftLibs\Services\ServiceInterface;
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use Exception;
 
 /**
  * The main start class.
@@ -28,14 +30,14 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @var Object[]
 	 */
-	private $services = [];
+	private array $services = [];
 
 	/**
 	 * DI container instance.
 	 *
 	 * @var Container
 	 */
-	private $container;
+	private Container $container;
 
 	/**
 	 * Constructs object and inserts prefixes from composer.
@@ -52,7 +54,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	/**
 	 * Register the individual services with optional dependency injection.
 	 *
-	 * @throws \Exception Exception thrown by DI container.
+	 * @throws Exception Exception thrown by DI container.
 	 *
 	 * @return void
 	 */
@@ -70,7 +72,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 		$this->services = $this->getServiceClassesWithDi();
 
-		array_walk(
+		\array_walk(
 			$this->services,
 			function ($class) {
 				if (!$class instanceof ServiceInterface) {
@@ -88,7 +90,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Allows it to be used in different context (for example in tests outside of WP environment).
 	 *
 	 * @return Container
-	 * @throws \Exception Exception thrown by the DI container.
+	 * @throws Exception Exception thrown by the DI container.
 	 */
 	public function buildDiContainer(): Container
 	{
@@ -102,7 +104,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * You can override autowired definition lists in $this->getServiceClasses().
 	 *
-	 * @throws \ReflectionException Exception thrown in case class is missing.
+	 * @throws Exception Exception thrown in case class is missing.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -116,7 +118,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @return Object[]
 	 *
-	 * @throws \Exception Exception thrown by the DI container.
+	 * @throws Exception Exception thrown by the DI container.
 	 */
 	private function getServiceClassesWithDi(): array
 	{
@@ -124,11 +126,11 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 		$container = $this->getDiContainer($services);
 
-		return array_map(
+		return \array_map(
 			function ($class) use ($container) {
 				return $container->get($class);
 			},
-			array_keys($services)
+			\array_keys($services)
 		);
 	}
 
@@ -136,7 +138,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Get services classes array and prepare it for dependency injection.
 	 * Key should be a class name, and value should be an empty array or the dependencies of the class.
 	 *
-	 * @throws \ReflectionException Exception thrown in case class is missing.
+	 * @throws Exception Exception thrown in case class is missing.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -145,7 +147,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		$output = [];
 
 		foreach ($this->getServiceClassesWithAutowire() as $class => $dependencies) {
-			if (is_array($dependencies)) {
+			if (\is_array($dependencies)) {
 				$output[$class] = $dependencies;
 				continue;
 			}
@@ -165,7 +167,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @param array<string, mixed> $services Array of service.
 	 *
-	 * @throws \Exception Exception thrown by the DI container.
+	 * @throws Exception Exception thrown by the DI container.
 	 *
 	 * @return Container
 	 */
@@ -174,7 +176,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		$definitions = [];
 
 		foreach ($services as $serviceKey => $serviceValues) {
-			if (gettype($serviceValues) !== 'array') {
+			if (\gettype($serviceValues) !== 'array') {
 				continue;
 			}
 
@@ -185,8 +187,8 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 		$builder = new ContainerBuilder();
 
-		if (defined('WP_ENVIRONMENT_TYPE') && (WP_ENVIRONMENT_TYPE === 'production' || WP_ENVIRONMENT_TYPE === 'staging')) {
-			$file = explode('\\', $this->namespace);
+		if (\defined('WP_ENVIRONMENT_TYPE') && (\WP_ENVIRONMENT_TYPE === 'production' || \WP_ENVIRONMENT_TYPE === 'staging')) {
+			$file = \explode('\\', $this->namespace);
 
 			$builder->enableCompilation(__DIR__ . '/Cache', "{$file[0]}CompiledContainer");
 		}
@@ -204,9 +206,9 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 */
 	private function getDiDependencies(array $dependencies): array
 	{
-		return array_map(
+		return \array_map(
 			function ($dependency) {
-				if (class_exists($dependency)) {
+				if (\class_exists($dependency)) {
 					return new Reference($dependency);
 				}
 				return $dependency;

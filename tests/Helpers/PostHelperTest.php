@@ -61,7 +61,7 @@ test('Correct get reading time function', function ($posts) {
 
     $wordCount = 0;
     foreach($postContent[0] as $block => $blockContent) {
-      $wordCount = $wordCount + str_word_count($blockContent);
+      $wordCount = $wordCount + \str_word_count($blockContent);
     }
 
     $testReadingTime = (int) ceil( $wordCount / Post::AVERAGE_WORD_COUNT);

@@ -23,7 +23,7 @@ class BlockPatternCli extends AbstractCli
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . DIRECTORY_SEPARATOR . 'BlockPatterns';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'BlockPatterns';
 
 	/**
 	 * Define default develop props.
@@ -56,7 +56,7 @@ class BlockPatternCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'Pattern title',
-					'optional' => \defined('ES_DEVELOP_MODE') ?? false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
 				],
 				[
 					'type' => 'assoc',
@@ -81,7 +81,7 @@ class BlockPatternCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$title = $assocArgs['title'] ?? '';

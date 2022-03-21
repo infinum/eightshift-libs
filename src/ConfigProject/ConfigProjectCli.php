@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\ConfigProject;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI;
 
 /**
  * Class ConfigProjectCli
@@ -20,7 +21,7 @@ class ConfigProjectCli extends AbstractCli
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
 
 	/**
 	 * Get WPCLI command name
@@ -67,7 +68,7 @@ class ConfigProjectCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
 		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
@@ -80,13 +81,13 @@ class ConfigProjectCli extends AbstractCli
 		// Output final class to new file/folder and finish.
 		$class->outputWrite($root, 'wp-config-project.php', $assocArgs);
 
-		\WP_CLI::success("Please do the following steps manually to complete the setup:");
-		\WP_CLI::success("1. In wp-config.php - Make sure to define WP_ENVIRONMENT_TYPE const to 'development' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'development' ); ?>`");
-		\WP_CLI::success("2. In wp-config.php - Make sure to require wp-config-project.php (at the end of the file) but before the wp-settings.php. Like this:`);");
-		\WP_CLI::success("
+		WP_CLI::success("Please do the following steps manually to complete the setup:");
+		WP_CLI::success("1. In wp-config.php - Make sure to define WP_ENVIRONMENT_TYPE const to 'development' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'development' ); ?>`");
+		WP_CLI::success("2. In wp-config.php - Make sure to require wp-config-project.php (at the end of the file) but before the wp-settings.php. Like this:`);");
+		WP_CLI::success("
 		/** Absolute path to the WordPress directory. */
-		if ( !defined('ABSPATH') ) {
-			define('ABSPATH', dirname(__FILE__) . '/');
+		if ( !\defined('ABSPATH') ) {
+			define('ABSPATH', \dirname(__FILE__) . '/');
 		}
 		
 		// Include wp config for your project.

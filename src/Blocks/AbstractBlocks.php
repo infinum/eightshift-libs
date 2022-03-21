@@ -15,6 +15,8 @@ use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
+use WP_Block_Editor_Context;
+use WP_Post;
 
 /**
  * Class Blocks
@@ -78,7 +80,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		// Save namespace to internal variable.
 		$this->namespace = $namespace;
 
-		$blocks = array_map(
+		$blocks = \array_map(
 			static function ($block) use ($namespace) {
 				// Check if blocks-namespace is defined in block or in global manifest settings.
 				$block['namespace'] = $namespace;
@@ -112,26 +114,26 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @hook allowed_block_types_all Available from WP 5.8.
 	 *
 	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
-	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 * @param WP_Block_Editor_Context $blockEditorContext The current block editor context.
 	 *
 	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
 	 */
-	public function getAllBlocksList($allowedBlockTypes, \WP_Block_Editor_Context $blockEditorContext)
+	public function getAllBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
 	{
 		// Allow forms to be used correctly.
 		if (
-			$blockEditorContext->post instanceof \WP_Post &&
+			$blockEditorContext->post instanceof WP_Post &&
 			!empty($blockEditorContext->post->post_type) &&
 			$blockEditorContext->post->post_type === 'eightshift-forms'
 		) {
 			return true;
 		}
 
-		if (gettype($allowedBlockTypes) === 'boolean') {
+		if (\gettype($allowedBlockTypes) === 'boolean') {
 			return $allowedBlockTypes;
 		}
 
-		$allowedBlockTypes = array_map(
+		$allowedBlockTypes = \array_map(
 			function ($block) {
 				return $block['blockFullName'];
 			},
@@ -153,17 +155,17 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @hook allowed_block_types This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
 	 *
 	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
-	 * @param \WP_Post $post The post resource data.
+	 * @param WP_Post $post The post resource data.
 	 *
 	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
 	 */
-	public function getAllBlocksListOld($allowedBlockTypes, \WP_Post $post)
+	public function getAllBlocksListOld($allowedBlockTypes, WP_Post $post)
 	{
-		if (gettype($allowedBlockTypes) === 'boolean') {
+		if (\gettype($allowedBlockTypes) === 'boolean') {
 			return $allowedBlockTypes;
 		}
 
-		$allowedBlockTypes = array_map(
+		$allowedBlockTypes = \array_map(
 			function ($block) {
 				return $block['blockFullName'];
 			},
@@ -232,23 +234,23 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$templatePath = $this->getBlockViewPath($blockName);
 
 		// Get block wrapper view path.
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 		$wrapperPath = "{$this->getWrapperPath()}{$sep}wrapper.php";
 
 		// Check if wrapper component exists.
-		if (!file_exists($wrapperPath)) {
+		if (!\file_exists($wrapperPath)) {
 			throw InvalidBlock::missingWrapperViewException($wrapperPath);
 		}
 
 		// Check if actual block exists.
-		if (!file_exists($templatePath)) {
+		if (!\file_exists($templatePath)) {
 			throw InvalidBlock::missingViewException($blockName, $templatePath);
 		}
 
 		// If everything is ok, return the contents of the template (return, NOT echo).
-		ob_start();
+		\ob_start();
 		include $wrapperPath;
-		$output = ob_get_clean();
+		$output = \ob_get_clean();
 
 		unset($blockName, $templatePath, $wrapperPath, $attributes, $innerBlockContent);
 
@@ -263,13 +265,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @hook block_categories_all Available from WP 5.8.
 	 *
 	 * @param array<int, array<string, string|null>> $categories Array of categories for block types.
-	 * @param \WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 * @param WP_Block_Editor_Context $blockEditorContext The current block editor context.
 	 *
 	 * @return array<int, array<string, string|null>> Array of categories for block types.
 	 */
-	public function getCustomCategory(array $categories, \WP_Block_Editor_Context $blockEditorContext): array
+	public function getCustomCategory(array $categories, WP_Block_Editor_Context $blockEditorContext): array
 	{
-		return array_merge(
+		return \array_merge(
 			$categories,
 			[
 				[
@@ -289,13 +291,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
 	 *
 	 * @param array<int, array<string, string|null>> $categories Array of categories for block types.
-	 * @param \WP_Post $post Post being loaded.
+	 * @param WP_Post $post Post being loaded.
 	 *
 	 * @return array<int, array<string, string|null>> Array of categories for block types.
 	 */
-	public function getCustomCategoryOld(array $categories, \WP_Post $post): array
+	public function getCustomCategoryOld(array $categories, WP_Post $post): array
 	{
-		return array_merge(
+		return \array_merge(
 			$categories,
 			[
 				[
@@ -322,7 +324,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function renderWrapperView(string $src, array $attributes, ?string $innerBlockContent = null): void
 	{
-		if (!file_exists($src)) {
+		if (!\file_exists($src)) {
 			throw InvalidBlock::missingWrapperViewException($src);
 		}
 
@@ -345,7 +347,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		global $esBlocks;
 
-		$namespace = array_key_first($esBlocks);
+		$namespace = \array_key_first($esBlocks);
 
 		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
 			if (
@@ -368,11 +370,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksPath(): string
 	{
-		$sep = DIRECTORY_SEPARATOR;
-		$blocksPath = dirname(__DIR__, 5) . "{$sep}src{$sep}Blocks";
+		$sep = \DIRECTORY_SEPARATOR;
+		$blocksPath = \dirname(__DIR__, 5) . "{$sep}src{$sep}Blocks";
 
-		if (getenv('TEST')) {
-			$blocksPath = dirname(__DIR__, 2) . "{$sep}tests{$sep}data{$sep}src{$sep}Blocks";
+		if (\getenv('TEST')) {
+			$blocksPath = \dirname(__DIR__, 2) . "{$sep}tests{$sep}data{$sep}src{$sep}Blocks";
 		}
 
 		return $blocksPath;
@@ -385,7 +387,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksCustomPath(): string
 	{
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 		return "{$this->getBlocksPath()}{$sep}custom";
 	}
 
@@ -396,7 +398,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksComponentsPath(): string
 	{
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 		return "{$this->getBlocksPath()}{$sep}components";
 	}
 
@@ -409,7 +411,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlockViewPath(string $blockName): string
 	{
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 		return "{$this->getBlocksCustomPath()}{$sep}{$blockName}{$sep}{$blockName}.php";
 	}
 
@@ -420,7 +422,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getWrapperPath(): string
 	{
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 		return "{$this->getBlocksPath()}{$sep}wrapper";
 	}
 
@@ -433,15 +435,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getWrapper(): array
 	{
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 		$manifestPath = "{$this->getWrapperPath()}{$sep}manifest.json";
 
-		if (!file_exists($manifestPath)) {
+		if (!\file_exists($manifestPath)) {
 			throw InvalidBlock::missingWrapperManifestException($manifestPath);
 		}
 
-		$settings = implode(' ', (array)file($manifestPath));
-		$settings = json_decode($settings, true);
+		$settings = \implode(' ', (array)\file($manifestPath));
+		$settings = \json_decode($settings, true);
 
 		return $settings;
 	}
@@ -459,15 +461,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$componentName = Components::camelToKebabCase($componentName);
 
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 		$manifestPath = "{$this->getBlocksComponentsPath()}{$sep}{$componentName}{$sep}manifest.json";
 
-		if (!file_exists($manifestPath) && !defined('WP_CLI')) {
+		if (!\file_exists($manifestPath) && !\defined('WP_CLI')) {
 			throw InvalidBlock::missingComponentManifestException($manifestPath);
 		}
 
-		$settings = implode(' ', (array)file($manifestPath));
-		$settings = json_decode($settings, true);
+		$settings = \implode(' ', (array)\file($manifestPath));
+		$settings = \json_decode($settings, true);
 
 		return $settings;
 	}
@@ -482,15 +484,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getGlobalSettings(): array
 	{
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 		$manifestPath = "{$this->getBlocksPath()}{$sep}manifest.json";
 
-		if (!file_exists($manifestPath)) {
+		if (!\file_exists($manifestPath)) {
 			throw InvalidBlock::missingSettingsManifestException($manifestPath);
 		}
 
-		$settings = implode(' ', (array)file(($manifestPath)));
-		$settings = json_decode($settings, true);
+		$settings = \implode(' ', (array)\file(($manifestPath)));
+		$settings = \json_decode($settings, true);
 
 		if (!isset($settings['namespace'])) {
 			throw InvalidBlock::missingNamespaceException();
@@ -516,7 +518,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$settings = Components::getSettings('settings', '', $this->namespace);
 		$blockClassPrefix = $settings['blockClassPrefix'] ?? 'block';
 
-		return array_merge(
+		return \array_merge(
 			[
 				'blockName' => [
 					'type' => 'string',
@@ -568,25 +570,25 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$newParent = Components::kebabToCamelCase($parent);
 
 		// Iterate each attribute and attach parent prefixes.
-		$componentAttributeKeys = array_keys($componentAttributes);
+		$componentAttributeKeys = \array_keys($componentAttributes);
 		foreach ($componentAttributeKeys as $componentAttribute) {
 			$attribute = $componentAttribute;
 
 			// If there is an attribute name switch, use the new one.
 			if ($newName !== $realName) {
-				$attribute = str_replace($realName, $newName, (string) $componentAttribute);
+				$attribute = \str_replace($realName, $newName, (string) $componentAttribute);
 			}
 
 			// Check if current attribute is used strip component prefix from attribute and replace it with parent prefix.
 			if ($currentAttributes) {
-				$attribute = str_replace(lcfirst(Components::kebabToCamelCase($realName)), '', (string) $componentAttribute);
+				$attribute = \str_replace(\lcfirst(Components::kebabToCamelCase($realName)), '', (string) $componentAttribute);
 			}
 
 			// Determine if parent is empty and if parent name is the same as component/block name and skip wrapper attributes.
-			if (substr((string)$attribute, 0, strlen('wrapper')) === 'wrapper') {
+			if (\substr((string)$attribute, 0, \strlen('wrapper')) === 'wrapper') {
 				$attributeName = $attribute;
 			} else {
-				$attributeName = $newParent . ucfirst((string)$attribute);
+				$attributeName = $newParent . \ucfirst((string)$attribute);
 			}
 
 			// Output new attribute names.
@@ -630,20 +632,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// If component has more components do recursive loop.
 			if (isset($component['components'])) {
-				$outputAttributes = $this->prepareComponentAttributes($component, $newParent . ucfirst(Components::camelToKebabCase($newComponentName)));
+				$outputAttributes = $this->prepareComponentAttributes($component, $newParent . \ucfirst(Components::camelToKebabCase($newComponentName)));
 			} else {
 				// Output the component attributes if there is no nesting left, and append the parent prefixes.
 				$outputAttributes = $this->prepareComponentAttribute($component, $newComponentName, $realComponentName, $newParent);
 			}
 
 			// Populate the output recursively.
-			$output = array_merge(
+			$output = \array_merge(
 				$output,
 				$outputAttributes
 			);
 		}
 
-		return array_merge(
+		return \array_merge(
 			$output,
 			$this->prepareComponentAttribute($manifest, '', $name, $newParent, true)
 		);
@@ -658,10 +660,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksData(): array
 	{
-		$sep = DIRECTORY_SEPARATOR;
-		return array_map(
+		$sep = \DIRECTORY_SEPARATOR;
+		return \array_map(
 			function (string $blockPath) {
-				$block = implode(' ', (array)file(($blockPath)));
+				$block = \implode(' ', (array)\file(($blockPath)));
 
 				$block = $this->parseManifest($block);
 
@@ -683,7 +685,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 				return $block;
 			},
-			(array)glob("{$this->getBlocksCustomPath()}{$sep}*{$sep}manifest.json")
+			(array)\glob("{$this->getBlocksCustomPath()}{$sep}*{$sep}manifest.json")
 		);
 	}
 
@@ -696,11 +698,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getComponentsManifest(): array
 	{
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 
-		return array_map(
+		return \array_map(
 			function (string $componentPath) {
-				$component = implode(' ', (array)file(($componentPath)));
+				$component = \implode(' ', (array)\file(($componentPath)));
 
 				$component = $this->parseManifest($component);
 
@@ -710,7 +712,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 				return $component;
 			},
-			(array)glob("{$this->getBlocksComponentsPath()}{$sep}*{$sep}manifest.json")
+			(array)\glob("{$this->getBlocksComponentsPath()}{$sep}*{$sep}manifest.json")
 		);
 	}
 
@@ -727,34 +729,34 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function parseManifest(string $string): array
 	{
-		$result = json_decode($string, true);
+		$result = \json_decode($string, true);
 
-		switch (json_last_error()) {
-			case JSON_ERROR_NONE:
+		switch (\json_last_error()) {
+			case \JSON_ERROR_NONE:
 				$error = '';
 				break;
-			case JSON_ERROR_DEPTH:
+			case \JSON_ERROR_DEPTH:
 				$error = \esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs');
 				break;
-			case JSON_ERROR_STATE_MISMATCH:
+			case \JSON_ERROR_STATE_MISMATCH:
 				$error = \esc_html__('Invalid or malformed JSON.', 'eightshift-libs');
 				break;
-			case JSON_ERROR_CTRL_CHAR:
+			case \JSON_ERROR_CTRL_CHAR:
 				$error = \esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs');
 				break;
-			case JSON_ERROR_SYNTAX:
+			case \JSON_ERROR_SYNTAX:
 				$error = \esc_html__('Syntax error, malformed JSON.', 'eightshift-libs');
 				break;
-			case JSON_ERROR_UTF8:
+			case \JSON_ERROR_UTF8:
 				$error = \esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs');
 				break;
-			case JSON_ERROR_RECURSION:
+			case \JSON_ERROR_RECURSION:
 				$error = \esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs');
 				break;
-			case JSON_ERROR_INF_OR_NAN:
+			case \JSON_ERROR_INF_OR_NAN:
 				$error = \esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs');
 				break;
-			case JSON_ERROR_UNSUPPORTED_TYPE:
+			case \JSON_ERROR_UNSUPPORTED_TYPE:
 				$error = \esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs');
 				break;
 			default:

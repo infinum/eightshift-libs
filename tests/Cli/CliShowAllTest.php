@@ -56,8 +56,8 @@ test('CliShowAll works', function () {
 	$cliShowAll = $this->cliShowAll;
 	$cliShowAll([], []);
 
-	$this->assertSame('All commands are outputted.', getenv('SUCCESS'));
-	$this->assertSame('%mCommands for project setup:%n', getenv('COLORIZE')); // Last colorize command.
+	$this->assertSame('All commands are outputted.', \getenv('SUCCESS'));
+	$this->assertSame('%mCommands for project setup:%n', \getenv('COLORIZE')); // Last colorize command.
 });
 
 

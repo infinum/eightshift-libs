@@ -29,7 +29,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 *
 	 * @var ManifestInterface
 	 */
-	protected $manifest;
+	protected ManifestInterface $manifest;
 
 	/**
 	 * Enqueue blocks script for editor only.
