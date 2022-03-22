@@ -821,6 +821,7 @@ class Components
 		// Check what attributes we need to includes.
 		$includes = [
 			'blockName',
+			'blockTopLevelId',
 			'blockFullName',
 			'blockClass',
 			'blockJsClass',
