@@ -84,13 +84,13 @@ class RouteCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'endpoint_slug',
 					'description' => 'The name of the endpoint slug. Example: test-route.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'method',
 					'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
 				],
 			],
 		];
@@ -100,22 +100,25 @@ class RouteCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? 'test');
-		$method = \strtoupper($assocArgs['method'] ?? 'post');
+		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug']);
+
+		// If slug is empty throw error.
+		if (empty($endpointSlug)) {
+			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
+		}
+
+		$method = \strtoupper($assocArgs['method']);
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
 		$className = $className . $this->getClassShortName();
+
 
 		// If method is invalid throw error.
 		if (!isset(self::VERB_ENUM[$method])) {
 			WP_CLI::error("Invalid method: $method, please use one of GET, POST, PATCH, PUT, or DELETE");
 		}
 
-		// If slug is empty throw error.
-		if (empty($endpointSlug)) {
-			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
-		}
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
