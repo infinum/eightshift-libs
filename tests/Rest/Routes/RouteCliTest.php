@@ -71,6 +71,7 @@ test('REST route CLI command will correctly copy the field class with arguments'
 
 
 test('REST route CLI command will throw error on missing / invalid arguments', function ($routeArguments) {
+	define('ES_DEVELOP_MODE', true);
 	$route = $this->route;
 	$route([], $routeArguments);
 })->with('errorRouteArguments')->throws(Exception::class);

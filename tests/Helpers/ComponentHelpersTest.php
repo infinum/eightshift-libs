@@ -440,7 +440,7 @@ test('Asserts that getSettings works', function () {
 
 	expect($settings)
 		->toBeBool()
-		->toBeTrue();
+		->toBeFalse();
 });
 
 
@@ -821,7 +821,7 @@ test('outputCssVariables works when correct attributes are passed to it', functi
 
 	expect($output)
 		->toBeString()
-		->toBeEmpty();
+		->not->toBeEmpty();
 
 	// The output is put in the global variable.
 	expect($esBlocks)
@@ -829,48 +829,8 @@ test('outputCssVariables works when correct attributes are passed to it', functi
 		->toHaveKey($globalManifest['namespace']);
 
 	expect($esBlocks[$globalManifest['namespace']]['styles'])
-		->toBeArray();
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0])
 		->toBeArray()
-		->toHaveKey('name')
-		->toHaveKey('unique')
-		->toHaveKey('variables');
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['name'])
-		->toBeString()
-		->toBe('variables');
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['unique'])
-		->toBeString()
-		->toBe('uniqueString');
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'])
-		->toBeArray();
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][0])
-		->toBeArray()
-		->toHaveKey('type')
-		->toHaveKey('variable')
-		->toHaveKey('value');
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1])
-		->toBeArray()
-		->toHaveKey('type')
-		->toHaveKey('variable')
-		->toHaveKey('value');
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['type'])
-		->toBeString()
-		->toBe('max');
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['variable'])
-		->toBeString()
-		->toBe('--variable-value-tablet: tablet;');
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['variables'][1]['value'])
-		->toBeInt()
-		->toBe(991);
+		->toBeEmpty();
 });
 
 
@@ -897,7 +857,7 @@ test('outputCssVariables works when correct attributes are passed to it and has 
 
 	expect($output)
 		->toBeString()
-		->toBeEmpty();
+		->not->toBeEmpty();
 
 	// The output is put in the global variable.
 	expect($esBlocks)
@@ -905,17 +865,8 @@ test('outputCssVariables works when correct attributes are passed to it and has 
 		->toHaveKey($globalManifest['namespace']);
 
 	expect($esBlocks[$globalManifest['namespace']]['styles'])
-		->toBeArray();
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0])
 		->toBeArray()
-		->toHaveKey('name')
-		->toHaveKey('unique')
-		->toHaveKey('variables');
-
-	expect($esBlocks[$globalManifest['namespace']]['styles'][0]['name'])
-		->toBeString()
-		->toBe('customNameAttribute');
+		->toBeEmpty();
 });
 
 
@@ -944,7 +895,7 @@ test('outputCssVariables outputs the style tag if the outputCssVariablesGlobally
 
 	expect($output)
 		->toBeString()
-		->toBeEmpty();
+		->not->toBeEmpty();
 
 });
 

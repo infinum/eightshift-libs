@@ -66,6 +66,7 @@ test('REST field CLI command will correctly copy the field class with arguments'
 })->with('correctFieldNameArguments');
 
 test('REST field CLI command will throw error on missing / invalid arguments', function ($fieldNameArguments) {
+	define('ES_DEVELOP_MODE', true);
 	$field = $this->field;
 	$field([], $fieldNameArguments);
 })->with('errorFieldNameArguments')->throws(Exception::class);
