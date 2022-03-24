@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI;
 
 /**
  * Class FieldCli
