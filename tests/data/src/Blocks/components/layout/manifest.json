@@ -1,0 +1,20 @@
+{
+	"componentName": "layout",
+	"title": "Layout",
+	"componentClass": "layout",
+	"example": {
+		"attributes": {
+			"layoutMain": "Main",
+			"layoutUse": true
+		}
+	},
+	"attributes": {
+		"layoutMain": {
+			"type": "string"
+		},
+		"layoutUse": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}
