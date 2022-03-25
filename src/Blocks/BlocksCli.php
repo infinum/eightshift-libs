@@ -144,11 +144,11 @@ class BlocksCli extends AbstractCli
 		WP_CLI::runcommand("{$this->commandParentName} use_wrapper {$this->prepareArgsManual($args)}");
 
 		foreach (static::COMPONENTS as $component) {
-			WP_CLI::runcommand("{$this->commandParentName} use_component --name='{$component}' {$this->prepareArgsManual($args)}");
+			WP_CLI::runcommand("{$this->commandParentName} use_component --name={$component} {$this->prepareArgsManual($args)}");
 		}
 
 		foreach (static::BLOCKS as $block) {
-			WP_CLI::runcommand("{$this->commandParentName} use_block --name='{$block}' {$this->prepareArgsManual($args)}");
+			WP_CLI::runcommand("{$this->commandParentName} use_block --name={$block} {$this->prepareArgsManual($args)}");
 		}
 
 		WP_CLI::success('Blocks successfully set.');
