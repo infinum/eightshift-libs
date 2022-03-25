@@ -38,7 +38,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$sourcePathFolder = "{$rootNode}/{$outputDir}/";
+		$ds = DIRECTORY_SEPARATOR;
+		$sourcePathFolder = "{$rootNode}{$ds}{$outputDir}{$ds}";
 
 		$blocks = \scandir($sourcePathFolder);
 		$blocksFullList = \array_diff((array)$blocks, ['..', '.']);
@@ -53,13 +54,13 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		// Iterate blocks/components.
 		foreach ($blocks as $block) {
-			$path = "{$outputDir}/{$block}";
+			$path = "{$outputDir}{$ds}{$block}";
 			$sourcePath = "{$sourcePathFolder}{$block}";
 
 			if (!\getenv('TEST')) {
-				$destinationPath = $root . \DIRECTORY_SEPARATOR . $path;
+				$destinationPath = "{$root}{$ds}{$path}";
 			} else {
-				$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
+				$destinationPath = "{$this->getProjectRootPath(true)}{$ds}cliOutput";
 			}
 
 			$typePlural = !$isComponents ?  'blocks' : 'components';
@@ -115,11 +116,12 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 */
 	private function moveBlock(string $destinationPath, string $sourcePath, string $name, array $assocArgs, string $path, string $typeSingular): void
 	{
+		$ds = DIRECTORY_SEPARATOR;
 		// Create folder in project if missing.
-		\mkdir("{$destinationPath}/");
+		\mkdir("{$destinationPath}{$ds}");
 
 		// Move block/component to project folder.
-		$this->copyRecursively($sourcePath, "{$destinationPath}/");
+		$this->copyRecursively($sourcePath, "{$destinationPath}{$ds}");
 
 		$typeSingular = \ucfirst($typeSingular);
 
