@@ -361,6 +361,10 @@ abstract class AbstractCli implements CliInterface
 		$path = \rtrim($path, $ds);
 		$path = \trim($path, $ds);
 
+		if ($ds === '/') {
+			return "{$ds}{$root}{$ds}{$path}";
+		}
+		
 		return "{$root}{$ds}{$path}";
 	}
 
