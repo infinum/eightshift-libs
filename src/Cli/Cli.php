@@ -127,7 +127,6 @@ class Cli
 	public const SETUP_CLASSES = [
 		CliInitTheme::class,
 		CliInitProject::class,
-		CliInitAll::class,
 	];
 
 	/**
@@ -139,6 +138,7 @@ class Cli
 		CliReset::class,
 		CliRunAll::class,
 		CliShowAll::class,
+		CliInitAll::class,
 	];
 
 	/**
