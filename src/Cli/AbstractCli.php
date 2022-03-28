@@ -246,7 +246,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): self
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		$path = "{$currentDir}{$ds}{$this->getExampleFileName( $fileName )}.php";
 
 		// If you pass file name with extension the version will be used.
@@ -346,7 +346,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputDir(string $path = ''): string
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		if (\function_exists('\add_action') && !\getenv('TEST')) {
 			$root = $this->getProjectRootPath();
 		} else {
@@ -364,7 +364,7 @@ abstract class AbstractCli implements CliInterface
 		if ($ds === '/') {
 			return "{$ds}{$root}{$ds}{$path}";
 		}
-		
+
 		return "{$root}{$ds}{$path}";
 	}
 
@@ -663,7 +663,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getComposer(array $args = []): array
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		if (!isset($args['config_path'])) {
 			if (\function_exists('\add_action')) {
 				$composerPath = "{$this->getProjectRootPath()}{$ds}composer.json";
@@ -841,7 +841,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getFrontendLibsPath(string $path = ''): string
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		return "{$this->getProjectRootPath()}{$ds}node_modules{$ds}@eightshift{$ds}frontend-libs{$ds}{$path}";
 	}
 
@@ -854,7 +854,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getLibsPath(string $path = ''): string
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		if (\getenv('TEST')) {
 			return "{$this->getProjectRootPath()}{$ds}{$path}";
 		}
@@ -869,7 +869,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getFrontendLibsBlockPath(): string
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		return $this->getFrontendLibsPath("blocks{$ds}init");
 	}
 
@@ -882,7 +882,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getFullBlocksFiles(string $name): array
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		return [
 			"{$name}.php",
 			"{$name}-block.js",

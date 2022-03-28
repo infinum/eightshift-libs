@@ -216,7 +216,7 @@ class Components
 		$path = \trim($path, $sep);
 
 		$manifest = "{$path}{$sep}manifest.json";
-		
+
 		if ($sep === '/') {
 			$manifest = "{$sep}{$manifest}";
 		}

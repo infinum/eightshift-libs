@@ -38,7 +38,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$root = $this->getProjectRootPath();
 		$rootNode = $this->getFrontendLibsBlockPath();
 
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		$sourcePathFolder = "{$rootNode}{$ds}{$outputDir}{$ds}";
 
 		$blocks = \scandir($sourcePathFolder);
@@ -116,7 +116,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 */
 	private function moveBlock(string $destinationPath, string $sourcePath, string $name, array $assocArgs, string $path, string $typeSingular): void
 	{
-		$ds = DIRECTORY_SEPARATOR;
+		$ds = \DIRECTORY_SEPARATOR;
 		// Create folder in project if missing.
 		\mkdir("{$destinationPath}{$ds}");
 
