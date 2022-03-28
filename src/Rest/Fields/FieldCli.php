@@ -80,14 +80,14 @@ class FieldCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['field_name']);
+		$fieldName = $this->prepareSlug($assocArgs['field_name'] ?? 'title');
 
 		// If field name is empty throw error.
 		if (empty($fieldName)) {
 			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
 		}
 
-		$objectType = $this->prepareSlug($assocArgs['object_type']);
+		$objectType = $this->prepareSlug($assocArgs['object_type'] ?? 'post');
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);

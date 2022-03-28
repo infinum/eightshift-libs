@@ -100,14 +100,14 @@ class RouteCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug']);
+		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? 'test-route');
 
 		// If slug is empty throw error.
 		if (empty($endpointSlug)) {
 			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
 		}
 
-		$method = \strtoupper($assocArgs['method']);
+		$method = \strtoupper($assocArgs['method'] ?? 'get');
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
