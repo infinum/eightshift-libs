@@ -56,7 +56,7 @@ class I18nExample implements ServiceInterface
 	 */
 	public function setScriptTranslations(): void
 	{
-		$assetsPrefix = Assets::getAssetsPrefix();
+		$assetsPrefix = Config::getProjectName();
 		$handle = "{$assetsPrefix}-block-editor-scripts";
 		\wp_set_script_translations(
 			$handle,
