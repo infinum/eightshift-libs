@@ -29,10 +29,6 @@ abstract class AbstractAcfMeta implements ServiceInterface
 			return;
 		}
 
-		if (!\is_admin()) {
-			return;
-		}
-
 		\add_action('acf/init', [$this, 'fields']);
 	}
 
