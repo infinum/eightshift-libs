@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
+use WP_CLI;
 
 /**
  * Class FieldCli
@@ -50,7 +51,7 @@ class FieldCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
@@ -79,8 +80,14 @@ class FieldCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['field_name'] ?? 'title');
-		$objectType = $this->prepareSlug($assocArgs['object_type'] ?? 'post');
+		$fieldName = $this->prepareSlug($assocArgs['field_name']);
+
+		// If field name is empty throw error.
+		if (empty($fieldName)) {
+			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
+		}
+
+		$objectType = $this->prepareSlug($assocArgs['object_type']);
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);
