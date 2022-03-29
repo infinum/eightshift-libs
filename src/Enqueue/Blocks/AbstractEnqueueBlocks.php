@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Blocks;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
+use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Enqueue_Blocks class.
