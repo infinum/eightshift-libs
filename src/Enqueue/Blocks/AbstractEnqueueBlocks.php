@@ -29,7 +29,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	/**
 	 * Instance variable of manifest data.
 	 *
-	 * @var ManifestInterface
+	 * @var \EightshiftLibs\Manifest\ManifestInterface
 	 */
 	protected ManifestInterface $manifest;
 
