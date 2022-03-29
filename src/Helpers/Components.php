@@ -980,7 +980,7 @@ class Components
 		// If searching for one item only.
 		$items = $details[$type] ?? [];
 
-		if (\gettype($items) === 'array' && empty($items)) {
+		if (\gettype($items) === 'array' && !$items) {
 			throw InvalidBlock::missingSettingsKeyException($type);
 		}
 
