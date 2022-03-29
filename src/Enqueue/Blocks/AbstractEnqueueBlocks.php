@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue\Blocks;
 
+use EightshiftLibs\Manifest\ManifestInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftLibs\Enqueue\AbstractAssets;
 use EightshiftLibs\Manifest\ManifestInterface;
 
@@ -29,7 +30,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	/**
 	 * Instance variable of manifest data.
 	 *
-	 * @var \EightshiftLibs\Manifest\ManifestInterface
+	 * @var ManifestInterface
 	 */
 	protected ManifestInterface $manifest;
 
