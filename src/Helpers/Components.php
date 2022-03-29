@@ -1016,7 +1016,7 @@ class Components
 			throw InvalidBlock::missingSettingsKeyException($type, $item);
 		}
 
-		return $item;
+		return $items;
 	}
 
 	/**
