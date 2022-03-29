@@ -436,7 +436,7 @@ test('Asserts that getSettings works', function () {
 	// Arrange - fill the $esBlocks global variable.
 	(new BlocksExample())->getBlocksDataFullRaw();
 
-	$settings = Components::getSettings('config', 'outputCssVariablesGlobally');
+	$settings = Components::getSetting('config', 'outputCssVariablesGlobally');
 
 	expect($settings)
 		->toBeBool()

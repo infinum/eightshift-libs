@@ -465,8 +465,8 @@ class Components
 		$output = '';
 
 		// Find global settings flag.
-		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
-		$outputGloballyOptimizeFlag = self::getSettings('config', 'outputCssVariablesGloballyOptimize');
+		$outputGloballyFlag = self::getSetting('config', 'outputCssVariablesGlobally');
+		$outputGloballyOptimizeFlag = self::getSetting('config', 'outputCssVariablesGloballyOptimize');
 
 		$namespace = $globalManifest['namespace'];
 
@@ -635,8 +635,8 @@ class Components
 	 */
 	public static function outputCssVariablesCombined(): string
 	{
-		$outputGloballyFlag = self::getSettings('config', 'outputCssVariablesGlobally');
-		$outputGloballyOptimizeFlag = self::getSettings('config', 'outputCssVariablesGloballyOptimize');
+		$outputGloballyFlag = self::getSetting('config', 'outputCssVariablesGlobally');
+		$outputGloballyOptimizeFlag = self::getSetting('config', 'outputCssVariablesGloballyOptimize');
 
 		// Bailout if not using this feature.
 		if (!$outputGloballyFlag) {
@@ -743,7 +743,7 @@ class Components
 			$output = \str_replace(["\n", "\r"], '', $output);
 		}
 
-		$selector = self::getSettings('config', 'outputCssVariablesSelectorName');
+		$selector = self::getSetting('config', 'outputCssVariablesSelectorName');
 
 		return "<style id='{$selector}'>{$output}</style>";
 	}
@@ -917,9 +917,9 @@ class Components
 	 *
 	 * @throws InvalidBlock If settings key is missing.
 	 *
-	 * @return string|array<string, mixed>
+	 * @return array<string, mixed>
 	 */
-	public static function getSettings(string $type, string $item = '', string $namespace = '')
+	public static function getSettings(string $type, string $item = '', string $namespace = ''): array
 	{
 		global $esBlocks;
 
@@ -955,6 +955,10 @@ class Components
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
 			}
 
+			if (\gettype($items) === 'string') {
+				throw InvalidBlock::wrongFunctionUsedException('getSettings', 'array', 'getSetting', 'string');
+			}
+
 			return \reset($items);
 		}
 
@@ -964,6 +968,10 @@ class Components
 
 			if (\gettype($items) === 'array' && empty($items)) {
 				throw InvalidBlock::missingSettingsKeyException($type, $item);
+			}
+
+			if (\gettype($items) === 'string') {
+				throw InvalidBlock::wrongFunctionUsedException('getSettings', 'array', 'getSetting', 'string');
 			}
 
 			return $items;
@@ -976,7 +984,39 @@ class Components
 			throw InvalidBlock::missingSettingsKeyException($type);
 		}
 
+		if (\gettype($items) === 'string') {
+			throw InvalidBlock::wrongFunctionUsedException('getSettings', 'array', 'getSetting', 'string');
+		}
+
 		return $items;
+	}
+
+	/**
+	 * Return project blocks detail based on the provided key .
+	 *
+	 * @param string $type Type to get.
+	 * @param string $item Array key to get.
+	 * @param string $namespace Namespace of blocks.
+	 *
+	 * @throws InvalidBlock If settings key is missing.
+	 *
+	 * @return string|bool
+	 */
+	public static function getSetting(string $type, string $item, string $namespace = '')
+	{
+		$settings = self::getSettings($type, $namespace);
+
+		$items = $settings[$item] ?? '';
+
+		if (\gettype($items) === 'array') {
+			throw InvalidBlock::wrongFunctionUsedException('getSetting', 'string', 'getSettings', 'array');
+		}
+
+		if (empty($items)) {
+			throw InvalidBlock::missingSettingsKeyException($type, $item);
+		}
+
+		return $item;
 	}
 
 	/**

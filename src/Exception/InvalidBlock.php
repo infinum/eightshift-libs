@@ -270,6 +270,30 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	}
 
 	/**
+	 * Throws error if the function use is wrong.
+	 *
+	 * @param string $original Original function used.
+	 * @param string $originalReturn Original function return type.
+	 * @param string $alternative Alternative function to use.
+	 * @param string $alternativeReturn Alternative function return type.
+	 *
+	 * @return static
+	 */
+	public static function wrongFunctionUsedException(string $original, string $originalReturn, string $alternative, string $alternativeReturn): InvalidBlock
+	{
+		return new InvalidBlock(
+			\sprintf(
+				/* translators: %1$s is going to be replaced with the original function name. */
+				\esc_html__('Requested function %1$s returns %2$s, please use %3$s function that returns %4$s.', 'eightshift-libs'),
+				$original,
+				$originalReturn,
+				$alternative,
+				$alternativeReturn
+			)
+		);
+	}
+
+	/**
 	 * Throws error if the block file is missing.
 	 *
 	 * @param string $sourcePath Missing file path.

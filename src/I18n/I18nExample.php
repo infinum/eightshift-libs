@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftBoilerplate\I18n;
 
 use EightshiftBoilerplate\Config\Config;
-use EightshiftBoilerplate\Enqueue\Assets;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
