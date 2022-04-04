@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The Shortcode specific functionality.
+ * Helpers for Shortcode.
  *
  * @package EightshiftLibs\Helpers
  */
@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 /**
- * Class Shortcode
+ * Class ShortcodeTrait Helper
  */
-class Shortcode
+trait ShortcodeTrait
 {
 	/**
 	 * Call a shortcode function by tag name.

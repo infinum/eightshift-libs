@@ -115,4 +115,105 @@ trait ObjectHelperTrait
 
 		return $items;
 	}
+
+	/**
+	 * Convert string from camel to kebab case
+	 *
+	 * @param string $string String to convert.
+	 *
+	 * @return string
+	 */
+	public static function camelToKebabCase(string $string): string
+	{
+		$replace = \preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string) ?? '';
+		return \ltrim(\strtolower($replace), '-');
+	}
+
+	/**
+	 * Convert string from kebab to camel case
+	 *
+	 * @param string $string    String to convert.
+	 * @param string $separator Separator to use for conversion.
+	 *
+	 * @return string
+	 */
+	public static function kebabToCamelCase(string $string, string $separator = '-'): string
+	{
+		return \lcfirst(\str_replace($separator, '', \ucwords($string, $separator)));
+	}
+
+	/**
+	 * Check if provided array is associative or sequential. Will return true if array is sequential.
+	 *
+	 * @param array<string, mixed>|string[] $array Array to check.
+	 *
+	 * @return boolean
+	 */
+	public static function arrayIsList(array $array): bool
+	{
+		$expectedKey = 0;
+		foreach ($array as $i => $value) {
+			if ($i !== $expectedKey) {
+				return false;
+			}
+			$expectedKey++;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Helper method to check the validity of JSON string
+	 *
+	 * @link https://stackoverflow.com/a/15198925/629127
+	 *
+	 * @param string $string JSON string to validate.
+	 *
+	 * @throws InvalidManifest Error in the case json file has errors.
+	 *
+	 * @return array<string, mixed> Parsed JSON string into an array.
+	 */
+	public static function parseManifest(string $string): array
+	{
+		$result = \json_decode($string, true);
+
+		switch (\json_last_error()) {
+			case \JSON_ERROR_NONE:
+				$error = '';
+				break;
+			case \JSON_ERROR_DEPTH:
+				$error = \esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs');
+				break;
+			case \JSON_ERROR_STATE_MISMATCH:
+				$error = \esc_html__('Invalid or malformed JSON.', 'eightshift-libs');
+				break;
+			case \JSON_ERROR_CTRL_CHAR:
+				$error = \esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs');
+				break;
+			case \JSON_ERROR_SYNTAX:
+				$error = \esc_html__('Syntax error, malformed JSON.', 'eightshift-libs');
+				break;
+			case \JSON_ERROR_UTF8:
+				$error = \esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs');
+				break;
+			case \JSON_ERROR_RECURSION:
+				$error = \esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs');
+				break;
+			case \JSON_ERROR_INF_OR_NAN:
+				$error = \esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs');
+				break;
+			case \JSON_ERROR_UNSUPPORTED_TYPE:
+				$error = \esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs');
+				break;
+			default:
+				$error = \esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
+				break;
+		}
+
+		if ($error !== '') {
+			throw InvalidManifest::manifestStructureException($error);
+		}
+
+		return $result;
+	}
 }

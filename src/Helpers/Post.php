@@ -1,8 +1,7 @@
 <?php
 
 /**
- * The object helper specific functionality inside classes.
- * Used in admin or theme side but only inside a class.
+ * Helpers for post.
  *
  * @package EightshiftLibs\Helpers
  */
@@ -12,17 +11,10 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 /**
- * Post class helper
+ * Class PostTrait helper.
  */
-class Post
+trait PostTrait
 {
-	/**
-	 * Average reading speed.
-	 *
-	 * @var int
-	 */
-	public const AVERAGE_WORD_COUNT = 200;
-
 	/**
 	 * Return content reading time
 	 *
@@ -33,10 +25,11 @@ class Post
 	 * The rest is math :D.
 	 *
 	 * @param int $postID ID of post content to calculate.
+	 * @param int $averageWordCount Average reading speed.
 	 *
 	 * @return int reading time integer.
 	 */
-	public static function getReadingTime(int $postID): int
+	public static function getReadingTime(int $postID, int $averageWordCount = 200): int
 	{
 		$contentBlocks = \parse_blocks(\get_the_content(null, false, $postID));
 
@@ -60,7 +53,7 @@ class Post
 		});
 
 		$wordCount = \str_word_count(\wp_strip_all_tags(\implode('', $content)));
-		$readingTime = \ceil($wordCount / self::AVERAGE_WORD_COUNT);
+		$readingTime = \ceil($wordCount / $averageWordCount);
 
 		/* translators: %d: number of minutes needed for reading the article. */
 		return (int)$readingTime;
