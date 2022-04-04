@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use DOMDocument;
+use EightshiftLibs\Exception\InvalidManifest;
 
 /**
  * Class Object Helper
@@ -50,9 +51,9 @@ trait ObjectHelperTrait
 	/**
 	 * Flatten multidimensional array.
 	 *
-	 * @param array $array Multidimensional array.
+	 * @param array<mixed> $array Multidimensional array.
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 */
 	public static function flattenArray(array $array): array
 	{
@@ -75,10 +76,10 @@ trait ObjectHelperTrait
 	 *
 	 * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
 	 *
-	 * @param array  $array Provided array.
+	 * @param array<mixed> $array Provided array.
 	 * @param string $sanitizationFunction WordPress function used for sanitization purposes.
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 */
 	public static function sanitizeArray(array $array, string $sanitizationFunction): array
 	{
@@ -101,8 +102,9 @@ trait ObjectHelperTrait
 	/**
 	 * Sort array by order key. Used to sort terms.
 	 *
-	 * @param array $items Items array to sort. Must have order key.
-	 * @return array
+	 * @param array<mixed> $items Items array to sort. Must have order key.
+	 *
+	 * @return array<mixed>
 	 */
 	public static function sortArrayByOrderKey(array $items): array
 	{

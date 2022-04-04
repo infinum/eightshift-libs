@@ -30,7 +30,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public const PATH_BLOCKS_PARENT = \DIRECTORY_SEPARATOR . 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR;
 
 	/**
-	 * Relative path to blocks folder.
+	 * Relative path to blocks folder in test mode.
 	 *
 	 * @var string
 	 */
@@ -58,9 +58,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public const PATH_WRAPPER = 'wrapper';
 
 	/**
-	 * Create custom project color palette
-	 *
-	 * These colors are fetched from the main manifest.json file located in src/blocks folder.
+	 * Create custom project color palette.
+	 * These colors are fetched from the main settings manifest.json.
 	 *
 	 * @return void
 	 */
@@ -75,7 +74,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Register align wide option in editor
+	 * Register multiple theme support options.
 	 *
 	 * @return void
 	 */
@@ -85,9 +84,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get blocks full data from global settings, blocks and wrapper
+	 * Get blocks full data from global settings, blocks and wrapper.
 	 *
-	 * You should never call this method directly. Instead, you should call $this->blocks.
+	 * You should never call this method directly it is used to prepare global store of data for all the blocks. Instead, you should call $this->blocks.
 	 *
 	 * @return void
 	 */
@@ -109,6 +108,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$this->getBlocksManifests()
 		);
 
+		// Register store and set all the data.
 		Components::setStore();
 		Components::setBlocks($blocks);
 		Components::setComponents($this->getComponentsManifests());
@@ -118,7 +118,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get all blocks with full block name
+	 * Get all blocks with full block name.
 	 *
 	 * Used to limit what blocks are going to be used in your project using allowed_block_types_all filter.
 	 *
@@ -159,7 +159,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get all blocks with full block name
+	 * Get all blocks with full block name - legacy.
 	 *
 	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
 	 *
@@ -191,7 +191,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Method used to register all custom blocks with data fetched from blocks manifest.json
+	 * Method used to register all custom blocks with data fetched from blocks manifest.json.
 	 *
 	 * @throws InvalidBlock Throws error if blocks are missing.
 	 *
@@ -199,17 +199,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function registerBlocks(): void
 	{
-		$blocks = Components::getBlocks();
-
-		foreach ($blocks as $block) {
+		foreach (Components::getBlocks() as $block) {
 			$this->registerBlock($block);
 		}
 	}
 
 	/**
-	 * Provides block registration callback method for rendering when using wrapper option
+	 * Provides block registration callback method for rendering when using wrapper.
 	 *
-	 * @param array<string, mixed>  $attributes Array of attributes as defined in block's manifest.json.
+	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
 	 * @throws InvalidBlock Throws error if block view is missing.
@@ -252,7 +250,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Create custom category to assign all custom blocks
+	 * Create custom category to assign all custom blocks.
 	 *
 	 * This category will be shown on all blocks list in "Add Block" button.
 	 *
@@ -278,7 +276,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Create custom category to assign all custom blocks
+	 * Create custom category to assign all custom blocks - legacy.
 	 *
 	 * This category will be shown on all blocks list in "Add Block" button.
 	 *
@@ -304,7 +302,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Locate and return template part with passed attributes for wrapper
+	 * Locate and return template part with passed attributes for wrapper.
 	 *
 	 * Used to render php block wrapper view.
 	 *
@@ -328,7 +326,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Removes paragraph block from the php part if the content is empty
+	 * Removes paragraph block from the php part if the content is empty.
 	 *
 	 * Useful when setting the default paragraph block.
 	 *
@@ -339,14 +337,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function filterBlocksContent(array $parsedBlock, array $sourceBlock): array
 	{
-		global $esBlocks;
-
-		$namespace = \array_key_first($esBlocks);
+		$namespace = Components::getSettingsNamespace();
 
 		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
-			if (
-				empty($parsedBlock['attrs']['paragraphParagraphContent'])
-			) {
+			if (!($parsedBlock['attrs']['paragraphParagraphContent'])) {
 				$parsedBlock['attrs']['wrapperDisable'] = true;
 				$parsedBlock['attrs']['paragraphUse'] = false;
 			}
@@ -355,13 +349,18 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		return $parsedBlock;
 	}
 
+	/**
+	 * Render inline css variables in dom. Used with wp_footer hook.
+	 *
+	 * @return string
+	 */
 	public function outputCssVariablesInline(): string
 	{
 		return Components::outputCssVariablesInline();
 	}
 
 	/**
-	 * Method used to really register Gutenberg blocks
+	 * Method used to really register Gutenberg blocks.
 	 *
 	 * It uses native register_block_type() function from WP.
 	 *
@@ -381,7 +380,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get blocks folder absolute path
+	 * Get blocks folder absolute path.
 	 *
 	 * @return string
 	 */
@@ -397,7 +396,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Retrieve block data
+	 * Retrieve block data from manifest.json combined with some additional stuff.
 	 *
 	 * @throws InvalidBlock Throws error if block name is missing.
 	 *
@@ -437,9 +436,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Retrieve components data
+	 * Retrieve components data from manifest.json.
 	 *
-	 * @throws InvalidBlock Throws error if block name is missing.
+	 * @throws InvalidBlock Throws error if component name is missing.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
@@ -465,7 +464,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get wrapper manifest data from wrapper manifest.json file
+	 * Retrieve wrapper data from manifest.json.
 	 *
 	 * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
 	 *
@@ -488,9 +487,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get blocks global settings manifest data from settings manifest.json file
+	 * Get blocks global settings manifest data from settings manifest.json file.
 	 *
-	 * @throws InvalidBlock Throws error if global manifest settings key namespace is missing.
+	 * @throws InvalidBlock Throws error if global manifest settings key block-namespace is missing.
 	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
 	 *
 	 * @return array<string, mixed>
@@ -515,11 +514,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get blocks attributes
+	 * Prepare all blocks attributes.
 	 *
 	 * This method combines default, block and wrapper attributes.
 	 * Default attributes are hardcoded in this lib.
 	 * Block attributes are provided by block manifest.json file.
+	 * Also it is doing recursive loop for all children components and their attributes.
 	 *
 	 * @param array<string, mixed> $blockDetails Block Manifest details.
 	 *

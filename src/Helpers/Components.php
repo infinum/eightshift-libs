@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
+use EightshiftLibs\Blocks\AbstractBlocks;
 use EightshiftLibs\Exception\ComponentException;
 
 /**
@@ -96,10 +97,14 @@ class Components
 				$manifest = self::getManifest($parentPath);
 			}
 		} else {
-			$componentPath = "{$parentPath}{$sep}src{$sep}Blocks{$sep}components{$sep}{$component}{$sep}{$component}.php";
+			$blocksParentPath = AbstractBlocks::PATH_BLOCKS_PARENT;
+			$componentsPath = AbstractBlocks::PATH_COMPONENTS;
+			$componentPath = "{$parentPath}{$blocksParentPath}{$componentsPath}{$sep}{$component}";
+
+			$componentPath = "{$componentPath}{$sep}{$component}.php";
 
 			if ($useComponentDefaults) {
-				$manifest = self::getManifest("{$parentPath}{$sep}src{$sep}Blocks{$sep}components{$sep}{$component}");
+				$manifest = self::getManifest("{$componentPath}");
 			}
 		}
 
@@ -107,8 +112,9 @@ class Components
 			throw ComponentException::throwUnableToLocateComponent($componentPath);
 		}
 
+		// Merge default attributes with the component attributes.
 		if ($useComponentDefaults && isset($manifest['attributes'])) {
-			$attributes = self::getDefaultRenderAttributes($manifest, $attributes);
+			$attributes = Components::getDefaultRenderAttributes($manifest, $attributes);
 		}
 
 		\ob_start();
@@ -133,19 +139,13 @@ class Components
 	 * Get manifest json. Generally used for getting block/components manifest.
 	 *
 	 * @param string $path Absolute path to manifest folder.
-	 * @param bool $useGlobal Use global blocks settings.
 	 *
 	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getManifest(string $path, bool $useGlobal = true): array
+	public static function getManifest(string $path): array
 	{
-		// Get manifest by directly getting the file.
-		if ($useGlobal) {
-			return self::getManifestDirect($path);
-		}
-
 		$path = \trim($path, \DIRECTORY_SEPARATOR);
 
 		$path = \explode(\DIRECTORY_SEPARATOR, $path);
@@ -154,51 +154,32 @@ class Components
 		$item = $path[\count($path) - 1] ?? '';
 
 		// Global settings.
-		if ($item === 'Blocks') {
-			return self::getBlocks();
+		if ($item === 'settings') {
+			return Components::getSettings();
+		}
+
+		// Blocks details.
+		if ($item === 'blocks') {
+			return Components::getBlocks();
 		}
 
 		// Wrapper details.
 		if ($item === 'wrapper') {
-			return self::getWrapper();
+			return Components::getWrapper();
 		}
 
 		$type = $path[\count($path) - 2] ?? '';
 
 		// Components settings.
 		if ($type === 'components') {
-			return self::getComponent($item);
+			return Components::getComponent($item);
 		}
 
 		// Blocks settings.
 		if ($type === 'custom') {
-			return self::getBlock($item);
+			return Components::getBlock($item);
 		}
 
 		return [];
-	}
-
-	/**
-	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
-	 * Used in combination with getManifest helper.
-	 *
-	 * @param string $path Absolute path to manifest folder.
-	 *
-	 * @throws ComponentException When we're unable to find the component by $component.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private static function getManifestDirect(string $path): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = \trim($path, $sep);
-
-		$manifest = "{$sep}{$path}{$sep}manifest.json";
-
-		if (!\file_exists($manifest)) {
-			throw ComponentException::throwUnableToLocateComponent($manifest);
-		}
-
-		return \json_decode(\implode(' ', (array)\file($manifest)), true);
 	}
 }

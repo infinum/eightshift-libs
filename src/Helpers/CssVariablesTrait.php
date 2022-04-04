@@ -16,22 +16,16 @@ namespace EightshiftLibs\Helpers;
 trait CssVariablesTrait
 {
 	/**
-	 * Get Global Manifest.json and return globalVariables as css variables.
-	 *
-	 * @param array<string, mixed> $globalManifest Array of global variables data.
+	 * Get Global Manifest.json and return globalVariables as CSS variables.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobal(array $globalManifest): string
+	public static function outputCssVariablesGlobal(): string
 	{
 		$output = '';
 
-		if (!$globalManifest || !isset($globalManifest['globalVariables'])) {
-			return $output;
-		}
-
-		foreach ($globalManifest['globalVariables'] as $itemKey => $itemValue) {
-			$itemKey = self::camelToKebabCase($itemKey);
+		foreach (Components::getSettingsGlobalVariables() as $itemKey => $itemValue) {
+			$itemKey = Components::camelToKebabCase($itemKey);
 
 			if (\gettype($itemValue) === 'array') {
 				$output .= self::globalInner($itemValue, $itemKey);
@@ -57,7 +51,7 @@ trait CssVariablesTrait
 	 *
 	 * @deprecated globalManifest argument is no longer in use, you can remove it. If not removed it will break in the next major release.
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest, string $customSelector = ''): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest = [], string $customSelector = ''): string
 	{
 		$output = '';
 

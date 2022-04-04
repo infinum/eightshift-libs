@@ -2,13 +2,13 @@
 
 namespace Tests\Helpers;
 
-use EightshiftLibs\Helpers\Shortcode;
+use EightshiftLibs\Helpers\Components;
 
 beforeEach(function () {
 	global $shortcode_tags;
 	$shortcode_tags = ['sayHello' => 'Tests\\Helpers\\sayHello'];
 
-	$this->shortcode = new Shortcode();
+	$this->shortcode = new Components();
 });
 
 
