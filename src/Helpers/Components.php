@@ -177,4 +177,28 @@ class Components
 
 		return [];
 	}
+
+	/**
+	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
+	 * Used in combination with getManifest helper.
+	 *
+	 * @param string $path Absolute path to manifest folder.
+	 *
+	 * @throws ComponentException When we're unable to find the component by $component.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function getManifestDirect(string $path): array
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = \trim($path, $sep);
+
+		$manifest = "{$sep}{$path}{$sep}manifest.json";
+
+		if (!\file_exists($manifest)) {
+			throw ComponentException::throwUnableToLocateComponent($manifest);
+		}
+
+		return \json_decode(\implode(' ', (array)\file($manifest)), true);
+	}
 }

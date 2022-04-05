@@ -1,12 +1,25 @@
 <?php
 
-namespace Tests\Helpers;
+namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Helpers\Components;
 
+use Brain\Monkey;
+
+use function Tests\setupMocks;
+
+beforeAll(function () {
+	Monkey\setUp();
+	setupMocks();
+});
+
+afterAll(function() {
+	Monkey\tearDown();
+});
+
 beforeEach(function () {
 	global $shortcode_tags;
-	$shortcode_tags = ['sayHello' => 'Tests\\Helpers\\sayHello'];
+	$shortcode_tags = ['sayHello' => 'Tests\\Unit\\Helpers\\sayHello'];
 
 	$this->shortcode = new Components();
 });

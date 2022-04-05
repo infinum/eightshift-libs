@@ -55,8 +55,6 @@ trait CssVariablesTrait
 	 * @param string $customSelector Output custom selector to use as a style prefix.
 	 *
 	 * @return string
-	 *
-	 * @deprecated globalManifest argument is no longer in use, you can remove it. If not removed it will break in the next major release.
 	 */
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest = [], string $customSelector = ''): string
 	{

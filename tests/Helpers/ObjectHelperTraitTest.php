@@ -1,12 +1,13 @@
 <?php
 
-namespace Tests\Helpers;
+namespace Tests\Unit\Helpers;
 
 use Brain\Monkey\Functions;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Helpers\ObjectHelperTrait;
 
 class MockObjectHelper {
-    use ObjectHelperTrait;
+	use ObjectHelperTrait;
 }
 
 beforeEach(function () {
@@ -119,4 +120,13 @@ test('Test that sorting helper works', function() {
 	];
 
 	$this->assertSame($expectedArray, $orderedArray);
+});
+
+test('Asserts that flattenArray will return the flattened array', function () {
+
+	$array = Components::flattenArray(['a' => ['b', 'c' => [1, 2, 3]]]);
+
+	expect($array)
+		->toBeArray()
+		->toBe(['b', 1, 2, 3]);
 });
