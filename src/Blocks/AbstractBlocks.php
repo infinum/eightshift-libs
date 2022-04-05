@@ -221,13 +221,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		// Get block view path.
 		$sep = \DIRECTORY_SEPARATOR;
-		$pathName = self::PATH_BLOCKS;
-		$templatePath = "{$this->getBlocksFolderPath()}{$pathName}{$sep}{$blockName}{$sep}{$blockName}.php";
+		$blockPathName = self::PATH_BLOCKS;
+		$templatePath = "{$this->getBlocksFolderPath()}{$blockPathName}{$sep}{$blockName}{$sep}{$blockName}.php";
 
 		// Get block wrapper view path.
-		$sep = \DIRECTORY_SEPARATOR;
-		$pathName = self::PATH_WRAPPER;
-		$wrapperPath = "{$this->getBlocksFolderPath()}{$pathName}{$sep}wrapper.php";
+		$wrapperPathName = self::PATH_WRAPPER;
+		$wrapperPath = "{$this->getBlocksFolderPath()}{$wrapperPathName}{$sep}wrapper.php";
 
 		// Check if wrapper component exists.
 		if (!\file_exists($wrapperPath)) {
