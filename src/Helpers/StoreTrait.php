@@ -416,7 +416,9 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		$esBlocks[self::getStoreName()]['style'] = $style;
+		if ($style) {
+			$esBlocks[self::getStoreName()]['styles'][] = $style;
+		}
 	}
 
 	/**

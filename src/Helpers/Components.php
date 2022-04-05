@@ -153,14 +153,9 @@ class Components
 		// Find last item to get name.
 		$item = $path[\count($path) - 1] ?? '';
 
-		// Global settings.
-		if ($item === 'settings') {
+		// Settings details.
+		if ($item === 'Blocks') {
 			return Components::getSettings();
-		}
-
-		// Blocks details.
-		if ($item === 'blocks') {
-			return Components::getBlocks();
 		}
 
 		// Wrapper details.

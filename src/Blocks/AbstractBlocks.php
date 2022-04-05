@@ -352,11 +352,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Render inline css variables in dom. Used with wp_footer hook.
 	 *
-	 * @return string
+	 * @return void
 	 */
-	public function outputCssVariablesInline(): string
+	public function outputCssVariablesInline(): void
 	{
-		return Components::outputCssVariablesInline();
+		echo Components::outputCssVariablesInline(); // phpcs:ignore
 	}
 
 	/**

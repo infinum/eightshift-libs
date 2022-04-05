@@ -34,8 +34,15 @@ trait CssVariablesTrait
 			}
 		}
 
-		return $output ? "
-			<style>:root {{$output}}</style>" : '';
+		$id = Components::getConfigOutputCssSelectorName();
+
+		$output = "<style id='{$id}-global'>:root {{$output}}</style>";
+
+		if (Components::getConfigOutputCssOptimize()) {
+			$output = \str_replace(["\n", "\r"], '', $output);
+		}
+
+		return $output;
 	}
 
 	/**
@@ -53,24 +60,13 @@ trait CssVariablesTrait
 	 */
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest = [], string $customSelector = ''): string
 	{
-		$output = '';
-
-		// Find global settings flag.
-		$outputGloballyFlag = self::getConfigOutputCssGlobally();
-		$outputGloballyOptimizeFlag = self::getConfigOutputCssOptimize();
-
-		// Bailout if attributes or manifest is missing.
-		if (!$attributes || !$manifest) {
-			return '';
-		}
-
 		// Bailout if manifest is missing variables key.
 		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
 			return '';
 		}
 
 		// Define variables from globalManifest.
-		$breakpoints = self::getSettingsGlobalVariablesBreakpoints();
+		$breakpoints = Components::getSettingsGlobalVariablesBreakpoints();
 
 		// Sort breakpoints in ascending order.
 		\asort($breakpoints);
@@ -118,113 +114,41 @@ trait CssVariablesTrait
 			$attributes = \array_merge($default, $attributes);
 		}
 
+		// Iterate each responsiveAttribute from responsiveAttributes that appears in variables field.
 		if (!empty($responsiveAttributes)) {
 			$responsiveVariables = self::setupResponsiveVariables($responsiveAttributes, $variables);
 			$data = self::setVariablesToBreakpoints($attributes, $responsiveVariables, $data, $manifest, $defaultBreakpoints);
 		}
 
+		// Iterate each variable.
 		if (!empty($variables)) {
-			// Iterate each variable.
 			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
 		}
 
-		// Prepare output style object.
-		$styles = [
-			'name' => $name,
-			'unique' => $unique,
-			'variables' => [],
-		];
-
-		// Loop data and provide correct selectors from data array.
-		foreach ($data as $values) {
-			// Define variables from values.
-			$type = $values['type'];
-			$value = $values['value'];
-			$variable = $values['variable'];
-
-			// Bailout if variables are empty.
-			if (!$variable) {
-				continue;
-			}
-
-			// Merge array of variables to string.
-			$breakpointData = \implode("\n", $variable);
-
-			// If breakpoint value is 0 then don't wrap the media query around it.
-			if ($outputGloballyFlag) {
-				$styles['variables'][] = [
-					'type' => $type,
-					'variable' => $breakpointData,
-					'value' => $value,
-				];
-			} else {
-				if ($value === 0) {
-					$output .= "\n .{$name}[data-id='{$unique}']{\n{$breakpointData}\n}";
-				} else {
-					$output .= "\n @media ({$type}-width:{$value}px){\n.{$name}[data-id='{$unique}']{\n{$breakpointData}\n}\n}";
-				}
-			}
+		// If default output just echo.
+		if (!Components::getConfigOutputCssGlobally()) {
+			return self::getCssVariablesTypeDefault($name, $data, $manifest, $unique);
 		}
 
-		// Output manual output from the array of variables.
-		$manual = isset($manifest['variablesCustom']) ? \esc_html(\implode(";\n", $manifest['variablesCustom'])) : '';
+		// Set inline styles.
+		Components::setStyle(self::getCssVariablesTypeInline($name, $data, $manifest, $unique));
 
-		// Output to global if flag is set.
-		if ($outputGloballyFlag) {
-			if ($manual) {
-				$styles['variables'][] = [
-					'type' => 'min',
-					'variable' => $manual,
-					'value' => 0,
-				];
-			}
-
-			$namespace = self::getSettingsNamespace();
-
-			$esBlocks[$namespace]['styles'][] = $styles;
-
-			return '';
-		}
-
-		// Prepare final output for testing.
-		$fullOutput = "
-			{$output}
-			{$manual}
-		";
-
-		// Check if final output is empty and and remove if it is.
-		if (empty(\trim($fullOutput))) {
-			return '';
-		}
-
-		// Prepare output for manual variables.
-		$finalManualOutput = $manual ? "\n .{$name}[data-id='{$unique}']{\n{$manual}\n}" : '';
-
-		if ($outputGloballyOptimizeFlag) {
-			$output = \str_replace(["\n", "\r"], '', $output);
-			$finalManualOutput = \str_replace(["\n", "\r"], '', $finalManualOutput);
-		}
-
-		// Output the style for CSS variables.
-		return "<style>{$output} {$finalManualOutput}</style>";
+		return '';
 	}
 
 	/**
-	 * Output css variables as a one inline style tag.
+	 * Output css variables as a one inline style tag. Used with wp_footer filter.
 	 *
 	 * @return string
 	 */
 	public static function outputCssVariablesInline(): string
 	{
-		$outputGloballyFlag = self::getConfigOutputCssGlobally();
-		$outputGloballyOptimizeFlag = self::getConfigOutputCssOptimize();
-
-		// Bailout if not using this feature.
-		if (!$outputGloballyFlag) {
+		// If default output just exit.
+		if (!Components::getConfigOutputCssGlobally()) {
 			return '';
 		}
 
-		$styles = self::getStyles();
+		$styles = Components::getStyles();
 
 		// Bailout if styles are missing.
 		if (!$styles) {
@@ -320,7 +244,7 @@ trait CssVariablesTrait
 		}
 
 		// Remove newlines is config is set.
-		if ($outputGloballyOptimizeFlag) {
+		if (Components::getConfigOutputCssOptimize()) {
 			$output = \str_replace(["\n", "\r"], '', $output);
 		}
 
@@ -366,6 +290,131 @@ trait CssVariablesTrait
 	public static function getUnique(): string
 	{
 		return \md5(\uniqid((string)\wp_rand(), true));
+	}
+
+	/**
+	 * Return CSS variables in default type. On the place where it was called.
+	 *
+	 * @param string $name Output css selector name.
+	 * @param array<mixed> $data Data prepared for checking.
+	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param string $unique Unique key.
+	 *
+	 * @return string
+	 */
+	private static function getCssVariablesTypeDefault(string $name, array $data, array $manifest, string $unique): string
+	{
+		$output = '';
+
+		// Loop data and provide correct selectors from data array.
+		foreach ($data as $values) {
+			// Define variables from values.
+			$type = $values['type'];
+			$value = $values['value'];
+			$variable = $values['variable'];
+
+			// Bailout if variables are empty.
+			if (!$variable) {
+				continue;
+			}
+
+			// Merge array of variables to string.
+			$breakpointData = \implode("\n", $variable);
+
+			// If breakpoint value is 0 then don't wrap the media query around it.
+			if ($value === 0) {
+				$output .= "\n .{$name}[data-id='{$unique}']{\n{$breakpointData}\n}";
+			} else {
+				$output .= "\n @media ({$type}-width:{$value}px){\n.{$name}[data-id='{$unique}']{\n{$breakpointData}\n}\n}";
+			}
+		}
+
+		// Output manual output from the array of variables.
+		$manual = isset($manifest['variablesCustom']) ? \esc_html(\implode(";\n", $manifest['variablesCustom'])) : '';
+
+		// Prepare final output for testing.
+		$fullOutput = "
+			{$output}
+			{$manual}
+		";
+
+		// Check if final output is empty and and remove if it is.
+		if (empty(\trim($fullOutput))) {
+			return '';
+		}
+
+		// Prepare output for manual variables.
+		$finalManualOutput = $manual ? "\n .{$name}[data-id='{$unique}']{\n{$manual}\n}" : '';
+
+		if (Components::getConfigOutputCssOptimize()) {
+			$output = \str_replace(["\n", "\r"], '', $output);
+			$finalManualOutput = \str_replace(["\n", "\r"], '', $finalManualOutput);
+		}
+
+		// Output the style for CSS variables.
+		return "<style>{$output} {$finalManualOutput}</style>";
+	}
+
+	/**
+	 * Get css variables in inline type. In one place in dom.
+	 *
+	 * @param string $name Output css selector name.
+	 * @param array<mixed> $data Data prepared for checking.
+	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param string $unique Unique key.
+	 *
+	 * @return array<mixed>
+	 */
+	private static function getCssVariablesTypeInline(string $name, array $data, array $manifest, string $unique): array
+	{
+		// Prepare output style object.
+		$styles = [
+			'name' => $name,
+			'unique' => $unique,
+			'variables' => [],
+		];
+
+		// Loop data and provide correct selectors from data array.
+		foreach ($data as $values) {
+			// Define variables from values.
+			$type = $values['type'];
+			$value = $values['value'];
+			$variable = $values['variable'];
+
+			// Bailout if variables are empty.
+			if (!$variable) {
+				continue;
+			}
+
+			// Merge array of variables to string.
+			$breakpointData = \implode("\n", $variable);
+
+			// If breakpoint value is 0 then don't wrap the media query around it.
+			$styles['variables'][] = [
+				'type' => $type,
+				'variable' => $breakpointData,
+				'value' => $value,
+			];
+		}
+
+		// Output manual output from the array of variables.
+		$manual = isset($manifest['variablesCustom']) ? \esc_html(\implode(";\n", $manifest['variablesCustom'])) : '';
+
+		// Output to global if flag is set.
+		if ($manual) {
+			$styles['variables'][] = [
+				'type' => 'min',
+				'variable' => $manual,
+				'value' => 0,
+			];
+		}
+
+		// Bailout if no styles is added.
+		if (!$styles['variables']) {
+			return [];
+		}
+
+		return $styles;
 	}
 
 	/**
