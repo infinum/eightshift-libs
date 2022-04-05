@@ -28,6 +28,9 @@ function setupMocks() {
 	// Mock escaping function.
 	Functions\when('wp_kses_post')->returnArg();
 
+	// Mock escaping function.
+	Functions\when('esc_html__')->returnArg();
+
 	// Mock rand function.
 	Functions\when('wp_rand')->justReturn(1154790670);
 

@@ -54,34 +54,6 @@ afterEach(function () {
 	Monkey\tearDown();
 });
 
-test('Return correct case - camelCase to kebab-case', function ($input, $output) {
-	$case = CliHelpers::camelCaseToKebabCase($input);
-
-	$this->assertIsString($case);
-	$this->assertSame($case, $output);
-})->with('camelToKebabCaseCheckCorrect');
-
-test('Return wrong case - camelCase to kebab-case', function ($input, $output) {
-	$case = CliHelpers::camelCaseToKebabCase($input);
-
-	$this->assertIsString($case);
-	$this->assertNotSame($case, $output);
-})->with('camelToKebabCaseCheckWrong');
-
-test('Return correct case - kebab-case to camelCase', function ($input, $output) {
-	$case = CliHelpers::kebabToCamelCase($input);
-
-	$this->assertIsString($case);
-	$this->assertSame($case, $output);
-})->with('kebabToCamelCaseCheckCorrect');
-
-test('Return wrong case - kebab-case to camelCase', function ($input, $output) {
-	$case = CliHelpers::kebabToCamelCase($input);
-
-	$this->assertIsString($case);
-	$this->assertNotSame($case, $output);
-})->with('kebabToCamelCaseCheckWrong');
-
 test('Return correct name - getGithubPluginName', function ($input, $output) {
 	$case = CliHelpers::getGithubPluginName($input);
 

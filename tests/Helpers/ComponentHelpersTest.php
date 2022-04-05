@@ -3,10 +3,10 @@
 namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
-use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
 
 use Brain\Monkey;
+use EightshiftBoilerplate\Blocks\BlocksExample;
 
 use function Tests\setupMocks;
 
@@ -20,8 +20,7 @@ afterAll(function() {
 });
 
 beforeEach(function() {
-	global $esBlocks;
-	$esBlocks = null;
+	(new BlocksExample())->getBlocksDataFullRaw();
 });
 
 afterEach(function() {
@@ -29,13 +28,9 @@ afterEach(function() {
 	$esBlocks = null;
 });
 
-test('Asserts that reading manifest.json using getManifest will return an array', function () {
-	$results = Components::getManifestDirect(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
-
-	expect($results)
-		->toBeArray()
-		->toHaveKey('componentName');
-});
+// ------------------------------------------
+// render
+// ------------------------------------------
 
 test('Asserts that rendering a component works', function () {
 	$results = Components::render('button', []);
@@ -44,7 +39,6 @@ test('Asserts that rendering a component works', function () {
 		->not->toBeEmpty()
 		->toContain('Hello!');
 });
-
 
 test('Asserts that rendering a component will output a wrapper if parentClass is provided', function () {
 	$results = Components::render('button', ['parentClass' => 'test']);
@@ -55,7 +49,6 @@ test('Asserts that rendering a component will output a wrapper if parentClass is
 		->not->toContain('test__button.php')
 		->toContain('test__button');
 });
-
 
 test('Asserts that providing a missing component will throw an exception without extension', function () {
 	Components::render('component', []);
@@ -73,20 +66,58 @@ test('Asserts that render used components defaults', function () {
 		->toContain('Hello!');
 });
 
+// ------------------------------------------
+// getManifest
+// ------------------------------------------
+
+test('Asserts that "getManifest" will return correct files if path name is used.', function () {
+	expect(Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/wrapper'))
+		->toBeArray()
+		->toHaveKey('componentName');
+
+	expect(Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks'))
+		->toBeArray()
+		->toHaveKey('namespace');
+
+	expect(Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button'))
+		->toBeArray()
+		->toHaveKey('componentName');
+
+	expect(Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/custom/button'))
+		->toBeArray()
+		->toHaveKey('blockName');
+});
+
+test('Asserts that "getManifest" will return correct files if name is used.', function () {
+	expect(Components::getManifest('wrapper'))
+		->toBeArray()
+		->toHaveKey('componentName');
+
+	expect(Components::getManifest('settings'))
+		->toBeArray()
+		->toHaveKey('namespace');
+
+	expect(Components::getManifest('component', 'button'))
+		->toBeArray()
+		->toHaveKey('componentName');
+
+	expect(Components::getManifest('block', 'button'))
+		->toBeArray()
+		->toHaveKey('blockName');
+});
+
+// ------------------------------------------
+// getManifestDirect
+// ------------------------------------------
+
+test('Asserts that reading manifest.json using getManifest will return an array', function () {
+	$results = Components::getManifestDirect(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+
+	expect($results)
+		->toBeArray()
+		->toHaveKey('componentName');
+});
+
 test('Asserts that not specifying the path in getManifest will throw an exception', function () {
 	Components::getManifestDirect(\dirname(__FILE__));
 })->throws(ComponentException::class);
-
-test('Asserts that arrayIsList function will correctly identify lists', function () {
-
-	$isList = Components::arrayIsList([1, 2, 3]);
-	$isNotList = Components::arrayIsList(['a' => 1, 'b' => 2, 'c' => 3]);
-
-	expect($isList)
-		->toBeBool()
-		->toBeTrue();
-
-	expect($isNotList)
-		->toBeBool()
-		->not->toBeTrue();
-});

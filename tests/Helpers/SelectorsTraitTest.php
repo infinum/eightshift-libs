@@ -28,27 +28,9 @@ afterEach(function() {
 	$esBlocks = null;
 });
 
-test('Asserts that using responsive selectors will work', function () {
-	$modifiers = ['mobile' => '12', 'tablet' => '12', 'desktop' => '6'];
-	$modifiersAlt = ['mobile' => '12', 'tablet' => '12', 'desktop' => ''];
-
-	$withModifier = Components::responsiveSelectors($modifiers, 'width', 'column', true);
-	$withoutModifier = Components::responsiveSelectors($modifiers, 'width', 'column', false);
-	$withEmptyString = Components::responsiveSelectors($modifiersAlt, 'width', 'column');
-
-	expect($withModifier)
-		->toBeString()
-		->toBe('column__width-mobile--12 column__width-tablet--12 column__width-desktop--6');
-
-	expect($withoutModifier)
-		->toBeString()
-		->toBe('column__width-mobile column__width-tablet column__width-desktop');
-
-	expect($withEmptyString)
-		->toBeString()
-		->toBe('column__width-mobile--12 column__width-tablet--12');
-});
-
+// ------------------------------------------
+// selector
+// ------------------------------------------
 
 test('Asserts that selectorBlock returns the correct class when attributes are set', function () {
 	$selector = Components::selector('button', 'button', 'icon', 'blue');
@@ -76,6 +58,34 @@ test('Asserts that selector returns the correct class when element is an empty s
 		->toBe('button');
 });
 
+// ------------------------------------------
+// responsiveSelectors
+// ------------------------------------------
+
+test('Asserts that using responsive selectors will work', function () {
+	$modifiers = ['mobile' => '12', 'tablet' => '12', 'desktop' => '6'];
+	$modifiersAlt = ['mobile' => '12', 'tablet' => '12', 'desktop' => ''];
+
+	$withModifier = Components::responsiveSelectors($modifiers, 'width', 'column', true);
+	$withoutModifier = Components::responsiveSelectors($modifiers, 'width', 'column', false);
+	$withEmptyString = Components::responsiveSelectors($modifiersAlt, 'width', 'column');
+
+	expect($withModifier)
+		->toBeString()
+		->toBe('column__width-mobile--12 column__width-tablet--12 column__width-desktop--6');
+
+	expect($withoutModifier)
+		->toBeString()
+		->toBe('column__width-mobile column__width-tablet column__width-desktop');
+
+	expect($withEmptyString)
+		->toBeString()
+		->toBe('column__width-mobile--12 column__width-tablet--12');
+});
+
+// ------------------------------------------
+// ensureString
+// ------------------------------------------
 
 test('Asserts ensure string returns a correct result', function ($args) {
 	$this->assertIsString(Components::ensureString($args));
@@ -92,6 +102,9 @@ test('Asserts classnames returns a string', function ($args) {
 	$this->assertIsString(Components::classnames($args));
 })->with('classesArray');
 
+// ------------------------------------------
+// classnames
+// ------------------------------------------
 
 test('Throws type exception if wrong argument type is passed to classnames', function ($argument) {
 	Components::classnames($argument);

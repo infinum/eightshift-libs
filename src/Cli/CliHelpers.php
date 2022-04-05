@@ -40,32 +40,6 @@ trait CliHelpers
 	}
 
 	/**
-	 * Convert camel case to kebab case.
-	 *
-	 * @param string $input Input to convert.
-	 * @return string
-	 */
-	public static function camelCaseToKebabCase(string $input): string
-	{
-		$output = \ltrim(\mb_strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
-		$output = \str_replace(['_', ' '], '-', $output);
-		return \str_replace('--', '-', $output);
-	}
-
-	/**
-	 * Convert string from kebab to camel case
-	 *
-	 * @param string $string    String to convert.
-	 * @param string $separator Separator to use for conversion.
-	 *
-	 * @return string
-	 */
-	public static function kebabToCamelCase(string $string, string $separator = '-'): string
-	{
-		return \lcfirst(\str_replace($separator, '', \ucwords(\mb_strtolower($string), $separator)));
-	}
-
-	/**
 	 * Returns the name of the github plugin without slashes. For example converts "infinum/eightshift-forms" to "eightshift-forms"
 	 *
 	 * @param string $name Name of the github package.

@@ -23,6 +23,15 @@ beforeEach(function() {
 	(new BlocksExample())->getBlocksDataFullRaw();
 });
 
+afterEach(function () {
+	global $esBlocks;
+	$esBlocks = null;
+});
+
+// ------------------------------------------
+// outputCssVariablesGlobal
+// ------------------------------------------
+
 test('Asserts that outputCssVariablesGlobal returns the correct CSS variables from global manifest', function () {
 	$output = Components::outputCssVariablesGlobal();
 
@@ -37,12 +46,16 @@ test('Asserts that outputCssVariablesGlobal returns the correct CSS variables fr
 });
 
 test('Asserts that outputCssVariablesGlobal returns empty string if global manifest data is not provided', function () {
-	$output = Components::outputCssVariablesGlobal([]);
+	$output = Components::outputCssVariablesGlobal();
 
 	expect($output)
 		->toBeString()
 		->not->toContain('<style>');
 });
+
+// ------------------------------------------
+// outputCssVariables
+// ------------------------------------------
 
 test('outputCssVariables returns empty string if global breakpoints are missing', function () {
 	$output = Components::outputCssVariables(
@@ -58,13 +71,10 @@ test('outputCssVariables returns empty string if global breakpoints are missing'
 });
 
 test('outputCssVariables returns empty string if global attributes or manifest are missing', function () {
-	$globalManifest = Components::getManifestDirect(dirname(__FILE__, 2) . '/data/src/Blocks');
-
 	$output = Components::outputCssVariables(
 		['attribute'],
 		[],
-		'uniqueString',
-		$globalManifest
+		'uniqueString'
 	);
 
 	expect($output)
@@ -74,8 +84,7 @@ test('outputCssVariables returns empty string if global attributes or manifest a
 	$outputSecond = Components::outputCssVariables(
 		[],
 		['manifest'],
-		'uniqueString',
-		$globalManifest
+		'uniqueString'
 	);
 
 	expect($outputSecond)
@@ -84,13 +93,10 @@ test('outputCssVariables returns empty string if global attributes or manifest a
 });
 
 test('outputCssVariables returns empty string if variable keys are missing in manifest', function () {
-	$globalManifest = Components::getManifestDirect(dirname(__FILE__, 2) . '/data/src/Blocks');
-
 	$output = Components::outputCssVariables(
 		['attribute'],
 		['manifest'],
 		'uniqueString',
-		$globalManifest
 	);
 
 	expect($output)
@@ -99,8 +105,10 @@ test('outputCssVariables returns empty string if variable keys are missing in ma
 });
 
 test('outputCssVariables works when correct attributes are passed to it', function () {
-	$manifest = Components::getManifestDirect(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifestDirect(dirname(__FILE__, 2) . '/data/src/Blocks');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+
+	Components::setConfigOutputCssGlobally(false);
+	Components::setConfigOutputCssOptimize(false);
 
 	$attributes = [
 		'variableValue' => 'value3',
@@ -109,8 +117,7 @@ test('outputCssVariables works when correct attributes are passed to it', functi
 	$output = Components::outputCssVariables(
 		$attributes,
 		$manifest,
-		'uniqueString',
-		$globalManifest
+		'uniqueString'
 	);
 
 	expect($output)
@@ -119,8 +126,10 @@ test('outputCssVariables works when correct attributes are passed to it', functi
 });
 
 test('outputCssVariables works when correct attributes are passed to it and has a unique name', function () {
-	$manifest = Components::getManifestDirect(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
-	$globalManifest = Components::getManifestDirect(dirname(__FILE__, 2) . '/data/src/Blocks');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+
+	Components::setConfigOutputCssGlobally(false);
+	Components::setConfigOutputCssOptimize(false);
 
 	$attributes = [
 		'variableValue' => 'value3',
@@ -130,7 +139,7 @@ test('outputCssVariables works when correct attributes are passed to it and has 
 		$attributes,
 		$manifest,
 		'uniqueString',
-		$globalManifest,
+		[],
 		'customNameAttribute'
 	);
 
@@ -139,11 +148,11 @@ test('outputCssVariables works when correct attributes are passed to it and has 
 		->not->toBeEmpty();
 });
 
-test('outputCssVariables outputs the style tag if the outputCssVariablesGlobally is set to false', function () {
-	$globalManifest = Components::getManifestDirect(dirname(__FILE__, 2) . '/data/src/Blocks');
-	$esBlocks[$globalManifest['namespace']]['config']['outputCssVariablesGlobally'] = false;
+test('outputCssVariables outputs the style tag in default way if the outputCssGlobally is set to false', function () {
+	Components::setConfigOutputCssGlobally(false);
+	Components::setConfigOutputCssOptimize(false);
 
-	$manifest = Components::getManifestDirect(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
 
 	$attributes = [
 		'variableValue' => 'value3',
@@ -153,15 +162,67 @@ test('outputCssVariables outputs the style tag if the outputCssVariablesGlobally
 		$attributes,
 		$manifest,
 		'uniqueString',
-		$globalManifest,
+		[],
 		'customNameAttribute'
 	);
 
 	expect($output)
 		->toBeString()
 		->not->toBeEmpty();
-
 });
+
+test('outputCssVariables outputs the style tag in inline way if the outputCssGlobally is set to true', function () {
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	$output = Components::outputCssVariables(
+		$attributes,
+		$manifest,
+		'uniqueString',
+		[],
+		'customNameAttribute'
+	);
+
+	$styles = Components::getStyles();
+
+	expect($styles)
+	->toBeArray()
+	->toEqual([
+		[
+			'name' => 'customNameAttribute',
+			'unique' => 'uniqueString',
+			'variables' => [
+				[
+					'type' => 'min',
+					'variable' => '--variable-value-default: default;',
+					'value' => 0,
+				],
+				[
+					'type' => 'max',
+					'variable' => '--variable-value-tablet: tablet;',
+					'value' => 991,
+				]
+			],
+		],
+	]);
+
+	expect($output)
+		->toBeString()
+		->toBeEmpty();
+});
+
+// ------------------------------------------
+// outputCssVariablesInline
+// ------------------------------------------
+
+
+
+// ------------------------------------------
+// hexToRgb
+// ------------------------------------------
 
 test('Check that hexToRgb returns the correct output for a valid hex code', function ($input, $output) {
 	$converted = Components::hexToRgb($input);
@@ -176,6 +237,11 @@ test('Check that hexToRgb returns the fallback for an invalid hex code', functio
 	$this->assertIsString($converted);
 	$this->assertSame($converted, $output);
 })->with('hexToRgbInvalid');
+
+
+// ------------------------------------------
+// getUnique
+// ------------------------------------------
 
 test('Asserts that getUnique function will return some random string', function () {
 

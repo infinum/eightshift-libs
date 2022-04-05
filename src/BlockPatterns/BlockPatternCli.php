@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\BlockPatterns;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\CliHelpers;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class BlockPatternCli
@@ -114,6 +114,6 @@ class BlockPatternCli extends AbstractCli
 	 */
 	private function generateName(string $title): string
 	{
-		return 'eightshift-boilerplate/' . CliHelpers::camelCaseToKebabCase($title);
+		return 'eightshift-boilerplate/' . Components::camelToKebabCase($title);
 	}
 }

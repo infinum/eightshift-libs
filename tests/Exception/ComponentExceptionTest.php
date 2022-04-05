@@ -38,7 +38,7 @@ test('Checks if the throwNotStringOrArray method functions correctly.',
 
 		$this->assertIsObject($exceptionObject, "The object should be an instance of ComponentException class");
 		$this->assertObjectHasAttribute('message', $exceptionObject, "Object doesn't contain message attribute");
-		$this->assertSame('Object couldn&#039;t be converted to string. Please provide only string or array.', $exceptionObject->getMessage(), "Strings for 'Object couldn't be converted to string' message do not match!");
+		$this->assertSame('Object couldn\'t be converted to string. Please provide only string or array.', $exceptionObject->getMessage(), "Strings for 'Object couldn't be converted to string' message do not match!");
 
 	});
 

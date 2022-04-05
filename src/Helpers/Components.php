@@ -139,40 +139,46 @@ class Components
 	 * Get manifest json. Generally used for getting block/components manifest.
 	 *
 	 * @param string $path Absolute path to manifest folder.
+	 * @param string $name Block/Component name.
 	 *
 	 * @throws ComponentException When we're unable to find the component by $component.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getManifest(string $path): array
+	public static function getManifest(string $path, string $name = ''): array
 	{
-		$path = \trim($path, \DIRECTORY_SEPARATOR);
+		$pathNew = \trim($path, \DIRECTORY_SEPARATOR);
 
-		$path = \explode(\DIRECTORY_SEPARATOR, $path);
+		$pathNew = \explode(\DIRECTORY_SEPARATOR, $pathNew);
 
 		// Find last item to get name.
-		$item = $path[\count($path) - 1] ?? '';
+		$item = $pathNew[\count($pathNew) - 1] ?? '';
 
 		// Settings details.
-		if ($item === 'Blocks') {
+		if ($item === 'Blocks' || $path === 'settings') {
 			return Components::getSettings();
 		}
 
 		// Wrapper details.
-		if ($item === 'wrapper') {
+		if ($item === 'wrapper' || $path === 'wrapper') {
 			return Components::getWrapper();
 		}
 
-		$type = $path[\count($path) - 2] ?? '';
+		$type = $pathNew[\count($pathNew) - 2] ?? '';
+		$itemName = $item;
+
+		if ($name) {
+			$itemName = $name;
+		}
 
 		// Components settings.
-		if ($type === 'components') {
-			return Components::getComponent($item);
+		if ($type === 'components' || $path === 'component') {
+			return Components::getComponent($itemName);
 		}
 
 		// Blocks settings.
-		if ($type === 'custom') {
-			return Components::getBlock($item);
+		if ($type === 'custom' || $path === 'block') {
+			return Components::getBlock($itemName);
 		}
 
 		return [];

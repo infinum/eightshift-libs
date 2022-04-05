@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Helpers\Components;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -505,7 +506,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomain(array $args = []): self
 	{
-		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
+		$namespace = Components::camelToKebabCase($this->getNamespace($args));
 
 		$this->fileContents = \str_replace(
 			'eightshift-libs',
@@ -525,7 +526,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomainFrontendLibs(array $args = []): self
 	{
-		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
+		$namespace = Components::camelToKebabCase($this->getNamespace($args));
 
 		$this->fileContents = \str_replace(
 			'eightshift-frontend-libs',
