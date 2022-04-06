@@ -158,6 +158,7 @@ trait AttributesTrait
 		// Check what attributes we need to includes.
 		$includes = [
 			'blockName',
+			'blockClientId',
 			'blockTopLevelId',
 			'blockFullName',
 			'blockClass',

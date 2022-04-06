@@ -536,6 +536,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					'default' => $blockName,
 				],
 				// Used to pass reference to all components.
+				'blockClientId' => [
+					'type' => 'integer',
+				],
 				'blockTopLevelId' => [
 					'type' => 'string',
 					'default' => Components::getUnique(),
