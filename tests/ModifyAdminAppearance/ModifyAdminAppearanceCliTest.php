@@ -28,9 +28,7 @@ $this->modifyAdminAppearance = new ModifyAdminAppearanceCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
 test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppearance class with defaults', function () {

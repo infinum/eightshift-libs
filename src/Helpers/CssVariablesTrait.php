@@ -274,7 +274,9 @@ trait CssVariablesTrait
 			$g = \hexdec(\substr($hex, 2, 2));
 			$b = \hexdec(\substr($hex, 4, 2));
 		} else {
-			return '0 0 0';
+			$r = '0';
+			$g = '0';
+			$b = '0';
 		}
 
 		return "{$r} {$g} {$b}";

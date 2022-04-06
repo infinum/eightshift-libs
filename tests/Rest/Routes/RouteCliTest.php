@@ -33,9 +33,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 4) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
 });
 
 

@@ -218,7 +218,41 @@ test('outputCssVariables outputs the style tag in inline way if the outputCssGlo
 // outputCssVariablesInline
 // ------------------------------------------
 
+test('Asserts that "outputCssVariablesInline" will return empty string if config flags are set to false.', function () {
+	Components::setConfigOutputCssGlobally(false);
+	Components::setConfigOutputCssOptimize(false);
 
+	$result = Components::outputCssVariablesInline([], [], '');
+
+	expect($result)->toBeString()->toEqual('');
+});
+
+test('Asserts that "outputCssVariablesInline" will return empty string if styles are empty.', function () {
+	Components::setStyles([]);
+
+	$result = Components::outputCssVariablesInline([], [], '');
+
+	expect($result)->toBeString()->toEqual('');
+});
+
+test('Asserts that "outputCssVariablesInline" will return style tag with the correct styles.', function () {
+	Components::setConfigOutputCssOptimize(false);
+
+	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$attributes = [
+		'variableValue' => 'value3',
+	];
+
+	Components::outputCssVariables($attributes, $manifest, 'unique');
+
+	$result = Components::outputCssVariablesInline();
+
+	expect($result)->toBeString()->toContain(
+		"<style id='esCssVariablesTest'>",
+		"--variable-value-default: default;",
+		"@media (max-width:991px){"
+	);
+});
 
 // ------------------------------------------
 // hexToRgb

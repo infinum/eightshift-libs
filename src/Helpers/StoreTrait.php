@@ -406,6 +406,22 @@ trait StoreTrait
 	}
 
 	/**
+	 * Set styles details full array.
+	 *
+	 * @param array<mixed> $styles Styles to set.
+	 *
+	 * @return void
+	 */
+	public static function setStyles(array $styles): void
+	{
+		global $esBlocks;
+
+		if ($styles) {
+			$esBlocks[self::getStoreName()]['styles'] = $styles;
+		}
+	}
+
+	/**
 	 * Set styles details.
 	 *
 	 * @param array<mixed> $style Style to store.

@@ -159,6 +159,25 @@ test('Asserts that "setConfigFlags" will change config if set in manifest.json.'
 	expect($outputCssSelectorName)->toBeString()->toEqual('esCssVariablesTest');
 });
 
+// ------------------------------------------
+// getSettingsGlobalVariablesColors
+// ------------------------------------------
+
+test('Asserts that "getSettingsGlobalVariablesColors" will return global setting variables color as array.', function () {
+	$result = Components::getSettingsGlobalVariablesColors();
+
+	expect($result)->toBeArray();
+});
+
+// ------------------------------------------
+// getSettingsGlobalVariablesCustomBlockName
+// ------------------------------------------
+
+test('Asserts that "getSettingsGlobalVariablesCustomBlockName" will return global setting variables custom block name.', function () {
+	$result = Components::getSettingsGlobalVariablesCustomBlockName();
+
+	expect($result)->toBeString()->toEqual('eightshift-block');
+});
 
 // ------------------------------------------
 // setStyle

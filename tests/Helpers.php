@@ -69,8 +69,12 @@ function setupMocks() {
  *
  * @return void
  */
-function deleteCliOutput(string $dir) : void
+function deleteCliOutput(string $dir = '') : void
 {
+	if (!$dir) {
+		$dir = \dirname(__FILE__, 2) . '/cliOutput';
+	}
+
 	if (!\is_dir($dir)) {
 		return;
 	}

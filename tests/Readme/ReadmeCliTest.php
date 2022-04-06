@@ -28,9 +28,7 @@ $this->readme = new ReadmeCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
 test('Readme CLI command will correctly copy the readme file with defaults', function () {

@@ -28,9 +28,7 @@ $this->gitignore = new GitIgnoreCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
 test('GitIgnore CLI command will correctly copy the .gitignore file with defaults', function () {

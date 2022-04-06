@@ -28,9 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
 test('ConfigProject CLI command will correctly copy the ConfigProject class with defaults', function () {
