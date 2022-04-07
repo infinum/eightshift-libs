@@ -82,9 +82,7 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		$store = self::getBlocks();
-
-		if (!$store) {
+		if (self::getStore()) {
 			$esBlocks[self::getStoreName()]['blocks'] = $blocks;
 		}
 	}
@@ -129,9 +127,7 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		$store = self::getComponents();
-
-		if (!$store) {
+		if (self::getStore()) {
 			$esBlocks[self::getStoreName()]['components'] = $components;
 		}
 	}
@@ -212,7 +208,9 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		$esBlocks[self::getStoreName()]['config']['outputCssGlobally'] = $config;
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()]['config']['outputCssGlobally'] = $config;
+		}
 	}
 
 	/**
@@ -236,7 +234,9 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		$esBlocks[self::getStoreName()]['config']['outputCssOptimize'] = $config;
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()]['config']['outputCssOptimize'] = $config;
+		}
 	}
 
 	/**
@@ -260,7 +260,9 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		$esBlocks[self::getStoreName()]['config']['outputCssSelectorName'] = $config;
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()]['config']['outputCssSelectorName'] = $config;
+		}
 	}
 
 	/**
@@ -284,9 +286,7 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		$store = self::getWrapper();
-
-		if (!$store) {
+		if (self::getStore()) {
 			$esBlocks[self::getStoreName()]['wrapper'] = $wrapper;
 		}
 	}
@@ -322,7 +322,9 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		$esBlocks[self::getStoreName()]['settings'] = $settings;
+		if (self::getStore()) {
+			$esBlocks[self::getStoreName()]['settings'] = $settings;
+		}
 	}
 
 	/**
@@ -416,7 +418,7 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		if ($styles) {
+		if (self::getStore()) {
 			$esBlocks[self::getStoreName()]['styles'] = $styles;
 		}
 	}
@@ -432,7 +434,7 @@ trait StoreTrait
 	{
 		global $esBlocks;
 
-		if ($style) {
+		if (self::getStore()) {
 			$esBlocks[self::getStoreName()]['styles'][] = $style;
 		}
 	}
