@@ -537,7 +537,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				],
 				// Used to pass reference to all components.
 				'blockClientId' => [
-					'type' => 'integer',
+					'type' => 'string',
 				],
 				'blockTopLevelId' => [
 					'type' => 'string',
