@@ -18,9 +18,11 @@ trait CssVariablesTrait
 	/**
 	 * Get Global Manifest.json and return globalVariables as CSS variables.
 	 *
+	 * @param array<string, mixed> $globalManifest Global manifest array. - Deprecated.
+	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobal(): string
+	public static function outputCssVariablesGlobal(array $globalManifest = []): string
 	{
 		$output = '';
 
