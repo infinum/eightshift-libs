@@ -76,6 +76,10 @@ class Components
 
 		if (empty($parentPath)) {
 			$parentPath = \dirname(__DIR__, 5);
+
+			if (\getenv('TEST')) {
+				$parentPath = \dirname(__DIR__, 2);
+			}
 		}
 
 		/**
@@ -97,6 +101,11 @@ class Components
 			$componentPath = "{$sep}{$parentPath}{$sep}{$component}";
 		} else {
 			$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT;
+
+			if (\getenv('TEST')) {
+				$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT_TESTS;
+			}
+
 			$componentsFolderName = AbstractBlocks::PATH_COMPONENTS;
 			$componentPath = "{$parentPath}{$blocksPath}{$componentsFolderName}{$sep}{$component}{$sep}{$component}.php";
 		}
