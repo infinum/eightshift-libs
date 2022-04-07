@@ -248,9 +248,13 @@ trait CssVariablesTrait
 			$output = \str_replace(["\n", "\r"], '', $output);
 		}
 
-		$selector = self::getConfigOutputCssSelectorName();
+		// Add additional style from config settings.
+		$additionalStyles = Components::getConfigOutputCssGloballyAdditionalStyles();
+		$additionalStylesOutput = $additionalStyles ? \esc_html(\implode(";\n", $additionalStyles)) : '';
 
-		return "<style id='{$selector}'>{$output}</style>";
+		$selector = Components::getConfigOutputCssSelectorName();
+
+		return "<style id='{$selector}'>{$output} {$additionalStylesOutput}</style>";
 	}
 
 	/**
@@ -432,8 +436,8 @@ trait CssVariablesTrait
 		$output = '';
 
 		foreach ($itemValues as $key => $value) {
-			$key = self::camelToKebabCase((string)$key);
-			$itemKey = self::camelToKebabCase((string)$itemKey);
+			$key = Components::camelToKebabCase((string)$key);
+			$itemKey = Components::camelToKebabCase((string)$itemKey);
 
 			switch ($itemKey) {
 				case 'colors':
@@ -589,7 +593,7 @@ trait CssVariablesTrait
 	{
 		foreach ($variables as $variableName => $variableValue) {
 			// Constant for attributes set value (in db or default).
-			$attributeValue = $attributes[self::getAttrKey($variableName, $attributes, $manifest)] ?? '';
+			$attributeValue = $attributes[Components::getAttrKey($variableName, $attributes, $manifest)] ?? '';
 
 			// Make sure this works correctly for attributes which are toggles (booleans).
 			if (\is_bool($attributeValue)) {
@@ -597,7 +601,7 @@ trait CssVariablesTrait
 			}
 
 			// If type default or value.
-			if (!self::arrayIsList($variableValue)) {
+			if (!Components::arrayIsList($variableValue)) {
 				$variableValue = $variableValue[$attributeValue] ?? [];
 			}
 
@@ -740,14 +744,14 @@ trait CssVariablesTrait
 		$output = [];
 
 		// Bailout if provided list is not an object.
-		if (self::arrayIsList($variables)) {
+		if (Components::arrayIsList($variables)) {
 			return $output;
 		}
 
 		// Iterate each attribute and make corrections.
 		foreach ($variables as $variableKey => $variableValue) {
 			// Convert to correct case.
-			$internalKey = self::camelToKebabCase($variableKey);
+			$internalKey = Components::camelToKebabCase($variableKey);
 
 			// If value contains magic variable swap that variable with original attribute value.
 			if (\strpos($variableValue, '%value%') !== false) {

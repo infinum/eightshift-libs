@@ -5,7 +5,10 @@
 	"config": {
 		"outputCssGlobally": true,
 		"outputCssOptimize": true,
-		"outputCssSelectorName": "esCssVariablesTest"
+		"outputCssSelectorName": "esCssVariablesTest",
+		"outputCssGloballyAdditionalStyles": [
+			":root {--es-loader-opacity: 1;}"
+		]
 	},
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",

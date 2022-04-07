@@ -27,6 +27,7 @@ trait StoreTrait
 			'outputCssGlobally' => false,
 			'outputCssOptimize' => false,
 			'outputCssSelectorName' => 'esCssVariables',
+			'outputCssGloballyAdditionalStyles' => [],
 		],
 		'wrapper' => [],
 		'settings' => [],
@@ -184,6 +185,11 @@ trait StoreTrait
 			if (isset($config['outputCssSelectorName']) && \gettype($config['outputCssSelectorName']) === 'string') {
 				Components::setConfigOutputCssSelectorName($config['outputCssSelectorName']);
 			}
+
+			// outputCssGloballyAdditionalStyles.
+			if (isset($config['outputCssGloballyAdditionalStyles']) && \gettype($config['outputCssGloballyAdditionalStyles']) === 'array') {
+				Components::setConfigOutputCssGloballyAdditionalStyles($config['outputCssGloballyAdditionalStyles']);
+			}
 		}
 	}
 
@@ -273,6 +279,33 @@ trait StoreTrait
 	public static function getConfigOutputCssSelectorName(): string
 	{
 		return self::getConfig()['outputCssSelectorName'] ?? self::$defaultState['config']['outputCssSelectorName'];
+	}
+
+	/**
+	 * Set global config value for output css globally additional styles.
+	 *
+	 * @param array<string> $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigOutputCssGloballyAdditionalStyles(array $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()]['config']['outputCssGloballyAdditionalStyles'] = $config;
+		}
+	}
+
+
+	/**
+	 * Get global config value for output css globally additional styles.
+	 *
+	 * @return array<string>
+	 */
+	public static function getConfigOutputCssGloballyAdditionalStyles(): array
+	{
+		return self::getConfig()['outputCssGloballyAdditionalStyles'] ?? self::$defaultState['config']['outputCssGloballyAdditionalStyles'];
 	}
 
 	/**
