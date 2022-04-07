@@ -142,7 +142,7 @@ trait ObjectHelperTrait
 	 */
 	public static function kebabToCamelCase(string $string, string $separator = '-'): string
 	{
-		return \lcfirst(\str_replace($separator, '', \ucwords(\mb_strtolower($string), $separator)));
+		return \lcfirst(\str_replace($separator, '', \ucwords($string, $separator)));
 	}
 
 	/**

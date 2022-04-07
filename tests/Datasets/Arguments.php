@@ -176,11 +176,9 @@ dataset('camelToKebabCaseCheckWrong', [
 dataset('kebabToCamelCaseCheckCorrect', [
 	['simple-test', 'simpleTest'],
 	['easy', 'easy'],
-	['HTML', 'html'],
 	['simple-xml', 'simpleXml'],
 	['pdf-load', 'pdfLoad'],
 	['start-middle-last', 'startMiddleLast'],
-	['start-MIDDLE-last', 'startMiddleLast'],
 	['a-string', 'aString'],
 	['some4-numbers234', 'some4Numbers234'],
 	['test123-string', 'test123String'],

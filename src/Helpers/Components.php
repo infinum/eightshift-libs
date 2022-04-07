@@ -75,7 +75,7 @@ class Components
 		$sep = \DIRECTORY_SEPARATOR;
 
 		if (empty($parentPath)) {
-			$parentPath = \get_template_directory();
+			$parentPath = \dirname(__DIR__, 5);
 		}
 
 		/**
@@ -91,21 +91,18 @@ class Components
 		 * parentClass__componentName.php
 		 */
 		if (\strpos($component, '.php') !== false) {
-			$componentPath = "{$parentPath}{$sep}$component";
-
-			if ($useComponentDefaults) {
-				$manifest = self::getManifest($parentPath);
-			}
+			$parentPath = \rtrim($parentPath, '/');
+			$parentPath = \ltrim($parentPath, '/');
+			$component = \ltrim($component, '/');
+			$componentPath = "{$sep}{$parentPath}{$sep}{$component}";
 		} else {
-			$blocksParentPath = AbstractBlocks::PATH_BLOCKS_PARENT;
-			$componentsPath = AbstractBlocks::PATH_COMPONENTS;
-			$componentPath = "{$parentPath}{$blocksParentPath}{$componentsPath}{$sep}{$component}";
+			$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT;
+			$componentsFolderName = AbstractBlocks::PATH_COMPONENTS;
+			$componentPath = "{$parentPath}{$blocksPath}{$componentsFolderName}{$sep}{$component}{$sep}{$component}.php";
+		}
 
-			$componentPath = "{$componentPath}{$sep}{$component}.php";
-
-			if ($useComponentDefaults) {
-				$manifest = self::getManifest("{$componentPath}");
-			}
+		if ($useComponentDefaults) {
+			$manifest = Components::getManifest($componentPath);
 		}
 
 		if (!\file_exists($componentPath)) {
@@ -150,6 +147,11 @@ class Components
 		$pathNew = \trim($path, \DIRECTORY_SEPARATOR);
 
 		$pathNew = \explode(\DIRECTORY_SEPARATOR, $pathNew);
+
+		// If user provides url with .php at the end.
+		if (\strpos(\end($pathNew), '.php') !== false) {
+			\array_pop($pathNew);
+		}
 
 		// Find last item to get name.
 		$item = $pathNew[\count($pathNew) - 1] ?? '';
