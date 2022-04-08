@@ -125,8 +125,11 @@ trait CssVariablesTrait
 			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
 		}
 
+		// Load normal styles if server side render is used.
+		$ssr = $attributes['blockSsr'] ?? false;
+
 		// If default output just echo.
-		if (!Components::getConfigOutputCssGlobally()) {
+		if (!Components::getConfigOutputCssGlobally() || $ssr) {
 			return self::getCssVariablesTypeDefault($name, $data, $manifest, $unique);
 		}
 

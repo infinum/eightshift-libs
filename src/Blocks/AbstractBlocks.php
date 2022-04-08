@@ -555,6 +555,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					'type' => 'string',
 					'default' => "js-{$blockClassPrefix}-{$blockName}",
 				],
+				'blockSsr' => [
+					'type' => 'boolean',
+					'default' => false,
+				],
 			],
 			Components::getSettingsAttributes(),
 			Components::getWrapperAttributes(),

@@ -164,6 +164,7 @@ trait AttributesTrait
 			'blockClass',
 			'blockJsClass',
 			'blockStyles',
+			'blockSsr',
 			'componentJsClass',
 			'selectorClass',
 			'additionalClass',
