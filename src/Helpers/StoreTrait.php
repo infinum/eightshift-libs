@@ -421,6 +421,22 @@ trait StoreTrait
 	}
 
 	/**
+	 * Set global settings details - global variables breakpoints.
+	 *
+	 * @param array<string> $breakpoints Breakpoints to store.
+	 *
+	 * @return void
+	 */
+	public static function setSettingsGlobalVariablesBreakpoints(array $breakpoints): void
+	{
+		global $esBlocks;
+
+		if (self::getStore()) {
+			$esBlocks[self::getStoreName()]['settings']['globalVariables']['breakpoints'] = $breakpoints;
+		}
+	}
+
+	/**
 	 * Get global settings details - global variables breakpoints.
 	 *
 	 * @return array<mixed>
