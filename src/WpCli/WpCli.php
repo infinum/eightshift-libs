@@ -3,34 +3,26 @@
 /**
  * Class that registers WPCLI command for custom WPCLI command.
  *
- * @package EightshiftLibs\CliCommand
+ * @package EightshiftLibs\WpCli
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\CliCommands;
+namespace EightshiftLibs\WpCli;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI;
 
 /**
- * Class CustomCommandCli
+ * Class WpCli
  */
-class CustomCommandCli extends AbstractCli
+class WpCli extends AbstractCli
 {
-	/**
-	 * CLI command name
-	 *
-	 * @var string
-	 */
-	public const COMMAND_NAME = 'create_cli_command';
-
 	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CliCommands';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'WpCli';
 
 	/**
 	 * Get WPCLI command name
@@ -39,7 +31,7 @@ class CustomCommandCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'create_wp_cli';
 	}
 
 	/**
@@ -80,23 +72,18 @@ class CustomCommandCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$commandName = $this->prepareSlug($assocArgs['command_name'] ?? 'custom-command');
+		$commandName = $assocArgs['command_name'] ?? 'custom-command';
 
 		// Get full class name.
 		$className = $this->getFileName($commandName);
-		$className = $className . $this->getClassShortName();
-
-		// If slug is empty throw error.
-		if (empty($commandName)) {
-			WP_CLI::error("Empty command name provided, please set the command name using --command_name=\"command-name\"");
-		}
+		$className = $className . $this->getClassShortName(true);
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
-			->renameClassNameWithPrefix($this->getClassShortName(), $className)
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName(true))
+			->renameClassNameWithPrefix($this->getClassShortName(true), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('command_name', "{$commandName}")
+			->searchReplaceString('command_name', $commandName)
 			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }
