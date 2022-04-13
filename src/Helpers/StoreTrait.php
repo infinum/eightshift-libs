@@ -28,6 +28,7 @@ trait StoreTrait
 			'outputCssOptimize' => false,
 			'outputCssSelectorName' => 'esCssVariables',
 			'outputCssGloballyAdditionalStyles' => [],
+			'useWrapper' => true,
 		],
 		'wrapper' => [],
 		'settings' => [],
@@ -190,6 +191,11 @@ trait StoreTrait
 			if (isset($config['outputCssGloballyAdditionalStyles']) && \gettype($config['outputCssGloballyAdditionalStyles']) === 'array') {
 				Components::setConfigOutputCssGloballyAdditionalStyles($config['outputCssGloballyAdditionalStyles']);
 			}
+
+			// useWrapper.
+			if (isset($config['useWrapper']) && \gettype($config['useWrapper']) === 'boolean') {
+				Components::setConfigUseWrapper($config['useWrapper']);
+			}
 		}
 	}
 
@@ -297,7 +303,6 @@ trait StoreTrait
 		}
 	}
 
-
 	/**
 	 * Get global config value for output css globally additional styles.
 	 *
@@ -306,6 +311,32 @@ trait StoreTrait
 	public static function getConfigOutputCssGloballyAdditionalStyles(): array
 	{
 		return self::getConfig()['outputCssGloballyAdditionalStyles'] ?? self::$defaultState['config']['outputCssGloballyAdditionalStyles'];
+	}
+
+	/**
+	 * Set global config value for use wrapper.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseWrapper(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()]['config']['useWrapper'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use wrapper.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseWrapper(): bool
+	{
+		return self::getConfig()['useWrapper'] ?? self::$defaultState['config']['useWrapper'];
 	}
 
 	/**
