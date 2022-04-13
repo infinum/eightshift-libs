@@ -110,10 +110,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		// Register store and set all the data.
 		Components::setStore();
+		Components::setSettings($settings);
 		Components::setBlocks($blocks);
 		Components::setComponents($this->getComponentsManifests());
-		Components::setWrapper($this->getWrapperManifest());
-		Components::setSettings($settings);
+
+		if (Components::getConfigUseWrapper()) {
+			Components::setWrapper($this->getWrapperManifest());
+		}
+
 		Components::setConfigFlags();
 	}
 
@@ -225,23 +229,29 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$templatePath = "{$this->getBlocksFolderPath()}{$blockPathName}{$sep}{$blockName}{$sep}{$blockName}.php";
 
 		// Get block wrapper view path.
-		$wrapperPathName = self::PATH_WRAPPER;
-		$wrapperPath = "{$this->getBlocksFolderPath()}{$wrapperPathName}{$sep}wrapper.php";
+		if (Components::getConfigUseWrapper()) {
+			$wrapperPathName = self::PATH_WRAPPER;
+			$wrapperPath = "{$this->getBlocksFolderPath()}{$wrapperPathName}{$sep}wrapper.php";
 
-		// Check if wrapper component exists.
-		if (!\file_exists($wrapperPath)) {
-			throw InvalidBlock::missingWrapperViewException($wrapperPath);
+			// Check if wrapper component exists.
+			if (!\file_exists($wrapperPath)) {
+				throw InvalidBlock::missingWrapperViewException($wrapperPath);
+			}
+
+			// Check if actual block exists.
+			if (!\file_exists($templatePath)) {
+				throw InvalidBlock::missingViewException($blockName, $templatePath);
+			}
+
+			// If everything is ok, return the contents of the template (return, NOT echo).
+			\ob_start();
+			include $wrapperPath;
+			$output = \ob_get_clean();
+		} else {
+			\ob_start();
+			include $templatePath;
+			$output = \ob_get_clean();
 		}
-
-		// Check if actual block exists.
-		if (!\file_exists($templatePath)) {
-			throw InvalidBlock::missingViewException($blockName, $templatePath);
-		}
-
-		// If everything is ok, return the contents of the template (return, NOT echo).
-		\ob_start();
-		include $wrapperPath;
-		$output = \ob_get_clean();
 
 		unset($blockName, $templatePath, $wrapperPath, $attributes, $innerBlockContent);
 
@@ -529,6 +539,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$blockName = $blockDetails['blockName'];
 		$blockClassPrefix = Components::getSettingsBlockClassPrefix();
 
+		$wrapperAttributes = [];
+
+		if (Components::getConfigUseWrapper()) {
+			$wrapperAttributes = Components::getWrapperAttributes();
+		}
+
 		return \array_merge(
 			[
 				'blockName' => [
@@ -561,7 +577,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				],
 			],
 			Components::getSettingsAttributes(),
-			Components::getWrapperAttributes(),
+			$wrapperAttributes,
 			$this->prepareComponentAttributes($blockDetails)
 		);
 	}
