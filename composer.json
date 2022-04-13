@@ -75,6 +75,12 @@
     "test:unit": "@php ./vendor/bin/pest --group=unit",
     "test:unit-report": "@php ./vendor/bin/pest --group=unit --log-junit tests/coverage/report.xml",
     "test:integration": "@php ./vendor/bin/pest --group=integration",
-    "test:coverage": "@php ./vendor/bin/pest --coverage"
+    "test:coverage": "@php ./vendor/bin/pest --coverage",
+    "check-all": [
+      "@standards:check",
+      "@analyze",
+      "@test:unit",
+      "@test:integration"
+    ]
   }
 }
