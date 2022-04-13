@@ -14,16 +14,16 @@ use RecursiveIteratorIterator;
  * This is a way to circumvent the issue I was having described here:
  * https://github.com/pestphp/pest/issues/259
  */
-function setupMocks() {
+function setupUnitTestMocks() {
 	// Mock WP functions
 	Functions\stubTranslationFunctions();
 	Functions\stubEscapeFunctions();
 
 	// Mock the template dir location.
-	Functions\when('get_template_directory')->justReturn(\dirname(__FILE__) . '/data');
+	Functions\when('get_template_directory')->justReturn(\dirname(__FILE__) . '/Unit/data');
 
 	// Mock the template dir location.
-	Functions\when('get_stylesheet_directory')->justReturn(\dirname(__FILE__) . '/');
+	Functions\when('get_stylesheet_directory')->justReturn(\dirname(__FILE__) . '/Unit/');
 
 	// Mock escaping function.
 	Functions\when('wp_kses_post')->returnArg();
