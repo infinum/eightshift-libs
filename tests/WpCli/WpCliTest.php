@@ -1,8 +1,9 @@
 <?php
 
-namespace Tests\Unit\CliCommands;
+namespace Tests\Unit\WpCli;
 
-use EightshiftLibs\CliCommands\CustomCommandCli;
+use EightshiftBoilerplate\WpCli\WpCliExample;
+use EightshiftLibs\WpCli\WpCli;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
@@ -21,7 +22,7 @@ beforeEach(function () {
 		->shouldReceive('error')
 		->andReturnArg(0);
 
-	$this->customCommand = new CustomCommandCli('boilerplate');
+	$this->customCommand = new WpCli('boilerplate');
 });
 
 /**
@@ -37,11 +38,12 @@ test('Custom command CLI command will correctly copy the Custom command class wi
 	$customCommand([], $customCommand->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$customCommand = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CliCommands/TestCustomCommand.php');
+	$customCommand = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/WpCli/TestWpCli.php');
 
-	$this->assertStringContainsString('class TestCustomCommand extends AbstractCustomCommand', $customCommand);
-	$this->assertStringContainsString('function getCommandName', $customCommand);
-	$this->assertStringContainsString('function getDoc', $customCommand);
+	$this->assertStringContainsString('class TestWpCli implements ServiceCliInterface', $customCommand);
+	$this->assertStringContainsString('function register', $customCommand);
+	$this->assertStringContainsString('function registerCommand', $customCommand);
+	$this->assertStringContainsString('function getDocs', $customCommand);
 	$this->assertStringContainsString('function __invoke', $customCommand);
 });
 
