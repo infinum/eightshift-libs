@@ -34,7 +34,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @var string
 	 */
-	public const PATH_BLOCKS_PARENT_TESTS = \DIRECTORY_SEPARATOR . 'tests' . \DIRECTORY_SEPARATOR . 'data' . self::PATH_BLOCKS_PARENT;
+	public const PATH_BLOCKS_PARENT_TESTS = \DIRECTORY_SEPARATOR . 'tests' . \DIRECTORY_SEPARATOR . 'Unit' . \DIRECTORY_SEPARATOR . 'data' . self::PATH_BLOCKS_PARENT;
 
 	/**
 	 * Relative path to custom folder.
