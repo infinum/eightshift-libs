@@ -35,7 +35,7 @@ test('Services CLI command will correctly copy the Services class with defaults'
 	$services = $this->services;
 	$services([], $services->getDevelopArgs([]));
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/TestFolder/TMP/TestTest.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/src/TestFolder/TMP/TestTest.php';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedService = \file_get_contents($outputPath);
@@ -55,7 +55,7 @@ test('Services CLI command will correctly copy the Services class with set argum
 		'file_name' => 'FileName',
 	]);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/FolderName/FileName.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/src/FolderName/FileName.php';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedService = \file_get_contents($outputPath);

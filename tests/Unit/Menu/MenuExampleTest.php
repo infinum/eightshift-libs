@@ -8,12 +8,12 @@ use EightshiftBoilerplate\Menu\MenuExample;
 
 use EightshiftLibs\Menu\AbstractMenu;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	mock('Walker_Nav_Menu');
 

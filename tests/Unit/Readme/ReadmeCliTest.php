@@ -35,7 +35,7 @@ test('Readme CLI command will correctly copy the readme file with defaults', fun
 	$readme = $this->readme;
 	$readme([], $readme->getDevelopArgs([]));
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/README.md';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/README.md';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedReadme = \file_get_contents($outputPath);
@@ -58,7 +58,7 @@ test('Readme CLI command will correctly copy the readme in the custom folder wit
 		'root' => './test',
 	]);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/test/README.md';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/test/README.md';
 
 	$this->assertFileExists($outputPath);
 });

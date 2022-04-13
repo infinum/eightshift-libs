@@ -7,11 +7,11 @@ use EightshiftLibs\Exception\FailedToLoadView;
 use Brain\Monkey;
 use Exception;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeAll(function () {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 });
 
 afterAll(function() {

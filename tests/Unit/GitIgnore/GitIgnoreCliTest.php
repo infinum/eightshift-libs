@@ -35,7 +35,7 @@ test('GitIgnore CLI command will correctly copy the .gitignore file with default
 	$gitignore = $this->gitignore;
 	$gitignore([], $gitignore->getDevelopArgs([]));
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/.gitignore';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/.gitignore';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedIgnore = \file_get_contents($outputPath);
@@ -58,7 +58,7 @@ test('GitIgnore CLI command will correctly copy the .gitignore file in the custo
 		'root' => './test',
 	]);
 
-	$this->assertFileExists(\dirname(__FILE__, 3) . '/cliOutput/test/.gitignore');
+	$this->assertFileExists(\dirname(__FILE__, 4) . '/cliOutput/test/.gitignore');
 });
 
 

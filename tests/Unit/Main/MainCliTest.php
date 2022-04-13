@@ -35,7 +35,7 @@ test('Main CLI command will correctly copy the Main class with defaults', functi
 	$main = $this->main;
 	$main([], []);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/Main/Main.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/src/Main/Main.php';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMain = \file_get_contents($outputPath);
@@ -54,7 +54,7 @@ test('Main CLI command will correctly copy the Main class with set arguments', f
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMain = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Main/Main.php');
+	$generatedMain = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Main/Main.php');
 
 	$this->assertStringContainsString('namespace CoolTheme\Main', $generatedMain);
 	$this->assertStringNotContainsString('namespace EightshiftLibs\Main', $generatedMain);

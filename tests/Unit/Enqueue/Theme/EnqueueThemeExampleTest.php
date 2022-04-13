@@ -8,7 +8,7 @@ use EightshiftBoilerplate\Enqueue\Theme\EnqueueThemeExample;
 use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 class EnqueueThemeExampleTest extends EnqueueThemeExample {
@@ -29,12 +29,12 @@ class EnqueueThemeExampleTest extends EnqueueThemeExample {
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive([
 			'getProjectName' => 'MyProject',
-			'getProjectPath' => 'tests/data',
+			'getProjectPath' => 'tests/Unit/data',
 			'getProjectVersion' => '1.0',
 		]);
 

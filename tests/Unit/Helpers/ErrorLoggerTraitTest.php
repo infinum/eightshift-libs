@@ -4,7 +4,7 @@ namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Helpers\ErrorLoggerTrait;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 class MockErrorLogger {
@@ -12,7 +12,7 @@ class MockErrorLogger {
 }
 
 beforeEach(function () {
-    setupMocks();
+    setupUnitTestMocks();
 
 	$this->mockLogger = new MockErrorLogger();
 });

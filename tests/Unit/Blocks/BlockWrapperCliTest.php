@@ -45,7 +45,7 @@ afterEach(function () {
 
 	$mock([], [$this->wrapper->getDevelopArgs([])]);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/wrapper.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/wrapper.php';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedWrapper = \file_get_contents($outputPath);
@@ -84,7 +84,7 @@ test('Wrapper CLI command will fail if Wrapper doesn\'t exist', function () {
 
 	$mock([], ['name' => 'testing']);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/testing/testing.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/testing/testing.php';
 
 	$this->assertFileDoesNotExist($outputPath);
 });

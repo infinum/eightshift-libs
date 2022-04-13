@@ -38,7 +38,7 @@ test('Enqueue Block CLI command will make appropriate class.', function () {
 	$ebc = $this->ebc;
 	$ebc([], []);
 
-	$generatedEBC = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
+	$generatedEBC = \file_get_contents(\dirname(__FILE__, 5) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
 	$this->assertStringContainsString('class EnqueueBlocks extends AbstractEnqueueBlocks', $generatedEBC);
 
 	$this->assertStringContainsString('enqueue_block_editor_assets', $generatedEBC);
@@ -66,7 +66,7 @@ test('Enqueue Block CLI command will set correct namespace.', function () {
 		'namespace' => 'NewTheme',
 	]);
 
-	$generatedEBC = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
+	$generatedEBC = \file_get_contents(\dirname(__FILE__, 5) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
 
 	$this->assertStringContainsString('namespace NewTheme\Enqueue\Blocks;', $generatedEBC);
 });
@@ -78,7 +78,7 @@ test('Enqueue Block CLI command will set correct functions.', function () {
 	$ebc = $this->ebc;
 	$ebc([], []);
 
-	$generatedEBC = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
+	$generatedEBC = \file_get_contents(\dirname(__FILE__, 5) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
 
 	$this->assertStringContainsString('getAssetsPrefix', $generatedEBC);
 	$this->assertStringContainsString('getAssetsVersion', $generatedEBC);

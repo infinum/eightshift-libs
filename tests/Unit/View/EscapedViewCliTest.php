@@ -37,7 +37,7 @@ test('Escaped view command will correctly copy the EscapedView class with defaul
 	$escapedView([], $escapedView->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedEscapedView = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/View/EscapedView.php');
+	$generatedEscapedView = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/View/EscapedView.php');
 
 	$this->assertNotEmpty($generatedEscapedView);
 	$this->assertStringContainsString('class EscapedView extends AbstractEscapedView implements ServiceInterface', $generatedEscapedView);

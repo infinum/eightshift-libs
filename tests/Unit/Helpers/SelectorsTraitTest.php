@@ -7,11 +7,11 @@ use EightshiftLibs\Helpers\Components;
 
 use Brain\Monkey;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeAll(function () {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 });
 
 afterAll(function() {

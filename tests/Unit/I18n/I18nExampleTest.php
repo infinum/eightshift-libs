@@ -6,12 +6,12 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\I18n\I18nExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->i18n = new I18nExample();
 });

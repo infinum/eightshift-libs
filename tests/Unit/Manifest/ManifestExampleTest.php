@@ -6,17 +6,17 @@ use Brain\Monkey;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
 use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	// Setup Config mock.
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive([
 			'getProjectName' => 'MyProject',
-			'getProjectPath' => 'tests/data',
+			'getProjectPath' => 'tests/Unit/data',
 		]);
 
 	$this->example = new ManifestExample();
@@ -38,7 +38,7 @@ test('Manifest example contains correct manifest file path', function () {
 
 	$manifestData = \json_decode(\file_get_contents($manifestFilePath), true);
 
-	$this->assertStringContainsString('tests/data/public/manifest.json', $manifestFilePath);
+	$this->assertStringContainsString('tests/Unit/data/public/manifest.json', $manifestFilePath);
 	$this->assertIsArray($manifestData);
 	$this->assertArrayHasKey('0.js', $manifestData, 'Array key not present in the manifest data');
 	$this->assertArrayHasKey('application.css', $manifestData, 'Array key not present in the manifest data');

@@ -5,7 +5,7 @@ namespace Tests\Unit\CustomPostType;
 use EightshiftLibs\Db\ImportCli;
 use Exception;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 beforeEach(function() {
@@ -23,7 +23,7 @@ beforeEach(function() {
             }
 	);
 
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->import = new ImportCli('boilerplate');
 });

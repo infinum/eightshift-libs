@@ -38,7 +38,7 @@ test('REST field CLI command will correctly copy the field class with defaults',
 	$field([], $field->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Fields/TitleField.php');
+	$generatedField = \file_get_contents(\dirname(__FILE__, 5) . '/cliOutput/src/Rest/Fields/TitleField.php');
 
 	$this->assertStringContainsString('class TitleField extends AbstractField implements CallableFieldInterface', $generatedField);
 	$this->assertStringContainsString('return \'title\';', $generatedField);
@@ -55,7 +55,7 @@ test('REST field CLI command will correctly copy the field class with arguments'
 	$objectType = $fieldNameArguments['object_type'];
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . "/cliOutput/src/Rest/Fields/{$fullFieldName}.php");
+	$generatedField = \file_get_contents(\dirname(__FILE__, 5) . "/cliOutput/src/Rest/Fields/{$fullFieldName}.php");
 
 	$this->assertStringContainsString("class {$fullFieldName} extends AbstractField implements CallableFieldInterface", $generatedField);
 	$this->assertStringContainsString("return '{$objectType}';", $generatedField);

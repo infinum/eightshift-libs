@@ -6,11 +6,11 @@ use EightshiftLibs\Helpers\Components;
 
 use Brain\Monkey;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeAll(function () {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 });
 
 afterAll(function() {
@@ -29,7 +29,7 @@ test('Shortcode helper will call the shortcode callback', function() {
 	function sayHello(array $args): void {
 		echo "Hello {$args['name']}!";
 	}
-	
+
 	\ob_start();
 	$this->shortcode->getShortcode('sayHello', ['name' => 'John']);
 	$result = \ob_get_clean();

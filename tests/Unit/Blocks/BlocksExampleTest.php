@@ -10,11 +10,11 @@ use EightshiftLibs\Exception\InvalidBlock;
 use WP_Block_Editor_Context;
 
 use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->config = mock('alias:EightshiftBoilerplate\Config\Config');
 
@@ -31,7 +31,7 @@ test('Register method will call init hooks', function () {
 
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample->register();
 
@@ -116,7 +116,7 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 	$this->assertSame(false, $blocks, "Return value is not false.");
 });
 
-test('Asserts that getAllBlocksList will return only projects blocks for older versions.', function () {
+test('Asserts that getAllBlocksList will return only projects blocks for older versions', function () {
 
 	Functions\when('is_wp_version_compatible')->justReturn(false);
 
@@ -124,7 +124,7 @@ test('Asserts that getAllBlocksList will return only projects blocks for older v
 
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -144,7 +144,7 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -165,7 +165,7 @@ test('Asserts that render component will load view template.', function () {
 
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$block = $this->blocksExample->render($blockManifest, '');
 
@@ -181,7 +181,7 @@ test('Asserts that render will throw error if block view is missing.', function 
 
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample->render($blockManifest, '');
 })->throws(InvalidBlock::class);
@@ -241,7 +241,7 @@ test('changeEditorColorPalette method will call add_theme_support() function wit
 
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -260,7 +260,7 @@ test('registerBlocks method will register all blocks.', function () {
 
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample->getBlocksDataFullRaw();
 
@@ -283,7 +283,7 @@ test('getCustomCategoryOld method will return an array.', function () {
 test('filterBlocksContent method will return an array.', function () {
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$parsedBlock = [
 		'blockName' => 'eightshift-boilerplate/jumbotron',
@@ -360,7 +360,7 @@ test('filterBlocksContent method will return an array.', function () {
 test('filterBlocksContent method will not filter out the paragraph with content.', function () {
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$parsedBlock = [
 		'blockName' => 'eightshift-boilerplate/paragraph',
@@ -387,7 +387,7 @@ test('filterBlocksContent method will not filter out the paragraph with content.
 test('filterBlocksContent method will filter out the paragraph without content.', function () {
 	$this->config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$parsedBlock = [
 		'blockName' => 'eightshift-boilerplate/paragraph',

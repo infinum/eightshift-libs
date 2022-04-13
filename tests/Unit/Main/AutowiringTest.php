@@ -35,7 +35,7 @@ beforeEach(function() {
 
 	$this->main = new MainExample([
 		'Tests\\Datasets\\Autowiring\\' => [
-			\dirname( __FILE__, 2 ) . '/Datasets/Autowiring',
+			\dirname( __FILE__, 3 ) . '/Datasets/Autowiring',
 		],
 	], 'Tests\Datasets\Autowiring');
 

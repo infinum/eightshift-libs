@@ -35,7 +35,7 @@ test('Login CLI command will correctly copy the Login class with defaults', func
 	$login = $this->login;
 	$login([], []);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/Login/Login.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/src/Login/Login.php';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedLogin = \file_get_contents($outputPath);
@@ -54,7 +54,7 @@ test('Login CLI command will correctly copy the Login class with set arguments',
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedLogin = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Login/Login.php');
+	$generatedLogin = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Login/Login.php');
 
 	$this->assertStringContainsString('namespace CoolTheme\Login;', $generatedLogin);
 });

@@ -5,11 +5,13 @@ namespace Tests\Unit\Config;
 use Brain\Monkey;
 use EightshiftBoilerplate\Config\ConfigExample;
 
-use function Tests\setupMocks;
+use EightshiftLibs\Exception\InvalidPath;
+
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->example = new ConfigExample();
 });
@@ -52,4 +54,4 @@ test('Is custom project path defined and readable', function () {
 
 test('If non-existent path throws exception', function () {
 	$this->example::getProjectPath('bla/');
-})->throws(\EightshiftLibs\Exception\InvalidPath::class);
+})->throws(InvalidPath::class);

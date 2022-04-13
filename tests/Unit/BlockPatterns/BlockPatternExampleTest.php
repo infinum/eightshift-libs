@@ -6,11 +6,11 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\BlockPatterns\BlockPatternExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->example = new BlockPatternExample();
 });

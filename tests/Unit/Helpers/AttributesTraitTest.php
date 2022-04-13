@@ -8,12 +8,12 @@ use Brain\Monkey;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use Exception;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 beforeAll(function () {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 });
 
 afterAll(function() {
@@ -265,7 +265,7 @@ test('Asserts props for heading block will return only heading attributes', func
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
@@ -290,7 +290,7 @@ test('Asserts props for heading component will return only typography attributes
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
@@ -315,7 +315,7 @@ test('Asserts props will correctly build the prefix', function () {
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
@@ -348,7 +348,7 @@ test('Asserts props will correctly leave only the the needed attributes', functi
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
@@ -387,7 +387,7 @@ test('Asserts props will correctly generate manual keys in camelCase', function 
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();
@@ -414,7 +414,7 @@ test('Props will include the correct attribute in the manual case', function () 
 
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	$this->blocksExample = new BlocksExample();
 	$this->blocksExample->getBlocksDataFullRaw();

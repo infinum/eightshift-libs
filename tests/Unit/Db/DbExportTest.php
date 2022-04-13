@@ -6,7 +6,7 @@ use EightshiftLibs\Db\ExportCli;
 use Brain\Monkey\Functions;
 use Exception;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 beforeEach(function() {
@@ -32,7 +32,7 @@ beforeEach(function() {
             }
 	);
 
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->export = new ExportCli('boilerplate');
 });

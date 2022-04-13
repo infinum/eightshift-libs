@@ -10,7 +10,7 @@ use EightshiftLibs\Enqueue\AbstractAssets;
 use EightshiftLibs\Manifest\ManifestInterface;
 
 use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 class EnqueueAdminExampleTest extends EnqueueAdminExample {
 
@@ -30,13 +30,13 @@ class EnqueueAdminExampleTest extends EnqueueAdminExample {
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	// Setup Config mock.
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive([
 			'getProjectName' => 'MyProject',
-			'getProjectPath' => 'tests/data',
+			'getProjectPath' => 'tests/Unit/data',
 			'getProjectVersion' => '1.0',
 		]);
 

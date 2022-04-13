@@ -35,7 +35,7 @@ test('ConfigProject CLI command will correctly copy the ConfigProject class with
 	$configProject = $this->configProject;
 	$configProject([], $configProject->getDevelopArgs([]));
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/wp-config-project.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/wp-config-project.php';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedConfigProject = \file_get_contents($outputPath);
@@ -60,7 +60,7 @@ test('ConfigProject CLI command will correctly copy the ConfigProject class with
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedConfigProject = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/test/wp-config-project.php');
+	$generatedConfigProject = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/test/wp-config-project.php');
 
 	$this->assertStringContainsString('!\defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
 });

@@ -6,11 +6,11 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Services\ServiceExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->service = new ServiceExample();
 });

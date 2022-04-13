@@ -8,13 +8,13 @@ use EightshiftLibs\Exception\InvalidBlock;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	setupMocks();
+	setupUnitTestMocks();
 
 	$wpCliMock = mock('alias:WP_CLI');
 
@@ -50,7 +50,7 @@ afterEach(function () {
 
 	$mock([], [$this->block->getDevelopArgs([])]);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button/button.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/button/button.php';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedBlock = \file_get_contents($outputPath);

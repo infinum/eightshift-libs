@@ -8,13 +8,13 @@ use EightshiftLibs\Exception\InvalidBlock;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	setupMocks();
+	setupUnitTestMocks();
 	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
@@ -49,7 +49,7 @@ afterEach(function () {
 
 	$mock([], [$this->variation->getDevelopArgs([])]);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button-block/manifest.json';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/button-block/manifest.json';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedVariation = \file_get_contents($outputPath);

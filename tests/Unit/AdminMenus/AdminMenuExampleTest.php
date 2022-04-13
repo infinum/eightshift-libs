@@ -7,11 +7,11 @@ use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\AdminMenus\AdminMenuExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->example = new AdminMenuExample();
 });

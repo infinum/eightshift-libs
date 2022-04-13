@@ -35,7 +35,7 @@ test('I18n CLI command will correctly copy the I18n class with defaults', functi
 	$i18n = $this->i18n;
 	$i18n([], []);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/I18n/I18n.php';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/src/I18n/I18n.php';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedI18n = \file_get_contents($outputPath);
@@ -54,7 +54,7 @@ test('I18n CLI command will correctly copy the I18n class with set arguments', f
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedI18n = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/I18n/I18n.php');
+	$generatedI18n = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/I18n/I18n.php');
 
 	$this->assertStringContainsString('namespace CoolTheme\I18n;', $generatedI18n);
 });

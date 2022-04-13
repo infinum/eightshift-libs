@@ -5,11 +5,11 @@ namespace Tests\Unit\ThemeOptions;
 use Brain\Monkey;
 use EightshiftBoilerplate\ThemeOptions\ThemeOptionsExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->example = new ThemeOptionsExample();
 });

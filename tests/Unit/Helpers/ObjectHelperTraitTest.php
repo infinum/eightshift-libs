@@ -9,7 +9,7 @@ use EightshiftLibs\Helpers\ObjectHelperTrait;
 use Brain\Monkey;
 use EightshiftLibs\Exception\InvalidManifest;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 class MockObjectHelper {
 	use ObjectHelperTrait;
@@ -17,7 +17,7 @@ class MockObjectHelper {
 
 beforeAll(function () {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 });
 
 afterAll(function() {

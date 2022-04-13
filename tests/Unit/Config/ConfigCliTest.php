@@ -37,7 +37,7 @@ test('Custom acf meta CLI command will correctly copy the Config class with defa
 	$config([], $config->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedConfig = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Config/Config.php');
+	$generatedConfig = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Config/Config.php');
 
 	$this->assertStringContainsString('class Config extends AbstractConfigData', $generatedConfig);
 	$this->assertStringContainsString('getProjectName', $generatedConfig);

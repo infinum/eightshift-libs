@@ -33,7 +33,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
+	deleteCliOutput(\dirname(__FILE__, 5) . '/cliOutput');
 });
 
 
@@ -42,7 +42,7 @@ test('REST route CLI command will correctly copy the field class with defaults',
 	$route([], $route->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Routes/TestRoute.php');
+	$generatedField = \file_get_contents(\dirname(__FILE__, 5) . '/cliOutput/src/Rest/Routes/TestRoute.php');
 
 	$this->assertStringContainsString('class TestRoute extends AbstractRoute implements CallableRouteInterface', $generatedField);
 	$this->assertStringContainsString('\'methods\' => ', $generatedField);
@@ -61,7 +61,7 @@ test('REST route CLI command will correctly copy the field class with arguments'
 	$method_to_const = RouteCli::VERB_ENUM[\strtolower($routeArguments['method'])] ?? '';
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . "/cliOutput/src/Rest/Routes/{$full_route_name}.php");
+	$generatedField = \file_get_contents(\dirname(__FILE__, 5) . "/cliOutput/src/Rest/Routes/{$full_route_name}.php");
 
 	$this->assertStringContainsString("class {$full_route_name} extends AbstractRoute implements CallableRouteInterface", $generatedField);
 	$this->assertStringContainsString("'methods' => {$method_to_const}", $generatedField);

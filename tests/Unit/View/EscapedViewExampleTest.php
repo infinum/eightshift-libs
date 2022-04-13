@@ -5,11 +5,11 @@ namespace Tests\Unit\View;
 use Brain\Monkey;
 use EightshiftBoilerplate\View\EscapedViewExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->example = new EscapedViewExample();
 });

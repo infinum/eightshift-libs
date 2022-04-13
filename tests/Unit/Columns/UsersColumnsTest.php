@@ -5,11 +5,11 @@ namespace Tests\Unit\Columns;
 use Brain\Monkey;
 use EightshiftLibs\Columns\User\AbstractUserColumns;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 });
 
 afterEach(function() {

@@ -6,14 +6,14 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 /**
  * Setup before each test.
  */
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
   Functions\when('parse_blocks')
     ->alias(function($blocks) {

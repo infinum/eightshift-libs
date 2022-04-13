@@ -6,11 +6,11 @@ use Brain\Monkey;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeAll(function () {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 });
 
 afterAll(function() {

@@ -18,14 +18,14 @@ use EightshiftLibs\Setup\UpdateCli;
 
 use function Tests\deleteCliOutput;
 use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$wpCliMock = mock('alias:WP_CLI');
 
@@ -108,7 +108,7 @@ test('Running develop commands runs a particular command successfully', function
 	$this->cli->loadDevelop(['create_menu']);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMenu = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Menu/Menu.php');
+	$generatedMenu = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Menu/Menu.php');
 	$this->assertStringContainsString('class Menu extends AbstractMenu', $generatedMenu);
 	$this->assertStringContainsString('header_main_nav', $generatedMenu);
 	$this->assertStringNotContainsString('footer_main_nav', $generatedMenu);

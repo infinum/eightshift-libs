@@ -5,11 +5,11 @@ namespace Tests\Unit\Login;
 use Brain\Monkey;
 use EightshiftBoilerplate\Main\MainExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->main = new MainExample([], '');
 });

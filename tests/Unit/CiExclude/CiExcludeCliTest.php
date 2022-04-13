@@ -35,7 +35,7 @@ test('CiExclude CLI command will correctly copy the ci-exclude text file with de
 	$ciexclude = $this->ciexclude;
 	$ciexclude([], $ciexclude->getDevelopArgs([]));
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/ci-exclude.txt';
+	$outputPath = \dirname(__FILE__, 4) . '/cliOutput/ci-exclude.txt';
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedExclude = \file_get_contents($outputPath);
@@ -58,7 +58,7 @@ test('CiExclude CLI command will correctly copy the ci-exclude file in the custo
 		'root' => './test',
 	]);
 
-	$this->assertFileExists(\dirname(__FILE__, 3) . '/cliOutput/test/ci-exclude.txt');
+	$this->assertFileExists(\dirname(__FILE__, 4) . '/cliOutput/test/ci-exclude.txt');
 });
 
 test('CiExclude CLI command will correctly copy the ci-exclude file with set arguments', function () {
@@ -70,7 +70,7 @@ test('CiExclude CLI command will correctly copy the ci-exclude file with set arg
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedExclude = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/ci-exclude.txt');
+	$generatedExclude = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/ci-exclude.txt');
 
 	$this->assertStringContainsString('/wp-content/plugin/coolPlugin/node_modules', $generatedExclude);
 });

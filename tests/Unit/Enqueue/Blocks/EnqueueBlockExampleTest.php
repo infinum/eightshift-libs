@@ -8,7 +8,7 @@ use EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample;
 use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 class EnqueueBlockExampleTest extends EnqueueBlocksExample {
@@ -32,7 +32,7 @@ class EnqueueBlockExampleTest extends EnqueueBlocksExample {
  */
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	// Setting imaginary values for mock and testing.
 	$this->projectName = 'NewProject';
@@ -57,7 +57,7 @@ beforeEach(function() {
 
 	$config
 		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+		->andReturn('tests/Unit/data');
 
 	Functions\when('wp_register_style')->alias(function($args) {
 		putenv("REGISTER_STYLE={$args}");
