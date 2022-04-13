@@ -35,7 +35,6 @@ afterEach(function () {
 	deleteCliOutput();
 });
 
-
 test('Custom post type CLI command will correctly copy the Custom post type class with defaults', function () {
 	$cpt = $this->cpt;
 	$cpt([], $cpt->getDevelopArgs([]));
@@ -112,7 +111,7 @@ test('Registered post type will have properly created labels', function() {
 	$this->assertStringContainsString('All books', $generatedCPT);
 	$this->assertStringContainsString('all books', $generatedCPT);
 	$this->assertStringContainsString('$labels', $generatedCPT);
-	$this->assertStringContainsString('$nouns[self::SINGULAR_NAME_UC]', $generatedCPT);
+	$this->assertStringContainsString('$nouns[0]', $generatedCPT);
 });
 
 

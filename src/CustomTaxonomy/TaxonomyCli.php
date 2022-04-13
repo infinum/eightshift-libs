@@ -35,10 +35,11 @@ class TaxonomyCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'label' => $args[1] ?? 'Locations',
+			'label' => $args[1] ?? 'Location',
 			'slug' => $args[2] ?? 'location',
 			'rest_endpoint_slug' => $args[3] ?? 'locations',
 			'post_type_slug' => $args[4] ?? 'post',
+			'plural_label' => $args[5] ?? 'Locations',
 		];
 	}
 
@@ -84,10 +85,11 @@ class TaxonomyCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$label = $assocArgs['label'] ?? 'Example Name';
+		$label = $assocArgs['label'] ?? 'Custom Taxonomy';
 		$slug = $this->prepareSlug($assocArgs['slug'] ?? TaxonomyExample::TAXONOMY_SLUG);
 		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? TaxonomyExample::REST_API_ENDPOINT_SLUG);
 		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug'] ?? TaxonomyExample::TAXONOMY_POST_TYPE_SLUG);
+		$pluralLabel = $assocArgs['plural_label'] ?? $label . 's';
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
@@ -102,8 +104,11 @@ class TaxonomyCli extends AbstractCli
 			->searchReplaceString('example-slug', $slug)
 			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
 			->searchReplaceString("'post'", "'{$postTypeSlug}'")
-			->searchReplaceString('Example Name', $label)
 			->searchReplaceString('Blog_Taxonomy', $className)
+			->searchReplaceString('Singular Name', $label)
+			->searchReplaceString('singular name', \strtolower($label))
+			->searchReplaceString('Plural Name', $pluralLabel)
+			->searchReplaceString('plural name', \strtolower($pluralLabel))
 			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }
