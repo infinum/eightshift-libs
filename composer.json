@@ -40,7 +40,9 @@
     "phpunit/phpunit": "^9.5",
     "roave/security-advisories": "dev-master",
     "szepeviktor/phpstan-wordpress": "^1.0.3",
-    "wp-cli/wp-cli": "^2.4"
+    "wp-cli/wp-cli": "^2.4",
+    "johnpbloch/wordpress": "@stable",
+    "johnpbloch/wordpress-core-installer": "^2.0.0"
   },
   "suggest": {
     "ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
@@ -65,8 +67,12 @@
     "process-timeout": 2000,
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "pestphp/pest-plugin": true
+      "pestphp/pest-plugin": true,
+      "johnpbloch/wordpress-core-installer": true
     }
+  },
+  "extra": {
+    "wordpress-install-dir": "wp"
   },
   "scripts": {
     "analyze": "@php ./vendor/bin/phpstan analyze",
