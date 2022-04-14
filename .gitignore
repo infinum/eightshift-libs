@@ -1,7 +1,8 @@
 vendor
 node_modules
-docs
-.phpdoc/cache
+/docs
+.phpdoc/*
+/wp
 
 composer.lock
 package-lock.json
