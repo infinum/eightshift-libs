@@ -77,7 +77,8 @@
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"pestphp/pest-plugin": true,
 			"mnsami/composer-custom-directory-installer": true,
-			"koodimonni/composer-dropin-installer": true
+			"koodimonni/composer-dropin-installer": true,
+			"composer/installers": true
 		}
 	},
 	"extra": {
