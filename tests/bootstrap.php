@@ -1,11 +1,44 @@
 <?php
 
-// Autoload things.
+// Autoload everything for unit tests.
 require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
 
-// Include core bootstrap for integration test suite.
+/**
+ * Include core bootstrap for an integration test suite
+ *
+ * This will only work if you run the tests from the command line.
+ * Running the tests from IDE such as PhpStorm will require you to
+ * add additional argument to the test run command if you want to run
+ * integration tests.
+ */
 if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['argv'][1], 'integration') !== false) {
-	// We need to set up core config details and test details
+	if (!file_exists(dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php')) {
+		// We need to set up core config details and test details
+		copy(dirname(__FILE__, 2) . '/wp/wp-tests-config-sample.php', dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php');
 
-	require_once dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/bootstrap.php';
+		// Change certain constants from the test's config file.
+		$testConfigPath = dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php';
+		$testConfigContents = file_get_contents($testConfigPath);
+
+		$testConfigContents = str_replace("dirname( __FILE__ ) . '/src/'", "dirname(__FILE__, 3) . '/src/'", $testConfigContents);
+		$testConfigContents = str_replace("youremptytestdbnamehere", $_SERVER['DB_NAME'], $testConfigContents);
+		$testConfigContents = str_replace("yourusernamehere", $_SERVER['DB_USER'], $testConfigContents);
+		$testConfigContents = str_replace("yourpasswordhere", $_SERVER['DB_PASSWORD'], $testConfigContents);
+		$testConfigContents = str_replace("localhost", $_SERVER['DB_HOST'], $testConfigContents);
+
+		file_put_contents($testConfigPath, $testConfigContents);
+	}
+
+	// Modify the bootstrap so that Pest works.
+	$basicBootstrapPath = dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/bootstrap.php';
+	$basicBootstrapContents = file_get_contents($basicBootstrapPath);
+
+	// We need to remove these because we already included them in Pest.php
+	$basicBootstrapContents = str_replace("require __DIR__ . '/phpunit-adapter-testcase.php';", '', $basicBootstrapContents);
+	$basicBootstrapContents = str_replace("require __DIR__ . '/abstract-testcase.php';", '', $basicBootstrapContents);
+	$basicBootstrapContents = str_replace("require __DIR__ . '/testcase.php';", '', $basicBootstrapContents);
+
+	file_put_contents($basicBootstrapPath, $basicBootstrapContents);
+
+	require_once $basicBootstrapPath;
 }
