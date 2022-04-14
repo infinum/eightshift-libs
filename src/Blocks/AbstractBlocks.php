@@ -86,7 +86,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Get blocks full data from global settings, blocks and wrapper.
 	 *
-	 * You should never call this method directly it is used to prepare global store of data for all the blocks. Instead, you should call $this->blocks.
+	 * You should never call this method directly. It is used to prepare global store of data for all the blocks. Instead, you should call $this->blocks.
 	 *
 	 * @return void
 	 */
