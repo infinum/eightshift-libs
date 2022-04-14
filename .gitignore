@@ -3,6 +3,8 @@ node_modules
 /docs
 .phpdoc/*
 /wp
+# The following is added by a sql db dropin package.
+/wp-content
 
 composer.lock
 package-lock.json
