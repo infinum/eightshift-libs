@@ -14,10 +14,10 @@
 	</testsuites>
 	<php>
         <env name="ES_TEST" value="true" force="true" />
-		<server name="DB_NAME" value="4"/>
-		<server name="DB_USER" value="4"/>
-		<server name="DB_PASSWORD" value="4"/>
-		<server name="DB_HOST" value="4"/>
+		<server name="DB_NAME" value="es_libs_tests"/>
+		<server name="DB_USER" value="root"/>
+		<server name="DB_PASSWORD" value=""/>
+		<server name="DB_HOST" value="localhost"/>
 	</php>
 	<coverage processUncoveredFiles="true">
 		<include>
