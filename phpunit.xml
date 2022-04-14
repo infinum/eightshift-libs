@@ -14,7 +14,11 @@
 	</testsuites>
 	<php>
         <env name="ES_TEST" value="true" force="true" />
-    </php>
+		<server name="DB_NAME" value="4"/>
+		<server name="DB_USER" value="4"/>
+		<server name="DB_PASSWORD" value="4"/>
+		<server name="DB_HOST" value="4"/>
+	</php>
 	<coverage processUncoveredFiles="true">
 		<include>
 			<directory suffix=".php">./src</directory>
