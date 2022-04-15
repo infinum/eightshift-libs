@@ -59,8 +59,6 @@ test('Custom command example documentation is correct', function () {
 
 	$documentation = $customCommand->getDocs();
 
-	$descKey = 'shortdesc';
-
 	expect($documentation)
 		->toBeArray($documentation)
 		->toHaveKey('shortdesc');
