@@ -36,7 +36,7 @@ trait LabelGeneratorTrait
 		];
 
 		if (\count($nouns) !== \count($requiredNouns)) {
-			throw InvalidNouns::fromKey($requiredCouns[\count($nouns)]);
+			throw InvalidNouns::fromKey($requiredNouns[\count($nouns)]);
 		}
 
 		$labelTemplates = [
@@ -105,10 +105,7 @@ trait LabelGeneratorTrait
 			static function ($label) use ($nouns) {
 				return \sprintf(
 					$label,
-					$nouns[0],
-					$nouns[1],
-					$nouns[2],
-					$nouns[3]
+					...$nouns
 				);
 			},
 			$labelTemplates

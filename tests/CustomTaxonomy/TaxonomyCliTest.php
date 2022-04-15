@@ -42,12 +42,11 @@ test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
 
-	expect(generatedCPT)
+	expect($generatedCPT)
 		->toContain('class LocationTaxonomy extends AbstractTaxonomy')
 		->toContain('location')
-		->toContain('post');	
+		->toContain('post');
 });
-
 
 test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class with set arguments', function () {
 	$tax = $this->tax;
@@ -62,15 +61,14 @@ test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
 
-	$this->assertStringContainsString('class BookTaxonomy extends AbstractTaxonomy', $generatedCPT);
-	$this->assertStringContainsString('Book', $generatedCPT);
-	$this->assertStringContainsString('book', $generatedCPT);
-	$this->assertStringContainsString('book', $generatedCPT);
-	$this->assertStringContainsString('books', $generatedCPT);
-	$this->assertStringContainsString('post', $generatedCPT);
-	$this->assertStringNotContainsString('dashicons-analytics', $generatedCPT);
+	expect($generatedCPT)
+		->toContain('class BookTaxonomy extends AbstractTaxonom')
+		->toContain('Book')
+		->toContain('book')
+		->toContain('books')
+		->toContain('post')
+		->not->toContain('dashicons-analytics');
 });
-
 
 test('Custom taxonomy CLI documentation is correct', function () {
 	$tax = $this->tax;
@@ -79,10 +77,9 @@ test('Custom taxonomy CLI documentation is correct', function () {
 
 	$key = 'shortdesc';
 
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Generates custom taxonomy class file.', $documentation[$key]);
+	expect($documentation)
+		->toBeArray($documentation)
+		->toHaveKeys([$key, 'synopsis']);
 });
 
 
@@ -103,12 +100,13 @@ test('Registered taxonomy will have properly created labels', function() {
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
 
-	$this->assertStringContainsString('book', $generatedCPT);
-	$this->assertStringContainsString('books', $generatedCPT);
-	$this->assertStringContainsString('All books', $generatedCPT);
-	$this->assertStringContainsString('all books', $generatedCPT);
-	$this->assertStringContainsString('$labels', $generatedCPT);
-	$this->assertStringContainsString('$nouns[0]', $generatedCPT);
+	expect($generatedCPT)
+		->toContain('book')
+		->toContain('books')
+		->toContain('All books')
+		->toContain('all books')
+		->toContain('$labels')
+		->toContain('$nouns[0]');
 });
 
 
@@ -128,9 +126,10 @@ test('Registered taxonomy will have properly created plural label if the plural 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
 
-	$this->assertStringContainsString('book', $generatedCPT);
-	$this->assertStringContainsString('books', $generatedCPT);
-	$this->assertStringContainsString('Books', $generatedCPT);
+	expect($generatedCPT)
+		->toContain('book')
+		->toContain('books')
+		->toContain('Books');
 });
 
 

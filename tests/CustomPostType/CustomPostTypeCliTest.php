@@ -42,9 +42,10 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/ProductPostType.php');
 
-	$this->assertStringContainsString('class ProductPostType extends AbstractPostType', $generatedCPT);
-	$this->assertStringContainsString('admin-settings', $generatedCPT);
-	$this->assertStringNotContainsString('dashicons-analytics', $generatedCPT);
+	expect($generatedCPT)
+		->toContain('class ProductPostType extends AbstractPostType')
+		->toContain('admin-settings')
+		->not->toContain('dashicons-analytics');
 });
 
 
@@ -72,6 +73,16 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 	$this->assertStringContainsString('50', $generatedCPT);
 	$this->assertStringContainsString('dashicons-book', $generatedCPT);
 	$this->assertStringNotContainsString('dashicons-analytics', $generatedCPT);
+
+	expect($generatedCPT)
+	->toContain('class BookPostType extends AbstractPostType')
+	->toContain('Book')
+	->toContain('book')
+	->toContain('books')
+	->toContain('post')
+	->toContain('50')
+	->toContain('dashicons-book')
+	->not->toContain('dashicons-analytics');
 });
 
 
@@ -82,10 +93,9 @@ test('Custom post type CLI documentation is correct', function () {
 
 	$key = 'shortdesc';
 
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Generates custom post type class file.', $documentation[$key]);
+	expect($documentation)
+	->toBeArray($documentation)
+	->toHaveKeys([$key, 'synopsis']);
 });
 
 
@@ -106,12 +116,13 @@ test('Registered post type will have properly created labels', function() {
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
 
-	$this->assertStringContainsString('book', $generatedCPT);
-	$this->assertStringContainsString('books', $generatedCPT);
-	$this->assertStringContainsString('All books', $generatedCPT);
-	$this->assertStringContainsString('all books', $generatedCPT);
-	$this->assertStringContainsString('$labels', $generatedCPT);
-	$this->assertStringContainsString('$nouns[0]', $generatedCPT);
+	expect($generatedCPT)
+	->toContain('book')
+	->toContain('books')
+	->toContain('All books')
+	->toContain('all books')
+	->toContain('$labels')
+	->toContain('$nouns[0]');
 });
 
 
@@ -131,9 +142,10 @@ test('Registered post type will have properly created plural label if the plural
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
 
-	$this->assertStringContainsString('book', $generatedCPT);
-	$this->assertStringContainsString('books', $generatedCPT);
-	$this->assertStringContainsString('Books', $generatedCPT);
+	expect($generatedCPT)
+		->toContain('book')
+		->toContain('books')
+		->toContain('Books');
 });
 
 
