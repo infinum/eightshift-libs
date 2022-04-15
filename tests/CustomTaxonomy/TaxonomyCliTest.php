@@ -42,9 +42,10 @@ test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
 
-	$this->assertStringContainsString('class LocationTaxonomy extends AbstractTaxonomy', $generatedCPT);
-	$this->assertStringContainsString('location', $generatedCPT);
-	$this->assertStringContainsString('post', $generatedCPT);
+	expect(generatedCPT)
+		->toContain('class LocationTaxonomy extends AbstractTaxonomy')
+		->toContain('location')
+		->toContain('post');	
 });
 
 
