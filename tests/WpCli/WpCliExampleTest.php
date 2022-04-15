@@ -9,18 +9,6 @@ use RuntimeException;
 use function Tests\deleteCliOutput;
 use function Tests\mock;
 
-// class AbstractTest implements ServiceCliInterface {
-// 	public function getCommandName(): string
-// 	{
-// 		return 'command_name';
-// 	}
-
-// 	public function getDoc(): array
-// 	{
-// 		return [];
-// 	}
-// };
-
 /**
  * Mock before tests.
  */
@@ -73,7 +61,7 @@ test('Custom command example documentation is correct', function () {
 
 	$descKey = 'shortdesc';
 
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertSame('Generates custom WPCLI command in your project.', $documentation[$descKey]);
+	expect($documentation)
+		->toBeArray($documentation)
+		->toHaveKey('shortdesc');
 });
