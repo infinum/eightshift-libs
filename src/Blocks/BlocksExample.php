@@ -19,11 +19,6 @@ use EightshiftLibs\Blocks\AbstractBlocks;
 class BlocksExample extends AbstractBlocks
 {
 	/**
-	 * Reusable blocks Capability Name.
-	 */
-	public const REUSABLE_BLOCKS_CAPABILITY = 'edit_reusable_blocks';
-
-	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -50,31 +45,10 @@ class BlocksExample extends AbstractBlocks
 		// Register custom project color palette.
 		\add_action('after_setup_theme', [$this, 'changeEditorColorPalette'], 11);
 
-		// Register Reusable blocks side menu.
-		\add_action('admin_menu', [$this, 'addReusableBlocks']);
-
 		// Filter block content.
 		\add_filter('render_block_data', [$this, 'filterBlocksContent'], 10, 2);
 
 		// Output inline css variables.
 		\add_action('wp_footer', [$this, 'outputCssVariablesInline']);
-	}
-
-	/**
-	 * Add Reusable Blocks as a part of a sidebar menu.
-	 *
-	 * @return void
-	 */
-	public function addReusableBlocks(): void
-	{
-		\add_menu_page(
-			\esc_html__('Blocks', 'eightshift-libs'),
-			\esc_html__('Blocks', 'eightshift-libs'),
-			self::REUSABLE_BLOCKS_CAPABILITY,
-			'edit.php?post_type=wp_block',
-			'', // @phpstan-ignore-line
-			'dashicons-editor-table',
-			4
-		);
 	}
 }
