@@ -28,7 +28,7 @@ trait LabelGeneratorTrait
 	 */
 	protected function getGeneratedLabels(array $nouns): array
 	{
-		$requiredCouns = [
+		$requiredNouns = [
 			'upper case singular name',
 			'lower case singular name',
 			'upper case plural name',
