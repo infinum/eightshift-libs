@@ -35,7 +35,7 @@ trait LabelGeneratorTrait
 			'lower case plural name',
 		];
 
-		if (\count($nouns) !== \count($requiredCouns)) {
+		if (\count($nouns) !== \count($requiredNouns)) {
 			throw InvalidNouns::fromKey($requiredCouns[\count($nouns)]);
 		}
 
