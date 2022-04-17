@@ -75,14 +75,14 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 	$this->assertStringNotContainsString('dashicons-analytics', $generatedCPT);
 
 	expect($generatedCPT)
-	->toContain('class BookPostType extends AbstractPostType')
-	->toContain('Book')
-	->toContain('book')
-	->toContain('books')
-	->toContain('post')
-	->toContain('50')
-	->toContain('dashicons-book')
-	->not->toContain('dashicons-analytics');
+		->toContain('class BookPostType extends AbstractPostType')
+		->toContain('Book')
+		->toContain('book')
+		->toContain('books')
+		->toContain('post')
+		->toContain('50')
+		->toContain('dashicons-book')
+		->not->toContain('dashicons-analytics');
 });
 
 
