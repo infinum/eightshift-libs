@@ -1,7 +1,7 @@
 vendor
 node_modules
-/docs
-.phpdoc/*
+docs
+.phpdoc/cache
 
 composer.lock
 package-lock.json
