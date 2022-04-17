@@ -94,8 +94,8 @@ test('Custom post type CLI documentation is correct', function () {
 	$key = 'shortdesc';
 
 	expect($documentation)
-	->toBeArray($documentation)
-	->toHaveKeys([$key, 'synopsis']);
+		->toBeArray($documentation)
+		->toHaveKeys([$key, 'synopsis']);
 });
 
 
