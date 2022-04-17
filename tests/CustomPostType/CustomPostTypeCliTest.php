@@ -117,12 +117,12 @@ test('Registered post type will have properly created labels', function() {
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomPostType/BookPostType.php');
 
 	expect($generatedCPT)
-	->toContain('book')
-	->toContain('books')
-	->toContain('All books')
-	->toContain('all books')
-	->toContain('$labels')
-	->toContain('$nouns[0]');
+		->toContain('book')
+		->toContain('books')
+		->toContain('All books')
+		->toContain('all books')
+		->toContain('$labels')
+		->toContain('$nouns[0]');
 });
 
 
