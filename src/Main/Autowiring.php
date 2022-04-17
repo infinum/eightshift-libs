@@ -13,6 +13,7 @@ namespace EightshiftLibs\Main;
 use EightshiftLibs\Exception\InvalidAutowireDependency;
 use EightshiftLibs\Exception\NonPsr4CompliantClass;
 use EightshiftLibs\Services\ServiceInterface;
+use EightshiftLibs\Services\ServiceCliInterface;
 use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -72,7 +73,7 @@ class Autowiring
 				$reflClass->isAbstract() ||
 				$reflClass->isInterface() ||
 				$reflClass->isTrait() ||
-				!$reflClass->implementsInterface(ServiceInterface::class)
+				!($reflClass->implementsInterface(ServiceInterface::class) || $reflClass->implementsInterface(ServiceCliInterface::class))
 			) {
 				continue;
 			}

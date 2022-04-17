@@ -183,15 +183,21 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Get short class name for current class
 	 *
+	 * @param bool $skipReplace Skip replacing CLI string.
+	 *
 	 * @throws RuntimeException Exception in the case the class name is missing.
 	 *
 	 * @return string
 	 */
-	public function getClassShortName(): string
+	public function getClassShortName(bool $skipReplace = false): string
 	{
 		$arr = \explode('\\', $this->getClassName());
 
 		$lastElement = \end($arr);
+
+		if ($skipReplace) {
+			return $lastElement;
+		}
 
 		return \str_replace('Cli', '', $lastElement);
 	}
