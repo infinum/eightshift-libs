@@ -29,6 +29,35 @@ if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['ar
 		file_put_contents($testConfigPath, $testConfigContents);
 	}
 
+	// Give access to tests_add_filter() function.
+	require_once dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/functions.php';
+
+	/**
+	 * Register mock theme.
+	 */
+	function _register_theme()
+	{
+		$themeDir = dirname(__FILE__, 2);
+		$currentTheme = basename($themeDir);
+		$themeToot = dirname($themeDir);
+
+		add_filter('theme_root', function () use ($themeToot) {
+			return $themeToot;
+		});
+
+		register_theme_directory($themeToot);
+
+		add_filter('pre_option_template', function () use ($currentTheme) {
+			return $currentTheme;
+		});
+
+		add_filter('pre_option_stylesheet', function () use ($currentTheme) {
+			return $currentTheme;
+		});
+	}
+
+	tests_add_filter( 'muplugins_loaded', '_register_theme' );
+
 	// Modify the bootstrap so that Pest works.
 	$basicBootstrapPath = dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/bootstrap.php';
 	$basicBootstrapContents = file_get_contents($basicBootstrapPath);
