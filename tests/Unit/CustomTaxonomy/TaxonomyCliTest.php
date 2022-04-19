@@ -7,14 +7,14 @@ use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
 use EightshiftLibs\Exception\InvalidNouns;
 
 use function Tests\deleteCliOutput;
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	setupMocks();
+	setupUnitTestMocks();
 	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
@@ -40,7 +40,7 @@ test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class 
 	$tax([], $tax->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
 
 	expect($generatedCPT)
 		->toContain('class LocationTaxonomy extends AbstractTaxonomy')
@@ -59,7 +59,7 @@ test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class 
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
 
 	expect($generatedCPT)
 		->toContain('class BookTaxonomy extends AbstractTaxonom')
@@ -98,7 +98,7 @@ test('Registered taxonomy will have properly created labels', function() {
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
 
 	expect($generatedCPT)
 		->toContain('book')
@@ -124,7 +124,7 @@ test('Registered taxonomy will have properly created plural label if the plural 
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
 
 	expect($generatedCPT)
 		->toContain('book')
@@ -147,7 +147,7 @@ test('Missing required noun will trigger the invalid nouns exception', function(
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
 
 	preg_match_all('/\$nouns\s=\s([^]]+)\]/m', $generatedCPT, $matches);
 
@@ -166,7 +166,7 @@ test('Missing required noun will trigger the invalid nouns exception', function(
 	 *
 	 * So we need to make sure that the error will indeed be thrown.
 	 */
-	require_once \dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php';
+	require_once \dirname(__FILE__, 4) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php';
 
 	$taxInstance = new \EightshiftLibs\CustomTaxonomy\BookTaxonomy();
 

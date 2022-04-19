@@ -38,7 +38,7 @@ test('Custom command CLI command will correctly copy the Custom command class wi
 	$customCommand([], $customCommand->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$customCommand = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/WpCli/TestWpCli.php');
+	$customCommand = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/WpCli/TestWpCli.php');
 
 	$this->assertStringContainsString('class TestWpCli implements ServiceCliInterface', $customCommand);
 	$this->assertStringContainsString('function register', $customCommand);
