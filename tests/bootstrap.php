@@ -39,13 +39,13 @@ if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['ar
 	{
 		$themeDir = dirname(__FILE__, 2);
 		$currentTheme = basename($themeDir);
-		$themeToot = dirname($themeDir);
+		$themeRoot = dirname($themeDir);
 
-		add_filter('theme_root', function () use ($themeToot) {
-			return $themeToot;
+		add_filter('theme_root', function () use ($themeRoot) {
+			return $themeRoot;
 		});
 
-		register_theme_directory($themeToot);
+		register_theme_directory($themeRoot);
 
 		add_filter('pre_option_template', function () use ($currentTheme) {
 			return $currentTheme;
