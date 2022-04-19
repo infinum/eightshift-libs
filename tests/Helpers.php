@@ -4,9 +4,6 @@ namespace Tests;
 
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Main\MainExample;
-use EightshiftLibs\Config\ConfigCli;
-use EightshiftLibs\Main\MainCli;
-//use EightshiftLibsTest\Main\Main;
 use Mockery;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
@@ -116,45 +113,7 @@ function mock(string $class): MockInterface
  */
 function setupTheme()
 {
-//	$config = new ConfigCli('boilerplate');
-//	$config([], $config->getDevelopArgs([]));
-//
-//	$main = new MainCli('boilerplate');
-//	$main([], $main->getDevelopArgs([]));
-//
-//	$configFile = dirname(__FILE__, 2) . '/cliOutput/src/Config/Config.php';
-//	$mainFile = dirname(__FILE__, 2) . '/cliOutput/src/Main/Main.php';
-//
-//	// Conflict prevention with the libs.
-//	replaceStringInFile($configFile);
-//	replaceStringInFile($mainFile);
-
 	$loader = require dirname(__FILE__, 2) . '/vendor/autoload.php';
 
 	(new MainExample($loader->getPrefixesPsr4(), 'EightshiftBoilerplate'))->register();
-}
-
-/**
- * Helper method that will replace strings in a file
- *
- * Used to replace the namespaces and imports in integration test classes,
- * so that we can actually test the added functionality.
- *
- * @param string $fileLocation String file location.
- * @param string $original Original string to replace.
- * @param string $replacement Replacement string.
- *
- * @return void
- */
-function replaceStringInFile(
-	string $fileLocation,
-	string $original = 'namespace EightshiftLibs',
-	string $replacement = 'namespace EightshiftLibsTest')
-{
-	if (file_exists($fileLocation)) {
-		$content = file_get_contents($fileLocation);
-		$content = str_replace($original, $replacement, $content);
-
-		file_put_contents($fileLocation, $content);
-	}
 }
