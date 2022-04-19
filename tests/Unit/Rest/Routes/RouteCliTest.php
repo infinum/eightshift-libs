@@ -3,7 +3,6 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\Rest\Routes\RouteCli;
-use Exception;
 use InvalidArgumentException;
 
 use function Tests\deleteCliOutput;
