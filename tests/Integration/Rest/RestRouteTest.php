@@ -3,10 +3,10 @@
 namespace Tests\Integration;
 
 use EightshiftLibs\Rest\Routes\RouteCli;
-use InvalidArgumentException;
 
 use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setupTheme;
+use function Tests\replaceStringInFile;
 
 beforeEach(function () {
 	parent::setUp();
@@ -16,22 +16,6 @@ beforeEach(function () {
 
 	$this->server = $wp_rest_server = new \WP_REST_Server();
 	do_action('rest_api_init');
-
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnUsing(
-			function ($errorMessage) {
-					throw new InvalidArgumentException($errorMessage);
-			}
-	);
-
-	$this->route = new RouteCli('boilerplate');
 });
 
 /**
@@ -41,7 +25,7 @@ afterEach(function () {
 	global $wp_rest_server;
 	$wp_rest_server = null;
 
-	deleteCliOutput(\dirname(__FILE__, 5) . '/cliOutput');
+	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
 
 	parent::tearDown();
 });
@@ -55,12 +39,28 @@ test('Rest API endpoints work', function () {
 });
 
 test('REST route CLI command will correctly set up a custom REST route', function () {
-	$route = $this->route;
-	$route([], $route->getDevelopArgs(['endpoint_slug' => 'books', 'method' => 'get']));
+	// Setup theme.
+	setupTheme();
+
+	// Create default custom route.
+	$route = new RouteCli('boilerplate');
+	$route([], $route->getDevelopArgs([]));
+
+//	$restFile = dirname(__FILE__, 4) . '/cliOutput/src/Rest/Routes/TestRoute.php';
+//
+//	expect($restFile)
+//		->toBeReadableFile();
+//
+//	replaceStringInFile($restFile, 'use EightshiftBoilerplate\Config\Config', 'use EightshiftLibsTest\Config\Config');
+//	replaceStringInFile($restFile, 'namespace EightshiftLibs\Rest\Routes', 'namespace EightshiftLibsTest\Rest\Routes');
 
 	$routes = $this->server->get_routes();
-die(var_export($routes));
+
+	global $wp_filter;
+	var_export($wp_filter['after_setup_theme']);
+//	var_export(array_keys($routes));
+
 	expect($routes)
 		->toBeArray()
-		->toHaveKey('/wp/v2/posts');
+		->toHaveKey('eightshift-libs/v1');
 });
