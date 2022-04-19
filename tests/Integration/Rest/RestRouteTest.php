@@ -46,19 +46,7 @@ test('REST route CLI command will correctly set up a custom REST route', functio
 	$route = new RouteCli('boilerplate');
 	$route([], $route->getDevelopArgs([]));
 
-//	$restFile = dirname(__FILE__, 4) . '/cliOutput/src/Rest/Routes/TestRoute.php';
-//
-//	expect($restFile)
-//		->toBeReadableFile();
-//
-//	replaceStringInFile($restFile, 'use EightshiftBoilerplate\Config\Config', 'use EightshiftLibsTest\Config\Config');
-//	replaceStringInFile($restFile, 'namespace EightshiftLibs\Rest\Routes', 'namespace EightshiftLibsTest\Rest\Routes');
-
 	$routes = $this->server->get_routes();
-
-	global $wp_filter;
-	var_export($wp_filter['after_setup_theme']);
-//	var_export(array_keys($routes));
 
 	expect($routes)
 		->toBeArray()
