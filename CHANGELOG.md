@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.0] - 2022-04-19
+
+- Major braking changes do to updates on css variables, and helpers and updating min PHP version to 7.4.
+- Full change log can be checked on Github [releases](https://github.com/infinum/eightshift-libs/releases/tag/5.0.0).
+
 ## [4.1.0] - 2022-02-03
 
 ### Added
@@ -304,6 +309,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[5.0.0]: https://github.com/infinum/eightshift-libs/compare/4.1.0...v5.0.0
 [4.1.0]: https://github.com/infinum/eightshift-libs/compare/4.0.0...v4.1.0
 [4.0.0]: https://github.com/infinum/eightshift-libs/compare/3.1.0...v4.0.0
 [3.1.0]: https://github.com/infinum/eightshift-libs/compare/3.0.8...v3.1.0

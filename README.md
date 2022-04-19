@@ -22,4 +22,4 @@ Eightshift Libs is maintained and sponsored by
 [Eightshift](https://eightshift.com) and [Infinum](https://infinum.com).
 
 ## License
-Eightshift Libs &copy;2021 [Eightshift](https://eightshift.com) and [Infinum](https://infinum.com). It is free software, and may be redistributed under the terms specified in the LICENSE file.
+Eightshift Libs &copy;2022 [Eightshift](https://eightshift.com) and [Infinum](https://infinum.com). It is free software, and may be redistributed under the terms specified in the LICENSE file.
