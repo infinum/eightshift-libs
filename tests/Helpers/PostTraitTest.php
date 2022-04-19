@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Unit\EnqueueBlock;
+namespace Tests\Unit\Helpers;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
-use EightshiftLibs\Helpers\Post;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setupMocks;
 
@@ -57,14 +57,14 @@ test('Correct get reading time function', function ($posts) {
     });
 
   foreach ($posts as $postId => $postContent) {
-    $methodReadingTime = Post::getReadingTime($postId);
+    $methodReadingTime = Components::getReadingTime($postId);
 
     $wordCount = 0;
     foreach($postContent[0] as $block => $blockContent) {
       $wordCount = $wordCount + \str_word_count($blockContent);
     }
 
-    $testReadingTime = (int) ceil( $wordCount / Post::AVERAGE_WORD_COUNT);
+    $testReadingTime = (int) ceil( $wordCount / 200);
 
     $this->assertSame($methodReadingTime, $testReadingTime);
   }

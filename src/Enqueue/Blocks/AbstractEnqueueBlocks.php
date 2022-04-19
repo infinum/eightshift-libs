@@ -22,9 +22,9 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	public const BLOCKS_EDITOR_STYLE_URI = 'applicationBlocksEditor.css';
 
 	public const BLOCKS_STYLE_URI = 'applicationBlocks.css';
-	public const BLOCKS_SCRIPT_URI = 'applicationBlocks.js';
 
 	public const BLOCKS_FRONTEND_STYLE_URI = 'applicationBlocksFrontend.css';
+	public const BLOCKS_FRONTEND_SCRIPT_URI = 'applicationBlocksFrontend.js';
 
 	/**
 	 * Instance variable of manifest data.
@@ -102,13 +102,13 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 *
 	 * @return void
 	 */
-	public function enqueueBlockScript(): void
+	public function enqueueBlockFrontendScript(): void
 	{
-		$handle = "{$this->getAssetsPrefix()}-block-scripts";
+		$handle = "{$this->getAssetsPrefix()}-block-frontend-scripts";
 
 		\wp_register_script(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::BLOCKS_SCRIPT_URI),
+			$this->manifest->getAssetsManifestItem(static::BLOCKS_FRONTEND_SCRIPT_URI),
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			$this->scriptInFooter()
@@ -129,7 +129,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockFrontendStyle(): void
 	{
-		$handler = "{$this->getAssetsPrefix()}-block-fontend-style";
+		$handler = "{$this->getAssetsPrefix()}-block-frontend-style";
 
 		\wp_register_style(
 			$handler,

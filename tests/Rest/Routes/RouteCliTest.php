@@ -33,9 +33,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 4) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
 });
 
 
@@ -68,16 +66,3 @@ test('REST route CLI command will correctly copy the field class with arguments'
 	$this->assertStringContainsString("class {$full_route_name} extends AbstractRoute implements CallableRouteInterface", $generatedField);
 	$this->assertStringContainsString("'methods' => {$method_to_const}", $generatedField);
 })->with('correctRouteArguments');
-
-
-test('REST route CLI command will throw error on missing / invalid arguments', function ($routeArguments) {
-	define('ES_DEVELOP_MODE', true);
-	$route = $this->route;
-	$route([], $routeArguments);
-})->with('errorRouteArguments')->throws(Exception::class);
-
-
-test('REST CLI command will throw WP_Error when arguments fail validation', function ($routeArguments) {
-	$route = $this->route;
-	$route([], $routeArguments);
-})->with('invalidRouteArguments')->throws(InvalidArgumentException::class);

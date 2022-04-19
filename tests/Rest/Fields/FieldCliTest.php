@@ -29,9 +29,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
 
@@ -64,9 +62,3 @@ test('REST field CLI command will correctly copy the field class with arguments'
 	$this->assertStringNotContainsString('example-post-type', $generatedField);
 	$this->assertStringNotContainsString('example-field', $generatedField);
 })->with('correctFieldNameArguments');
-
-test('REST field CLI command will throw error on missing / invalid arguments', function ($fieldNameArguments) {
-	define('ES_DEVELOP_MODE', true);
-	$field = $this->field;
-	$field([], $fieldNameArguments);
-})->with('errorFieldNameArguments')->throws(Exception::class);

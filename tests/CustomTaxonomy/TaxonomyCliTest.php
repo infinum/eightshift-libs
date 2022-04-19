@@ -4,13 +4,17 @@ namespace Tests\Unit\CustomTaxonomy;
 
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
 
+use EightshiftLibs\Exception\InvalidNouns;
+
 use function Tests\deleteCliOutput;
+use function Tests\setupMocks;
 use function Tests\mock;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
+	setupMocks();
 	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
@@ -21,68 +25,152 @@ beforeEach(function () {
 		->shouldReceive('error')
 		->andReturnArg(0);
 
-	$this->taxonomyCli = new TaxonomyCli('boilerplate');
+	$this->tax = new TaxonomyCli('boilerplate');
 });
 
 /**
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
-
-test('Custom taxonomy CLI command will correctly copy the Taxonomy class', function () {
-	$taxonomyCli = $this->taxonomyCli;
-	$taxonomyCli([], $taxonomyCli->getDevelopArgs([]));
+test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class with defaults', function () {
+	$tax = $this->tax;
+	$tax([], $tax->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedTaxonomy = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/LocationTaxonomy.php');
 
-	$this->assertStringContainsString('The LocationTaxonomy specific functionality.', $generatedTaxonomy);
-	$this->assertStringContainsString('class LocationTaxonomy extends AbstractTaxonomy', $generatedTaxonomy);
-	$this->assertStringContainsString('getTaxonomySlug', $generatedTaxonomy);
-	$this->assertStringContainsString('getPostTypeSlug', $generatedTaxonomy);
-	$this->assertStringContainsString('getTaxonomyArguments', $generatedTaxonomy);
-	$this->assertStringContainsString('TAXONOMY_SLUG', $generatedTaxonomy);
-	$this->assertStringContainsString('REST_API_ENDPOINT_SLUG', $generatedTaxonomy);
-	$this->assertStringNotContainsString('someRandomMethod', $generatedTaxonomy);
+	expect($generatedCPT)
+		->toContain('class LocationTaxonomy extends AbstractTaxonomy')
+		->toContain('location')
+		->toContain('post');
+});
+
+test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class with set arguments', function () {
+	$tax = $this->tax;
+	$tax([], [
+		'label' => 'Book',
+		'slug' => 'book',
+		'rewrite_url' => 'book',
+		'rest_endpoint_slug' => 'books',
+		'capability' => 'post',
+	]);
+
+	// Check the output dir if the generated method is correctly generated.
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
+
+	expect($generatedCPT)
+		->toContain('class BookTaxonomy extends AbstractTaxonom')
+		->toContain('Book')
+		->toContain('book')
+		->toContain('books')
+		->toContain('post')
+		->not->toContain('dashicons-analytics');
+});
+
+test('Custom taxonomy CLI documentation is correct', function () {
+	$tax = $this->tax;
+
+	$documentation = $tax->getDoc();
+
+	$key = 'shortdesc';
+
+	expect($documentation)
+		->toBeArray($documentation)
+		->toHaveKeys([$key, 'synopsis']);
 });
 
 
-test('Custom acf meta CLI documentation is correct', function () {
-	$taxonomyCli = $this->taxonomyCli;
+test('Registered taxonomy will have properly created labels', function() {
 
-	$documentation = $taxonomyCli->getDoc();
+	$tax = $this->tax;
+	$tax([], [
+		'label' => 'Book',
+		'slug' => 'book',
+		'rewrite_url' => 'book',
+		'rest_endpoint_slug' => 'books',
+		'capability' => 'post',
+		'menu_position' => 50,
+		'menu_icon' => 'dashicons-book',
+		'plural_label' => 'All books'
+	]);
 
-	$descKey = 'shortdesc';
-	$synopsisKey = 'synopsis';
+	// Check the output dir if the generated method is correctly generated.
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
 
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertArrayHasKey($synopsisKey, $documentation);
-	$this->assertIsArray($documentation[$synopsisKey]);
-	$this->assertSame('Generates custom taxonomy class file.', $documentation[$descKey]);
-
-	$this->assertSame('assoc', $documentation[$synopsisKey][0]['type']);
-	$this->assertSame('label', $documentation[$synopsisKey][0]['name']);
-	$this->assertSame('The label of the custom taxonomy to show in WP admin.', $documentation[$synopsisKey][0]['description']);
-	$this->assertSame(false, $documentation[$synopsisKey][0]['optional']);
-
-	$this->assertSame('assoc', $documentation[$synopsisKey][1]['type']);
-	$this->assertSame('slug', $documentation[$synopsisKey][1]['name']);
-	$this->assertSame('The name of the custom taxonomy slug. Example: location.', $documentation[$synopsisKey][1]['description']);
-	$this->assertSame(false, $documentation[$synopsisKey][1]['optional']);
-
-	$this->assertSame('assoc', $documentation[$synopsisKey][2]['type']);
-	$this->assertSame('rest_endpoint_slug', $documentation[$synopsisKey][2]['name']);
-	$this->assertSame('The name of the custom taxonomy REST-API endpoint slug. Example: locations.', $documentation[$synopsisKey][2]['description']);
-	$this->assertSame(false, $documentation[$synopsisKey][2]['optional']);
-
-	$this->assertSame('assoc', $documentation[$synopsisKey][3]['type']);
-	$this->assertSame('post_type_slug', $documentation[$synopsisKey][3]['name']);
-	$this->assertSame('The position where to assign the new custom taxonomy. Example: post.', $documentation[$synopsisKey][3]['description']);
-	$this->assertSame(false, $documentation[$synopsisKey][3]['optional']);
+	expect($generatedCPT)
+		->toContain('book')
+		->toContain('books')
+		->toContain('All books')
+		->toContain('all books')
+		->toContain('$labels')
+		->toContain('$nouns[0]');
 });
+
+
+test('Registered taxonomy will have properly created plural label if the plural is not defined', function() {
+
+	$tax = $this->tax;
+	$tax([], [
+		'label' => 'Book',
+		'slug' => 'book',
+		'rewrite_url' => 'book',
+		'rest_endpoint_slug' => 'books',
+		'capability' => 'post',
+		'menu_position' => 50,
+		'menu_icon' => 'dashicons-book',
+	]);
+
+	// Check the output dir if the generated method is correctly generated.
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
+
+	expect($generatedCPT)
+		->toContain('book')
+		->toContain('books')
+		->toContain('Books');
+});
+
+
+test('Missing required noun will trigger the invalid nouns exception', function() {
+
+	$tax = $this->tax;
+	$tax([], [
+		'label' => 'Book',
+		'slug' => 'book',
+		'rewrite_url' => 'book',
+		'rest_endpoint_slug' => 'books',
+		'capability' => 'post',
+		'menu_position' => 50,
+		'menu_icon' => 'dashicons-book',
+	]);
+
+	// Check the output dir if the generated method is correctly generated.
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php');
+
+	preg_match_all('/\$nouns\s=\s([^]]+)\]/m', $generatedCPT, $matches);
+
+	$newClass = \str_replace($matches[0][0]. ';', '', $generatedCPT);
+
+	/**
+	 * This part is a bit of a dirty hack.
+	 *
+	 * We are accessing a protected method. We are doing this because it's being used
+	 * in a CPT registration process, as a parameter generator. But we need to make sure that
+	 * the correct exception will be thrown in case a noun array for label generation
+	 * is missing or empty.
+	 * Ideally this will never happen when using WP-CLI, because everything is set up
+	 * for you, but if you manually copy class, and forget to add them, you'll get an
+	 * error thrown.
+	 *
+	 * So we need to make sure that the error will indeed be thrown.
+	 */
+	require_once \dirname(__FILE__, 3) . '/cliOutput/src/CustomTaxonomy/BookTaxonomy.php';
+
+	$taxInstance = new \EightshiftLibs\CustomTaxonomy\BookTaxonomy();
+
+	$reflection = new \ReflectionMethod($taxInstance, 'getGeneratedLabels');
+	$reflection->setAccessible(true);
+	$reflection->invoke($taxInstance, []); // This should trigger the error.
+})->expectException(InvalidNouns::class);

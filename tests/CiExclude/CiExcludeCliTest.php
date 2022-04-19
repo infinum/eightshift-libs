@@ -28,9 +28,7 @@ $this->ciexclude = new CiExcludeCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
 test('CiExclude CLI command will correctly copy the ci-exclude text file with defaults', function () {

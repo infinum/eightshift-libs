@@ -73,6 +73,7 @@
     "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.4-",
     "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.4-",
     "test:unit": "@php ./vendor/bin/pest",
+    "test:unit-report": "@php ./vendor/bin/pest --log-junit tests/coverage/report.xml",
     "test:coverage": "@php ./vendor/bin/pest --coverage"
   }
 }

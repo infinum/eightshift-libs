@@ -28,9 +28,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 4) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
 });
 
 /**
@@ -53,7 +51,10 @@ test('Enqueue Block CLI command will make appropriate class.', function () {
 	$this->assertStringContainsString('enqueueBlockStyle', $generatedEBC);
 
 	$this->assertStringContainsString('wp_enqueue_scripts', $generatedEBC);
-	$this->assertStringContainsString('enqueueBlockScript', $generatedEBC);
+	$this->assertStringContainsString('enqueueBlockFrontendScript', $generatedEBC);
+
+	$this->assertStringContainsString('wp_enqueue_scripts', $generatedEBC);
+	$this->assertStringContainsString('enqueueBlockFrontendStyle', $generatedEBC);
 });
 
 /**

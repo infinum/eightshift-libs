@@ -108,7 +108,8 @@ test('Enqueue Blocks\' register method will set hooks.', function () {
 	$this->assertSame(10, has_action('enqueue_block_editor_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockEditorScript()'));
 	$this->assertSame(50, has_action('enqueue_block_editor_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockEditorStyle()'));
 	$this->assertSame(50, has_action('enqueue_block_assets', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockStyle()'));
-	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockScript()'));
+	$this->assertSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockFrontendScript()'));
+	$this->assertSame(50, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Blocks\EnqueueBlockExampleTest->enqueueBlockFrontendStyle()'));
 });
 
 /**
@@ -151,10 +152,17 @@ test('enqueueBlockStyle method will enqueue styles for a block', function () {
 	$this->assertSame(\getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-style", 'Method enqueueStyles() failed to enqueue style');
 });
 
-test('enqueueBlockScript method will enqueue scripts for a block', function () {
-	$this->blockEnqueue->enqueueBlockScript();
+test('enqueueBlockFrontendScript method will enqueue scripts for a block', function () {
+	$this->blockEnqueue->enqueueBlockFrontendScript();
 
-	$this->assertSame(\getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-scripts", 'Method enqueueStyles() failed to register style');
-	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-scripts", 'Method enqueueScripts() failed to enqueue style');
+	$this->assertSame(\getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-frontend-scripts", 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-frontend-scripts", 'Method enqueueScripts() failed to enqueue style');
 	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
+});
+
+test('enqueueBlockFrontendStyle method will enqueue styles for a block', function () {
+	$this->blockEnqueue->enqueueBlockFrontendStyle();
+
+	$this->assertSame(\getenv('REGISTER_STYLE'), "{$this->projectName}-block-frontend-style", 'Method enqueueStyles() failed to register style');
+	$this->assertSame(\getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-frontend-style", 'Method enqueueScripts() failed to enqueue style');
 });

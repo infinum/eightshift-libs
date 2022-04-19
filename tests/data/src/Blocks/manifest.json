@@ -2,6 +2,14 @@
 	"namespace": "eightshift-boilerplate",
 	"background": "#F6F8F8",
 	"foreground": "#0D3636",
+	"config": {
+		"outputCssGlobally": true,
+		"outputCssOptimize": true,
+		"outputCssSelectorName": "esCssVariablesTest",
+		"outputCssGloballyAdditionalStyles": [
+			":root {--es-loader-opacity: 1;}"
+		]
+	},
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
 		"maxCols": 12,

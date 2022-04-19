@@ -12,5 +12,7 @@
   "applicationBlocksEditor.css": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocksEditor.css",
   "applicationBlocksEditor.js": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocksEditor.js",
   "applicationBlocksEditor.json": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocksEditor.asset.json",
+  "applicationBlocksFrontend.js": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocksFrontend.js",
+  "applicationBlocksFrontend.css": "/wp-content/themes/eightshift-boilerplate/public/applicationBlocksFrontend.css",
   "logo.svg": "/wp-content/themes/eightshift-boilerplate/public/logo.svg"
 }

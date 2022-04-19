@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Helpers\Components;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -182,15 +183,21 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Get short class name for current class
 	 *
+	 * @param bool $skipReplace Skip replacing CLI string.
+	 *
 	 * @throws RuntimeException Exception in the case the class name is missing.
 	 *
 	 * @return string
 	 */
-	public function getClassShortName(): string
+	public function getClassShortName(bool $skipReplace = false): string
 	{
 		$arr = \explode('\\', $this->getClassName());
 
 		$lastElement = \end($arr);
+
+		if ($skipReplace) {
+			return $lastElement;
+		}
 
 		return \str_replace('Cli', '', $lastElement);
 	}
@@ -505,7 +512,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomain(array $args = []): self
 	{
-		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
+		$namespace = Components::camelToKebabCase($this->getNamespace($args));
 
 		$this->fileContents = \str_replace(
 			'eightshift-libs',
@@ -525,7 +532,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomainFrontendLibs(array $args = []): self
 	{
-		$namespace = self::camelCaseToKebabCase($this->getNamespace($args));
+		$namespace = Components::camelToKebabCase($this->getNamespace($args));
 
 		$this->fileContents = \str_replace(
 			'eightshift-frontend-libs',

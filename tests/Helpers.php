@@ -28,6 +28,9 @@ function setupMocks() {
 	// Mock escaping function.
 	Functions\when('wp_kses_post')->returnArg();
 
+	// Mock escaping function.
+	Functions\when('esc_html__')->returnArg();
+
 	// Mock rand function.
 	Functions\when('wp_rand')->justReturn(1154790670);
 
@@ -66,8 +69,12 @@ function setupMocks() {
  *
  * @return void
  */
-function deleteCliOutput(string $dir) : void
+function deleteCliOutput(string $dir = '') : void
 {
+	if (!$dir) {
+		$dir = \dirname(__FILE__, 2) . '/cliOutput';
+	}
+
 	if (!\is_dir($dir)) {
 		return;
 	}

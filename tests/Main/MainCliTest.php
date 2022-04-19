@@ -28,9 +28,7 @@ $this->main = new MainCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
 test('Main CLI command will correctly copy the Main class with defaults', function () {

@@ -28,9 +28,7 @@ $this->i18n = new I18nCli('boilerplate');
  * Cleanup after tests.
  */
 afterEach(function () {
-	$output = \dirname(__FILE__, 3) . '/cliOutput';
-
-	deleteCliOutput($output);
+	deleteCliOutput();
 });
 
 test('I18n CLI command will correctly copy the I18n class with defaults', function () {
