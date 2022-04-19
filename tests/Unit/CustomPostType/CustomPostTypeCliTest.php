@@ -39,8 +39,13 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 	$cpt = $this->cpt;
 	$cpt([], $cpt->getDevelopArgs([]));
 
+	$dir = \dirname(__FILE__, 4) . '/cliOutput/src/CustomPostType/';
+	$file = $dir . 'ProductPostType.php';
+
+	expect($dir)->toBeReadableDirectory();
+
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/CustomPostType/ProductPostType.php');
+	$generatedCPT = \file_get_contents($file);
 
 	expect($generatedCPT)
 		->toContain('class ProductPostType extends AbstractPostType')
