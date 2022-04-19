@@ -10,12 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\AdminMenus;
 
-use EightshiftLibs\AdminMenus\AbstractAdminReusableBlocksMenu;
+use EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
  * AdminReusableBlocksMenuExample class.
  */
-class AdminReusableBlocksMenuExample extends AbstractAdminReusableBlocksMenu
+class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 {
 	/**
 	 * Reusable blocks Capability.
@@ -42,6 +42,29 @@ class AdminReusableBlocksMenuExample extends AbstractAdminReusableBlocksMenu
 	 * @var int
 	 */
 	public const ADMIN_REUSABLE_BLOCKS_MENU_POSITION = 4;
+
+	/**
+	 * Register all the hooks.
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_action(
+			'admin_menu',
+			function () {
+				\add_menu_page(
+					$this->getTitle(),
+					$this->getMenuTitle(),
+					$this->getCapability(),
+					$this->getMenuSlug(),
+					'',
+					$this->getIcon(),
+					$this->getPosition()
+				);
+			}
+		);
+	}
 
 	/**
 	 * Get the title to use for the admin page.
@@ -119,5 +142,32 @@ class AdminReusableBlocksMenuExample extends AbstractAdminReusableBlocksMenu
 	protected function getPosition(): int
 	{
 		return self::ADMIN_REUSABLE_BLOCKS_MENU_POSITION;
+	}
+
+	/**
+	 * Get the view component that will render correct view.
+	 *
+	 * @return string View uri.
+	 */
+	protected function getViewComponent(): string
+	{
+		return '';
+	}
+
+	/**
+	 * Process the admin menu attributes.
+	 *
+	 * Here you can get any kind of metadata, query the database, etc..
+	 * This data will be passed to the component view to be rendered out in the
+	 * processAdminMenu parent method.
+	 *
+	 * @param array<string, mixed>|string $attr Raw admin menu attributes passed into the
+	 *                           admin menu function.
+	 *
+	 * @return array<string, mixed> Processed admin menu attributes.
+	 */
+	protected function processAttributes($attr): array
+	{
+		return [];
 	}
 }
