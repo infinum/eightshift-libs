@@ -33,12 +33,12 @@ class BlocksCli extends AbstractCli
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks';
 
 	/**
-	 * List of components
+	 * List of components only used in the project init.
+	 * All components are read from the disc path.
 	 *
 	 * @var string[]
 	 */
 	public const COMPONENTS = [
-		'accordion',
 		'button',
 		'card',
 		'copyright',
@@ -50,48 +50,29 @@ class BlocksCli extends AbstractCli
 		'heading',
 		'icon',
 		'image',
-		'jumbotron',
 		'layout-three-columns',
 		'lists',
-		'loader',
 		'logo',
 		'menu',
-		'modal',
-		'page-overlay',
 		'paragraph',
-		'quote',
-		'scroll-to-top',
-		'search-bar',
-		'share',
-		'social-links',
 		'tracking-before-body-end',
 		'tracking-head',
-		'video',
 	];
 
 	/**
-	 * List of blocks
+	 * List of blocks only used in the project init.
+	 * All blocks are read from the disc path.
 	 *
 	 * @var string[]
 	 */
 	public const BLOCKS = [
-		'accordion',
 		'button',
 		'card',
-		'carousel',
-		'column',
-		'columns',
-		'example',
-		'featured-categories',
-		'featured-posts',
 		'group',
 		'heading',
 		'image',
-		'jumbotron',
 		'lists',
 		'paragraph',
-		'quote',
-		'video',
 	];
 
 	/**
