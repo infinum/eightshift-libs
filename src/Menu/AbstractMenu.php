@@ -48,16 +48,16 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 	 * @param string $parentClass This string will add class to only top level list element.
 	 * @param string $cssClassModifiers Provide either a string or array of values to apply extra classes
 	 *                                   to the <ul> but not the <li's>.
-	 * @param bool   $echo Echo the menu.
+	 * @param bool   $outputMenu Echo the menu.
 	 *
-	 * @return string|false|void Menu output if $echo is false, false if there are no items or no menu was found.
+	 * @return string|false|void Menu output if $outputMenu is false, false if there are no items or no menu was found.
 	 */
 	public static function bemMenu(
 		string $location = 'main_menu',
 		string $cssClassPrefix = 'main-menu',
 		string $parentClass = '',
 		$cssClassModifiers = '',
-		bool $echo = true
+		bool $outputMenu = true
 	) {
 		// Check to see if any css modifiers were supplied.
 		$modifiers = '';
@@ -74,7 +74,7 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 			'theme_location' => $location,
 			'container' => false,
 			'items_wrap' => '<ul class="' . $parentClass . ' ' . $cssClassPrefix . ' ' . $modifiers . '">%3$s</ul>',
-			'echo' => $echo,
+			'echo' => $outputMenu,
 			'walker' => new BemMenuWalker($cssClassPrefix),
 		];
 
