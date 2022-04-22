@@ -766,10 +766,10 @@ abstract class AbstractCli implements CliInterface
 	public function prepareSlug(string $convert): string
 	{
 		if (\strpos($convert, ' ') !== false) {
-			$string = \strtolower($convert);
+			$convert = \strtolower($convert);
 		}
 
-		return \str_replace('_', '-', \str_replace(' ', '-', $string));
+		return \str_replace('_', '-', \str_replace(' ', '-', $convert));
 	}
 
 	/**
