@@ -38,29 +38,29 @@ trait ObjectHelperTrait
 	/**
 	 * Check if json is valid
 	 *
-	 * @param string $check String to check.
+	 * @param string $jsonString String to check.
 	 *
 	 * @return bool
 	 */
-	public static function isJson(string $check): bool
+	public static function isJson(string $jsonString): bool
 	{
-		\json_decode($check);
+		\json_decode($jsonString);
 		return (\json_last_error() === \JSON_ERROR_NONE);
 	}
 
 	/**
 	 * Flatten multidimensional array.
 	 *
-	 * @param array<mixed> $flatten Multidimensional array to flatten.
+	 * @param array<mixed> $arrayToFlatten Multidimensional array to flatten.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function flattenArray(array $flatten): array
+	public static function flattenArray(array $arrayToFlatten): array
 	{
 		$output = [];
 
 		\array_walk_recursive(
-			$flatten,
+			$arrayToFlatten,
 			function ($a) use (&$output) {
 				if (!empty($a)) {
 					$output[] = $a;
@@ -76,16 +76,16 @@ trait ObjectHelperTrait
 	 *
 	 * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
 	 *
-	 * @param array<mixed> $array Provided array.
+	 * @param array<mixed> $arrayToSanitize Provided array.
 	 * @param string $sanitizationFunction WordPress function used for sanitization purposes.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function sanitizeArray(array $array, string $sanitizationFunction): array
+	public static function sanitizeArray(array $arrayToSanitize, string $sanitizationFunction): array
 	{
 		$sanitized = [];
 
-		foreach ($array as $key => $value) {
+		foreach ($arrayToSanitize as $key => $value) {
 			if (\is_array($value)) {
 				$sanitizedValue = self::sanitizeArray($value, $sanitizationFunction);
 				$sanitized[$key] = $sanitizedValue;
@@ -135,14 +135,14 @@ trait ObjectHelperTrait
 	/**
 	 * Convert string from kebab to camel case
 	 *
-	 * @param string $convert    String to convert.
+	 * @param string $stringToConvert    String to convert.
 	 * @param string $separator Separator to use for conversion.
 	 *
 	 * @return string
 	 */
-	public static function kebabToCamelCase(string $convert, string $separator = '-'): string
+	public static function kebabToCamelCase(string $stringToConvert, string $separator = '-'): string
 	{
-		return \lcfirst(\str_replace($separator, '', \ucwords($convert, $separator)));
+		return \lcfirst(\str_replace($separator, '', \ucwords($stringToConvert, $separator)));
 	}
 
 	/**

@@ -759,17 +759,17 @@ abstract class AbstractCli implements CliInterface
 	 * Convert _ to -, empty space to - and convert everything to lowercase
 	 * if the string contains empty space.
 	 *
-	 * @param string $convert String to convert.
+	 * @param string $stringToConvert String to convert.
 	 *
 	 * @return string
 	 */
-	public function prepareSlug(string $convert): string
+	public function prepareSlug(string $stringToConvert): string
 	{
-		if (\strpos($convert, ' ') !== false) {
-			$convert = \strtolower($convert);
+		if (\strpos($stringToConvert, ' ') !== false) {
+			$stringToConvert = \strtolower($stringToConvert);
 		}
 
-		return \str_replace('_', '-', \str_replace(' ', '-', $convert));
+		return \str_replace('_', '-', \str_replace(' ', '-', $stringToConvert));
 	}
 
 	/**
