@@ -39,9 +39,17 @@ test('Admin reusable blocks menu CLI command will correctly copy the admin reusa
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
 
-	$this->assertStringContainsString('class AdminReusableBlocksMenu extends AbstractAdminMenu', $generatedCPT, 'Class name not correctly set');
-	$this->assertStringContainsString('Reusable Blocks', $generatedCPT, 'Menu title not correctly replaced');
-	$this->assertStringNotContainsString('product', $generatedCPT);
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->toContain('class AdminReusableBlocksMenu extends AbstractAdminMenu');
+
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->toContain('Reusable Blocks');
+
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->not->toContain('product');
 });
 
 
@@ -58,12 +66,29 @@ test('Admin reusable blocks menu CLI command will correctly copy the admin reusa
 	// Check the output dir if the generated method is correctly generated.
 	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
 
-	$this->assertStringContainsString('class AdminReusableBlocksMenu extends AbstractAdminMenu', $generatedCPT, 'Class name not correctly set');
-	$this->assertStringContainsString('Reusable Blocks', $generatedCPT, 'Menu title not correctly replaced');
-	$this->assertStringContainsString('edit_posts', $generatedCPT, 'Capability not correctly replaced');
-	$this->assertStringContainsString('4', $generatedCPT, 'Menu position not correctly replaced');
-	$this->assertStringContainsString('dashicons-editor-table', $generatedCPT, 'Icon not correctly replaced');
-	$this->assertStringNotContainsString('dashicons-analytics', $generatedCPT, 'String found that should not be here');
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->toContain('class AdminReusableBlocksMenu extends AbstractAdminMenu');
+
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->toContain('Reusable Blocks');
+
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->toContain('edit_posts');
+
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->toContain('4');
+
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->toContain('dashicons-editor-table');
+
+	expect($generatedCPT)
+		->not->toBeEmpty()
+		->not->toContain('dashicons-analytics');
 });
 
 
@@ -74,8 +99,8 @@ test('Admin reusable blocks menu CLI documentation is correct', function () {
 
 	$key = 'shortdesc';
 
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Generates reusable blocks admin menu class file.', $documentation[$key]);
+	expect($documentation)->toBeArray();
+	expect($documentation)->toHaveKey($key);
+	expect($documentation)->toHaveKey('synopsis');
+	expect($documentation[$key])->toBe('Generates reusable blocks admin menu class file.');
 });
