@@ -48,7 +48,7 @@ use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
-use EightshiftLibs\CliCommands\CustomCommandCli;
+use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
@@ -93,7 +93,7 @@ class Cli
 		GitIgnoreCli::class,
 		ReadmeCli::class,
 		SetupCli::class,
-		CustomCommandCli::class,
+		WpCli::class,
 	];
 
 	/**

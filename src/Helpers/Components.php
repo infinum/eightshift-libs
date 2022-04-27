@@ -54,6 +54,11 @@ class Components
 	use PostTrait;
 
 	/**
+	 * Label Generator trait.
+	 */
+	use LabelGeneratorTrait;
+
+	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
 	 * Note about "parentClass" attribute: If provided, the component will be wrapped with a

@@ -203,6 +203,12 @@ trait CssVariablesTrait
 				continue;
 			}
 
+			$uniqueSelector = "[data-id='{$unique}']";
+
+			if (!$unique) {
+				$uniqueSelector = '';
+			}
+
 			foreach ($variables as $data) {
 				$type = $data['type'] ?? '';
 				$value = $data['value'] ?? '';
@@ -219,7 +225,7 @@ trait CssVariablesTrait
 				}
 
 				// Populate breakpoint.
-				$breakpoints["{$type}---{$value}"] .= "\n.{$name}[data-id='{$unique}']{\n{$variable}\n} ";
+				$breakpoints["{$type}---{$value}"] .= "\n.{$name}{$uniqueSelector}{\n{$variable}\n} ";
 			}
 		}
 
@@ -315,6 +321,12 @@ trait CssVariablesTrait
 	{
 		$output = '';
 
+		$uniqueSelector = "[data-id='{$unique}']";
+
+		if (!$unique) {
+			$uniqueSelector = '';
+		}
+
 		// Loop data and provide correct selectors from data array.
 		foreach ($data as $values) {
 			// Define variables from values.
@@ -332,9 +344,9 @@ trait CssVariablesTrait
 
 			// If breakpoint value is 0 then don't wrap the media query around it.
 			if ($value === 0) {
-				$output .= "\n .{$name}[data-id='{$unique}']{\n{$breakpointData}\n}";
+				$output .= "\n .{$name}{$uniqueSelector}{\n{$breakpointData}\n}";
 			} else {
-				$output .= "\n @media ({$type}-width:{$value}px){\n.{$name}[data-id='{$unique}']{\n{$breakpointData}\n}\n}";
+				$output .= "\n @media ({$type}-width:{$value}px){\n.{$name}{$uniqueSelector}{\n{$breakpointData}\n}\n}";
 			}
 		}
 
@@ -353,7 +365,7 @@ trait CssVariablesTrait
 		}
 
 		// Prepare output for manual variables.
-		$finalManualOutput = $manual ? "\n .{$name}[data-id='{$unique}']{\n{$manual}\n}" : '';
+		$finalManualOutput = $manual ? "\n .{$name}{$uniqueSelector}{\n{$manual}\n}" : '';
 
 		if (Components::getConfigOutputCssOptimize()) {
 			$output = \str_replace(["\n", "\r"], '', $output);

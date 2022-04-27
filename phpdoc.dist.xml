@@ -25,5 +25,5 @@
 			</extensions>
 		</api>
 	</version>
-	<template name="default"/>
+	<template name="eightshift-docs-php"/>
 </phpdocumentor>

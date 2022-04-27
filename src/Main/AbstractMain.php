@@ -15,6 +15,7 @@ use DI\ContainerBuilder;
 use DI\Definition\Helper\AutowireDefinitionHelper;
 use DI\Definition\Reference;
 use EightshiftLibs\Services\ServiceInterface;
+use EightshiftLibs\Services\ServiceCliInterface;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
 
@@ -60,11 +61,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 */
 	public function registerServices()
 	{
-		// Bail early is function is called via WP-CLI.
-		if (\defined('WP_CLI')) {
-			return;
-		}
-
 		// Bail early so we don't instantiate services twice.
 		if (!empty($this->services)) {
 			return;
@@ -75,11 +71,15 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		\array_walk(
 			$this->services,
 			function ($class) {
-				if (!$class instanceof ServiceInterface) {
-					return;
+				// Load services classes but not in the WP-CLI env.
+				if (!\defined('WP_CLI') && $class instanceof ServiceInterface) {
+					$class->register();
 				}
 
-				$class->register();
+				// Load services CLI classes only in WP-CLI env.
+				if (\defined('WP_CLI') && $class instanceof ServiceCliInterface) {
+					$class->register();
+				}
 			}
 		);
 	}
