@@ -41,14 +41,8 @@ test('Admin reusable blocks menu CLI command will correctly copy the admin reusa
 
 	expect($generatedCPT)
 		->not->toBeEmpty()
-		->toContain('class AdminReusableBlocksMenu extends AbstractAdminMenu');
-
-	expect($generatedCPT)
-		->not->toBeEmpty()
-		->toContain('Reusable Blocks');
-
-	expect($generatedCPT)
-		->not->toBeEmpty()
+		->toContain('class AdminReusableBlocksMenu extends AbstractAdminMenu')
+		->toContain('Reusable Blocks')
 		->not->toContain('product');
 });
 
@@ -68,26 +62,11 @@ test('Admin reusable blocks menu CLI command will correctly copy the admin reusa
 
 	expect($generatedCPT)
 		->not->toBeEmpty()
-		->toContain('class AdminReusableBlocksMenu extends AbstractAdminMenu');
-
-	expect($generatedCPT)
-		->not->toBeEmpty()
-		->toContain('Reusable Blocks');
-
-	expect($generatedCPT)
-		->not->toBeEmpty()
-		->toContain('edit_posts');
-
-	expect($generatedCPT)
-		->not->toBeEmpty()
-		->toContain('4');
-
-	expect($generatedCPT)
-		->not->toBeEmpty()
-		->toContain('dashicons-editor-table');
-
-	expect($generatedCPT)
-		->not->toBeEmpty()
+		->toContain('class AdminReusableBlocksMenu extends AbstractAdminMenu')
+		->toContain('Reusable Blocks')
+		->toContain('edit_posts')
+		->toContain('4')
+		->toContain('dashicons-editor-table')
 		->not->toContain('dashicons-analytics');
 });
 
@@ -99,8 +78,10 @@ test('Admin reusable blocks menu CLI documentation is correct', function () {
 
 	$key = 'shortdesc';
 
-	expect($documentation)->toBeArray();
-	expect($documentation)->toHaveKey($key);
-	expect($documentation)->toHaveKey('synopsis');
+	expect($documentation)
+		->toBeArray()
+		->toHaveKey($key)
+		->toHaveKey('synopsis');
+
 	expect($documentation[$key])->toBe('Generates reusable blocks admin menu class file.');
 });
