@@ -181,7 +181,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 					true
 				) ? $prefix . $suffix['ancestor_of_active_item'] : '',
 				'depth_class' => $depth >= 1 ? $prefix . $suffix['sub_menu_item'] . ' ' . $prefix . $suffix['sub_menu'] . '--' . $depth . '__item' : '',
-				'item_id_class' => $prefix . '__item--' . $item->object_id,
+				'item_id_class' => $prefix . '__item--' . $item->object_id, // @phpstan-ignore-line
 				'user_class' => !empty($userClasses) ? \implode(' ', $userClasses) : '',
 			];
 		}
