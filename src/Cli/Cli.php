@@ -13,6 +13,7 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\AdminMenus\AdminMenuCli;
 use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
+use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Blocks\BlockComponentCli;
@@ -95,6 +96,7 @@ class Cli
 		AdminReusableBlocksMenuCli::class,
 		AdminSubMenuCli::class,
 		AcfMetaCli::class,
+		AnalyticsGdprCli::class,
 		BlocksCli::class,
 		EnqueueAdminCli::class,
 		EnqueueBlocksCli::class,
@@ -114,7 +116,6 @@ class Cli
 		RouteCli::class,
 		ServiceExampleCli::class,
 		ThemeOptionsCli::class,
-		GdprSettingsCli::class,
 		BuildCli::class,
 		CiExcludeCli::class,
 		ConfigProjectCli::class,
