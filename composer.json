@@ -104,6 +104,12 @@
 			"@analyze",
 			"@test:unit",
 			"@test:integration"
+		],
+		"post-install-cmd": [
+			"@php bin/cleanWpContentFolder.php"
+		],
+		"post-update-cmd": [
+			"@php bin/cleanWpContentFolder.php"
 		]
 	}
 }
