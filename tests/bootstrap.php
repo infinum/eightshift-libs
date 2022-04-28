@@ -58,18 +58,5 @@ if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['ar
 
 	tests_add_filter( 'muplugins_loaded', '_register_theme' );
 
-	// Modify the bootstrap so that Pest works.
-	$basicBootstrapPath = dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/bootstrap.php';
-	$basicBootstrapContents = file_get_contents($basicBootstrapPath);
-
-	if (strpos($basicBootstrapContents, "require __DIR__ . '/phpunit-adapter-testcase.php';") !== false) {
-		// We need to remove these because we already included them in Pest.php
-		$basicBootstrapContents = str_replace("require __DIR__ . '/phpunit-adapter-testcase.php';", '', $basicBootstrapContents);
-		$basicBootstrapContents = str_replace("require __DIR__ . '/abstract-testcase.php';", '', $basicBootstrapContents);
-		$basicBootstrapContents = str_replace("require __DIR__ . '/testcase.php';", '', $basicBootstrapContents);
-
-		file_put_contents($basicBootstrapPath, $basicBootstrapContents);
-	}
-
-	require_once $basicBootstrapPath;
+	require_once dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/bootstrap.php';
 }
