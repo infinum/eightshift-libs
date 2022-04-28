@@ -41,22 +41,22 @@ if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['ar
 		$currentTheme = basename($themeDir);
 		$themeRoot = dirname($themeDir);
 
-		add_filter('theme_root', function () use ($themeRoot) {
+		\add_filter('theme_root', function () use ($themeRoot) {
 			return $themeRoot;
 		});
 
-		register_theme_directory($themeRoot);
+		\register_theme_directory($themeRoot);
 
-		add_filter('pre_option_template', function () use ($currentTheme) {
+		\add_filter('pre_option_template', function () use ($currentTheme) {
 			return $currentTheme;
 		});
 
-		add_filter('pre_option_stylesheet', function () use ($currentTheme) {
+		\add_filter('pre_option_stylesheet', function () use ($currentTheme) {
 			return $currentTheme;
 		});
 	}
 
-	tests_add_filter( 'muplugins_loaded', '_register_theme' );
+	\tests_add_filter( 'muplugins_loaded', '_register_theme' );
 
 	require_once dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/bootstrap.php';
 }
