@@ -9,10 +9,11 @@
 use EightshiftLibs\Cli\Cli;
 use WP_CLI\ExitException;
 
-$root = \dirname(__DIR__, 1);
+$root = \dirname(__DIR__);
+$ds = DIRECTORY_SEPARATOR;
 
-require "{$root}/vendor/autoload.php";
-require  "{$root}/src/Cli/Cli.php";
+require_once "{$root}{$ds}vendor{$ds}autoload.php";
+require_once  "{$root}{$ds}src{$ds}Cli{$ds}Cli.php";
 
 try {
 	(new Cli())->loadDevelop($args);
