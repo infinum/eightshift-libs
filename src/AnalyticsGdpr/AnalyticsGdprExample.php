@@ -225,7 +225,7 @@ class AnalyticsGdprExample implements ServiceInterface
 	 */
 	public function createAnalyticsPage(): void
 	{
-		if (function_exists('acf_add_options_page')) {
+		if (\function_exists('acf_add_options_page')) {
 			\acf_add_options_page(
 				[
 					'page_title' => \esc_html__('Analytics and GDPR settings', 'eightshift-libs'),
@@ -247,7 +247,7 @@ class AnalyticsGdprExample implements ServiceInterface
 	 */
 	public function registerAnalytics(): void
 	{
-		if (function_exists('acf_add_local_field_group')) {
+		if (\function_exists('acf_add_local_field_group')) {
 			\acf_add_local_field_group(
 				[
 					'key' => 'group_5fc829103758c',
@@ -322,7 +322,7 @@ class AnalyticsGdprExample implements ServiceInterface
 	 */
 	public function createGdprModalPage(): void
 	{
-		if (function_exists('acf_add_options_sub_page') && \current_user_can(self::ANALYTICS_CAPABILITY)) {
+		if (\function_exists('acf_add_options_sub_page') && \current_user_can(self::ANALYTICS_CAPABILITY)) {
 			\acf_add_options_sub_page(
 				[
 					'page_title' => \esc_html__('GDPR Modal', 'eightshift-libs'),
@@ -341,7 +341,7 @@ class AnalyticsGdprExample implements ServiceInterface
 	 */
 	public function registerGdprModalSettings(): void
 	{
-		if (function_exists('acf_add_local_field_group')) {
+		if (\function_exists('acf_add_local_field_group')) {
 			\acf_add_local_field_group(
 				[
 					'key' => 'group_5f09139247eb0',
@@ -840,7 +840,7 @@ class AnalyticsGdprExample implements ServiceInterface
 	 */
 	public function prepareGdprModalData(): array
 	{
-		if (!function_exists('get_field')) {
+		if (!\function_exists('get_field')) {
 			return [];
 		}
 
