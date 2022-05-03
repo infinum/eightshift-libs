@@ -41,15 +41,15 @@ test('Custom Analytics & GDPR Settings CLI command will correctly copy the Analy
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMeta = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/AnalyticsGdpr/AnalyticsGdpr.php');
 
-	$this->assertStringContainsString('class AnalyticsGdpr implements ServiceInterface', $generatedMeta);
-	$this->assertStringContainsString('acf_add_options_page', $generatedMeta);
-	$this->assertStringContainsString('acf_add_local_field_group', $generatedMeta);
-	$this->assertStringContainsString('createAnalyticsPage', $generatedMeta);
-	$this->assertStringContainsString('registerAnalytics', $generatedMeta);
-	$this->assertStringContainsString('createGdprModalPage', $generatedMeta);
-	$this->assertStringContainsString('registerGdprModalSettings', $generatedMeta);
-	$this->assertStringContainsString('prepareGdprModalData', $generatedMeta);
-	$this->assertStringNotContainsString('someRandomMethod', $generatedMeta);
+	expect($generatedMeta)->toBeString()->toContain('class AnalyticsGdpr implements ServiceInterface');
+	expect($generatedMeta)->toBeString()->toContain('acf_add_options_page');
+	expect($generatedMeta)->toBeString()->toContain('acf_add_local_field_group');
+	expect($generatedMeta)->toBeString()->toContain('createAnalyticsPage');
+	expect($generatedMeta)->toBeString()->toContain('registerAnalytics');
+	expect($generatedMeta)->toBeString()->toContain('createGdprModalPage');
+	expect($generatedMeta)->toBeString()->toContain('registerGdprModalSettings');
+	expect($generatedMeta)->toBeString()->toContain('prepareGdprModalData');
+	expect($generatedMeta)->toBeString()->not->toContain('someRandomMethod');
 });
 
 test('Custom GDPR settings CLI documentation is correct', function () {
@@ -59,7 +59,6 @@ test('Custom GDPR settings CLI documentation is correct', function () {
 
 	$descKey = 'shortdesc';
 
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertSame('Generates project Analytics and GDPR Settings classes using ACF.', $documentation[$descKey]);
+	expect($documentation)->toBeArray()->toHaveKey($descKey);
+	expect($documentation[$descKey])->toBeString()->toBe('Generates project Analytics and GDPR Settings classes using ACF.');
 });
