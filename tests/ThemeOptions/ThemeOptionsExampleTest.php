@@ -34,12 +34,10 @@ test('Method for adding ACF Theme Options page exists', function () {
 	$this->example->createThemeOptionsPage();
 
 	expect(\method_exists($this->example, 'createThemeOptionsPage'))->toBeTrue();
-	expect(\function_exists('acf_add_options_page'))->toBeTrue();
 });
 
 test('Method for adding ACF fields to Theme Options page exists', function () {
 	$this->example->registerThemeOptions();
 
 	expect(\method_exists($this->example, 'registerThemeOptions'))->toBeTrue();
-	expect(\function_exists('acf_add_local_field_group'))->toBeTrue();
 });

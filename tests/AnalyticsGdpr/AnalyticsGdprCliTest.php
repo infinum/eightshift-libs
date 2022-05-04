@@ -42,16 +42,16 @@ test('Custom Analytics & GDPR Settings CLI command will correctly copy the Analy
 	$generatedMeta = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/AnalyticsGdpr/AnalyticsGdpr.php');
 
     expect($generatedMeta)
-        ->toBeString()
-        ->toContain('class AnalyticsGdpr implements ServiceInterface')
-        ->toContain('acf_add_options_page')
-        ->toContain('acf_add_local_field_group')
-        ->toContain('createAnalyticsPage')
-        ->toContain('registerAnalytics')
-        ->toContain('createGdprModalPage')
-        ->toContain('registerGdprModalSettings')
-        ->toContain('prepareGdprModalData')
-        ->not->toContain('someRandomMethod');
+			->toBeString()
+			->toContain('class AnalyticsGdpr implements ServiceInterface')
+			->toContain('acf_add_options_page')
+			->toContain('acf_add_local_field_group')
+			->toContain('createAnalyticsPage')
+			->toContain('registerAnalytics')
+			->toContain('createGdprModalPage')
+			->toContain('registerGdprModalSettings')
+			->toContain('prepareGdprModalData')
+			->not->toContain('someRandomMethod');
 });
 
 test('Custom GDPR settings CLI documentation is correct', function () {
