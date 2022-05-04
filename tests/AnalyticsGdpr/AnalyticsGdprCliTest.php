@@ -41,15 +41,17 @@ test('Custom Analytics & GDPR Settings CLI command will correctly copy the Analy
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMeta = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/AnalyticsGdpr/AnalyticsGdpr.php');
 
-	expect($generatedMeta)->toBeString()->toContain('class AnalyticsGdpr implements ServiceInterface');
-	expect($generatedMeta)->toBeString()->toContain('acf_add_options_page');
-	expect($generatedMeta)->toBeString()->toContain('acf_add_local_field_group');
-	expect($generatedMeta)->toBeString()->toContain('createAnalyticsPage');
-	expect($generatedMeta)->toBeString()->toContain('registerAnalytics');
-	expect($generatedMeta)->toBeString()->toContain('createGdprModalPage');
-	expect($generatedMeta)->toBeString()->toContain('registerGdprModalSettings');
-	expect($generatedMeta)->toBeString()->toContain('prepareGdprModalData');
-	expect($generatedMeta)->toBeString()->not->toContain('someRandomMethod');
+    expect($generatedMeta)
+        ->toBeString()
+        ->toContain('class AnalyticsGdpr implements ServiceInterface')
+        ->toContain('acf_add_options_page')
+        ->toContain('acf_add_local_field_group')
+        ->toContain('createAnalyticsPage')
+        ->toContain('registerAnalytics')
+        ->toContain('createGdprModalPage')
+        ->toContain('registerGdprModalSettings')
+        ->toContain('prepareGdprModalData')
+        ->not->toContain('someRandomMethod');
 });
 
 test('Custom GDPR settings CLI documentation is correct', function () {
@@ -59,6 +61,11 @@ test('Custom GDPR settings CLI documentation is correct', function () {
 
 	$descKey = 'shortdesc';
 
-	expect($documentation)->toBeArray()->toHaveKey($descKey);
-	expect($documentation[$descKey])->toBeString()->toBe('Generates project Analytics and GDPR Settings classes using ACF.');
+	expect($documentation)
+		->toBeArray()
+		->toHaveKey($descKey);
+	
+	expect($documentation[$descKey])
+		->toBeString()
+		->toBe('Generates project Analytics and GDPR Settings classes using ACF.');
 });
