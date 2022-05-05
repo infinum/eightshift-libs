@@ -39,14 +39,20 @@ test('Rest API endpoints work', function () {
 });
 
 test('REST route CLI command will correctly set up a custom REST route', function () {
-	// Setup theme.
-	setupTheme();
 
 	// Create default custom route.
 	$route = new RouteCli('boilerplate');
 	$route([], $route->getDevelopArgs([]));
 
+	// Setup theme.
+	setupTheme();
+	
 	$routes = $this->server->get_routes();
+
+	global $wp_filter;
+	var_export($wp_filter['after_setup_theme']);
+//	var_export(array_keys($routes));
+
 
 	expect($routes)
 		->toBeArray()
