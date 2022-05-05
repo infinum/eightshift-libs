@@ -82,7 +82,7 @@ class UpdateCli extends AbstractCli
 
 		$setupFilename = 'setup.json';
 
-		if (\getenv('TEST') !== false) {
+		if (\getenv('ES_TEST') !== false) {
 			$setupFilename = $this->getProjectConfigRootPath() . '/cliOutput/setup.json';
 		}
 
