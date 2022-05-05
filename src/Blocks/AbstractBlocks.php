@@ -396,7 +396,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$blocksPath = \dirname(__DIR__, 5) . self::PATH_BLOCKS_PARENT;
 
-		if (\getenv('TEST')) {
+		if (\getenv('ES_TEST')) {
 			$blocksPath = \dirname(__DIR__, 2) . self::PATH_BLOCKS_PARENT_TESTS;
 		}
 

@@ -82,7 +82,7 @@ class Components
 		if (empty($parentPath)) {
 			$parentPath = \dirname(__DIR__, 5);
 
-			if (\getenv('TEST')) {
+			if (\getenv('ES_TEST')) {
 				$parentPath = \dirname(__DIR__, 2);
 			}
 		}
@@ -107,7 +107,7 @@ class Components
 		} else {
 			$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT;
 
-			if (\getenv('TEST')) {
+			if (\getenv('ES_TEST')) {
 				$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT_TESTS;
 			}
 

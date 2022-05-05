@@ -86,7 +86,7 @@ class BlockVariationCli extends AbstractCli
 		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
 		$sourcePath = "{$sourcePathFolder}{$name}";
 
-		if (!\getenv('TEST')) {
+		if (!\getenv('ES_TEST')) {
 			$destinationPath = $root . $ds . $path;
 		} else {
 			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';

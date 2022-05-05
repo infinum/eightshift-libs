@@ -56,7 +56,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$path = "{$outputDir}/{$block}";
 			$sourcePath = "{$sourcePathFolder}{$block}";
 
-			if (!\getenv('TEST')) {
+			if (!\getenv('ES_TEST')) {
 				$destinationPath = $root . \DIRECTORY_SEPARATOR . $path;
 			} else {
 				$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
