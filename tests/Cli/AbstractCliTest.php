@@ -193,13 +193,13 @@ test('Getting libs path works', function() {
 	$abstractMock = new AbstractTest('test');
 
 	// The test one is covered. Let's see if we can get the one that will be used
-	putenv('TEST');
+	putenv('ES_TEST');
 	$output = $abstractMock->getLibsPath('test');
 
 	$this->assertIsString($output);
 	$this->assertStringContainsString('/vendor/infinum/eightshift-libs/test', $output);
 
-	putenv('TEST=1');
+	putenv('ES_TEST=1');
 });
 
 
@@ -213,7 +213,7 @@ test('Project config root path works if dev is true', function() {
 
 
 test('Project config root path works if dev is false', function() {
-	putenv('TEST');
+	putenv('ES_TEST');
 	$abstractMock = new AbstractTest('test');
 
 	$outputProd = $abstractMock->getProjectConfigRootPath(false);
@@ -221,7 +221,7 @@ test('Project config root path works if dev is false', function() {
 	$this->assertIsString($outputProd);
 	$this->assertSame('/', $outputProd);
 
-	putenv('TEST=1');
+	putenv('ES_TEST=1');
 });
 
 
