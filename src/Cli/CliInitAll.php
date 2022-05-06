@@ -42,8 +42,9 @@ class CliInitAll extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for all service classes in the WordPress theme project.
-			This command is used only in develop mode. For this to work you must set global constant ES_DEVELOP_MODE to true.',
+			'shortdesc' =>
+				'Generates initial setup for all service classes in the WordPress theme project.
+				This command is used only in develop mode. For this to work you must set global constant ES_DEVELOP_MODE to true.',
 		];
 	}
 
