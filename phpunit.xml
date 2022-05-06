@@ -10,7 +10,7 @@
 		</testsuite>
 	</testsuites>
 	<php>
-        <env name="TEST" value="true" force="true" />
+        <env name="ES_TEST" value="true" force="true" />
     </php>
 	<coverage processUncoveredFiles="true">
 		<include>

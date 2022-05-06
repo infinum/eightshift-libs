@@ -13,37 +13,58 @@ namespace EightshiftBoilerplate\AdminMenus;
 use EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
- * AdminMenuExample class.
+ * AdminReusableBlocksMenuExample class.
  */
-class AdminMenuExample extends AbstractAdminMenu
+class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 {
 	/**
-	 * Capability for this admin menu
+	 * Reusable blocks Capability.
+	 */
+	public const ADMIN_REUSABLE_BLOCKS_MENU_CAPABILITY = 'edit_posts';
+
+	/**
+	 * Menu slug for reusable blocks menu.
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'edit_posts';
+	public const ADMIN_REUSABLE_BLOCKS_MENU_SLUG = 'edit.php?post_type=wp_block';
 
 	/**
-	 * Menu slug for this admin menu
+	 * Menu icon for reusable blocks menu.
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'example-menu-slug';
+	public const ADMIN_REUSABLE_BLOCKS_MENU_ICON = 'dashicons-editor-table';
 
 	/**
-	 * Menu icon for this admin menu
-	 *
-	 * @var string
-	 */
-	public const ADMIN_MENU_ICON = 'dashicons-admin-generic';
-
-	/**
-	 * Menu position for this admin menu
+	 * Menu position for reusable blocks menu.
 	 *
 	 * @var int
 	 */
-	public const ADMIN_MENU_POSITION = 100;
+	public const ADMIN_REUSABLE_BLOCKS_MENU_POSITION = 4;
+
+	/**
+	 * Register all the hooks.
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_action(
+			'admin_menu',
+			function () {
+				\add_menu_page(
+					$this->getTitle(),
+					$this->getMenuTitle(),
+					$this->getCapability(),
+					$this->getMenuSlug(),
+					'',
+					$this->getIcon(),
+					$this->getPosition()
+				);
+			}
+		);
+	}
 
 	/**
 	 * Get the title to use for the admin page.
@@ -52,7 +73,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Admin Title', 'eightshift-libs');
+		return \esc_html__('Reusable Blocks', 'eightshift-libs');
 	}
 
 	/**
@@ -62,35 +83,35 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Admin Menu Title', 'eightshift-libs');
+		return \esc_html__('Reusable Blocks', 'eightshift-libs');
 	}
 
 	/**
-	 * Get the capability required for this menu to be displayed.
+	 * Get the capability required for reusable block menu to be displayed.
 	 *
-	 * @return string The capability required for this menu to be displayed to the user.
+	 * @return string The capability required for reusable block menu to be displayed to the user.
 	 */
 	protected function getCapability(): string
 	{
-		return self::ADMIN_MENU_CAPABILITY;
+		return self::ADMIN_REUSABLE_BLOCKS_MENU_CAPABILITY;
 	}
 
 	/**
 	 * Get the menu slug.
 	 *
-	 * @return string The slug name to refer to this menu by.
-	 *                Should be unique for this menu page and only include lowercase alphanumeric,
+	 * @return string The slug name to refer to reusable block menu by.
+	 *                Should be unique for reusable block menu page and only include lowercase alphanumeric,
 	 *                dashes, and underscores characters to be compatible with sanitize_key().
 	 */
 	protected function getMenuSlug(): string
 	{
-		return self::ADMIN_MENU_SLUG;
+		return self::ADMIN_REUSABLE_BLOCKS_MENU_SLUG;
 	}
 
 	/**
-	 * Get the URL to the icon to be used for this menu
+	 * Get the URL to the icon to be used for reusable block menu.
 	 *
-	 * @return string The URL to the icon to be used for this menu.
+	 * @return string The URL to the icon to be used for reusable block menu.
 	 *                * Pass a base64-encoded SVG using a data URI, which will be colored to match
 	 *                  the color scheme. This should begin with 'data:image/svg+xml;base64,'.
 	 *                * Pass the name of a Dashicons helper class to use a font icon,
@@ -99,11 +120,11 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getIcon(): string
 	{
-		return self::ADMIN_MENU_ICON;
+		return self::ADMIN_REUSABLE_BLOCKS_MENU_ICON;
 	}
 
 	/**
-	 * Get the position of the menu.
+	 * Get the position of the reusable blocks menu.
 	 *
 	 * @return int Number that indicates the position of the menu.
 	 * 5   - below Posts
@@ -120,7 +141,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getPosition(): int
 	{
-		return self::ADMIN_MENU_POSITION;
+		return self::ADMIN_REUSABLE_BLOCKS_MENU_POSITION;
 	}
 
 	/**
@@ -130,7 +151,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return 'layout';
+		return '';
 	}
 
 	/**
@@ -147,8 +168,6 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		return [
-			'pageTitle' => \esc_html__('Admin Title', 'eightshift-libs'),
-		];
+		return [];
 	}
 }

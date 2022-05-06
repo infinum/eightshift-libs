@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\AdminMenus\AdminMenuCli;
+use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
@@ -64,6 +65,7 @@ class Cli
 	 */
 	public const CLASSES_LIST = [
 		AdminMenuCli::class,
+		AdminReusableBlocksMenuCli::class,
 		AdminSubMenuCli::class,
 		AcfMetaCli::class,
 		BlocksCli::class,

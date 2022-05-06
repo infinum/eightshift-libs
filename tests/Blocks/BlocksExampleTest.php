@@ -54,13 +54,6 @@ test('Register method will call after_setup_theme hooks', function () {
 	$this->assertSame(11, has_action('after_setup_theme', 'EightshiftBoilerplate\Blocks\BlocksExample->changeEditorColorPalette()'), 'The callback changeEditorColorPalette should be hooked to after_setup_theme hook with priority 10');
 });
 
-test('Register method will call admin_menu hooks', function () {
-
-	$this->blocksExample->register();
-
-	$this->assertSame(10, has_action('admin_menu', 'EightshiftBoilerplate\Blocks\BlocksExample->addReusableBlocks()'), 'The callback addReusableBlocks should be hooked to admin_menu hook with priority 10');
-});
-
 test('addThemeSupport method will call add_theme_support() function with different arguments', function () {
 
 	Functions\when('add_theme_support')->alias(function($arg) {
