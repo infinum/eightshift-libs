@@ -246,11 +246,12 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): self
 	{
-		$path = "{$currentDir}/{$this->getExampleFileName( $fileName )}.php";
+		$ds = \DIRECTORY_SEPARATOR;
+		$path = "{$currentDir}{$ds}{$this->getExampleFileName( $fileName )}.php";
 
 		// If you pass file name with extension the version will be used.
 		if (\strpos($fileName, '.') !== false) {
-			$path = "{$currentDir}/{$fileName}";
+			$path = "{$currentDir}{$ds}{$fileName}";
 		}
 
 		$templateFile = '';
@@ -345,13 +346,13 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputDir(string $path = ''): string
 	{
-		if (\function_exists('\add_action') && !\getenv('ES_TEST')) {
+		$ds = \DIRECTORY_SEPARATOR;
+
+		if (\function_exists('\add_action') && !\getenv('TEST')) {
 			$root = $this->getProjectRootPath();
 		} else {
-			$root = $this->getProjectRootPath(true) . '/cliOutput';
+			$root = "{$this->getProjectRootPath(true)}{$ds}cliOutput";
 		}
-
-		$ds = \DIRECTORY_SEPARATOR;
 
 		$root = \rtrim($root, $ds);
 		$root = \trim($root, $ds);
@@ -359,7 +360,11 @@ abstract class AbstractCli implements CliInterface
 		$path = \rtrim($path, $ds);
 		$path = \trim($path, $ds);
 
-		return "{$ds}{$root}{$ds}{$path}";
+		if ($ds === '/') {
+			return "{$ds}{$root}{$ds}{$path}";
+		}
+
+		return "{$root}{$ds}{$path}";
 	}
 
 	/**
@@ -657,11 +662,12 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getComposer(array $args = []): array
 	{
+		$ds = \DIRECTORY_SEPARATOR;
 		if (!isset($args['config_path'])) {
 			if (\function_exists('\add_action')) {
-				$composerPath = $this->getProjectRootPath() . '/composer.json';
+				$composerPath = "{$this->getProjectRootPath()}{$ds}composer.json";
 			} else {
-				$composerPath = $this->getProjectRootPath(true) . '/composer.json';
+				$composerPath = "{$this->getProjectRootPath(true)}{$ds}composer.json";
 			}
 		} else {
 			$composerPath = $args['config_path'];
@@ -834,7 +840,8 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getFrontendLibsPath(string $path = ''): string
 	{
-		return "{$this->getProjectRootPath()}/node_modules/@eightshift/frontend-libs/{$path}";
+		$ds = \DIRECTORY_SEPARATOR;
+		return "{$this->getProjectRootPath()}{$ds}node_modules{$ds}@eightshift{$ds}frontend-libs{$ds}{$path}";
 	}
 
 	/**
@@ -846,11 +853,12 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getLibsPath(string $path = ''): string
 	{
-		if (\getenv('ES_TEST')) {
-			return "{$this->getProjectRootPath()}/{$path}";
+		$ds = \DIRECTORY_SEPARATOR;
+		if (\getenv('TEST')) {
+			return "{$this->getProjectRootPath()}{$ds}{$path}";
 		}
 
-		return "{$this->getProjectRootPath()}/vendor/infinum/eightshift-libs/{$path}";
+		return "{$this->getProjectRootPath()}{$ds}vendor{$ds}infinum{$ds}eightshift-libs{$ds}{$path}";
 	}
 
 	/**
@@ -860,7 +868,8 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getFrontendLibsBlockPath(): string
 	{
-		return $this->getFrontendLibsPath('blocks/init');
+		$ds = \DIRECTORY_SEPARATOR;
+		return $this->getFrontendLibsPath("blocks{$ds}init");
 	}
 
 	/**
@@ -872,16 +881,17 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getFullBlocksFiles(string $name): array
 	{
+		$ds = \DIRECTORY_SEPARATOR;
 		return [
 			"{$name}.php",
 			"{$name}-block.js",
 			"{$name}-hooks.js",
 			"{$name}-transforms.js",
 			"{$name}.js",
-			"docs/story.js",
-			"components/{$name}-editor.js",
-			"components/{$name}-toolbar.js",
-			"components/{$name}-options.js",
+			"docs{$ds}story.js",
+			"components{$ds}{$name}-editor.js",
+			"components{$ds}{$name}-toolbar.js",
+			"components{$ds}{$name}-options.js",
 		];
 	}
 

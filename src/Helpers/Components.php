@@ -215,7 +215,11 @@ class Components
 		$sep = \DIRECTORY_SEPARATOR;
 		$path = \trim($path, $sep);
 
-		$manifest = "{$sep}{$path}{$sep}manifest.json";
+		$manifest = "{$path}{$sep}manifest.json";
+
+		if ($sep === '/') {
+			$manifest = "{$sep}{$manifest}";
+		}
 
 		if (!\file_exists($manifest)) {
 			throw ComponentException::throwUnableToLocateComponent($manifest);

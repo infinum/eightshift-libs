@@ -151,104 +151,102 @@ trait CssVariablesTrait
 			return '';
 		}
 
-		$styles = Components::getStyles();
-
-		// Bailout if styles are missing.
-		if (!$styles) {
-			return '';
-		}
-
-		// Define variables from globalManifest.
-		$breakpointsData = self::getSettingsGlobalVariablesBreakpoints();
-
-		// Sort breakpoints in ascending order.
-		\asort($breakpointsData);
-
-		// Populate min values.
-		$breakpointsMin = \array_map(
-			static function ($item) {
-				return "min---{$item}";
-			},
-			\array_values($breakpointsData)
-		);
-		// Append 0 value.
-		\array_unshift($breakpointsMin, 'min---0');
-
-		// Populate max values.
-		$breakpointsMax = \array_map(
-			static function ($item) {
-				return "max---{$item}";
-			},
-			\array_reverse(\array_values($breakpointsData))
-		);
-		// Append 0 value.
-		\array_unshift($breakpointsMax, 'max---0');
-
-		// Return empty array of items.
-		$breakpoints = \array_map(
-			static function () {
-				return '';
-			},
-			\array_flip(\array_values(\array_merge($breakpointsMin, $breakpointsMax)))
-		);
-
-		// Loop styles.
-		foreach ($styles as $style) {
-			$name = $style['name'] ?? '';
-			$unique = $style['unique'] ?? '';
-			$variables = $style['variables'] ?? [];
-
-			// Bailout if variables are missing.
-			if (!$variables) {
-				continue;
-			}
-
-			$uniqueSelector = "[data-id='{$unique}']";
-
-			if (!$unique) {
-				$uniqueSelector = '';
-			}
-
-			foreach ($variables as $data) {
-				$type = $data['type'] ?? '';
-				$value = $data['value'] ?? '';
-				$variable = $data['variable'] ?? '';
-
-				// Bailout if variable is missing.
-				if (!$variable) {
-					continue;
-				}
-
-				// Bailout if breakpont is missing.
-				if (!isset($breakpoints["{$type}---{$value}"])) {
-					continue;
-				}
-
-				// Populate breakpoint.
-				$breakpoints["{$type}---{$value}"] .= "\n.{$name}{$uniqueSelector}{\n{$variable}\n} ";
-			}
-		}
-
 		// Prepare final output.
 		$output = '';
 
-		// Loop breakpoints in correct order.
-		foreach ($breakpoints as $breakpointKey => $breakpointValue) {
-			$breakpointKey = \explode('---', $breakpointKey);
+		$styles = Components::getStyles();
 
-			$type = $breakpointKey[0] ?? '';
-			$value = $breakpointKey[1] ?? '';
+		// Bailout if styles are missing.
+		if ($styles) {
+			// Define variables from globalManifest.
+			$breakpointsData = self::getSettingsGlobalVariablesBreakpoints();
 
-			// Bailout if empty value.
-			if (!$breakpointValue) {
-				continue;
+			// Sort breakpoints in ascending order.
+			\asort($breakpointsData);
+
+			// Populate min values.
+			$breakpointsMin = \array_map(
+				static function ($item) {
+					return "min---{$item}";
+				},
+				\array_values($breakpointsData)
+			);
+			// Append 0 value.
+			\array_unshift($breakpointsMin, 'min---0');
+
+			// Populate max values.
+			$breakpointsMax = \array_map(
+				static function ($item) {
+					return "max---{$item}";
+				},
+				\array_reverse(\array_values($breakpointsData))
+			);
+			// Append 0 value.
+			\array_unshift($breakpointsMax, 'max---0');
+
+			// Return empty array of items.
+			$breakpoints = \array_map(
+				static function () {
+					return '';
+				},
+				\array_flip(\array_values(\array_merge($breakpointsMin, $breakpointsMax)))
+			);
+
+			// Loop styles.
+			foreach ($styles as $style) {
+				$name = $style['name'] ?? '';
+				$unique = $style['unique'] ?? '';
+				$variables = $style['variables'] ?? [];
+
+				// Bailout if variables are missing.
+				if (!$variables) {
+					continue;
+				}
+
+				$uniqueSelector = "[data-id='{$unique}']";
+
+				if (!$unique) {
+					$uniqueSelector = '';
+				}
+
+				foreach ($variables as $data) {
+					$type = $data['type'] ?? '';
+					$value = $data['value'] ?? '';
+					$variable = $data['variable'] ?? '';
+
+					// Bailout if variable is missing.
+					if (!$variable) {
+						continue;
+					}
+
+					// Bailout if breakpont is missing.
+					if (!isset($breakpoints["{$type}---{$value}"])) {
+						continue;
+					}
+
+					// Populate breakpoint.
+					$breakpoints["{$type}---{$value}"] .= "\n.{$name}{$uniqueSelector}{\n{$variable}\n} ";
+				}
 			}
 
-			// If value is 0 then this breakpoint has no media query.
-			if ($value === '0') {
-				$output .= "{$breakpointValue}\n";
-			} else {
-				$output .= "\n@media ({$type}-width:{$value}px){{$breakpointValue}}\n ";
+			// Loop breakpoints in correct order.
+			foreach ($breakpoints as $breakpointKey => $breakpointValue) {
+				$breakpointKey = \explode('---', $breakpointKey);
+
+				$type = $breakpointKey[0] ?? '';
+				$value = $breakpointKey[1] ?? '';
+
+				// Bailout if empty value.
+				if (!$breakpointValue) {
+					continue;
+				}
+
+				// If value is 0 then this breakpoint has no media query.
+				if ($value === '0') {
+					$output .= "{$breakpointValue}\n";
+				} else {
+					$output .= "\n@media ({$type}-width:{$value}px){{$breakpointValue}}\n ";
+				}
 			}
 		}
 
