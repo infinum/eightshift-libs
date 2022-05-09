@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.1.0] - 2022-05-09
+
+### Added:
+- new WP-CLI command for reusable blocks
+
+### Fixed:
+- Css variables combine output small fix if no blocks are added to dom.
+- Windows compatibility fixes.
+
 ## [5.0.2] - 2022-04-21
 
 ### Fixed
@@ -318,6 +327,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[5.1.0]: https://github.com/infinum/eightshift-libs/compare/5.0.2...v5.1.0
 [5.0.2]: https://github.com/infinum/eightshift-libs/compare/5.0.1...v5.0.2
 [5.0.1]: https://github.com/infinum/eightshift-libs/compare/5.0.0...v5.0.1
 [5.0.0]: https://github.com/infinum/eightshift-libs/compare/4.1.0...v5.0.0
