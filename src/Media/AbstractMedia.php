@@ -20,6 +20,13 @@ abstract class AbstractMedia implements ServiceInterface
 	/**
 	 * WebP Quality compression range 0-100.
 	 *
+	 * @var array<string>
+	 */
+	public const WEBP_ALLOWED_EXT = ['gif', 'jpg', 'jpeg', 'png', 'bmp'];
+
+	/**
+	 * WebP Quality compression range 0-100.
+	 *
 	 * @var int
 	 */
 	private const WEBP_QUALITY = 80;
@@ -172,7 +179,7 @@ abstract class AbstractMedia implements ServiceInterface
 		}
 
 		// Replace the image name extension with the webP.
-		$filePathNew = \str_replace($ext, 'webp', $filePath);
+		$filePathNew = \str_replace(".{$ext}", '.webp', $filePath);
 
 		// Create new webP image and store it to the same location.
 		\imagewebp($createdImage, $filePathNew, $this->getMediaWebPQuality());
@@ -197,7 +204,7 @@ abstract class AbstractMedia implements ServiceInterface
 		$ext = $typeData['ext'];
 
 		// Replace the image name extension with the webP.
-		$filePathNew = \str_replace($ext, 'webp', $filePath);
+		$filePathNew = \str_replace(".{$ext}", '.webp', $filePath);
 
 		// Delete file from disk.
 		\wp_delete_file($filePathNew);
