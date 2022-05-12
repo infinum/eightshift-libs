@@ -74,7 +74,7 @@ abstract class AbstractMedia implements ServiceInterface
 	}
 
 	/**
-	 * Delete all created webP media after original media is deleted.
+	 * Delete all created WebP media after original media is deleted.
 	 *
 	 * @param integer $attachmentId Current attachment ID.
 	 * @return void
