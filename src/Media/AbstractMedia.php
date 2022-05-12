@@ -81,7 +81,7 @@ abstract class AbstractMedia implements ServiceInterface
 	}
 
 	/**
-	 * Delete all created webP media after original media is deleted.
+	 * Delete all created WebP media after original media is deleted.
 	 *
 	 * @param integer $attachmentId Current attachment ID.
 	 * @return void
@@ -132,7 +132,7 @@ abstract class AbstractMedia implements ServiceInterface
 	}
 
 	/**
-	 * Convert media to webP using file path.
+	 * Convert media to WebP using file path.
 	 *
 	 * @param string $filePath Disk full file path.
 	 *
@@ -178,10 +178,10 @@ abstract class AbstractMedia implements ServiceInterface
 			return false;
 		}
 
-		// Replace the image name extension with the webP.
+		// Replace the image name extension with the WebP.
 		$filePathNew = \str_replace(".{$ext}", '.webp', $filePath);
 
-		// Create new webP image and store it to the same location.
+		// Create new WebP image and store it to the same location.
 		\imagewebp($createdImage, $filePathNew, $this->getMediaWebPQuality());
 
 		// Free up memory.
@@ -191,7 +191,7 @@ abstract class AbstractMedia implements ServiceInterface
 	}
 
 	/**
-	 * Delete webP media by path.
+	 * Delete WebP media by path.
 	 *
 	 * @param string $filePath Disk full file path.
 	 *
@@ -203,7 +203,7 @@ abstract class AbstractMedia implements ServiceInterface
 		$typeData = \wp_check_filetype($filePath);
 		$ext = $typeData['ext'];
 
-		// Replace the image name extension with the webP.
+		// Replace the image name extension with the WebP.
 		$filePathNew = \str_replace(".{$ext}", '.webp', $filePath);
 
 		// Delete file from disk.
@@ -211,7 +211,7 @@ abstract class AbstractMedia implements ServiceInterface
 	}
 
 	/**
-	 * Delete webP media sizes.
+	 * Delete WebP media sizes.
 	 *
 	 * @param array<string, mixed> $metadata An array of attachment meta data.
 	 * @param string $filePath Disk full file path.
