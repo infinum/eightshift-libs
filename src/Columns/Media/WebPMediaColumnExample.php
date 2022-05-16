@@ -49,7 +49,8 @@ class WebPMediaColumn extends AbstractMediaColumns
 	public function renderColumnContent(string $columnName, int $postId): string
 	{
 		if ($columnName === self::COLUMN_KEY) {
-			echo Components::existsWebPMedia($postId) ? '<span class="dashicons dashicons-saved"></span>' : '';
+			$icon = Components::existsWebPMedia($postId) ? 'yes' : 'no';
+			echo '<span class="dashicons dashicons-' . $icon . '"></span>'; // phpcs:ignore
 		}
 
 		return $columnName;
