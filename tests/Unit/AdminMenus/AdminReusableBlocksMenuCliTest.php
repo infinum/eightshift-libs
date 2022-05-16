@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\CustomPostType;
+namespace Tests\Unit\AdminMenus;
 
 use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
 
@@ -37,7 +37,7 @@ test('Admin reusable blocks menu CLI command will correctly copy the admin reusa
 	$cpt([], $cpt->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
 
 	expect($generatedCPT)
 		->not->toBeEmpty()
@@ -58,7 +58,7 @@ test('Admin reusable blocks menu CLI command will correctly copy the admin reusa
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
+	$generatedCPT = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
 
 	expect($generatedCPT)
 		->not->toBeEmpty()

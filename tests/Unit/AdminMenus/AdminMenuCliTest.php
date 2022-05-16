@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\CustomPostType;
+namespace Tests\Unit\AdminMenus;
 
 use EightshiftLibs\AdminMenus\AdminMenuCli;
 

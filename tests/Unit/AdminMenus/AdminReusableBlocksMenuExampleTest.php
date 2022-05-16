@@ -6,11 +6,11 @@ use Brain\Monkey;
 use Brain\Monkey\Actions;
 use EightshiftBoilerplate\AdminMenus\AdminReusableBlocksMenuExample;
 
-use function Tests\setupMocks;
+use function Tests\setupUnitTestMocks;
 
 beforeEach(function() {
 	Monkey\setUp();
-	setupMocks();
+	setupUnitTestMocks();
 
 	$this->example = new AdminReusableBlocksMenuExample();
 });
