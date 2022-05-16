@@ -22,6 +22,7 @@ use EightshiftLibs\Blocks\BlockVariationCli;
 use EightshiftLibs\Blocks\BlockWrapperCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
+use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\View\EscapedViewCli;
@@ -91,6 +92,7 @@ class Cli
 		CiExcludeCli::class,
 		ConfigProjectCli::class,
 		GitIgnoreCli::class,
+		WebPMediaColumnCli::class,
 		ReadmeCli::class,
 		SetupCli::class,
 		WpCli::class,

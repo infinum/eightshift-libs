@@ -29,7 +29,7 @@ abstract class AbstractMedia implements ServiceInterface
 	 *
 	 * @var int
 	 */
-	private const WEBP_QUALITY = 80;
+	public const WEBP_QUALITY = 80;
 
 	/**
 	 * Generate webP media images.
@@ -154,18 +154,11 @@ abstract class AbstractMedia implements ServiceInterface
 				$createdImage = \imagecreatefromjpeg($filePath);
 				break;
 			case 'png':
-				// For PNG we need to fix the alpha chanel.
-				\ob_start();
-
 				$createdImage = \imagecreatefrompng($filePath);
 				\imagepalettetotruecolor($createdImage);
-				\imagealphablending($createdImage, true); // alpha channel.
-				\imagesavealpha($createdImage, true); // save alpha setting.
-
-				\header('Content-type: image/png');
+				\imagealphablending($createdImage, true);
+				\imagesavealpha($createdImage, true);
 				\imagePng($createdImage);
-
-				\ob_get_clean();
 				break;
 			case 'bmp':
 				$createdImage = \imagecreatefrombmp($filePath);

@@ -36,4 +36,20 @@ trait MediaTrait
 
 		return \str_replace(".{$ext}", '.webp', $path);
 	}
+
+	/**
+	 * Check if WebP media exist by testing the original media.
+	 *
+	 * @param integer $attachmentId Id of the media.
+	 *
+	 * @return boolean
+	 */
+	public static function existsWebPMedia(int $attachmentId): bool
+	{
+		$filePath = \get_attached_file($attachmentId);
+
+		$image = self::getWebPMedia($filePath);
+
+		return \file_exists($image);
+	}
 }
