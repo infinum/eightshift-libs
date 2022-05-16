@@ -39,7 +39,7 @@ test('Media CLI command will correctly copy the Media class with defaults', func
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMedia = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Media/Media.php');
 
-	$this->assertStringContainsString('class Media implements ServiceInterface', $generatedMedia);
+	$this->assertStringContainsString('class Media extends AbstractMedia', $generatedMedia);
 	$this->assertStringContainsString('after_setup_theme', $generatedMedia, 'Created class does not contain after_setup_theme hook');
 	$this->assertStringContainsString('addThemeSupport', $generatedMedia, 'Created class does not contain addThemeSupport method');
 });
