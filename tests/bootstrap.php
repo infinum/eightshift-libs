@@ -1,7 +1,7 @@
 <?php
 
 // Autoload everything for unit tests.
-require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 /**
  * Include core bootstrap for an integration test suite
@@ -12,15 +12,15 @@ require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
  * integration tests.
  */
 if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['argv'][1], 'integration') !== false) {
-	if (!file_exists(dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php')) {
+	if (!file_exists(dirname(__DIR__) . '/wp/tests/phpunit/wp-tests-config.php')) {
 		// We need to set up core config details and test details
 		copy(
-			dirname(__FILE__, 2) . '/wp/wp-tests-config-sample.php',
-			dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php'
+			dirname(__DIR__) . '/wp/wp-tests-config-sample.php',
+			dirname(__DIR__) . '/wp/tests/phpunit/wp-tests-config.php'
 		);
 
 		// Change certain constants from the test's config file.
-		$testConfigPath = dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php';
+		$testConfigPath = dirname(__DIR__) . '/wp/tests/phpunit/wp-tests-config.php';
 		$testConfigContents = file_get_contents($testConfigPath);
 
 		$testConfigContents = str_replace(
@@ -37,14 +37,14 @@ if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['ar
 	}
 
 	// Give access to tests_add_filter() function.
-	require_once dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/functions.php';
+	require_once dirname(__DIR__) . '/wp/tests/phpunit/includes/functions.php';
 
 	/**
 	 * Register mock theme.
 	 */
 	function _register_theme()
 	{
-		$themeDir = dirname(__FILE__, 2);
+		$themeDir = dirname(__FILE__, 2) . '/themes/testing';
 		$currentTheme = basename($themeDir);
 		$themeRoot = dirname($themeDir);
 
@@ -63,7 +63,7 @@ if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['ar
 		});
 	}
 
-	\tests_add_filter('muplugins_loaded', '_register_theme', 1);
+	\tests_add_filter('muplugins_loaded', '_register_theme');
 
-	require_once dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/bootstrap.php';
+	require_once dirname(__DIR__) . '/wp/tests/phpunit/includes/bootstrap.php';
 }
