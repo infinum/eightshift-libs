@@ -3,14 +3,17 @@
 namespace Tests;
 
 use Brain\Monkey\Functions;
-use EightshiftBoilerplate\Main\MainExample;
+use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Main\MainCli;
+use FilesystemIterator;
 use Mockery;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Helper function that will setup some repeating mocks in every tests.
+ * Helper function that will set up some repeating mocks in every test.
  *
  * This is a way to circumvent the issue I was having described here:
  * https://github.com/pestphp/pest/issues/259
@@ -80,18 +83,8 @@ function deleteCliOutput(string $dir = '') : void
 		return;
 	}
 
-	$iterator = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-	$files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
-
-	foreach ($files as $file) {
-		if ($file->isDir()) {
-			rmdir($file->getRealPath());
-		} else {
-			unlink($file->getRealPath());
-		}
-	}
-
-	rmdir($dir);
+	$fs = new Filesystem();
+	$fs->remove($dir);
 }
 
 /**
@@ -113,7 +106,42 @@ function mock(string $class): MockInterface
  */
 function setupTheme()
 {
-	$loader = require dirname(__FILE__, 2) . '/vendor/autoload.php';
+	// Set up the Main file in the cliOutput.
+	$main = new MainCli('boilerplate');
+	$main([], $main->getDevelopArgs([]));
+	$config = new ConfigCli('boilerplate');
+	$config([], $config->getDevelopArgs([]));
 
-	(new MainExample($loader->getPrefixesPsr4(), 'EightshiftBoilerplate'))->register();
+	// Create functions.php file on the fly, inside the cliOutput folder.
+	copy(dirname(__FILE__) . '/Stubs/style.css', dirname(__DIR__) . '/cliOutput/style.css');
+	copy(dirname(__FILE__) . '/Stubs/functions.php', dirname(__DIR__) . '/cliOutput/functions.php');
+
+	// Go through each file in cliOutput and change 'namespace EightshiftLibs' with 'namespace Testing'.
+	// Change EightshiftBoilerplate with Testing.
+	$outputFolder = dirname(__DIR__) . '/cliOutput';
+	$iterator = new RecursiveDirectoryIterator($outputFolder, FilesystemIterator::SKIP_DOTS);
+	$files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
+
+	foreach ($files as $file) {
+		if (!$file->isDir()) {
+			$content = file_get_contents($file->getRealPath());
+			$content = str_replace('namespace EightshiftLibs', 'namespace Testing', $content);
+			$content = str_replace('EightshiftBoilerplate', 'Testing', $content);
+			file_put_contents($file->getRealPath(), $content);
+		}
+	}
+
+	// Move all files and folders to a sub folder called 'testing'.
+	$fs = new Filesystem();
+
+	$themeDir = dirname(__DIR__) . '/themes/testing';
+	$fs->mirror($outputFolder, $themeDir);
+	$fs->remove($outputFolder);
+}
+
+function deleteTheme() {
+	$fs = new Filesystem();
+	$themeDir = dirname(__DIR__) . '/themes';
+	$fs->remove($themeDir);
+
 }
