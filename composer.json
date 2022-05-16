@@ -23,12 +23,6 @@
 		"issues": "https://github.com/infinum/eightshift-libs/issues",
 		"source": "https://github.com/infinum/eightshift-libs"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/WordPress/wordpress-develop"
-		}
-	],
 	"require": {
 		"php": "^7.4 || <8.0",
 		"ext-dom": "*",
@@ -38,25 +32,12 @@
 		"php-di/php-di": "^6.3"
 	},
 	"require-dev": {
-		"aaemnnosttv/wp-sqlite-db": "^1.2",
-		"brain/monkey": "^2.6",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+		"dingo-d/wp-pest-integration-test-setup": "1.1.0",
 		"infinum/eightshift-coding-standards": "^1.5",
-		"koodimonni/composer-dropin-installer": "^1.4",
-		"mnsami/composer-custom-directory-installer": "^2.0",
-		"pestphp/pest": "^1.2",
 		"php-stubs/wordpress-stubs": "^5.9",
-		"phpunit/phpunit": "^9.5",
 		"roave/security-advisories": "dev-master",
-		"szepeviktor/phpstan-wordpress": "^1.0.3",
-		"wordpress/wordpress": "^5.9",
-		"wp-cli/wp-cli": "^2.4",
-		"yoast/phpunit-polyfills": "^1.0",
-		"yoast/wp-test-utils": "^1.0"
-	},
-	"suggest": {
-		"ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
-		"ext-xdebug": "^3.0.0 || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both."
+		"wp-cli/wp-cli": "^2.4"
 	},
 	"autoload": {
 		"psr-4": {
@@ -77,18 +58,8 @@
 		"process-timeout": 2000,
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"pestphp/pest-plugin": true,
-			"mnsami/composer-custom-directory-installer": true,
-			"koodimonni/composer-dropin-installer": true,
-			"composer/installers": true
-		}
-	},
-	"extra": {
-		"installer-paths": {
-			"./wp/": ["wordpress/wordpress"]
-		},
-		"dropin-paths": {
-		    "wp/src/wp-content/": ["package:aaemnnosttv/wp-sqlite-db:src/db.php"]
+			"composer/installers": true,
+			"pestphp/pest-plugin": true
 		}
 	},
 	"scripts": {
@@ -104,12 +75,6 @@
 			"@analyze",
 			"@test:unit",
 			"@test:integration"
-		],
-		"post-install-cmd": [
-			"@php bin/cleanWpContentFolder.php"
-		],
-		"post-update-cmd": [
-			"@php bin/cleanWpContentFolder.php"
 		]
 	}
 }
