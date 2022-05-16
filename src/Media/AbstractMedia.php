@@ -144,6 +144,14 @@ abstract class AbstractMedia implements ServiceInterface
 		$typeData = \wp_check_filetype($filePath);
 		$ext = $typeData['ext'];
 
+		// Replace the image name extension with the WebP.
+		$filePathNew = \str_replace(".{$ext}", '.webp', $filePath);
+
+		// Bailout if media exists.
+		if (\file_exists($filePathNew)) {
+			return false;
+		}
+
 		// Convert using different methods for differnet extensions.
 		switch ($ext) {
 			case 'gif':
@@ -158,7 +166,6 @@ abstract class AbstractMedia implements ServiceInterface
 				\imagepalettetotruecolor($createdImage);
 				\imagealphablending($createdImage, true);
 				\imagesavealpha($createdImage, true);
-				\imagePng($createdImage);
 				break;
 			case 'bmp':
 				$createdImage = \imagecreatefrombmp($filePath);
@@ -170,9 +177,6 @@ abstract class AbstractMedia implements ServiceInterface
 		if (!$createdImage) {
 			return false;
 		}
-
-		// Replace the image name extension with the WebP.
-		$filePathNew = \str_replace(".{$ext}", '.webp', $filePath);
 
 		// Create new WebP image and store it to the same location.
 		\imagewebp($createdImage, $filePathNew, $this->getMediaWebPQuality());
