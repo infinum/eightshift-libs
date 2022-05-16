@@ -4,9 +4,8 @@ namespace Tests\Integration;
 
 use EightshiftLibs\Rest\Routes\RouteCli;
 
-use function Tests\deleteCliOutput;
 use function Tests\setupTheme;
-use function Tests\replaceStringInFile;
+use function Tests\deleteTheme;
 
 beforeEach(function () {
 	parent::setUp();
@@ -25,7 +24,7 @@ afterEach(function () {
 	global $wp_rest_server;
 	$wp_rest_server = null;
 
-	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
+	deleteTheme();
 
 	parent::tearDown();
 });
@@ -39,7 +38,6 @@ test('Rest API endpoints work', function () {
 });
 
 test('REST route CLI command will correctly set up a custom REST route', function () {
-
 	// Create default custom route.
 	$route = new RouteCli('boilerplate');
 	$route([], $route->getDevelopArgs([]));
@@ -48,11 +46,6 @@ test('REST route CLI command will correctly set up a custom REST route', functio
 	setupTheme();
 
 	$routes = $this->server->get_routes();
-
-	global $wp_filter;
-	var_export($wp_filter['after_setup_theme']);
-//	var_export(array_keys($routes));
-
 
 	expect($routes)
 		->toBeArray()
