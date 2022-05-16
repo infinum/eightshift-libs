@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds class for WebPMediaColumn registration.
+ * File that holds class for WebP Media Column registration.
  *
  * @package EightshiftBoilerplate\CustomMeta
  */
@@ -14,9 +14,9 @@ use EightshiftLibs\Columns\Media\AbstractMediaColumns;
 use EightshiftLibs\Helpers\Components;
 
 /**
- * Class WebPMediaColumn.
+ * Class WebP Media Column.
  */
-class WebPMediaColumn extends AbstractMediaColumns
+class WebPMediaColumnExample extends AbstractMediaColumns
 {
 	/**
 	 * Column key const.

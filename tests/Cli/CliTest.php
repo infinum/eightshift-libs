@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Cli;
 
-use Brain\Monkey;
 use EightshiftLibs\Blocks\BlockCli;
 use EightshiftLibs\Blocks\BlockComponentCli;
 use EightshiftLibs\Blocks\BlocksStorybookCli;
@@ -16,36 +15,14 @@ use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\Setup\UpdateCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	Monkey\setUp();
-	setupMocks();
-
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnUsing(function ($message) {
-			putenv("ERROR_HAPPENED={$message}");
-		});
-
-	$wpCliMock
-		->shouldReceive('log')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('runcommand')
-		->andReturn(putenv("INIT_CALLED=true"));
+	setBeforeEach();
 
 	$this->cli = new Cli();
 });
@@ -54,12 +31,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	deleteCliOutput();
-
-	putenv('ERROR_HAPPENED');
-	putenv('INIT_CALLED');
-
-	Monkey\tearDown();
+	setAfterEach();
 });
 
 
@@ -101,7 +73,7 @@ test('Cli getPublicClasses return correct class list', function () {
 test('Running develop commands throws error if command name is not specified', function() {
 	$this->cli->loadDevelop();
 
-	$this->assertSame('First argument must be a valid command name.', \getenv('ERROR_HAPPENED'));
+	$this->assertSame('First argument must be a valid command name.', \getenv('ES_CLI_ERROR_HAPPENED'));
 });
 
 test('Running develop commands runs a particular command successfully', function() {

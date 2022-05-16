@@ -2,13 +2,12 @@
 
 namespace Tests\Unit\Cli;
 
-use Brain\Monkey;
 use EightshiftLibs\Cli\AbstractCli;
 use ReflectionClass;
 use RuntimeException;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 class AbstractTest extends AbstractCli {
 	protected string $fileContents = 'use EightshiftBoilerplateVendor\Service; use EightshiftBoilerplate\Test;';
@@ -32,44 +31,14 @@ class AbstractTest extends AbstractCli {
  * Mock before tests.
  */
 beforeEach(function () {
-	Monkey\setUp();
-
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnUsing(function ($message) {
-			putenv("ERROR_HAPPENED={$message}");
-		});
-
-	$wpCliMock
-		->shouldReceive('log')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('runcommand')
-		->andReturn(putenv("INIT_CALLED=true"));
-
-	$wpCliMock
-		->shouldReceive('add_command')
-		->andReturn(putenv("COMMAND_ADDED=true"));
+	setBeforeEach();
 });
 
 /**
  * Cleanup after tests.
  */
 afterEach(function () {
-	deleteCliOutput();
-
-	putenv('ERROR_HAPPENED');
-	putenv('INIT_CALLED');
-	putenv('COMMAND_ADDED');
-
-	Monkey\tearDown();
+	setAfterEach();
 });
 
 

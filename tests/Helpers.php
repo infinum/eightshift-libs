@@ -4,6 +4,7 @@ namespace Tests;
 
 use Brain\Monkey\Functions;
 use Mockery;
+use Brain\Monkey;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -60,6 +61,72 @@ function setupMocks() {
 
 	// Mock site_url function.
 	Functions\when('site_url')->justReturn('https://example.com');
+
+	$wpCliMock = mock('alias:WP_CLI');
+
+	$wpCliMock
+		->shouldReceive('success')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_SUCCESS_HAPPENED={$message}");
+		});
+
+	$wpCliMock
+		->shouldReceive('error')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_ERROR_HAPPENED={$message}");
+		});
+
+	$wpCliMock
+		->shouldReceive('log')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_LOG_HAPPENED={$message}");
+		});
+
+	$wpCliMock
+		->shouldReceive('runcommand')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_HAPPENED={$message}");
+		});
+
+	$wpCliMock
+		->shouldReceive('add_command')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_ADD_COMMAND_HAPPENED={$message}");
+		});
+
+	// Mock attachment function.
+	Functions\when('get_attached_file')->justReturn('test.jpg');
+
+	// Mock attachment function.
+	Functions\when('wp_check_filetype')->justReturn([
+		'ext' => 'jpg',
+		'type' => 'image/jpeg',
+	]);
+}
+
+/**
+ * Set everything before every test.
+ *
+ * @return void
+ */
+function setBeforeEach() {
+	Monkey\setUp();
+	setupMocks();
+}
+
+/**
+ * Clear everything after each test.
+ *
+ * @return void
+ */
+function setAfterEach() {
+	Monkey\tearDown();
+	deleteCliOutput();
+
+	putenv('ES_CLI_SUCCESS_HAPPENED');
+	putenv('ES_CLI_ERROR_HAPPENED');
+	putenv('ES_CLI_LOG_HAPPENED');
+	putenv('ES_CLI_RUNCOMMAND_HAPPENED');
 }
 
 /**
