@@ -18,4 +18,4 @@ latest_dump.tar.gz
 # Editor settings
 .vscode/settings.json
 .idea/*
- .editorconfig
+.editorconfig

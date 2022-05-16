@@ -15,7 +15,7 @@ beforeEach(function () {
 	global $wp_rest_server;
 
 	$this->server = $wp_rest_server = new \WP_REST_Server();
-	do_action('rest_api_init');
+	do_action('rest_api_init', $this->server);
 });
 
 /**
@@ -46,7 +46,7 @@ test('REST route CLI command will correctly set up a custom REST route', functio
 
 	// Setup theme.
 	setupTheme();
-	
+
 	$routes = $this->server->get_routes();
 
 	global $wp_filter;

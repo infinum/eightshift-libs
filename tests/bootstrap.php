@@ -14,13 +14,20 @@ require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
 if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['argv'][1], 'integration') !== false) {
 	if (!file_exists(dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php')) {
 		// We need to set up core config details and test details
-		copy(dirname(__FILE__, 2) . '/wp/wp-tests-config-sample.php', dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php');
+		copy(
+			dirname(__FILE__, 2) . '/wp/wp-tests-config-sample.php',
+			dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php'
+		);
 
 		// Change certain constants from the test's config file.
 		$testConfigPath = dirname(__FILE__, 2) . '/wp/tests/phpunit/wp-tests-config.php';
 		$testConfigContents = file_get_contents($testConfigPath);
 
-		$testConfigContents = str_replace("dirname( __FILE__ ) . '/src/'", "dirname(__FILE__, 3) . '/src/'", $testConfigContents);
+		$testConfigContents = str_replace(
+			"dirname( __FILE__ ) . '/src/'",
+			"dirname(__FILE__, 3) . '/src/'",
+			$testConfigContents
+		);
 		$testConfigContents = str_replace("youremptytestdbnamehere", $_SERVER['DB_NAME'], $testConfigContents);
 		$testConfigContents = str_replace("yourusernamehere", $_SERVER['DB_USER'], $testConfigContents);
 		$testConfigContents = str_replace("yourpasswordhere", $_SERVER['DB_PASSWORD'], $testConfigContents);
@@ -56,7 +63,7 @@ if (isset($GLOBALS['argv']) && isset($GLOBALS['argv'][1]) && strpos($GLOBALS['ar
 		});
 	}
 
-	\tests_add_filter( 'muplugins_loaded', '_register_theme' );
+	\tests_add_filter('muplugins_loaded', '_register_theme', 1);
 
 	require_once dirname(__FILE__, 2) . '/wp/tests/phpunit/includes/bootstrap.php';
 }
