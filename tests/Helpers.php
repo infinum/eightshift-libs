@@ -115,6 +115,7 @@ function setupTheme()
 	// Create functions.php file on the fly, inside the cliOutput folder.
 	copy(dirname(__FILE__) . '/Stubs/style.css', dirname(__DIR__) . '/cliOutput/style.css');
 	copy(dirname(__FILE__) . '/Stubs/functions.php', dirname(__DIR__) . '/cliOutput/functions.php');
+	copy(dirname(__FILE__) . '/Stubs/index.php', dirname(__DIR__) . '/cliOutput/index.php');
 
 	// Go through each file in cliOutput and change 'namespace EightshiftLibs' with 'namespace Testing'.
 	// Change EightshiftBoilerplate with Testing.
@@ -132,16 +133,37 @@ function setupTheme()
 	}
 
 	// Move all files and folders to a sub folder called 'testing'.
-	$fs = new Filesystem();
+	$fs = getFilesystem();
 
 	$themeDir = dirname(__DIR__) . '/themes/testing';
 	$fs->mirror($outputFolder, $themeDir);
 	$fs->remove($outputFolder);
+
+	register_theme_directory(dirname(__DIR__) . '/themes');
+	switch_theme('testing');
 }
 
-function deleteTheme() {
-	$fs = new Filesystem();
-	$themeDir = dirname(__DIR__) . '/themes';
-	$fs->remove($themeDir);
+/**
+ * Helper to clean theme files after creation
+ *
+ * @return void
+ */
+function deleteTheme(): void {
+	$fs = getFilesystem();
+	$fs->remove(dirname(__DIR__) . '/themes');
+}
 
+/**
+ * Memoization helper for filesystem
+ *
+ * @return mixed|Filesystem
+ */
+function getFilesystem() {
+	static $fs;
+
+	if (empty($fs)) {
+		$fs = new Filesystem();
+	}
+
+	return $fs;
 }
