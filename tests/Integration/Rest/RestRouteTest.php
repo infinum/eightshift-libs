@@ -49,5 +49,5 @@ test('REST route CLI command will correctly set up a custom REST route', functio
 
 	expect($routes)
 		->toBeArray()
-		->toHaveKey('eightshift-libs/v1');
+		->toHaveKey('/Boilerplate/v2');
 });
