@@ -927,13 +927,16 @@ abstract class AbstractCli implements CliInterface
 
 		$synopsis = $docs['synopsis'] ?? [];
 
-		return [
-			'shortdesc' => $shortdesc,
-			'synopsis' => \array_merge(
-				$docsGlobal['synopsis'],
-				$synopsis
-			)
-		];
+		return \array_merge(
+			$docsGlobal,
+			$docs,
+			[
+				'synopsis' => \array_merge(
+					$synopsis,
+					$docsGlobal['synopsis']
+				),
+			]
+		);
 	}
 
 	/**

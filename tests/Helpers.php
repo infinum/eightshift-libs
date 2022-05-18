@@ -62,6 +62,15 @@ function setupMocks() {
 	// Mock site_url function.
 	Functions\when('site_url')->justReturn('https://example.com');
 
+	// Mock wp_get_attachment_metadata function.
+	Functions\when('wp_get_attachment_metadata')->justReturn(attachemntMetaDataMock());
+
+	// Mock get_post_meta function.
+	Functions\when('get_post_meta')->justReturn('');
+
+	// Mock wp_delete_file function.
+	Functions\when('wp_delete_file')->justReturn('');
+
 	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock

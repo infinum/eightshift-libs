@@ -4,37 +4,23 @@ namespace Tests\Unit\Media;
 
 use EightshiftLibs\Media\MediaCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->media = new MediaCli('boilerplate');
+	$this->mediaCli = new MediaCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
 });
 
 
 test('Media CLI command will correctly copy the Media class with defaults', function () {
-	$media = $this->media;
-	$media([], $media->getDevelopArgs([]));
+	$mock = $this->mediaCli;
+	$mock([], $mock->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMedia = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Media/Media.php');
@@ -45,9 +31,9 @@ test('Media CLI command will correctly copy the Media class with defaults', func
 });
 
 test('Media CLI documentation is correct', function () {
-	$media = $this->media;
+	$mock = $this->mediaCli;
 
-	$documentation = $media->getDoc();
+	$documentation = $mock->getDoc();
 
 	$key = 'shortdesc';
 

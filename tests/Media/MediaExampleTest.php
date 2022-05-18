@@ -2,27 +2,29 @@
 
 namespace Tests\Unit\Media;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Media\MediaExample;
 
-use function Tests\setupMocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
+	setBeforeEach();
 
 	$this->media = new MediaExample();
 });
 
 afterEach(function() {
-	Monkey\tearDown();
+	setAfterEach();
 });
 
 test('Register method will call init hook', function () {
 	$this->media->register();
 
 	$this->assertSame(20, has_action('after_setup_theme', 'EightshiftBoilerplate\Media\MediaExample->addThemeSupport()'));
+	$this->assertSame(10, has_filter('wp_generate_attachment_metadata', 'EightshiftBoilerplate\Media\MediaExample->generateWebPMedia()'), 2);
+	$this->assertSame(10, has_filter('wp_update_attachment_metadata', 'EightshiftBoilerplate\Media\MediaExample->generateWebPMedia()'), 2);
+	$this->assertSame(10, has_action('delete_attachment', 'EightshiftBoilerplate\Media\MediaExample->deleteWebPMedia()'));
 });
 
 test('addThemeSupport method will call add_theme_support() function with different arguments', function () {

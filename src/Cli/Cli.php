@@ -46,6 +46,7 @@ use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
@@ -96,6 +97,7 @@ class Cli
 		ReadmeCli::class,
 		SetupCli::class,
 		WpCli::class,
+		RegenerateWebPMediaCli::class,
 	];
 
 	/**
