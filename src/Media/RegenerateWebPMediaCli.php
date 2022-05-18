@@ -103,7 +103,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 		$quality = $assocArgs['quality'] ?? '80';
 		$action = $assocArgs['action'] ?? 'generate';
 		$ids = $assocArgs['ids'] ?? '';
-		$force = isset($assocArgs['force']) ?: 'false';
+		$force = isset($assocArgs['force']) ?: 'false'; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		$args = [];
 
