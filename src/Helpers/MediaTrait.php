@@ -29,6 +29,11 @@ trait MediaTrait
 	{
 		$typeData = \wp_check_filetype($path);
 		$ext = $typeData['ext'];
+
+		if ($ext === 'webp') {
+			return $path;
+		}
+
 		$allowed = \array_flip(AbstractMedia::WEBP_ALLOWED_EXT);
 
 		if (!isset($allowed[$ext])) {
