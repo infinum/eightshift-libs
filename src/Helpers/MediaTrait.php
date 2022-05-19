@@ -23,24 +23,32 @@ trait MediaTrait
 	 *
 	 * @param string $path Path to original media file.
 	 *
-	 * @return string
+	 * @return array<string>
 	 */
-	public static function getWebPMedia(string $path): string
+	public static function getWebPMedia(string $path): array
 	{
 		$typeData = \wp_check_filetype($path);
 		$ext = $typeData['ext'];
 
 		if ($ext === 'webp') {
-			return $path;
+			return [
+				'src' => $path,
+				'type' => 'image/webp',
+			];
 		}
 
 		$allowed = \array_flip(AbstractMedia::WEBP_ALLOWED_EXT);
 
 		if (!isset($allowed[$ext])) {
-			return '';
+			return [];
 		}
 
-		return \str_replace(".{$ext}", '.webp', $path);
+		$newPath = \str_replace(".{$ext}", '.webp', $path);
+
+		return [
+			'src' => $newPath,
+			'type' => 'image/webp',
+		];
 	}
 
 	/**
@@ -66,6 +74,10 @@ trait MediaTrait
 
 		$image = self::getWebPMedia($filePath);
 
-		return \file_exists($image);
+		if (!$image) {
+			return false;
+		}
+
+		return \file_exists($image['src']);
 	}
 }
