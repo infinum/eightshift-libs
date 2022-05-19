@@ -18,7 +18,7 @@ use Exception;
 trait MediaWebPTrait
 {
 	/**
-	 * Generate webP media images - original size.
+	 * Generate WebP media images - original size.
 	 *
 	 * @param integer $attachmentId Current attachment ID.
 	 * @param integer $quality Conversion quality.
@@ -38,7 +38,7 @@ trait MediaWebPTrait
 		return $this->convertMediaToWebPByPath($filePath, $quality, $force);
 	}
 	/**
-	 * Generate webP media images - sizes.
+	 * Generate WebP media images - sizes.
 	 *
 	 * @param integer $attachmentId Current attachment ID.
 	 * @param integer $quality Conversion quality.
