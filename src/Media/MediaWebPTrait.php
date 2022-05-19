@@ -232,6 +232,10 @@ trait MediaWebPTrait
 				return '';
 		}
 
+		if (!$createdImage) {
+			return '';
+		}
+
 		// Create new WebP image and store it to the same location.
 		$newImage = \imagewebp($createdImage, $filePathNew, $quality);
 
