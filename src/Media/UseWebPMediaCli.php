@@ -59,7 +59,7 @@ class UseWebPMediaCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		if ((bool) \get_option(self::USE_WEBP_MEDIA_OPTION_NAME)) {
+		if (\get_option(self::USE_WEBP_MEDIA_OPTION_NAME)) {
 			\update_option(self::USE_WEBP_MEDIA_OPTION_NAME, false, true);
 
 			WP_CLI::success('WebP Media use disabled.');
