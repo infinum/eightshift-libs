@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Media\AbstractMedia;
+use EightshiftLibs\Media\UseWebPMediaCli;
 
 /**
  * Class MediaTrait Helper
@@ -35,6 +36,16 @@ trait MediaTrait
 		}
 
 		return \str_replace(".{$ext}", '.webp', $path);
+	}
+
+	/**
+	 * Check if WebP Media is used based on the options setting.
+	 *
+	 * @return boolean
+	 */
+	public static function isWebPMediaUsed(): bool
+	{
+		return (bool) \get_option(UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME, 'true');
 	}
 
 	/**

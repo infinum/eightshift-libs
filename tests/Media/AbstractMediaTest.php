@@ -60,8 +60,7 @@ test('Check if deleteWebPMedia will return void.', function() {
 
 	$mock = $mock->deleteWebPMedia(10);
 
-	expect($mock)
-		->toBeNull();
+	expect($mock)->toBeNull();
 });
 
 test('Check if generateWebPMediaOriginal will return empty string if file is missing.', function() {

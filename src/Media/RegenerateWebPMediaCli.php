@@ -139,6 +139,11 @@ class RegenerateWebPMediaCli extends AbstractCli
 			'post_type' => 'attachment',
 			'post_status' => 'inherit',
 			'nopaging' => true,
+			'perm' => 'readable',
+			'no_found_rows' => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'fields' => 'ids',
 			'post_mime_type' => \array_map(
 				static function ($item) {
 					return "image/{$item}";
@@ -165,14 +170,12 @@ class RegenerateWebPMediaCli extends AbstractCli
 
 		$theQuery = new WP_Query($this->getQueryArgs($args));
 
-		if (!$theQuery->have_posts()) {
+		if (!$theQuery->posts) {
 			WP_CLI::error("No attachments found!");
 		}
 
-		while ($theQuery->have_posts()) {
-			$theQuery->the_post();
-			$title = \get_the_title();
-			$id = \get_the_ID();
+		foreach ($theQuery->posts as $id) {
+			$title = \get_the_title($id);
 
 			$original = $this->generateWebPMediaOriginal($id, $quality, $force);
 
@@ -213,14 +216,12 @@ class RegenerateWebPMediaCli extends AbstractCli
 	{
 		$theQuery = new WP_Query($this->getQueryArgs($args));
 
-		if (!$theQuery->have_posts()) {
+		if (!$theQuery->posts) {
 			WP_CLI::error("No attachments found!");
 		}
 
-		while ($theQuery->have_posts()) {
-			$theQuery->the_post();
-			$title = \get_the_title();
-			$id = \get_the_ID();
+		foreach ($theQuery->posts as $id) {
+			$title = \get_the_title($id);
 
 			$original = $this->deleteWebPMediaOriginal($id);
 

@@ -47,6 +47,7 @@ use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
+use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
@@ -98,6 +99,7 @@ class Cli
 		SetupCli::class,
 		WpCli::class,
 		RegenerateWebPMediaCli::class,
+		UseWebPMediaCli::class
 	];
 
 	/**

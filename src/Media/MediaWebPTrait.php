@@ -194,9 +194,11 @@ trait MediaWebPTrait
 					return '';
 				}
 
-				\imagepalettetotruecolor($createdImage);
-				\imagealphablending($createdImage, true);
-				\imagesavealpha($createdImage, true);
+				if ($createdImage) {
+					\imagepalettetotruecolor($createdImage);
+					\imagealphablending($createdImage, true);
+					\imagesavealpha($createdImage, true);
+				}
 				break;
 			case 'jpg':
 			case 'jpeg':
@@ -213,9 +215,11 @@ trait MediaWebPTrait
 					return '';
 				}
 
-				\imagepalettetotruecolor($createdImage);
-				\imagealphablending($createdImage, true);
-				\imagesavealpha($createdImage, true);
+				if ($createdImage) {
+					\imagepalettetotruecolor($createdImage);
+					\imagealphablending($createdImage, true);
+					\imagesavealpha($createdImage, true);
+				}
 				break;
 			case 'bmp':
 				try {
