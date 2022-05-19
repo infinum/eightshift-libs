@@ -45,7 +45,7 @@ trait MediaTrait
 	 */
 	public static function isWebPMediaUsed(): bool
 	{
-		return (bool) \get_option(UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME, 'true');
+		return (bool) \get_option(UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME, true);
 	}
 
 	/**
