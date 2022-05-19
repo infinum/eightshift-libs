@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Media;
 
-use Exception;
+use Throwable;
 
 /**
  * Trait MediaWebPTrait.
@@ -190,7 +190,7 @@ trait MediaWebPTrait
 			case 'gif':
 				try {
 					$createdImage = \imagecreatefromgif($filePath);
-				} catch (Exception $e) {
+				} catch (Throwable $e) {
 					return '';
 				}
 
@@ -204,14 +204,14 @@ trait MediaWebPTrait
 			case 'jpeg':
 				try {
 					$createdImage = \imagecreatefromjpeg($filePath);
-				} catch (Exception $e) {
+				} catch (Throwable $e) {
 					return '';
 				}
 				break;
 			case 'png':
 				try {
 					$createdImage = \imagecreatefrompng($filePath);
-				} catch (Exception $e) {
+				} catch (Throwable $e) {
 					return '';
 				}
 
@@ -224,7 +224,7 @@ trait MediaWebPTrait
 			case 'bmp':
 				try {
 					$createdImage = \imagecreatefrombmp($filePath);
-				} catch (Exception $e) {
+				} catch (Throwable $e) {
 					return '';
 				}
 				break;
