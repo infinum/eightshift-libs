@@ -33,7 +33,7 @@ class WebPMediaColumnCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WPCLI command doc.
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */

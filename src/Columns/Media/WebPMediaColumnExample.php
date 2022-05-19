@@ -39,7 +39,7 @@ class WebPMediaColumnExample extends AbstractMediaColumns
 	}
 
 	/**
-	 * Render the media column content in the custom media column
+	 * Render the media column content in the custom media column.
 	 *
 	 * @param string $columnName Column name.
 	 * @param int    $postId ID of the currently-listed media.
@@ -57,7 +57,7 @@ class WebPMediaColumnExample extends AbstractMediaColumns
 	}
 
 	/**
-	 * Make media columns sortable
+	 * Make media columns sortable.
 	 *
 	 * @param string[] $columns Array of columns.
 	 *

@@ -30,7 +30,7 @@ abstract class AbstractMedia implements ServiceInterface
 	public const WEBP_ALLOWED_EXT = ['gif', 'jpg', 'jpeg', 'png', 'bmp'];
 
 	/**
-	 * Generate webP media images.
+	 * Generate WebP media images.
 	 *
 	 * @param array<string, mixed> $metadata An array of attachment meta data.
 	 * @param integer $attachmentId Current attachment ID.

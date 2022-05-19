@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Media columns abstract class file
+ * Media columns abstract class file.
  *
  * @package EightshiftLibs\Columns\Media
  */
@@ -41,7 +41,7 @@ abstract class AbstractMediaColumns implements ServiceInterface
 	abstract public function addColumnName(array $columns): array;
 
 	/**
-	 * Render the media column content in the custom media column
+	 * Render the media column content in the custom media column.
 	 *
 	 * @param string $columnName Column name.
 	 * @param int $postId ID of the currently-listed media.
@@ -51,7 +51,7 @@ abstract class AbstractMediaColumns implements ServiceInterface
 	abstract public function renderColumnContent(string $columnName, int $postId): string;
 
 	/**
-	 * Make media columns sortable
+	 * Make media columns sortable.
 	 *
 	 * @param string[] $columns Array of columns.
 	 *
