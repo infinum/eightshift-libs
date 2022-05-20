@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\CustomPostType;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class PostTypeCli
@@ -31,7 +32,7 @@ class PostTypeCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -72,31 +73,31 @@ class PostTypeCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates custom post type class file.',
+			'shortdesc' => 'Create custom post type service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom post type to show in WP admin.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The custom post type slug. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rewrite_url',
 					'description' => 'The custom post type url. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom post type REST-API endpoint slug. Example: locations.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
@@ -123,6 +124,21 @@ class PostTypeCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create custom post type for all your custom data.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --label='Jobs' --slug='jobs' --rewrite_url='jobs' --rest_endpoint_slug='jobs'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/CustomPostType/PostTypeExample.php
+			"),
 		];
 	}
 

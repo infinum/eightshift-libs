@@ -24,9 +24,10 @@ use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Cli\ParentGroups\CliSetup;
-use EightshiftLibs\Cli\ParentGroups\CliUse;
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Cli\ParentGroups\CliWebp;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
@@ -75,9 +76,10 @@ class Cli
 	 */
 	public const PARENTS_LIST = [
 		CliCreate::class,
+		CliProject::class,
 		CliRun::class,
 		CliSetup::class,
-		CliUse::class,
+		CliBlocks::class,
 		CliWebp::class,
 	];
 
@@ -120,7 +122,7 @@ class Cli
 		WpCli::class,
 	];
 
-		/**
+	/**
 	 * All classes and commands that can be used on WP project.
 	 *
 	 * @var class-string[]
@@ -229,7 +231,12 @@ class Cli
 			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
-			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName') && \method_exists($class, 'getDevelopArgs') && \method_exists($class, '__invoke')) {
+			if (
+				\method_exists($class, 'getCommandName') &&
+				\method_exists($class, 'getCommandParentName') &&
+				\method_exists($class, 'getDevelopArgs') &&
+				\method_exists($class, '__invoke')
+			) {
 				if ("{$class->getCommandParentName()}_{$class->getCommandName()}" === $commandName) {
 					$class->__invoke(
 						[],

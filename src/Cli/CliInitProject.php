@@ -13,6 +13,7 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
+use EightshiftLibs\Cli\ParentGroups\CliSetup;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
@@ -61,7 +62,7 @@ class CliInitProject extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'setup';
+		return CliSetup::COMMAND_NAME;
 	}
 
 	/**
@@ -82,7 +83,18 @@ class CliInitProject extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for WordPress theme project with all files to run a client project. For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.', // phpcs:ignore Generic.Files.LineLength.TooLong
+			'shortdesc' => 'Kickstart your WordPress project with this simple command.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Generates initial project setup with all files to run one client project.
+				For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.
+
+				## EXAMPLES
+
+				# Setup project:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+			"),
 		];
 	}
 
@@ -99,11 +111,12 @@ class CliInitProject extends AbstractCli
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if (\method_exists($class, 'getCommandName')) {
+			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
 				if (\function_exists('\add_action')) {
-					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
+					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
 				} else {
-					WP_CLI::runcommand("eval-file bin" . \DIRECTORY_SEPARATOR . "cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
+					$sep = \DIRECTORY_SEPARATOR;
+					WP_CLI::runcommand("eval-file bin{$sep}cli.php {$class->getCommandParentName()}_{$class->getCommandName()} --skip-wordpress");
 				}
 			}
 		}

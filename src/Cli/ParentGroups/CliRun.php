@@ -13,7 +13,7 @@ namespace EightshiftLibs\Cli\ParentGroups;
 use WP_CLI_Command;
 
 /**
- * Commands used to execute functionalities on you project like import/export, plugins updates, etc.
+ * Execute functionalities on you project like import/export, plugins updates, etc.
  */
 class CliRun extends WP_CLI_Command
 {
@@ -22,4 +22,3 @@ class CliRun extends WP_CLI_Command
 	 */
 	public const COMMAND_NAME = 'run';
 }
- 

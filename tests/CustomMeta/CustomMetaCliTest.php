@@ -45,20 +45,5 @@ test('Custom acf meta CLI command will correctly copy the ACF meta class with de
 
 
 test('Custom acf meta CLI documentation is correct', function () {
-	$meta = $this->customMeta;
-
-	$documentation = $meta->getDoc();
-
-	$descKey = 'shortdesc';
-	$synopsisKey = 'synopsis';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertArrayHasKey($synopsisKey, $documentation);
-	$this->assertIsArray($documentation[$synopsisKey]);
-	$this->assertSame('Generates custom ACF meta fields class file.', $documentation[$descKey]);
-	$this->assertSame('assoc', $documentation[$synopsisKey][0]['type']);
-	$this->assertSame('name', $documentation[$synopsisKey][0]['name']);
-	$this->assertSame('The name of the custom meta slug. Example: title.', $documentation[$synopsisKey][0]['description']);
-	$this->assertSame(false, $documentation[$synopsisKey][0]['optional']);
+	expect($this->customMeta->getDoc())->toBeArray();
 });

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use WP_CLI;
 
 /**
@@ -45,7 +46,7 @@ class RouteCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -76,26 +77,48 @@ class RouteCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array<string, array<int, array<string, bool|string>>|string>
+	 * @return array<string, mixed>
 	 */
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates REST-API Route in your project.',
+			'shortdesc' => 'Create REST-API route service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'endpoint_slug',
 					'description' => 'The name of the endpoint slug. Example: test-route.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'method',
 					'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
+					'optional' => true,
+					'options' => [
+						'GET',
+						'POST',
+						'PATCH',
+						'PUT',
+						'DELETE',
+					],
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create REST-API services class to register custom route.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --endpoint_slug='test-route'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Rest/Routes/RouteExample.php
+			"),
 		];
 	}
 

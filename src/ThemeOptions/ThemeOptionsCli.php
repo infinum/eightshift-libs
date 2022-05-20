@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\ThemeOptions;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class ThemeOptionsCli
@@ -29,7 +30,7 @@ class ThemeOptionsCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,26 @@ class ThemeOptionsCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates project Theme Options class using ACF.',
+			'shortdesc' => 'Create project theme Options service class using ACF plugin.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create Advance custom fiels theme options services class to register project specific options.
+				ACF plugin must be installed.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/ThemeOptions/ThemeOptionsExample.php
+
+				ACF documentation:
+				https://www.advancedcustomfields.com/resources/options-page/
+			"),
 		];
 	}
 

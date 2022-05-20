@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Db;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliRun;
 use WP_CLI\ExitException;
 
 /**
@@ -18,7 +19,6 @@ use WP_CLI\ExitException;
  */
 class ExportCli extends AbstractCli
 {
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -26,7 +26,7 @@ class ExportCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'run';
+		return CliRun::COMMAND_NAME;
 	}
 
 	/**
@@ -42,18 +42,22 @@ class ExportCli extends AbstractCli
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array<string, array<int, array<string, bool|string>>|string>
+	 * @return array<string, mixed>
 	 */
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Run database export with images.',
+			'shortdesc' => 'Run database export with uploads folder.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'skip_db',
 					'description' => 'If you want to skip exporting database.',
 					'optional' => true,
+					'options' => [
+						'true',
+						'false',
+					],
 				],
 				[
 					'type' => 'assoc',
@@ -62,6 +66,25 @@ class ExportCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used as a project command to create database export with zip-ed uplaods folder in the root of your project.
+				All configuration data is used from the setup.json file located in the project root.
+
+				## EXAMPLES
+
+				# Run db export command:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				# Run db export command without uploads folder:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --skip_uploads='true'
+
+				## RESOURCES
+
+				Command will be run using this code:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Db/DbExport.php
+			"),
 		];
 	}
 

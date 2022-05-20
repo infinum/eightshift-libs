@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:ignoreFile Generic.Files.LineLength.TooLong
+
 /**
  * Class that registers WPCLI command for Custom Taxonomy.
  *
@@ -11,6 +13,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\BlockPatterns;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 
 /**
@@ -32,7 +35,7 @@ class BlockPatternCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -70,13 +73,13 @@ class BlockPatternCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates a block pattern.',
+			'shortdesc' => 'Create block pattern service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'Pattern title',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
@@ -89,14 +92,31 @@ class BlockPatternCli extends AbstractCli
 					'name' => 'description',
 					'description' => 'Description of the pattern.',
 					'optional' => true,
+					'default' => '',
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'content',
 					'description' => 'Content of the pattern. Needs to be the WP block markup (tho most likely you\'d add this manually after you generate the pattern)',
 					'optional' => true,
+					'default' => 'Description of this pattern',
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create service class to register custom block pattern.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --title='Call to action' --menu_title='content' --capability='edit_posts' --menu_slug='es-content'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/BlockPatterns/BlockPatternExample.php
+			"),
 		];
 	}
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use WP_CLI;
 
 /**
@@ -32,7 +33,7 @@ class BlockWrapperCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'use';
+		return CliBlocks::COMMAND_NAME;
 	}
 
 	/**
@@ -53,7 +54,18 @@ class BlockWrapperCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy Wrapper from library to your project.',
+			'shortdesc' => 'Copy wrapper from our library to your project.',
+			'longdesc' => "
+				## EXAMPLES
+
+				# Copy wrapper.
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Our wrapper can be found here:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/wrapper
+			"
 		];
 	}
 

@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:ignoreFile Generic.Files.LineLength.TooLong
+
 /**
  * Class that registers WPCLI command for Custom Taxonomy.
  *
@@ -12,6 +14,7 @@ namespace EightshiftLibs\CustomTaxonomy;
 
 use EightshiftBoilerplate\CustomTaxonomy\TaxonomyExample;
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class TaxonomyCli
@@ -32,7 +35,7 @@ class TaxonomyCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -71,33 +74,48 @@ class TaxonomyCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates custom taxonomy class file.',
+			'shortdesc' => 'Create custom taxonomy service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom taxonomy to show in WP admin.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The name of the custom taxonomy slug. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom taxonomy REST-API endpoint slug. Example: locations.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'post_type_slug',
 					'description' => 'The position where to assign the new custom taxonomy. Example: post.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create custom taxonomy all your custom data.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --label='Job Positions' --slug='job-position' --rest_endpoint_slug='job-positions' --post_type_slug='user'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/CustomTaxonomy/TaxonomyExample.php
+			"),
 		];
 	}
 

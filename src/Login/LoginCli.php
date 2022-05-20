@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Login;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class LoginCli
@@ -29,7 +30,7 @@ class LoginCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,22 @@ class LoginCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Login class file.',
+			'shortdesc' => 'Create login service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create login services class to register custom functonality restricted to the WordPress login screen.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Login/LoginExample.php
+			"),
 		];
 	}
 

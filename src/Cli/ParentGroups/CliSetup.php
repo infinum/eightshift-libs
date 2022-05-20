@@ -13,7 +13,7 @@ namespace EightshiftLibs\Cli\ParentGroups;
 use WP_CLI_Command;
 
 /**
- * Commands used to initialiy setup you project like theme, plugin, project, etc. This commands should be used only once.
+ * Initialiy setup you project like theme, plugin, project, etc. This commands should be used only once.
  */
 class CliSetup extends WP_CLI_Command
 {
@@ -22,4 +22,3 @@ class CliSetup extends WP_CLI_Command
 	 */
 	public const COMMAND_NAME = 'setup';
 }
- 

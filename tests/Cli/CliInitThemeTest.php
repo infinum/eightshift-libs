@@ -56,13 +56,7 @@ test('Initializing the project command returns correct command name', function (
 
 
 test('CliInitTheme CLI documentation is correct', function () {
-	$documentation = $this->cliInitTheme->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertSame('Generates initial setup for WordPress theme project.', $documentation[$key]);
+	expect($this->cliInitTheme->getDoc())->toBeArray();
 });
 
 

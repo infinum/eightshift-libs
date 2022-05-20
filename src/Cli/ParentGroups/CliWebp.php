@@ -13,7 +13,7 @@ namespace EightshiftLibs\Cli\ParentGroups;
 use WP_CLI_Command;
 
 /**
- * Commands on media to generate, delete, use media WebP format in your project.
+ * WebP media commands you can use like generate, delete, etc.
  */
 class CliWebp extends WP_CLI_Command
 {
@@ -22,4 +22,3 @@ class CliWebp extends WP_CLI_Command
 	 */
 	public const COMMAND_NAME = 'webp';
 }
- 

@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:ignoreFile Generic.Files.LineLength.TooLong
+
 /**
  * Class that registers WPCLI command for Config Project.
  *
@@ -11,6 +13,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\ConfigProject;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
 use WP_CLI;
 
 /**
@@ -30,7 +33,7 @@ class ConfigProjectCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'init';
+		return CliProject::COMMAND_NAME;
 	}
 
 	/**
@@ -65,7 +68,7 @@ class ConfigProjectCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates projects config file to control global variables used in WordPress project.',
+			'shortdesc' => 'Copy config file to control global variables used in the WordPress project.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -74,6 +77,21 @@ class ConfigProjectCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to extend project configuration and limit functionality depending on the environment like plugins update, file editing, upload, etc. This file will be copied to your project root folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/ConfigProject/ConfigProjectExample.php
+			"),
 		];
 	}
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\CiExclude;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
 
 /**
  * Class CiExcludeCli
@@ -31,7 +32,7 @@ class CiExcludeCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'init';
+		return CliProject::COMMAND_NAME;
 	}
 
 	/**
@@ -66,7 +67,7 @@ class CiExcludeCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for building your projects CI exclude file.',
+			'shortdesc' => 'Copy text file for building your projects continuous integration exclude file.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -87,6 +88,22 @@ class CiExcludeCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to list all files you want to exclude in your continuous integration process. Generally used in GitHub Actions or any other tool for continuous integration.
+				This file will be copied to your project root folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Build/BuildExample.php
+			"),
 		];
 	}
 

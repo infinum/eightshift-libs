@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\Cli\ParentGroups\CliSetup;
 use WP_CLI;
 
 /**
@@ -24,7 +25,7 @@ class CliInitAll extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'setup';
+		return CliSetup::COMMAND_NAME;
 	}
 
 	/**
@@ -45,9 +46,19 @@ class CliInitAll extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' =>
-				'Generates initial setup for all service classes in the WordPress theme project.
-				This command is used only in develop mode. For this to work you must set global constant ES_DEVELOP_MODE to true.',
+			'shortdesc' => 'Initial setup for all service classes in the WordPress theme project.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create ALL service classes in your project.
+				This command is used only in develop mode. For this to work you must set global constant ES_DEVELOP_MODE to true.
+
+				## EXAMPLES
+
+				# Create all service classes:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+			"),
+
 		];
 	}
 

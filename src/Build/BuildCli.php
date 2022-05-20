@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:ignoreFile Generic.Files.LineLength.TooLong
+
 /**
  * Class that registers WPCLI command for BuildCli.
  *
@@ -11,6 +13,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Build;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
 
 /**
  * Class BuildCli
@@ -31,7 +34,7 @@ class BuildCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'init';
+		return CliProject::COMMAND_NAME;
 	}
 
 	/**
@@ -66,7 +69,7 @@ class BuildCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for building your project with one command, generally used on CI deployments.',
+			'shortdesc' => 'Copy bash script for building your project with one command, generally used on CI deployments.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -87,6 +90,21 @@ class BuildCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used for building you project to production ready version in one command. Generally used in GitHub Actions or any other tool for continuous integration. This file will be copied to your project root under the bin folder.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Build/BuildExample.php
+			"),
 		];
 	}
 

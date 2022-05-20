@@ -54,16 +54,7 @@ afterEach(function () {
 });
 
 test('Variation CLI documentation is correct', function () {
-	$variation = $this->variation;
-
-	$documentation = $variation->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Copy Variation from library to your project.', $documentation[$key]);
+	expect($this->variation->getDoc())->toBeArray();
 });
 
 test('Variation CLI command will fail if Variation doesn\'t exist', function () {

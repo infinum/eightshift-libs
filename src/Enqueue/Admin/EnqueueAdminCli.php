@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class EnqueueAdminCli
@@ -29,7 +30,7 @@ class EnqueueAdminCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,22 @@ class EnqueueAdminCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Enqueue Admin class.',
+			'shortdesc' => 'Create enqueue admin service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create enqueue services class to register all admin styles and scripts.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Enqueue/Admin/EnqueueAdminExample.php
+			"),
 		];
 	}
 

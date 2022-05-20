@@ -28,13 +28,7 @@ test('Check if CLI command name is correct.', function () {
 });
 
 test('Check if CLI command documentation is correct.', function () {
-	$mock = $this->webPMediaColumnCliMock;
-
-	$mock = $mock->getDoc();
-
-	expect($mock)
-		->toBeArray($mock)
-		->toMatchArray(['shortdesc' => 'Generates columns class for media WebP images.']);
+	expect($this->webPMediaColumnCliMock->getDoc())->toBeArray();
 });
 
 test('Check if CLI command will correctly copy the WebPMediaColums class with defaults.', function () {

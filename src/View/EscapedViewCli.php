@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\View;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class EscapedViewCli
@@ -29,7 +30,7 @@ class EscapedViewCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,22 @@ class EscapedViewCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates project Escape view class.',
+			'shortdesc' => 'Create escape view service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create escape view services class to list all tags you want to escape or enable.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/View/EscapedViewExample.php
+			"),
 		];
 	}
 

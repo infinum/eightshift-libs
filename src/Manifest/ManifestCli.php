@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Manifest;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class ManifestCli
@@ -29,7 +30,7 @@ class ManifestCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,22 @@ class ManifestCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Manifest class.',
+			'shortdesc' => 'Create manifest service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create manifest services class to register assets manifest functionality like getting fonts from your project.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Manifest/ManifestExample.php
+			"),
 		];
 	}
 

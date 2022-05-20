@@ -67,16 +67,7 @@ afterEach(function () {
 });
 
 test('Component CLI documentation is correct', function () {
-	$component = $this->component;
-
-	$documentation = $component->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Copy Component from library to your project.', $documentation[$key]);
+	expect($this->component->getDoc())->toBeArray();
 });
 
 test('Component CLI command will fail if Component doesn\'t exist', function () {

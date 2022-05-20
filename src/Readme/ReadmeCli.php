@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Readme;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
 
 /**
  * Class ReadmeCli
@@ -31,7 +32,7 @@ class ReadmeCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'init';
+		return CliProject::COMMAND_NAME;
 	}
 
 	/**
@@ -66,7 +67,7 @@ class ReadmeCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for building your projects readme.',
+			'shortdesc' => 'Copy readme.md file for documentation.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -75,6 +76,22 @@ class ReadmeCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to document your project to help yourself and other people.
+				This file will be copied to your project root folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Readme/README.md
+			"),
 		];
 	}
 

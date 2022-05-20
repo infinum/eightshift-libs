@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\I18n;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class I18nCli
@@ -31,7 +32,7 @@ class I18nCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -52,7 +53,22 @@ class I18nCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates i18n language class.',
+			'shortdesc' => 'Create i18n language service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create language services class to register custom languages to your theme or plugin.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/I18n/I18nExample.php
+			"),
 		];
 	}
 

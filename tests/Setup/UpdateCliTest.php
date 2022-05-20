@@ -50,14 +50,5 @@ test('Update CLI command will correctly throw an exception if setup.json does no
 })->throws(Exception::class);
 
 test('Update CLI documentation is correct', function () {
-	$update = $this->update;
-
-	$documentation = $update->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Run project update with details stored in setup.json file.', $documentation[$key]);
+	expect($this->update->getDoc())->toBeArray();
 });

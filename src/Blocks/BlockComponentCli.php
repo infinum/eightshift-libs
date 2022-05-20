@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+
 /**
  * Class BlockComponentCli
  */
@@ -29,7 +31,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'use';
+		return CliBlocks::COMMAND_NAME;
 	}
 
 	/**
@@ -64,15 +66,30 @@ class BlockComponentCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy Component from library to your project.',
+			'shortdesc' => 'Copy component from our library to your project.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify component name.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to copy precreated component from out library to your project. After the copy you can modify the component in any way you see fit.
+
+				## EXAMPLES
+
+				# Copy component by name:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph'
+
+				## RESOURCES
+
+				All our components can be found here:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/components
+			"),
 		];
 	}
 

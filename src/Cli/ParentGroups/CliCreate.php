@@ -13,7 +13,21 @@ namespace EightshiftLibs\Cli\ParentGroups;
 use WP_CLI_Command;
 
 /**
- * Commands used to create service classes with specific functionality in your project.
+ * Service classes with specific functionality for your project.
+ *
+ * ## EXAMPLES
+ *
+ *    # Create media service class.
+ *    $ wp boilerplate create media
+ *
+ *    # Create custom post type service class.
+ *    $ wp boilerplate create post_type --url='redesign.infinum.test' --label="Jobs" --slug="jobs" --rewrite_url="jobs" --rest_endpoint_slug="jobs"
+ *
+ *    # Create custom taxonomy service class.
+ *    $ wp boilerplate create_taxonomy --label='Job Positions' --slug='job-position' --rest_endpoint_slug='job-positions' --post_type_slug='user'
+ *
+ *    # Create create custom admin appearance service class.
+ *    $ wp boilerplate create_modify_admin_appearance
  */
 class CliCreate extends WP_CLI_Command
 {

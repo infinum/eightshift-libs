@@ -13,13 +13,12 @@ namespace EightshiftLibs\Cli\ParentGroups;
 use WP_CLI_Command;
 
 /**
- * Commands used copy block editor specific features to your project like blocks, components, wrapper, etc.
+ * Features that can enhance your WordPress project like readme, setup.json, ci tools, etc.
  */
-class CliUse extends WP_CLI_Command
+class CliProject extends WP_CLI_Command
 {
 	/**
 	 * Cli command name parent constant.
 	 */
-	public const COMMAND_NAME = 'use';
+	public const COMMAND_NAME = 'project';
 }
- 

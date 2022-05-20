@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\WpCli;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class WpCli
@@ -31,7 +32,7 @@ class WpCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -66,15 +67,33 @@ class WpCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates custom WPCLI command in your project.',
+			'shortdesc' => 'Create custom WPCLI command service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'command_name',
 					'description' => 'The name of cli command name. Example: command_name.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create generic WP-CLI services class to kickstart your custom WP-CLI command.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --command_name='test'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/WpCli/WpCliExample.php
+
+				WP-CLI custom command documentation:
+				https://make.wordpress.org/cli/handbook/guides/commands-cookbook/
+			"),
 		];
 	}
 

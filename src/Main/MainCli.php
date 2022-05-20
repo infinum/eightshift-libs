@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Main;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class MainCli
@@ -29,7 +30,7 @@ class MainCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,23 @@ class MainCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Main class file for all other features using service container pattern.',
+			'shortdesc' => 'Create Main class file for all other features using service container pattern.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create main entry point services class that activates all other classes and initializes autowiring.
+				Without this class nothing will work.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Main/MainExample.php
+			"),
 		];
 	}
 

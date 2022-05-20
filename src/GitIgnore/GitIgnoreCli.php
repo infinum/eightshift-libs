@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\GitIgnore;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
 
 /**
  * Class GitIgnoreCli
@@ -31,7 +32,7 @@ class GitIgnoreCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'init';
+		return CliProject::COMMAND_NAME;
 	}
 
 	/**
@@ -66,7 +67,7 @@ class GitIgnoreCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for building your projects gitignore.',
+			'shortdesc' => 'Copy .gitignore file for excluding unecesery files from git. This file will be copied to WordPress root folder.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -75,6 +76,22 @@ class GitIgnoreCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to list all files you want to exclude from GitHub repo or any other versioning tool.
+				This file will be copied to your project root folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/GitIgnore/.gitignore
+			"),
 		];
 	}
 

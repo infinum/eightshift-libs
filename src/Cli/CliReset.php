@@ -21,7 +21,6 @@ use WP_CLI;
  */
 class CliReset extends AbstractCli
 {
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -62,19 +61,19 @@ class CliReset extends AbstractCli
 		if (!\is_dir($dir)) {
 			WP_CLI::error('Output directory is not a directory.');
 		}
-	
+
 		$iterator = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
 		$files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
-	
+
 		foreach ($files as $file) {
 			if ($file->isDir()) {
-				rmdir($file->getRealPath());
+				\rmdir($file->getRealPath());
 			} else {
-				unlink($file->getRealPath());
+				\unlink($file->getRealPath());
 			}
 		}
-	
-		rmdir($dir);
+
+		\rmdir($dir);
 
 		WP_CLI::success('Output directory successfully removed.');
 	}

@@ -77,14 +77,5 @@ test('CiExclude CLI command will correctly copy the ci-exclude file with set arg
 
 
 test('CiExclude CLI documentation is correct', function () {
-	$ciexclude = $this->ciexclude;
-
-	$documentation = $ciexclude->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Initialize Command for building your projects CI exclude file.', $documentation[$key]);
+	expect($this->ciexclude->getDoc())->toBeArray();
 });

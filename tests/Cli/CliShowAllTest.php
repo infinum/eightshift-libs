@@ -62,11 +62,5 @@ test('CliShowAll works', function () {
 
 
 test('CliShowAll CLI documentation is correct', function () {
-	$documentation = $this->cliShowAll->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertSame('DEVELOP - Used to show all commands.', $documentation[$key]);
+	expect($this->cliShowAll->getDoc())->toBeArray();
 });

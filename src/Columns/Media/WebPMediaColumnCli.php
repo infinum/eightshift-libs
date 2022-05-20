@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Columns\Media;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class WebPMediaColumnCli.
@@ -29,7 +30,7 @@ class WebPMediaColumnCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,22 @@ class WebPMediaColumnCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates columns class for media WebP images.',
+			'shortdesc' => 'Create WebP media column service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to creat new column in th media list page to show if your media has built WebP format created.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Columns/Media/WebPMediaColumnExample.php
+			"),
 		];
 	}
 

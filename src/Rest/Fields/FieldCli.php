@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use WP_CLI;
 
 /**
@@ -32,7 +33,7 @@ class FieldCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -68,21 +69,36 @@ class FieldCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates REST-API Field in your project.',
+			'shortdesc' => 'Create REST-API field service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'field_name',
 					'description' => 'The name of the endpoint slug. Example: title.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'object_type',
 					'description' => 'Object(s) the field is being registered to. Example: post.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
+					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create REST-API services class to register custom field.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --field_name='title'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Rest/Fields/FieldExample.php
+			"),
 		];
 	}
 

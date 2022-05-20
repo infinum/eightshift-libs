@@ -22,21 +22,21 @@ class AdminSubMenuExample extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'edit_posts';
+	public const ADMIN_MENU_CAPABILITY = '%capability%';
 
 	/**
 	 * Menu slug for this admin sub menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'example-menu-slug';
+	public const ADMIN_MENU_SLUG = '%menu_slug%';
 
 	/**
 	 * Parent menu slug for this admin sub menu
 	 *
 	 * @var string
 	 */
-	public const PARENT_MENU_SLUG = 'example-parent-slug';
+	public const PARENT_MENU_SLUG = '%parent_slug%';
 
 	/**
 	 * Get the title to use for the admin page.
@@ -45,7 +45,7 @@ class AdminSubMenuExample extends AbstractAdminSubMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Admin Title', 'eightshift-libs');
+		return \esc_html__('%title%', 'eightshift-libs');
 	}
 
 	/**
@@ -55,7 +55,7 @@ class AdminSubMenuExample extends AbstractAdminSubMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Admin Sub Menu Title', 'eightshift-libs');
+		return \esc_html__('%menu_title%', 'eightshift-libs');
 	}
 
 	/**
@@ -115,7 +115,7 @@ class AdminSubMenuExample extends AbstractAdminSubMenu
 	protected function processAttributes($attr): array
 	{
 		return [
-			'pageTitle' => \esc_html__('Admin Title', 'eightshift-libs'),
+			'pageTitle' => \esc_html__('%title%', 'eightshift-libs'),
 		];
 	}
 }

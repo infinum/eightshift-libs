@@ -45,11 +45,5 @@ test('Custom enqueue theme CLI command will correctly copy the Enqueue Theme cla
 
 
 test('Custom Enqueue Theme CLI documentation is correct', function () {
-	$theme = $this->enqueueTheme;
-	$documentation = $theme->getDoc();
-	$descKey = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertSame('Generates Enqueue Theme class.', $documentation[$descKey]);
+	expect($this->enqueueTheme->getDoc())->toBeArray();
 });

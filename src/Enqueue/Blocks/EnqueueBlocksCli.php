@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class EnqueueBlocksCli
@@ -31,7 +32,7 @@ class EnqueueBlocksCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -52,7 +53,22 @@ class EnqueueBlocksCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Enqueue Blocks class.',
+			'shortdesc' => 'Create enqueue blocks service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create enqueue services class to register all block editor styles and scripts.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Enqueue/Blocks/EnqueueBlocksExample.php
+			"),
 		];
 	}
 

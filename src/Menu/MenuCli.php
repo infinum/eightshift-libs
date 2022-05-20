@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Menu;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class MenuCli
@@ -29,7 +30,7 @@ class MenuCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,22 @@ class MenuCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates menu class.',
+			'shortdesc' => 'Create menu service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create menu services class to register custom menus, men walkers and etc.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Menu/MenuExample.php
+			"),
 		];
 	}
 

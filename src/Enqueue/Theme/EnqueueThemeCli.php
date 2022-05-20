@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Theme;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class EnqueueThemeCli
@@ -29,7 +30,7 @@ class EnqueueThemeCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return 'create';
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -50,7 +51,22 @@ class EnqueueThemeCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Enqueue Theme class.',
+			'shortdesc' => 'Creeate enqueue theme service class.',
+			'longdesc' => $this->prepareLongDesc("
+			## USAGE
+
+			Used to create enqueue services class to register all theme styles and scripts.
+
+			## EXAMPLES
+
+			# Create service class:
+			$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+			## RESOURCES
+
+			Service class will be created from this example:
+			https://github.com/infinum/eightshift-libs/blob/develop/src/Enqueue/Theme/EnqueueThemeExample.php
+		"),
 		];
 	}
 
