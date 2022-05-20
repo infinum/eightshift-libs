@@ -50,7 +50,7 @@ afterEach(function () {
 	$result = $variation->getCommandName();
 
 	expect($result)
-		->toContain('use_variation');
+		->toContain('variation');
 });
 
 test('Variation CLI documentation is correct', function () {

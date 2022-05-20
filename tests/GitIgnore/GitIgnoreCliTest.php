@@ -49,7 +49,7 @@ test('GitIgnore CLI command will run under custom command name', function () {
 	$gitignore = $this->gitignore;
 	$result = $gitignore->getCommandName();
 
-	$this->assertStringContainsString('init_gitignore', $result);
+	$this->assertStringContainsString('gitignore', $result);
 });
 
 test('GitIgnore CLI command will correctly copy the .gitignore file in the custom folder with set arguments', function () {

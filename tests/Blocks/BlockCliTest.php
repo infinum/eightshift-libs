@@ -50,7 +50,7 @@ test('Block CLI command will run under custom command name', function () {
 	$block = $this->block;
 	$result = $block->getCommandName();
 
-	$this->assertStringContainsString('use_block', $result);
+	$this->assertStringContainsString('block', $result);
 });
 
 test('Block CLI documentation is correct', function () {

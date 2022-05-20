@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use WP_CLI;
 
 /**
@@ -27,7 +29,7 @@ class CliReset extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return '';
+		return 'develop';
 	}
 
 	/**
@@ -55,12 +57,25 @@ class CliReset extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$outputDir = $this->getOutputDir('');
+		$dir = $this->getOutputDir('');
 
-		if (\is_dir($outputDir)) {
-			\rmdir($outputDir);
-
-			WP_CLI::success('Output directory successfully removed.');
+		if (!\is_dir($dir)) {
+			WP_CLI::error('Output directory is not a directory.');
 		}
+	
+		$iterator = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+		$files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
+	
+		foreach ($files as $file) {
+			if ($file->isDir()) {
+				rmdir($file->getRealPath());
+			} else {
+				unlink($file->getRealPath());
+			}
+		}
+	
+		rmdir($dir);
+
+		WP_CLI::success('Output directory successfully removed.');
 	}
 }

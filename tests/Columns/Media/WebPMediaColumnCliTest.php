@@ -24,7 +24,7 @@ test('Check if CLI command name is correct.', function () {
 
 	expect($mock)
 		->toBeString()
-		->toEqual('create_webp_media_column');
+		->toEqual('webp_media_column');
 });
 
 test('Check if CLI command documentation is correct.', function () {

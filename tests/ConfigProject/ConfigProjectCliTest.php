@@ -50,7 +50,7 @@ test('ConfigProject CLI command will run under custom command name', function ()
 	$configProject = $this->configProject;
 	$result = $configProject->getCommandName();
 
-	$this->assertStringContainsString('init_config_project', $result);
+	$this->assertStringContainsString('config_project', $result);
 });
 
 test('ConfigProject CLI command will correctly copy the ConfigProject class with set arguments', function () {

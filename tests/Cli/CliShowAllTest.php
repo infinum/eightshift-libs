@@ -57,7 +57,7 @@ test('CliShowAll works', function () {
 	$cliShowAll([], []);
 
 	$this->assertSame('All commands are outputted.', \getenv('SUCCESS'));
-	$this->assertSame('%mCommands for project setup:%n', \getenv('COLORIZE')); // Last colorize command.
+	$this->assertSame('%mCommands for WP project only:%n', \getenv('COLORIZE')); // Last colorize command.
 });
 
 

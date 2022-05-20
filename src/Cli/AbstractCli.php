@@ -152,7 +152,7 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		WP_CLI::add_command(
-			$this->commandParentName . ' ' . $this->getCommandName(),
+			"{$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}",
 			$class,
 			$this->prepareCommandDocs($this->getDoc(), $this->getGlobalSynopsis())
 		);
@@ -756,14 +756,14 @@ abstract class AbstractCli implements CliInterface
 
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
-			if (\method_exists($class, 'getCommandName')) {
+			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
 				if (\function_exists('\add_action')) {
-					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
+					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
 				} else {
 					if (!$run) {
-						WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+						WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandParentName()}_{$class->getCommandName()} --skip-wordpress");
 					} else {
-						WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+						WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandParentName()}_{$class->getCommandName()} --skip-wordpress");
 					}
 				}
 			}
@@ -778,7 +778,7 @@ abstract class AbstractCli implements CliInterface
 	public function runReset(): void
 	{
 		$reset = new CliReset('');
-		WP_CLI::runcommand("eval-file bin/cli.php {$reset->getCommandName()} --skip-wordpress");
+		WP_CLI::runcommand("eval-file bin/cli.php {$reset->getCommandParentName()}_{$reset->getCommandName()} --skip-wordpress");
 	}
 
 	/**

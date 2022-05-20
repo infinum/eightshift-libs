@@ -56,7 +56,7 @@ test('Initializing the project command returns correct command name', function (
 	$commandName = $this->cliInitProject->getCommandName();
 
 	$this->assertIsString($commandName);
-	$this->assertSame(($this->cliInitProject)::COMMAND_NAME, $commandName);
+	$this->assertSame('project', $commandName);
 });
 
 

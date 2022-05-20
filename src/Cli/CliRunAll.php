@@ -26,7 +26,7 @@ class CliRunAll extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return '';
+		return 'develop';
 	}
 
 	/**
@@ -54,6 +54,14 @@ class CliRunAll extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		// Set output paths.
+		$outputDir = $this->getOutputDir();
+
+		// Create output dir if it doesn't exist.
+		if (!\is_dir($outputDir)) {
+			\mkdir($outputDir, 0755, true);
+		}
+
 		$this->runReset();
 
 		WP_CLI::log('--------------------------------------------------');

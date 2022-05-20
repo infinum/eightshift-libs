@@ -49,7 +49,7 @@ test('Readme CLI command will run under custom command name', function () {
 	$readme = $this->readme;
 	$result = $readme->getCommandName();
 
-	$this->assertStringContainsString('init_readme', $result);
+	$this->assertStringContainsString('readme', $result);
 });
 
 test('Readme CLI command will correctly copy the readme in the custom folder with set arguments', function () {

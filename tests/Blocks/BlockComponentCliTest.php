@@ -63,7 +63,7 @@ afterEach(function () {
 	$component = $this->component;
 	$result = $component->getCommandName();
 
-	$this->assertStringContainsString('use_component', $result);
+	$this->assertStringContainsString('component', $result);
 });
 
 test('Component CLI documentation is correct', function () {

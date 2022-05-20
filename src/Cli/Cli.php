@@ -118,8 +118,16 @@ class Cli
 		ReadmeCli::class,
 		SetupCli::class,
 		WpCli::class,
+	];
+
+		/**
+	 * All classes and commands that can be used on WP project.
+	 *
+	 * @var class-string[]
+	 */
+	public const COMMANDS_LIST = [
 		RegenerateWebPMediaCli::class,
-		UseWebPMediaCli::class
+		UseWebPMediaCli::class,
 	];
 
 	/**
@@ -179,7 +187,8 @@ class Cli
 		return \array_merge(
 			static::CLASSES_LIST,
 			static::DEVELOP_CLASSES,
-			static::SETUP_CLASSES
+			static::SETUP_CLASSES,
+			static::COMMANDS_LIST
 		);
 	}
 
@@ -194,7 +203,8 @@ class Cli
 			static::CLASSES_LIST,
 			static::BLOCKS_CLASSES,
 			static::PROJECT_CLASSES,
-			static::SETUP_CLASSES
+			static::SETUP_CLASSES,
+			static::COMMANDS_LIST
 		);
 	}
 
@@ -219,8 +229,8 @@ class Cli
 			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
-			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getDevelopArgs') && \method_exists($class, '__invoke')) {
-				if ($class->getCommandName() === $commandName) {
+			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName') && \method_exists($class, 'getDevelopArgs') && \method_exists($class, '__invoke')) {
+				if ("{$class->getCommandParentName()}_{$class->getCommandName()}" === $commandName) {
 					$class->__invoke(
 						[],
 						$class->getDevelopArgs($args)
@@ -243,16 +253,18 @@ class Cli
 	 */
 	public function load(string $commandParentName): void
 	{
-		// Top Level command name.
-		WP_CLI::add_command($commandParentName, new CliBoilerplate());
+		if (!\getenv('ES_TEST')) {
+			// Top Level command name.
+			WP_CLI::add_command($commandParentName, new CliBoilerplate());
 
-		// Register all top level commands.
-		foreach (self::PARENTS_LIST as $item) {
-			$reflectionClass = new ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs();
-			$name = $reflectionClass->getConstant('COMMAND_NAME');
+			// Register all top level commands.
+			foreach (self::PARENTS_LIST as $item) {
+				$reflectionClass = new ReflectionClass($item);
+				$class = $reflectionClass->newInstanceArgs();
+				$name = $reflectionClass->getConstant('COMMAND_NAME');
 
-			WP_CLI::add_command("{$commandParentName} {$name}", $class);
+				WP_CLI::add_command("{$commandParentName} {$name}", $class);
+			}
 		}
 
 		foreach ($this->getPublicClasses() as $item) {
