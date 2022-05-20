@@ -26,6 +26,26 @@ class TaxonomyCli extends AbstractCli
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomTaxonomy';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'create';
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'taxonomy';
+	}
+
+	/**
 	 * Define default develop props.
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.

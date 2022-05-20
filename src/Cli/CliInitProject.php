@@ -32,8 +32,6 @@ use WP_CLI;
  */
 class CliInitProject extends AbstractCli
 {
-	public const COMMAND_NAME = 'setup_project';
-
 	/**
 	 * All classes for initial theme setup for project
 	 *
@@ -57,13 +55,23 @@ class CliInitProject extends AbstractCli
 	];
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'setup';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'project';
 	}
 
 	/**

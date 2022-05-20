@@ -20,7 +20,15 @@ use WP_CLI\ExitException;
  */
 class UpdateCli extends AbstractCli
 {
-	public const COMMAND_NAME = 'run_update';
+	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'run';
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -29,7 +37,7 @@ class UpdateCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'update';
 	}
 
 	/**

@@ -18,6 +18,17 @@ use WP_CLI\ExitException;
  */
 class ExportCli extends AbstractCli
 {
+
+	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'run';
+	}
+
 	/**
 	 * Get WPCLI command name
 	 *
@@ -25,7 +36,7 @@ class ExportCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'run_export';
+		return 'export';
 	}
 
 	/**

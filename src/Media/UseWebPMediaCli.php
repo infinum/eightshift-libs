@@ -31,6 +31,16 @@ class UseWebPMediaCli extends AbstractCli
 	public const USE_WEBP_MEDIA_OPTION_NAME = 'es-use-webp-media';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'webp';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string

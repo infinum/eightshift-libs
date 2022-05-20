@@ -16,18 +16,21 @@ namespace EightshiftLibs\Blocks;
 class BlockComponentCli extends AbstractBlocksCli
 {
 	/**
-	 * CLI command name
-	 *
-	 * @var string
-	 */
-	public const COMMAND_NAME = 'use_component';
-
-	/**
 	 * Output dir relative path
 	 *
 	 * @var string
 	 */
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR . 'components';
+
+	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'use';
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -36,7 +39,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'component';
 	}
 
 	/**

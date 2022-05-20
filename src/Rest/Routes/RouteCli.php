@@ -19,13 +19,6 @@ use WP_CLI;
 class RouteCli extends AbstractCli
 {
 	/**
-	 * CLI command name
-	 *
-	 * @var string
-	 */
-	public const COMMAND_NAME = 'create_rest_route';
-
-	/**
 	 * Output dir relative path.
 	 *
 	 * @var string
@@ -46,13 +39,23 @@ class RouteCli extends AbstractCli
 	];
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'create';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'rest_route';
 	}
 
 	/**

@@ -25,6 +25,26 @@ class I18nCli extends AbstractCli
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'I18n';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'create';
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'i18n';
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>

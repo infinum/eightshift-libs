@@ -22,6 +22,12 @@ use EightshiftLibs\Blocks\BlockVariationCli;
 use EightshiftLibs\Blocks\BlockWrapperCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
+use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Cli\ParentGroups\CliRun;
+use EightshiftLibs\Cli\ParentGroups\CliSetup;
+use EightshiftLibs\Cli\ParentGroups\CliUse;
+use EightshiftLibs\Cli\ParentGroups\CliWebp;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
@@ -55,12 +61,26 @@ use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
+use WP_CLI;
 
 /**
  * Class Cli
  */
 class Cli
 {
+	/**
+	 * All classes defined as parent list commands.
+	 *
+	 * @var class-string[]
+	 */
+	public const PARENTS_LIST = [
+		CliCreate::class,
+		CliRun::class,
+		CliSetup::class,
+		CliUse::class,
+		CliWebp::class,
+	];
+
 	/**
 	 * All classes and commands that can be used on development and public WP CLI.
 	 *
@@ -223,6 +243,18 @@ class Cli
 	 */
 	public function load(string $commandParentName): void
 	{
+		// Top Level command name.
+		WP_CLI::add_command($commandParentName, new CliBoilerplate());
+
+		// Register all top level commands.
+		foreach (self::PARENTS_LIST as $item) {
+			$reflectionClass = new ReflectionClass($item);
+			$class = $reflectionClass->newInstanceArgs();
+			$name = $reflectionClass->getConstant('COMMAND_NAME');
+
+			WP_CLI::add_command("{$commandParentName} {$name}", $class);
+		}
+
 		foreach ($this->getPublicClasses() as $item) {
 			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([$commandParentName]);

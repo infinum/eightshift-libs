@@ -203,16 +203,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Get WPCLI command name
-	 *
-	 * @return string
-	 */
-	public function getCommandName(): string
-	{
-		return 'create_' . \strtolower((string)\preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
-	}
-
-	/**
 	 * Generate correct class name from provided string
 	 *
 	 * Remove _, - and empty space. Create a camelcase from string.

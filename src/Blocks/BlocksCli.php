@@ -76,6 +76,26 @@ class BlocksCli extends AbstractCli
 	];
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'create';
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'blocks';
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>

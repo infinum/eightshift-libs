@@ -23,13 +23,23 @@ class WebPMediaColumnCli extends AbstractCli
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Columns' . \DIRECTORY_SEPARATOR . 'Media';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'create';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return 'create_webp_media_column';
+		return 'webp_media_column';
 	}
 
 	/**

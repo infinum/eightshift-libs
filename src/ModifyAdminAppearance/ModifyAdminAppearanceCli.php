@@ -23,6 +23,26 @@ class ModifyAdminAppearanceCli extends AbstractCli
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'ModifyAdminAppearance';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'create';
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'modify_admin_appearance';
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>

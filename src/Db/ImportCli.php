@@ -19,13 +19,23 @@ use WP_CLI\ExitException;
 class ImportCli extends AbstractCli
 {
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'run';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return 'run_import';
+		return 'import';
 	}
 
 	/**

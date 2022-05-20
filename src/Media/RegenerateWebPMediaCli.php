@@ -25,13 +25,23 @@ class RegenerateWebPMediaCli extends AbstractCli
 	use MediaWebPTrait;
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'webp';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return 'regenerate_webp_media';
+		return 'regenerate_media';
 	}
 
 	/**

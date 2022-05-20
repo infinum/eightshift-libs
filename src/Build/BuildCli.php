@@ -18,18 +18,21 @@ use EightshiftLibs\Cli\AbstractCli;
 class BuildCli extends AbstractCli
 {
 	/**
-	 * Init build command name.
-	 *
-	 * @var string
-	 */
-	public const COMMAND_NAME = 'init_build';
-
-	/**
 	 * Output dir relative path
 	 *
 	 * @var string
 	 */
 	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
+
+	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'init';
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -38,7 +41,7 @@ class BuildCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'build';
 	}
 
 	/**

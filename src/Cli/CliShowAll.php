@@ -20,6 +20,16 @@ use WP_CLI;
 class CliShowAll extends AbstractCli
 {
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return '';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string

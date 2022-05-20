@@ -18,11 +18,14 @@ use WP_CLI;
 class CliInitAll extends AbstractCli
 {
 	/**
-	 * CLI command name
+	 * Get WPCLI command parent name
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public const COMMAND_NAME = 'setup_all';
+	public function getCommandParentName(): string
+	{
+		return 'setup';
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -31,7 +34,7 @@ class CliInitAll extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'all';
 	}
 
 	/**

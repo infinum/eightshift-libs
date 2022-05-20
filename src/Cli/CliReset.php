@@ -19,8 +19,19 @@ use WP_CLI;
  */
 class CliReset extends AbstractCli
 {
+
 	/**
-	 * Get WPCLI command name.
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return '';
+	}
+
+	/**
+	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */

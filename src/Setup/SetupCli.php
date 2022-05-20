@@ -17,8 +17,6 @@ use EightshiftLibs\Cli\AbstractCli;
  */
 class SetupCli extends AbstractCli
 {
-	public const SETUP_CLI_COMMAND_NAME = 'init_setup';
-
 	/**
 	 * Output dir relative path.
 	 *
@@ -27,13 +25,23 @@ class SetupCli extends AbstractCli
 	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'init';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return self::SETUP_CLI_COMMAND_NAME;
+		return 'setup';
 	}
 
 	/**

@@ -28,6 +28,26 @@ class ServiceExampleCli extends AbstractCli
 	public const TEMPLATE = 'Service';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'create';
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'service_example';
+	}
+
+	/**
 	 * Define default develop props.
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
