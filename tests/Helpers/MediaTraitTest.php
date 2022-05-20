@@ -20,10 +20,13 @@ test('Check if getWebPMedia will return webp image format.', function() {
 	$mock = Components::getWebPMedia('image.jpg');
 
 	expect($mock)
-		->toBeString('image.webp');
+		->toMatchArray([
+			'src' => 'image.webp',
+			'type' => 'image/webp',
+		]);
 });
 
-test('Check if getWebPMedia will return empty string if provided extension is not supported.', function() {
+test('Check if getWebPMedia will return empty array if provided extension is not supported.', function() {
 
 	Functions\when('wp_check_filetype')->justReturn([
 		'ext' => 'pdf',
@@ -33,7 +36,7 @@ test('Check if getWebPMedia will return empty string if provided extension is no
 	$mock = Components::getWebPMedia('document.pdf');
 
 	expect($mock)
-		->toBeString('');
+		->toBeArray();
 });
 
 test('Check if existsWebPMedia will return false if attachment ID is non existing.', function() {
