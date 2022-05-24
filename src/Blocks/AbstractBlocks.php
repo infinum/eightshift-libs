@@ -143,7 +143,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return true;
 		}
 
-		if (\gettype($allowedBlockTypes) === 'boolean') {
+		if (!\is_bool($allowedBlockTypes)) {
 			return $allowedBlockTypes;
 		}
 
@@ -348,7 +348,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$namespace = Components::getSettingsNamespace();
 
 		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
-			if (!($parsedBlock['attrs']['paragraphParagraphContent'])) {
+			if (!empty($parsedBlock['attrs']['paragraphParagraphContent'])) {
 				$parsedBlock['attrs']['wrapperDisable'] = true;
 				$parsedBlock['attrs']['paragraphUse'] = false;
 			}
