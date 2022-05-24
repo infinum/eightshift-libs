@@ -195,16 +195,17 @@ abstract class AbstractCli implements CliInterface
 
 	/**
 	 * Get one argument.
+	 *
 	 * Use assocArgs props and fallback to default if missing.
 	 *
-	 * @param array<string, mixed> $array Array of args to check.
+	 * @param array<string, string> $arguments Array of args to check.
 	 * @param string $key Argument name to check.
 	 *
 	 * @return string
 	 */
-	public function getArg(array $array, string $key): string
+	public function getArg(array $arguments, string $key): string
 	{
-		return isset($array[$key]) ? (string) $array[$key] : $this->getDefaultArg($key);
+		return isset($arguments[$key]) ? (string) $arguments[$key] : $this->getDefaultArg($key);
 	}
 
 	/**
