@@ -35,7 +35,6 @@ afterEach(function () {
 test('Asserts that outputCssVariablesGlobal returns the correct CSS variables from global manifest', function () {
 	$output = Components::outputCssVariablesGlobal();
 
-
 	expect($output)
 		->toBeString()
 		->toContain('</style>')
@@ -222,17 +221,26 @@ test('Asserts that "outputCssVariablesInline" will return empty string if config
 	Components::setConfigOutputCssGlobally(false);
 	Components::setConfigOutputCssOptimize(false);
 
-	$result = Components::outputCssVariablesInline([], [], '');
+	$result = Components::outputCssVariablesInline();
 
 	expect($result)->toBeString()->toEqual('');
 });
 
-test('Asserts that "outputCssVariablesInline" will return empty string if styles are empty.', function () {
+test('Asserts that "outputCssVariablesInline" will return empty style but output aditional styles.', function () {
 	Components::setStyles([]);
 
-	$result = Components::outputCssVariablesInline([], [], '');
+	$result = Components::outputCssVariablesInline();
 
-	expect($result)->toBeString()->toEqual('');
+	expect($result)->toBeString()->toEqual("<style id='esCssVariablesTest'> :root {--es-loader-opacity: 1;}</style>");
+});
+
+test('Asserts that "outputCssVariablesInline" will return empty style tag if styles are empty.', function () {
+	Components::setConfigOutputCssGloballyAdditionalStyles([]);
+	Components::setStyles([]);
+
+	$result = Components::outputCssVariablesInline();
+
+	expect($result)->toBeString()->toEqual("<style id='esCssVariablesTest'> </style>");
 });
 
 test('Asserts that "outputCssVariablesInline" will return style tag with the correct styles.', function () {

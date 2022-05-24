@@ -22,6 +22,7 @@ use EightshiftLibs\Blocks\BlockVariationCli;
 use EightshiftLibs\Blocks\BlockWrapperCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
+use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\View\EscapedViewCli;
@@ -45,6 +46,8 @@ use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\Media\RegenerateWebPMediaCli;
+use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
@@ -91,9 +94,12 @@ class Cli
 		CiExcludeCli::class,
 		ConfigProjectCli::class,
 		GitIgnoreCli::class,
+		WebPMediaColumnCli::class,
 		ReadmeCli::class,
 		SetupCli::class,
 		WpCli::class,
+		RegenerateWebPMediaCli::class,
+		UseWebPMediaCli::class
 	];
 
 	/**

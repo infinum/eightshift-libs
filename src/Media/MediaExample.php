@@ -10,14 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Media;
 
-use EightshiftLibs\Services\ServiceInterface;
+use EightshiftLibs\Media\AbstractMedia;
 
 /**
  * Class MediaExample
  *
  * This class handles all media options. Sizes, Types, Features, etc.
  */
-class MediaExample implements ServiceInterface
+class MediaExample extends AbstractMedia
 {
 	/**
 	 * Register all the hooks
@@ -27,6 +27,13 @@ class MediaExample implements ServiceInterface
 	public function register(): void
 	{
 		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 20);
+
+		// WebP.
+		if (\extension_loaded('gd')) {
+			\add_filter('wp_generate_attachment_metadata', [$this, 'generateWebPMedia'], 10, 2);
+			\add_filter('wp_update_attachment_metadata', [$this, 'generateWebPMedia'], 10, 2);
+			\add_action('delete_attachment', [$this, 'deleteWebPMedia']);
+		}
 	}
 
 

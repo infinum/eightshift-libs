@@ -348,7 +348,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$ds = \DIRECTORY_SEPARATOR;
 
-		if (\function_exists('\add_action') && !\getenv('TEST')) {
+		if (\function_exists('\add_action') && !\getenv('ES_TEST')) {
 			$root = $this->getProjectRootPath();
 		} else {
 			$root = "{$this->getProjectRootPath(true)}{$ds}cliOutput";
@@ -854,7 +854,7 @@ abstract class AbstractCli implements CliInterface
 	public function getLibsPath(string $path = ''): string
 	{
 		$ds = \DIRECTORY_SEPARATOR;
-		if (\getenv('TEST')) {
+		if (\getenv('ES_TEST')) {
 			return "{$this->getProjectRootPath()}{$ds}{$path}";
 		}
 
@@ -927,13 +927,16 @@ abstract class AbstractCli implements CliInterface
 
 		$synopsis = $docs['synopsis'] ?? [];
 
-		return [
-			'shortdesc' => $shortdesc,
-			'synopsis' => \array_merge(
-				$docsGlobal['synopsis'],
-				$synopsis
-			)
-		];
+		return \array_merge(
+			$docsGlobal,
+			$docs,
+			[
+				'synopsis' => \array_merge(
+					$synopsis,
+					$docsGlobal['synopsis']
+				),
+			]
+		);
 	}
 
 	/**

@@ -6,28 +6,15 @@ use EightshiftLibs\Blocks\BlockVariationCli;
 
 use EightshiftLibs\Exception\InvalidBlock;
 
-use function Tests\deleteCliOutput;
 use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	setupMocks();
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('log')
-		->andReturnArg(0);
+	setBeforeEach();
 
 	$this->variation = new BlockVariationCli('boilerplate');
 });
@@ -36,7 +23,7 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
 });
 
  test('Variation CLI command will correctly copy the variation class with defaults', function () {
