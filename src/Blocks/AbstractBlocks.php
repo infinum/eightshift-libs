@@ -143,7 +143,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return true;
 		}
 
-		if (\gettype($allowedBlockTypes) === 'boolean') {
+		if (!\is_bool($allowedBlockTypes)) {
 			return $allowedBlockTypes;
 		}
 
