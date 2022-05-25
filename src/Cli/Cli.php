@@ -52,6 +52,7 @@ use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
+use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
@@ -120,6 +121,7 @@ class Cli
 		ReadmeCli::class,
 		SetupCli::class,
 		WpCli::class,
+		GeolocationCli::class,
 	];
 
 	/**
