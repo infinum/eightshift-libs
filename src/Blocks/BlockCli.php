@@ -78,7 +78,7 @@ class BlockCli extends AbstractBlocksCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to copy precreated block from out library to your project. After the copy you can modify the block in any way you see fit.
+				Used to copy pre-created block from our library to your project. After copying you can modify the block in any way you see fit.
 
 				## EXAMPLES
 

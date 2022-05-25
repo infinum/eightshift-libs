@@ -115,7 +115,7 @@ class AdminMenuCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'menu_slug',
-					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes, and underscores characters to be compatible with sanitize_key().',
+					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes and underscore characters to be compatible with sanitize_key().',
 					'optional' => false,
 				],
 				[

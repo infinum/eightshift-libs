@@ -78,7 +78,7 @@ class BlockComponentCli extends AbstractBlocksCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to copy precreated component from out library to your project. After the copy you can modify the component in any way you see fit.
+				Used to copy pre-created component from our library to your project. After copying you can modify the component in any way you see fit.
 
 				## EXAMPLES
 
