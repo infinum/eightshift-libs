@@ -33,6 +33,7 @@
   },
   "require-dev": {
     "brain/monkey": "^2.6",
+    "captainhook/captainhook": "^5.10",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "infinum/eightshift-coding-standards": "^1.5",
     "pestphp/pest": "^1.2",
@@ -65,15 +66,24 @@
     "process-timeout": 2000,
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "pestphp/pest-plugin": true
+      "pestphp/pest-plugin": true,
+      "composer/installers": true
     }
   },
   "scripts": {
+    "post-autoload-dump": [
+      "vendor/bin/captainhook install -f -s"
+    ],
     "analyze": "@php ./vendor/bin/phpstan analyze",
     "standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.4-",
     "standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.4-",
     "test:unit": "@php ./vendor/bin/pest",
     "test:unit-report": "@php ./vendor/bin/pest --log-junit tests/coverage/report.xml",
-    "test:coverage": "@php ./vendor/bin/pest --coverage"
+    "test:coverage": "@php ./vendor/bin/pest --coverage",
+    "check-all": [
+      "@standards:check",
+      "@analyze",
+      "@test:unit"
+    ]
   }
 }
