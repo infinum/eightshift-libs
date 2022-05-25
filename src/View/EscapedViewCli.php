@@ -51,11 +51,11 @@ class EscapedViewCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create escape view service class.',
+			'shortdesc' => 'Create escaped view service class.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create escape view services class to list all tags you want to escape or enable.
+				Used to create escaped view service class to list all tags you want to escape or enable.
 
 				## EXAMPLES
 

@@ -80,7 +80,7 @@ class SetupCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to list all your project configurations like themes, plugins, core, enviroments and etc.
+				Used to list all your project configurations like themes, plugins, core, environments, etc.
 				This file will be copied to your project root folder.
 
 				## EXAMPLES

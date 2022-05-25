@@ -79,7 +79,7 @@ class WpCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create generic WP-CLI services class to kickstart your custom WP-CLI command.
+				Used to create generic WP-CLI service class to kickstart your custom WP-CLI command.
 
 				## EXAMPLES
 

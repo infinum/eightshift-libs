@@ -51,11 +51,11 @@ class ThemeOptionsCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create project theme Options service class using ACF plugin.',
+			'shortdesc' => 'Create project Theme Options service class using ACF plugin.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create Advance custom fiels theme options services class to register project specific options.
+				Used to create Advanced Custom Fields theme options service class to register project specific options.
 				ACF plugin must be installed.
 
 				## EXAMPLES

@@ -49,7 +49,7 @@ test('CiExclude CLI command will run under custom command name', function () {
 	$ciexclude = $this->ciexclude;
 	$result = $ciexclude->getCommandName();
 
-	$this->assertStringContainsString('ci_exclude', $result);
+	expect($result)->toContain('ci_exclude');
 });
 
 test('CiExclude CLI command will correctly copy the ci-exclude file in the custom folder with set arguments', function () {

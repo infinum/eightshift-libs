@@ -58,7 +58,7 @@ afterEach(function () {
 	$wrapper = $this->wrapper;
 	$result = $wrapper->getCommandName();
 
-	$this->assertStringContainsString('wrapper', $result);
+	expect($result)->toContain('wrapper');
 });
 
 test('Wrapper CLI documentation is correct', function () {
