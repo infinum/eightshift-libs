@@ -50,7 +50,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -66,7 +66,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	/**
 	 * Define default arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDefaultArgs(): array
 	{

@@ -167,7 +167,7 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -186,7 +186,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Define default props for command.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDefaultArgs(): array
 	{

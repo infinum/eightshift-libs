@@ -1,7 +1,5 @@
 <?php
 
-// phpcs:ignoreFile Generic.Files.LineLength.TooLong
-
 /**
  * Class that registers WPCLI command for Custom Taxonomy.
  *
@@ -53,7 +51,7 @@ class TaxonomyCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
