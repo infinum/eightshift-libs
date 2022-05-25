@@ -47,7 +47,7 @@ class GeolocationExample extends AbstractGeolocation
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the phar location.
-			return new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this locaiton %s', 'eightshift-libs'), $path));
+			return new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), $path));
 		}
 
 		return $path;
@@ -64,7 +64,7 @@ class GeolocationExample extends AbstractGeolocation
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the database location.
-			return new Exception(\sprintf(\esc_html__('Missing Geolocation database on this locaiton %s', 'eightshift-libs'), $path));
+			return new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), $path));
 		}
 
 		return $path;
