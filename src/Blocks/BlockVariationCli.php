@@ -51,7 +51,7 @@ class BlockVariationCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -80,7 +80,7 @@ class BlockVariationCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to copy precreated variation from out library to your project. After the copy you can modify the variation in any way you see fit.
+				Used to copy pre-created variation from our library to your project. After copying you can modify the variation in any way you see fit.
 
 				## EXAMPLES
 

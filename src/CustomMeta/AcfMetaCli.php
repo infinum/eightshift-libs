@@ -50,7 +50,7 @@ class AcfMetaCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -67,7 +67,7 @@ class AcfMetaCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create custom Advance custom fields service class.',
+			'shortdesc' => 'Create Advanced Custom Fields service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -79,7 +79,7 @@ class AcfMetaCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create Advance custom fields service class for registering custom fields in your project using the PHP way.
+				Used to create Advanced Custom Fields service class for registering custom fields in your project using the PHP way.
 				ACF plugin must be installed.
 
 				## EXAMPLES

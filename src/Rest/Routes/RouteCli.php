@@ -64,7 +64,7 @@ class RouteCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -107,7 +107,7 @@ class RouteCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create REST-API services class to register custom route.
+				Used to create REST-API service class to register custom route.
 
 				## EXAMPLES
 

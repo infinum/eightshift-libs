@@ -55,7 +55,7 @@ class MenuCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create menu services class to register custom menus, men walkers and etc.
+				Used to create menu service class to register custom menus, menu walkers and etc.
 
 				## EXAMPLES
 

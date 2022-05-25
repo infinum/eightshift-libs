@@ -50,7 +50,7 @@ class GitIgnoreCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -67,7 +67,7 @@ class GitIgnoreCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy .gitignore file for excluding unecesery files from git. This file will be copied to WordPress root folder.',
+			'shortdesc' => 'Copy .gitignore file for excluding unnecessary files from git. This file will be copied to WordPress root folder.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',

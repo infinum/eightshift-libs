@@ -17,7 +17,7 @@ use WP_CLI_Command;
  *
  * ## NOTE
  *
- * We use boilerplate for all examples commands but this command prefix deppends on you project setup.
+ * We use boilerplate for all example commands, but this command prefix depends on your project setup.
  * This prefix can be changed in the `(new Cli())->load('boilerplate');` function call.
  * If you have changed the prefix to something else, please keep that in mind when reading the examples.
  *

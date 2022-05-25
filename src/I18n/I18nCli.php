@@ -57,7 +57,7 @@ class I18nCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create language services class to register custom languages to your theme or plugin.
+				Used to create language service class to register custom languages to your theme or plugin.
 
 				## EXAMPLES
 

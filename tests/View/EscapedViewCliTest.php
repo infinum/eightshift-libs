@@ -41,7 +41,7 @@ test('Escaped view command will correctly copy the EscapedView class with defaul
 	$this->assertNotEmpty($generatedEscapedView);
 	$this->assertStringContainsString('class EscapedView extends AbstractEscapedView implements ServiceInterface', $generatedEscapedView);
 	$this->assertStringContainsString('register', $generatedEscapedView);
-	$this->assertStringNotContainsString('someRandomMethod', $generatedEscapedView);
+	expect($generatedEscapedView)->not-> toContain('someRandomMethod');
 });
 
 test('Escaped view CLI documentation is correct', function () {

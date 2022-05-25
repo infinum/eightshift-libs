@@ -51,7 +51,7 @@ class FieldCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -87,7 +87,7 @@ class FieldCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create REST-API services class to register custom field.
+				Used to create REST-API service class to register custom field.
 
 				## EXAMPLES
 

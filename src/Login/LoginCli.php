@@ -55,7 +55,7 @@ class LoginCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create login services class to register custom functonality restricted to the WordPress login screen.
+				Used to create login service class to register custom functionality restricted to the WordPress login screen.
 
 				## EXAMPLES
 

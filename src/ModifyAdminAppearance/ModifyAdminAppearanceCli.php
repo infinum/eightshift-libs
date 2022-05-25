@@ -55,7 +55,7 @@ class ModifyAdminAppearanceCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 			## USAGE
 
-			Used to create admin appearance services class to register features that change the admin based on the enviroment like colors.
+			Used to create admin appearance service class to register features that change the admin based on the environment like colors.
 
 			## EXAMPLES
 

@@ -48,7 +48,7 @@ class ConfigCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -91,7 +91,7 @@ class ConfigCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to project config class with settings like, project name, version, REST-API name/version, etc.
+				Used to create project config class with settings like project name, version, REST-API name/version, etc.
 
 				## EXAMPLES
 

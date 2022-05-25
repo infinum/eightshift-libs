@@ -87,7 +87,7 @@ class CliInitProject extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Generates initial project setup with all files to run one client project.
+				Generates initial project setup with all files to run on the client project.
 				For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.
 
 				## EXAMPLES

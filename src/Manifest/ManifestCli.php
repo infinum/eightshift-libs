@@ -55,7 +55,7 @@ class ManifestCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create manifest services class to register assets manifest functionality like getting fonts from your project.
+				Used to create manifest service class to register assets manifest functionality like getting fonts from your project.
 
 				## EXAMPLES
 

@@ -55,7 +55,7 @@ class MainCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create main entry point services class that activates all other classes and initializes autowiring.
+				Used to create main entry point service class that activates all other classes and initializes autowiring.
 				Without this class nothing will work.
 
 				## EXAMPLES

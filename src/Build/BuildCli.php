@@ -1,7 +1,5 @@
 <?php
 
-// phpcs:ignoreFile Generic.Files.LineLength.TooLong
-
 /**
  * Class that registers WPCLI command for BuildCli.
  *
@@ -52,7 +50,7 @@ class BuildCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -93,16 +91,16 @@ class BuildCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used for building you project to production ready version in one command. Generally used in GitHub Actions or any other tool for continuous integration. This file will be copied to your project root under the bin folder.
+				Used for building your project to production ready version in one command. Generally used in GitHub Actions or any other tool for continuous integration. This file will be copied to your project root under the bin folder.
 
 				## EXAMPLES
 
-				# Create service class:
+				# Copy file:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
-				Service class will be created from this example:
+				File will be created from this example:
 				https://github.com/infinum/eightshift-libs/blob/develop/src/Build/BuildExample.php
 			"),
 		];

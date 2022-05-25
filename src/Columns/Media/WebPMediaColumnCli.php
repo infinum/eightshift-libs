@@ -55,7 +55,7 @@ class WebPMediaColumnCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to creat new column in th media list page to show if your media has built WebP format created.
+				Used to create new column in the media list page to show if your media has WebP format created.
 
 				## EXAMPLES
 

@@ -1,7 +1,5 @@
 <?php
 
-// phpcs:ignoreFile Generic.Files.LineLength.TooLong
-
 /**
  * Class that registers WPCLI command for admin sub menu creation.
  *
@@ -52,7 +50,7 @@ class AdminSubMenuCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -68,7 +66,7 @@ class AdminSubMenuCli extends AbstractCli
 	/**
 	 * Define default arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDefaultArgs(): array
 	{

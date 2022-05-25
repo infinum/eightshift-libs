@@ -1,7 +1,5 @@
 <?php
 
-// phpcs:ignoreFile Generic.Files.LineLength.TooLong
-
 /**
  * Class that registers WPCLI command for Admin menu creation.
  *
@@ -12,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\AdminMenus;
 
-use EightshiftBoilerplate\AdminMenus\AdminMenuExample;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
@@ -53,7 +50,7 @@ class AdminMenuCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -70,7 +67,7 @@ class AdminMenuCli extends AbstractCli
 	/**
 	 * Define default arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDefaultArgs(): array
 	{
@@ -115,7 +112,7 @@ class AdminMenuCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'menu_slug',
-					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes, and underscores characters to be compatible with sanitize_key().',
+					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes and underscore characters to be compatible with sanitize_key().',
 					'optional' => false,
 				],
 				[
