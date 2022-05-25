@@ -107,7 +107,7 @@ class RouteCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create REST-API services class to register custom route.
+				Used to create REST-API service class to register custom route.
 
 				## EXAMPLES
 

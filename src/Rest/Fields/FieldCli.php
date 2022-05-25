@@ -87,7 +87,7 @@ class FieldCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create REST-API services class to register custom field.
+				Used to create REST-API service class to register custom field.
 
 				## EXAMPLES
 

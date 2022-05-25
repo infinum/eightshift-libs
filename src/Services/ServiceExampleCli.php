@@ -89,7 +89,7 @@ class ServiceExampleCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create generic services class to kickstart your custom service class.
+				Used to create generic service class to kickstart your custom service class.
 
 				## EXAMPLES
 

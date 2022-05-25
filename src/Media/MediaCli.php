@@ -55,7 +55,7 @@ class MediaCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create media services class to register custom functonality like new media sizes, WebP format support and etc.
+				Used to create media service class to register custom functionality like new media sizes, WebP format support, etc.
 
 				## EXAMPLES
 
