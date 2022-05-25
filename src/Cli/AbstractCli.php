@@ -223,7 +223,7 @@ abstract class AbstractCli implements CliInterface
 			return '';
 		}
 
-		return $args[$key] ?? '';
+		return isset($args[$key]) ? (string) $args[$key] : '';
 	}
 
 	/**

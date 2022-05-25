@@ -6,7 +6,7 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Exception\InvalidBlock;
-
+use EightshiftLibs\Helpers\Components;
 use WP_Block_Editor_Context;
 
 use function Tests\mock;
@@ -89,31 +89,23 @@ test('Asserts that getAllBlocksList will return true if post type is eightshift-
 	$blockContext->post = mock('WP_Post');
 	$blockContext->post->post_type = 'eightshift-forms';
 
-	$blocks = $this->blocksExample->getAllBlocksList(true, $blockContext);
+	$blocks = $this->blocksExample->getAllBlocksList([], $blockContext);
 
-	$this->assertSame(true, $blocks);
-
-	$blockContext->post = mock('WP_Post');
-	$blockContext->post->post_type = 'post';
-
-	$blocks = $this->blocksExample->getAllBlocksList(false, $blockContext);
-
-	$this->assertSame(false, $blocks);
+	expect($blocks)
+		->toBeTrue();
 });
 
-test('Asserts that getAllBlocksList first argument is boolean and return the provided attribute as return value for WP 5.8.', function () {
+test('Asserts that getAllBlocksList first argument is not bool and return first argument for WP 5.8.', function () {
 
 	$blockContext = mock('WP_Block_Editor_Context');
 	$blockContext->post = mock('WP_Post');
 	$blockContext->post->post_type = 'post';
 
-	$blocks = $this->blocksExample->getAllBlocksList(true, $blockContext);
+	$blocks = $this->blocksExample->getAllBlocksList(['test'], $blockContext);
 
-	$this->assertSame(true, $blocks);
-
-	$blocks = $this->blocksExample->getAllBlocksList(false, $blockContext);
-
-	$this->assertSame(false, $blocks, "Return value is not false.");
+	expect($blocks)
+		->toBeArray()
+		->toContain('test');
 });
 
 test('Asserts that getAllBlocksList will return only projects blocks for older versions.', function () {
@@ -142,19 +134,15 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 	$blockContext = mock(WP_Block_Editor_Context::class);
 	$blockContext->post = null;
 
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+	(new BlocksExample())->getBlocksDataFullRaw();
 
-	$this->blocksExample->getBlocksDataFullRaw();
+	Components::setConfigFlags();
 
-	$list = $this->blocksExample->getAllBlocksList([], $blockContext);
+	$blocks = $this->blocksExample->getAllBlocksList(false, $blockContext);
 
-	$this->assertIsArray($list);
-	$this->assertNotContains('core/paragraph', $list, "List array does contain core/paragraph item.");
-	$this->assertContains('eightshift-boilerplate/button', $list, "List array doesn't contain eightshift-boilerplate/button item.");
-	$this->assertContains('core/block', $list, "List array doesn't contain core/block item.");
-	$this->assertContains('core/template', $list, "List array doesn't contain core/template item.");
+	expect($blocks)
+		->toBeArray()
+		->toContain('eightshift-boilerplate/button', 'eightshift-boilerplate/heading', 'core/block', 'core/template');
 });
 
 test('Asserts that render component will load view template.', function () {
@@ -391,17 +379,16 @@ test('filterBlocksContent method will filter out the paragraph without content.'
 
 	$parsedBlock = [
 		'blockName' => 'eightshift-boilerplate/paragraph',
-		'attrs' =>
-			[
-				'paragraphParagraphContent' => '',
-			],
+		'attrs' => [
+			'paragraphParagraphContent' => '',
+			'wrapperDisable' => true,
+			'paragraphUse' => false,
+		],
 		'innerBlocks' => '',
 		'innerHTML' => '',
-		'innerContent' =>
-			[
-				0 => '',
-			],
-		'wrapperDisable' => false
+		'innerContent' => [
+			0 => '',
+		],
 	];
 
 	// Set namespace data.
