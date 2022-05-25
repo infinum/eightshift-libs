@@ -104,7 +104,7 @@ class TaxonomyCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create custom taxonomy all your custom data.
+				Used to create custom taxonomy for all your custom data.
 
 				## EXAMPLES
 

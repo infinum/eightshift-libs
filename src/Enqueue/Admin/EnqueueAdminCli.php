@@ -55,7 +55,7 @@ class EnqueueAdminCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create enqueue services class to register all admin styles and scripts.
+				Used to create enqueue service class to register all admin styles and scripts.
 
 				## EXAMPLES
 

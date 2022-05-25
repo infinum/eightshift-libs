@@ -91,7 +91,7 @@ class ConfigCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to project config class with settings like, project name, version, REST-API name/version, etc.
+				Used to create project config class with settings like project name, version, REST-API name/version, etc.
 
 				## EXAMPLES
 

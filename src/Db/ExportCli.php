@@ -69,7 +69,7 @@ class ExportCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used as a project command to create database export with zip-ed uplaods folder in the root of your project.
+				Used as a project command to create database export with zipped uploads folder in the root of your project.
 				All configuration data is used from the setup.json file located in the project root.
 
 				## EXAMPLES

@@ -57,7 +57,7 @@ class EnqueueBlocksCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create enqueue services class to register all block editor styles and scripts.
+				Used to create enqueue service class to register all block editor styles and scripts.
 
 				## EXAMPLES
 

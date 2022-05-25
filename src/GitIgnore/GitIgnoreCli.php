@@ -67,7 +67,7 @@ class GitIgnoreCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy .gitignore file for excluding unecesery files from git. This file will be copied to WordPress root folder.',
+			'shortdesc' => 'Copy .gitignore file for excluding unnecessary files from git. This file will be copied to WordPress root folder.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',

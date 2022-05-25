@@ -55,7 +55,7 @@ class EnqueueThemeCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 			## USAGE
 
-			Used to create enqueue services class to register all theme styles and scripts.
+			Used to create enqueue service class to register all theme styles and scripts.
 
 			## EXAMPLES
 
