@@ -59,4 +59,18 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 	{
 		return Config::getProjectVersion();
 	}
+
+	/**
+	 * Get script localizations
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getLocalizations(): array
+	{
+		return [
+			'esBlocksLocalization' => [
+				'ajaxurl' => admin_url('admin-ajax.php'),
+			],
+		];
+	}
 }
