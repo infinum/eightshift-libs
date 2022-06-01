@@ -18,7 +18,7 @@ use EightshiftLibs\Services\ServiceInterface;
 class AnalyticsGdprExample implements ServiceInterface
 {
 	/**
-	 * Analytics api page slug
+	 * Analytics api page slug.
 	 *
 	 * @var string
 	 */
@@ -156,14 +156,14 @@ class AnalyticsGdprExample implements ServiceInterface
 	public const PERFORMANCE_COOKIES_ACTIVATED = 'performance_cookies_activated';
 
 	/**
-	 * The title of the functional cookies.
+	 * The title of the performance cookies.
 	 *
 	 * @var string
 	 */
 	public const PERFORMANCE_COOKIES_TITLE = 'performance_cookies_title';
 
 	/**
-	 * The summary of the functional cookies.
+	 * The summary of the performance cookies.
 	 *
 	 * @var string
 	 */
