@@ -104,7 +104,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 	}
 
 	/**
-	 * Gets ip address by manual. General used for development and testing.
+	 * Gets an IP address manually. Generally used for development and testing.
 	 *
 	 * @return string
 	 */
