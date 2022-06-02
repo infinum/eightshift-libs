@@ -51,7 +51,7 @@ class EnqueueThemeCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Creeate enqueue theme service class.',
+			'shortdesc' => 'Create enqueue theme service class.',
 			'longdesc' => $this->prepareLongDesc("
 			## USAGE
 
