@@ -31,11 +31,7 @@ class DynamicDataCli extends AbstractCli
 	 */
 	public function getDevelopArgs(array $args): array
 	{
-		return [
-			'name' => $args[1] ?? 'Boilerplate',
-			'version' => $args[2] ?? '1',
-			'routes_version' => $args[5] ?? 'v2',
-		];
+		return [];
 	}
 
 	/**
