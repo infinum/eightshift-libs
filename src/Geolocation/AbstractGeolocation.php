@@ -76,7 +76,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 
 		$cookieName = $this->getGeolocationCookieName();
 
-		// If cookie exists don't set it again.
+		// If the cookie exists, don't set it again.
 		if (isset($_COOKIE[$cookieName])) {
 			return;
 		}
@@ -94,7 +94,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 	}
 
 	/**
-	 * Get additional location for countries list.
+	 * Gets additional locations for country list.
 	 *
 	 * @return array<mixed>
 	 */
@@ -114,7 +114,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 	}
 
 	/**
-	 * Get all country lists from the manifest.json.
+	 * Gets the list of all countries from the manifest.
 	 *
 	 * @return array<mixed>
 	 */
@@ -168,11 +168,11 @@ abstract class AbstractGeolocation implements ServiceInterface
 		}
 
 		// Provide custom countries.
-		$adittionalLocaitons = $this->getAdditionalCountries();
-		if ($adittionalLocaitons) {
+		$additionalLocations = $this->getAdditionalCountries();
+		if ($additionalLocations) {
 			$output = \array_merge(
 				$output,
-				$adittionalLocaitons
+				$additionalLocations
 			);
 		}
 
@@ -180,7 +180,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 	}
 
 	/**
-	 * Get geolocation 2 digit code proivided by the project.
+	 * Gets the 2-digit location code provided by the project.
 	 *
 	 * @return string
 	 */
@@ -197,7 +197,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 			$ipAddr = $this->getIpAddress();
 		}
 
-		// Skip if empty for some reason or if you are on local host.
+		// Skip if empty for some reason or if you are on local computer.
 		if ($ipAddr !== '127.0.0.1' && $ipAddr !== '::1' && !empty($ipAddr)) {
 			try {
 				$phar = $this->getGeolocationPharLocation();
