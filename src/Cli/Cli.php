@@ -45,6 +45,7 @@ use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
+use EightshiftLibs\DynamicData\DynamicDataCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
@@ -99,7 +100,8 @@ class Cli
 		SetupCli::class,
 		WpCli::class,
 		RegenerateWebPMediaCli::class,
-		UseWebPMediaCli::class
+		UseWebPMediaCli::class,
+		DynamicDataCli::class,
 	];
 
 	/**

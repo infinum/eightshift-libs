@@ -15,7 +15,7 @@ use EightshiftLibs\Helpers\Components;
 /**
  * DynamicData class.
  */
-class DynamicData extends AbstractDynamicData
+class DynamicDataExample extends AbstractDynamicData
 {
 	/**
 	 * A register method holds ajax hooks.
@@ -32,7 +32,7 @@ class DynamicData extends AbstractDynamicData
 	 * Map dynamic data reponse with the component to provide to output.
 	 *
 	 * @param string $type Type of load more used, usually block name.
-	 * @param array $response Response of IDs.
+	 * @param array<int> $response Response of IDs.
 	 *
 	 * @return string
 	 */
@@ -43,16 +43,14 @@ class DynamicData extends AbstractDynamicData
 				return Components::render(
 					'cards.php',
 					[
-						'ids' => $response,
+						'items' => $response,
 						'blockSsr' => true,
 					],
-					dirname(__DIR__, 1) . '/Blocks/custom/featured-content/partials',
+					\dirname(__DIR__, 1) . '/Blocks/custom/featured-content/partials',
 					true
 				);
-				break;
 			default:
 				return '';
-				break;
 		}
 	}
 }
