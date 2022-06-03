@@ -198,7 +198,7 @@ trait StoreTrait
 	public static function getVariation(string $variation): array
 	{
 		$variations = \array_filter(
-			self::getvariations(),
+			self::getVariations(),
 			static function ($item) use ($variation) {
 				return $item['name'] === $variation;
 			}
