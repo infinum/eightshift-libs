@@ -31,6 +31,7 @@ trait StoreTrait
 			'useWrapper' => true,
 		],
 		'wrapper' => [],
+		'variations' => [],
 		'settings' => [],
 		'styles' => [],
 	];
@@ -160,6 +161,50 @@ trait StoreTrait
 		);
 
 		return \reset($components) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	}
+
+	/**
+	 * Set variations details.
+	 *
+	 * @param array<mixed> $variations Variations list to store.
+	 *
+	 * @return void
+	 */
+	public static function setVariations(array $variations): void
+	{
+		global $esBlocks;
+
+		if (self::getStore()) {
+			$esBlocks[self::getStoreName()]['variations'] = $variations;
+		}
+	}
+
+	/**
+	 * Get variations details.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getVariations(): array
+	{
+		return self::getStore()['variations'] ?? [];
+	}
+
+	/**
+	 * Get variation details.
+	 *
+	 * @param string $variation Variation name to get.
+	 * @return array<mixed>
+	 */
+	public static function getVariation(string $variation): array
+	{
+		$variations = \array_filter(
+			self::getvariations(),
+			static function ($item) use ($variation) {
+				return $item['name'] === $variation;
+			}
+		);
+
+		return \reset($variations) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	}
 
 	/**

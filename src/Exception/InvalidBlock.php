@@ -74,6 +74,24 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	}
 
 	/**
+	 * Throws error if manifest key name is missing.
+	 *
+	 * @param string $variationPath Full component path for the missing name.
+	 *
+	 * @return static
+	 */
+	public static function missingVariationNameException(string $variationPath): InvalidBlock
+	{
+		return new InvalidBlock(
+			\sprintf(
+			/* translators: %s will be replaced with the path where the block should be. */
+				\esc_html__('Variation at %s is missing the "name" key in its manifest.json.', 'eightshift-libs'),
+				$variationPath
+			)
+		);
+	}
+
+	/**
 	 * Throws error if block view is missing.
 	 *
 	 * @param string $blockName Block name for the missing view.
