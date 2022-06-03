@@ -51,6 +51,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public const PATH_COMPONENTS = 'components';
 
 	/**
+	 * Relative path to variations folder.
+	 *
+	 * @var string
+	 */
+	public const PATH_VARIATIONS = 'variations';
+
+	/**
 	 * Relative path to wrapper folder.
 	 *
 	 * @var string

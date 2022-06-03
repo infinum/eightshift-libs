@@ -58,4 +58,21 @@ final class ComponentException extends InvalidArgumentException implements Gener
 			)
 		);
 	}
+
+	/**
+	 * Throws exception if unable to locate partial.
+	 *
+	 * @param string $path Path.
+	 * @return static
+	 */
+	public static function throwUnableToLocatePartial(string $path): ComponentException
+	{
+		return new ComponentException(
+			\sprintf(
+			/* translators: %s is replaced with the path of the partial. */
+				\esc_html__('Unable to locate partial on this path: %s', 'eightshift-libs'),
+				$path
+			)
+		);
+	}
 }

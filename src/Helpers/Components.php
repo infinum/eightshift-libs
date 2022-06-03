@@ -152,6 +152,84 @@ class Components
 	}
 
 	/**
+	 * Render component/block partial.
+	 *
+	 * @param string $type Type of content block, component, variable, etc.
+	 * @param string $parent Parent block/component name.
+	 * @param string $name Name of the partial. It can be without extension so .php is used.
+	 * @param array<string, mixed> $attributes Attributes that will be passed to partial.
+	 * @param string $partialFolderName Partial folder name.
+	 *
+	 * @throws ComponentException When we're unable to find the partial.
+	 *
+	 * @return string Partial html.
+	 */
+	public static function renderPartial(
+		string $type,
+		string $parent,
+		string $name,
+		array $attributes = [],
+		string $partialFolderName = 'partials'
+	): string {
+		$sep = \DIRECTORY_SEPARATOR;
+
+		$parentPath = \dirname(__DIR__, 5);
+
+		if (\getenv('ES_TEST')) {
+			$parentPath = \dirname(__DIR__, 2);
+		}
+
+		$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT;
+
+		if (\getenv('ES_TEST')) {
+			$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT_TESTS;
+		}
+
+		// Detect folder based on the name.
+		switch ($type) {
+			case 'block':
+			case 'blocks':
+			case 'custom':
+				$folderName = AbstractBlocks::PATH_BLOCKS;
+				break;
+			case 'component':
+			case 'components':
+				$folderName = AbstractBlocks::PATH_COMPONENTS;
+				break;
+			case 'variation':
+			case 'variations':
+				$folderName = AbstractBlocks::PATH_VARIATIONS;
+				break;
+			case 'wrapper':
+			case '':
+				$folderName = AbstractBlocks::PATH_WRAPPER;
+				break;
+			default:
+				$folderName = $type;
+				break;
+		}
+
+		// If no extension is provided use php.
+		if (\strpos($name, '.php') === false) {
+			$name = "{$name}.php";
+		}
+
+		// Set full path.
+		$path = "{$parentPath}{$blocksPath}{$folderName}{$sep}{$parent}{$sep}{$partialFolderName}{$sep}{$name}";
+
+		// Bailout if file is missing.
+		if (!\file_exists($path)) {
+			throw ComponentException::throwUnableToLocatePartial($path);
+		}
+
+		\ob_start();
+
+		require $path;
+
+		return \trim((string) \ob_get_clean());
+	}
+
+	/**
 	 * Get manifest json. Generally used for getting block/components manifest.
 	 *
 	 * @param string $path Absolute path to manifest folder.
