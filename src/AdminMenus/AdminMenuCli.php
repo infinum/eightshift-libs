@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\AdminMenus;
 
-use EightshiftBoilerplate\AdminMenus\AdminMenuExample;
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class AdminMenuCli
@@ -26,21 +26,58 @@ class AdminMenuCli extends AbstractCli
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AdminMenus';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'admin_menu';
+	}
+
+	/**
 	 * Define default develop props.
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'title' => $args[1] ?? 'Admin Title',
-			'menu_title' => $args[2] ?? 'Admin Title',
-			'capability' => $args[3] ?? 'edit_posts',
-			'menu_slug' => $args[4] ?? 'admin_title',
-			'menu_icon' => $args[5] ?? 'dashicons-admin-generic',
-			'menu_position' => $args[6] ?? 100,
+			'title' => 'Test Title',
+			'menu_title' => 'Test Menu Title',
+			'capability' => 'test_edit_posts',
+			'menu_slug' => 'test_title',
+			'menu_icon' => 'dashicons-admin-media',
+			'menu_position' => 50,
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'title' => 'Admin Title',
+			'menu_title' => 'Admin Menu Title',
+			'capability' => 'edit_posts',
+			'menu_slug' => 'example-menu-slug',
+			'menu_icon' => 'dashicons-admin-generic',
+			'menu_position' => 100,
 		];
 	}
 
@@ -52,46 +89,62 @@ class AdminMenuCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates admin menu class file.',
+			'shortdesc' => 'Create admin menu service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'The text to be displayed in the title tags of the page when the menu is selected.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_title',
-					'description' => 'The text to be used for the menu.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'description' => 'The text to be used for the sidebar menu.',
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'capability',
 					'description' => 'The capability required for this menu to be displayed to the user.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_slug',
-					'description' => 'The slug name to refer to this menu by.
-					Should be unique for this menu page and only include lowercase alphanumeric, dashes, and underscores characters to be compatible with sanitize_key().',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes and underscore characters to be compatible with sanitize_key().',
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_icon',
-					'description' => 'The default menu icon for the admin menu. Example: dashicons-admin-generic.',
+					'description' => 'The default menu icon for the admin menu.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('menu_icon'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_position',
-					'description' => 'The default menu position. Example: 20.',
+					'description' => 'The default menu position.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('menu_position'),
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create top level admin pages for settings and etc.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --title='Content' --menu_title='content' --capability='edit_posts' --menu_slug='es-content'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminMenuExample.php
+			"),
 		];
 	}
 
@@ -99,12 +152,12 @@ class AdminMenuCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Arguments.
-		$title = $assocArgs['title'] ?? 'Admin Title';
-		$menuTitle = $assocArgs['menu_title'] ?? 'Admin Menu Title';
-		$capability = $assocArgs['capability'] ?? AdminMenuExample::ADMIN_MENU_CAPABILITY;
-		$menuSlug = $this->prepareSlug($assocArgs['menu_slug'] ?? AdminMenuExample::ADMIN_MENU_SLUG);
-		$menuIcon = $assocArgs['menu_icon'] ?? AdminMenuExample::ADMIN_MENU_ICON;
-		$menuPosition = (string)($assocArgs['menu_position'] ?? AdminMenuExample::ADMIN_MENU_POSITION);
+		$title = $this->getArg($assocArgs, 'title');
+		$menuTitle = $this->getArg($assocArgs, 'menu_title');
+		$capability = $this->getArg($assocArgs, 'capability');
+		$menuSlug = $this->prepareSlug($this->getArg($assocArgs, 'menu_slug'));
+		$menuIcon =  $this->getArg($assocArgs, 'menu_icon');
+		$menuPosition = $this->getArg($assocArgs, 'menu_position');
 
 		// Get full class name.
 		$className = $this->getFileName($menuSlug);
@@ -116,17 +169,17 @@ class AdminMenuCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->searchReplaceString('Admin Title', $title)
-			->searchReplaceString('Admin Menu Title', $menuTitle)
-			->searchReplaceString("'edit_posts'", "'{$capability}'")
-			->searchReplaceString('example-menu-slug', $menuSlug);
+			->searchReplaceString($this->getArgTemplate('title'), $title)
+			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle)
+			->searchReplaceString($this->getArgTemplate('capability'), $capability)
+			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug);
 
 		if (!empty($menuPosition)) {
-			$class->searchReplaceString('100', $menuPosition);
+			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);
 		}
 
 		if (!empty($menuIcon)) {
-			$class->searchReplaceString('dashicons-admin-generic', $menuIcon);
+			$class->searchReplaceString($this->getArgTemplate('menu_icon'), $menuIcon);
 		}
 
 		// Output final class to new file/folder and finish.

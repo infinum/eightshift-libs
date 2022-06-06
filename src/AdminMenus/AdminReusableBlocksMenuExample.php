@@ -20,7 +20,7 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	/**
 	 * Reusable blocks Capability.
 	 */
-	public const ADMIN_REUSABLE_BLOCKS_MENU_CAPABILITY = 'edit_posts';
+	public const ADMIN_REUSABLE_BLOCKS_MENU_CAPABILITY = '%capability%';
 
 	/**
 	 * Menu slug for reusable blocks menu.
@@ -34,7 +34,7 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_REUSABLE_BLOCKS_MENU_ICON = 'dashicons-editor-table';
+	public const ADMIN_REUSABLE_BLOCKS_MENU_ICON = '%menu_icon%';
 
 	/**
 	 * Menu position for reusable blocks menu.
@@ -73,7 +73,7 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Reusable Blocks', 'eightshift-libs');
+		return \esc_html__('%title%', 'eightshift-libs');
 	}
 
 	/**
@@ -83,7 +83,7 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Reusable Blocks', 'eightshift-libs');
+		return \esc_html__('%menu_title%', 'eightshift-libs');
 	}
 
 	/**

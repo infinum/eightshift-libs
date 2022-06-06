@@ -71,15 +71,7 @@ test('Custom taxonomy CLI command will correctly copy the Custom taxonomy class 
 });
 
 test('Custom taxonomy CLI documentation is correct', function () {
-	$tax = $this->tax;
-
-	$documentation = $tax->getDoc();
-
-	$key = 'shortdesc';
-
-	expect($documentation)
-		->toBeArray($documentation)
-		->toHaveKeys([$key, 'synopsis']);
+	expect($this->tax->getDoc())->toBeArray();
 });
 
 

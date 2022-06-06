@@ -61,14 +61,5 @@ test('Blocks CLI command will correctly copy the Blocks class with set arguments
 });
 
 test('Blocks CLI documentation is correct', function () {
-	$blocks = $this->blocks;
-
-	$documentation = $blocks->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates Blocks class.', $documentation[$key]);
+	expect($this->blocks->getDoc())->toBeArray();
 });

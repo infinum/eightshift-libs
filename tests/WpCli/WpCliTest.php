@@ -49,21 +49,5 @@ test('Custom command CLI command will correctly copy the Custom command class wi
 
 
 test('Custom command CLI documentation is correct', function () {
-	$customCommand = $this->customCommand;
-
-	$documentation = $customCommand->getDoc();
-
-	$descKey = 'shortdesc';
-	$synopsisKey = 'synopsis';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertArrayHasKey($synopsisKey, $documentation);
-	$this->assertIsArray($documentation[$synopsisKey]);
-	$this->assertSame('Generates custom WPCLI command in your project.', $documentation[$descKey]);
-
-	$this->assertSame('assoc', $documentation[$synopsisKey][0]['type']);
-	$this->assertSame('command_name', $documentation[$synopsisKey][0]['name']);
-	$this->assertSame('The name of cli command name. Example: command_name.', $documentation[$synopsisKey][0]['description']);
-	$this->assertSame(false, $documentation[$synopsisKey][0]['optional']);
+	expect($this->customCommand->getDoc())->toBeArray();
 });

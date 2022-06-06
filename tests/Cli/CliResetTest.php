@@ -49,11 +49,5 @@ test('CliReset works', function () {
 
 
 test('CliReset CLI documentation is correct', function () {
-	$documentation = $this->cliReset->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertSame('DEVELOP - Used to reset and remove all outputs.', $documentation[$key]);
+	expect($this->cliReset->getDoc())->toBeArray();
 });

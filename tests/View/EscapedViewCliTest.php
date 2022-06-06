@@ -31,7 +31,6 @@ afterEach(function () {
 	deleteCliOutput();
 });
 
-
 test('Escaped view command will correctly copy the EscapedView class with defaults', function () {
 	$escapedView = $this->escapedView;
 	$escapedView([], $escapedView->getDevelopArgs([]));
@@ -42,20 +41,9 @@ test('Escaped view command will correctly copy the EscapedView class with defaul
 	$this->assertNotEmpty($generatedEscapedView);
 	$this->assertStringContainsString('class EscapedView extends AbstractEscapedView implements ServiceInterface', $generatedEscapedView);
 	$this->assertStringContainsString('register', $generatedEscapedView);
-		$this->assertStringNotContainsString('someRandomMethod', $generatedEscapedView);
-
+	expect($generatedEscapedView)->not-> toContain('someRandomMethod');
 });
 
-
- test('Escaped view CLI documentation is correct', function () {
- 	$escapedView = $this->escapedView;
-
- 	$documentation = $escapedView->getDoc();
-
- 	$descKey = 'shortdesc';
-
-	$this->assertNotEmpty($documentation);
-	$this->assertIsArray($documentation);
- 	$this->assertArrayHasKey($descKey, $documentation);
- 	$this->assertSame('Generates project Escape view class.', $documentation[$descKey]);
- });
+test('Escaped view CLI documentation is correct', function () {
+	expect($this->escapedView->getDoc())->toBeArray();
+});

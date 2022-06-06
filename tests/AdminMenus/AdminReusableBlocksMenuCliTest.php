@@ -4,52 +4,36 @@ namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->cpt = new AdminReusableBlocksMenuCli('boilerplate');
+	$this->adminReusableBlocksMenuCli = new AdminReusableBlocksMenuCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
 });
-
 
 test('Admin reusable blocks menu CLI command will correctly copy the admin reusable blocks menu example class with defaults', function () {
-	$cpt = $this->cpt;
-	$cpt([], $cpt->getDevelopArgs([]));
+	$mock = $this->adminReusableBlocksMenuCli;
+	$mock([], $mock->getDevelopArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
+	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
 
-	expect($generatedCPT)
+	expect($output)
 		->not->toBeEmpty()
 		->toContain('class AdminReusableBlocksMenu extends AbstractAdminMenu')
 		->toContain('Reusable Blocks')
 		->not->toContain('product');
 });
 
-
 test('Admin reusable blocks menu CLI command will correctly copy the admin reusable blocks menu class with set arguments', function () {
-	$cpt = $this->cpt;
-	$cpt([], [
+	$mock = $this->adminReusableBlocksMenuCli;
+	$mock([], [
 		'title' => 'Reusable Blocks',
 		'menu_title' => 'Reusable Blocks',
 		'capability' => 'edit_posts',
@@ -58,9 +42,9 @@ test('Admin reusable blocks menu CLI command will correctly copy the admin reusa
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
+	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');
 
-	expect($generatedCPT)
+	expect($output)
 		->not->toBeEmpty()
 		->toContain('class AdminReusableBlocksMenu extends AbstractAdminMenu')
 		->toContain('Reusable Blocks')
@@ -70,18 +54,6 @@ test('Admin reusable blocks menu CLI command will correctly copy the admin reusa
 		->not->toContain('dashicons-analytics');
 });
 
-
 test('Admin reusable blocks menu CLI documentation is correct', function () {
-	$cpt = $this->cpt;
-
-	$documentation = $cpt->getDoc();
-
-	$key = 'shortdesc';
-
-	expect($documentation)
-		->toBeArray()
-		->toHaveKey($key)
-		->toHaveKey('synopsis');
-
-	expect($documentation[$key])->toBe('Generates reusable blocks admin menu class file.');
+	expect($this->adminReusableBlocksMenuCli->getDoc())->toBeArray();
 });

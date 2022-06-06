@@ -58,20 +58,11 @@ afterEach(function () {
 	$wrapper = $this->wrapper;
 	$result = $wrapper->getCommandName();
 
-	$this->assertStringContainsString('use_wrapper', $result);
+	expect($result)->toContain('wrapper');
 });
 
 test('Wrapper CLI documentation is correct', function () {
-	$wrapper = $this->wrapper;
-
-	$documentation = $wrapper->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Copy Wrapper from library to your project.', $documentation[$key]);
+	expect($this->wrapper->getDoc())->toBeArray();
 });
 
 test('Wrapper CLI command will fail if Wrapper doesn\'t exist', function () {

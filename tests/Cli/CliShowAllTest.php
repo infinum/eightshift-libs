@@ -57,16 +57,10 @@ test('CliShowAll works', function () {
 	$cliShowAll([], []);
 
 	$this->assertSame('All commands are outputted.', \getenv('SUCCESS'));
-	$this->assertSame('%mCommands for project setup:%n', \getenv('COLORIZE')); // Last colorize command.
+	$this->assertSame('%mCommands for WP project only:%n', \getenv('COLORIZE')); // Last colorize command.
 });
 
 
 test('CliShowAll CLI documentation is correct', function () {
-	$documentation = $this->cliShowAll->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertSame('DEVELOP - Used to show all commands.', $documentation[$key]);
+	expect($this->cliShowAll->getDoc())->toBeArray();
 });

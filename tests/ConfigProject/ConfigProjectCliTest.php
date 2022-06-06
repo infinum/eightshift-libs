@@ -50,7 +50,7 @@ test('ConfigProject CLI command will run under custom command name', function ()
 	$configProject = $this->configProject;
 	$result = $configProject->getCommandName();
 
-	$this->assertStringContainsString('init_config_project', $result);
+	$this->assertStringContainsString('config_project', $result);
 });
 
 test('ConfigProject CLI command will correctly copy the ConfigProject class with set arguments', function () {
@@ -66,14 +66,5 @@ test('ConfigProject CLI command will correctly copy the ConfigProject class with
 });
 
 test('ConfigProject CLI documentation is correct', function () {
-	$configProject = $this->configProject;
-
-	$documentation = $configProject->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Generates projects config file to control global variables used in WordPress project.', $documentation[$key]);
+	expect($this->configProject->getDoc())->toBeArray();
 });

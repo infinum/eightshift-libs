@@ -20,6 +20,16 @@ use WP_CLI;
 class CliShowAll extends AbstractCli
 {
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'develop';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
@@ -44,6 +54,12 @@ class CliShowAll extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		WP_CLI::log(WP_CLI::colorize('%mCommands for development:%n'));
+
+		$this->getEvalLoop(Cli::DEVELOP_CLASSES);
+
+		WP_CLI::log('-----------------------------------------');
+
 		WP_CLI::log(WP_CLI::colorize('%mCommands for wp-cli and development:%n'));
 
 		$this->getEvalLoop(Cli::CLASSES_LIST);
@@ -62,15 +78,15 @@ class CliShowAll extends AbstractCli
 
 		WP_CLI::log('-----------------------------------------');
 
-		WP_CLI::log(WP_CLI::colorize('%mCommands for development:%n'));
-
-		$this->getEvalLoop(Cli::DEVELOP_CLASSES);
-
-		WP_CLI::log('-----------------------------------------');
-
 		WP_CLI::log(WP_CLI::colorize('%mCommands for project setup:%n'));
 
 		$this->getEvalLoop(Cli::SETUP_CLASSES);
+
+		WP_CLI::log('-----------------------------------------');
+
+		WP_CLI::log(WP_CLI::colorize('%mCommands for WP project only:%n'));
+
+		$this->getEvalLoop(Cli::COMMANDS_LIST);
 
 		WP_CLI::log('-----------------------------------------');
 

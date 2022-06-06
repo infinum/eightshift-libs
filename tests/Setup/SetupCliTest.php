@@ -54,14 +54,5 @@ test('Setup CLI command will correctly copy the Setup class with set parameters'
 });
 
 test('Setup CLI documentation is correct', function () {
-	$setup = $this->setup;
-
-	$documentation = $setup->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Initialize Command for automatic project setup and update.', $documentation[$key]);
+	expect($this->setup->getDoc())->toBeArray();
 });

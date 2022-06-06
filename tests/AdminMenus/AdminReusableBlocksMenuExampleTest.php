@@ -49,5 +49,5 @@ test('getIcon will return the default icon', function() {
 
 	expect($method->invoke(new AdminReusableBlocksMenuExample()))
 		->not->toBeEmpty()
-		->toBe('dashicons-editor-table');
+		->toBe('%menu_icon%');
 });

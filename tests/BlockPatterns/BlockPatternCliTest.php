@@ -94,14 +94,5 @@ test('Block pattern CLI command will generate a name from title if "name" argume
 
 
 test('Block Pattern documentation is correct', function () {
-	$blockPattern = $this->blockPattern;
-
-	$documentation = $blockPattern->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Generates a block pattern.', $documentation[$key]);
+	expect($this->blockPattern->getDoc())->toBeArray();
 });

@@ -87,15 +87,7 @@ test('Custom post type CLI command will correctly copy the Custom post type clas
 
 
 test('Custom post type CLI documentation is correct', function () {
-	$cpt = $this->cpt;
-
-	$documentation = $cpt->getDoc();
-
-	$key = 'shortdesc';
-
-	expect($documentation)
-		->toBeArray($documentation)
-		->toHaveKeys([$key, 'synopsis']);
+	expect($this->cpt->getDoc())->toBeArray();
 });
 
 

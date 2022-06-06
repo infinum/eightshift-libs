@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class ServiceExampleCli
@@ -28,11 +29,31 @@ class ServiceExampleCli extends AbstractCli
 	public const TEMPLATE = 'Service';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'service_example';
+	}
+
+	/**
 	 * Define default develop props.
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -50,21 +71,36 @@ class ServiceExampleCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates empty generic service class.',
+			'shortdesc' => 'Create empty generic service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'folder',
 					'description' => 'The output folder path relative to src folder. Example: main or `main` or `config` or nested `main/config`',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'file_name',
 					'description' => 'The output file name. Example: Main',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create generic service class to kickstart your custom service class.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --folder='test' --file_name='Test'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Services/ServiceExample.php
+			"),
 		];
 	}
 

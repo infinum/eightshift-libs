@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use WP_CLI;
 
 /**
@@ -76,6 +78,26 @@ class BlocksCli extends AbstractCli
 	];
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'blocks';
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
@@ -83,7 +105,14 @@ class BlocksCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Blocks class.',
+			'shortdesc' => 'Create blocks service class.',
+			'longdesc' => "
+				This file is a main entrypoint for all our block editor setup.
+				We use it to register all blocks, limit what blocks user can see, and lots more.
+
+				## EXAMPLES
+				$ wp boilerplate create_blocks
+			",
 		];
 	}
 
@@ -141,14 +170,16 @@ class BlocksCli extends AbstractCli
 		$this->copyRecursively("{$rootNode}/src/Blocks/variations/", "{$folders['variations']}/");
 		\copy("{$rootNode}/src/Blocks/manifest.json", "{$folders['blocks']}/manifest.json");
 
-		WP_CLI::runcommand("{$this->commandParentName} use_wrapper {$this->prepareArgsManual($args)}");
+		$commandParentName = CliBlocks::COMMAND_NAME;
+
+		WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} wrapper {$this->prepareArgsManual($args)}");
 
 		foreach (static::COMPONENTS as $component) {
-			WP_CLI::runcommand("{$this->commandParentName} use_component --name={$component} {$this->prepareArgsManual($args)}");
+			WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} component --name={$component} {$this->prepareArgsManual($args)}");
 		}
 
 		foreach (static::BLOCKS as $block) {
-			WP_CLI::runcommand("{$this->commandParentName} use_block --name={$block} {$this->prepareArgsManual($args)}");
+			WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} block --name={$block} {$this->prepareArgsManual($args)}");
 		}
 
 		WP_CLI::success('Blocks successfully set.');

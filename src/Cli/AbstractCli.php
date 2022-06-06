@@ -116,6 +116,10 @@ abstract class AbstractCli implements CliInterface
 					'name' => 'skip_existing',
 					'description' => 'If this value is set to true CLI commands will not fail it they find an existing files in your project',
 					'optional' => true,
+					'options' => [
+						'true',
+						'false',
+					]
 				],
 			],
 		];
@@ -152,22 +156,86 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		WP_CLI::add_command(
-			$this->commandParentName . ' ' . $this->getCommandName(),
+			"{$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}",
 			$class,
 			$this->prepareCommandDocs($this->getDoc(), $this->getGlobalSynopsis())
 		);
 	}
 
 	/**
-	 * Define default develop props
+	 * Define default develop props.
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
-		return $args;
+		$output = [];
+
+		$i = 1;
+		foreach ($this->getDefaultArgs() as $key => $value) {
+			$output[$key] = $args[$i] ?? $value;
+
+			$i++;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Define default props for command.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [];
+	}
+
+	/**
+	 * Get one argument.
+	 *
+	 * Use assocArgs props and fallback to default if missing.
+	 *
+	 * @param array<string, string> $arguments Array of args to check.
+	 * @param string $key Argument name to check.
+	 *
+	 * @return string
+	 */
+	public function getArg(array $arguments, string $key): string
+	{
+		return isset($arguments[$key]) ? (string) $arguments[$key] : $this->getDefaultArg($key);
+	}
+
+	/**
+	 * Get one default argument.
+	 *
+	 * @param string $key Argument name to get.
+	 *
+	 * @return string
+	 */
+	public function getDefaultArg(string $key): string
+	{
+		$args = $this->getDefaultArgs();
+
+		if (!$args) {
+			return '';
+		}
+
+		return isset($args[$key]) ? (string) $args[$key] : '';
+	}
+
+	/**
+	 * Get argument template based on the key.
+	 *
+	 * @param string $key Key to search.
+	 *
+	 * @return string
+	 */
+	public function getArgTemplate(string $key): string
+	{
+		return "%{$key}%";
 	}
 
 	/**
@@ -200,16 +268,6 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		return \str_replace('Cli', '', $lastElement);
-	}
-
-	/**
-	 * Get WPCLI command name
-	 *
-	 * @return string
-	 */
-	public function getCommandName(): string
-	{
-		return 'create_' . \strtolower((string)\preg_replace('/(?<!^)[A-Z]/', '_$0', $this->getClassShortName()));
 	}
 
 	/**
@@ -766,14 +824,16 @@ abstract class AbstractCli implements CliInterface
 
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
-			if (\method_exists($class, 'getCommandName')) {
+			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
 				if (\function_exists('\add_action')) {
-					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
+					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
 				} else {
+					$sep = \DIRECTORY_SEPARATOR;
+
 					if (!$run) {
-						WP_CLI::log("wp eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+						WP_CLI::log("wp eval-file bin{$sep}cli.php {$class->getCommandParentName()}_{$class->getCommandName()} --skip-wordpress");
 					} else {
-						WP_CLI::runcommand("eval-file bin/cli.php {$class->getCommandName()} --skip-wordpress");
+						WP_CLI::runcommand("eval-file bin{$sep}cli.php {$class->getCommandParentName()}_{$class->getCommandName()} --skip-wordpress");
 					}
 				}
 			}
@@ -788,7 +848,8 @@ abstract class AbstractCli implements CliInterface
 	public function runReset(): void
 	{
 		$reset = new CliReset('');
-		WP_CLI::runcommand("eval-file bin/cli.php {$reset->getCommandName()} --skip-wordpress");
+		$sep = \DIRECTORY_SEPARATOR;
+		WP_CLI::runcommand("eval-file bin{$sep}cli.php {$reset->getCommandParentName()}_{$reset->getCommandName()} --skip-wordpress");
 	}
 
 	/**
@@ -925,16 +986,30 @@ abstract class AbstractCli implements CliInterface
 			throw new RuntimeException('CLI Short description is missing.');
 		}
 
-		$synopsis = $docs['synopsis'] ?? [];
+		// Set optional props to false in case of development.
+		$synopsis = \array_map(
+			static function ($item) {
+				$optional = $item['optional'] ?? true;
+
+				$item['optional'] = $optional;
+
+				if (\defined('ES_DEVELOP_MODE')) {
+					$item['optional'] = true;
+				}
+
+				return $item;
+			},
+			\array_merge(
+				$docs['synopsis'] ?? [],
+				$docsGlobal['synopsis']
+			)
+		);
 
 		return \array_merge(
 			$docsGlobal,
 			$docs,
 			[
-				'synopsis' => \array_merge(
-					$synopsis,
-					$docsGlobal['synopsis']
-				),
+				'synopsis' => $synopsis
 			]
 		);
 	}
@@ -954,6 +1029,20 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Return longdesc output for cli.
+	 * Removes tabs and replaces them with space.
+	 * Adds new line before and after ## heading.
+	 *
+	 * @param string $string String to convert.
+	 *
+	 * @return string
+	 */
+	public function prepareLongDesc(string $string): string
+	{
+		return \preg_replace('/(##+)(.*)/m', "\n" . '${1}${2}' . "\n", \preg_replace('/\s*^\s*/m', "\n", \trim($string)));
 	}
 
 	/**

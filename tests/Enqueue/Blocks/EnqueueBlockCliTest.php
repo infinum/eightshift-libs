@@ -85,11 +85,5 @@ test('Enqueue Block CLI command will set correct functions.', function () {
 });
 
 test('Custom Enqueue Blocks CLI documentation is correct', function () {
-	$ebc = $this->ebc;
-	$documentation = $ebc->getDoc();
-	$descKey = 'shortdesc';
-
-	$this->assertIsArray($documentation, 'Returned value must be an array.');
-	$this->assertArrayHasKey($descKey, $documentation, 'Array doesn\'t have a required key.');
-	$this->assertSame('Generates Enqueue Blocks class.', $documentation[$descKey], 'Returned string doesn\'t match');
+	expect($this->ebc->getDoc())->toBeArray();
 });

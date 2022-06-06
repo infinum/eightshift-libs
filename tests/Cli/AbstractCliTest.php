@@ -25,6 +25,17 @@ class AbstractTest extends AbstractCli {
 	{
 		return [];
 	}
+
+	public function getCommandParentName(): string
+	{
+		return '';
+	}
+
+	public function getCommandName(): string
+	{
+		return '';
+	}
+
 };
 
 /**

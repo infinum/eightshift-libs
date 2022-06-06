@@ -55,11 +55,5 @@ test('CliRunAll works', function () {
 
 
 test('CliRunAll CLI documentation is correct', function () {
-	$documentation = $this->cliRunAll->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertSame('DEVELOP - Used to run all commands.', $documentation[$key]);
+	expect($this->cliRunAll->getDoc())->toBeArray();
 });

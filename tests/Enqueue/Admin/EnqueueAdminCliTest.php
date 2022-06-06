@@ -45,11 +45,5 @@ test('Custom Enqueue Admin CLI command will correctly copy the Enqueue Admin cla
 
 
 test('Custom Enqueue Admin CLI documentation is correct', function () {
-	$admin = $this->enqueueAdmin;
-	$documentation = $admin->getDoc();
-	$descKey = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertSame('Generates Enqueue Admin class.', $documentation[$descKey]);
+	expect($this->enqueueAdmin->getDoc())->toBeArray();
 });

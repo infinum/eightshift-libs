@@ -67,14 +67,5 @@ test('Services CLI command will correctly copy the Services class with set argum
 });
 
 test('Services CLI documentation is correct', function () {
-	$services = $this->services;
-
-	$documentation = $services->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Generates empty generic service class.', $documentation[$key]);
+	expect($this->services->getDoc())->toBeArray();
 });
