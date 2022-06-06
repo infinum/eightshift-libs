@@ -54,16 +54,7 @@ test('Build CLI will correctly copy the build script to a given folder', functio
 });
 
 test('Build CLI documentation is correct', function () {
-	$buildCli = $this->buildCli;
-
-	$documentation = $buildCli->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Initialize Command for building your project with one command, generally used on CI deployments.', $documentation[$key]);
+	expect($this->buildCli->getDoc())->toBeArray();
 });
 
 test('getDevelopArgs correctly returns arguments', function() {

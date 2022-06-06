@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\ConfigProject;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
 use WP_CLI;
 
 /**
@@ -24,13 +25,23 @@ class ConfigProjectCli extends AbstractCli
 	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliProject::COMMAND_NAME;
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_config_project';
+		return 'config_project';
 	}
 
 	/**
@@ -38,7 +49,7 @@ class ConfigProjectCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -55,7 +66,7 @@ class ConfigProjectCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates projects config file to control global variables used in WordPress project.',
+			'shortdesc' => 'Copy config file to control global variables used in the WordPress project.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -64,6 +75,21 @@ class ConfigProjectCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to extend project configuration and limit functionality depending on the environment like plugins update, file editing, upload, etc. This file will be copied to your project root folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/ConfigProject/ConfigProjectExample.php
+			"),
 		];
 	}
 

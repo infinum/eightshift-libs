@@ -49,7 +49,7 @@ test('Readme CLI command will run under custom command name', function () {
 	$readme = $this->readme;
 	$result = $readme->getCommandName();
 
-	$this->assertStringContainsString('init_readme', $result);
+	$this->assertStringContainsString('readme', $result);
 });
 
 test('Readme CLI command will correctly copy the readme in the custom folder with set arguments', function () {
@@ -64,14 +64,5 @@ test('Readme CLI command will correctly copy the readme in the custom folder wit
 });
 
 test('Readme CLI documentation is correct', function () {
-	$readme = $this->readme;
-
-	$documentation = $readme->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Initialize Command for building your projects readme.', $documentation[$key]);
+	expect($this->readme->getDoc())->toBeArray();
 });

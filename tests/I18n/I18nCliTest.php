@@ -60,14 +60,5 @@ test('I18n CLI command will correctly copy the I18n class with set arguments', f
 });
 
 test('I18n CLI documentation is correct', function () {
-	$i18n = $this->i18n;
-
-	$documentation = $i18n->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates i18n language class.', $documentation[$key]);
+	expect($this->i18n->getDoc())->toBeArray();
 });

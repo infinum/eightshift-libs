@@ -32,11 +32,11 @@ interface CliInterface
 	public function __invoke(array $args, array $assocArgs); // @phpstan-ignore-line
 
 	/**
-	 * Method that creates actual WPCLI command in terminal.
+	 * Get WPCLI command parent name
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public function registerCommand(): void;
+	public function getCommandParentName(): string;
 
 	/**
 	 * Get WPCLI command name
@@ -44,13 +44,6 @@ interface CliInterface
 	 * @return string
 	 */
 	public function getCommandName(): string;
-
-	/**
-	 * Get WPCLI trigger class name.
-	 *
-	 * @return string
-	 */
-	public function getClassName(): string;
 
 	/**
 	 * Get WPCLI command doc

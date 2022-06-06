@@ -61,14 +61,5 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 
 
 test('ModifyAdminAppearance CLI documentation is correct', function () {
-	$modifyAdminAppearance = $this->modifyAdminAppearance;
-
-	$documentation = $modifyAdminAppearance->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates Modify Admin Appearance class.', $documentation[$key]);
+	expect($this->modifyAdminAppearance->getDoc())->toBeArray();
 });

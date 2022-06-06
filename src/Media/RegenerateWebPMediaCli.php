@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Media;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliWebp;
 use WP_CLI;
 use WP_Query;
 
@@ -25,19 +26,29 @@ class RegenerateWebPMediaCli extends AbstractCli
 	use MediaWebPTrait;
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliWebp::COMMAND_NAME;
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return 'regenerate_webp_media';
+		return 'regenerate_media';
 	}
 
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array<string, array<int, array<string, bool|string>>|string>
+	 * @return array<string, mixed>
 	 */
 	public function getDoc(): array
 	{
@@ -48,52 +59,65 @@ class RegenerateWebPMediaCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'action',
 					'description' => 'Action to use "generate" or "delete". Default: generate',
-					'optional' => true
+					'optional' => true,
+					'options' => [
+						'generate',
+						'delete',
+					],
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'quality',
 					'description' => 'Quality of conversion 0-100. Default: 80',
-					'optional' => true
+					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'ids',
 					'description' => 'Ids of attachment separated by comma.',
-					'optional' => true
+					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'force',
 					'description' => 'Force generation no matter if the file exists. Default: false',
-					'optional' => true
+					'optional' => true,
+					'options' => [
+						'true',
+						'false',
+					],
 				],
 			],
-			'longdesc' => "## EXAMPLES \n
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used as a project command to generate WebP meda from the provided data.
+
+				## EXAMPLES
 				# Regenerate all supported media to WebP format.
-				$ wp boilerplate regenerate_webp_media
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 
 				# Regenerate only one attachment by ID.
-				$ wp boilerplate regenerate_webp_media --ids='16911'
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911'
 
 				# Regenerate multiple attachments by IDs.
-				$ wp boilerplate regenerate_webp_media --ids='16911, 1692, 1302'
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911, 1692, 1302'
 
 				# Force regenerate attachments no matter if they all-ready exist.
-				$ wp boilerplate regenerate_webp_media --force='true'
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --force='true'
 
 				# Regenerate media with diffferent quality.
-				$ wp boilerplate regenerate_webp_media --quality='90'
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --quality='90'
 
 				# Delete all WebP media formats.
-				$ wp boilerplate regenerate_webp_media --action='delete'
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --action='delete'
 
 				# Delete only one WebP attachment by ID.
-				$ wp boilerplate regenerate_webp_media --ids='16911' --action='delete'
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911' --action='delete'
 
 				# Delete multiple WebP attachments by ID.
-				$ wp boilerplate regenerate_webp_media --ids='16911, 1692, 1302' --action='delete'
-			",
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911, 1692, 1302' --action='delete'
+			"),
 		];
 	}
 

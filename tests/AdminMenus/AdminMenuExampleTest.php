@@ -66,9 +66,9 @@ test('getIcon will return the default icon', function() {
 
 	// We shouldn't do this, but the add_menu_page is called in a closure.
 	$method = new \ReflectionMethod('EightshiftBoilerplate\\AdminMenus\\AdminMenuExample', 'getIcon');
-    $method->setAccessible(true);
+	$method->setAccessible(true);
 
 	expect($method->invoke(new AdminMenuExample()))
 		->not->toBeEmpty()
-		->toBe('dashicons-admin-generic');
+		->toBe('%menu_icon%');
 });

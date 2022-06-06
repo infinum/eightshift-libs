@@ -56,18 +56,12 @@ test('Initializing the project command returns correct command name', function (
 	$commandName = $this->cliInitProject->getCommandName();
 
 	$this->assertIsString($commandName);
-	$this->assertSame(($this->cliInitProject)::COMMAND_NAME, $commandName);
+	$this->assertSame('project', $commandName);
 });
 
 
 test('CliInitProject CLI documentation is correct', function () {
-	$documentation = $this->cliInitProject->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertSame('Generates initial setup for WordPress theme project with all files to run a client project. For example: gitignore file for the full WordPress project, continuous integration exclude files, etc.', $documentation[$key]);
+	expect($this->cliInitProject->getDoc())->toBeArray();
 });
 
 

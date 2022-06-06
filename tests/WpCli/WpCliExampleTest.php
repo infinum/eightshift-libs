@@ -55,11 +55,5 @@ test('Custom command class is callable', function() {
 
 
 test('Custom command example documentation is correct', function () {
-	$customCommand = $this->customCommand;
-
-	$documentation = $customCommand->getDocs();
-
-	expect($documentation)
-		->toBeArray($documentation)
-		->toHaveKey('shortdesc');
+	expect($this->customCommand->getDocs())->toBeArray();
 });

@@ -51,6 +51,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public const PATH_COMPONENTS = 'components';
 
 	/**
+	 * Relative path to variations folder.
+	 *
+	 * @var string
+	 */
+	public const PATH_VARIATIONS = 'variations';
+
+	/**
 	 * Relative path to wrapper folder.
 	 *
 	 * @var string
@@ -113,6 +120,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		Components::setSettings($settings);
 		Components::setBlocks($blocks);
 		Components::setComponents($this->getComponentsManifests());
+		Components::setVariations($this->getVariationsManifests());
 		Components::setConfigFlags();
 
 		if (Components::getConfigUseWrapper()) {
@@ -466,6 +474,34 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				}
 
 				return $component;
+			},
+			(array)\glob("{$this->getBlocksFolderPath()}{$pathName}{$sep}*{$sep}manifest.json")
+		);
+	}
+
+	/**
+	 * Retrieve variations data from manifest.json.
+	 *
+	 * @throws InvalidBlock Throws error if variation name is missing.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getVariationsManifests(): array
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+		$pathName = self::PATH_VARIATIONS;
+
+		return \array_map(
+			function (string $variationPath) {
+				$variation = \implode(' ', (array)\file(($variationPath)));
+
+				$variation = Components::parseManifest($variation);
+
+				if (!isset($variation['name'])) {
+					throw InvalidBlock::missingVariationNameException($variationPath);
+				}
+
+				return $variation;
 			},
 			(array)\glob("{$this->getBlocksFolderPath()}{$pathName}{$sep}*{$sep}manifest.json")
 		);

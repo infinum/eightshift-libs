@@ -51,18 +51,12 @@ test('Initializing the project command returns correct command name', function (
 	$commandName = $this->cliInitTheme->getCommandName();
 
 	$this->assertIsString($commandName);
-	$this->assertSame(($this->cliInitTheme)::COMMAND_NAME, $commandName);
+	$this->assertSame('theme', $commandName);
 });
 
 
 test('CliInitTheme CLI documentation is correct', function () {
-	$documentation = $this->cliInitTheme->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertSame('Generates initial setup for WordPress theme project.', $documentation[$key]);
+	expect($this->cliInitTheme->getDoc())->toBeArray();
 });
 
 

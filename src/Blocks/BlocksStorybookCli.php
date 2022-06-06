@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliSetup;
 use WP_CLI;
 
 /**
@@ -19,6 +20,26 @@ use WP_CLI;
 class BlocksStorybookCli extends AbstractCli
 {
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliSetup::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'blocks_storybook';
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
@@ -26,7 +47,22 @@ class BlocksStorybookCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Storybook config.',
+			'shortdesc' => 'Setup storybook in your project.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to copy all configuration files to your project needed to run Storybook.
+
+				## EXAMPLES
+
+				# Create Storybook config:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Storybook config will be created from this folder:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/storybook
+			"),
 		];
 	}
 

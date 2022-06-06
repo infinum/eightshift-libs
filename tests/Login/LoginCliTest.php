@@ -61,14 +61,5 @@ test('Login CLI command will correctly copy the Login class with set arguments',
 
 
 test('Login CLI documentation is correct', function () {
-	$login = $this->login;
-
-	$documentation = $login->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates Login class file.', $documentation[$key]);
+	expect($this->login->getDoc())->toBeArray();
 });

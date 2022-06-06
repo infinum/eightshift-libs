@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Config;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class ConfigCli
@@ -23,11 +24,31 @@ class ConfigCli extends AbstractCli
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Config';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'config';
+	}
+
+	/**
 	 * Define default develop props.
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -46,7 +67,7 @@ class ConfigCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates project config class.',
+			'shortdesc' => 'Create project config service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -67,6 +88,21 @@ class ConfigCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create project config class with settings like project name, version, REST-API name/version, etc.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Config/ConfigExample.php
+			"),
 		];
 	}
 

@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Cli\ParentGroups\CliSetup;
 
 /**
  * Class SetupCli
  */
 class SetupCli extends AbstractCli
 {
-	public const SETUP_CLI_COMMAND_NAME = 'init_setup';
-
 	/**
 	 * Output dir relative path.
 	 *
@@ -27,13 +27,23 @@ class SetupCli extends AbstractCli
 	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliProject::COMMAND_NAME;
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return self::SETUP_CLI_COMMAND_NAME;
+		return CliSetup::COMMAND_NAME;
 	}
 
 	/**
@@ -41,7 +51,7 @@ class SetupCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -58,7 +68,7 @@ class SetupCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for automatic project setup and update.',
+			'shortdesc' => 'Copy setup.json file used  for automatic project setup and update.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -67,6 +77,22 @@ class SetupCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to list all your project configurations like themes, plugins, core, environments, etc.
+				This file will be copied to your project root folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Setup/setup.json
+			"),
 		];
 	}
 

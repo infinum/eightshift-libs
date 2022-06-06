@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Media;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliWebp;
 use WP_CLI;
 
 /**
@@ -31,6 +32,16 @@ class UseWebPMediaCli extends AbstractCli
 	public const USE_WEBP_MEDIA_OPTION_NAME = 'es-use-webp-media';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliWebp::COMMAND_NAME;
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
@@ -48,11 +59,17 @@ class UseWebPMediaCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Use WebP media.',
-			'longdesc' => "## EXAMPLES \n
+			'shortdesc' => 'Toggle config flag to use WebP media or not.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used as a project command to toggle global options flag to use or not to use WebP media on the frontend.
+
+				## EXAMPLES
+
 				# Toggle frontend media to use WebP format.
-				$ wp boilerplate use_webp_media
-			",
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+			"),
 		];
 	}
 

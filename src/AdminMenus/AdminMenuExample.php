@@ -22,21 +22,21 @@ class AdminMenuExample extends AbstractAdminMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'edit_posts';
+	public const ADMIN_MENU_CAPABILITY = '%capability%';
 
 	/**
 	 * Menu slug for this admin menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'example-menu-slug';
+	public const ADMIN_MENU_SLUG = '%menu_slug%';
 
 	/**
 	 * Menu icon for this admin menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_ICON = 'dashicons-admin-generic';
+	public const ADMIN_MENU_ICON = '%menu_icon%';
 
 	/**
 	 * Menu position for this admin menu
@@ -52,7 +52,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Admin Title', 'eightshift-libs');
+		return \esc_html__('%title%', 'eightshift-libs');
 	}
 
 	/**
@@ -62,7 +62,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('Admin Menu Title', 'eightshift-libs');
+		return \esc_html__('%menu_title%', 'eightshift-libs');
 	}
 
 	/**
@@ -148,7 +148,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		return [
-			'pageTitle' => \esc_html__('Admin Title', 'eightshift-libs'),
+			'pageTitle' => \esc_html__('%title%', 'eightshift-libs'),
 		];
 	}
 }

@@ -20,6 +20,16 @@ use WP_CLI;
 class CliRunAll extends AbstractCli
 {
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return 'develop';
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
@@ -44,6 +54,14 @@ class CliRunAll extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		// Set output paths.
+		$outputDir = $this->getOutputDir();
+
+		// Create output dir if it doesn't exist.
+		if (!\is_dir($outputDir)) {
+			\mkdir($outputDir, 0755, true);
+		}
+
 		$this->runReset();
 
 		WP_CLI::log('--------------------------------------------------');

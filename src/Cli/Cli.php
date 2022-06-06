@@ -22,6 +22,13 @@ use EightshiftLibs\Blocks\BlockVariationCli;
 use EightshiftLibs\Blocks\BlockWrapperCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
+use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Cli\ParentGroups\CliRun;
+use EightshiftLibs\Cli\ParentGroups\CliSetup;
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+use EightshiftLibs\Cli\ParentGroups\CliWebp;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
@@ -46,6 +53,7 @@ use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\DynamicData\DynamicDataCli;
+use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
@@ -56,12 +64,27 @@ use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
+use WP_CLI;
 
 /**
  * Class Cli
  */
 class Cli
 {
+	/**
+	 * All classes defined as parent list commands.
+	 *
+	 * @var class-string[]
+	 */
+	public const PARENTS_LIST = [
+		CliCreate::class,
+		CliProject::class,
+		CliRun::class,
+		CliSetup::class,
+		CliBlocks::class,
+		CliWebp::class,
+	];
+
 	/**
 	 * All classes and commands that can be used on development and public WP CLI.
 	 *
@@ -99,9 +122,18 @@ class Cli
 		ReadmeCli::class,
 		SetupCli::class,
 		WpCli::class,
+		GeolocationCli::class,
+		DynamicDataCli::class,
+	];
+
+	/**
+	 * All classes and commands that can be used on WP project.
+	 *
+	 * @var class-string[]
+	 */
+	public const COMMANDS_LIST = [
 		RegenerateWebPMediaCli::class,
 		UseWebPMediaCli::class,
-		DynamicDataCli::class,
 	];
 
 	/**
@@ -161,7 +193,8 @@ class Cli
 		return \array_merge(
 			static::CLASSES_LIST,
 			static::DEVELOP_CLASSES,
-			static::SETUP_CLASSES
+			static::SETUP_CLASSES,
+			static::COMMANDS_LIST
 		);
 	}
 
@@ -176,7 +209,8 @@ class Cli
 			static::CLASSES_LIST,
 			static::BLOCKS_CLASSES,
 			static::PROJECT_CLASSES,
-			static::SETUP_CLASSES
+			static::SETUP_CLASSES,
+			static::COMMANDS_LIST
 		);
 	}
 
@@ -201,8 +235,13 @@ class Cli
 			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
-			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getDevelopArgs') && \method_exists($class, '__invoke')) {
-				if ($class->getCommandName() === $commandName) {
+			if (
+				\method_exists($class, 'getCommandName') &&
+				\method_exists($class, 'getCommandParentName') &&
+				\method_exists($class, 'getDevelopArgs') &&
+				\method_exists($class, '__invoke')
+			) {
+				if ("{$class->getCommandParentName()}_{$class->getCommandName()}" === $commandName) {
 					$class->__invoke(
 						[],
 						$class->getDevelopArgs($args)
@@ -225,6 +264,20 @@ class Cli
 	 */
 	public function load(string $commandParentName): void
 	{
+		if (!\getenv('ES_TEST')) {
+			// Top Level command name.
+			WP_CLI::add_command($commandParentName, new CliBoilerplate());
+
+			// Register all top level commands.
+			foreach (self::PARENTS_LIST as $item) {
+				$reflectionClass = new ReflectionClass($item);
+				$class = $reflectionClass->newInstanceArgs();
+				$name = $reflectionClass->getConstant('COMMAND_NAME');
+
+				WP_CLI::add_command("{$commandParentName} {$name}", $class);
+			}
+		}
+
 		foreach ($this->getPublicClasses() as $item) {
 			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([$commandParentName]);

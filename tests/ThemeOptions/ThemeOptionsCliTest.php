@@ -48,13 +48,5 @@ test('Custom theme options CLI command will correctly copy the theme options cla
 });
 
 test('Custom theme options CLI documentation is correct', function () {
-	$themeOptions = $this->themeOptions;
-
-	$documentation = $themeOptions->getDoc();
-
-	$descKey = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertSame('Generates project Theme Options class using ACF.', $documentation[$descKey]);
+	expect($this->themeOptions->getDoc())->toBeArray();
 });

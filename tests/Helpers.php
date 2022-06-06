@@ -128,9 +128,12 @@ function setBeforeEach() {
  *
  * @return void
  */
-function setAfterEach() {
+function setAfterEach($delete = true) {
 	Monkey\tearDown();
-	deleteCliOutput();
+
+	if ($delete) {
+		deleteCliOutput();
+	}
 
 	putenv('ES_CLI_SUCCESS_HAPPENED');
 	putenv('ES_CLI_ERROR_HAPPENED');

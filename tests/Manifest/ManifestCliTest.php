@@ -56,14 +56,5 @@ test('Manifest CLI command will correctly copy the Manifest class with set argum
 });
 
 test('Manifest CLI documentation is correct', function () {
-	$manifest = $this->manifest;
-
-	$documentation = $manifest->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates Manifest class.', $documentation[$key]);
+	expect($this->manifest->getDoc())->toBeArray();
 });

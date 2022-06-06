@@ -10,18 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+
 /**
  * Class BlockComponentCli
  */
 class BlockComponentCli extends AbstractBlocksCli
 {
-	/**
-	 * CLI command name
-	 *
-	 * @var string
-	 */
-	public const COMMAND_NAME = 'use_component';
-
 	/**
 	 * Output dir relative path
 	 *
@@ -30,13 +25,23 @@ class BlockComponentCli extends AbstractBlocksCli
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR . 'components';
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliBlocks::COMMAND_NAME;
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'component';
 	}
 
 	/**
@@ -44,7 +49,7 @@ class BlockComponentCli extends AbstractBlocksCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -61,15 +66,30 @@ class BlockComponentCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy Component from library to your project.',
+			'shortdesc' => 'Copy component from our library to your project.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Specify component name.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to copy pre-created component from our library to your project. After copying you can modify the component in any way you see fit.
+
+				## EXAMPLES
+
+				# Copy component by name:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph'
+
+				## RESOURCES
+
+				All our components can be found here:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/components
+			"),
 		];
 	}
 

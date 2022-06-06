@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Cli\ParentGroups\CliSetup;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
@@ -26,13 +27,6 @@ use WP_CLI;
  */
 class CliInitTheme extends AbstractCli
 {
-	/**
-	 * CLI command name
-	 *
-	 * @var string
-	 */
-	public const COMMAND_NAME = 'setup_theme';
-
 	/**
 	 * All classes for initial theme setup for project
 	 *
@@ -50,13 +44,23 @@ class CliInitTheme extends AbstractCli
 	];
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliSetup::COMMAND_NAME;
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'theme';
 	}
 
 	/**
@@ -67,7 +71,17 @@ class CliInitTheme extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates initial setup for WordPress theme project.',
+			'shortdesc' => 'Kickstart your WordPress theme with this simple command.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Generates initial theme setup with all files to create a custom theme.
+
+				## EXAMPLES
+
+				# Setup theme:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+			"),
 		];
 	}
 

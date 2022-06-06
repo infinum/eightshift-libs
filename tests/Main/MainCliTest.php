@@ -61,14 +61,5 @@ test('Main CLI command will correctly copy the Main class with set arguments', f
 });
 
 test('Main CLI documentation is correct', function () {
-	$main = $this->main;
-
-	$documentation = $main->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates Main class file for all other features using service container pattern.', $documentation[$key]);
+	expect($this->main->getDoc())->toBeArray();
 });

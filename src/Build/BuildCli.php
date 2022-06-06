@@ -11,19 +11,13 @@ declare(strict_types=1);
 namespace EightshiftLibs\Build;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliProject;
 
 /**
  * Class BuildCli
  */
 class BuildCli extends AbstractCli
 {
-	/**
-	 * Init build command name.
-	 *
-	 * @var string
-	 */
-	public const COMMAND_NAME = 'init_build';
-
 	/**
 	 * Output dir relative path
 	 *
@@ -32,13 +26,23 @@ class BuildCli extends AbstractCli
 	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliProject::COMMAND_NAME;
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'build';
 	}
 
 	/**
@@ -46,7 +50,7 @@ class BuildCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -63,7 +67,7 @@ class BuildCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for building your project with one command, generally used on CI deployments.',
+			'shortdesc' => 'Copy bash script for building your project with one command, generally used on CI deployments.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -84,6 +88,21 @@ class BuildCli extends AbstractCli
 					'optional' => true,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used for building your project to production ready version in one command. Generally used in GitHub Actions or any other tool for continuous integration. This file will be copied to your project root under the bin folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Build/BuildExample.php
+			"),
 		];
 	}
 

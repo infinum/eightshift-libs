@@ -70,4 +70,12 @@
 	<rule ref="WordPress.WP.GlobalVariablesOverride">
 		<exclude name="WordPress.WP.GlobalVariablesOverride.Prohibited"/>
 	</rule>
+
+	<rule ref="Generic.Files.LineLength">
+		<exclude-pattern>*/src/**/*Cli.php</exclude-pattern>
+		<properties>
+			<property name="lineLimit" value="180" />
+			<property name="ignoreComments" value="true" />
+		</properties>
+	</rule>
 </ruleset>

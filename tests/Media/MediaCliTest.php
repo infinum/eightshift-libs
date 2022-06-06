@@ -31,15 +31,5 @@ test('Media CLI command will correctly copy the Media class with defaults', func
 });
 
 test('Media CLI documentation is correct', function () {
-	$mock = $this->mediaCli;
-
-	$documentation = $mock->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates media class.', $documentation[$key]);
-
+	expect($this->mediaCli->getDoc())->toBeArray();
 });

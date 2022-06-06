@@ -50,20 +50,11 @@ test('Block CLI command will run under custom command name', function () {
 	$block = $this->block;
 	$result = $block->getCommandName();
 
-	$this->assertStringContainsString('use_block', $result);
+	expect($result)->toContain('block');
 });
 
 test('Block CLI documentation is correct', function () {
-	$block = $this->block;
-
-	$documentation = $block->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Copy Block from library to your project.', $documentation[$key]);
+	expect($this->block->getDoc())->toBeArray();
 });
 
 test('Block CLI command will fail if block doesn\'t exist', function () {
