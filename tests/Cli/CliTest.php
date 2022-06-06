@@ -51,7 +51,7 @@ test('Cli getDevelopClasses return correct class list', function () {
 
 	expect(\count($developClasses))
 		->toBeInt()
-		->toBe(40); // Dev classes count.
+		->toBe(41); // Dev classes count.
 });
 
 
@@ -66,7 +66,7 @@ test('Cli getPublicClasses return correct class list', function () {
 
 	expect(\count($publicClasses))
 		->toBeInt()
-		->toBe(46); // Public classes count.
+		->toBe(47); // Public classes count.
 });
 
 

@@ -11,18 +11,27 @@ declare(strict_types=1);
 namespace EightshiftLibs\AnalyticsGdpr;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class AnalyticsGdprCli
  */
 class AnalyticsGdprCli extends AbstractCli
 {
-	public const COMMAND_NAME = 'create_analytics_gdpr_settings';
-
 	/**
 	 * Output dir relative path.
 	 */
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AnalyticsGdpr';
+
+	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -31,7 +40,7 @@ class AnalyticsGdprCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'analytics_gdpr_settings';
 	}
 
 	/**
@@ -42,7 +51,26 @@ class AnalyticsGdprCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates project Analytics and GDPR Settings classes using ACF.',
+			'shortdesc' => 'Create project Analytics and GDPR Settings classes using ACF plugin.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create Advanced Custom Fields analytics & GDPR settings service class to register project specific options.
+				ACF plugin must be installed.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/AnalyticsGdpr/AnalyticsGdprExample.php
+
+				ACF documentation:
+				https://www.advancedcustomfields.com/resources/options-page/
+			"),
 		];
 	}
 

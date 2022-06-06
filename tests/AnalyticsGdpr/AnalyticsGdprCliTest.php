@@ -67,5 +67,5 @@ test('Custom GDPR settings CLI documentation is correct', function () {
 	
 	expect($documentation[$descKey])
 		->toBeString()
-		->toBe('Generates project Analytics and GDPR Settings classes using ACF.');
+		->toBe('Create project Analytics and GDPR Settings classes using ACF plugin.');
 });

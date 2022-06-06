@@ -63,5 +63,5 @@ test('Custom theme options CLI documentation is correct', function () {
 
 		expect($documentation[$descKey])
 			->toBeString()
-			->toBe('Generates project Theme Options class using ACF.');
+			->toBe('Create project Theme Options service class using ACF plugin.');
 });
