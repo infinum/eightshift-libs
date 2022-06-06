@@ -48,7 +48,7 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	{
 		return new InvalidBlock(
 			\sprintf(
-			/* translators: %s will be replaced with the path where the block should be. */
+				/* translators: %s will be replaced with the path where the block should be. */
 				\esc_html__('Block in this path %s is missing blockName key in its manifest.json.', 'eightshift-libs'),
 				$blockPath
 			)
@@ -66,9 +66,27 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	{
 		return new InvalidBlock(
 			\sprintf(
-			/* translators: %s will be replaced with the path where the block should be. */
+				/* translators: %s will be replaced with the path where the block should be. */
 				\esc_html__('Component at %s is missing the "componentName" key in its manifest.json.', 'eightshift-libs'),
 				$componmentPath
+			)
+		);
+	}
+
+	/**
+	 * Throws error if manifest key name is missing.
+	 *
+	 * @param string $variationPath Full component path for the missing name.
+	 *
+	 * @return static
+	 */
+	public static function missingVariationNameException(string $variationPath): InvalidBlock
+	{
+		return new InvalidBlock(
+			\sprintf(
+				/* translators: %s will be replaced with the path where the block should be. */
+				\esc_html__('Variation at %s is missing the "name" key in its manifest.json.', 'eightshift-libs'),
+				$variationPath
 			)
 		);
 	}
@@ -85,7 +103,7 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	{
 		return new InvalidBlock(
 			\sprintf(
-			/* translators: %1$s is going to be replaced with the template name, %2$s with the template path. */
+				/* translators: %1$s is going to be replaced with the template name, %2$s with the template path. */
 				\esc_html__(
 					'Block with this name %1$s is missing view template. Template name should be called %1$s.php, and it should be located in this path %2$s',
 					'eightshift-libs'
@@ -107,7 +125,7 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	{
 		return new InvalidBlock(
 			\sprintf(
-			/* translators: %s will be replaced with the block path. */
+				/* translators: %s will be replaced with the block path. */
 				\esc_html__(
 					'Block view is missing in the provided path. Please check if %s is the right path for your block view.',
 					'eightshift-libs'
@@ -128,7 +146,7 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	{
 		return new InvalidBlock(
 			\sprintf(
-			/* translators: %s will be replaced with the location of the manifest for the block. */
+				/* translators: %s will be replaced with the location of the manifest for the block. */
 				\esc_html__('Global blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
 				$settingsManifestPath
 			)
@@ -146,7 +164,7 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	{
 		return new InvalidBlock(
 			\sprintf(
-			/* translators: %s will be replaced with the manifest path location. */
+				/* translators: %s will be replaced with the manifest path location. */
 				\esc_html__('Wrapper blocks settings manifest.json is missing on this location: %s.', 'eightshift-libs'),
 				$settingsManifestPath
 			)
@@ -164,7 +182,7 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	{
 		return new InvalidBlock(
 			\sprintf(
-			/* translators: %s will be replaced with the manifest path location. */
+				/* translators: %s will be replaced with the manifest path location. */
 				\esc_html__('Component manifest.json is missing on this location: %s.', 'eightshift-libs'),
 				$settingsManifestPath
 			)
@@ -182,7 +200,7 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	{
 		return new InvalidBlock(
 			\sprintf(
-			/* translators: %s will be replaced with the view template path location. */
+				/* translators: %s will be replaced with the view template path location. */
 				\esc_html__('Wrapper view is missing. Template should be located in this path %s', 'eightshift-libs'),
 				$wrapperPath
 			)
