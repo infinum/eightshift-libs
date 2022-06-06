@@ -262,7 +262,7 @@ class Cli
 	 */
 	public function load(string $commandParentName): void
 	{
-		if (!\getenv('ES_TEST')) {
+		if (!\getenv('ES_TEST') && defined('WP_CLI')) {
 			// Top Level command name.
 			WP_CLI::add_command($commandParentName, new CliBoilerplate());
 
