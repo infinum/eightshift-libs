@@ -43,7 +43,7 @@ class GeolocationExample extends AbstractGeolocation
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$path = __DIR__ . '/geoip2.phar';
+		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'geoip2.phar';
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the phar location.
@@ -60,7 +60,7 @@ class GeolocationExample extends AbstractGeolocation
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$path = __DIR__ . '/GeoLite2-Country.mmdb';
+		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'GeoLite2-Country.mmdb';
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the database location.
