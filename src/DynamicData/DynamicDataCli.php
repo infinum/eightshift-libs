@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\DynamicData;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
  * Class DynamicDataCli
@@ -21,6 +22,26 @@ class DynamicDataCli extends AbstractCli
 	 * Output dir relative path.
 	 */
 	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'DynamicData';
+
+	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'dynamicData';
+	}
 
 	/**
 	 * Define default develop props.
