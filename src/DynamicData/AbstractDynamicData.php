@@ -193,7 +193,7 @@ abstract class AbstractDynamicData implements ServiceInterface
 			unset($query['paged']);
 		}
 
-		// Prevend accidental issues.
+		// Prevent accidental issues.
 		if (isset($query['nopaging'])) {
 			unset($query['nopaging']);
 		}
