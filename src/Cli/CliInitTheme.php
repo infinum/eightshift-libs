@@ -100,9 +100,9 @@ class CliInitTheme extends AbstractCli
 
 			if (\method_exists($class, 'getCommandName')) {
 				if (\function_exists('\add_action')) {
-					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
+					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
 				} else {
-					WP_CLI::runcommand("eval-file bin" . \DIRECTORY_SEPARATOR . "cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
+					WP_CLI::runcommand("eval-file bin" . \DIRECTORY_SEPARATOR . "cli.php {$class->getCommandParentName()}_{$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
 				}
 			}
 		}
