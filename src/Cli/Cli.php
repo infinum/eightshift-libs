@@ -13,6 +13,7 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\AdminMenus\AdminMenuCli;
 use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
+use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Blocks\BlockComponentCli;
@@ -94,6 +95,7 @@ class Cli
 		AdminReusableBlocksMenuCli::class,
 		AdminSubMenuCli::class,
 		AcfMetaCli::class,
+		AnalyticsGdprCli::class,
 		BlocksCli::class,
 		EnqueueAdminCli::class,
 		EnqueueBlocksCli::class,
@@ -262,7 +264,7 @@ class Cli
 	 */
 	public function load(string $commandParentName): void
 	{
-		if (!\getenv('ES_TEST') && defined('WP_CLI')) {
+		if (!\getenv('ES_TEST') && \defined('WP_CLI')) {
 			// Top Level command name.
 			WP_CLI::add_command($commandParentName, new CliBoilerplate());
 

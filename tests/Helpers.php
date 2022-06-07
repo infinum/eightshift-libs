@@ -71,6 +71,21 @@ function setupMocks() {
 	// Mock wp_delete_file function.
 	Functions\when('wp_delete_file')->justReturn('');
 
+	// Mock ACF add options page function
+	Functions\when('acf_add_options_page')->justReturn(true);
+
+	// Mock ACF add options subpage function
+	Functions\when('acf_add_options_sub_page')->justReturn(true);
+
+	// Mock ACF add local field group function
+	Functions\when('acf_add_local_field_group')->justReturn(true);
+
+	// Mock current_user_can function.
+	Functions\when('current_user_can')->returnArg();
+
+	// Mock get_field function.
+	Functions\when('get_field')->returnArg();
+
 	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
