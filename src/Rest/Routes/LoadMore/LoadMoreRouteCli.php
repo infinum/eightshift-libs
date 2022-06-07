@@ -1,27 +1,27 @@
 <?php
 
 /**
- * Class that registers WPCLI command for DynamicData.
+ * Class that registers WPCLI command for Load More route.
  *
- * @package EightshiftLibs\DynamicData
+ * @package EightshiftLibs\Config
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\DynamicData;
+namespace EightshiftLibs\Rest\Routes\LoadMore;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
 /**
- * Class DynamicDataCli
+ * Class LoadMoreRouteCli
  */
-class DynamicDataCli extends AbstractCli
+class LoadMoreRouteCli extends AbstractCli
 {
 	/**
 	 * Output dir relative path.
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'DynamicData';
+	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Routes';
 
 	/**
 	 * Get WPCLI command parent name
@@ -40,7 +40,7 @@ class DynamicDataCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'dynamic_data';
+		return 'rest_route_load_more';
 	}
 
 	/**
@@ -48,7 +48,7 @@ class DynamicDataCli extends AbstractCli
 	 *
 	 * @param string[] $args WPCLI eval-file arguments.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
 	public function getDevelopArgs(array $args): array
 	{
@@ -63,7 +63,22 @@ class DynamicDataCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates projects dynamic data class.',
+			'shortdesc' => 'Create REST-API load more route class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create REST-API load more route, used in the blocks like featured-content.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Rest/Routes/LoadMore/LoadMoreExample.php
+			"),
 		];
 	}
 

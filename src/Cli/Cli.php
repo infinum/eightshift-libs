@@ -53,12 +53,12 @@ use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
-use EightshiftLibs\DynamicData\DynamicDataCli;
 use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
+use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\WpCli\WpCli;
@@ -125,7 +125,7 @@ class Cli
 		SetupCli::class,
 		WpCli::class,
 		GeolocationCli::class,
-		DynamicDataCli::class,
+		LoadMoreRouteCli::class
 	];
 
 	/**

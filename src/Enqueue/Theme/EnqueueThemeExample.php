@@ -13,6 +13,7 @@ namespace EightshiftBoilerplate\Enqueue\Theme;
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
+use EightshiftLibs\Rest\Routes\LoadMore\AbstractLoadMore;
 
 /**
  * Class EnqueueThemeExample
@@ -67,9 +68,13 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 	 */
 	protected function getLocalizations(): array
 	{
+		$sep = \DIRECTORY_SEPARATOR;
+		$namespace = Config::getProjectRoutesNamespace();
+		$version = Config::getProjectRoutesVersion();
+
 		return [
 			'esBlocksLocalization' => [
-				'ajaxurl' => \admin_url('admin-ajax.php'),
+				'loadMoreRestUrl' => \get_rest_url(null, "{$namespace}{$sep}{$version}{$sep}" . AbstractLoadMore::LOAD_MORE_ROUTE),
 			],
 		];
 	}
