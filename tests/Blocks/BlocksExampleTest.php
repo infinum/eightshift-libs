@@ -35,23 +35,23 @@ test('Register method will call init hooks', function () {
 
 	$this->blocksExample->register();
 
-	$this->assertSame(10, has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->getBlocksDataFullRaw()'), 'The callback getBlocksDataFullRaw should be hooked to init hook with priority 10');
-	$this->assertSame(11, has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->registerBlocks()'), 'The callback registerBlocks should be hooked to init hook with priority 11');
+	expect(has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->getBlocksDataFullRaw()'))->toBe(10);
+	expect(has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->registerBlocks()'))->toBe(11);
 });
 
 test('Register method will call block_categories_all hooks', function () {
 
 	$this->blocksExample->register();
 
-	$this->assertSame(10, has_filter('block_categories_all', 'EightshiftBoilerplate\Blocks\BlocksExample->getCustomCategory()'), 'The callback getCustomCategory should be hooked to block_categories_all hook with priority 10');
+	expect(has_filter('block_categories_all', 'EightshiftBoilerplate\Blocks\BlocksExample->getCustomCategory()'))->toBe(10);
 });
 
 test('Register method will call after_setup_theme hooks', function () {
 
 	$this->blocksExample->register();
 
-	$this->assertSame(25, has_action('after_setup_theme', 'EightshiftBoilerplate\Blocks\BlocksExample->addThemeSupport()'), 'The callback addThemeSupport should be hooked to after_setup_theme hook with priority 25');
-	$this->assertSame(11, has_action('after_setup_theme', 'EightshiftBoilerplate\Blocks\BlocksExample->changeEditorColorPalette()'), 'The callback changeEditorColorPalette should be hooked to after_setup_theme hook with priority 10');
+	expect(has_action('after_setup_theme', 'EightshiftBoilerplate\Blocks\BlocksExample->addThemeSupport()'))->toBe(25);
+	expect(has_action('after_setup_theme', 'EightshiftBoilerplate\Blocks\BlocksExample->changeEditorColorPalette()'))->toBe(11);
 });
 
 test('addThemeSupport method will call add_theme_support() function with different arguments', function () {
@@ -64,8 +64,7 @@ test('addThemeSupport method will call add_theme_support() function with differe
 
 	$this->blocksExample->addThemeSupport();
 
-	$this->assertSame(\getenv('ALIGN_WIDE'), 'true', "Method addThemeSupport() didn't add theme support for align-wide");
-
+	expect(\getenv('ALIGN_WIDE'))->toBe('true');
 });
 
 test('Asserts that getAllBlocksList first argument is boolean and return the provided attribute as return value for older WP versions.', function () {
@@ -76,11 +75,11 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 
 	$blocks = $this->blocksExample->getAllBlocksListOld(true, $post);
 
-	$this->assertSame(true, $blocks);
+	expect($blocks)->toBeTrue();
 
 	$blocks = $this->blocksExample->getAllBlocksListOld(false, $post);
 
-	$this->assertSame(false, $blocks, "Return value is not false.");
+	expect($blocks)->toBeFalse();
 });
 
 test('Asserts that getAllBlocksList will return true if post type is eightshift-forms for WP 5.8.', function () {
@@ -108,7 +107,7 @@ test('Asserts that getAllBlocksList first argument is not bool and return first 
 		->toContain('test');
 });
 
-test('Asserts that getAllBlocksList will return only projects blocks for older versions.', function () {
+test('Asserts that getAllBlocksListOld will return only projects blocks for older versions.', function () {
 
 	Functions\when('is_wp_version_compatible')->justReturn(false);
 
@@ -122,11 +121,12 @@ test('Asserts that getAllBlocksList will return only projects blocks for older v
 
 	$list = $this->blocksExample->getAllBlocksListOld([], $post);
 
-	$this->assertIsArray($list);
-	$this->assertNotContains('core/paragraph', $list, "List array does contain core/paragraph item.");
-	$this->assertContains('eightshift-boilerplate/button', $list, "List array doesn't contain eightshift-boilerplate/button item.");
-	$this->assertContains('core/block', $list, "List array doesn't contain core/block item.");
-	$this->assertContains('core/template', $list, "List array doesn't contain core/template item.");
+	expect($list)
+		->toBeArray()
+		->not->toContain('core/paragraph')
+		->toContain('eightshift-boilerplate/button')
+		->toContain('core/block')
+		->toContain('core/template');
 });
 
 test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.', function () {
@@ -157,8 +157,10 @@ test('Asserts that render component will load view template.', function () {
 
 	$block = $this->blocksExample->render($blockManifest, '');
 
-	$this->assertStringContainsString('Wrapper!', $block);
-	$this->assertStringNotContainsString('fake', $block, "Blocks render contains fake string.");
+	expect($block)
+		->toBeString()
+		->toContain('Wrapper!')
+		->not->toContain('fake');
 });
 
 test('Asserts that render will throw error if block view is missing.', function () {
@@ -196,7 +198,9 @@ test('Asserts that renderWrapperView will return a valid file.', function () {
 	$this->blocksExample->renderWrapperView($wrapperManifest, []);
 	$content = \ob_get_clean();
 
-	$this->assertSame('<div>Wrapper!</div>', \trim($content));
+	expect(\trim($content))
+		->toBeString()
+		->toBe('<div>Wrapper!</div>');
 });
 
 test('Asserts that renderWrapperView will throw error if path is not valid.', function () {
@@ -208,8 +212,11 @@ test('Asserts that getCustomCategory will return categories array.', function ()
 	$blockContext = mock('WP_Block_Editor_Context');
 	$category = $this->blocksExample->getCustomCategory([], $blockContext);
 
-	$this->assertIsArray($category);
-	$this->assertContains('eightshift', $category[0], "Items array doesn't contain eightshift category");
+	expect($category)->toBeArray();
+	
+	expect($category[0])
+		->toBeArray()
+		->toContain('eightshift');
 });
 
 test('Asserts that getCustomCategory will throw error if first argument is not array.', function () {
@@ -235,7 +242,7 @@ test('changeEditorColorPalette method will call add_theme_support() function wit
 
 	$this->blocksExample->changeEditorColorPalette();
 
-	$this->assertSame(\getenv('EDITOR_COLOR_PALETTE'), 'true', "Method addThemeSupport() didn't add theme support for editor-color-palette");
+	expect(\getenv('EDITOR_COLOR_PALETTE'))->toBe('true');
 });
 
 test('registerBlocks method will register all blocks.', function () {
@@ -254,7 +261,7 @@ test('registerBlocks method will register all blocks.', function () {
 
 	$this->blocksExample->registerBlocks();
 
-	$this->assertSame(\getenv('BLOCK_TYPE'), 'true', 'Calling void method register_block_type caused no side effects');
+	expect(\getenv('BLOCK_TYPE'))->toBe('true');
 });
 
 test('getCustomCategoryOld method will return an array.', function () {
@@ -262,10 +269,13 @@ test('getCustomCategoryOld method will return an array.', function () {
 
 	$categoryList = $this->blocksExample->getCustomCategoryOld([], $post);
 
-	$this->assertIsArray($categoryList, 'The result is not an array');
-	$this->assertArrayHasKey('slug', $categoryList[0], 'Key slug must be present in the array');
-	$this->assertArrayHasKey('title', $categoryList[0], 'Key title must be present in the array');
-	$this->assertArrayHasKey('icon', $categoryList[0], 'Key icon must be present in the array');
+	expect($categoryList)->toBeArray();
+	
+	expect($categoryList[0])
+		->toBeArray()
+		->toHaveKey('slug')
+		->toHaveKey('title')
+		->toHaveKey('icon');
 });
 
 test('filterBlocksContent method will return an array.', function () {
@@ -342,7 +352,7 @@ test('filterBlocksContent method will return an array.', function () {
 
 	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
 
-	$this->assertIsArray($filteredBlockContent, 'The result is not an array');
+	expect($filteredBlockContent)->toBeArray();
 });
 
 test('filterBlocksContent method will not filter out the paragraph with content.', function () {
@@ -367,9 +377,14 @@ test('filterBlocksContent method will not filter out the paragraph with content.
 
 	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
 
-	$this->assertArrayHasKey('blockName', $filteredBlockContent, 'Key blockName must be present in the array');
-	$this->assertArrayHasKey('attrs', $filteredBlockContent, 'Key attrs must be present in the array');
-	$this->assertArrayHasKey('paragraphParagraphContent', $filteredBlockContent['attrs'], 'Key paragraphParagraphContent must be present in the attributes array');
+	expect($filteredBlockContent)
+		->toBeArray()
+		->toHaveKey('blockName')
+		->toHaveKey('attrs');
+
+	expect($filteredBlockContent['attrs'])
+		->toBeArray()
+		->toHaveKey('paragraphParagraphContent');
 });
 
 test('filterBlocksContent method will filter out the paragraph without content.', function () {
@@ -396,10 +411,16 @@ test('filterBlocksContent method will filter out the paragraph without content.'
 
 	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
 
-	$this->assertArrayHasKey('blockName', $filteredBlockContent, 'Key blockName must be present in the array');
-	$this->assertArrayHasKey('attrs', $filteredBlockContent, 'Key attrs must be present in the array');
-	$this->assertArrayHasKey('wrapperDisable', $filteredBlockContent['attrs'], 'Key wrapperDisable must be present in the attributes array');
-	$this->assertArrayHasKey('paragraphUse', $filteredBlockContent['attrs'], 'Key paragraphUse must be present in the attributes array');
-	$this->assertTrue($filteredBlockContent['attrs']['wrapperDisable'], 'wrapperDisable must be set to true.');
-	$this->assertFalse($filteredBlockContent['attrs']['paragraphUse'], 'paragraphUse must be set to false.');
+	expect($filteredBlockContent)
+		->toBeArray()
+		->toHaveKey('blockName')
+		->toHaveKey('attrs');
+
+	expect($filteredBlockContent['attrs'])
+		->toBeArray()
+		->toHaveKey('wrapperDisable')
+		->toHaveKey('paragraphUse');
+
+	expect($filteredBlockContent['attrs']['wrapperDisable'])->toBeTrue();
+	expect($filteredBlockContent['attrs']['paragraphUse'])->toBeFalse();
 });

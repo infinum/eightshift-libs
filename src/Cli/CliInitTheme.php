@@ -98,11 +98,12 @@ class CliInitTheme extends AbstractCli
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if (\method_exists($class, 'getCommandName')) {
+			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
 				if (\function_exists('\add_action')) {
-					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
+					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
 				} else {
-					WP_CLI::runcommand("eval-file bin" . \DIRECTORY_SEPARATOR . "cli.php {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
+					// phpcs:ignore Generic.Files.LineLength.TooLong
+					WP_CLI::runcommand("eval-file bin" . \DIRECTORY_SEPARATOR . "cli.php {$class->getCommandParentName()}_{$class->getCommandName()} {$this->prepareArgsManual($assocArgs)} --skip-wordpress");
 				}
 			}
 		}

@@ -39,14 +39,29 @@ test('Custom theme options CLI command will correctly copy the theme options cla
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMeta = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/ThemeOptions/ThemeOptions.php');
 
-	$this->assertStringContainsString('class ThemeOptions implements ServiceInterface', $generatedMeta);
-	$this->assertStringContainsString('acf_add_options_page', $generatedMeta);
-	$this->assertStringContainsString('acf_add_local_field_group', $generatedMeta);
-	$this->assertStringContainsString('createThemeOptionsPage', $generatedMeta);
-	$this->assertStringContainsString('registerThemeOptions', $generatedMeta);
-	$this->assertStringNotContainsString('someRandomMethod', $generatedMeta);
+		expect($generatedMeta)
+			->toBeString()
+			->toContain('class ThemeOptions implements ServiceInterface')
+			->toContain('acf_add_options_page')
+			->toContain('acf_add_local_field_group')
+			->toContain('createThemeOptionsPage')
+			->toContain('registerThemeOptions')
+			->not->toContain('someRandomMethod');
 });
 
 test('Custom theme options CLI documentation is correct', function () {
 	expect($this->themeOptions->getDoc())->toBeArray();
+	$themeOptions = $this->themeOptions;
+
+	$documentation = $themeOptions->getDoc();
+
+	$descKey = 'shortdesc';
+
+		expect($documentation)
+			->toBeArray()
+			->toHaveKey($descKey);
+
+		expect($documentation[$descKey])
+			->toBeString()
+			->toBe('Create project Theme Options service class using ACF plugin.');
 });
