@@ -15,9 +15,9 @@ use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Rest\Routes\LoadMore\AbstractLoadMore;
 
 /**
- * Class LoadMoreRoute
+ * Class LoadMoreRouteExample
  */
-class LoadMoreRoute extends AbstractLoadMore
+class LoadMoreRouteExample extends AbstractLoadMore
 {
 	/**
 	 * Method that returns project Route namespace.
