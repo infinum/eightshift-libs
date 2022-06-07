@@ -68,13 +68,12 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 	 */
 	protected function getLocalizations(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
 		$namespace = Config::getProjectRoutesNamespace();
 		$version = Config::getProjectRoutesVersion();
 
 		return [
 			'esBlocksLocalization' => [
-				'loadMoreRestUrl' => \get_rest_url(null, "{$namespace}{$sep}{$version}{$sep}" . AbstractLoadMore::LOAD_MORE_ROUTE),
+				'loadMoreRestUrl' => \get_rest_url(null, "{$namespace}/{$version}/" . AbstractLoadMore::LOAD_MORE_ROUTE),
 			],
 		];
 	}
