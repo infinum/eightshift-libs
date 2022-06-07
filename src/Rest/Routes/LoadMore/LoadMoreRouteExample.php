@@ -64,14 +64,14 @@ class LoadMoreRoute extends AbstractLoadMore
 	}
 
 	/**
-	 * Map dynamic data reponse with the component to provide to output.
+	 * Map load more data reponse with the component to provide to output.
 	 *
 	 * @param string $type Type of load more used, usually block name.
 	 * @param array<int> $response Response of IDs.
 	 *
 	 * @return string
 	 */
-	public function getMappedDynamicData(string $type, array $response): string
+	public function getMappedData(string $type, array $response): string
 	{
 		switch ($type) {
 			case 'featured-content':

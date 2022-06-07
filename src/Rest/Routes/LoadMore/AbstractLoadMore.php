@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The abstract class register DynamicData used to fetch data via admin ajax.
+ * The abstract class register Load more route.
  *
  * @package EightshiftLibs\Routes\LoadMore
  */
@@ -29,14 +29,14 @@ abstract class AbstractLoadMore extends AbstractRoute implements CallableRouteIn
 	public const LOAD_MORE_ROUTE = 'load-more-route';
 
 	/**
-	 * Map dynamic data reponse with the component to provide to output.
+	 * Map load more data reponse with the component to provide to output.
 	 *
 	 * @param string $type Type of load more used, usually block name.
 	 * @param array<int> $response Response of IDs.
 	 *
 	 * @return string
 	 */
-	abstract public function getMappedDynamicData(string $type, array $response): string;
+	abstract public function getMappedData(string $type, array $response): string;
 
 	/**
 	 * Method that returns rest response
@@ -179,7 +179,7 @@ abstract class AbstractLoadMore extends AbstractRoute implements CallableRouteIn
 
 		// Output success.
 		return [
-			'body' => $this->getMappedDynamicData($type, $response),
+			'body' => $this->getMappedData($type, $response),
 			'query' => $newQuery,
 			'currentPage' => $urlLoadMoreAction === 'true' ? $currentPage : $currentPage + 1 , // If url load just remain on the current page number.
 			'maxPages' => $this->getMaxCount($originalQuery, $initialItems),
