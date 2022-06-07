@@ -40,7 +40,7 @@ class DynamicDataCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'dynamicData';
+		return 'dynamic_data';
 	}
 
 	/**

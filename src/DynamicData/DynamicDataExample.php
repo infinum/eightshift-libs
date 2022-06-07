@@ -40,14 +40,14 @@ class DynamicDataExample extends AbstractDynamicData
 	{
 		switch ($type) {
 			case 'featured-content':
-				return Components::render(
-					'cards.php',
+				return Components::renderPartial(
+					'block',
+					$type,
+					'cards',
 					[
 						'items' => $response,
 						'blockSsr' => true,
-					],
-					\dirname(__DIR__, 1) . '/Blocks/custom/featured-content/partials',
-					true
+					]
 				);
 			default:
 				return '';
