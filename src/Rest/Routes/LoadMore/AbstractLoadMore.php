@@ -114,7 +114,7 @@ abstract class AbstractLoadMore extends AbstractRoute implements CallableRouteIn
 		if (!$query) {
 			return new WP_Error(
 				'error_missing_query',
-				\esc_html__('Your request is missing query param. Query param should be a valid WP_Query arguments.', 'eightshift-boilerplate')
+				\esc_html__('Your request is missing query parameters. Query parameters should be a valid WP_Query arguments array.', 'eightshift-boilerplate')
 			);
 		}
 
@@ -122,7 +122,7 @@ abstract class AbstractLoadMore extends AbstractRoute implements CallableRouteIn
 		if (!$type) {
 			return new WP_Error(
 				'error_missing_type',
-				\esc_html__('Your request is missing type param. This is used to filter whate response will the method return.', 'eightshift-boilerplate')
+				\esc_html__('Your request is missing a type parameter. This is used to filter out what kind of response will the method return.', 'eightshift-boilerplate')
 			);
 		}
 
@@ -131,7 +131,7 @@ abstract class AbstractLoadMore extends AbstractRoute implements CallableRouteIn
 			return new WP_Error(
 				'error_missing_initial_items',
 				\esc_html__(
-					'Your request is missing initialItems param. This is used to determin number of items to load and what items to exclude from new requests.',
+					'Your request is missing initialItems parameter. This is used to determine the number of items to load and what items to exclude from new requests.',
 					'eightshift-boilerplate'
 				)
 			);
