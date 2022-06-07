@@ -57,7 +57,7 @@ class LoadMoreRouteExample extends AbstractLoadMore
 	protected function getCallbackArguments(): array
 	{
 		return [
-			'methods' => static::CREATABLE,
+			'methods' => static::READABLE,
 			'callback' => [$this, 'routeCallback'],
 			'permission_callback' => '__return_true'
 		];
