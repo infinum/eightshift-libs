@@ -202,10 +202,10 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 		// Prepare original query.
 		$originalQuery = $this->prepareOriginalQuery($query, $initialItems, $perPageOverride);
 
-		// Create new query to modify of url load.
+		// Create new query from original to be able to refference the original query later on.
 		$newQuery = $originalQuery;
 
-		// In case on url load update per page to new value.
+		// In case we are using api to load data on page refresh via get parameter update per page to new value.
 		if ($urlLoadMoreAction === 'true') {
 			$newQuery['posts_per_page'] = $newQuery['posts_per_page'] * $currentPage;
 		}
