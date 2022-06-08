@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftBoilerplate\Enqueue\Theme;
 
 use EightshiftBoilerplate\Config\Config;
-use EightshiftBoilerplate\Rest\Routes\LoadMoreRouteExample;
 use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -59,22 +58,5 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 	public function getAssetsVersion(): string
 	{
 		return Config::getProjectVersion();
-	}
-
-	/**
-	 * Get script localizations
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function getLocalizations(): array
-	{
-		$namespace = Config::getProjectRoutesNamespace();
-		$version = Config::getProjectRoutesVersion();
-
-		return [
-			'esBlocksLocalization' => [
-				'loadMoreRestUrl' => \get_rest_url(null, "{$namespace}/{$version}/" . LoadMoreRouteExample::LOAD_MORE_ROUTE),
-			],
-		];
 	}
 }
