@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftBoilerplate\Enqueue\Theme;
 
 use EightshiftBoilerplate\Config\Config;
+use EightshiftBoilerplate\Rest\Routes\LoadMoreRouteExample;
 use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
-use EightshiftLibs\Rest\Routes\LoadMore\AbstractLoadMore;
 
 /**
  * Class EnqueueThemeExample
@@ -73,7 +73,7 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 
 		return [
 			'esBlocksLocalization' => [
-				'loadMoreRestUrl' => \get_rest_url(null, "{$namespace}/{$version}/" . AbstractLoadMore::LOAD_MORE_ROUTE),
+				'loadMoreRestUrl' => \get_rest_url(null, "{$namespace}/{$version}/" . LoadMoreRouteExample::LOAD_MORE_ROUTE),
 			],
 		];
 	}
