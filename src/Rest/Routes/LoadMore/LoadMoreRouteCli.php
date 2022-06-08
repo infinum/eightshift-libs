@@ -77,7 +77,7 @@ class LoadMoreRouteCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/Rest/Routes/LoadMore/LoadMoreExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Rest/Routes/LoadMore/LoadMoreRouteExample.php
 			"),
 		];
 	}
@@ -91,7 +91,8 @@ class LoadMoreRouteCli extends AbstractCli
 		$class = $this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
-			->renameUse($assocArgs);
+			->renameUse($assocArgs)
+			->renameTextDomain($assocArgs);
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
