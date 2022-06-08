@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\CustomTaxonomy;
 
-use EightshiftBoilerplate\CustomTaxonomy\TaxonomyExample;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 
@@ -56,11 +55,27 @@ class TaxonomyCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'label' => $args[1] ?? 'Location',
-			'slug' => $args[2] ?? 'location',
-			'rest_endpoint_slug' => $args[3] ?? 'locations',
-			'post_type_slug' => $args[4] ?? 'post',
-			'plural_label' => $args[5] ?? 'Locations',
+			'label' => 'Location',
+			'slug' => 'location',
+			'rest_endpoint_slug' => 'locations',
+			'post_type_slug' => 'post',
+			'plural_label' => 'Locations',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'label' => 'Location',
+			'slug' => 'location',
+			'rest_endpoint_slug' => 'locations',
+			'post_type_slug' => 'post',
+			'plural_label' => 'Locations',
 		];
 	}
 
@@ -121,11 +136,11 @@ class TaxonomyCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$label = $assocArgs['label'] ?? 'Custom Taxonomy';
-		$slug = $this->prepareSlug($assocArgs['slug'] ?? TaxonomyExample::TAXONOMY_SLUG);
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? TaxonomyExample::REST_API_ENDPOINT_SLUG);
-		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug'] ?? TaxonomyExample::TAXONOMY_POST_TYPE_SLUG);
-		$pluralLabel = $assocArgs['plural_label'] ?? $label . 's';
+		$label = $this->getArg($assocArgs, 'label');
+		$slug = $this->prepareSlug($this->getArg($assocArgs, 'slug'));
+		$restEndpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'rest_endpoint_slug'));
+		$postTypeSlug = $this->prepareSlug($this->getArg($assocArgs, 'post_type_slug'));
+		$pluralLabel = $this->getArg($assocArgs, 'plural_label');
 
 		// Get full class name.
 		$className = $this->getFileName($slug);

@@ -30,7 +30,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 	protected function blocksMove(array $assocArgs, string $outputDir, bool $isComponents = false): void
 	{
 		// Get Props.
-		$name = $assocArgs['name'] ?? '';
+		$name = $this->getArg($assocArgs, 'name');
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);

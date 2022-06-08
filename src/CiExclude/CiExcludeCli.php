@@ -55,7 +55,23 @@ class CiExcludeCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'root' => $args[1] ?? './',
+			'root' => './',
+			'project_name' => 'eightshift-boilerplate',
+			'project_type' => 'themes',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'root' => self::OUTPUT_DIR,
+			'project_name' => 'eightshift-boilerplate',
+			'project_type' => 'themes',
 		];
 	}
 
@@ -74,18 +90,21 @@ class CiExcludeCli extends AbstractCli
 					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('root'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'project_name',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('project_name'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'project_type',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name. Default is themes.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('project_type'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -111,7 +130,7 @@ class CiExcludeCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
+		$root = $this->getArg($assocArgs, 'root');
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, 'ci-exclude.txt')

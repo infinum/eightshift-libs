@@ -55,7 +55,19 @@ class ReadmeCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'root' => $args[1] ?? './',
+			'root' => './',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'root' => self::OUTPUT_DIR,
 		];
 	}
 
@@ -74,6 +86,7 @@ class ReadmeCli extends AbstractCli
 					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('root'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -99,7 +112,7 @@ class ReadmeCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
+		$root = $this->getArg($assocArgs, 'root');
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, 'README.md')

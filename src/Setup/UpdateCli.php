@@ -42,6 +42,22 @@ class UpdateCli extends AbstractCli
 	}
 
 	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'skip_core' => 'false',
+			'skip_plugins' => 'false',
+			'skip_plugins_core' => 'false',
+			'skip_plugins_github' => 'false',
+			'skip_themes' => 'false',
+		];
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, mixed>
@@ -56,6 +72,7 @@ class UpdateCli extends AbstractCli
 					'name' => 'skip_core',
 					'description' => 'If you want to skip core update/installation, provide bool on this attr.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('skip_core'),
 					'options' => [
 						'true',
 						'false',
@@ -66,6 +83,7 @@ class UpdateCli extends AbstractCli
 					'name' => 'skip_plugins',
 					'description' => 'If you want to skip all plugins update/installation, provide bool on this attr.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('skip_plugins'),
 					'options' => [
 						'true',
 						'false',

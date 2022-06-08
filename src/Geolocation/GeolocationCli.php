@@ -117,7 +117,7 @@ class GeolocationCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Arguments.
-		$cookie_name = $this->getArg($assocArgs, 'cookie_name');
+		$cookieName = $this->getArg($assocArgs, 'cookie_name');
 
 		// Get full class name.
 		$className = $this->getClassShortName();
@@ -128,7 +128,7 @@ class GeolocationCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->searchReplaceString($this->getArgTemplate('cookie_name'), $cookie_name);
+			->searchReplaceString($this->getArgTemplate('cookie_name'), $cookieName);
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);

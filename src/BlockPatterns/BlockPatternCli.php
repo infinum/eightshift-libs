@@ -56,10 +56,25 @@ class BlockPatternCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'title' => $args[1] ?? 'Something',
-			'name' => $args[2] ?? 'eightshift-boilerplate/something',
-			'description' => $args[3] ?? 'This is an example block pattern',
-			'content' => $args[4] ?? '',
+			'title' => 'Something',
+			'name' => 'eightshift-boilerplate/something',
+			'description' => 'This is an example block pattern',
+			'content' => '',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'title' => 'example-title',
+			'name' => 'example-name',
+			'description' => 'example-description',
+			'content' => 'example-content',
 		];
 	}
 
@@ -84,20 +99,21 @@ class BlockPatternCli extends AbstractCli
 					'name' => 'name',
 					'description' => 'Pattern name with namespace. If not provided will be generated from title. Example: eightshift/pattern-name',
 					'optional' => true,
+					'default' => $this->getDefaultArg('name'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'description',
 					'description' => 'Description of the pattern.',
 					'optional' => true,
-					'default' => '',
+					'default' => $this->getDefaultArg('description'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'content',
 					'description' => 'Content of the pattern. Needs to be the WP block markup (tho most likely you\'d add this manually after you generate the pattern)',
 					'optional' => true,
-					'default' => 'Description of this pattern',
+					'default' => $this->getDefaultArg('content'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -108,7 +124,7 @@ class BlockPatternCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --title='Call to action' --menu_title='content' --capability='edit_posts' --menu_slug='es-content'
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --title='Button' --description='This is description' --capability='edit_posts' --menu_slug='es-content'
 
 				## RESOURCES
 
@@ -122,10 +138,14 @@ class BlockPatternCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$title = $assocArgs['title'] ?? '';
-		$name = isset($assocArgs['name']) ? $assocArgs['name'] : $this->generateName($title);
-		$content = $assocArgs['content'] ?? '';
-		$description = isset($assocArgs['description']) ? $assocArgs['description'] : 'Description of this pattern';
+		$title = $this->getArg($assocArgs, 'title');
+		$name = $this->getArg($assocArgs, 'name');
+		$content = $this->getArg($assocArgs, 'content');
+		$description = $this->getArg($assocArgs, 'description');
+
+		if (!$name) {
+			$name = $this->generateName($title);
+		}
 
 		$className = $this->getFileName($title);
 		$className = $className . $this->getClassShortName();
@@ -135,10 +155,10 @@ class BlockPatternCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('example-name', $name)
-			->searchReplaceString('example-title', $title)
-			->searchReplaceString('example-description', $description)
-			->searchReplaceString('example-content', $content);
+			->searchReplaceString($this->getArgTemplate('title'), $title)
+			->searchReplaceString($this->getArgTemplate('name'), $name)
+			->searchReplaceString($this->getArgTemplate('content'), $content)
+			->searchReplaceString($this->getArgTemplate('description'), $description);
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);

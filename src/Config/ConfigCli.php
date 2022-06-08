@@ -53,9 +53,23 @@ class ConfigCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'name' => $args[1] ?? 'Boilerplate',
-			'version' => $args[2] ?? '1',
-			'routes_version' => $args[5] ?? 'v2',
+			'name' => 'Boilerplate',
+			'version' => '1',
+			'routes_version' => '2',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'name' => 'Boilerplate',
+			'version' => '1',
+			'routes_version' => '2',
 		];
 	}
 
@@ -74,18 +88,21 @@ class ConfigCli extends AbstractCli
 					'name' => 'name',
 					'description' => 'Define project name.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('name'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'version',
 					'description' => 'Define project version.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('version'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'routes_version',
 					'description' => 'Define project REST version.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('routes_version'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -110,9 +127,9 @@ class ConfigCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$name = $assocArgs['name'] ?? '';
-		$version = $assocArgs['version'] ?? '';
-		$routesVersion = $assocArgs['routes_version'] ?? '';
+		$name = $this->getArg($assocArgs, 'name');
+		$version = $this->getArg($assocArgs, 'version');
+		$routesVersion = $this->getArg($assocArgs, 'routes_version');
 
 		$className = $this->getClassShortName();
 

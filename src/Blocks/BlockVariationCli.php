@@ -56,7 +56,19 @@ class BlockVariationCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'name' => $args[1] ?? 'button',
+			'name' => 'card',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'name' => 'button',
 		];
 	}
 
@@ -99,7 +111,7 @@ class BlockVariationCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$name = $assocArgs['name'] ?? '';
+		$name = $this->getArg($assocArgs, 'name');
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);

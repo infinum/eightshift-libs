@@ -55,7 +55,19 @@ class WpCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'command_name' => $args[1] ?? 'test',
+			'command_name' => 'test',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'command_name' => 'test',
 		];
 	}
 
@@ -101,7 +113,7 @@ class WpCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$commandName = $assocArgs['command_name'] ?? 'custom-command';
+		$commandName = $this->getArg($assocArgs, 'command_name');
 
 		// Get full class name.
 		$className = $this->getFileName($commandName);

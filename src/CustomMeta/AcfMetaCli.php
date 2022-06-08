@@ -55,7 +55,19 @@ class AcfMetaCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'name' => $args[1] ?? 'title',
+			'name' => 'title',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'name' => 'title',
 		];
 	}
 
@@ -102,7 +114,7 @@ class AcfMetaCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['name'] ?? '');
+		$fieldName = $this->prepareSlug($this->getArg($assocArgs, 'name'));
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);

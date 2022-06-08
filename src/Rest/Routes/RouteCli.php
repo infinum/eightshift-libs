@@ -69,8 +69,21 @@ class RouteCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'endpoint_slug' => $args[1] ?? 'test',
-			'method' => $args[2] ?? 'get',
+			'endpoint_slug' => 'test',
+			'method' => 'get',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'endpoint_slug' => 'test',
+			'method' => 'get',
 		];
 	}
 
@@ -95,6 +108,7 @@ class RouteCli extends AbstractCli
 					'name' => 'method',
 					'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('method'),
 					'options' => [
 						'GET',
 						'POST',
@@ -126,14 +140,8 @@ class RouteCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? 'test-route');
-
-		// If slug is empty throw error.
-		if (empty($endpointSlug)) {
-			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
-		}
-
-		$method = \strtoupper($assocArgs['method'] ?? 'get');
+		$endpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'endpoint_slug'));
+		$method = \strtoupper($this->getArg($assocArgs, 'method'));
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);

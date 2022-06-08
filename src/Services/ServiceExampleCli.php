@@ -58,8 +58,21 @@ class ServiceExampleCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'folder' => $args[1] ?? 'TestFolder/TMP',
-			'file_name' => $args[2] ?? 'TestTest',
+			'folder' => 'TestFolder/TMP',
+			'file_name' => 'TestTest',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'folder' => 'TestFolder/TMP',
+			'file_name' => 'TestTest',
 		];
 	}
 
@@ -108,8 +121,8 @@ class ServiceExampleCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$folder = $assocArgs['folder'] ?? '';
-		$fileName = $this->prepareSlug($assocArgs['file_name'] ?? '');
+		$folder = $this->getArg($assocArgs, 'folder');
+		$fileName = $this->prepareSlug($this->getArg($assocArgs, 'file_name'));
 
 		// Get full class name.
 		$className = $this->getClassShortName();

@@ -40,6 +40,19 @@ class ImportCli extends AbstractCli
 	}
 
 	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'from' => 'production',
+			'to' => 'develop',
+		];
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
@@ -89,8 +102,8 @@ class ImportCli extends AbstractCli
 			dbImport( // phpcs:ignore
 				$this->getProjectConfigRootPath(),
 				[
-					'from' => $assocArgs['from'] ?? '',
-					'to' => $assocArgs['to'] ?? '',
+					'from' => $this->getArg($assocArgs, 'from'),
+					'to' => $this->getArg($assocArgs, 'to'),
 				]
 			);
 		} catch (ExitException $e) {

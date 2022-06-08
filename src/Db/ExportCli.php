@@ -40,6 +40,19 @@ class ExportCli extends AbstractCli
 	}
 
 	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'skip_db' => 'false',
+			'skip_uploads' => 'false',
+		];
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, mixed>
@@ -54,6 +67,7 @@ class ExportCli extends AbstractCli
 					'name' => 'skip_db',
 					'description' => 'If you want to skip exporting database.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('skip_db'),
 					'options' => [
 						'true',
 						'false',
@@ -64,6 +78,7 @@ class ExportCli extends AbstractCli
 					'name' => 'skip_uploads',
 					'description' => 'If you want to skip exporting images.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('skip_uploads'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -97,8 +112,8 @@ class ExportCli extends AbstractCli
 			dbExport( // phpcs:ignore
 				$this->getProjectConfigRootPath(),
 				[
-					'skip_db' => $assocArgs['skip_db'] ?? false,
-					'skip_uploads' => $assocArgs['skip_uploads'] ?? false,
+					'skip_db' => $this->getArg($assocArgs, 'skip_db'),
+					'skip_uploads' => $this->getArg($assocArgs, 'skip_uploads'),
 				]
 			);
 		} catch (ExitException $e) {

@@ -94,14 +94,14 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 					'name' => 'title',
 					'description' => 'The text to be displayed in the title tags of the page when the menu is selected.',
 					'optional' => true,
-					'default' => 'Reusable Blocks',
+					'default' => $this->getDefaultArg('title'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_title',
 					'description' => 'The text to be used for the menu.',
 					'optional' => true,
-					'default' => 'Reusable Blocks',
+					'default' => $this->getDefaultArg('menu_title'),
 				],
 				[
 					'type' => 'assoc',

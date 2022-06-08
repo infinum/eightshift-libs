@@ -12,7 +12,6 @@ namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use WP_CLI;
 
 /**
  * Class FieldCli
@@ -56,8 +55,21 @@ class FieldCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'field_name' => $args[1] ?? 'title',
-			'object_type' => $args[2] ?? 'post',
+			'field_name' => 'title',
+			'object_type' => 'post',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'field_name' => 'title',
+			'object_type' => 'post',
 		];
 	}
 
@@ -82,6 +94,7 @@ class FieldCli extends AbstractCli
 					'name' => 'object_type',
 					'description' => 'Object(s) the field is being registered to. Example: post.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('object_type'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -106,14 +119,8 @@ class FieldCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['field_name'] ?? 'title');
-
-		// If field name is empty throw error.
-		if (empty($fieldName)) {
-			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
-		}
-
-		$objectType = $this->prepareSlug($assocArgs['object_type'] ?? 'post');
+		$fieldName = $this->getArg($assocArgs, 'field_name');
+		$objectType = $this->prepareSlug($this->getArg($assocArgs, 'object_type'));
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);

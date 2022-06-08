@@ -97,6 +97,7 @@ test('Prepare command docs returns correct doc', function() {
 				'name' => 'random',
 				'description' => 'Random description.',
 				'optional' => true,
+				'default' => $this->getDefaultArg('random'),
 			],
 		],
 	];

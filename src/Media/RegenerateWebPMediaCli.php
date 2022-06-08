@@ -46,6 +46,21 @@ class RegenerateWebPMediaCli extends AbstractCli
 	}
 
 	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'action' => 'generate',
+			'quality' => '80',
+			'ids' => '',
+			'force' => 'false',
+		];
+	}
+
+	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, mixed>
@@ -60,6 +75,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 					'name' => 'action',
 					'description' => 'Action to use "generate" or "delete". Default: generate',
 					'optional' => true,
+					'default' => $this->getDefaultArg('action'),
 					'options' => [
 						'generate',
 						'delete',
@@ -70,18 +86,21 @@ class RegenerateWebPMediaCli extends AbstractCli
 					'name' => 'quality',
 					'description' => 'Quality of conversion 0-100. Default: 80',
 					'optional' => true,
+					'default' => $this->getDefaultArg('quality'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'ids',
 					'description' => 'Ids of attachment separated by comma.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('ids'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'force',
 					'description' => 'Force generation no matter if the file exists. Default: false',
 					'optional' => true,
+					'default' => $this->getDefaultArg('force'),
 					'options' => [
 						'true',
 						'false',
@@ -124,10 +143,10 @@ class RegenerateWebPMediaCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$quality = $assocArgs['quality'] ?? '80';
-		$action = $assocArgs['action'] ?? 'generate';
-		$ids = $assocArgs['ids'] ?? '';
-		$force = isset($assocArgs['force']) ?: 'false'; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$quality = $this->getArg($assocArgs, 'quality');
+		$action = $this->getArg($assocArgs, 'action');
+		$ids = $this->getArg($assocArgs, 'ids');
+		$force = $this->getArg($assocArgs, 'force');
 
 		$args = [];
 

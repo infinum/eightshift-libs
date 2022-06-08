@@ -44,6 +44,7 @@ class PostTypeCli extends AbstractCli
 	{
 		return 'post_type';
 	}
+
 	/**
 	 * Define default develop props.
 	 *
@@ -54,14 +55,33 @@ class PostTypeCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'label' => $args[1] ?? 'Product',
-			'slug' => $args[2] ?? 'product',
-			'rewrite_url' => $args[3] ?? 'product',
-			'rest_endpoint_slug' => $args[4] ?? 'products',
-			'capability' => $args[5] ?? 'post',
-			'menu_position' => $args[6] ?? 40,
-			'menu_icon' => $args[7] ?? 'admin-settings',
-			'plural_label' => $args[8] ?? 'Products',
+			'label' => 'Product',
+			'slug' => 'product',
+			'rewrite_url' => 'product',
+			'rest_endpoint_slug' => 'products',
+			'capability' => 'post',
+			'menu_position' => 40,
+			'menu_icon' => 'admin-settings',
+			'plural_label' => 'Products',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'label' => 'Product',
+			'slug' => 'product',
+			'rewrite_url' => 'product',
+			'rest_endpoint_slug' => 'products',
+			'capability' => 'post',
+			'menu_position' => 40,
+			'menu_icon' => 'admin-settings',
+			'plural_label' => 'Products',
 		];
 	}
 
@@ -104,24 +124,28 @@ class PostTypeCli extends AbstractCli
 					'name' => 'capability',
 					'description' => 'The default capability for the custom post types. Example: post.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('capability'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_position',
 					'description' => 'The default menu position for the custom post types. Example: 20.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('menu_position'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_icon',
 					'description' => 'The default menu icon for the custom post types. Example: dashicons-analytics.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('menu_icon'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'plural_label',
 					'description' => 'The plural label of the custom post type. Used for label generation. If not specified the plural will have appended s at the end of the label.', // phpcs:ignore Generic.Files.LineLength.TooLong
 					'optional' => true,
+					'default' => $this->getDefaultArg('plural_label'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -146,14 +170,14 @@ class PostTypeCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$label = $assocArgs['label'] ?? 'Custom Post Type';
-		$slug = $this->prepareSlug($assocArgs['slug'] ?? 'custom-post-type');
-		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url'] ?? 'custom-post-type');
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? 'custom-post-type');
-		$capability = $assocArgs['capability'] ?? '';
-		$menuPosition = (string) ($assocArgs['menu_position'] ?? '');
-		$menuIcon = $assocArgs['menu_icon'] ?? '';
-		$pluralLabel = $assocArgs['plural_label'] ?? $label . 's';
+		$label = $this->getArg($assocArgs, 'label');
+		$slug = $this->prepareSlug($this->getArg($assocArgs, 'slug'));
+		$rewriteUrl = $this->prepareSlug($this->getArg($assocArgs, 'rewrite_url'));
+		$restEndpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'rest_endpoint_slug'));
+		$capability = $this->getArg($assocArgs, 'capability');
+		$menuPosition = $this->getArg($assocArgs, 'menu_position');
+		$menuIcon = $this->getArg($assocArgs, 'menu_icon');
+		$pluralLabel = $this->getArg($assocArgs, 'plural_label');
 
 		// Get full class name.
 		$className = $this->getFileName($slug);

@@ -75,6 +75,7 @@ class SetupCli extends AbstractCli
 					'name' => 'root',
 					'description' => 'Define project root relative to initialization file of WP CLI.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('root'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -100,7 +101,7 @@ class SetupCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
+		$root = $this->getArg($assocArgs, 'root');
 
 		// Get setup.json example file, and create the one in the project.
 		$this->getExampleTemplate(__DIR__, 'setup.json')

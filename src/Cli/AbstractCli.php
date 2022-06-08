@@ -98,24 +98,28 @@ abstract class AbstractCli implements CliInterface
 					'name' => 'namespace',
 					'description' => 'Define your project namespace. Default is read from composer autoload psr-4 key.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('namespace'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'vendor_prefix',
 					'description' => 'Define your project vendor_prefix. Default is read from composer extra, imposter, namespace key.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('vendor_prefix'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'config_path',
 					'description' => 'Define your project composer absolute path.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('config_path'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_existing',
 					'description' => 'If this value is set to true CLI commands will not fail it they find an existing files in your project',
 					'optional' => true,
+					'default' => $this->getDefaultArg('skip_existing'),
 					'options' => [
 						'true',
 						'false',

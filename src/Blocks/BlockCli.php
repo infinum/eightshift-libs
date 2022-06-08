@@ -54,7 +54,19 @@ class BlockCli extends AbstractBlocksCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'name' => $args[1] ?? 'button',
+			'name' => 'card',
+		];
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'name' => 'button',
 		];
 	}
 
