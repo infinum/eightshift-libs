@@ -81,7 +81,9 @@ abstract class AbstractGeolocation implements ServiceInterface
 			return;
 		}
 
-		\ob_start();
+		if (!\getenv('ES_TEST')) {
+			\ob_start();
+		}
 
 		\setcookie(
 			$cookieName,
@@ -90,7 +92,9 @@ abstract class AbstractGeolocation implements ServiceInterface
 			'/'
 		);
 
-		\ob_get_clean();
+		if (!\getenv('ES_TEST')) {
+			\ob_get_clean();
+		}
 	}
 
 	/**

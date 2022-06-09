@@ -53,7 +53,7 @@ function setupMocks() {
 			$response['data'] = $data;
 		}
 
-	    echo json_encode($response, $options);
+		echo json_encode($response, $options);
 	});
 
 	// Mock rest response handler.
@@ -126,6 +126,12 @@ function setupMocks() {
 		'ext' => 'jpg',
 		'type' => 'image/jpeg',
 	]);
+
+	if (!defined('DAY_IN_SECONDS')) {
+		define('DAY_IN_SECONDS', 3600);
+	}
+
+	Functions\when('is_admin')->justReturn(false);
 }
 
 /**
@@ -150,6 +156,7 @@ function setAfterEach($delete = true) {
 		deleteCliOutput();
 	}
 
+	putenv('ES_SIDEAFFECT');
 	putenv('ES_CLI_SUCCESS_HAPPENED');
 	putenv('ES_CLI_ERROR_HAPPENED');
 	putenv('ES_CLI_LOG_HAPPENED');
