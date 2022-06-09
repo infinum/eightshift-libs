@@ -356,9 +356,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$namespace = Components::getSettingsNamespace();
 
 		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
-			if (!empty($parsedBlock['attrs']['paragraphParagraphContent'])) {
+			$content = $parsedBlock['attrs']['paragraphParagraphContent'] ?? '';
+
+			if (empty($content)) {
 				$parsedBlock['attrs']['wrapperDisable'] = true;
-				$parsedBlock['attrs']['paragraphUse'] = false;
+				$parsedBlock['attrs']['paragraphParagraphUse'] = false;
 			}
 		}
 
