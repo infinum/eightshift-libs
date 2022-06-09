@@ -111,11 +111,12 @@ class CliInitTheme extends AbstractCli
 		WP_CLI::log('--------------------------------------------------');
 
 		if (!\getenv('ES_TEST')) {
-			WP_CLI::log((string)shell_exec('npm run start')); // phpcs:ignore
+			WP_CLI::log('We have copied everyting that you need in your active theme. Now make sure that you naviate inside and type:');
+			WP_CLI::log(WP_CLI::colorize('%bnpm run start%b'));
 		}
 
 		WP_CLI::log('--------------------------------------------------');
 
-		WP_CLI::success('All commands are finished.');
+		WP_CLI::success('You are ready to start developing, good luck.');
 	}
 }
