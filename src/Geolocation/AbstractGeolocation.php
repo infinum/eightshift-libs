@@ -204,7 +204,6 @@ abstract class AbstractGeolocation implements ServiceInterface
 		return \setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
 	}
 
-
 	/**
 	 * Gets the 2-digit location code provided by the project.
 	 *
