@@ -6,29 +6,15 @@ use EightshiftLibs\Blocks\BlockComponentCli;
 
 use EightshiftLibs\Exception\InvalidBlock;
 
-use function Tests\deleteCliOutput;
 use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	setupMocks();
-
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('log')
-		->andReturnArg(0);
+	setBeforeEach();
 
 	$this->component = new BlockComponentCli('boilerplate');
 });
@@ -37,7 +23,9 @@ beforeEach(function () {
  * Cleanup after tests.
  */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->component);
 });
 
  test('Component CLI command will correctly copy the Component class with defaults', function () {

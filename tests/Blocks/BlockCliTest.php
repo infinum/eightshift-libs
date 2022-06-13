@@ -23,9 +23,11 @@ beforeEach(function () {
  */
 afterEach(function () {
 	setAfterEach();
+
+	unset($this->block);
 });
 
- test('Block CLI command will correctly copy the Block class with defaults', function () {
+test('Block CLI command will correctly copy the Block class with defaults', function () {
 	$blockMock = mock(BlockCli::class)
 		->makePartial()
 		->shouldReceive('getFrontendLibsBlockPath')
@@ -45,6 +47,7 @@ afterEach(function () {
 	$this->assertStringNotContainsString('Components::render(\'link\', $attributes)', $generatedBlock);
 	$this->assertFileExists($outputPath);
  });
+
 
 test('Block CLI command will run under custom command name', function () {
 	$block = $this->block;

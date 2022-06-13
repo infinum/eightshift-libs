@@ -3,12 +3,12 @@
 /**
  * Class that adds Geolocation detection.
  *
- * @package Geolocation
+ * @package EightshiftLibs\Geolocation
  */
 
 declare(strict_types=1);
 
-namespace Geolocation;
+namespace EightshiftLibs\Geolocation;
 
 use EightshiftLibs\Geolocation\AbstractGeolocation;
 use Exception;
@@ -39,6 +39,8 @@ class GeolocationExample extends AbstractGeolocation
 	/**
 	 * Get geolocation executable phar location.
 	 *
+	 * @throws Exception If file is missing in provided path.
+	 *
 	 * @return string
 	 */
 	public function getGeolocationPharLocation(): string
@@ -47,7 +49,7 @@ class GeolocationExample extends AbstractGeolocation
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the phar location.
-			return new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), $path));
+			throw new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), $path));
 		}
 
 		return $path;
@@ -55,6 +57,8 @@ class GeolocationExample extends AbstractGeolocation
 
 	/**
 	 * Get geolocation database location.
+	 *
+	 * @throws Exception If file is missing in provided path.
 	 *
 	 * @return string
 	 */
@@ -64,7 +68,7 @@ class GeolocationExample extends AbstractGeolocation
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the database location.
-			return new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), $path));
+			throw new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), $path));
 		}
 
 		return $path;

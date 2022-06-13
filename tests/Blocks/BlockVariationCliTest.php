@@ -24,6 +24,8 @@ beforeEach(function () {
  */
 afterEach(function () {
 	setAfterEach();
+
+	unset($this->variation);
 });
 
  test('Variation CLI command will correctly copy the variation class with defaults', function () {

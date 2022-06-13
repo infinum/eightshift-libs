@@ -117,8 +117,11 @@ abstract class AbstractBlocksCli extends AbstractCli
 	private function moveBlock(string $destinationPath, string $sourcePath, string $name, array $assocArgs, string $path, string $typeSingular): void
 	{
 		$ds = \DIRECTORY_SEPARATOR;
+
 		// Create folder in project if missing.
-		\mkdir("{$destinationPath}{$ds}");
+		if (!\is_dir("{$destinationPath}{$ds}")) {
+			\mkdir("{$destinationPath}{$ds}");
+		}
 
 		// Move block/component to project folder.
 		$this->copyRecursively($sourcePath, "{$destinationPath}{$ds}");
@@ -129,8 +132,27 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		WP_CLI::log('--------------------------------------------------');
 
+		$partialsOutput = [];
+
+		// Check if we have partials folder. If so output and that folder with items in it.
+		if (\is_dir("{$destinationPath}/partials")) {
+			$partials = \array_diff(\scandir("{$destinationPath}/partials"), ['..', '.']);
+
+			$partialsOutput = \array_map(
+				static function ($item) {
+					return "partials/{$item}";
+				},
+				$partials
+			);
+		}
+
+		$items = \array_merge(
+			$this->getFullBlocksFiles($name),
+			$partialsOutput
+		);
+
 		// Move all files from library to project.
-		foreach ($this->getFullBlocksFiles($name) as $file) {
+		foreach ($items as $file) {
 			// Set output file path.
 			$class = $this->getExampleTemplate($destinationPath, $file, true);
 
