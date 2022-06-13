@@ -132,6 +132,11 @@ function setupMocks() {
 	}
 
 	Functions\when('is_admin')->justReturn(false);
+
+	Functions\when('setcookie')->alias(function($name, $value) {
+		putenv("ES_SIDEAFFECT={$name}");
+		putenv("ES_SIDEAFFECT_ADDITIONAL={$value}");
+	});
 }
 
 /**
@@ -157,6 +162,7 @@ function setAfterEach($delete = true) {
 	}
 
 	putenv('ES_SIDEAFFECT');
+	putenv('ES_SIDEAFFECT_ADDITIONAL');
 	putenv('ES_CLI_SUCCESS_HAPPENED');
 	putenv('ES_CLI_ERROR_HAPPENED');
 	putenv('ES_CLI_LOG_HAPPENED');
@@ -194,6 +200,25 @@ function deleteCliOutput(string $dir = '') : void
 	rmdir($dir);
 }
 
+/**
+ * Get path to data mocks.
+ *
+ * @param string $path Path to attach.
+ *
+ * @return string
+ */
+function getDataPath(string $path = ''): string
+{
+	return __DIR__ . "/data/{$path}";
+}
+
+/**
+ * Mock Mockery interface.
+ *
+ * @param string $class Class to mock.
+ *
+ * @return MockInterface
+ */
 function mock(string $class): MockInterface
 {
 	return Mockery::mock($class);

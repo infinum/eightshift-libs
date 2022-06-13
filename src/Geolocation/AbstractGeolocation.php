@@ -81,9 +81,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 			return;
 		}
 
-		if (!\getenv('ES_TEST')) {
-			\ob_start();
-		}
+		\ob_start();
 
 		\setcookie(
 			$cookieName,
@@ -92,9 +90,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 			'/'
 		);
 
-		if (!\getenv('ES_TEST')) {
-			\ob_get_clean();
-		}
+		\ob_get_clean();
 	}
 
 	/**
@@ -200,6 +196,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 		if ($this->getIpAddress()) {
 			$ipAddr = $this->getIpAddress();
 		}
+
 
 		// Skip if empty for some reason or if you are on local computer.
 		if ($ipAddr !== '127.0.0.1' && $ipAddr !== '::1' && !empty($ipAddr)) {
