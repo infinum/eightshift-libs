@@ -83,7 +83,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 
 		\ob_start();
 
-		\setcookie(
+		$this->setCookie(
 			$cookieName,
 			$this->getGeolocation(),
 			\time() + \DAY_IN_SECONDS,
@@ -178,6 +178,19 @@ abstract class AbstractGeolocation implements ServiceInterface
 
 		return $output;
 	}
+
+	public function setCookie(
+		$name,
+		$value = "",
+		$expire = 0,
+		$path = "", 
+		$domain = "",
+		$secure = false,
+		$httponly = false
+	) {
+		return setcookie($name, $value,  $expire, $path, $domain, $secure, $httponly);
+	}
+
 
 	/**
 	 * Gets the 2-digit location code provided by the project.

@@ -132,11 +132,6 @@ function setupMocks() {
 	}
 
 	Functions\when('is_admin')->justReturn(false);
-
-	Functions\when('setcookie')->alias(function($name, $value) {
-		putenv("ES_SIDEAFFECT={$name}");
-		putenv("ES_SIDEAFFECT_ADDITIONAL={$value}");
-	});
 }
 
 /**

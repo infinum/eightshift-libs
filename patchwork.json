@@ -4,7 +4,6 @@
     "system",
     "function_exists",
     "file_get_contents",
-    "file_put_contents",
-    "setcookie"
+    "file_put_contents"
   ]
 }

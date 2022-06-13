@@ -96,15 +96,6 @@ class BlockCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore Eightshift.Commenting.FunctionComment.WrongStyle
 	{
-		var_dump('tttt');
-		if (!\getenv('ES_TEST')) {
-			$this->commandAction($args, $assocArgs);
-		}
-	}
-
-	public function commandAction(array $args, array $assocArgs)
-	{
-		var_dump($assocArgs);
 		$this->blocksMove($assocArgs, static::OUTPUT_DIR);
 	}
 }

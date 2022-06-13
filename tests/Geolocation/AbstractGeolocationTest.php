@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\CGeolocation;
+namespace Tests\Unit\Geolocation;
 
 use EightshiftLibs\Geolocation\GeolocationExample;
 
@@ -90,14 +90,14 @@ test('setLocationCookie will exit if cookie is set', function () {
 	unset($_COOKIE[$cookieName]);
 });
 
-test('setLocationCookie will set cookie.', function () {
-	$this->geolocation->setLocationCookie();
-
-	expect(getenv('ES_SIDEAFFECT'))->toEqual($this->geolocation->getGeolocationCookieName());
-});
-
 test('setLocationCookie will set cookie to localhost.', function () {
-	$this->geolocation->setLocationCookie();
+	$mock = mock(GeolocationExample::class)->makePartial();
+	$mock->shouldReceive('setCookie')->withArgs(function (string $name, string $value) {
+		putenv("ES_SIDEAFFECT={$name}");
+		putenv("ES_SIDEAFFECT_ADDITIONAL={$value}");
+	});
+
+	$mock->setLocationCookie();
 
 	expect(getenv('ES_SIDEAFFECT'))->toEqual($this->geolocation->getGeolocationCookieName());
 	expect(getenv('ES_SIDEAFFECT_ADDITIONAL'))->toEqual('localhost');
@@ -107,6 +107,10 @@ test('setLocationCookie will set cookie based on the server location.', function
 	$mock = mock(GeolocationExample::class)->makePartial();
 	$mock->shouldReceive('getGeolocationPharLocation')->andReturn(getDataPath('geolocation/geoip.phar'));
 	$mock->shouldReceive('getGeolocationDbLocation')->andReturn(getDataPath('geolocation/geoip.mmdb'));
+	$mock->shouldReceive('setCookie')->withArgs(function (string $name, string $value) {
+		putenv("ES_SIDEAFFECT={$name}");
+		putenv("ES_SIDEAFFECT_ADDITIONAL={$value}");
+	});
 
 	$_SERVER['REMOTE_ADDR'] = $this->germanIp;
 
@@ -122,6 +126,10 @@ test('setLocationCookie will set cookie based on the provided manual ip.', funct
 	$mock->shouldReceive('getGeolocationPharLocation')->andReturn(getDataPath('geolocation/geoip.phar'));
 	$mock->shouldReceive('getGeolocationDbLocation')->andReturn(getDataPath('geolocation/geoip.mmdb'));
 	$mock->shouldReceive('getIpAddress')->andReturn($this->germanIp);
+	$mock->shouldReceive('setCookie')->withArgs(function (string $name, string $value) {
+		putenv("ES_SIDEAFFECT={$name}");
+		putenv("ES_SIDEAFFECT_ADDITIONAL={$value}");
+	});
 
 	$mock->setLocationCookie();
 
@@ -133,6 +141,10 @@ test('setLocationCookie will throw and error if something is wrong.', function (
 	$mock->shouldReceive('getGeolocationPharLocation')->andReturn(getDataPath('geolocation/geoip.phar'));
 	$mock->shouldReceive('getGeolocationDbLocation')->andThrow(new Exception('test'));
 	$mock->shouldReceive('getIpAddress')->andReturn($this->germanIp);
+	$mock->shouldReceive('setCookie')->withArgs(function (string $name, string $value) {
+		putenv("ES_SIDEAFFECT={$name}");
+		putenv("ES_SIDEAFFECT_ADDITIONAL={$value}");
+	});
 
 	$mock->setLocationCookie();
 

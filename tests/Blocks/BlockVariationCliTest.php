@@ -10,60 +10,62 @@ use function Tests\mock;
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
 
-// /**
-//  * Mock before tests.
-//  */
-// beforeEach(function () {
-// 	setBeforeEach();
+/**
+ * Mock before tests.
+ */
+beforeEach(function () {
+	setBeforeEach();
 
-// 	$this->variation = new BlockVariationCli('boilerplate');
-// });
+	$this->variation = new BlockVariationCli('boilerplate');
+});
 
-// /**
-//  * Cleanup after tests.
-//  */
-// afterEach(function () {
-// 	setAfterEach();
-// });
+/**
+ * Cleanup after tests.
+ */
+afterEach(function () {
+	setAfterEach();
 
-//  test('Variation CLI command will correctly copy the variation class with defaults', function () {
-// 	$variationMock = mock(BlockVariationCli::class)
-// 		->makePartial()
-// 		->shouldReceive('getFrontendLibsBlockPath')
-// 		->andReturn(\dirname(__FILE__, 2) . '/data');
+	unset($this->variation);
+});
 
-// 	$mock = $variationMock->getMock();
+ test('Variation CLI command will correctly copy the variation class with defaults', function () {
+	$variationMock = mock(BlockVariationCli::class)
+		->makePartial()
+		->shouldReceive('getFrontendLibsBlockPath')
+		->andReturn(\dirname(__FILE__, 2) . '/data');
 
-// 	$mock([], [$this->variation->getDevelopArgs([])]);
+	$mock = $variationMock->getMock();
 
-// 	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button-block/manifest.json';
+	$mock([], [$this->variation->getDevelopArgs([])]);
 
-// 	// Check the output dir if the generated method is correctly generated.
-// 	$generatedVariation = \file_get_contents($outputPath);
+	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button-block/manifest.json';
 
-// 	$this->assertStringContainsString('"parentName": "button"', $generatedVariation);
-// 	$this->assertFileExists($outputPath);
-//  });
+	// Check the output dir if the generated method is correctly generated.
+	$generatedVariation = \file_get_contents($outputPath);
 
-//  test('Variation CLI command will run under custom command name', function () {
-// 	$variation = $this->variation;
-// 	$result = $variation->getCommandName();
+	$this->assertStringContainsString('"parentName": "button"', $generatedVariation);
+	$this->assertFileExists($outputPath);
+ });
 
-// 	expect($result)
-// 		->toContain('variation');
-// });
+ test('Variation CLI command will run under custom command name', function () {
+	$variation = $this->variation;
+	$result = $variation->getCommandName();
 
-// test('Variation CLI documentation is correct', function () {
-// 	expect($this->variation->getDoc())->toBeArray();
-// });
+	expect($result)
+		->toContain('variation');
+});
 
-// test('Variation CLI command will fail if Variation doesn\'t exist', function () {
-// 	$variationMock = mock(BlockVariationCli::class)
-// 		->makePartial()
-// 		->shouldReceive('getFrontendLibsBlockPath')
-// 		->andReturn(\dirname(__FILE__, 2) . '/data');
+test('Variation CLI documentation is correct', function () {
+	expect($this->variation->getDoc())->toBeArray();
+});
 
-// 	$mock = $variationMock->getMock();
+test('Variation CLI command will fail if Variation doesn\'t exist', function () {
+	$variationMock = mock(BlockVariationCli::class)
+		->makePartial()
+		->shouldReceive('getFrontendLibsBlockPath')
+		->andReturn(\dirname(__FILE__, 2) . '/data');
 
-// 	$mock([], ['name' => 'testing']);
-// })->expectException(InvalidBlock::class);
+	$mock = $variationMock->getMock();
+
+	$mock([], ['name' => 'testing']);
+})->expectException(InvalidBlock::class);

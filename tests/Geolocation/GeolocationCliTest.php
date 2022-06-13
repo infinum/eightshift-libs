@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\CGeolocation;
+namespace Tests\Unit\Geolocation;
 
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Geolocation\GeolocationCli;
