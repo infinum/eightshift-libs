@@ -179,16 +179,29 @@ abstract class AbstractGeolocation implements ServiceInterface
 		return $output;
 	}
 
+	/**
+	 * Mock setCookie method for testing reasons.
+	 *
+	 * @param string $name Name of cookie.
+	 * @param string $value Value to store to cookie.
+	 * @param int $expire Expiration time.
+	 * @param string $path Path of usage.
+	 * @param string $domain Domain of usage.
+	 * @param boolean $secure Indicates that the cookie should only be transmitted over a secure HTTPS connection from the client.
+	 * @param boolean $httponly When true the cookie will be made accessible only through the HTTP protocol.
+	 *
+	 * @return bool
+	 */
 	public function setCookie(
-		$name,
-		$value = "",
-		$expire = 0,
-		$path = "", 
-		$domain = "",
-		$secure = false,
-		$httponly = false
-	) {
-		return setcookie($name, $value,  $expire, $path, $domain, $secure, $httponly);
+		string $name,
+		string $value = "",
+		int $expire = 0,
+		string $path = "",
+		string $domain = "",
+		bool $secure = false,
+		bool $httponly = false
+	): bool {
+		return \setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
 	}
 
 

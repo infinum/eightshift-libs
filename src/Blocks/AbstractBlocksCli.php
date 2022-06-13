@@ -41,7 +41,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$ds = \DIRECTORY_SEPARATOR;
 		$sourcePathFolder = "{$rootNode}{$ds}{$outputDir}{$ds}";
 
-		
 		$blocks = \scandir($sourcePathFolder);
 		$blocksFullList = \array_diff((array)$blocks, ['..', '.']);
 
@@ -126,8 +125,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		// Move block/component to project folder.
 		$this->copyRecursively($sourcePath, "{$destinationPath}{$ds}");
-
-		var_dump('aaa');
 
 		$typeSingular = \ucfirst($typeSingular);
 
