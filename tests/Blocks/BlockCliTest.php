@@ -49,7 +49,7 @@ test('Block CLI command will correctly copy the Block class with defaults', func
  });
 
 
- test('Block CLI command will run under custom command name', function () {
+test('Block CLI command will run under custom command name', function () {
 	$block = $this->block;
 	$result = $block->getCommandName();
 
