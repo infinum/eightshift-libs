@@ -124,7 +124,7 @@ class WpCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(true), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('command_name', $commandName)
+			->searchReplaceString($this->getArgTemplate('command_name'), $commandName)
 			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }

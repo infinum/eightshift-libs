@@ -131,8 +131,8 @@ class FieldCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('example-post-type', $objectType)
-			->searchReplaceString('example-field', $fieldName)
+			->searchReplaceString($this->getArgTemplate('object_type'), $objectType)
+			->searchReplaceString($this->getArgTemplate('field_name'), $fieldName)
 			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }

@@ -169,7 +169,7 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Define default develop props.
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
+	 * @param string[] $args WPCLI eval-file arguments used in development debugging.
 	 *
 	 * @return array<string, int|string|boolean>
 	 */

@@ -159,8 +159,8 @@ class RouteCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('/example-route', "/{$endpointSlug}")
-			->searchReplaceString('static::READABLE', static::VERB_ENUM[$method])
+			->searchReplaceString($this->getArgTemplate('endpoint_slug'), $endpointSlug)
+			->searchReplaceString("'{$this->getArgTemplate('method')}'", static::VERB_ENUM[$method])
 			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }

@@ -40,19 +40,20 @@ if (!function_exists('dbImport')) {
 			CliHelpers::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
 		}
 
-		chdir($projectRootPath);
+		$sep = \DIRECTORY_SEPARATOR;
+		$setupFilePath = "{$projectRootPath}{$sep}{$setupFile}";
 
 		// Check if setup exists.
-		if (!file_exists($setupFile)) {
-			CliHelpers::cliError("setup.json is missing at this path: {$setupFile}.");
+		if (!file_exists($setupFilePath)) {
+			CliHelpers::cliError("setup.json is missing at this path: {$setupFilePath}.");
 		}
 
 		// Parse json file to array.
-		$data = json_decode(implode(' ', (array)file($setupFile)), true);
+		$data = json_decode(implode(' ', (array)file($setupFilePath)), true);
 
 		// Check if $data is empty.
 		if (empty($data)) {
-			CliHelpers::cliError("{$setupFile} is empty.");
+			CliHelpers::cliError("{$setupFilePath} is empty.");
 		}
 
 		// Check if urls key exists.
@@ -86,63 +87,65 @@ if (!function_exists('dbImport')) {
 			$toScheme = $to['scheme'];
 		}
 
-		// Define db export file name.
-		$dbFileName = 'latest.sql';
+		if (!\getenv('ES_TEST')) {
+			// Define db export file name.
+			$dbFileName = 'latest.sql';
 
-		// Define export file name.
-		$exportFileName = 'latest_dump.tar.gz';
+			// Define export file name.
+			$exportFileName = 'latest_dump.tar.gz';
 
-		// Define export folder name.
-		$exportFolderName = 'latest_dump';
+			// Define export folder name.
+			$exportFolderName = 'latest_dump';
 
-		// Remove old db export folder if it exists.
-		if (file_exists($exportFolderName)) {
-			WP_CLI::log((string)shell_exec("rm -rf {$exportFolderName}"));
-			WP_CLI::log("Removed old temp {$exportFolderName} folder.");
+			// Remove old db export folder if it exists.
+			if (file_exists($exportFolderName)) {
+				WP_CLI::log((string)shell_exec("rm -rf {$exportFolderName}"));
+				WP_CLI::log("Removed old temp {$exportFolderName} folder.");
+				WP_CLI::log('--------------------------------------------------');
+			}
+
+			// Create new temp folder.
+			mkdir($exportFolderName);
+			WP_CLI::log("Created temp {$exportFolderName} folder.");
+			WP_CLI::log('--------------------------------------------------');
+
+			// Export files to new temp folder.
+			WP_CLI::log((string)shell_exec("tar zxf {$exportFileName} -C {$exportFolderName}"));
+			WP_CLI::log("Exported {$exportFileName} to {$exportFolderName} folder.");
+			WP_CLI::log('--------------------------------------------------');
+
+			// Execute db export.
+			WP_CLI::runcommand('db export');
+			WP_CLI::log('Db exported successfully.');
+			WP_CLI::log('--------------------------------------------------');
+
+			WP_CLI::runcommand('db reset');
+			WP_CLI::log('--------------------------------------------------');
+
+			// Import new database.
+			WP_CLI::runcommand("db import {$exportFolderName}/{$dbFileName}");
+			WP_CLI::log('Database import done.');
+			WP_CLI::log('--------------------------------------------------');
+
+			// Search and replace url host.
+			WP_CLI::runcommand("search-replace {$fromHost} {$toHost} --url={$fromHost} --all-tables --network");
+			WP_CLI::log('Database search replace for host successfully finished.');
+			WP_CLI::log('--------------------------------------------------');
+
+			// Search and replace url scheme.
+			if ($toScheme !== $fromScheme) {
+				WP_CLI::runcommand("search-replace {$fromScheme}://{$toHost} {$toScheme}://{$toHost} --all-tables --network");
+				WP_CLI::log('Database search replace for scheme successfully finished.');
+				WP_CLI::log('--------------------------------------------------');
+			}
+
+			// Clean up.
+			WP_CLI::runcommand('cache flush');
+			WP_CLI::runcommand('transient delete --all');
+			WP_CLI::runcommand('rewrite flush');
+			WP_CLI::log('Flushing cache, removing transients and resetting permalinks!');
 			WP_CLI::log('--------------------------------------------------');
 		}
-
-		// Create new temp folder.
-		mkdir($exportFolderName);
-		WP_CLI::log("Created temp {$exportFolderName} folder.");
-		WP_CLI::log('--------------------------------------------------');
-
-		// Export files to new temp folder.
-		WP_CLI::log((string)shell_exec("tar zxf {$exportFileName} -C {$exportFolderName}"));
-		WP_CLI::log("Exported {$exportFileName} to {$exportFolderName} folder.");
-		WP_CLI::log('--------------------------------------------------');
-
-		// Execute db export.
-		WP_CLI::runcommand('db export');
-		WP_CLI::log('Db exported successfully.');
-		WP_CLI::log('--------------------------------------------------');
-
-		WP_CLI::runcommand('db reset');
-		WP_CLI::log('--------------------------------------------------');
-
-		// Import new database.
-		WP_CLI::runcommand("db import {$exportFolderName}/{$dbFileName}");
-		WP_CLI::log('Database import done.');
-		WP_CLI::log('--------------------------------------------------');
-
-		// Search and replace url host.
-		WP_CLI::runcommand("search-replace {$fromHost} {$toHost} --url={$fromHost} --all-tables --network");
-		WP_CLI::log('Database search replace for host successfully finished.');
-		WP_CLI::log('--------------------------------------------------');
-
-		// Search and replace url scheme.
-		if ($toScheme !== $fromScheme) {
-			WP_CLI::runcommand("search-replace {$fromScheme}://{$toHost} {$toScheme}://{$toHost} --all-tables --network");
-			WP_CLI::log('Database search replace for scheme successfully finished.');
-			WP_CLI::log('--------------------------------------------------');
-		}
-
-		// Clean up.
-		WP_CLI::runcommand('cache flush');
-		WP_CLI::runcommand('transient delete --all');
-		WP_CLI::runcommand('rewrite flush');
-		WP_CLI::log('Flushing cache, removing transients and resetting permalinks!');
-		WP_CLI::log('--------------------------------------------------');
 
 		WP_CLI::success('Finished! Success!');
 	}

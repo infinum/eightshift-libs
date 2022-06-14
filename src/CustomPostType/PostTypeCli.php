@@ -79,7 +79,7 @@ class PostTypeCli extends AbstractCli
 			'rewrite_url' => 'product',
 			'rest_endpoint_slug' => 'products',
 			'capability' => 'post',
-			'menu_position' => 40,
+			'menu_position' => 20,
 			'menu_icon' => 'admin-settings',
 			'plural_label' => 'Products',
 		];
@@ -189,24 +189,24 @@ class PostTypeCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->searchReplaceString('example-slug', $slug)
-			->searchReplaceString('example-url-slug', $rewriteUrl)
-			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
-			->searchReplaceString('Singular Name', $label)
-			->searchReplaceString('singular name', \strtolower($label))
-			->searchReplaceString('Plural Name', $pluralLabel)
-			->searchReplaceString('plural name', \strtolower($pluralLabel));
+			->searchReplaceString($this->getArgTemplate('slug'), $slug)
+			->searchReplaceString($this->getArgTemplate('rewrite_url'), $rewriteUrl)
+			->searchReplaceString($this->getArgTemplate('rest_endpoint_slug'), $restEndpointSlug)
+			->searchReplaceString($this->getArgTemplate('label'), $label)
+			->searchReplaceString($this->getArgTemplate('label_lowercaps'), \strtolower($label))
+			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
+			->searchReplaceString($this->getArgTemplate('plural_label_lowecaps'), \strtolower($pluralLabel));
 
 		if (!empty($capability)) {
-			$class->searchReplaceString("'post'", "'{$capability}'");
+			$class->searchReplaceString($this->getArgTemplate('capability'), $capability);
 		}
 
 		if (!empty($menuPosition)) {
-			$class->searchReplaceString('20', $menuPosition);
+			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);
 		}
 
 		if (!empty($menuIcon)) {
-			$class->searchReplaceString('dashicons-analytics', $menuIcon);
+			$class->searchReplaceString($this->getArgTemplate('menu_icon'), $menuIcon);
 		}
 
 		// Output final class to new file/folder and finish.

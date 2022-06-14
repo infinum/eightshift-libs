@@ -4,95 +4,107 @@ namespace Tests\Unit\BlockPatterns;
 
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
+use function Tests\getCliOutputPath;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
+	setBeforeEach();
 
 	$this->blockPattern = new BlockPatternCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->blockPattern);
 });
 
+//---------------------------------------------------------------------------------//
 
 test('Block pattern CLI command will correctly copy the Block Pattern class with defaults', function () {
 	$blockPattern = $this->blockPattern;
-	$developArgs = $blockPattern->getDevelopArgs([]);
-	$blockPattern([], $developArgs);
+	$blockPattern([], $this->blockPattern->getDefaultArgs([]));
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedBlockPattern = \file_get_contents(\dirname(__FILE__, 3) . "/cliOutput/src/BlockPatterns/SomethingBlockPattern.php");
+	$output = \file_get_contents(getCliOutputPath('src/BlockPatterns/ExampleTitleBlockPattern.php'));
 
-	$this->assertStringContainsString('class SomethingBlockPattern extends AbstractBlockPattern', $generatedBlockPattern);
-
-	foreach ($developArgs as $developArg) {
-		$this->assertStringContainsString($developArg, $generatedBlockPattern);
-	}
-
-	$this->assertStringNotContainsString('example-content', $generatedBlockPattern);
-	$this->assertStringNotContainsString('example-description', $generatedBlockPattern);
-	$this->assertStringNotContainsString('example-title', $generatedBlockPattern);
-	$this->assertStringNotContainsString('example-name', $generatedBlockPattern);
+	expect($output)
+		->toContain(
+			'class ExampleTitleBlockPattern',
+			'example-title',
+			'example-name',
+			'example-description',
+			'example-content'
+		)
+		->not->toContain(
+			'class BlockPatternExample',
+			'%title%',
+			'%name%',
+			'%description%',
+			'%content%'
+		);
 });
 
 
 test('Block pattern CLI command will correctly copy the Block pattern class with set arguments', function () {
 	$blockPattern = $this->blockPattern;
-	$cliArgs = [
+	$blockPattern([], [
 		'title' => 'Your Own Thing',
 		'name' => 'eightshift-boilerplate/your-own-thing',
 		'description' => 'Description of the your own thing pattern',
 		'content' => 'this-one-has-some-content',
-	];
-	$blockPattern([], $cliArgs);
+	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedBlockPattern = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/BlockPatterns/YourOwnThingBlockPattern.php');
+	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/BlockPatterns/YourOwnThingBlockPattern.php');
 
-	$this->assertStringContainsString('class YourOwnThingBlockPattern extends AbstractBlockPattern', $generatedBlockPattern);
-	foreach ($cliArgs as $cliArg) {
-		$this->assertStringContainsString($cliArg, $generatedBlockPattern);
-	}
-
-	$this->assertStringNotContainsString('example-content', $generatedBlockPattern);
-	$this->assertStringNotContainsString('example-description', $generatedBlockPattern);
-	$this->assertStringNotContainsString('example-title', $generatedBlockPattern);
-	$this->assertStringNotContainsString('example-name', $generatedBlockPattern);
+	expect($output)
+	->toContain(
+		'class YourOwnThingBlockPattern',
+		'Your Own Thing',
+		'eightshift-boilerplate/your-own-thing',
+		'Description of the your own thing pattern',
+		'this-one-has-some-content'
+	)
+	->not->toContain(
+		'class BlockPatternExample',
+		'%title%',
+		'%name%',
+		'%description%',
+		'%content%'
+	);
 });
 
 test('Block pattern CLI command will generate a name from title if "name" argument is not provided', function () {
 	$blockPattern = $this->blockPattern;
-	$cliArgs = [
+	$blockPattern([], [
 		'title' => 'Your Own Thing',
+		'name' => '',
 		'description' => 'Description of the your own thing pattern',
 		'content' => 'this-one-has-some-content',
-	];
-	$blockPattern([], $cliArgs);
+	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedBlockPattern = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/BlockPatterns/YourOwnThingBlockPattern.php');
+	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/BlockPatterns/YourOwnThingBlockPattern.php');
 
-	$this->assertStringContainsString('eightshift-boilerplate/your-own-thing', $generatedBlockPattern);
+	expect($output)
+	->toContain(
+		'class YourOwnThingBlockPattern',
+		'Your Own Thing',
+		'eightshift-boilerplate/your-own-thing',
+		'Description of the your own thing pattern',
+		'this-one-has-some-content'
+	)
+	->not->toContain(
+		'class BlockPatternExample',
+		'%title%',
+		'%name%',
+		'%description%',
+		'%content%'
+	);
 });
 
 
-test('Block Pattern documentation is correct', function () {
-	expect($this->blockPattern->getDoc())->toBeArray();
-});
+// test('Block Pattern documentation is correct', function () {
+// 	expect($this->blockPattern->getDoc())->toBeArray();
+// });

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\WpCli;
 
-use EightshiftBoilerplate\WpCli\WpCliExample;
 use EightshiftLibs\WpCli\WpCli;
 
 use function Tests\deleteCliOutput;

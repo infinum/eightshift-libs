@@ -47,7 +47,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface
 	 */
 	protected function getRouteName(): string
 	{
-		return '/example-route';
+		return '/%endpoint_slug%';
 	}
 
 	/**
@@ -58,7 +58,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface
 	protected function getCallbackArguments(): array
 	{
 		return [
-			'methods' => static::READABLE,
+			'methods' => '%method%',
 			'callback' => [$this, 'routeCallback'],
 			'permission_callback' => '__return_true'
 		];

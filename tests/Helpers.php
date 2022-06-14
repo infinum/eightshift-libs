@@ -5,6 +5,7 @@ namespace Tests;
 use Brain\Monkey\Functions;
 use Mockery;
 use Brain\Monkey;
+use Exception;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -86,6 +87,13 @@ function setupMocks() {
 	// Mock get_field function.
 	Functions\when('get_field')->returnArg();
 
+	// Mock wp_parse_url function.
+	Functions\when('wp_parse_url')->justReturn([
+		'scheme' => 'https',
+		'host' => 'developer.wordpress.org',
+		'path' => '/reference/functions/wp_parse_url/',
+	]);
+
 	$wpCliMock = mock('alias:WP_CLI');
 
 	$wpCliMock
@@ -96,8 +104,9 @@ function setupMocks() {
 
 	$wpCliMock
 		->shouldReceive('error')
-		->andReturnUsing(function ($message) {
-			putenv("ES_CLI_ERROR_HAPPENED={$message}");
+		->andReturnUsing(function ($errorMessage) {
+			putenv("ES_CLI_ERROR_HAPPENED={$errorMessage}");
+			throw new Exception($errorMessage);
 		});
 
 	$wpCliMock
@@ -205,6 +214,18 @@ function deleteCliOutput(string $dir = '') : void
 function getDataPath(string $path = ''): string
 {
 	return __DIR__ . "/data/{$path}";
+}
+
+/**
+ * Get path to cliOutput mocks.
+ *
+ * @param string $path Path to attach.
+ *
+ * @return string
+ */
+function getCliOutputPath(string $path = ''): string
+{
+	return \dirname(__FILE__, 2) . "/cliOutput/{$path}";
 }
 
 /**

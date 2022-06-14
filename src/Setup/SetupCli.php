@@ -56,7 +56,7 @@ class SetupCli extends AbstractCli
 	public function getDevelopArgs(array $args): array
 	{
 		return [
-			'root' => $args[1] ?? './',
+			'root' => './',
 		];
 	}
 

@@ -152,14 +152,13 @@ class TaxonomyCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->searchReplaceString('example-slug', $slug)
-			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
-			->searchReplaceString("'post'", "'{$postTypeSlug}'")
-			->searchReplaceString('Blog_Taxonomy', $className)
-			->searchReplaceString('Singular Name', $label)
-			->searchReplaceString('singular name', \strtolower($label))
-			->searchReplaceString('Plural Name', $pluralLabel)
-			->searchReplaceString('plural name', \strtolower($pluralLabel))
+			->searchReplaceString($this->getArgTemplate('slug'), $slug)
+			->searchReplaceString($this->getArgTemplate('rest_endpoint_slug'), $restEndpointSlug)
+			->searchReplaceString($this->getArgTemplate('post_type_slug'), $postTypeSlug)
+			->searchReplaceString($this->getArgTemplate('label'), $label)
+			->searchReplaceString($this->getArgTemplate('label_lowercaps'), \strtolower($label))
+			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
+			->searchReplaceString($this->getArgTemplate('plural_label_lowecaps'), \strtolower($pluralLabel))
 			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
 	}
 }

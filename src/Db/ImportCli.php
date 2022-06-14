@@ -40,6 +40,21 @@ class ImportCli extends AbstractCli
 	}
 
 	/**
+	 * Define default develop props.
+	 *
+	 * @param string[] $args WPCLI eval-file arguments.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getDevelopArgs(array $args): array
+	{
+		return [
+			'from' => 'production',
+			'to' => 'develop',
+		];
+	}
+
+	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
@@ -47,8 +62,9 @@ class ImportCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'from' => 'production',
-			'to' => 'develop',
+			'from' => '',
+			'to' => '',
+			'fileName' => 'setup.json',
 		];
 	}
 
@@ -104,7 +120,8 @@ class ImportCli extends AbstractCli
 				[
 					'from' => $this->getArg($assocArgs, 'from'),
 					'to' => $this->getArg($assocArgs, 'to'),
-				]
+				],
+				$this->getArg($assocArgs, 'fileName')
 			);
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

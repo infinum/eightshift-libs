@@ -140,15 +140,15 @@ class ConfigCli extends AbstractCli
 			->renameUse($assocArgs);
 
 		if (!empty($name)) {
-			$class->searchReplaceString('eightshift-libs', $name);
+			$class->searchReplaceString($this->getArgTemplate('name'), $name);
 		}
 
 		if (!empty($version)) {
-			$class->searchReplaceString('1.0.0', $version);
+			$class->searchReplaceString($this->getArgTemplate('version'), $version);
 		}
 
 		if (!empty($routesVersion)) {
-			$class->searchReplaceString('v1', $routesVersion);
+			$class->searchReplaceString($this->getArgTemplate('routes_version'), $routesVersion);
 		}
 
 		// Output final class to new file/folder and finish.

@@ -150,11 +150,11 @@ class UpdateCli extends AbstractCli
 			$this->setup(
 				$this->getProjectConfigRootPath(),
 				[
-					'skip_core' => $assocArgs['skip_core'] ?? false,
-					'skip_plugins' => $assocArgs['skip_plugins'] ?? false,
-					'skip_plugins_core' => $assocArgs['skip_plugins_core'] ?? false,
-					'skip_plugins_github' => $assocArgs['skip_plugins_github'] ?? false,
-					'skip_themes' => $assocArgs['skip_themes'] ?? false,
+					'skip_core' => $this->getArg($assocArgs, 'skip_core'),
+					'skip_plugins' => $this->getArg($assocArgs, 'skip_plugins'),
+					'skip_plugins_core' => $this->getArg($assocArgs, 'skip_plugins_core'),
+					'skip_plugins_github' => $this->getArg($assocArgs, 'skip_plugins_github'),
+					'skip_themes' => $this->getArg($assocArgs, 'skip_themes'),
 				],
 				$setupFilename
 			);
@@ -176,11 +176,11 @@ class UpdateCli extends AbstractCli
 	private function setup(string $projectRootPath, array $args = [], string $setupFile = 'setup.json')
 	{
 		// Check if optional parameters exists.
-		$skipCore = $args['skip_core'] ?? false;
-		$skipPlugins = $args['skip_plugins'] ?? false;
-		$skipPluginsCore = $args['skip_plugins_core'] ?? false;
-		$skipPluginsGithub = $args['skip_plugins_github'] ?? false;
-		$skipThemes = $args['skip_themes'] ?? false;
+		$skipCore = $this->getArg($args, 'skip_core');
+		$skipPlugins = $this->getArg($args, 'skip_plugins');
+		$skipPluginsCore = $this->getArg($args, 'skip_plugins_core');
+		$skipPluginsGithub = $this->getArg($args, 'skip_plugins_github');
+		$skipThemes = $this->getArg($args, 'skip_themes');
 
 		// Change execution folder.
 		if (!\is_dir($projectRootPath)) {
