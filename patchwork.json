@@ -4,6 +4,7 @@
     "system",
     "function_exists",
     "file_get_contents",
-    "file_put_contents"
+    "file_put_contents",
+    "file_exists"
   ]
 }
