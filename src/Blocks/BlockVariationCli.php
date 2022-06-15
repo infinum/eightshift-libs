@@ -47,20 +47,6 @@ class BlockVariationCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'name' => 'card',
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
@@ -68,7 +54,7 @@ class BlockVariationCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'name' => 'button',
+			'name' => 'button-block',
 		];
 	}
 
@@ -124,22 +110,21 @@ class BlockVariationCli extends AbstractCli
 		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
 		$sourcePath = "{$sourcePathFolder}{$name}";
 
-		if (!\getenv('ES_TEST')) {
-			$destinationPath = $root . $ds . $path;
-		} else {
-			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
-		}
+		$destinationPath = "{$root}{$ds}{$path}";
+
+		var_dump(file_exists($sourcePath));
 
 		// Source doesn't exist.
 		if (!\file_exists($sourcePath)) {
 			$nameList = '';
-			$filesList = \scandir($sourcePathFolder);
 
-			if (!$filesList) {
-				self::cliError("The folder in the '{$sourcePath}' seems to be empty.");
+			if (!\is_dir($sourcePathFolder)) {
+				self::cliError("The variation source folder is missing!");
 			}
 
-			foreach (\array_diff((array)$filesList, ['..', '.']) as $item) {
+			$filesList = \array_diff(\scandir($sourcePathFolder), ['..', '.']);
+
+			foreach ($filesList as $item) {
 				$nameList .= "- {$item} \n";
 			}
 

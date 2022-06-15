@@ -34,7 +34,7 @@ afterEach(function () {
 
 test('Custom command CLI command will correctly copy the Custom command class with defaults', function () {
 	$customCommand = $this->customCommand;
-	$customCommand([], $customCommand->getDevelopArgs([]));
+	$customCommand([], $customCommand->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$customCommand = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/WpCli/TestWpCli.php');

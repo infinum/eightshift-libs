@@ -36,7 +36,7 @@ afterEach(function () {
 
 	$mock = $componentMock->getMock();
 
-	$mock([], [$this->component->getDevelopArgs([])]);
+	$mock([], [$this->component->getDefaultArgs()]);
 
 	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button/button.php';
 

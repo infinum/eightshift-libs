@@ -34,7 +34,7 @@ afterEach(function () {
 
 test('Custom acf meta CLI command will correctly copy the ACF meta class with defaults', function () {
 	$meta = $this->customMeta;
-	$meta([], $meta->getDevelopArgs([]));
+	$meta([], $meta->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMeta = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/CustomMeta/TitleAcfMeta.php');

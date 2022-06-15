@@ -46,24 +46,6 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'title' => 'Test Reusable Blocks',
-			'menu_title' => 'Test Reusable Blocks',
-			'capability' => 'test_edit_posts',
-			'menu_icon' => 'dashicons-editor-generic',
-			'menu_position' => 100,
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>

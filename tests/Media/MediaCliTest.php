@@ -20,7 +20,7 @@ afterEach(function () {
 
 test('Media CLI command will correctly copy the Media class with defaults', function () {
 	$mock = $this->mediaCli;
-	$mock([], $mock->getDevelopArgs([]));
+	$mock([], $mock->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedMedia = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Media/Media.php');

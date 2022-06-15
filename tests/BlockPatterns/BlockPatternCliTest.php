@@ -24,7 +24,7 @@ afterEach(function () {
 
 test('Block pattern CLI command will correctly copy the Block Pattern class with defaults', function () {
 	$blockPattern = $this->blockPattern;
-	$blockPattern([], $this->blockPattern->getDefaultArgs([]));
+	$blockPattern([], $this->blockPattern->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$output = \file_get_contents(getCliOutputPath('src/BlockPatterns/ExampleTitleBlockPattern.php'));
@@ -104,7 +104,16 @@ test('Block pattern CLI command will generate a name from title if "name" argume
 	);
 });
 
+test('getDoc will return correct array', function () {
+	$docs = $this->import->getDoc();
 
-// test('Block Pattern documentation is correct', function () {
-// 	expect($this->blockPattern->getDoc())->toBeArray();
-// });
+	expect($docs)
+		->toBeArray()
+		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
+		->and(count($docs['synopsis']))->toEqual(4)
+		->and($docs['synopsis'][0]['name'])->toEqual('title')
+		->and($docs['synopsis'][1]['name'])->toEqual('name')
+		->and($docs['synopsis'][2]['name'])->toEqual('description')
+		->and($docs['synopsis'][3]['name'])->toEqual('content')
+		->and($docs['synopsis'][4]['name'])->toEqual('description');
+});

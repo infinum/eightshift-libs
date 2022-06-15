@@ -33,7 +33,7 @@ afterEach(function () {
 
 test('Custom enqueue theme CLI command will correctly copy the Enqueue Theme class', function () {
 	$theme = $this->enqueueTheme;
-	$theme([], $theme->getDevelopArgs([]));
+	$theme([], $theme->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedTheme = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Theme/EnqueueTheme.php');

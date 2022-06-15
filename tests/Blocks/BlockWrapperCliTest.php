@@ -43,7 +43,7 @@ afterEach(function () {
 
 	$mock = $wrapperMock->getMock();
 
-	$mock([], [$this->wrapper->getDevelopArgs([])]);
+	$mock([], [$this->wrapper->getDefaultArgs()]);
 
 	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/wrapper.php';
 

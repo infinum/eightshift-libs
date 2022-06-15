@@ -46,20 +46,6 @@ class AcfMetaCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'name' => 'title',
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>

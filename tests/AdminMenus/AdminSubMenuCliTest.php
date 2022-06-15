@@ -19,7 +19,7 @@ afterEach(function () {
 
 test('Admin submenu CLI command will correctly copy the admin menu example class with defaults', function () {
 	$mock = $this->adminSubMenuCli;
-	$mock([], $mock->getDevelopArgs([]));
+	$mock([], $mock->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/TestAdminTitleAdminSubMenu.php');

@@ -46,25 +46,6 @@ class AdminMenuCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'title' => 'Test Title',
-			'menu_title' => 'Test Menu Title',
-			'capability' => 'test_edit_posts',
-			'menu_slug' => 'test_title',
-			'menu_icon' => 'dashicons-admin-media',
-			'menu_position' => 50,
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>

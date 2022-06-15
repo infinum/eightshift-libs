@@ -167,27 +167,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments used in development debugging.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		$output = [];
-
-		$i = 1;
-		foreach ($this->getDefaultArgs() as $key => $value) {
-			$output[$key] = $args[$i] ?? $value;
-
-			$i++;
-		}
-
-		return $output;
-	}
-
-	/**
 	 * Define default props for command.
 	 *
 	 * @return array<string, int|string|boolean>
@@ -410,11 +389,11 @@ abstract class AbstractCli implements CliInterface
 	{
 		$ds = \DIRECTORY_SEPARATOR;
 
-		if (\function_exists('\add_action') && !\getenv('ES_TEST')) {
-			$root = $this->getProjectRootPath();
-		} else {
-			$root = "{$this->getProjectRootPath(true)}{$ds}cliOutput";
-		}
+		$root = $this->getProjectRootPath();
+		// if (\function_exists('\add_action') && !\getenv('ES_TEST')) {
+		// } else {
+		// 	$root = "{$this->getProjectRootPath(true)}{$ds}cliOutput";
+		// }
 
 		$root = \rtrim($root, $ds);
 		$root = \trim($root, $ds);

@@ -33,7 +33,7 @@ afterEach(function () {
 
 test('Services CLI command will correctly copy the Services class with defaults', function () {
 	$services = $this->services;
-	$services([], $services->getDevelopArgs([]));
+	$services([], $services->getDefaultArgs());
 
 	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/TestFolder/TMP/TestTest.php';
 

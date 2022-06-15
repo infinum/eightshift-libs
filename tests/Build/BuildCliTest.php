@@ -56,13 +56,3 @@ test('Build CLI will correctly copy the build script to a given folder', functio
 test('Build CLI documentation is correct', function () {
 	expect($this->buildCli->getDoc())->toBeArray();
 });
-
-test('getDevelopArgs correctly returns arguments', function() {
-	$buildCli = $this->buildCli;
-
-	$arguments = $buildCli->getDevelopArgs([]);
-
-	$this->assertIsArray($arguments);
-	$this->assertArrayHasKey('root', $arguments);
-	$this->assertSame($arguments['root'], './');
-});

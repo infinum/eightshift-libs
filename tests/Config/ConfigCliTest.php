@@ -34,7 +34,7 @@ afterEach(function () {
 
 test('Custom acf meta CLI command will correctly copy the Config class with defaults', function () {
 	$config = $this->config;
-	$config([], $config->getDevelopArgs([]));
+	$config([], $config->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedConfig = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Config/Config.php');

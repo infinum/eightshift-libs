@@ -35,7 +35,7 @@ test('Block CLI command will correctly copy the Block class with defaults', func
 
 	$mock = $blockMock->getMock();
 
-	$mock([], [$this->block->getDevelopArgs([])]);
+	$mock([], [$this->block->getDefaultArgs()]);
 
 	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button/button.php';
 

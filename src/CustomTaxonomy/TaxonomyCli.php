@@ -46,24 +46,6 @@ class TaxonomyCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'label' => 'Location',
-			'slug' => 'location',
-			'rest_endpoint_slug' => 'locations',
-			'post_type_slug' => 'post',
-			'plural_label' => 'Locations',
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
@@ -72,10 +54,10 @@ class TaxonomyCli extends AbstractCli
 	{
 		return [
 			'label' => 'Location',
+			'plural_label' => 'Locations',
 			'slug' => 'location',
 			'rest_endpoint_slug' => 'locations',
 			'post_type_slug' => 'post',
-			'plural_label' => 'Locations',
 		];
 	}
 
@@ -93,6 +75,12 @@ class TaxonomyCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom taxonomy to show in WP admin.',
+					'optional' => false,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'plural_label',
+					'description' => 'The label of the custom taxonomy to show in WP admin but as a plural version.',
 					'optional' => false,
 				],
 				[
@@ -137,10 +125,10 @@ class TaxonomyCli extends AbstractCli
 	{
 		// Get Props.
 		$label = $this->getArg($assocArgs, 'label');
+		$pluralLabel = $this->getArg($assocArgs, 'plural_label');
 		$slug = $this->prepareSlug($this->getArg($assocArgs, 'slug'));
 		$restEndpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'rest_endpoint_slug'));
 		$postTypeSlug = $this->prepareSlug($this->getArg($assocArgs, 'post_type_slug'));
-		$pluralLabel = $this->getArg($assocArgs, 'plural_label');
 
 		// Get full class name.
 		$className = $this->getFileName($slug);

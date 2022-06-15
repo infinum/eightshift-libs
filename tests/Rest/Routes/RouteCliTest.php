@@ -39,7 +39,7 @@ afterEach(function () {
 
 test('REST route CLI command will correctly copy the field class with defaults', function () {
 	$route = $this->route;
-	$route([], $route->getDevelopArgs([]));
+	$route([], $route->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Routes/TestRoute.php');

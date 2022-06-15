@@ -182,8 +182,9 @@ function setAfterEach($delete = true) {
  */
 function deleteCliOutput(string $dir = '') : void
 {
+	$sep = \DIRECTORY_SEPARATOR;
 	if (!$dir) {
-		$dir = \dirname(__FILE__, 2) . '/cliOutput';
+		$dir = \dirname(__FILE__, 2) . "{$sep}cliOutput";
 	}
 
 	if (!\is_dir($dir)) {
@@ -213,7 +214,14 @@ function deleteCliOutput(string $dir = '') : void
  */
 function getDataPath(string $path = ''): string
 {
-	return __DIR__ . "/data/{$path}";
+	$sep = \DIRECTORY_SEPARATOR;
+	$internalPath = __DIR__ . "{$sep}data";
+
+	if ($path) {
+		return "{$internalPath}{$sep}{$path}";
+	}
+
+	return $internalPath;
 }
 
 /**
@@ -225,7 +233,60 @@ function getDataPath(string $path = ''): string
  */
 function getCliOutputPath(string $path = ''): string
 {
-	return \dirname(__FILE__, 2) . "/cliOutput/{$path}";
+	$sep = \DIRECTORY_SEPARATOR;
+	$internalPath = getProjectRootPath() . "{$sep}cliOutput";
+
+	if ($path) {
+		return "{$internalPath}{$sep}{$path}";
+	}
+
+	return $internalPath;
+}
+
+/**
+ * Get projects root path for mocks.
+ *
+ * @return string
+ */
+function getProjectRootPath(): string
+{
+	return \dirname(__FILE__, 2);
+}
+
+/**
+ * Get projects composer file for mocks.
+ *
+ * @return array
+ */
+function getProjectComposerFile(): array
+{
+	return [
+		'autoload' => [
+			'psr-4' => [
+				'EightshiftBoilerplate\\' => 'test',
+			],
+		]
+	];
+}
+
+/**
+ * Get file in cliOutput folder.
+ *
+ * @param string $path Path to get.
+ *
+ * @throws Exception If file is missing.
+ *
+ * @return string
+ */
+function getCliOutputFile(string $path = ''): string
+{
+	$pathFile = getCliOutputPath($path);
+
+	if (!file_exists($pathFile)) {
+		throw new Exception("File missing on this path: {$pathFile}");
+	}
+
+	return \file_get_contents($pathFile);
 }
 
 /**

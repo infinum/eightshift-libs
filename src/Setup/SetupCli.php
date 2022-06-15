@@ -47,20 +47,6 @@ class SetupCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'root' => './',
-		];
-	}
-
-	/**
 	 * Get WPCLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>

@@ -33,7 +33,7 @@ afterEach(function () {
 
 test('Setup CLI command will correctly copy the Setup class with defaults', function () {
 	$setup = $this->setup;
-	$setup([], $setup->getDevelopArgs([]));
+	$setup([], $setup->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/setup.json');

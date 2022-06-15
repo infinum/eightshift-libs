@@ -35,7 +35,7 @@ afterEach(function () {
 
 test('REST field CLI command will correctly copy the field class with defaults', function () {
 	$field = $this->field;
-	$field([], $field->getDevelopArgs([]));
+	$field([], $field->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Fields/TitleField.php');

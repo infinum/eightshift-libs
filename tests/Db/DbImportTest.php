@@ -14,19 +14,19 @@ use function Tests\getDataPath;
 beforeEach(function() {
 	setBeforeEach();
 
-	$this->import = new ImportCli('boilerplate');
+	$this->mock = new ImportCli('boilerplate');
 });
 
 afterEach(function () {
 	setAfterEach();
 
-	unset($this->import);
+	unset($this->mock);
 });
 
 //---------------------------------------------------------------------------------//
 
 test('getCommandParentName will return correct value', function () {
-	expect($this->import->getCommandParentName())
+	expect($this->mock->getCommandParentName())
 		->toBeString()
 		->toEqual(CliRun::COMMAND_NAME);
 });
@@ -34,24 +34,15 @@ test('getCommandParentName will return correct value', function () {
 //---------------------------------------------------------------------------------//
 
 test('getCommandName will return correct value', function () {
-	expect($this->import->getCommandName())
+	expect($this->mock->getCommandName())
 		->toBeString()
 		->toEqual('import');
 });
 
 //---------------------------------------------------------------------------------//
 
-test('getDevelopArgs will return correct array', function () {
-	expect($this->import->getDevelopArgs([]))
-		->toBeArray()
-		->toMatchArray([
-				'from' => 'production',
-				'to' => 'develop',
-		]);
-});
-
 test('getDefaultArgs will return correct array', function () {
-	expect($this->import->getDefaultArgs())
+	expect($this->mock->getDefaultArgs())
 		->toBeArray()
 		->toMatchArray([
 				'from' => '',
@@ -63,12 +54,11 @@ test('getDefaultArgs will return correct array', function () {
 //---------------------------------------------------------------------------------//
 
 test('getDoc will return correct array', function () {
-	$docs = $this->import->getDoc();
+	$docs = $this->mock->getDoc();
 
 	expect($docs)
 		->toBeArray()
-		->toHaveKey('longdesc')
-		->and($docs['shortdesc'])->toEqual('Run database import based on environments.')
+		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
 		->and(count($docs['synopsis']))->toEqual(2)
 		->and($docs['synopsis'][0]['name'])->toEqual('from')
 		->and($docs['synopsis'][1]['name'])->toEqual('to');
@@ -76,14 +66,28 @@ test('getDoc will return correct array', function () {
 
 //---------------------------------------------------------------------------------//
 
-test('dbImport will fails if --from parameter is not specified', function () {
+test('__invoke will log correct msg if import is success', function () {
 	$mock = mock(ImportCli::class)->makePartial();
 	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
 
-	$mock->__invoke([], []);
+	$mock->__invoke([], [
+		'from' => 'production',
+		'to' => 'develop',
+	]);
+
+	expect(\getenv('ES_CLI_SUCCESS_HAPPENED'))->toEqual('Finished! Success!');
+});
+
+test('__invoke will fail if --from parameter is not specified', function () {
+	$mock = mock(ImportCli::class)->makePartial();
+	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
+
+	$mock->__invoke([], [
+		'to' => 'develop',
+	]);
 })->throws(Exception::class, '--from parameter is mandatory. Please provide one url key from setup.json file.');
 
-test('dbImport will fails if --to parameter is not specified', function () {
+test('__invoke will fail if --to parameter is not specified', function () {
 	$mock = mock(ImportCli::class)->makePartial();
 	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
 
@@ -92,79 +96,73 @@ test('dbImport will fails if --to parameter is not specified', function () {
 	]);
 })->throws(Exception::class, '--to parameter is mandatory. Please provide one url key from setup.json file.');
 
-test('dbImport will fails if setup.json folder is missing', function () {
+test('__invoke will fail if setup.json folder is missing', function () {
 	$mock = mock(ImportCli::class)->makePartial();
 	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('missing'));
 
-	$mock->__invoke([], $mock->getDevelopArgs([]));
+	$mock->__invoke([], [
+		'from' => 'production',
+		'to' => 'develop',
+	]);
 
 })->throws(Exception::class, 'Folder doesn\'t exist on this path: ' . getDataPath('missing'));
 
-test('dbImport will fails if setup.json is missing but folder exists', function () {
+test('__invoke will fail if setup.json is missing but folder exists', function () {
 	$mock = mock(ImportCli::class)->makePartial();
 	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('src'));
 
-	$mock->__invoke([], $mock->getDevelopArgs([]));
+	$mock->__invoke([], [
+		'from' => 'production',
+		'to' => 'develop',
+	]);
 
 })->throws(Exception::class, 'setup.json is missing at this path: ' . getDataPath('src') . '/setup.json');
 
-test('dbImport will fails if setup.json is empty', function () {
+test('__invoke will fail if setup.json is empty', function () {
 	$mock = mock(ImportCli::class)->makePartial();
 	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
 
-	$mock->__invoke([], array_merge(
-		$mock->getDevelopArgs([]),
-		[
-			'fileName' => 'setup-empty.json',
-		]
-	));
+	$mock->__invoke([], [
+		'from' => 'production',
+		'to' => 'develop',
+		'fileName' => 'setup-empty.json',
+	]);
 
 })->throws(Exception::class, getDataPath('setup') . '/setup-empty.json' . ' is empty.');
 
-test('dbImport will fails if setup.json is missing url keys', function () {
+test('__invoke will fail if setup.json is missing url keys', function () {
 	$mock = mock(ImportCli::class)->makePartial();
 	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
 
-	$mock->__invoke([], array_merge(
-		$mock->getDevelopArgs([]),
-		[
-			'fileName' => 'setup-missing-urls.json',
-		]
-	));
+	$mock->__invoke([], [
+		'from' => 'production',
+		'to' => 'develop',
+		'fileName' => 'setup-missing-urls.json',
+	]);
 
 })->throws(Exception::class, 'Urls key is missing or empty.');
 
-test('dbImport will fails if setup.json is missing url from key', function () {
+test('__invoke will fail if setup.json is missing url "from" key', function () {
 	$mock = mock(ImportCli::class)->makePartial();
 	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
 
 	$mock->__invoke([], array_merge(
-		$mock->getDevelopArgs([]),
+		$mock->getDefaultArgs(),
 		[
 			'from' => 'test',
+			'to' => 'develop',
 		]
 	));
 
 })->throws(Exception::class, 'test key is missing or empty in urls.');
 
-test('dbImport will fails if setup.json is missing url to key', function () {
+test('__invoke will fail if setup.json is missing url "to" key', function () {
 	$mock = mock(ImportCli::class)->makePartial();
 	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
 
-	$mock->__invoke([], array_merge(
-		$mock->getDevelopArgs([]),
-		[
-			'to' => 'test',
-		]
-	));
+	$mock->__invoke([], [
+		'from' => 'production',
+		'to' => 'test',
+	]);
 
 })->throws(Exception::class, 'test key is missing or empty in urls.');
-
-test('dbImport will log correct msg if import is success', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
-
-	$mock->__invoke([], $mock->getDevelopArgs([]));
-
-	expect(\getenv('ES_CLI_SUCCESS_HAPPENED'))->toEqual('Finished! Success!');
-});

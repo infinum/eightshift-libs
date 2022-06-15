@@ -33,7 +33,7 @@ afterEach(function () {
 
 test('Custom Enqueue Admin CLI command will correctly copy the Enqueue Admin class', function () {
 	$admin = $this->enqueueAdmin;
-	$admin([], $admin->getDevelopArgs([]));
+	$admin([], $admin->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedAdmin = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Admin/EnqueueAdmin.php');

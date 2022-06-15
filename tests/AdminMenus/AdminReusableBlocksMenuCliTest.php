@@ -19,7 +19,7 @@ afterEach(function () {
 
 test('Admin reusable blocks menu CLI command will correctly copy the admin reusable blocks menu example class with defaults', function () {
 	$mock = $this->adminReusableBlocksMenuCli;
-	$mock([], $mock->getDevelopArgs([]));
+	$mock([], $mock->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminReusableBlocksMenu.php');

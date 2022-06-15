@@ -46,27 +46,6 @@ class PostTypeCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'label' => 'Product',
-			'slug' => 'product',
-			'rewrite_url' => 'product',
-			'rest_endpoint_slug' => 'products',
-			'capability' => 'post',
-			'menu_position' => 40,
-			'menu_icon' => 'admin-settings',
-			'plural_label' => 'Products',
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
@@ -75,13 +54,13 @@ class PostTypeCli extends AbstractCli
 	{
 		return [
 			'label' => 'Product',
+			'plural_label' => 'Products',
 			'slug' => 'product',
 			'rewrite_url' => 'product',
 			'rest_endpoint_slug' => 'products',
 			'capability' => 'post',
 			'menu_position' => 20,
 			'menu_icon' => 'admin-settings',
-			'plural_label' => 'Products',
 		];
 	}
 
@@ -100,6 +79,13 @@ class PostTypeCli extends AbstractCli
 					'name' => 'label',
 					'description' => 'The label of the custom post type to show in WP admin.',
 					'optional' => false,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'plural_label',
+					'description' => 'The plural label of the custom post type. Used for label generation. If not specified the plural will have appended s at the end of the label.', // phpcs:ignore Generic.Files.LineLength.TooLong
+					'optional' => false,
+					'default' => $this->getDefaultArg('plural_label'),
 				],
 				[
 					'type' => 'assoc',
@@ -139,13 +125,6 @@ class PostTypeCli extends AbstractCli
 					'description' => 'The default menu icon for the custom post types. Example: dashicons-analytics.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('menu_icon'),
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'plural_label',
-					'description' => 'The plural label of the custom post type. Used for label generation. If not specified the plural will have appended s at the end of the label.', // phpcs:ignore Generic.Files.LineLength.TooLong
-					'optional' => true,
-					'default' => $this->getDefaultArg('plural_label'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("

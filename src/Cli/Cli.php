@@ -240,13 +240,13 @@ class Cli
 			if (
 				\method_exists($class, 'getCommandName') &&
 				\method_exists($class, 'getCommandParentName') &&
-				\method_exists($class, 'getDevelopArgs') &&
+				\method_exists($class, 'getDefaultArgs') &&
 				\method_exists($class, '__invoke')
 			) {
 				if ("{$class->getCommandParentName()}_{$class->getCommandName()}" === $commandName) {
 					$class->__invoke(
 						[],
-						$class->getDevelopArgs($args)
+						$class->getDefaultArgs($args)
 					);
 
 					break;

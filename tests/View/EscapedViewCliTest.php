@@ -33,7 +33,7 @@ afterEach(function () {
 
 test('Escaped view command will correctly copy the EscapedView class with defaults', function () {
 	$escapedView = $this->escapedView;
-	$escapedView([], $escapedView->getDevelopArgs([]));
+	$escapedView([], $escapedView->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedEscapedView = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/View/EscapedView.php');

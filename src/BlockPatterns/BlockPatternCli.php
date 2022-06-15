@@ -47,23 +47,6 @@ class BlockPatternCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'title' => 'Something',
-			'name' => 'eightshift-boilerplate/something',
-			'description' => 'This is an example block pattern',
-			'content' => '',
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>

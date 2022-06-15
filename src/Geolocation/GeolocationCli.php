@@ -48,20 +48,6 @@ class GeolocationCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'cookie_name' => 'es-geolocation-test',
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, mixed>

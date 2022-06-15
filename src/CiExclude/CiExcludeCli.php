@@ -46,22 +46,6 @@ class CiExcludeCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'root' => './',
-			'project_name' => 'eightshift-boilerplate',
-			'project_type' => 'themes',
-		];
-	}
-
-	/**
 	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
@@ -131,11 +115,13 @@ class CiExcludeCli extends AbstractCli
 	{
 		// Get Props.
 		$root = $this->getArg($assocArgs, 'root');
+		$projectName = $this->getArg($assocArgs, 'project_name');
+		$projectType = $this->getArg($assocArgs, 'project_type');
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, 'ci-exclude.txt')
-			->renameProjectName($assocArgs)
-			->renameProjectType($assocArgs)
+			->searchReplaceString($this->getArgTemplate('project_name'), $projectName)
+			->searchReplaceString($this->getArgTemplate('project_type'), $projectType)
 			->outputWrite($root, 'ci-exclude.txt', $assocArgs);
 	}
 }
