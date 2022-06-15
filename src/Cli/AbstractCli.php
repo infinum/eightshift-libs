@@ -885,11 +885,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$output = \dirname(__DIR__, 8);
 
-		if ($isDev) {
-			$output = \dirname(__DIR__, 2);
-		}
-
-		if (\getenv('ES_TEST')) {
+		if ($isDev || \getenv('ES_TEST')) {
 			$output = \dirname(__DIR__, 2);
 		}
 
