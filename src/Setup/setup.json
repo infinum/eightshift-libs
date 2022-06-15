@@ -7,13 +7,20 @@
   "core": "5.9.1",
   "plugins": {
     "core": {
-      "contact-form-7": "5.1.8"
+      "contact-form-7": "5.1.8",
+      "query-monitor": "3.6.7"
     },
     "github": {
       "infinum/eightshift-forms": "1.0.0"
+    },
+    "paid": {
+      "wp-rocket": "3.11.2"
+    },
+    "folder": {
+      "elementor-pro": "3.7.0"
     }
   },
   "themes": {
-    "twentytwentyone": "1.0"
+    "twentytwentyone": "1.5"
   }
 }
