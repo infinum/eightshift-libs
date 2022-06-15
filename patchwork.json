@@ -1,9 +1,10 @@
 {
-	"redefinable-internals": [
-		"shell_exec",
-		"system",
-		"function_exists",
-		"file_get_contents",
-		"file_put_contents"
-	]
+  "redefinable-internals": [
+    "shell_exec",
+    "system",
+    "function_exists",
+    "file_get_contents",
+    "file_put_contents",
+    "file_exists"
+  ]
 }
