@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Setup.
+ * Class that registers WPCLI command for Update.
  *
  * @package EightshiftLibs\Setup
  */
@@ -160,7 +160,6 @@ class UpdateCli extends AbstractCli
 			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		}
 	}
-
 
 	/**
 	 * Update project and setup all plugins, themes and core
