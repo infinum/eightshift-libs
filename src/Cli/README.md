@@ -1,3 +1,4 @@
+
 # WP-CLI
 
 We created an WP-CLI commands for all the features of the Eightshift-Libs.
@@ -11,7 +12,7 @@ You can run this commands in development mode.
 
 ### Run all commands:
 
-```wp eval-file bin/cli.php develop_show_all --skip-wordpress```
+```wp eval-file bin/cli.php develop_run_all --skip-wordpress```
 
 ### Reset output:
 
