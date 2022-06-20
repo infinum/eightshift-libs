@@ -172,6 +172,7 @@ class UpdateCli extends AbstractCli
 	 */
 	private function setup(string $projectRootPath, array $args = [], string $setupFile = 'setup.json')
 	{
+		// TODO: Replace this method with parts from the install CLI command.
 		// Check if optional parameters exists.
 		$skipCore = $this->getArg($args, 'skip_core');
 		$skipPlugins = $this->getArg($args, 'skip_plugins');
@@ -238,7 +239,7 @@ class UpdateCli extends AbstractCli
 					// Install github plugins.
 					if (!empty($pluginsGithub)) {
 						foreach ($pluginsGithub as $name => $version) {
-							$shortName = CliHelpers::getGithubPluginName($name);
+							$shortName = $this->getGithubPluginName($name);
 							$filePath = \getcwd() . "/{$shortName}.zip";
 							$releaseZip = \file_get_contents("https://github.com/{$name}/releases/download/{$version}/release.zip"); // phpcs:ignore WordPress.WP.AlternativeFunctions
 							\file_put_contents($filePath, $releaseZip); // phpcs:ignore WordPress.WP.AlternativeFunctions
@@ -270,5 +271,24 @@ class UpdateCli extends AbstractCli
 
 		WP_CLI::success('All commands are finished.');
 		WP_CLI::log('--------------------------------------------------');
+	}
+
+	/**
+	 * Extract the GitHub plugin name from the identifier
+	 *
+	 * @param string $name Identifier of the plugin from the setup.json file.
+	 *
+	 * @return string Plugin slug.
+	 */
+	private function getGithubPluginName(string $name): string
+	{
+		// If the plugin doesn't have a namespace, we're good, just return it.
+		if (\strpos($name, '/') === false) {
+			return $name;
+		}
+
+		$splitName = explode('/', $name);
+
+		return $splitName[count($splitName) - 1];
 	}
 }
