@@ -38,23 +38,4 @@ trait CliHelpers
 			// @codeCoverageIgnoreEnd
 		}
 	}
-
-	/**
-	 * Returns the name of the github plugin without slashes. For example converts "infinum/eightshift-forms" to "eightshift-forms"
-	 *
-	 * @param string $name Name of the github package.
-	 * @return string
-	 */
-	public static function getGithubPluginName(string $name): string
-	{
-
-		// If the plugin doesn't have a namespace, we're good, just return it.
-		if (\strpos($name, '/') === false) {
-			return $name;
-		}
-
-		$splitName = \explode('/', $name);
-
-		return $splitName[\count($splitName) - 1];
-	}
 }
