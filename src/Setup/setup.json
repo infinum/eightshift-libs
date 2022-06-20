@@ -11,10 +11,11 @@
       "query-monitor": "3.6.7"
     },
     "github": {
-      "infinum/eightshift-forms": "1.0.0"
+      "infinum/eightshift-forms": "1.2.4"
     },
     "paid": {
-      "wp-rocket": "3.11.2"
+      "wp-rocket": "3.11.2",
+      "advanced-custom-fields-pro": "5.10.2"
     },
     "folder": {
       "elementor-pro": "3.7.0"
