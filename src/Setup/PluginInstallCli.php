@@ -11,11 +11,9 @@ declare(strict_types=1);
 namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\CliHelpers;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Exception\FileMissing;
 use WP_CLI;
-use WP_CLI\ExitException;
 
 /**
  * Class PluginInstallCli
@@ -186,13 +184,20 @@ class PluginInstallCli extends AbstractCli
 
 		$setupFile = $this->getProjectConfigRootPath() . '/setup.json';
 
-		if (\getenv('ES_TEST') !== false) {
+		if (\getenv('ES_TEST') === '1') {
 			$setupFile = dirname(__FILE__) . '/setup.json';
 		}
 
 		if (!\file_exists($setupFile)) {
 			throw FileMissing::missingFileOnPath($setupFile);
 		}
+
+		$cliOptions = [
+			'return' => true,
+			'parse' => 'json',
+			'launch' => false,
+			'exit_error' => true,
+		];
 
 		$setup = json_decode((string)\file_get_contents($setupFile), true);
 
@@ -202,12 +207,7 @@ class PluginInstallCli extends AbstractCli
 		$folderSetupPlugins = $setup['plugins']['folder'] ?? [];
 
 		// Get installed plugins.
-		$installedPluginsList = WP_CLI::runcommand('plugin list --field=name --format=json', [
-			'return' => true,
-			'parse' => 'json',
-			'launch' => false,
-			'exit_error' => true,
-		]);
+		$installedPluginsList = WP_CLI::runcommand('plugin list --field=name --format=json', $cliOptions);
 
 		$installedPlugins = json_decode($installedPluginsList, true);
 
@@ -215,7 +215,7 @@ class PluginInstallCli extends AbstractCli
 		$ghPluginsRepo = [];
 		if (!empty($ghSetupPlugins)) {
 			// We need to replace the package notifier from GH, because wp plugin list returns just the plugin name.
-			// But we also need to have some pointer about the package/
+			// But we also need to have some pointer about the package.
 			foreach ($ghSetupPlugins as $ghPluginName => $ghPluginVersion) {
 				$cleanedUpName = str_replace('/', '', strstr($ghPluginName, '/'));
 
@@ -240,33 +240,32 @@ class PluginInstallCli extends AbstractCli
 
 		WP_CLI::log('Check plugins');
 
+		foreach ($pluginsToRemove as $pluginToRemove) {
+			WP_CLI::runcommand("plugin delete {$pluginToRemove}", $cliOptions);
+			WP_CLI::log("Plugin {$pluginToRemove} removed");
+		}
 
-//		foreach ($pluginsToRemove as $pluginToRemove) {
-//			run("~/bin/wp plugin delete {$pluginToRemove}");
-//			writeln("<info>Plugin {$pluginToRemove} removed</info>");
-//		}
-//
-//		foreach ($pluginsToAdd as $pluginToAdd) {
-//			if (isset(array_flip($gitHubPlugins)[$pluginToAdd])) {
-//				$version = $ghPlugins[$pluginToAdd];
-//				$repoName = $ghPluginsRepo[$pluginToAdd];
-//
-//				installGHPlugin($repoName, $version);
-//			} elseif (isset(array_flip($paidPlugins)[$pluginToAdd])) {
-//				$version = $paidSetupPlugins[$pluginToAdd];
-//
-//				installPaidPlugin($pluginToAdd, $version);
-//			} elseif (isset(array_flip($folderPlugins)[$pluginToAdd])) {
-//				continue;
-//			} else {
-//				run("~/bin/wp plugin install {$pluginToAdd} --force");
-//			}
-//
-//			writeln("<info>Plugin {$pluginToAdd} installed</info>");
-//		}
+		foreach ($pluginsToAdd as $pluginToAdd) {
+			if (isset(array_flip($gitHubPlugins)[$pluginToAdd])) {
+				$version = $ghPlugins[$pluginToAdd];
+				$repoName = $ghPluginsRepo[$pluginToAdd];
+
+				$this->installGHPlugin($repoName, $version);
+			} elseif (isset(array_flip($paidPlugins)[$pluginToAdd])) {
+				$version = $paidSetupPlugins[$pluginToAdd];
+
+				$this->installPaidPlugin($pluginToAdd, $version);
+			} elseif (isset(array_flip($folderPlugins)[$pluginToAdd])) {
+				continue;
+			} else {
+				WP_CLI::runcommand("plugin install {$pluginToAdd} --force", $cliOptions);
+			}
+
+			WP_CLI::log("Plugin {$pluginToAdd} installed");
+		}
 
 		// Check plugin versions and update if needed.
-		$currentlyInstalledPlugins = run('~/bin/wp plugin list --fields=name,version --format=json');
+		$currentlyInstalledPlugins = WP_CLI::runcommand('plugin list --fields=name,version --format=json', $cliOptions);
 		$currentlyInstalledPlugins = json_decode($currentlyInstalledPlugins, true);
 
 		$currentVersions = [];
@@ -289,75 +288,83 @@ class PluginInstallCli extends AbstractCli
 				// The only way to update is to reinstall.
 				$repoName = $ghPluginsRepo[$pluginName];
 
-				installGHPlugin($repoName, $setupPluginVersion);
+				$this->installGHPlugin($repoName, $setupPluginVersion);
 			} elseif (isset($paidSetupPlugins[$pluginName])) {
-				installPaidPlugin($pluginName, $setupPluginVersion);
+				$this->installPaidPlugin($pluginName, $setupPluginVersion);
 			} else {
-				run("~/bin/wp plugin update {$pluginName} --version={$setupPluginVersion}");
+				WP_CLI::runcommand("plugin update {$pluginName} --version={$setupPluginVersion}");
 			}
 
-			writeln("<info>Plugin {$pluginName} updated</info>");
+			WP_CLI::log("Plugin {$pluginName} updated");
 		}
-
-
-
 	}
 
-//	/**
-//	 * Extract the GitHub plugin name from the identifier
-//	 *
-//	 * @param string $name Identifier of the plugin from the setup.json file.
-//	 *
-//	 * @return string Plugin slug.
-//	 */
-//	private function getGithubPluginName(string $name): string
-//	{
-//		// If the plugin doesn't have a namespace, we're good, just return it.
-//		if (\strpos($name, '/') === false) {
-//			return $name;
-//		}
-//
-//		$splitName = explode('/', $name);
-//
-//		return $splitName[count($splitName) - 1];
-//	}
-//
-//	/**
-//	 * Helper used to install the plugin from GitHub
-//	 *
-//	 * Will install the plugin, and rename the folder so it's not hashed.
-//	 *
-//	 * @param string $name Plugin slug.
-//	 *
-//	 * @param string $version Plugin version number.
-//	 */
-//	private function installGHPlugin(string $name, string $version) {
-//		$shortName = $this->getGithubPluginName($name);
-//
-////		run("~/bin/wp plugin install \"https://github.com/{$name}/releases/download/{$version}/release.zip\" --force");
-////		run("for f in ./wp-content/plugins/release*/; do rsync -avh --delete \"\$f\" \"./wp-content/plugins/{$shortName}/\" && rm -rf \"\$f\"; done"); // Rename the plugin folder.
-//	}
-//
-//	/**
-//	 * Helper to install paid plugins
-//	 *
-//	 * If the URL of the paid plugin has a version placeholder
-//	 * will replace the placeholder with the version set in the setup.json.
-//	 *
-//	 * @param string $name Plugin slug.
-//	 * @param string $version Plugin version.
-//	 */
-//	private function installPaidPlugin(string $name, string $version) {
-//		// Check if env.json exist
-//
-//		$plugin = $secrets[$name];
-//
-//		if (strpos($plugin, 'VERSION') !== false) {
-//			$pluginUrl = str_replace('VERSION', $version, $plugin);
-//		} else {
-//			$pluginUrl = $plugin;
-//		}
-//
-//		// Install plugin.
-//	}
+	/**
+	 * Extract the GitHub plugin name from the identifier
+	 *
+	 * @param string $name Identifier of the plugin from the setup.json file.
+	 *
+	 * @return string Plugin slug.
+	 */
+	private function getGithubPluginName(string $name): string
+	{
+		// If the plugin doesn't have a namespace, we're good, just return it.
+		if (\strpos($name, '/') === false) {
+			return $name;
+		}
+
+		$splitName = explode('/', $name);
+
+		return $splitName[count($splitName) - 1];
+	}
+
+	/**
+	 * Helper used to install the plugin from GitHub
+	 *
+	 * Will install the plugin, and rename the folder so it's not hashed.
+	 *
+	 * @param string $name Plugin slug.
+	 * @param string $version Plugin version number.
+	 */
+	private function installGHPlugin(string $name, string $version) {
+		$shortName = $this->getGithubPluginName($name);
+
+		WP_CLI::runcommand("plugin install \"https://github.com/{$name}/releases/download/{$version}/release.zip\" --force");
+		WP_CLI::runcommand("for f in ./wp-content/plugins/release*/; do rsync -avh --delete \"\$f\" \"./wp-content/plugins/{$shortName}/\" && rm -rf \"\$f\"; done"); // Rename the plugin folder.
+	}
+
+	/**
+	 * Helper to install paid plugins
+	 *
+	 * If the URL of the paid plugin has a version placeholder
+	 * will replace the placeholder with the version set in the setup.json.
+	 *
+	 * @param string $name Plugin slug.
+	 * @param string $version Plugin version.
+	 */
+	private function installPaidPlugin(string $name, string $version) {
+		// Check if env.json exist.
+		$envFile = $this->getProjectConfigRootPath() . '/env.json';
+
+		if (\getenv('ES_TEST') === '1') {
+			$envFile = dirname(__DIR__, 2) . '/tests/data/env.json';
+		}
+
+		if (!\file_exists($envFile)) {
+			throw FileMissing::missingFileOnPath($envFile);
+		}
+
+		$envData = json_decode((string)\file_get_contents($envFile), true);
+
+		$plugin = $envData[$name];
+
+		if (strpos($plugin, 'VERSION') !== false) {
+			$pluginUrl = str_replace('VERSION', $version, $plugin);
+		} else {
+			$pluginUrl = $plugin;
+		}
+
+		// Install plugin.
+		WP_CLI::runcommand("~/bin/wp plugin install \"{$pluginUrl}\" --force");
+	}
 }
