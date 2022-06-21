@@ -365,6 +365,6 @@ class PluginInstallCli extends AbstractCli
 		}
 
 		// Install plugin.
-		WP_CLI::runcommand("~/bin/wp plugin install \"{$pluginUrl}\" --force");
+		WP_CLI::runcommand("plugin install \"{$pluginUrl}\" --force");
 	}
 }
