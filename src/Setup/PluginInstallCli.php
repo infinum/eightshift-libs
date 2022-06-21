@@ -20,6 +20,19 @@ use WP_CLI;
  */
 class PluginInstallCli extends AbstractCli
 {
+
+	/**
+	 * Default CLI options
+	 *
+	 * @var array<string, string|boolean>
+	 */
+	private $cliOptions = [
+		'return' => true,
+		'parse' => 'json',
+		'launch' => false,
+		'exit_error' => true,
+	];
+
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -51,7 +64,6 @@ class PluginInstallCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'install-all' => 'false',
 			'install-core' => 'false',
 			'install-github' => 'false',
 			'install-paid' => 'false',
@@ -69,17 +81,6 @@ class PluginInstallCli extends AbstractCli
 		return [
 			'shortdesc' => 'Install or update the WordPress plugins based on the setup.json file.',
 			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'install-all',
-					'description' => 'If you want to install all the plugins from the setup.json file.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('install-all'),
-					'options' => [
-						'true',
-						'false',
-					],
-				],
 				[
 					'type' => 'assoc',
 					'name' => 'install-core',
@@ -146,13 +147,13 @@ class PluginInstallCli extends AbstractCli
 
 				## EXAMPLES
 
-				# Install only the wp.org plugins:
+				# Install/update all the plugins:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 
-				# Update all the plugins:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --install-all'
+				# Install/update only the wp.org plugins:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --install-core'
 				
-				# Install only the paid plugins:
+				# Install/update only the paid plugins:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --install-paid'
 			"
 			),
@@ -167,62 +168,98 @@ class PluginInstallCli extends AbstractCli
 		 * toggle the behavior of the CLI command.
 		 */
 		if (\in_array('install-core', $assocArgs)) {
-			$corePluginInstall = true;
+			$this->installOnlyWpOrgPlugins();
+			return;
 		}
 
 		if (\in_array('install-github', $assocArgs)) {
-			$githubPluginInstall = true;
+			$this->installOnlyGitHubPlugins();
+			return;
 		}
 
 		if (\in_array('install-paid', $assocArgs)) {
-			$paidPluginInstall = true;
+			$this->installOnlyPaidPlugins();
+			return;
 		}
 
 		if (\in_array('install-folder', $assocArgs)) {
-			$folderPluginInstall = true;
+			$this->installOnlyFolderPlugins();
+			return;
 		}
 
-		$setupFile = $this->getProjectConfigRootPath() . '/setup.json';
+		$this->installAllPlugins();
+	}
 
-		if (\getenv('ES_TEST') === '1') {
-			$setupFile = dirname(__FILE__) . '/setup.json';
+
+	private function installOnlyWpOrgPlugins()
+	{
+		$coreSetupPlugins = $setup['plugins']['core'] ?? [];
+
+		if (empty($coreSetupPlugins)) {
+			WP_CLI::log('There are no wordpress.org plugins to install.');
+			return;
 		}
 
-		if (!\file_exists($setupFile)) {
-			throw FileMissing::missingFileOnPath($setupFile);
+		$installedPlugins = $this->getCurrentlyInstalledPlugins();
+
+
+		return;
+	}
+
+	private function installOnlyGitHubPlugins()
+	{
+		$ghSetupPlugins = $setup['plugins']['github'] ?? [];
+
+		if (empty($ghSetupPlugins)) {
+			WP_CLI::log('There are no GitHub plugins to install.');
+			return;
 		}
 
-		$cliOptions = [
-			'return' => true,
-			'parse' => 'json',
-			'launch' => false,
-			'exit_error' => true,
-		];
+		list($ghPlugins, $ghPluginsRepo) = $this->getGitHubPluginsInfo($ghSetupPlugins);
 
-		$setup = json_decode((string)\file_get_contents($setupFile), true);
+
+		return;
+	}
+
+	private function installOnlyPaidPlugins()
+	{
+		$paidSetupPlugins = $setup['plugins']['paid'] ?? [];
+
+		if (empty($paidSetupPlugins)) {
+			WP_CLI::log('There are no paid plugins to install.');
+			return;
+		}
+
+		return;
+	}
+
+	private function installOnlyFolderPlugins()
+	{
+		$folderSetupPlugins = $setup['plugins']['folder'] ?? [];
+
+		if (empty($folderSetupPlugins)) {
+			WP_CLI::log('There are no plugins from the repository folder to install.');
+			return;
+		}
+
+		return;
+	}
+
+	private function installAllPlugins()
+	{
+		$setup = $this->getSetupFile();
 
 		$coreSetupPlugins = $setup['plugins']['core'] ?? [];
 		$ghSetupPlugins = $setup['plugins']['github'] ?? [];
 		$paidSetupPlugins = $setup['plugins']['paid'] ?? [];
 		$folderSetupPlugins = $setup['plugins']['folder'] ?? [];
 
-		// Get installed plugins.
-		$installedPluginsList = WP_CLI::runcommand('plugin list --field=name --format=json', $cliOptions);
+		// We only need a list of plugin names, so we'll filter the above return value.
+		$installedPlugins = array_map(function($pluginElement){
+			return $pluginElement['name'];
+		}, $this->getCurrentlyInstalledPlugins());
 
-		$installedPlugins = json_decode($installedPluginsList, true);
-
-		$ghPlugins = [];
-		$ghPluginsRepo = [];
-		if (!empty($ghSetupPlugins)) {
-			// We need to replace the package notifier from GH, because wp plugin list returns just the plugin name.
-			// But we also need to have some pointer about the package.
-			foreach ($ghSetupPlugins as $ghPluginName => $ghPluginVersion) {
-				$cleanedUpName = str_replace('/', '', strstr($ghPluginName, '/'));
-
-				$ghPlugins[$cleanedUpName] = $ghPluginVersion;
-				$ghPluginsRepo[$cleanedUpName] = $ghPluginName;
-			}
-		}
+		list($ghPlugins, $ghPluginsRepo) = $this->getGitHubPluginsInfo($ghSetupPlugins);
 
 		$gitHubPlugins = array_keys($ghPlugins); // Get just the names of the plugins.
 		$paidPlugins = array_keys($paidSetupPlugins); // Get just the names of the plugins.
@@ -241,7 +278,7 @@ class PluginInstallCli extends AbstractCli
 		WP_CLI::log('Check plugins');
 
 		foreach ($pluginsToRemove as $pluginToRemove) {
-			WP_CLI::runcommand("plugin delete {$pluginToRemove}", $cliOptions);
+			WP_CLI::runcommand("plugin delete {$pluginToRemove}", $this->cliOptions);
 			WP_CLI::log("Plugin {$pluginToRemove} removed");
 		}
 
@@ -258,15 +295,14 @@ class PluginInstallCli extends AbstractCli
 			} elseif (isset(array_flip($folderPlugins)[$pluginToAdd])) {
 				continue;
 			} else {
-				WP_CLI::runcommand("plugin install {$pluginToAdd} --force", $cliOptions);
+				WP_CLI::runcommand("plugin install {$pluginToAdd} --force", $this->cliOptions);
 			}
 
-			WP_CLI::log("Plugin {$pluginToAdd} installed");
+			WP_CLI::success("Plugin {$pluginToAdd} installed");
 		}
 
 		// Check plugin versions and update if needed.
-		$currentlyInstalledPlugins = WP_CLI::runcommand('plugin list --fields=name,version --format=json', $cliOptions);
-		$currentlyInstalledPlugins = json_decode($currentlyInstalledPlugins, true);
+		$currentlyInstalledPlugins = $this->getCurrentlyInstalledPlugins('name,version');
 
 		$currentVersions = [];
 
@@ -295,7 +331,7 @@ class PluginInstallCli extends AbstractCli
 				WP_CLI::runcommand("plugin update {$pluginName} --version={$setupPluginVersion}");
 			}
 
-			WP_CLI::log("Plugin {$pluginName} updated");
+			WP_CLI::success("Plugin {$pluginName} updated");
 		}
 	}
 
@@ -366,5 +402,62 @@ class PluginInstallCli extends AbstractCli
 
 		// Install plugin.
 		WP_CLI::runcommand("plugin install \"{$pluginUrl}\" --force");
+	}
+
+	private function getSetupFile()
+	{
+		$setupFile = $this->getProjectConfigRootPath() . '/setup.json';
+
+		if (\getenv('ES_TEST') === '1') {
+			$setupFile = dirname(__FILE__) . '/setup.json';
+		}
+
+		if (!\file_exists($setupFile)) {
+			throw FileMissing::missingFileOnPath($setupFile);
+		}
+
+		return json_decode((string)\file_get_contents($setupFile), true);
+	}
+
+	/**
+	 * @param string $fields Comma separated list of fields to return. Default is name.
+	 *
+	 * @return mixed
+	 */
+	private function getCurrentlyInstalledPlugins(string $fields = 'name')
+	{
+		// Get installed plugins.
+		$installedPluginsList = WP_CLI::runcommand("plugin list --fields={$fields} --format=json", $this->cliOptions);
+
+		return json_decode($installedPluginsList, true);
+	}
+
+	/**
+	 * Return the information about the GH plugins
+	 *
+	 * @param array $ghSetupPlugins List of plugins located on GitHub.
+	 *
+	 * @return array[]
+	 */
+	private function getGitHubPluginsInfo(array $ghSetupPlugins): array
+	{
+		$ghPlugins = [];
+		$ghPluginsRepo = [];
+
+		if (!empty($ghSetupPlugins)) {
+			/**
+			 * We need to replace the package notifier from GH,
+			 * because wp plugin list returns just the plugin name.
+			 * But we also need to have some pointer about the package.
+			 */
+			foreach ($ghSetupPlugins as $ghPluginName => $ghPluginVersion) {
+				$cleanedUpName = str_replace('/', '', strstr($ghPluginName, '/'));
+
+				$ghPlugins[$cleanedUpName] = $ghPluginVersion;
+				$ghPluginsRepo[$cleanedUpName] = $ghPluginName;
+			}
+		}
+
+		return [$ghPlugins, $ghPluginsRepo];
 	}
 }
