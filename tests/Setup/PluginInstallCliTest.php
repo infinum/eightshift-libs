@@ -19,16 +19,21 @@ beforeEach(function () {
 
 	$wpCliMock
 		->shouldReceive('success')
-		->andReturnArg(0);
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_SUCCESS_HAPPENED={$message}");
+		});
 
 	$wpCliMock
 		->shouldReceive('error')
-		->andReturnArg(0);
+		->andReturnUsing(function ($errorMessage) {
+			putenv("ES_CLI_ERROR_HAPPENED={$errorMessage}");
+			throw new Exception($errorMessage);
+		});
 
 	$wpCliMock
 		->shouldReceive('runcommand')
-		->withSomeOfArgs('plugin list --field=name --format=json')
-		->andReturn('["contact-form-7", "wordpress-seo"]');
+		->withSomeOfArgs('plugin list --fields=name --format=json')
+		->andReturn('[{"name":"contact-form-7"}, {"name":"wordpress-seo"}]');
 
 	$wpCliMock
 		->shouldReceive('runcommand')
@@ -91,7 +96,9 @@ beforeEach(function () {
 
 	$wpCliMock
 		->shouldReceive('log')
-		->andReturnArg(0);
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_LOG_HAPPENED={$message}");
+		});
 
 	stubTranslationFunctions();
 	stubEscapeFunctions();
@@ -137,11 +144,22 @@ test('Plugin install CLI documentation is correct', function () {
 });
 
 test('Plugin install CLI command will work with default action', function () {
+	// Reset the previously set mock.
+	when('file_exists')->justReturn(true);
+
 	$pluginInstall = $this->pluginInstall;
 	$pluginInstall([], []);
+
+	expect(getenv('ES_CLI_SUCCESS_HAPPENED'))
+		->toBeString()
+		->toContain('Plugin eightshift-forms updated');
 });
 
 test('Plugin install CLI command will work when only core plugins should be installed', function () {
 	$pluginInstall = $this->pluginInstall;
 	$pluginInstall([], ['install-core']);
+
+	expect(getenv('ES_CLI_SUCCESS_HAPPENED'))
+		->toBeString()
+		->toBe('Plugin eightshift-forms updated');
 });
