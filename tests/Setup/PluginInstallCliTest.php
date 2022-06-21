@@ -33,7 +33,7 @@ beforeEach(function () {
 	$wpCliMock
 		->shouldReceive('runcommand')
 		->withSomeOfArgs('plugin list --fields=name,version --format=json')
-		->andReturn('[{"name":"contact-form-7","version":"5.1.8"},{"name":"elementor-pro","version":"3.7.0"},{"name":"eightshift-forms","version":"1.0.0"},{"name":"query-monitor","version":"3.6.7"}]');
+		->andReturn('[{"name":"advanced-custom-fields-pro","version":"5.10.2"},{"name":"contact-form-7","version":"5.1.8"},{"name":"elementor-pro","version":"3.7.0"},{"name":"eightshift-forms","version":"1.0.0"},{"name":"query-monitor","version":"3.6.7"},{"name":"wp-rocket","version":"3.11.2"}]');
 
 	$wpCliMock
 		->shouldReceive('runcommand')
@@ -139,13 +139,9 @@ test('Plugin install CLI documentation is correct', function () {
 test('Plugin install CLI command will work with default action', function () {
 	$pluginInstall = $this->pluginInstall;
 	$pluginInstall([], []);
-
-
 });
 
 test('Plugin install CLI command will work when only core plugins should be installed', function () {
 	$pluginInstall = $this->pluginInstall;
 	$pluginInstall([], ['install-core']);
-
-
 });
