@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Exception;
 
-use Exception;
 use RuntimeException;
 
 /**
