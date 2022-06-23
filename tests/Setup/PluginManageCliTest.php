@@ -3,7 +3,7 @@
 namespace Tests\Unit\Setup;
 
 use EightshiftLibs\Exception\FileMissing;
-use EightshiftLibs\Setup\PluginInstallCli;
+use EightshiftLibs\Setup\PluginManageCli;
 
 use function Brain\Monkey\Functions\stubEscapeFunctions;
 use function Brain\Monkey\Functions\stubTranslationFunctions;
@@ -103,7 +103,7 @@ beforeEach(function () {
 	stubTranslationFunctions();
 	stubEscapeFunctions();
 
-	$this->pluginInstall = new PluginInstallCli('boilerplate');
+	$this->pluginManage = new PluginManageCli('boilerplate');
 });
 
 /**
@@ -120,8 +120,8 @@ test('Plugin Install CLI command will correctly throw an exception if setup.json
 		}
 	});
 
-	$pluginInstall = $this->pluginInstall;
-	$pluginInstall([], []);
+	$pluginManage = $this->pluginManage;
+	$pluginManage([], []);
 })->throws(FileMissing::class);
 
 test('Plugin Install CLI command will correctly throw an exception if env.json does not exist', function () {
@@ -135,20 +135,20 @@ test('Plugin Install CLI command will correctly throw an exception if env.json d
 		}
 	});
 
-	$pluginInstall = $this->pluginInstall;
-	$pluginInstall([], []);
+	$pluginManage = $this->pluginManage;
+	$pluginManage([], []);
 })->throws(FileMissing::class);
 
 test('Plugin install CLI documentation is correct', function () {
-	expect($this->pluginInstall->getDoc())->toBeArray();
+	expect($this->pluginManage->getDoc())->toBeArray();
 });
 
 test('Plugin install CLI command will work with default action', function () {
 	// Reset the previously set mock.
 	when('file_exists')->justReturn(true);
 
-	$pluginInstall = $this->pluginInstall;
-	$pluginInstall([], []);
+	$pluginManage = $this->pluginManage;
+	$pluginManage([], []);
 
 	expect(getenv('ES_CLI_SUCCESS_HAPPENED'))
 		->toBeString()
@@ -156,8 +156,8 @@ test('Plugin install CLI command will work with default action', function () {
 });
 
 test('Plugin install CLI command will work when only core plugins should be installed', function () {
-	$pluginInstall = $this->pluginInstall;
-	$pluginInstall([], ['install-core']);
+	$pluginManage = $this->pluginManage;
+	$pluginManage([], ['install-core']);
 
 	expect(getenv('ES_CLI_SUCCESS_HAPPENED'))
 		->toBeString()
