@@ -137,8 +137,7 @@ class Cli
 		UseWebPMediaCli::class,
 		ExportCli::class,
 		ImportCli::class,
-		UpdateCli::class,
-		PluginInstallCli::class,
+		PluginManageCli::class,
 	];
 
 	/**
