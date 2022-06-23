@@ -33,7 +33,7 @@ use EightshiftLibs\Cli\ParentGroups\CliWebp;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
-use EightshiftLibs\Setup\PluginInstallCli;
+use EightshiftLibs\Setup\PluginManageCli;
 use EightshiftLibs\View\EscapedViewCli;
 use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
@@ -162,7 +162,7 @@ class Cli
 		ExportCli::class,
 		ImportCli::class,
 		UpdateCli::class,
-		PluginInstallCli::class,
+		PluginManageCli::class,
 	];
 
 	/**
