@@ -82,53 +82,32 @@ class PluginManageCli extends AbstractCli
 			'shortdesc' => 'Install or update the WordPress plugins based on the setup.json file.',
 			'synopsis' => [
 				[
-					'type' => 'assoc',
+					'type' => 'flag',
 					'name' => 'delete-plugins',
 					'description' => 'If you want to delete plugins that are not in the setup.json list.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('install-core'),
-					'options' => [
-						'true',
-						'false',
-					],
 				],
 				[
-					'type' => 'assoc',
+					'type' => 'flag',
 					'name' => 'install-core',
 					'description' => 'If you want to install only the wordpress.org plugins.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('install-core'),
-					'options' => [
-						'true',
-						'false',
-					],
 				],
 				[
-					'type' => 'assoc',
+					'type' => 'flag',
 					'name' => 'install-github',
 					'description' => 'If you want to install only the plugins from github.org.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('install-github'),
-					'options' => [
-						'true',
-						'false',
-					],
 				],
 				[
-					'type' => 'assoc',
+					'type' => 'flag',
 					'name' => 'install-paid',
 					'description' => 'If you want to install only the paid plugins plugins.
 					You\'ll need an additional env.json file with premium plugin URLs.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('install-paid'),
-					'options' => [
-						'true',
-						'false',
-					],
 				],
 			],
-			'longdesc' => $this->prepareLongDesc(
-				"
+			'longdesc' => <<<EOT
 				## USAGE
 
 				This command will install, delete or update the plugins based on the setup.json file.
@@ -157,8 +136,7 @@ class PluginManageCli extends AbstractCli
 				
 				# Delete plugins not in the setup.json list:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --delete-plugins'
-			"
-			),
+			EOT,
 		];
 	}
 
