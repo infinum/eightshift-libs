@@ -40,7 +40,7 @@ if (!function_exists('dbImport')) {
 			CliHelpers::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
 		}
 
-		$sep = \DIRECTORY_SEPARATOR;
+		$sep = DIRECTORY_SEPARATOR;
 		$setupFilePath = "{$projectRootPath}{$sep}{$setupFile}";
 
 		// Check if setup exists.
@@ -87,7 +87,7 @@ if (!function_exists('dbImport')) {
 			$toScheme = $to['scheme'];
 		}
 
-		if (!\getenv('ES_TEST')) {
+		if (!getenv('ES_TEST')) {
 			// Define db export file name.
 			$dbFileName = 'latest.sql';
 
