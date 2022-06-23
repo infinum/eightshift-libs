@@ -60,7 +60,6 @@ use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
-use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
@@ -161,7 +160,6 @@ class Cli
 	public const PROJECT_CLASSES = [
 		ExportCli::class,
 		ImportCli::class,
-		UpdateCli::class,
 		PluginManageCli::class,
 	];
 
