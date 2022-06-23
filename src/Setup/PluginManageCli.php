@@ -102,8 +102,10 @@ class PluginManageCli extends AbstractCli
 				[
 					'type' => 'flag',
 					'name' => 'install-paid',
-					'description' => 'If you want to install only the paid plugins plugins.
-					You\'ll need an additional env.json file with premium plugin URLs.',
+					'description' => <<<EOT
+					If you want to install only the paid plugins plugins.
+					You'll need an additional env.json file with premium plugin URLs.
+					EOT,
 					'optional' => true,
 				],
 			],
@@ -116,8 +118,8 @@ class PluginManageCli extends AbstractCli
 				is usually stored in a secret vault. That file should looks something like this:
 				
 				{
-					\"advanced-custom-fields-pro\": \"url==&t=VERSION\",
-					\"wp-rocket\": \"url\",
+					"advanced-custom-fields-pro": "url==&t=VERSION",
+					"wp-rocket": "url",
 				}
 				
 				If the URl contains the VERSION string, that version will be replaced with the version
@@ -143,28 +145,32 @@ class PluginManageCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$setup = $this->getSetupFile();
+		try {
+			$setup = $this->getSetupFile();
+		} catch (FileMissing $exception) {
+			self::cliError($exception->getMessage());
+		}
 
 		/**
 		 * Check associated arguments. Based on which one is present
 		 * toggle the behavior of the CLI command.
 		 */
-		if (\in_array('install-core', $assocArgs)) {
+		if (isset($assocArgs['install-core'])) {
 			$this->installWpOrgPlugins($setup);
 			return;
 		}
 
-		if (\in_array('install-github', $assocArgs)) {
+		if (isset($assocArgs['install-github'])) {
 			$this->installGitHubPlugins($setup);
 			return;
 		}
 
-		if (\in_array('install-paid', $assocArgs)) {
+		if (isset($assocArgs['install-paid'])) {
 			$this->installPaidPlugins($setup);
 			return;
 		}
 
-		if (\in_array('delete-plugins', $assocArgs)) {
+		if (isset($assocArgs['delete-plugins'])) {
 			$this->deletePlugins($setup);
 			return;
 		}
@@ -176,14 +182,14 @@ class PluginManageCli extends AbstractCli
 	{
 		$coreSetupPlugins = $setup['plugins']['core'] ?? [];
 
-		if (empty($coreSetupPlugins)) {
-			WP_CLI::log('There are no wordpress.org plugins to install.');
-			return;
+        if (empty($coreSetupPlugins)) {
+			WP_CLI::warning('There are no wordpress.org plugins to install.');
+            return;
 		}
 
 		// We only need a list of plugin names, so we'll filter the above return value.
 		$installedPlugins = array_map(function($pluginElement){
-			return $pluginElement['name'];
+			return $pluginElement['name'] ?? '';
 		}, $this->getCurrentlyInstalledPlugins());
 
 		$pluginsToAdd = array_diff(array_keys($coreSetupPlugins), $installedPlugins);
@@ -192,22 +198,20 @@ class PluginManageCli extends AbstractCli
 			WP_CLI::runcommand("plugin install {$pluginToAdd} --force", $this->cliOptions);
 			WP_CLI::success("Plugin {$pluginToAdd} installed");
 		}
-
-		return;
-	}
+    }
 
 	private function installGitHubPlugins(array $setup)
 	{
 		$ghSetupPlugins = $setup['plugins']['github'] ?? [];
 
 		if (empty($ghSetupPlugins)) {
-			WP_CLI::log('There are no GitHub plugins to install.');
-			return;
+			WP_CLI::warning('There are no GitHub plugins to install.');
+            return;
 		}
 
 		// We only need a list of plugin names, so we'll filter the above return value.
 		$installedPlugins = array_map(function($pluginElement){
-			return $pluginElement['name'];
+			return $pluginElement['name'] ?? '';
 		}, $this->getCurrentlyInstalledPlugins());
 
 		list($ghPlugins, $ghPluginsRepo) = $this->getGitHubPluginsInfo($ghSetupPlugins);
@@ -226,8 +230,6 @@ class PluginManageCli extends AbstractCli
 
 			WP_CLI::success("Plugin {$pluginToAdd} installed");
 		}
-
-		return;
 	}
 
 	private function installPaidPlugins(array $setup)
@@ -235,13 +237,13 @@ class PluginManageCli extends AbstractCli
 		$paidSetupPlugins = $setup['plugins']['paid'] ?? [];
 
 		if (empty($paidSetupPlugins)) {
-			WP_CLI::log('There are no paid plugins to install.');
-			return;
+			WP_CLI::warning('There are no paid plugins to install.');
+            return;
 		}
 
 		// We only need a list of plugin names, so we'll filter the above return value.
 		$installedPlugins = array_map(function($pluginElement){
-			return $pluginElement['name'];
+			return $pluginElement['name'] ?? '';
 		}, $this->getCurrentlyInstalledPlugins());
 
 		$paidPlugins = array_keys($paidSetupPlugins); // Get just the names of the plugins.
@@ -252,13 +254,15 @@ class PluginManageCli extends AbstractCli
 			if (isset(array_flip($paidPlugins)[$pluginToAdd])) {
 				$version = $paidSetupPlugins[$pluginToAdd];
 
-				$this->installPaidPlugin($pluginToAdd, $version);
+				try {
+					$this->installPaidPlugin($pluginToAdd, $version);
+				} catch (FileMissing $exception) {
+					self::cliError($exception->getMessage());
+				}
 			}
 
 			WP_CLI::success("Plugin {$pluginToAdd} installed");
 		}
-
-		return;
 	}
 
 	private function manageAllPlugins(array $setup)
@@ -345,10 +349,16 @@ class PluginManageCli extends AbstractCli
 		WP_CLI::runcommand("plugin install \"{$pluginUrl}\" --force");
 	}
 
+	/**
+	 * Get the array of the decoded setup.json file
+	 *
+	 * @return array setup.json file in array form.
+	 *
+	 * @throws FileMissing Throws exception in case the setup.json file is missing.
+	 */
 	private function getSetupFile(): array
 	{
 		$setupFile = $this->getProjectConfigRootPath() . '/setup.json';
-
 		if (\getenv('ES_TEST') === '1') {
 			$setupFile = dirname(__FILE__) . '/setup.json';
 		}
@@ -363,14 +373,11 @@ class PluginManageCli extends AbstractCli
 	/**
 	 * @param string $fields Comma separated list of fields to return. Default is name.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	private function getCurrentlyInstalledPlugins(string $fields = 'name')
+	private function getCurrentlyInstalledPlugins(string $fields = 'name'): array
 	{
-		// Get installed plugins.
-		$installedPluginsList = WP_CLI::runcommand("plugin list --fields={$fields} --format=json", $this->cliOptions);
-
-		return json_decode($installedPluginsList, true);
+		return WP_CLI::runcommand("plugin list --fields={$fields} --format=json", $this->cliOptions);
 	}
 
 	/**
@@ -416,7 +423,7 @@ class PluginManageCli extends AbstractCli
 
 		// We only need a list of plugin names, so we'll filter the above return value.
 		$installedPlugins = array_map(function($pluginElement){
-			return $pluginElement['name'];
+			return $pluginElement['name'] ?? '';
 		}, $this->getCurrentlyInstalledPlugins());
 
 		list($ghPlugins) = $this->getGitHubPluginsInfo($ghSetupPlugins);
@@ -475,7 +482,11 @@ class PluginManageCli extends AbstractCli
 
 				$this->installGHPlugin($repoName, $setupPluginVersion);
 			} elseif (isset($paidSetupPlugins[$pluginName])) {
-				$this->installPaidPlugin($pluginName, $setupPluginVersion);
+				try {
+					$this->installPaidPlugin($pluginName, $setupPluginVersion);
+				} catch (FileMissing $exception) {
+					self::cliError($exception->getMessage());
+				}
 			} else {
 				WP_CLI::runcommand("plugin update {$pluginName} --version={$setupPluginVersion}");
 			}
