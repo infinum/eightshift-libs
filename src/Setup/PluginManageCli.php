@@ -16,9 +16,9 @@ use EightshiftLibs\Exception\FileMissing;
 use WP_CLI;
 
 /**
- * Class PluginInstallCli
+ * Class PluginManageCli
  */
-class PluginInstallCli extends AbstractCli
+class PluginManageCli extends AbstractCli
 {
 
 	/**
@@ -50,7 +50,7 @@ class PluginInstallCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'plugin_install';
+		return 'plugin_manage';
 	}
 
 	/**
@@ -64,10 +64,10 @@ class PluginInstallCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
+			'delete-plugins' => 'false',
 			'install-core' => 'false',
 			'install-github' => 'false',
 			'install-paid' => 'false',
-			'install-folder' => 'false',
 		];
 	}
 
@@ -83,8 +83,19 @@ class PluginInstallCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
+					'name' => 'delete-plugins',
+					'description' => 'If you want to delete plugins that are not in the setup.json list.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('install-core'),
+					'options' => [
+						'true',
+						'false',
+					],
+				],
+				[
+					'type' => 'assoc',
 					'name' => 'install-core',
-					'description' => 'If you want to install only the wordpress.org plugins. This is the default option.',
+					'description' => 'If you want to install only the wordpress.org plugins.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('install-core'),
 					'options' => [
@@ -115,23 +126,12 @@ class PluginInstallCli extends AbstractCli
 						'false',
 					],
 				],
-				[
-					'type' => 'assoc',
-					'name' => 'install-folder',
-					'description' => 'If you want to install only the plugins committed to the repository.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('install-folder'),
-					'options' => [
-						'true',
-						'false',
-					],
-				],
 			],
 			'longdesc' => $this->prepareLongDesc(
 				"
 				## USAGE
 
-				This command will install or update the plugins based on the setup.json file.
+				This command will install, delete or update the plugins based on the setup.json file.
 				
 				In order to install the premium plugins you will need to have an env.json file which
 				is usually stored in a secret vault. That file should looks something like this:
@@ -142,12 +142,11 @@ class PluginInstallCli extends AbstractCli
 				}
 				
 				If the URl contains the VERSION string, that version will be replaced with the version
-				defined in the setup.json file. Otherwise the latest version available from the URL will
-				be downloaded.
+				defined in the setup.json file. Otherwise the latest version available from the URL will be downloaded.
 
 				## EXAMPLES
 
-				# Install/update all the plugins:
+				# Install/update all the plugins, delete unused plugins:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 
 				# Install/update only the wp.org plugins:
@@ -155,6 +154,9 @@ class PluginInstallCli extends AbstractCli
 				
 				# Install/update only the paid plugins:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --install-paid'
+				
+				# Delete plugins not in the setup.json list:
+				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --delete-plugins'
 			"
 			),
 		];
@@ -163,35 +165,36 @@ class PluginInstallCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$setup = $this->getSetupFile();
+
 		/**
 		 * Check associated arguments. Based on which one is present
 		 * toggle the behavior of the CLI command.
 		 */
 		if (\in_array('install-core', $assocArgs)) {
-			$this->installOnlyWpOrgPlugins();
+			$this->installWpOrgPlugins($setup);
 			return;
 		}
 
 		if (\in_array('install-github', $assocArgs)) {
-			$this->installOnlyGitHubPlugins();
+			$this->installGitHubPlugins($setup);
 			return;
 		}
 
 		if (\in_array('install-paid', $assocArgs)) {
-			$this->installOnlyPaidPlugins();
+			$this->installPaidPlugins($setup);
 			return;
 		}
 
-		if (\in_array('install-folder', $assocArgs)) {
-			$this->installOnlyFolderPlugins();
+		if (\in_array('delete-plugins', $assocArgs)) {
+			$this->deletePlugins($setup);
 			return;
 		}
 
-		$this->installAllPlugins();
+		$this->manageAllPlugins($setup);
 	}
 
-
-	private function installOnlyWpOrgPlugins()
+	private function installWpOrgPlugins(array $setup)
 	{
 		$coreSetupPlugins = $setup['plugins']['core'] ?? [];
 
@@ -200,13 +203,22 @@ class PluginInstallCli extends AbstractCli
 			return;
 		}
 
-		$installedPlugins = $this->getCurrentlyInstalledPlugins();
+		// We only need a list of plugin names, so we'll filter the above return value.
+		$installedPlugins = array_map(function($pluginElement){
+			return $pluginElement['name'];
+		}, $this->getCurrentlyInstalledPlugins());
 
+		$pluginsToAdd = array_diff(array_keys($coreSetupPlugins), $installedPlugins);
+
+		foreach ($pluginsToAdd as $pluginToAdd) {
+			WP_CLI::runcommand("plugin install {$pluginToAdd} --force", $this->cliOptions);
+			WP_CLI::success("Plugin {$pluginToAdd} installed");
+		}
 
 		return;
 	}
 
-	private function installOnlyGitHubPlugins()
+	private function installGitHubPlugins(array $setup)
 	{
 		$ghSetupPlugins = $setup['plugins']['github'] ?? [];
 
@@ -214,45 +226,6 @@ class PluginInstallCli extends AbstractCli
 			WP_CLI::log('There are no GitHub plugins to install.');
 			return;
 		}
-
-		list($ghPlugins, $ghPluginsRepo) = $this->getGitHubPluginsInfo($ghSetupPlugins);
-
-
-		return;
-	}
-
-	private function installOnlyPaidPlugins()
-	{
-		$paidSetupPlugins = $setup['plugins']['paid'] ?? [];
-
-		if (empty($paidSetupPlugins)) {
-			WP_CLI::log('There are no paid plugins to install.');
-			return;
-		}
-
-		return;
-	}
-
-	private function installOnlyFolderPlugins()
-	{
-		$folderSetupPlugins = $setup['plugins']['folder'] ?? [];
-
-		if (empty($folderSetupPlugins)) {
-			WP_CLI::log('There are no plugins from the repository folder to install.');
-			return;
-		}
-
-		return;
-	}
-
-	private function installAllPlugins()
-	{
-		$setup = $this->getSetupFile();
-
-		$coreSetupPlugins = $setup['plugins']['core'] ?? [];
-		$ghSetupPlugins = $setup['plugins']['github'] ?? [];
-		$paidSetupPlugins = $setup['plugins']['paid'] ?? [];
-		$folderSetupPlugins = $setup['plugins']['folder'] ?? [];
 
 		// We only need a list of plugin names, so we'll filter the above return value.
 		$installedPlugins = array_map(function($pluginElement){
@@ -262,77 +235,67 @@ class PluginInstallCli extends AbstractCli
 		list($ghPlugins, $ghPluginsRepo) = $this->getGitHubPluginsInfo($ghSetupPlugins);
 
 		$gitHubPlugins = array_keys($ghPlugins); // Get just the names of the plugins.
-		$paidPlugins = array_keys($paidSetupPlugins); // Get just the names of the plugins.
-		$folderPlugins = array_keys($folderSetupPlugins); // Get just the names of the plugins.
 
-		$setupPluginList = array_merge(
-			array_keys($coreSetupPlugins),
-			$gitHubPlugins,
-			$paidPlugins,
-			$folderPlugins
-		);
-
-		$pluginsToAdd = array_diff($setupPluginList, $installedPlugins);
-		$pluginsToRemove = array_diff($installedPlugins, $setupPluginList);
-
-		WP_CLI::log('Check plugins');
-
-		foreach ($pluginsToRemove as $pluginToRemove) {
-			WP_CLI::runcommand("plugin delete {$pluginToRemove}", $this->cliOptions);
-			WP_CLI::log("Plugin {$pluginToRemove} removed");
-		}
+		$pluginsToAdd = array_diff($gitHubPlugins, $installedPlugins);
 
 		foreach ($pluginsToAdd as $pluginToAdd) {
 			if (isset(array_flip($gitHubPlugins)[$pluginToAdd])) {
-				$version = $ghPlugins[$pluginToAdd];
 				$repoName = $ghPluginsRepo[$pluginToAdd];
+				$version = $ghPlugins[$pluginToAdd];
 
 				$this->installGHPlugin($repoName, $version);
-			} elseif (isset(array_flip($paidPlugins)[$pluginToAdd])) {
-				$version = $paidSetupPlugins[$pluginToAdd];
-
-				$this->installPaidPlugin($pluginToAdd, $version);
-			} elseif (isset(array_flip($folderPlugins)[$pluginToAdd])) {
-				continue;
-			} else {
-				WP_CLI::runcommand("plugin install {$pluginToAdd} --force", $this->cliOptions);
 			}
 
 			WP_CLI::success("Plugin {$pluginToAdd} installed");
 		}
 
+		return;
+	}
+
+	private function installPaidPlugins(array $setup)
+	{
+		$paidSetupPlugins = $setup['plugins']['paid'] ?? [];
+
+		if (empty($paidSetupPlugins)) {
+			WP_CLI::log('There are no paid plugins to install.');
+			return;
+		}
+
+		// We only need a list of plugin names, so we'll filter the above return value.
+		$installedPlugins = array_map(function($pluginElement){
+			return $pluginElement['name'];
+		}, $this->getCurrentlyInstalledPlugins());
+
+		$paidPlugins = array_keys($paidSetupPlugins); // Get just the names of the plugins.
+
+		$pluginsToAdd = array_diff($paidPlugins, $installedPlugins);
+
+		foreach ($pluginsToAdd as $pluginToAdd) {
+			if (isset(array_flip($paidPlugins)[$pluginToAdd])) {
+				$version = $paidSetupPlugins[$pluginToAdd];
+
+				$this->installPaidPlugin($pluginToAdd, $version);
+			}
+
+			WP_CLI::success("Plugin {$pluginToAdd} installed");
+		}
+
+		return;
+	}
+
+	private function manageAllPlugins(array $setup)
+	{
+
+		// Delete unused plugins.
+		$this->deletePlugins($setup);
+
+		// Install all the other plugins.
+		$this->installWpOrgPlugins($setup);
+		$this->installGitHubPlugins($setup);
+		$this->installPaidPlugins($setup);
+
 		// Check plugin versions and update if needed.
-		$currentlyInstalledPlugins = $this->getCurrentlyInstalledPlugins('name,version');
-
-		$currentVersions = [];
-
-		foreach ($currentlyInstalledPlugins as $pluginDetails) {
-			$currentVersions[$pluginDetails['name']] = $pluginDetails['version'];
-		}
-
-		$setupPluginVersions = array_merge($coreSetupPlugins, $ghPlugins, $paidSetupPlugins, $folderSetupPlugins);
-
-		// Compare versions of the two arrays key for key.
-		foreach ($setupPluginVersions as $pluginName => $setupPluginVersion) {
-			// Update if the current version of the plugin is greater or less than the setup version.
-			if ($currentVersions[$pluginName] === $setupPluginVersion) {
-				continue;
-			}
-
-			// Check if plugin is from GH or not.
-			if (isset($ghPlugins[$pluginName])) {
-				// The only way to update is to reinstall.
-				$repoName = $ghPluginsRepo[$pluginName];
-
-				$this->installGHPlugin($repoName, $setupPluginVersion);
-			} elseif (isset($paidSetupPlugins[$pluginName])) {
-				$this->installPaidPlugin($pluginName, $setupPluginVersion);
-			} else {
-				WP_CLI::runcommand("plugin update {$pluginName} --version={$setupPluginVersion}");
-			}
-
-			WP_CLI::success("Plugin {$pluginName} updated");
-		}
+		$this->updatePlugins($setup);
 	}
 
 	/**
@@ -404,7 +367,7 @@ class PluginInstallCli extends AbstractCli
 		WP_CLI::runcommand("plugin install \"{$pluginUrl}\" --force");
 	}
 
-	private function getSetupFile()
+	private function getSetupFile(): array
 	{
 		$setupFile = $this->getProjectConfigRootPath() . '/setup.json';
 
@@ -416,7 +379,7 @@ class PluginInstallCli extends AbstractCli
 			throw FileMissing::missingFileOnPath($setupFile);
 		}
 
-		return json_decode((string)\file_get_contents($setupFile), true);
+		return (array)json_decode((string)\file_get_contents($setupFile), true);
 	}
 
 	/**
@@ -459,5 +422,87 @@ class PluginInstallCli extends AbstractCli
 		}
 
 		return [$ghPlugins, $ghPluginsRepo];
+	}
+
+	/**
+	 * Delete plugins that are located locally, but not in the setup.json
+	 *
+	 * @return void
+	 */
+	private function deletePlugins(array $setup)
+	{
+		$coreSetupPlugins = $setup['plugins']['core'] ?? [];
+		$ghSetupPlugins = $setup['plugins']['github'] ?? [];
+		$paidSetupPlugins = $setup['plugins']['paid'] ?? [];
+		$folderSetupPlugins = $setup['plugins']['folder'] ?? [];
+
+		// We only need a list of plugin names, so we'll filter the above return value.
+		$installedPlugins = array_map(function($pluginElement){
+			return $pluginElement['name'];
+		}, $this->getCurrentlyInstalledPlugins());
+
+		list($ghPlugins) = $this->getGitHubPluginsInfo($ghSetupPlugins);
+
+		$gitHubPlugins = array_keys($ghPlugins); // Get just the names of the plugins.
+		$paidPlugins = array_keys($paidSetupPlugins); // Get just the names of the plugins.
+		$folderPlugins = array_keys($folderSetupPlugins); // Get just the names of the plugins.
+
+		$setupPluginList = array_merge(
+			array_keys($coreSetupPlugins),
+			$gitHubPlugins,
+			$paidPlugins,
+			$folderPlugins
+		);
+
+		$pluginsToRemove = array_diff($installedPlugins, $setupPluginList);
+
+		WP_CLI::log('Remove plugins');
+
+		foreach ($pluginsToRemove as $pluginToRemove) {
+			WP_CLI::runcommand("plugin delete {$pluginToRemove}", $this->cliOptions);
+			WP_CLI::log("Plugin {$pluginToRemove} removed");
+		}
+	}
+
+	private function updatePlugins(array $setup)
+	{
+		$currentlyInstalledPlugins = $this->getCurrentlyInstalledPlugins('name,version');
+
+		$currentVersions = [];
+
+		foreach ($currentlyInstalledPlugins as $pluginDetails) {
+			$currentVersions[$pluginDetails['name']] = $pluginDetails['version'];
+		}
+
+		$coreSetupPlugins = $setup['plugins']['core'] ?? [];
+		$ghSetupPlugins = $setup['plugins']['github'] ?? [];
+		$paidSetupPlugins = $setup['plugins']['paid'] ?? [];
+		$folderSetupPlugins = $setup['plugins']['folder'] ?? [];
+
+		list($ghPlugins, $ghPluginsRepo) = $this->getGitHubPluginsInfo($ghSetupPlugins);
+
+		$setupPluginVersions = array_merge($coreSetupPlugins, $ghPlugins, $paidSetupPlugins, $folderSetupPlugins);
+
+		// Compare versions of the two arrays key for key.
+		foreach ($setupPluginVersions as $pluginName => $setupPluginVersion) {
+			// Update if the current version of the plugin is greater or less than the setup version.
+			if ($currentVersions[$pluginName] === $setupPluginVersion) {
+				continue;
+			}
+
+			// Check if plugin is from GH or not.
+			if (isset($ghPlugins[$pluginName])) {
+				// The only way to update is to reinstall.
+				$repoName = $ghPluginsRepo[$pluginName];
+
+				$this->installGHPlugin($repoName, $setupPluginVersion);
+			} elseif (isset($paidSetupPlugins[$pluginName])) {
+				$this->installPaidPlugin($pluginName, $setupPluginVersion);
+			} else {
+				WP_CLI::runcommand("plugin update {$pluginName} --version={$setupPluginVersion}");
+			}
+
+			WP_CLI::success("Plugin {$pluginName} updated");
+		}
 	}
 }
