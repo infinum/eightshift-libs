@@ -27,18 +27,18 @@ beforeEach(function () {
 		->shouldReceive('error')
 		->andReturnUsing(function ($errorMessage) {
 			putenv("ES_CLI_ERROR_HAPPENED={$errorMessage}");
-			throw new Exception($errorMessage);
+			throw new FileMissing($errorMessage);
 		});
 
 	$wpCliMock
 		->shouldReceive('runcommand')
 		->withSomeOfArgs('plugin list --fields=name --format=json')
-		->andReturn('[{"name":"contact-form-7"}, {"name":"wordpress-seo"}]');
+		->andReturn([['name' => 'contact-form-7'], ['name'=>'wordpress-seo']]);
 
 	$wpCliMock
 		->shouldReceive('runcommand')
 		->withSomeOfArgs('plugin list --fields=name,version --format=json')
-		->andReturn('[{"name":"advanced-custom-fields-pro","version":"5.10.2"},{"name":"contact-form-7","version":"5.1.8"},{"name":"elementor-pro","version":"3.7.0"},{"name":"eightshift-forms","version":"1.0.0"},{"name":"query-monitor","version":"3.6.7"},{"name":"wp-rocket","version":"3.11.2"}]');
+		->andReturn([['name' => 'advanced-custom-fields-pro','version' => '5.10.2'],['name' => 'contact-form-7','version' => '5.1.8'],['name' => 'elementor-pro','version' => '3.7.0'],['name' => 'eightshift-forms','version' => '1.0.0'],['name' => 'query-monitor','version' => '3.6.7'],['name' => 'wp-rocket','version' => '3.11.2']]);
 
 	$wpCliMock
 		->shouldReceive('runcommand')
@@ -159,7 +159,37 @@ test('Plugin install CLI command will work when only core plugins should be inst
 	$pluginManage = $this->pluginManage;
 	$pluginManage([], ['install-core']);
 
-	expect(getenv('ES_CLI_SUCCESS_HAPPENED'))
+	expect(getenv('ES_CLI_RUN_COMMAND_PLUGIN_INSTALL_QM_HAPPENED'))
 		->toBeString()
-		->toBe('Plugin eightshift-forms updated');
+		->toBe('plugin install query-monitor --force');
+});
+
+test('Plugin install CLI command will work when only GitHub plugins should be installed', function () {
+	$pluginManage = $this->pluginManage;
+	$pluginManage([], ['install-github']);
+
+	expect(getenv('ES_CLI_RUN_COMMAND_PLUGIN_GH_INSTALL_HAPPENED'))
+		->toBeString()
+		->toBe('plugin install "https://github.com/infinum/eightshift-forms/releases/download/1.2.4/release.zip" --force');
+});
+
+test('Plugin install CLI command will work when only paid plugins should be installed', function () {
+	$pluginManage = $this->pluginManage;
+	$pluginManage([], ['install-paid']);
+
+	expect(getenv('ES_CLI_RUN_COMMAND_PLUGIN_PAID_1_INSTALL_HAPPENED'))
+		->toBeString()
+		->toBe('plugin install "https://example.com" --force')
+		->and(getenv('ES_CLI_RUN_COMMAND_PLUGIN_PAID_2_INSTALL_HAPPENED')) // Version replacement test.
+		->toBeString()
+		->toBe('plugin install "https://example.com&t=5.10.2" --force');
+});
+
+test('Plugins install CLI command will delete plugins', function () {
+	$pluginManage = $this->pluginManage;
+	$pluginManage([], ['delete-plugins']);
+
+	expect(getenv('ES_CLI_RUN_COMMAND_PLUGIN_DELETE_HAPPENED'))
+		->toBeString()
+		->toBe('plugin delete wordpress-seo');
 });
