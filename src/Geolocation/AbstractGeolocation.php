@@ -81,20 +81,16 @@ abstract class AbstractGeolocation implements ServiceInterface
 			return;
 		}
 
-		if (!\getenv('ES_TEST')) {
-			\ob_start();
-		}
+		\ob_start();
 
-		\setcookie(
+		$this->setCookie(
 			$cookieName,
 			$this->getGeolocation(),
 			\time() + \DAY_IN_SECONDS,
 			'/'
 		);
 
-		if (!\getenv('ES_TEST')) {
-			\ob_get_clean();
-		}
+		\ob_get_clean();
 	}
 
 	/**
@@ -184,6 +180,34 @@ abstract class AbstractGeolocation implements ServiceInterface
 	}
 
 	/**
+	 * Wrapper method for the native PHP setcookie function.
+	 *
+	 * We are using a wrapper because we cannot easily mock the setcookie function from PHP.
+	 * This way, we can just mock our implementation during tests.
+	 *
+	 * @param string $name Name of cookie.
+	 * @param string $value Value to store to cookie.
+	 * @param int $expire Expiration time.
+	 * @param string $path Path of usage.
+	 * @param string $domain Domain of usage.
+	 * @param boolean $secure Indicates that the cookie should only be transmitted over a secure HTTPS connection from the client.
+	 * @param boolean $httponly When true the cookie will be made accessible only through the HTTP protocol.
+	 *
+	 * @return bool
+	 */
+	public function setCookie(
+		string $name,
+		string $value = "",
+		int $expire = 0,
+		string $path = "",
+		string $domain = "",
+		bool $secure = false,
+		bool $httponly = false
+	): bool {
+		return \setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+	}
+
+	/**
 	 * Gets the 2-digit location code provided by the project.
 	 *
 	 * @return string
@@ -200,6 +224,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 		if ($this->getIpAddress()) {
 			$ipAddr = $this->getIpAddress();
 		}
+
 
 		// Skip if empty for some reason or if you are on local computer.
 		if ($ipAddr !== '127.0.0.1' && $ipAddr !== '::1' && !empty($ipAddr)) {

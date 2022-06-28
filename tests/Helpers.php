@@ -157,6 +157,7 @@ function setAfterEach($delete = true) {
 	}
 
 	putenv('ES_SIDEAFFECT');
+	putenv('ES_SIDEAFFECT_ADDITIONAL');
 	putenv('ES_CLI_SUCCESS_HAPPENED');
 	putenv('ES_CLI_ERROR_HAPPENED');
 	putenv('ES_CLI_LOG_HAPPENED');
@@ -194,6 +195,27 @@ function deleteCliOutput(string $dir = '') : void
 	rmdir($dir);
 }
 
+/**
+ * Get path to data mocks.
+ *
+ * @param string $path Path to attach.
+ *
+ * @return string
+ */
+function getDataPath(string $path = ''): string
+{
+	$ds = \DIRECTORY_SEPARATOR;
+
+	return __DIR__ . "{$ds}data{$ds}{$path}";
+}
+
+/**
+ * Mock Mockery interface.
+ *
+ * @param string $class Class to mock.
+ *
+ * @return MockInterface
+ */
 function mock(string $class): MockInterface
 {
 	return Mockery::mock($class);
