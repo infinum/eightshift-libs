@@ -156,12 +156,12 @@ test('setLocationCookie will throw and error if something is wrong.', function (
 test('getCountries returns array of correct defaults from manifest and code.', function () {
 	$countries = $this->geolocation->getCountries();
 
-	expect($countries[0])->toBeArray()->toHaveKeys(['label', 'value', 'group']);
-	expect(count($countries))->toEqual(252);
-	expect($countries[0]['value'])->toEqual('europe');
-	expect($countries[1]['value'])->toEqual('european-union');
-	expect($countries[2]['value'])->toEqual('ex-yugoslavia');
-	expect($countries[3]['value'])->toEqual('AF');
+	expect($countries[0])->toBeArray()->toHaveKeys(['label', 'value', 'group'])
+		->and(count($countries))->toEqual(252)
+		->and($countries[0]['value'])->toEqual('europe')
+		->and($countries[1]['value'])->toEqual('european-union')
+		->and($countries[2]['value'])->toEqual('ex-yugoslavia')
+		->and($countries[3]['value'])->toEqual('AF');
 });
 
 test('getCountries returns array of defaults with additional items.', function () {
