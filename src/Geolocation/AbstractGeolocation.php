@@ -180,7 +180,10 @@ abstract class AbstractGeolocation implements ServiceInterface
 	}
 
 	/**
-	 * Mock setCookie method for testing reasons.
+	 * Wrapper method for the native PHP setcookie function.
+	 *
+	 * We are using a wrapper because we cannot easily mock the setcookie function from PHP.
+	 * This way, we can just mock our implementation during tests.
 	 *
 	 * @param string $name Name of cookie.
 	 * @param string $value Value to store to cookie.
