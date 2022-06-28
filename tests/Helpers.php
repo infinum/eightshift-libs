@@ -204,7 +204,9 @@ function deleteCliOutput(string $dir = '') : void
  */
 function getDataPath(string $path = ''): string
 {
-	return __DIR__ . "/data/{$path}";
+	$ds = \DIRECTORY_SEPARATOR;
+
+	return __DIR__ . "{$ds}data{$ds}{$path}";
 }
 
 /**
