@@ -176,9 +176,9 @@ test('getCountries returns array of defaults with additional items.', function (
 
 	$countries = $mock->getCountries();
 
-	expect(count($countries))->toEqual(253);
-	expect($countries[0]['value'])->toEqual('europe');
-	expect($countries[252]['value'])->toEqual('test');
+	expect(count($countries))->toEqual(253)
+		->and($countries[0]['value'])->toEqual('europe')
+		->and($countries[252]['value'])->toEqual('test');
 });
 
 //---------------------------------------------------------------------------------//
