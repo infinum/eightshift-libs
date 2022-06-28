@@ -153,3 +153,15 @@ test('Localization will return empty array if not initialized', function() {
 	$this->assertIsArray($localizationExample->getLocalizations());
 	$this->assertEmpty($localizationExample->getLocalizations());
 });
+
+test('will correctly return admin style handle', function () {
+	$adminHandle = $this->adminEnqueue->getAdminStyleHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray()
+		->toBe('MyProject-styles')
+		->not->toBe('boilerplate-handle');
+});
+
+
