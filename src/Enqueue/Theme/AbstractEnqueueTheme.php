@@ -29,13 +29,33 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 	protected ManifestInterface $manifest;
 
 	/**
+	 * Get theme Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getThemeStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-theme-styles";
+	}
+
+	/**
+	 * Get theme JavaScript handle.
+	 *
+	 * @return string
+	 */
+	public function getThemeScriptHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-scripts";
+	}
+
+	/**
 	 * Register the Stylesheets for the front end of the theme.
 	 *
 	 * @return void
 	 */
 	public function enqueueStyles(): void
 	{
-		$handle = "{$this->getAssetsPrefix()}-theme-styles";
+		$handle = $this->getThemeStyleHandle();
 
 		\wp_register_style(
 			$handle,
@@ -55,7 +75,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 	 */
 	public function enqueueScripts(): void
 	{
-		$handle = "{$this->getAssetsPrefix()}-scripts";
+		$handle = $this->getThemeScriptHandle();
 
 		\wp_register_script(
 			$handle,

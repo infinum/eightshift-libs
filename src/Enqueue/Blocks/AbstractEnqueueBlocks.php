@@ -34,13 +34,63 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	protected ManifestInterface $manifest;
 
 	/**
+	 * Get block editor JavaScript handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockEditorScriptsHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-editor-scripts";
+	}
+
+	/**
+	 * Get block editor Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockEditorStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-editor-style";
+	}
+
+	/**
+	 * Get block Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-style";
+	}
+
+	/**
+	 * Get block frontend JavaScript handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockFrontentScriptHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-frontend-scripts";
+	}
+
+	/**
+	 * Get block frontend Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockFrontentStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-frontend-style";
+	}
+
+	/**
 	 * Enqueue blocks script for editor only.
 	 *
 	 * @return void
 	 */
 	public function enqueueBlockEditorScript(): void
 	{
-		$handle = "{$this->getAssetsPrefix()}-block-editor-scripts";
+		$handle = $this->getBlockEditorScriptsHandle();
 
 		\wp_register_script(
 			$handle,
@@ -64,17 +114,17 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockEditorStyle(): void
 	{
-		$handler = "{$this->getAssetsPrefix()}-block-editor-style";
+		$handle = $this->getBlockEditorStyleHandle();
 
 		\wp_register_style(
-			$handler,
+			$handle,
 			$this->manifest->getAssetsManifestItem(static::BLOCKS_EDITOR_STYLE_URI),
 			$this->getAdminStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
 
-		\wp_enqueue_style($handler);
+		\wp_enqueue_style($handle);
 	}
 
 	/**
@@ -84,17 +134,17 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockStyle(): void
 	{
-		$handler = "{$this->getAssetsPrefix()}-block-style";
+		$handle = $this->getBlockStyleHandle();
 
 		\wp_register_style(
-			$handler,
+			$handle,
 			$this->manifest->getAssetsManifestItem(static::BLOCKS_STYLE_URI),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
 
-		\wp_enqueue_style($handler);
+		\wp_enqueue_style($handle);
 	}
 
 	/**
@@ -104,7 +154,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockFrontendScript(): void
 	{
-		$handle = "{$this->getAssetsPrefix()}-block-frontend-scripts";
+		$handle = $this->getBlockFrontentScriptHandle();
 
 		\wp_register_script(
 			$handle,
@@ -118,7 +168,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 
 		foreach ($this->getLocalizations() as $objectName => $dataArray) {
-			\wp_localize_script($handle, $objectName, $dataArray);
+			\wp_localize_script($this->getBlockFrontentScriptHandle(), $objectName, $dataArray);
 		}
 	}
 
@@ -129,17 +179,17 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockFrontendStyle(): void
 	{
-		$handler = "{$this->getAssetsPrefix()}-block-frontend-style";
+		$handle = $this->getBlockFrontentStyleHandle();
 
 		\wp_register_style(
-			$handler,
+			$handle,
 			$this->manifest->getAssetsManifestItem(static::BLOCKS_FRONTEND_STYLE_URI),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
 
-		\wp_enqueue_style($handler);
+		\wp_enqueue_style($handle);
 	}
 
 	/**
