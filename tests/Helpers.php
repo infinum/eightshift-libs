@@ -141,6 +141,10 @@ function setupMocks() {
 	}
 
 	Functions\when('is_admin')->justReturn(false);
+
+	Functions\when('trailingslashit')->alias(function(string $string) {
+		return rtrim( $string, '/\\' );
+	});
 }
 
 /**

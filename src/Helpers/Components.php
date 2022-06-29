@@ -319,6 +319,10 @@ class Components
 		switch ($type) {
 			case 'root':
 				$path = \dirname(__FILE__, 5);
+
+				if (\getenv('ES_TEST')) {
+					$path = \dirname(__FILE__, 3);
+				}
 				break;
 			case 'projectRoot':
 				$path = \dirname(__FILE__, 8);
@@ -327,13 +331,20 @@ class Components
 				$path = \dirname(__FILE__, 6);
 				break;
 			case 'frontendLibs':
-				$path = \dirname(__FILE__, 5) . "node_modules{$sep}@eightshift{$sep}frontend-libs";
+				$path = \dirname(__FILE__, 5) . "{$sep}node_modules{$sep}@eightshift{$sep}frontend-libs";
 				break;
 			case 'frontendLibsBlocks':
-				$path = \dirname(__FILE__, 5) . "node_modules{$sep}@eightshift{$sep}frontend-libs{$sep}blocks{$sep}init";
+				$path = \dirname(__FILE__, 5) . "{$sep}node_modules{$sep}@eightshift{$sep}frontend-libs{$sep}blocks{$sep}init";
 				break;
 			case 'libs':
-				$path = \dirname(__FILE__, 5) . "vendor{$sep}infinum{$sep}eightshift-libs";
+				$path = \dirname(__FILE__, 5) . "{$sep}vendor{$sep}infinum{$sep}eightshift-libs";
+				break;
+			case 'testsOutput':
+				$path = '';
+
+				if (\getenv('ES_TEST')) {
+					$path = \dirname(__FILE__, 3) . "{$sep}cliOutput";
+				}
 				break;
 			default:
 				$path = '';
@@ -352,7 +363,7 @@ class Components
 		}
 
 		if ($useSufixSlash) {
-			return trailingslashit("{$path}{$sufix}");
+			return \trailingslashit("{$path}{$sufix}");
 		}
 	
 		return "{$path}{$sufix}";

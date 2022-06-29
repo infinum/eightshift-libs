@@ -22,13 +22,6 @@ use WP_CLI;
 class BlocksCli extends AbstractCli
 {
 	/**
-	 * Toggle to see if this is running inside tests or not
-	 *
-	 * @var bool
-	 */
-	private $isTest;
-
-	/**
 	 * Output dir relative path
 	 *
 	 * @var string
@@ -129,10 +122,8 @@ class BlocksCli extends AbstractCli
 			->renameTextDomainFrontendLibs($assocArgs)
 			->renameUse($assocArgs);
 
-		if (! \defined('ES_DEVELOP_MODE')) {
-			if (!$this->isTest && \function_exists('\add_action')) {
-				$this->blocksInit($assocArgs);
-			}
+		if (!\getenv('ES_TEST')) {
+			$this->blocksInit($assocArgs);
 		}
 
 		// Output final class to new file/folder and finish.
@@ -184,15 +175,5 @@ class BlocksCli extends AbstractCli
 		}
 
 		WP_CLI::success('Blocks successfully set.');
-	}
-
-	/**
-	 * Used when running tests.
-	 *
-	 * @return void
-	 */
-	public function setTest(): void
-	{
-		$this->isTest = true;
 	}
 }

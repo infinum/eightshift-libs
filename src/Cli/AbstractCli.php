@@ -387,21 +387,11 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputDir(string $path = ''): string
 	{
-		$ds = \DIRECTORY_SEPARATOR;
-
-		$root = Components::getProjectPaths('root');
-
-		$root = \rtrim($root, $ds);
-		$root = \trim($root, $ds);
-
-		$path = \rtrim($path, $ds);
-		$path = \trim($path, $ds);
-
-		if ($ds === '/') {
-			return "{$ds}{$root}{$ds}{$path}";
+		if (\getenv('ES_TEST')) {
+			return Components::getProjectPaths('testsOutput', $path);
 		}
 
-		return "{$root}{$ds}{$path}";
+		return Components::getProjectPaths('root', $path);
 	}
 
 	/**
@@ -438,15 +428,15 @@ abstract class AbstractCli implements CliInterface
 		$namespace = $this->getNamespace($args);
 		$vendorPrefix = $this->getVendorPrefix($args);
 
-		if (\function_exists('\add_action') && !\getenv('ES_TEST')) {
+		if (\getenv('ES_TEST')) {
 			$output = \str_replace(
-				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
+				'namespace EightshiftBoilerplate\\',
 				"namespace {$namespace}\\",
 				$output
 			);
 		} else {
 			$output = \str_replace(
-				'namespace EightshiftBoilerplate\\',
+				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
 				"namespace {$namespace}\\",
 				$output
 			);
@@ -474,7 +464,13 @@ abstract class AbstractCli implements CliInterface
 		$prefixUse = 'use';
 		$prefixPackage = '@package';
 
-		if (\function_exists('\add_action')) {
+		if (\getenv('ES_TEST')) {
+			$output = \str_replace(
+				"{$prefixUse} EightshiftBoilerplate\\",
+				"{$prefixUse} {$namespace}\\",
+				$output
+			);
+		} else {
 			$output = \str_replace(
 				"{$prefixUse} EightshiftBoilerplateVendor\\",
 				"{$prefixUse} {$vendorPrefix}\\",
@@ -483,12 +479,6 @@ abstract class AbstractCli implements CliInterface
 
 			$output = \str_replace(
 				"{$prefixUse} {$vendorPrefix}\EightshiftBoilerplate\\",
-				"{$prefixUse} {$namespace}\\",
-				$output
-			);
-		} else {
-			$output = \str_replace(
-				"{$prefixUse} EightshiftBoilerplate\\",
 				"{$prefixUse} {$namespace}\\",
 				$output
 			);
