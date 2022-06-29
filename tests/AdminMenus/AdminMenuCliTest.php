@@ -3,6 +3,7 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\AdminMenus\AdminMenuCli;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
@@ -23,11 +24,26 @@ test('Admin menu CLI command will correctly copy the admin menu example class wi
 	$mock([], $mock->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
-	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/TestTitleAdminMenu.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$mock = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}AdminMenus{$sep}ExampleMenuSlugAdminMenu.php"));
 
-	expect($output)
-		->toContain('class TestTitleAdminMenu extends AbstractAdminMenu', 'Test Title')
-		->not->toContain('product');
+	expect($mock)
+		->toContain(
+			'class ExampleMenuSlugAdminMenu extends AbstractAdminMenu',
+			 'Admin Title',
+			 'Admin Menu Title',
+			 'edit_posts',
+			 'example-menu-slug',
+			 'dashicons-admin-generic',
+		)
+		->not->toContain(
+			'%title%',
+			'%menu_title%',
+			'%capability%',
+			'%menu_slug%',
+			'%menu_icon%',
+			'%menu_position%',
+		);
 });
 
 test('Admin menu CLI command will correctly copy the admin menu class with set arguments', function () {
@@ -41,11 +57,26 @@ test('Admin menu CLI command will correctly copy the admin menu class with set a
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/ReusableBlocksAdminMenu.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$mock = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}AdminMenus{$sep}ReusableBlocksAdminMenu.php"));
 
-	expect($output)
-		->toContain('class ReusableBlocksAdminMenu extends AbstractAdminMenu', 'Reusable Blocks', 'edit_reusable_blocks', '100', 'dashicons-editor-table')
-		->not->toContain('dashicons-analytics');
+	expect($mock)
+		->toContain(
+			'class ReusableBlocksAdminMenu extends AbstractAdminMenu',
+			'Reusable Blocks',
+			'Reusable Blocks',
+			'edit_reusable_blocks',
+			'reusable-blocks',
+			'dashicons-editor-table',
+		)
+		->not->toContain(
+			'%title%',
+			'%menu_title%',
+			'%capability%',
+			'%menu_slug%',
+			'%menu_icon%',
+			'%menu_position%',
+		);
 });
 
 test('Admin menu CLI documentation is correct', function () {

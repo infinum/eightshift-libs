@@ -27,7 +27,8 @@ test('Custom command CLI command will correctly copy the Custom command class wi
 
 
 	// Check the output dir if the generated method is correctly generated.
-	$mock = \file_get_contents(Components::getProjectPaths('testsOutput', 'src/WpCli/TestWpCli.php'));
+	$sep = \DIRECTORY_SEPARATOR;
+	$mock = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}WpCli{$sep}TestWpCli.php"));
 
 	$this->assertStringContainsString('class TestWpCli implements ServiceCliInterface', $mock);
 	$this->assertStringContainsString('function register', $mock);

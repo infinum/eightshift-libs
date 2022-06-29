@@ -2,42 +2,32 @@
 
 namespace Tests\Unit\CustomPostType;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Rest\Fields\FieldCli;
-use Exception;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->field = new FieldCli('boilerplate');
+	$this->mock = new FieldCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 
 test('REST field CLI command will correctly copy the field class with defaults', function () {
-	$field = $this->field;
-	$field([], $field->getDefaultArgs());
+	$mock = $this->mock;
+	$mock([], $mock->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}ThemeOptions{$sep}ThemeOptions.php"));
 	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Fields/TitleField.php');
 
 	$this->assertStringContainsString('class TitleField extends AbstractField implements CallableFieldInterface', $generatedField);
@@ -48,11 +38,12 @@ test('REST field CLI command will correctly copy the field class with defaults',
 	$this->assertStringNotContainsString('ExampleRoute', $generatedField);
 });
 
-test('REST field CLI command will correctly copy the field class with arguments', function ($fieldNameArguments) {
-	$field = $this->field;
-	$field([], $fieldNameArguments);
-	$fullFieldName = "{$this->field->getFileName($fieldNameArguments['field_name'])}Field";
-	$objectType = $fieldNameArguments['object_type'];
+test('REST field CLI command will correctly copy the field class with arguments', function ($mockNameArguments) {
+	$mock = $this->mock;
+	$mock([], $mockNameArguments);
+
+	$fullFieldName = "{$this->mock->getFileName($mockNameArguments['field_name'])}Field";
+	$objectType = $mockNameArguments['object_type'];
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . "/cliOutput/src/Rest/Fields/{$fullFieldName}.php");

@@ -2,67 +2,51 @@
 
 namespace Tests\Unit\CustomPostType;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Rest\Routes\RouteCli;
-use Exception;
-use InvalidArgumentException;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
-/**
- * Mock before tests.
- */
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
+
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnUsing(
-			function ($errorMessage) {
-					throw new InvalidArgumentException($errorMessage);
-			}
-	);
-
-	$this->route = new RouteCli('boilerplate');
+	$this->mock = new RouteCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 
 test('REST route CLI command will correctly copy the field class with defaults', function () {
-	$route = $this->route;
-	$route([], $route->getDefaultArgs());
+	$mock = $this->mock;
+	$mock([], $mock->getDefaultArgs());
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Routes/TestRoute.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Rest{$sep}Routes{$sep}TestRoute.php"));
 
-	$this->assertStringContainsString('class TestRoute extends AbstractRoute implements CallableRouteInterface', $generatedField);
-	$this->assertStringContainsString('\'methods\' => ', $generatedField);
-	$this->assertStringContainsString('\'callback\' => ', $generatedField);
-	$this->assertStringContainsString('\'permission_callback\' => ', $generatedField);
-	$this->assertStringContainsString('function getCallbackArguments', $generatedField);
-	$this->assertStringContainsString('function routeCallback', $generatedField);
+	$this->assertStringContainsString('class TestRoute extends AbstractRoute implements CallableRouteInterface', $output);
+	$this->assertStringContainsString('\'methods\' => ', $output);
+	$this->assertStringContainsString('\'callback\' => ', $output);
+	$this->assertStringContainsString('\'permission_callback\' => ', $output);
+	$this->assertStringContainsString('function getCallbackArguments', $output);
+	$this->assertStringContainsString('function routeCallback', $output);
 });
 
 
-test('REST route CLI command will correctly copy the field class with arguments', function ($routeArguments) {
-	$route = $this->route;
-	$route([], $routeArguments);
+test('REST route CLI command will correctly copy the field class with arguments', function ($mockArguments) {
+	$mock = $this->mock;
+	$mock([], $mockArguments);
 
-	$full_route_name = "{$this->route->getFileName($routeArguments['endpoint_slug'])}Route";
-	$method_to_const = RouteCli::VERB_ENUM[\strtolower($routeArguments['method'])] ?? '';
+	$full_route_name = "{$this->mock->getFileName($mockArguments['endpoint_slug'])}Route";
+	$method_to_const = RouteCli::VERB_ENUM[\strtolower($mockArguments['method'])] ?? '';
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . "/cliOutput/src/Rest/Routes/{$full_route_name}.php");
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Rest{$sep}Routes{$sep}{$full_route_name}.php"));
 
-	$this->assertStringContainsString("class {$full_route_name} extends AbstractRoute implements CallableRouteInterface", $generatedField);
-	$this->assertStringContainsString("'methods' => {$method_to_const}", $generatedField);
+	$this->assertStringContainsString("class {$full_route_name} extends AbstractRoute implements CallableRouteInterface", $output);
+	$this->assertStringContainsString("'methods' => {$method_to_const}", $output);
 })->with('correctRouteArguments');
