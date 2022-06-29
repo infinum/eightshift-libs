@@ -13,6 +13,7 @@ namespace EightshiftLibs\Blocks;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
@@ -147,8 +148,8 @@ class BlocksCli extends AbstractCli
 	 */
 	private function blocksInit(array $args): void
 	{
-		$root = $this->getProjectRootPath();
-		$rootNode = $this->getFrontendLibsBlockPath();
+		$root = Components::getProjectPaths('root');
+		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
 
 		$folders = [
 			'assetsGlobal' => "{$root}/assets",

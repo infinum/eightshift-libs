@@ -12,6 +12,7 @@ use function Tests\setBeforeEach;
 use function Tests\getCliOutputPath;
 use function Tests\getDataPath;
 use function Tests\getProjectComposerFile;
+use function Tests\mockTemp;
 
 beforeEach(function () {
 	setBeforeEach();
@@ -20,7 +21,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-	setAfterEach();
+	// setAfterEach();
 
 	unset($this->mock);
 });
@@ -66,10 +67,7 @@ test('getDoc will return correct array', function () {
 //---------------------------------------------------------------------------------//
 
 test('__invoke will correctly copy example variation with default args', function () {
-	$mock = mock(BlockVariationCli::class)->makePartial();
-	$mock->shouldReceive('getProjectRootPath')->andReturn(getCliOutputPath());
-	$mock->shouldReceive('getFrontendLibsBlockPath')->andReturn(getDataPath());
-	$mock->shouldReceive('getComposer')->andReturn(getProjectComposerFile());
+	$mock = mockTemp(BlockVariationCli::class);
 	$mock([], $this->mock->getDefaultArgs([]));
 
 	expect(getCliOutputFile('src/Blocks/variations/button-block/manifest.json'))

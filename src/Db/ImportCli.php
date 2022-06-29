@@ -12,6 +12,7 @@ namespace EightshiftLibs\Db;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI\ExitException;
 
 /**
@@ -97,11 +98,11 @@ class ImportCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		require $this->getLibsPath('src/Db/DbImport.php');
+		require Components::getProjectPaths('libs', 'src/Db/DbImport.php');
 
 		try {
 			dbImport( // phpcs:ignore
-				$this->getProjectConfigRootPath(),
+				Components::getProjectPaths('projectRoot'),
 				[
 					'from' => $this->getArg($assocArgs, 'from'),
 					'to' => $this->getArg($assocArgs, 'to'),

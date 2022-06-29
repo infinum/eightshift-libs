@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
@@ -35,8 +36,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
-		$root = $this->getProjectRootPath();
-		$rootNode = $this->getFrontendLibsBlockPath();
+		$root = Components::getProjectPaths('root');
+		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
 
 		$ds = \DIRECTORY_SEPARATOR;
 		$sourcePathFolder = "{$rootNode}{$ds}{$outputDir}{$ds}";
@@ -57,11 +58,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$path = "{$outputDir}{$ds}{$block}";
 			$sourcePath = "{$sourcePathFolder}{$block}";
 
-			if (!\getenv('ES_TEST')) {
-				$destinationPath = "{$root}{$ds}{$path}";
-			} else {
-				$destinationPath = "{$this->getProjectRootPath(true)}{$ds}cliOutput";
-			}
+			$destinationPath = "{$root}{$ds}{$path}";
 
 			$typePlural = !$isComponents ?  'blocks' : 'components';
 			$typeSingular = !$isComponents ?  'block' : 'component';

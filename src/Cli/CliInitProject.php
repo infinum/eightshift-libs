@@ -101,23 +101,13 @@ class CliInitProject extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		if (!\function_exists('\add_action')) {
-			$this->runReset();
-			WP_CLI::log('--------------------------------------------------');
-		}
-
 		foreach (static::INIT_PROJECT_CLASSES as $item) {
 			$reflectionClass = new ReflectionClass($item);
 
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
-				if (\function_exists('\add_action')) {
-					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
-				} else {
-					$sep = \DIRECTORY_SEPARATOR;
-					WP_CLI::runcommand("eval-file bin{$sep}cli.php {$class->getCommandParentName()}_{$class->getCommandName()} --skip-wordpress");
-				}
+				WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
 			}
 		}
 

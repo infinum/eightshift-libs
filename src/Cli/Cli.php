@@ -175,32 +175,6 @@ class Cli
 	];
 
 	/**
-	 * All classes and commands used only for development.
-	 *
-	 * @var class-string[]
-	 */
-	public const DEVELOP_CLASSES = [
-		CliReset::class,
-		CliRunAll::class,
-		CliShowAll::class,
-	];
-
-	/**
-	 * Define all classes to register for development.
-	 *
-	 * @return class-string[]
-	 */
-	public function getDevelopClasses(): array
-	{
-		return \array_merge(
-			static::CLASSES_LIST,
-			static::DEVELOP_CLASSES,
-			static::SETUP_CLASSES,
-			static::COMMANDS_LIST
-		);
-	}
-
-	/**
 	 * Define all classes to register for normal WP.
 	 *
 	 * @return class-string[]
@@ -214,45 +188,6 @@ class Cli
 			static::SETUP_CLASSES,
 			static::COMMANDS_LIST
 		);
-	}
-
-	/**
-	 * Run all CLI commands for develop.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @throws Exception Exception if the class doesn't exist.
-	 *
-	 * @return void
-	 */
-	public function loadDevelop(array $args = []): void
-	{
-		$commandName = $args[0] ?? '';
-
-		if (empty($commandName)) {
-			CliHelpers::cliError('First argument must be a valid command name.');
-		}
-
-		foreach ($this->getDevelopClasses() as $item) {
-			$reflectionClass = new ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs(['null']);
-
-			if (
-				\method_exists($class, 'getCommandName') &&
-				\method_exists($class, 'getCommandParentName') &&
-				\method_exists($class, 'getDefaultArgs') &&
-				\method_exists($class, '__invoke')
-			) {
-				if ("{$class->getCommandParentName()}_{$class->getCommandName()}" === $commandName) {
-					$class->__invoke(
-						[],
-						$class->getDefaultArgs($args)
-					);
-
-					break;
-				}
-			}
-		}
 	}
 
 	/**

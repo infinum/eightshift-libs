@@ -65,18 +65,13 @@ class CliInitAll extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
-		if (!\function_exists('\add_action')) {
-			$this->runReset();
-			WP_CLI::log('--------------------------------------------------');
-		}
-
 		$classes = \array_merge(
 			Cli::CLASSES_LIST,
 			Cli::BLOCKS_CLASSES,
 			Cli::SETUP_CLASSES
 		);
 
-		$this->getEvalLoop($classes, true, $assocArgs);
+		$this->getEvalLoop($classes, $assocArgs);
 
 		WP_CLI::log('--------------------------------------------------');
 

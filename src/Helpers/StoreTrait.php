@@ -43,7 +43,7 @@ trait StoreTrait
 	 */
 	public static function getStoreName(): string
 	{
-		return \basename(\dirname(__DIR__, 5));
+		return \basename(Components::getProjectPaths('root'));
 	}
 
 	/**

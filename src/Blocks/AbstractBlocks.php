@@ -404,13 +404,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksFolderPath(): string
 	{
-		$blocksPath = \dirname(__DIR__, 5) . self::PATH_BLOCKS_PARENT;
-
-		if (\getenv('ES_TEST')) {
-			$blocksPath = \dirname(__DIR__, 2) . self::PATH_BLOCKS_PARENT_TESTS;
-		}
-
-		return $blocksPath;
+		return Components::getProjectPaths('root', self::PATH_BLOCKS_PARENT);
 	}
 
 	/**

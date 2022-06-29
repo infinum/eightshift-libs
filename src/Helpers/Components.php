@@ -85,11 +85,7 @@ class Components
 		$sep = \DIRECTORY_SEPARATOR;
 
 		if (empty($parentPath)) {
-			$parentPath = \dirname(__DIR__, 5);
-
-			if (\getenv('ES_TEST')) {
-				$parentPath = \dirname(__DIR__, 2);
-			}
+			$parentPath = Components::getProjectPaths('root');
 		}
 
 		/**
@@ -173,11 +169,7 @@ class Components
 	): string {
 		$sep = \DIRECTORY_SEPARATOR;
 
-		$parentPath = \dirname(__DIR__, 5);
-
-		if (\getenv('ES_TEST')) {
-			$parentPath = \dirname(__DIR__, 2);
-		}
+		$parentPath = Components::getProjectPaths('root');
 
 		$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT;
 
@@ -309,5 +301,60 @@ class Components
 		}
 
 		return \json_decode(\implode(' ', (array)\file($manifest)), true);
+	}
+
+	/**
+	 * Internal helper for getting all project paths for easy mocking in tests.
+	 *
+	 * @param string $type Type fo path to return.
+	 * @param string $sufix Additional sufix path to add.
+	 * @param bool $useSufixSlash Force / at the end of the path.
+	 *
+	 * @return string
+	 */
+	public static function getProjectPaths(string $type, string $sufix = '', bool $useSufixSlash = true): string
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+
+		switch ($type) {
+			case 'root':
+				$path = \dirname(__FILE__, 5);
+				break;
+			case 'projectRoot':
+				$path = \dirname(__FILE__, 8);
+				break;
+			case 'wpContent':
+				$path = \dirname(__FILE__, 6);
+				break;
+			case 'frontendLibs':
+				$path = \dirname(__FILE__, 5) . "node_modules{$sep}@eightshift{$sep}frontend-libs";
+				break;
+			case 'frontendLibsBlocks':
+				$path = \dirname(__FILE__, 5) . "node_modules{$sep}@eightshift{$sep}frontend-libs{$sep}blocks{$sep}init";
+				break;
+			case 'libs':
+				$path = \dirname(__FILE__, 5) . "vendor{$sep}infinum{$sep}eightshift-libs";
+				break;
+			default:
+				$path = '';
+				break;
+		}
+
+		$path = ltrim($path, '/');
+		$path = rtrim($path, '/');
+		$path = "{$sep}{$path}";
+
+		$sufix = ltrim($sufix, '/');
+		$sufix = rtrim($sufix, '/');
+
+		if ($sufix) {
+			$sufix = "{$sep}{$sufix}";
+		}
+
+		if ($useSufixSlash) {
+			return trailingslashit("{$path}{$sufix}");
+		}
+	
+		return "{$path}{$sufix}";
 	}
 }

@@ -12,6 +12,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
@@ -102,8 +103,8 @@ class BlockVariationCli extends AbstractCli
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
-		$root = $this->getProjectRootPath();
-		$rootNode = $this->getFrontendLibsBlockPath();
+		$root = Components::getProjectPaths('root');
+		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
 		$ds = \DIRECTORY_SEPARATOR;
 
 		$path = static::OUTPUT_DIR . $ds . $name;

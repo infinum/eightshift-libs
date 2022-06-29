@@ -12,6 +12,7 @@ namespace EightshiftLibs\Db;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI\ExitException;
 
 /**
@@ -106,11 +107,11 @@ class ExportCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		require $this->getLibsPath('src/Db/DbExport.php');
+		require Components::getProjectPaths('libs', 'src/Db/DbExport.php');
 
 		try {
 			dbExport( // phpcs:ignore
-				$this->getProjectConfigRootPath(),
+				Components::getProjectPaths('projectRoot'),
 				[
 					'skip_db' => $this->getArg($assocArgs, 'skip_db'),
 					'skip_uploads' => $this->getArg($assocArgs, 'skip_uploads'),

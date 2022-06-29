@@ -13,6 +13,7 @@ namespace EightshiftLibs\Setup;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\CliHelpers;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 use WP_CLI\ExitException;
 
@@ -142,13 +143,9 @@ class UpdateCli extends AbstractCli
 
 		$setupFilename = 'setup.json';
 
-		if (\getenv('ES_TEST') !== false) {
-			$setupFilename = $this->getProjectConfigRootPath() . '/cliOutput/setup.json';
-		}
-
 		try {
 			$this->setup(
-				$this->getProjectConfigRootPath(),
+				Components::getProjectPaths('projectRoot'),
 				[
 					'skip_core' => $this->getArg($assocArgs, 'skip_core'),
 					'skip_plugins' => $this->getArg($assocArgs, 'skip_plugins'),

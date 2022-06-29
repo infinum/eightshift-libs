@@ -12,6 +12,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliSetup;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
@@ -70,8 +71,8 @@ class BlocksStorybookCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		if (\function_exists('\add_action')) {
-			$root = $this->getProjectRootPath();
-			$rootNode = $this->getFrontendLibsBlockPath();
+			$root = Components::getProjectPaths('root');
+			$rootNode = Components::getProjectPaths('frontendLibsBlocks');
 
 			$folder = "{$root}/.storybook";
 

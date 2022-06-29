@@ -12,6 +12,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
@@ -78,8 +79,8 @@ class BlockWrapperCli extends AbstractCli
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
-		$root = $this->getProjectRootPath();
-		$rootNode = $this->getFrontendLibsBlockPath();
+		$root = Components::getProjectPaths('root');
+		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
 
 		$ds = \DIRECTORY_SEPARATOR;
 
@@ -87,11 +88,7 @@ class BlockWrapperCli extends AbstractCli
 		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
 		$sourcePath = "{$sourcePathFolder}";
 
-		if (!\getenv('ES_TEST')) {
-			$destinationPath = $root . $ds . $path;
-		} else {
-			$destinationPath = $this->getProjectRootPath(true) . '/cliOutput';
-		}
+		$destinationPath = $root . $ds . $path;
 
 		// Destination exists.
 		if (\file_exists($destinationPath) && $skipExisting === false) {
