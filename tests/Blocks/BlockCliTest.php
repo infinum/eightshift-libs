@@ -34,7 +34,6 @@ test('Block CLI command will correctly copy the Block class with defaults', func
 	$this->assertStringNotContainsString('Components::render(\'link\', $attributes)', $output);
  });
 
-
 test('Block CLI command will run under custom command name', function () {
 	$mock = $this->mock;
 	$output = $mock->getCommandName();
