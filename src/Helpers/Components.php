@@ -88,7 +88,7 @@ class Components
 		if (!$parentPath) {
 			$parentPath = Components::getProjectPaths('root');
 		} else {
-			// Remove / 
+			// Remove slash.
 			$parentPath = \trim($parentPath, $sep);
 			$parentPath = "{$sep}{$parentPath}{$sep}";
 		}
@@ -321,35 +321,32 @@ class Components
 
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
-					$path = "tests{$sep}data{$sep}setup";
+					$path = "cliOutput{$sep}setup";
 				}
 
 				break;
 			case 'cliOuput':
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
-					$path = "testsOutput";
+					$path = "cliOutput";
 				}
 
 				break;
 			case 'wpContent':
 				$internalPrefix = \dirname(__FILE__, 6);
 				break;
-			case 'frontendLibs':
-				$path = "node_modules{$sep}@eightshift{$sep}frontend-libs";
-				break;
 			case 'frontendLibsBlocks':
-				$path = "node_modules{$sep}@eightshift{$sep}frontend-libs{$sep}blocks{$sep}init";
+				$path = "node_modules{$sep}@eightshift{$sep}frontend-libs{$sep}blocks{$sep}init{$sep}src{$sep}Blocks";
 
 				if (\getenv('ES_TEST')) {
-					$path = "tests{$sep}data{$sep}src{$sep}Blocks";
+					$path = "cliOutput{$sep}src{$sep}Blocks";
 				}
 				break;
 			case 'libs':
 				$path = "vendor{$sep}infinum{$sep}eightshift-libs";
 
 				if (\getenv('ES_TEST')) {
-					$path = "";
+					$path = '';
 				}
 
 				break;
@@ -361,49 +358,36 @@ class Components
 				}
 				break;
 			case 'blocksCustom':
-				$name = AbstractBlocks::PATH_BLOCKS;
+				$name = 'custom';
 				$path = "src{$sep}Blocks{$sep}{$name}";
 
 				if (\getenv('ES_TEST')) {
-					$path = "tests{$sep}data{$sep}src{$sep}Blocks{$sep}{$name}";
+					$path = "cliOutput{$sep}src{$sep}Blocks{$sep}{$name}";
 				}
 				break;
 			case 'blocksComponents':
-				$name = AbstractBlocks::PATH_COMPONENTS;
+				$name = 'components';
 				$path =  "src{$sep}Blocks{$sep}{$name}";
 
 				if (\getenv('ES_TEST')) {
-					$path = "tests{$sep}data{$sep}src{$sep}Blocks{$sep}{$name}";
+					$path = "cliOutput{$sep}src{$sep}Blocks{$sep}{$name}";
 				}
 				break;
 			case 'blocksVariations':
-				$name = AbstractBlocks::PATH_VARIATIONS;
+				$name = 'variations';
 				$path = "src{$sep}Blocks{$sep}{$name}";
 
 				if (\getenv('ES_TEST')) {
-					$path = "tests{$sep}data{$sep}src{$sep}Blocks{$sep}{$name}";
+					$path = "cliOutput{$sep}src{$sep}Blocks{$sep}{$name}";
 				}
 				break;
 			case 'blocksWrapper':
-				$name = AbstractBlocks::PATH_WRAPPER;
+				$name = 'wrapper';
 				$path = "src{$sep}Blocks{$sep}{$name}";
 
 				if (\getenv('ES_TEST')) {
-					$path = "tests{$sep}data{$sep}src{$sep}Blocks{$sep}{$name}";
+					$path = "cliOutput{$sep}src{$sep}Blocks{$sep}{$name}";
 				}
-				break;
-			case 'testsOutput':
-				if (\getenv('ES_TEST')) {
-					$internalPrefix = \dirname(__FILE__, 3);
-					$path = "cliOutput";
-				}
-				break;
-			case 'testsData':
-				if (\getenv('ES_TEST')) {
-					$internalPrefix = \dirname(__FILE__, 3);
-					$path = "tests{$sep}data";
-				}
-
 				break;
 		}
 

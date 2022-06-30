@@ -26,7 +26,7 @@ test('REST route CLI command will correctly copy the field class with defaults',
 	$mock([], $mock->getDefaultArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Rest{$sep}Routes{$sep}TestRoute.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Rest{$sep}Routes{$sep}TestRoute.php"));
 
 	$this->assertStringContainsString('class TestRoute extends AbstractRoute implements CallableRouteInterface', $output);
 	$this->assertStringContainsString('\'methods\' => ', $output);
@@ -45,7 +45,7 @@ test('REST route CLI command will correctly copy the field class with arguments'
 	$method_to_const = RouteCli::VERB_ENUM[\strtolower($mockArguments['method'])] ?? '';
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Rest{$sep}Routes{$sep}{$full_route_name}.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Rest{$sep}Routes{$sep}{$full_route_name}.php"));
 
 	$this->assertStringContainsString("class {$full_route_name} extends AbstractRoute implements CallableRouteInterface", $output);
 	$this->assertStringContainsString("'methods' => {$method_to_const}", $output);

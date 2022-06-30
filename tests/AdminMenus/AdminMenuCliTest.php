@@ -25,7 +25,7 @@ test('Admin menu CLI command will correctly copy the admin menu example class wi
 
 	// Check the output dir if the generated method is correctly generated.
 	$sep = \DIRECTORY_SEPARATOR;
-	$mock = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}AdminMenus{$sep}ExampleMenuSlugAdminMenu.php"));
+	$mock = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}AdminMenus{$sep}ExampleMenuSlugAdminMenu.php"));
 
 	expect($mock)
 		->toContain(
@@ -58,7 +58,7 @@ test('Admin menu CLI command will correctly copy the admin menu class with set a
 
 	// Check the output dir if the generated method is correctly generated.
 	$sep = \DIRECTORY_SEPARATOR;
-	$mock = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}AdminMenus{$sep}ReusableBlocksAdminMenu.php"));
+	$mock = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}AdminMenus{$sep}ReusableBlocksAdminMenu.php"));
 
 	expect($mock)
 		->toContain(

@@ -103,10 +103,10 @@ test('__invoke will fail if setup.json is missing but folder exists', function (
 	$mock([], [
 		'from' => 'production',
 		'to' => 'develop',
-		'path' => Components::getProjectPaths('testsData'),
+		'path' => Components::getProjectPaths('cliOuput'),
 	]);
 
-})->throws(Exception::class, 'setup.json is missing at this path: ' . Components::getProjectPaths('testsData', 'setup.json'));
+})->throws(Exception::class, 'setup.json is missing at this path: ' . Components::getProjectPaths('cliOuput', 'setup.json'));
 
 test('__invoke will fail if setup.json is empty', function () {
 	$mock = $this->mock;

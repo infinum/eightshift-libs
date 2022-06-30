@@ -27,7 +27,7 @@ test('Services CLI command will correctly copy the Services class with defaults'
 	$mock([], $mock->getDefaultArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}TestFolder{$sep}TMP{$sep}TestTest.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}TestFolder{$sep}TMP{$sep}TestTest.php"));
 
 	$this->assertStringContainsString('class TestTest implements ServiceInterface', $output);
 	$this->assertStringContainsString('namespace EightshiftLibs\TestFolder\TMP', $output);
@@ -44,7 +44,7 @@ test('Services CLI command will correctly copy the Services class with set argum
 	]);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}FolderName{$sep}FileName.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}FolderName{$sep}FileName.php"));
 
 	$this->assertStringContainsString('class FileName implements ServiceInterface', $output);
 	$this->assertStringContainsString('namespace CoolTheme\FolderName', $output);

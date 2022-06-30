@@ -27,7 +27,7 @@ test('I18n CLI command will correctly copy the I18n class with defaults', functi
 	$mock([], []);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}I18n{$sep}I18n.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}I18n{$sep}I18n.php"));
 
 	$this->assertStringContainsString('class I18n implements ServiceInterface', $output);
 	$this->assertStringContainsString('@package EightshiftLibs\I18n', $output);
@@ -42,7 +42,7 @@ test('I18n CLI command will correctly copy the I18n class with set arguments', f
 	]);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}I18n{$sep}I18n.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}I18n{$sep}I18n.php"));
 
 	$this->assertStringContainsString('namespace CoolTheme\I18n;', $output);
 });

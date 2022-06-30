@@ -25,7 +25,7 @@ test('Manifest CLI command will correctly copy the Manifest class with defaults'
 	$mock([], []);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Manifest{$sep}Manifest.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Manifest{$sep}Manifest.php"));
 
 	$this->assertStringContainsString('class Manifest extends AbstractManifest', $output);
 	$this->assertStringContainsString('setAssetsManifestRaw', $output);
@@ -40,7 +40,7 @@ test('Manifest CLI command will correctly copy the Manifest class with set argum
 	]);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Manifest{$sep}Manifest.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Manifest{$sep}Manifest.php"));
 
 	$this->assertStringContainsString('namespace MyTheme\Manifest;', $output);
 });

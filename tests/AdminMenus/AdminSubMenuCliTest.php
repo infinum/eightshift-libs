@@ -3,6 +3,7 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
@@ -15,17 +16,19 @@ beforeEach(function () {
 
 afterEach(function () {
 	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Admin submenu CLI command will correctly copy the admin menu example class with defaults', function () {
 	$mock = $this->adminSubMenuCli;
 	$mock([], $mock->getDefaultArgs());
 
-	// Check the output dir if the generated method is correctly generated.
-	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/TestAdminTitleAdminSubMenu.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}AdminMenus{$sep}ExampleMenuSlugAdminSubMenu.php"));
 
 	expect($output)
-		->toContain('class TestAdminTitleAdminSubMenu extends AbstractAdminSubMenu', 'Test Admin Title')
+		->toContain('class ExampleMenuSlugAdminSubMenu extends AbstractAdminSubMenu', 'Admin Title')
 		->not->toContain('product');
 });
 
@@ -39,8 +42,8 @@ test('Admin submenu CLI command will correctly copy the admin menu class with se
 		'menu_slug' => 'reusable-block-options',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/ReusableBlockOptionsAdminSubMenu.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}AdminMenus{$sep}ReusableBlockOptionsAdminSubMenu.php"));
 
 	expect($output)
 		->toContain('class ReusableBlockOptionsAdminSubMenu extends AbstractAdminSubMenu', 'Options', 'edit_reusable_blocks')

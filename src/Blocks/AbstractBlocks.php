@@ -23,34 +23,6 @@ use WP_Post;
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
-	 * Relative path to custom folder.
-	 *
-	 * @var string
-	 */
-	public const PATH_BLOCKS = 'custom';
-
-	/**
-	 * Relative path to components folder.
-	 *
-	 * @var string
-	 */
-	public const PATH_COMPONENTS = 'components';
-
-	/**
-	 * Relative path to variations folder.
-	 *
-	 * @var string
-	 */
-	public const PATH_VARIATIONS = 'variations';
-
-	/**
-	 * Relative path to wrapper folder.
-	 *
-	 * @var string
-	 */
-	public const PATH_WRAPPER = 'wrapper';
-
-	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
 	 *

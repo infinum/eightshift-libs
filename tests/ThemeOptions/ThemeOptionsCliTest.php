@@ -26,7 +26,7 @@ test('Custom theme options CLI command will correctly copy the theme options cla
 	$mock([], []);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}ThemeOptions{$sep}ThemeOptions.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}ThemeOptions{$sep}ThemeOptions.php"));
 
 		expect($output)
 			->toBeString()

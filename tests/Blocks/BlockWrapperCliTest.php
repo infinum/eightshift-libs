@@ -25,7 +25,7 @@ test('Wrapper CLI command will correctly copy the Wrapper class with defaults', 
 	$mock([], [$this->mock->getDefaultArgs()]);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Blocks{$sep}wrapper{$sep}wrapper.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Blocks{$sep}wrapper{$sep}wrapper.php"));
 
 	$this->assertStringContainsString('<div>Wrapper!</div>', $output);
  });

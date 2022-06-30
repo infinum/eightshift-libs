@@ -25,7 +25,7 @@ test('Main CLI command will correctly copy the Main class with defaults', functi
 	$mock([], []);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Main{$sep}Main.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Main{$sep}Main.php"));
 
 	$this->assertStringContainsString('class Main extends AbstractMain', $output);
 	$this->assertStringContainsString('@package EightshiftLibs\Main', $output);
@@ -40,7 +40,7 @@ test('Main CLI command will correctly copy the Main class with set arguments', f
 	]);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Main{$sep}Main.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Main{$sep}Main.php"));
 
 	$this->assertStringContainsString('namespace CoolTheme\Main', $output);
 	$this->assertStringNotContainsString('namespace EightshiftLibs\Main', $output);
