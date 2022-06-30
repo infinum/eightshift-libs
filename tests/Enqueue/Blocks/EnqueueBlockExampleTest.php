@@ -166,3 +166,43 @@ test('enqueueBlockFrontendStyle method will enqueue styles for a block', functio
 	$this->assertSame(\getenv('REGISTER_STYLE'), "{$this->projectName}-block-frontend-style", 'Method enqueueStyles() failed to register style');
 	$this->assertSame(\getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-frontend-style", 'Method enqueueScripts() failed to enqueue style');
 });
+
+test('getBlockEditorScriptsHandle will return string', function () {
+	$adminHandle = $this->blockEnqueue->getBlockEditorScriptsHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});
+
+test('getBlockEditorStyleHandle will return string', function () {
+	$adminHandle = $this->blockEnqueue->getBlockEditorStyleHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});
+
+test('getBlockFrontentScriptHandle will return string', function () {
+	$adminHandle = $this->blockEnqueue->getBlockFrontentScriptHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});
+
+test('getBlockFrontentStyleHandle will return string', function () {
+	$adminHandle = $this->blockEnqueue->getBlockFrontentStyleHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});
+
+test('getBlockStyleHandle will return string', function () {
+	$adminHandle = $this->blockEnqueue->getBlockStyleHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});
