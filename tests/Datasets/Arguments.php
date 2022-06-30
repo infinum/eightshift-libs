@@ -22,16 +22,6 @@ dataset('classesArray', [
 	[['medium', 'large']],
 	[['small']],
 	[['key' => 'bold--all']],
-	[[new stdClass()]],
-]);
-
-dataset('classesString', [
-	'bla',
-	new stdClass(),
-	'😄',
-	1,
-	false,
-	null
 ]);
 
 // Rest/Fields arguments

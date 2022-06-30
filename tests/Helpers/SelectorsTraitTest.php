@@ -100,12 +100,7 @@ test('Throws type exception if wrong argument type is passed to ensureString', f
 
 test('Asserts classnames returns a string', function ($args) {
 	$this->assertIsString(Components::classnames($args));
-})->with('classesArray')->only();
-
-
-test('Asserts classnames throws an error in case non array is passed', function ($args) {
-	Components::classnames($args);
-})->with('classesString')->expectError();
+})->with('classesArray');
 
 // ------------------------------------------
 // classnames
@@ -115,4 +110,3 @@ test('Throws type exception if wrong argument type is passed to classnames', fun
 	Components::classnames($argument);
 })->throws(\TypeError::class)
 	->with('errorStringArguments');
-
