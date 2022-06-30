@@ -34,27 +34,6 @@ afterEach(function () {
 	setAfterEach();
 });
 
-
-test('Cli getDevelopClasses return correct class list', function () {
-	$developClasses = $this->cli->getDevelopClasses();
-
-	expect($developClasses)
-		->toBeArray()
-		->not->toHaveKey(BlockComponentCli::class)
-		->not->toHaveKey(BlockWrapperCli::class)
-		->not->toHaveKey(BlockVariationCli::class)
-		->not->toHaveKey(BlockCli::class)
-		->not->toHaveKey(BlocksStorybookCli::class)
-		->not->toHaveKey(UpdateCli::class)
-		->not->toHaveKey(ExportCli::class)
-		->not->toHaveKey(ImportCli::class);
-
-	expect(\count($developClasses))
-		->toBeInt()
-		->toBe(42); // Dev classes count.
-});
-
-
 test('Cli getPublicClasses return correct class list', function () {
 	$publicClasses = $this->cli->getPublicClasses();
 
@@ -68,24 +47,6 @@ test('Cli getPublicClasses return correct class list', function () {
 		->toBeInt()
 		->toBe(48); // Public classes count.
 });
-
-
-test('Running develop commands throws error if command name is not specified', function() {
-	$this->cli->loadDevelop();
-
-	$this->assertSame('First argument must be a valid command name.', \getenv('ES_CLI_ERROR_HAPPENED'));
-});
-
-test('Running develop commands runs a particular command successfully', function() {
-	$this->cli->loadDevelop(['create_menu']);
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMenu = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Menu/Menu.php');
-	$this->assertStringContainsString('class Menu extends AbstractMenu', $generatedMenu);
-	$this->assertStringContainsString('header_main_nav', $generatedMenu);
-	$this->assertStringNotContainsString('footer_main_nav', $generatedMenu);
-});
-
 
 test('Running load command works', function() {
 	$this->cli->load('boilerplate');

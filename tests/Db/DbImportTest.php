@@ -4,12 +4,11 @@ namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Db\ImportCli;
+use EightshiftLibs\Helpers\Components;
 use Exception;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
-use function Tests\mock;
-use function Tests\getDataPath;
 
 beforeEach(function() {
 	setBeforeEach();
@@ -67,10 +66,8 @@ test('getDoc will return correct array', function () {
 //---------------------------------------------------------------------------------//
 
 test('__invoke will log correct msg if import is success', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
-
-	$mock->__invoke([], [
+	$mock = $this->mock;
+	$mock([], [
 		'from' => 'production',
 		'to' => 'develop',
 	]);
@@ -79,62 +76,51 @@ test('__invoke will log correct msg if import is success', function () {
 });
 
 test('__invoke will fail if --from parameter is not specified', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
-
-	$mock->__invoke([], [
+	$mock = $this->mock;
+	$mock([], [
 		'to' => 'develop',
 	]);
 })->throws(Exception::class, '--from parameter is mandatory. Please provide one url key from setup.json file.');
 
 test('__invoke will fail if --to parameter is not specified', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
-
-	$mock->__invoke([], [
+	$mock = $this->mock;
+	$mock([], [
 		'from' => 'staging'
 	]);
 })->throws(Exception::class, '--to parameter is mandatory. Please provide one url key from setup.json file.');
 
 test('__invoke will fail if setup.json folder is missing', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('missing'));
-
+	$mock = $this->mock;
 	$mock->__invoke([], [
 		'from' => 'production',
 		'to' => 'develop',
+		'path' => Components::getProjectPaths('setupJson', 'missing'),
 	]);
-
-})->throws(Exception::class, 'Folder doesn\'t exist on this path: ' . getDataPath('missing'));
+})->throws(Exception::class, 'Folder doesn\'t exist on this path: ' . Components::getProjectPaths('setupJson', 'missing'));
 
 test('__invoke will fail if setup.json is missing but folder exists', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('src'));
-
-	$mock->__invoke([], [
+	$mock = $this->mock;
+	$mock([], [
 		'from' => 'production',
 		'to' => 'develop',
+		'path' => Components::getProjectPaths('testsData'),
 	]);
 
-})->throws(Exception::class, 'setup.json is missing at this path: ' . getDataPath('src') . '/setup.json');
+})->throws(Exception::class, 'setup.json is missing at this path: ' . Components::getProjectPaths('testsData', 'setup.json'));
 
 test('__invoke will fail if setup.json is empty', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
-
-	$mock->__invoke([], [
+	$mock = $this->mock;
+	$mock([], [
 		'from' => 'production',
 		'to' => 'develop',
 		'fileName' => 'setup-empty.json',
 	]);
 
-})->throws(Exception::class, getDataPath('setup') . '/setup-empty.json' . ' is empty.');
+})->throws(Exception::class, Components::getProjectPaths('setupJson', 'setup-empty.json') . ' is empty.');
 
 test('__invoke will fail if setup.json is missing url keys', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
-
-	$mock->__invoke([], [
+	$mock = $this->mock;
+	$mock([], [
 		'from' => 'production',
 		'to' => 'develop',
 		'fileName' => 'setup-missing-urls.json',
@@ -143,24 +129,17 @@ test('__invoke will fail if setup.json is missing url keys', function () {
 })->throws(Exception::class, 'Urls key is missing or empty.');
 
 test('__invoke will fail if setup.json is missing url "from" key', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
-
-	$mock->__invoke([], array_merge(
-		$mock->getDefaultArgs(),
-		[
-			'from' => 'test',
-			'to' => 'develop',
-		]
-	));
+	$mock = $this->mock;
+	$mock([], [
+		'from' => 'test',
+		'to' => 'develop',
+	]);
 
 })->throws(Exception::class, 'test key is missing or empty in urls.');
 
 test('__invoke will fail if setup.json is missing url "to" key', function () {
-	$mock = mock(ImportCli::class)->makePartial();
-	$mock->shouldReceive('getProjectConfigRootPath')->andReturn(getDataPath('setup'));
-
-	$mock->__invoke([], [
+	$mock = $this->mock;
+	$mock([], [
 		'from' => 'production',
 		'to' => 'test',
 	]);

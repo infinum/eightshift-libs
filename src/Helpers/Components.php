@@ -84,8 +84,13 @@ class Components
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
-		if (empty($parentPath)) {
+		// If parent path is missing provide project root.
+		if (!$parentPath) {
 			$parentPath = Components::getProjectPaths('root');
+		} else {
+			// Remove / 
+			$parentPath = \trim($parentPath, $sep);
+			$parentPath = "{$sep}{$parentPath}{$sep}";
 		}
 
 		/**
@@ -101,20 +106,13 @@ class Components
 		 * parentClass__componentName.php
 		 */
 		if (\strpos($component, '.php') !== false) {
-			$parentPath = \rtrim($parentPath, '/');
-			$parentPath = \ltrim($parentPath, '/');
-			$component = \ltrim($component, '/');
-			$componentPath = "{$sep}{$parentPath}{$sep}{$component}";
+			$component = \ltrim($component, $sep);
+			$componentPath = $component;
 		} else {
-			$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT;
-
-			if (\getenv('ES_TEST')) {
-				$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT_TESTS;
-			}
-
-			$componentsFolderName = AbstractBlocks::PATH_COMPONENTS;
-			$componentPath = "{$parentPath}{$blocksPath}{$componentsFolderName}{$sep}{$component}{$sep}{$component}.php";
+			$componentPath = Components::getProjectPaths('blocksComponents', "{$component}{$sep}{$component}.php", $sep);
 		}
+
+		$componentPath = "{$parentPath}{$componentPath}";
 
 		if ($useComponentDefaults) {
 			$manifest = Components::getManifest($componentPath);
@@ -169,45 +167,35 @@ class Components
 	): string {
 		$sep = \DIRECTORY_SEPARATOR;
 
-		$parentPath = Components::getProjectPaths('root');
-
-		$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT;
-
-		if (\getenv('ES_TEST')) {
-			$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT_TESTS;
+		// If no extension is provided use php.
+		if (\strpos($name, '.php') === false) {
+			$name = "{$name}.php";
 		}
+
+		$partialPath = "{$parent}{$sep}{$partialFolderName}{$sep}{$name}";
 
 		// Detect folder based on the name.
 		switch ($type) {
 			case 'block':
 			case 'blocks':
 			case 'custom':
-				$folderName = AbstractBlocks::PATH_BLOCKS;
+				$path = Components::getProjectPaths('blocksCustom', $partialPath);
 				break;
 			case 'component':
 			case 'components':
-				$folderName = AbstractBlocks::PATH_COMPONENTS;
+				$path = Components::getProjectPaths('blocksComponents', $partialPath);
 				break;
 			case 'variation':
 			case 'variations':
-				$folderName = AbstractBlocks::PATH_VARIATIONS;
+				$path = Components::getProjectPaths('blocksVariations', $partialPath);
 				break;
 			case 'wrapper':
-			case '':
-				$folderName = AbstractBlocks::PATH_WRAPPER;
+				$path = Components::getProjectPaths('blocksWrapper', $partialPath);
 				break;
 			default:
-				$folderName = $type;
+				$path = Components::getProjectPaths('root', $partialPath);
 				break;
 		}
-
-		// If no extension is provided use php.
-		if (\strpos($name, '.php') === false) {
-			$name = "{$name}.php";
-		}
-
-		// Set full path.
-		$path = "{$parentPath}{$blocksPath}{$folderName}{$sep}{$parent}{$sep}{$partialFolderName}{$sep}{$name}";
 
 		// Bailout if file is missing.
 		if (!\file_exists($path)) {
@@ -288,13 +276,9 @@ class Components
 	public static function getManifestDirect(string $path): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;
-		$path = \trim($path, $sep);
+		$path = \rtrim($path, $sep);
 
 		$manifest = "{$path}{$sep}manifest.json";
-
-		if ($sep === '/') {
-			$manifest = "{$sep}{$manifest}";
-		}
 
 		if (!\file_exists($manifest)) {
 			throw ComponentException::throwUnableToLocateComponent($manifest);
@@ -308,64 +292,145 @@ class Components
 	 *
 	 * @param string $type Type fo path to return.
 	 * @param string $sufix Additional sufix path to add.
+	 * @param string $prefix Additional prefix insted of dirname path.
 	 * @param bool $useSufixSlash Force / at the end of the path.
 	 *
 	 * @return string
 	 */
-	public static function getProjectPaths(string $type, string $sufix = '', bool $useSufixSlash = true): string
+	public static function getProjectPaths(string $type = '', string $sufix = '', string $prefix = '', bool $useSufixSlash = true): string
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
+		$path = '';
+		$internalPrefix = \dirname(__FILE__, 5);
+
+		if (\getenv('ES_TEST')) {
+			$internalPrefix = \dirname(__FILE__, 3);
+		}
+
 		switch ($type) {
-			case 'root':
-				$path = \dirname(__FILE__, 5);
+			case 'projectRoot':
+				$internalPrefix = \dirname(__FILE__, 8);
 
 				if (\getenv('ES_TEST')) {
-					$path = \dirname(__FILE__, 3);
+					$internalPrefix = \dirname(__FILE__, 3);
 				}
 				break;
-			case 'projectRoot':
-				$path = \dirname(__FILE__, 8);
+			case 'setupJson':
+				$internalPrefix = \dirname(__FILE__, 8);
+
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = "tests{$sep}data{$sep}setup";
+				}
+
 				break;
 			case 'wpContent':
-				$path = \dirname(__FILE__, 6);
+				$internalPrefix = \dirname(__FILE__, 6);
 				break;
 			case 'frontendLibs':
-				$path = \dirname(__FILE__, 5) . "{$sep}node_modules{$sep}@eightshift{$sep}frontend-libs";
+				$path = "node_modules{$sep}@eightshift{$sep}frontend-libs";
 				break;
 			case 'frontendLibsBlocks':
-				$path = \dirname(__FILE__, 5) . "{$sep}node_modules{$sep}@eightshift{$sep}frontend-libs{$sep}blocks{$sep}init";
-				break;
-			case 'libs':
-				$path = \dirname(__FILE__, 5) . "{$sep}vendor{$sep}infinum{$sep}eightshift-libs";
-				break;
-			case 'testsOutput':
-				$path = '';
+				$path = "node_modules{$sep}@eightshift{$sep}frontend-libs{$sep}blocks{$sep}init";
 
 				if (\getenv('ES_TEST')) {
-					$path = \dirname(__FILE__, 3) . "{$sep}cliOutput";
+					$path = "tests{$sep}data{$sep}src{$sep}Blocks";
 				}
 				break;
-			default:
-				$path = '';
+			case 'libs':
+				$path = "vendor{$sep}infinum{$sep}eightshift-libs";
+
+				if (\getenv('ES_TEST')) {
+					$path = "";
+				}
+
+				break;
+			case 'blocks':
+				$path = "src{$sep}Blocks";
+
+				if (\getenv('ES_TEST')) {
+					$path = "cliOutput{$sep}src{$sep}Blocks";
+				}
+				break;
+			case 'blocksCustom':
+				$name = AbstractBlocks::PATH_BLOCKS;
+				$path = "src{$sep}Blocks{$sep}{$name}";
+
+				if (\getenv('ES_TEST')) {
+					$path = "tests{$sep}data{$sep}src{$sep}Blocks{$sep}{$name}";
+				}
+				break;
+			case 'blocksComponents':
+				$name = AbstractBlocks::PATH_COMPONENTS;
+				$path =  "src{$sep}Blocks{$sep}{$name}";
+
+				if (\getenv('ES_TEST')) {
+					$path = "tests{$sep}data{$sep}src{$sep}Blocks{$sep}{$name}";
+				}
+				break;
+			case 'blocksVariations':
+				$name = AbstractBlocks::PATH_VARIATIONS;
+				$path = "src{$sep}Blocks{$sep}{$name}";
+
+				if (\getenv('ES_TEST')) {
+					$path = "tests{$sep}data{$sep}src{$sep}Blocks{$sep}{$name}";
+				}
+				break;
+			case 'blocksWrapper':
+				$name = AbstractBlocks::PATH_WRAPPER;
+				$path = "src{$sep}Blocks{$sep}{$name}";
+
+				if (\getenv('ES_TEST')) {
+					$path = "tests{$sep}data{$sep}src{$sep}Blocks{$sep}{$name}";
+				}
+				break;
+			case 'testsOutput':
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = "cliOutput";
+				}
+				break;
+			case 'testsData':
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = "tests{$sep}data";
+				}
+
 				break;
 		}
 
-		$path = ltrim($path, '/');
-		$path = rtrim($path, '/');
-		$path = "{$sep}{$path}";
+		if (!$prefix) {
+			$prefix = $internalPrefix;
+		} else {
+			$prefix = \trim($prefix, $sep);
+		}
 
-		$sufix = ltrim($sufix, '/');
-		$sufix = rtrim($sufix, '/');
+		$path = \trim($path, $sep);
+		$path = "{$prefix}{$sep}{$path}{$sep}";
+
+		$isFile = false;
 
 		if ($sufix) {
-			$sufix = "{$sep}{$sufix}";
+			$sufix = \trim($sufix, $sep);
+			$isFile = \strpos($sufix, '.') !== false;
 		}
 
 		if ($useSufixSlash) {
-			return \trailingslashit("{$path}{$sufix}");
+			$newPath = "{$path}{$sufix}";
+			$newPath = \rtrim($newPath, $sep);
+
+			if (!$isFile) {
+				return str_replace("{$sep}{$sep}", $sep, "{$newPath}{$sep}");
+			}
+
+			return str_replace("{$sep}{$sep}", $sep, $newPath);
 		}
-	
-		return "{$path}{$sufix}";
+
+		if (!$isFile) {
+			return str_replace("{$sep}{$sep}", $sep, "{$path}{$sufix}");
+		}
+
+		return str_replace("{$sep}{$sep}", $sep, $path);
 	}
 }

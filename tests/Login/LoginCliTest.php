@@ -2,64 +2,50 @@
 
 namespace Tests\Unit\Login;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Login\LoginCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$this->login = new LoginCli('boilerplate');
+	$this->mock = new LoginCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Login CLI command will correctly copy the Login class with defaults', function () {
-	$login = $this->login;
-	$login([], []);
+	$mock = $this->mock;
+	$mock([], []);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/Login/Login.php';
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Login{$sep}Login.php"));
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedLogin = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('class Login implements ServiceInterface', $generatedLogin);
-	$this->assertStringContainsString('@package EightshiftLibs\Login', $generatedLogin);
-	$this->assertStringContainsString('namespace EightshiftLibs\Login', $generatedLogin);
-	$this->assertStringNotContainsString('footer.php', $generatedLogin);
-	$this->assertFileExists($outputPath);
+	$this->assertStringContainsString('class Login implements ServiceInterface', $output);
+	$this->assertStringContainsString('@package EightshiftLibs\Login', $output);
+	$this->assertStringContainsString('namespace EightshiftLibs\Login', $output);
+	$this->assertStringNotContainsString('footer.php', $output);
 });
 
 test('Login CLI command will correctly copy the Login class with set arguments', function () {
-	$login = $this->login;
-	$login([], [
+	$mock = $this->mock;
+	$mock([], [
 		'namespace' => 'CoolTheme',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedLogin = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Login/Login.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}Login{$sep}Login.php"));
 
-	$this->assertStringContainsString('namespace CoolTheme\Login;', $generatedLogin);
+	$this->assertStringContainsString('namespace CoolTheme\Login;', $output);
 });
 
 
 test('Login CLI documentation is correct', function () {
-	expect($this->login->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

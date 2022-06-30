@@ -41,7 +41,9 @@ if (!function_exists('dbImport')) {
 		}
 
 		$sep = \DIRECTORY_SEPARATOR;
-		$setupFilePath = "{$projectRootPath}{$sep}{$setupFile}";
+		$projectRootPath = \trim($projectRootPath, $sep);
+		$setupFile = \trim($setupFile, $sep);
+		$setupFilePath = "{$sep}{$projectRootPath}{$sep}{$setupFile}";
 
 		// Check if setup exists.
 		if (!file_exists($setupFilePath)) {

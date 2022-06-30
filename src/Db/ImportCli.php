@@ -51,6 +51,7 @@ class ImportCli extends AbstractCli
 			'from' => '',
 			'to' => '',
 			'fileName' => 'setup.json',
+			'path' => Components::getProjectPaths('setupJson'),
 		];
 	}
 
@@ -102,7 +103,7 @@ class ImportCli extends AbstractCli
 
 		try {
 			dbImport( // phpcs:ignore
-				Components::getProjectPaths('projectRoot'),
+				$this->getArg($assocArgs, 'path'),
 				[
 					'from' => $this->getArg($assocArgs, 'from'),
 					'to' => $this->getArg($assocArgs, 'to'),

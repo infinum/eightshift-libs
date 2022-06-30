@@ -2,26 +2,21 @@
 
 namespace Tests\Unit\Helpers;
 
-use Brain\Monkey;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setupMocks;
-
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterAll(function() {
-	Monkey\tearDown();
-});
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 beforeEach(function () {
+	setBeforeEach();
+
 	(new BlocksExample())->getBlocksDataFullRaw();
 });
 
 afterEach(function () {
+	setAfterEach();
+
 	global $esBlocks;
 	$esBlocks = null;
 });

@@ -2,54 +2,55 @@
 
 namespace Tests\Unit\Config;
 
-use Brain\Monkey;
 use EightshiftBoilerplate\Config\ConfigExample;
 
-use function Tests\setupMocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
+	setBeforeEach();
 
-	$this->example = new ConfigExample();
+	$this->mock = new ConfigExample();
 });
 
-afterEach(function() {
-	Monkey\tearDown();
+afterEach(function () {
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Is project name defined and a string', function () {
-	$this->assertNotEmpty($this->example::getProjectName());
-	$this->assertIsString(\gettype($this->example::getProjectName()));
+	$this->assertNotEmpty($this->mock::getProjectName());
+	$this->assertIsString(\gettype($this->mock::getProjectName()));
 });
 
 test('Is project version defined and a string', function () {
-	$this->assertNotEmpty($this->example::getProjectVersion());
-	$this->assertIsString(\gettype($this->example::getProjectVersion()));
+	$this->assertNotEmpty($this->mock::getProjectVersion());
+	$this->assertIsString(\gettype($this->mock::getProjectVersion()));
 });
 
 test('Is project REST namespace defined, a string and same as project name', function () {
-	$this->assertNotEmpty($this->example::getProjectRoutesNamespace());
-	$this->assertIsString(\gettype($this->example::getProjectRoutesNamespace()));
-	$this->assertSame($this->example::getProjectName(), $this->example::getProjectRoutesNamespace());
+	$this->assertNotEmpty($this->mock::getProjectRoutesNamespace());
+	$this->assertIsString(\gettype($this->mock::getProjectRoutesNamespace()));
+	$this->assertSame($this->mock::getProjectName(), $this->mock::getProjectRoutesNamespace());
 });
 
 test('Is project REST route version defined and a string', function () {
-	$this->assertNotEmpty($this->example::getProjectRoutesVersion());
-	$this->assertIsString(\gettype($this->example::getProjectRoutesVersion()));
-	$this->assertStringContainsString('v', $this->example::getProjectRoutesVersion());
+	$this->assertNotEmpty($this->mock::getProjectRoutesVersion());
+	$this->assertIsString(\gettype($this->mock::getProjectRoutesVersion()));
+	$this->assertStringContainsString('v', $this->mock::getProjectRoutesVersion());
 });
 
 test('Is project path defined and readable', function () {
-	$this->assertNotEmpty($this->example::getProjectPath());
-	$this->assertDirectoryIsReadable($this->example::getProjectPath());
+	$this->assertNotEmpty($this->mock::getProjectPath());
+	$this->assertDirectoryIsReadable($this->mock::getProjectPath());
 });
 
 test('Is custom project path defined and readable', function () {
-	$this->assertNotEmpty($this->example::getProjectPath());
-	$this->assertDirectoryIsReadable($this->example::getProjectPath('data/'));
+	$this->assertNotEmpty($this->mock::getProjectPath());
+	$this->assertDirectoryIsReadable($this->mock::getProjectPath('tests'));
 });
 
 test('If non-existent path throws exception', function () {
-	$this->example::getProjectPath('bla/');
+	$this->mock::getProjectPath('bla/');
 })->throws(\EightshiftLibs\Exception\InvalidPath::class);

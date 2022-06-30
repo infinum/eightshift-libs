@@ -3,79 +3,50 @@
 namespace Tests\Unit\Block;
 
 use EightshiftLibs\Blocks\BlockWrapperCli;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('log')
-	->andReturnArg(0);
-
-$this->wrapper = new BlockWrapperCli('boilerplate');
+	$this->mock = new BlockWrapperCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
- test('Wrapper CLI command will correctly copy the Wrapper class with defaults', function () {
-	$wrapperMock = mock(BlockWrapperCli::class)
-		->makePartial()
-		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(\dirname(__FILE__, 2) . '/data');
+test('Wrapper CLI command will correctly copy the Wrapper class with defaults', function () {
+	$mock = $this->mock;
+	$mock([], [$this->mock->getDefaultArgs()]);
 
-	$mock = $wrapperMock->getMock();
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}wrapper{$sep}wrapper.php"));
 
-	$mock([], [$this->wrapper->getDefaultArgs()]);
-
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/wrapper.php';
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedWrapper = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('<div>Wrapper!</div>', $generatedWrapper);
-	$this->assertFileExists($outputPath);
+	$this->assertStringContainsString('<div>Wrapper!</div>', $output);
  });
 
  test('Wrapper CLI command will run under custom command name', function () {
-	$wrapper = $this->wrapper;
-	$result = $wrapper->getCommandName();
+	$mock = $this->mock;
+	$result = $mock->getCommandName();
 
 	expect($result)->toContain('wrapper');
 });
 
 test('Wrapper CLI documentation is correct', function () {
-	expect($this->wrapper->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });
 
 test('Wrapper CLI command will fail if Wrapper doesn\'t exist', function () {
-	$wrapperMock = mock(BlockWrapperCli::class)
-		->makePartial()
-		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(\dirname(__FILE__, 2) . '/data');
-
-	$mock = $wrapperMock->getMock();
-
+	$mock = $this->mock;
 	$mock([], ['name' => 'testing']);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/testing/testing.php';
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}testing{$sep}testing.php"));
 
-	$this->assertFileDoesNotExist($outputPath);
+	$this->assertFileDoesNotExist($output);
 });

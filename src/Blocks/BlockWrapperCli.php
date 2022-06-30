@@ -79,16 +79,9 @@ class BlockWrapperCli extends AbstractCli
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
-		$root = Components::getProjectPaths('root');
-		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
+		$sourcePath = Components::getProjectPaths('frontendLibsBlocks', 'wrapper');
 
-		$ds = \DIRECTORY_SEPARATOR;
-
-		$path = static::OUTPUT_DIR;
-		$sourcePathFolder = $rootNode . $ds . static::OUTPUT_DIR . $ds;
-		$sourcePath = "{$sourcePathFolder}";
-
-		$destinationPath = $root . $ds . $path;
+		$destinationPath = Components::getProjectPaths('blocks', 'wrapper');
 
 		// Destination exists.
 		if (\file_exists($destinationPath) && $skipExisting === false) {
@@ -99,10 +92,10 @@ class BlockWrapperCli extends AbstractCli
 				)
 			);
 		} else {
-			\mkdir("{$destinationPath}/");
+			\mkdir($destinationPath);
 		}
 
-		$this->copyRecursively($sourcePath, "{$destinationPath}/");
+		$this->copyRecursively($sourcePath, $destinationPath);
 
 		WP_CLI::success('Wrapper successfully moved to your project.');
 
@@ -117,7 +110,7 @@ class BlockWrapperCli extends AbstractCli
 					->renameNamespace($assocArgs)
 					->renameTextDomainFrontendLibs($assocArgs)
 					->renameUseFrontendLibs($assocArgs)
-					->outputWrite($path, $file, ['skip_existing' => true]);
+					->outputWrite($destinationPath, $file, ['skip_existing' => true]);
 			}
 		}
 

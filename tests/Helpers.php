@@ -22,10 +22,10 @@ function setupMocks() {
 	Functions\stubEscapeFunctions();
 
 	// Mock the template dir location.
-	Functions\when('get_template_directory')->justReturn(\dirname(__FILE__) . '/data');
+	Functions\when('get_template_directory')->justReturn(\dirname(__FILE__) . \DIRECTORY_SEPARATOR . 'data');
 
 	// Mock the template dir location.
-	Functions\when('get_stylesheet_directory')->justReturn(\dirname(__FILE__) . '/');
+	Functions\when('get_stylesheet_directory')->justReturn(\dirname(__FILE__) . \DIRECTORY_SEPARATOR);
 
 	// Mock escaping function.
 	Functions\when('wp_kses_post')->returnArg();

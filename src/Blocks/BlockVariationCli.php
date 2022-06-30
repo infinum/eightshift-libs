@@ -113,8 +113,6 @@ class BlockVariationCli extends AbstractCli
 
 		$destinationPath = "{$root}{$ds}{$path}";
 
-		var_dump(file_exists($sourcePath));
-
 		// Source doesn't exist.
 		if (!\file_exists($sourcePath)) {
 			$nameList = '';

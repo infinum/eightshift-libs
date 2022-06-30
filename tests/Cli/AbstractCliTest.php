@@ -97,7 +97,7 @@ test('Prepare command docs returns correct doc', function() {
 				'name' => 'random',
 				'description' => 'Random description.',
 				'optional' => true,
-				'default' => $this->getDefaultArg('random'),
+				'default' => 'random',
 			],
 		],
 	];
@@ -148,57 +148,6 @@ test('Block full file list helper works', function() {
 	$this->assertTrue(\array_key_exists('components/button-toolbar.js', \array_flip($output)), 'components/button-toolbar.js is missing.');
 	$this->assertTrue(\array_key_exists('components/button-options.js', \array_flip($output)), 'components/button-options.js is missing.');
 });
-
-
-test('Getting frontend libs block path works', function() {
-	$abstractMock = new AbstractTest('test');
-
-	$output = $abstractMock->getFrontendLibsBlockPath();
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('node_modules/@eightshift/frontend-libs/blocks/init', $output);
-});
-
-
-test('Getting frontend libs path works', function() {
-	$abstractMock = new AbstractTest('test');
-
-	$output = $abstractMock->getFrontendLibsPath('test');
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('node_modules/@eightshift/frontend-libs/test', $output);
-});
-
-
-test('Getting libs path works', function() {
-	$abstractMock = new AbstractTest('test');
-
-	// The test one is covered. Let's see if we can get the one that will be used
-	$output = $abstractMock->getLibsPath('test');
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('/vendor/infinum/eightshift-libs/test', $output);
-});
-
-
-test('Project config root path works if dev is true', function() {
-	$abstractMock = new AbstractTest('test');
-
-	$outputDev = $abstractMock->getProjectConfigRootPath(true);
-
-	$this->assertIsString($outputDev);
-});
-
-
-test('Project config root path works if dev is false', function() {
-	$abstractMock = new AbstractTest('test');
-
-	$outputProd = $abstractMock->getProjectConfigRootPath(false);
-
-	$this->assertIsString($outputProd);
-	$this->assertSame('/', $outputProd);
-});
-
 
 test('Preparing slug works', function($slugs) {
 	$abstractMock = new AbstractTest('test');
