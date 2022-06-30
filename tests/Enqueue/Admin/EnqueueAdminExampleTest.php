@@ -169,3 +169,28 @@ test('getAdminScriptHandle will return string', function () {
 		->toBeString()
 		->not->toBeArray();
 });
+
+test('getConditionUse will be false if outside of admin', function () {
+	Functions\when('is_admin')->justReturn(false);
+
+	$conditionUse = $this->adminEnqueue->getConditionUse();
+
+	expect($conditionUse)
+		->toBeFalse()
+		->not->toBeNull();
+});
+
+test('getConditionUse will be true if inside block editor', function () {
+	Functions\when('get_current_screen')->alias(function () {
+		return new class
+		{
+			public $is_block_editor = true; // We are in the block editor.
+		};
+	});
+
+	$conditionUse = $this->adminEnqueue->getConditionUse();
+
+	expect($conditionUse)
+		->toBeTrue()
+		->not->toBeNull();
+});
