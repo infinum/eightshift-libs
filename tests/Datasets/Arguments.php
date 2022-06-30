@@ -21,7 +21,7 @@ dataset('correctArguments', [
 dataset('classesArray', [
 	[['medium', 'large']],
 	[['small']],
-	[['key' => 'bold--all']]
+	[['key' => 'bold--all']],
 ]);
 
 // Rest/Fields arguments

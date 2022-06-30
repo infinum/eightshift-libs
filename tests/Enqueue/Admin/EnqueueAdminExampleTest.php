@@ -153,3 +153,44 @@ test('Localization will return empty array if not initialized', function() {
 	$this->assertIsArray($localizationExample->getLocalizations());
 	$this->assertEmpty($localizationExample->getLocalizations());
 });
+
+test('getAdminStyleHandle will return string', function () {
+	$adminHandle = $this->adminEnqueue->getAdminStyleHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});
+
+test('getAdminScriptHandle will return string', function () {
+	$adminHandle = $this->adminEnqueue->getAdminScriptHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});
+
+test('getConditionUse will be false if outside of admin', function () {
+	Functions\when('is_admin')->justReturn(false);
+
+	$conditionUse = $this->adminEnqueue->getConditionUse();
+
+	expect($conditionUse)
+		->toBeFalse()
+		->not->toBeNull();
+});
+
+test('getConditionUse will be true if inside block editor', function () {
+	Functions\when('get_current_screen')->alias(function () {
+		return new class
+		{
+			public $is_block_editor = true; // We are in the block editor.
+		};
+	});
+
+	$conditionUse = $this->adminEnqueue->getConditionUse();
+
+	expect($conditionUse)
+		->toBeTrue()
+		->not->toBeNull();
+});

@@ -110,4 +110,3 @@ test('Throws type exception if wrong argument type is passed to classnames', fun
 	Components::classnames($argument);
 })->throws(\TypeError::class)
 	->with('errorStringArguments');
-
