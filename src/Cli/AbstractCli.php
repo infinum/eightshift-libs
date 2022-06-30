@@ -387,11 +387,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getOutputDir(string $path = ''): string
 	{
-		if (\getenv('ES_TEST')) {
-			return Components::getProjectPaths('testsOutput', $path);
-		}
-
-		return Components::getProjectPaths('root', $path);
+		return Components::getProjectPaths('cliOuput', $path);
 	}
 
 	/**
@@ -405,7 +401,6 @@ abstract class AbstractCli implements CliInterface
 	{
 		$ds = \DIRECTORY_SEPARATOR;
 
-		$file = \rtrim($file, $ds);
 		$file = \trim($file, $ds);
 
 		if (\strpos($file, '.') !== false) {

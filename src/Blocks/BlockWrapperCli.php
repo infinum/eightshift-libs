@@ -21,13 +21,6 @@ use WP_CLI;
 class BlockWrapperCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR . 'wrapper';
-
-	/**
 	 * Get WPCLI command parent name
 	 *
 	 * @return string
@@ -79,9 +72,8 @@ class BlockWrapperCli extends AbstractCli
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
-		$sourcePath = Components::getProjectPaths('frontendLibsBlocks', 'wrapper');
-
-		$destinationPath = Components::getProjectPaths('blocks', 'wrapper');
+		$sourcePath = Components::getProjectPaths('frontendLibsBlocks', $name);
+		$destinationPath = Components::getProjectPaths('blocks', $name);
 
 		// Destination exists.
 		if (\file_exists($destinationPath) && $skipExisting === false) {

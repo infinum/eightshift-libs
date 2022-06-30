@@ -325,6 +325,13 @@ class Components
 				}
 
 				break;
+			case 'cliOuput':
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = "testsOutput";
+				}
+
+				break;
 			case 'wpContent':
 				$internalPrefix = \dirname(__FILE__, 6);
 				break;

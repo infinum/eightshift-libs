@@ -40,13 +40,3 @@ test('Wrapper CLI command will correctly copy the Wrapper class with defaults', 
 test('Wrapper CLI documentation is correct', function () {
 	expect($this->mock->getDoc())->toBeArray();
 });
-
-test('Wrapper CLI command will fail if Wrapper doesn\'t exist', function () {
-	$mock = $this->mock;
-	$mock([], ['name' => 'testing']);
-
-	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('testsOutput', "src{$sep}testing{$sep}testing.php"));
-
-	$this->assertFileDoesNotExist($output);
-});
