@@ -72,7 +72,7 @@ class BlockWrapperCli extends AbstractCli
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
-		$sourcePath = Components::getProjectPaths('frontendLibsBlocks', $name);
+		$sourcePath = Components::getProjectPaths('blocksSource', $name);
 		$destinationPath = Components::getProjectPaths('blocks', $name);
 
 		// Destination exists.

@@ -104,7 +104,7 @@ class BlockVariationCli extends AbstractCli
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
 		$root = Components::getProjectPaths('root');
-		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
+		$rootNode = Components::getProjectPaths('blocksSource');
 		$ds = \DIRECTORY_SEPARATOR;
 
 		$path = static::OUTPUT_DIR . $ds . $name;

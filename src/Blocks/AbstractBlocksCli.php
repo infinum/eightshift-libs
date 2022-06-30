@@ -20,148 +20,124 @@ use WP_CLI;
 abstract class AbstractBlocksCli extends AbstractCli
 {
 	/**
-	 * Move block/component to project folder.
+	 * Move items for the block editor to project folder.
 	 *
 	 * @param array<string, mixed> $assocArgs Array of arguments from WP-CLI command.
-	 * @param string $outputDir Output dir path.
-	 * @param bool $isComponents Is output used for components.
+	 * @param string $source Source path.
+	 * @param string $destination Destination path.
 	 *
 	 * @return void
 	 */
-	protected function blocksMove(array $assocArgs, string $outputDir, bool $isComponents = false): void
+	protected function moveItems(array $assocArgs, string $source, string $destination): void
 	{
 		// Get Props.
-		$name = $this->getArg($assocArgs, 'name');
-
-		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
-		$root = Components::getProjectPaths('root');
-		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
+		// Clean up name.
+		$name = $this->getArg($assocArgs, 'name');
+		$name = str_replace(' ', '', $name);
+		$name = \trim($name, \DIRECTORY_SEPARATOR);
 
-		$ds = \DIRECTORY_SEPARATOR;
-		$sourcePathFolder = "{$rootNode}{$ds}{$outputDir}{$ds}";
+		$itemsList = [$name];
 
-		$blocks = \scandir($sourcePathFolder);
-		$blocksFullList = \array_diff((array)$blocks, ['..', '.']);
-
-		$blocks = [$name];
-
-		// If you pass a name "all" it will move all blocks/components to the project.
-		if ($name === 'all') {
-			$skipExisting = true;
-			$blocks = $blocksFullList;
+		if (gettype($name) === 'array') {
+			$itemsList = explode(',', $name);
 		}
 
-		// Iterate blocks/components.
-		foreach ($blocks as $block) {
-			$path = "{$outputDir}{$ds}{$block}";
-			$sourcePath = "{$sourcePathFolder}{$block}";
+		if (!is_dir($source)) {
+			self::cliError(
+				\sprintf(
+					'%s path doesn\'t exist. Please check if you have eightshift-frontend-libs instaled.',
+					$source,
+				)
+			);
+		}
 
-			$destinationPath = "{$root}{$ds}{$path}";
+		$sourceItems = \array_diff(\scandir($source), ['..', '.']);
+		$sourceItems = array_values($sourceItems);
+		$sourceItemsOuput = \implode(\PHP_EOL, $sourceItems);
 
-			$typePlural = !$isComponents ?  'blocks' : 'components';
-			$typeSingular = !$isComponents ?  'block' : 'component';
+		if (!$sourceItems) {
+			self::cliError(
+				\sprintf(
+					'%s path doesn\'t contain anything. Please check if you have eightshift-frontend-libs instaled.',
+					$source
+				)
+			);
+		}
 
-			// Source doesn't exist.
-			if (!\file_exists($sourcePath)) {
-				// Make a list for output.
-				$blocksList = \implode(\PHP_EOL, $blocksFullList);
+		if (\file_exists($destination) && $skipExisting === false) {
+			self::cliError(
+				\sprintf(
+					'%s path exists. If you want to override the destination folder plase use --skip_existing="true" argument.',
+					$destination
+				)
+			);
+		}
 
-				WP_CLI::log(
-					"Please check the docs for all available {$typePlural}."
-				);
-				WP_CLI::log(
-					"You can find all available {$typePlural} on this link: https://infinum.github.io/eightshift-docs/storybook/."
-				);
-				WP_CLI::log(
-					"Or here is the list of all available {$typeSingular} names: \n{$blocksList}"
-				);
-
-				self::cliError("The {$typeSingular} '{$sourcePath}' doesn\'t exist in our library.");
-			}
-
-			// Destination exists.
-			if (\file_exists($destinationPath) && $skipExisting === false) {
+		foreach ($itemsList as $item) {
+			if (!in_array($item, $sourceItems, true)) {
 				self::cliError(
 					\sprintf(
-						'The %s in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
-						$typeSingular,
-						$destinationPath,
+						'Requested item with the name "%s" doesn\'t exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type: \n%s',
+						$item,
+						$sourceItemsOuput
 					)
 				);
 			}
 
-			// Move all files from library to project.
-			$this->moveBlock($destinationPath, $sourcePath, $block, $assocArgs, $path, $typeSingular);
-		}
+			$fullSource = Components::joinPaths([$source, $item]);
+			$fullDestination = Components::joinPaths([$destination, $item]);
 
-		WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
-	}
+			// Create folder in project if missing.
+			if (!\is_dir($fullDestination)) {
+				\mkdir($fullDestination);
+			}
 
-	/**
-	 * Move block/component from frontend libs to project.
-	 *
-	 * @param string $destinationPath Path where to move.
-	 * @param string $sourcePath Path of the block/component.
-	 * @param string $name Name of block/component.
-	 * @param array<string, mixed> $assocArgs WP-CLI command arguments.
-	 * @param string $path Path to write.
-	 * @param string $typeSingular If block or component output string.
-	 *
-	 * @return void
-	 */
-	private function moveBlock(string $destinationPath, string $sourcePath, string $name, array $assocArgs, string $path, string $typeSingular): void
-	{
-		$ds = \DIRECTORY_SEPARATOR;
+			// Move item to project folder.
+			$this->copyRecursively($fullSource, $fullDestination);
 
-		// Create folder in project if missing.
-		if (!\is_dir("{$destinationPath}{$ds}")) {
-			\mkdir("{$destinationPath}{$ds}");
-		}
+			$partialsOutput = [];
+			$partialsPath = Components::joinPaths([$fullDestination, 'partials']);
 
-		// Move block/component to project folder.
-		$this->copyRecursively($sourcePath, "{$destinationPath}{$ds}");
+			// Check if we have partials folder. If so output and that folder with items in it.
+			if (\is_dir($partialsPath)) {
+				$partials = \array_diff(\scandir($partialsPath), ['..', '.']);
+				$partials = array_values($partials);
 
-		$typeSingular = \ucfirst($typeSingular);
+				$partialsOutput = \array_map(
+					static function ($item) {
+						return "partials/{$item}";
+					},
+					$partials
+				);
+			}
 
-		WP_CLI::success("{$typeSingular} successfully moved to your project.");
+			$innerItems = \array_merge(
+				$this->getFullBlocksFiles($name),
+				$partialsOutput
+			);
 
-		WP_CLI::log('--------------------------------------------------');
+			foreach ($innerItems as $innerItem) {
+				// Set output file path.
+				$class = $this->getExampleTemplate($fullDestination, $innerItem, true);
 
-		$partialsOutput = [];
+				if (!empty($class->fileContents)) {
+					$class->renameProjectName($assocArgs)
+						->renameNamespace($assocArgs)
+						->renameTextDomainFrontendLibs($assocArgs)
+						->renameUseFrontendLibs($assocArgs)
+						->outputWrite($fullDestination, $innerItem, ['skip_existing' => true]);
+				}
+			}
 
-		// Check if we have partials folder. If so output and that folder with items in it.
-		if (\is_dir("{$destinationPath}/partials")) {
-			$partials = \array_diff(\scandir("{$destinationPath}/partials"), ['..', '.']);
-
-			$partialsOutput = \array_map(
-				static function ($item) {
-					return "partials/{$item}";
-				},
-				$partials
+			WP_CLI::success(
+				\sprintf(
+					"%s successfully moved to your project on this path %s.",
+					$name,
+					$destination
+				)
 			);
 		}
-
-		$items = \array_merge(
-			$this->getFullBlocksFiles($name),
-			$partialsOutput
-		);
-
-		// Move all files from library to project.
-		foreach ($items as $file) {
-			// Set output file path.
-			$class = $this->getExampleTemplate($destinationPath, $file, true);
-
-			if (!empty($class->fileContents)) {
-				$class->renameProjectName($assocArgs)
-					->renameNamespace($assocArgs)
-					->renameTextDomainFrontendLibs($assocArgs)
-					->renameUseFrontendLibs($assocArgs)
-					->outputWrite($path, $file, ['skip_existing' => true]);
-			}
-		}
-
-		WP_CLI::log('--------------------------------------------------');
 	}
 }

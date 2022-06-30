@@ -75,7 +75,7 @@ class BlocksStorybookCli extends AbstractCli
 		}
 
 		$root = Components::getProjectPaths('root');
-		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
+		$rootNode = Components::getProjectPaths('blocksSource');
 
 		$folder = "{$root}/.storybook";
 

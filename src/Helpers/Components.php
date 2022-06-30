@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
-use EightshiftLibs\Blocks\AbstractBlocks;
 use EightshiftLibs\Exception\ComponentException;
 
 /**
@@ -288,16 +287,40 @@ class Components
 	}
 
 	/**
+	 * Get all project paths for store.
+	 *
+	 * @var array<int, string>
+	 */
+	public const PROJECT_PATHS = [
+		'projectRoot',
+		'setupJson',
+		'cliOuput',
+		'wpContent',
+		'libs',
+
+		'blocksSource',
+		'blocksSourceCustom',
+		'blocksSourceComponents',
+		'blocksSourceVariations',
+		'blocksSourceWrapper',
+
+		'blocksDestination',
+		'blocksDestinationCustom',
+		'blocksDestinationComponents',
+		'blocksDestinationVariations',
+		'blocksDestinationWrapper',
+	];
+
+	/**
 	 * Internal helper for getting all project paths for easy mocking in tests.
 	 *
 	 * @param string $type Type fo path to return.
 	 * @param string $sufix Additional sufix path to add.
 	 * @param string $prefix Additional prefix insted of dirname path.
-	 * @param bool $useSufixSlash Force / at the end of the path.
 	 *
 	 * @return string
 	 */
-	public static function getProjectPaths(string $type = '', string $sufix = '', string $prefix = '', bool $useSufixSlash = true): string
+	public static function getProjectPaths(string $type = '', string $sufix = '', string $prefix = ''): string
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
@@ -307,6 +330,14 @@ class Components
 		if (\getenv('ES_TEST')) {
 			$internalPrefix = \dirname(__FILE__, 3);
 		}
+
+		$flibsPath = ["node_modules", "@eightshift", "frontend-libs", "blocks", "init"];
+		$libsPath = ["vendor", "infinum", "eightshift-libs"];
+		$testsDataPath = ["tests", "data"];
+		$blocksPath = ["src", "Blocks"];
+		$cliOutputFolder = "cliOutput";
+
+		$name = '';
 
 		switch ($type) {
 			case 'projectRoot':
@@ -321,7 +352,7 @@ class Components
 
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
-					$path = "cliOutput{$sep}setup";
+					$path = self::joinPaths([$cliOutputFolder, "setup"]);
 				}
 
 				break;
@@ -334,94 +365,101 @@ class Components
 				break;
 			case 'wpContent':
 				$internalPrefix = \dirname(__FILE__, 6);
-				break;
-			case 'frontendLibsBlocks':
-				$path = "node_modules{$sep}@eightshift{$sep}frontend-libs{$sep}blocks{$sep}init{$sep}src{$sep}Blocks";
 
 				if (\getenv('ES_TEST')) {
-					$path = "cliOutput{$sep}src{$sep}Blocks";
+					$internalPrefix = \dirname(__FILE__, 3);
 				}
 				break;
 			case 'libs':
-				$path = "vendor{$sep}infinum{$sep}eightshift-libs";
+				$path =  self::joinPaths($libsPath);
 
 				if (\getenv('ES_TEST')) {
 					$path = '';
 				}
-
 				break;
-			case 'blocks':
-				$path = "src{$sep}Blocks";
+			case 'blocksSource':
+				$path = self::joinPaths([...$flibsPath, ...$blocksPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path = "cliOutput{$sep}src{$sep}Blocks";
+					$path =  self::joinPaths([...$testsDataPath, ...$blocksPath]);
 				}
 				break;
-			case 'blocksCustom':
+			case 'blocksSourceCustom':
 				$name = 'custom';
-				$path = "src{$sep}Blocks{$sep}{$name}";
-
-				if (\getenv('ES_TEST')) {
-					$path = "cliOutput{$sep}src{$sep}Blocks{$sep}{$name}";
-				}
 				break;
-			case 'blocksComponents':
+			case 'blocksSourceComponents':
 				$name = 'components';
-				$path =  "src{$sep}Blocks{$sep}{$name}";
-
-				if (\getenv('ES_TEST')) {
-					$path = "cliOutput{$sep}src{$sep}Blocks{$sep}{$name}";
-				}
 				break;
-			case 'blocksVariations':
+			case 'blocksSourceVariations':
 				$name = 'variations';
-				$path = "src{$sep}Blocks{$sep}{$name}";
+				break;
+			case 'blocksSourceWrapper':
+				$name = 'wrapper';
+				break;
+
+			case 'blocksDestination':
+				$path = self::joinPaths($blocksPath);
 
 				if (\getenv('ES_TEST')) {
-					$path = "cliOutput{$sep}src{$sep}Blocks{$sep}{$name}";
+					$path =  self::joinPaths([$cliOutputFolder, ...$blocksPath]);
 				}
 				break;
-			case 'blocksWrapper':
+			case 'blocksDestinationCustom':
+				$name = 'custom';
+				break;
+			case 'blocksDestinationComponents':
+				$name = 'components';
+				break;
+			case 'blocksDestinationVariations':
+				$name = 'variations';
+				break;
+			case 'blocksDestinationWrapper':
 				$name = 'wrapper';
-				$path = "src{$sep}Blocks{$sep}{$name}";
+				break;
+		}
+
+		switch ($type) {
+			case 'blocksSourceCustom':
+			case 'blocksSourceComponents':
+			case 'blocksSourceVariations':
+			case 'blocksSourceWrapper':
+				$path = self::joinPaths([...$flibsPath, ...$blocksPath, $name]);
 
 				if (\getenv('ES_TEST')) {
-					$path = "cliOutput{$sep}src{$sep}Blocks{$sep}{$name}";
+					$path =  self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);
+				}
+				break;
+
+			case 'blocksDestinationCustom':
+			case 'blocksDestinationComponents':
+			case 'blocksDestinationVariations':
+			case 'blocksDestinationWrapper':
+				$path = self::joinPaths([...$blocksPath, $name]);
+
+				if (\getenv('ES_TEST')) {
+					$path =  self::joinPaths([$cliOutputFolder, ...$blocksPath, $name]);
 				}
 				break;
 		}
 
 		if (!$prefix) {
 			$prefix = $internalPrefix;
-		} else {
-			$prefix = \trim($prefix, $sep);
 		}
 
-		$path = \trim($path, $sep);
-		$path = "{$prefix}{$sep}{$path}{$sep}";
-
-		$isFile = false;
-
-		if ($sufix) {
-			$sufix = \trim($sufix, $sep);
-			$isFile = \strpos($sufix, '.') !== false;
-		}
-
-		if ($useSufixSlash) {
-			$newPath = "{$path}{$sufix}";
-			$newPath = \rtrim($newPath, $sep);
-
-			if (!$isFile) {
-				return str_replace("{$sep}{$sep}", $sep, "{$newPath}{$sep}");
-			}
-
-			return str_replace("{$sep}{$sep}", $sep, $newPath);
-		}
-
-		if (!$isFile) {
-			return str_replace("{$sep}{$sep}", $sep, "{$path}{$sufix}");
-		}
+		$path = self::joinPaths([$prefix, $path, $sufix]);
 
 		return str_replace("{$sep}{$sep}", $sep, $path);
+	}
+
+	/**
+	 * Paths join
+	 *
+	 * @param array<int, string> $paths Paths to join.
+	 *
+	 * @return string
+	 */
+ 	public static function joinPaths(array $paths): string
+	{
+		return implode(\DIRECTORY_SEPARATOR, $paths);
 	}
 }

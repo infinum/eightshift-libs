@@ -140,7 +140,7 @@ class BlocksCli extends AbstractCli
 	private function blocksInit(array $args): void
 	{
 		$root = Components::getProjectPaths('root');
-		$rootNode = Components::getProjectPaths('frontendLibsBlocks');
+		$rootNode = Components::getProjectPaths('blocksSource');
 
 		$folders = [
 			'assetsGlobal' => "{$root}/assets",

@@ -11,19 +11,14 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+use EightshiftLibs\Helpers\Components;
+use WP_CLI;
 
 /**
  * Class BlockCli
  */
 class BlockCli extends AbstractBlocksCli
 {
-	/**
-	 * Output dir relative path
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR . 'custom';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -94,6 +89,12 @@ class BlockCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore Eightshift.Commenting.FunctionComment.WrongStyle
 	{
-		$this->blocksMove($assocArgs, static::OUTPUT_DIR);
+		$this->moveItems(
+			$assocArgs,
+			Components::getProjectPaths('blocksSourceCustom'),
+			Components::getProjectPaths('blocksDestinationCustom'),
+		);
+
+		WP_CLI::log('--------------------------------------------------');
 	}
 }

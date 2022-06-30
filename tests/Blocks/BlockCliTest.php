@@ -4,8 +4,8 @@ namespace Tests\Unit\Block;
 
 use EightshiftLibs\Blocks\BlockCli;
 
-use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
+use Exception;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
@@ -24,28 +24,33 @@ afterEach(function () {
 
 test('Block CLI command will correctly copy the Block class with defaults', function () {
 	$mock = $this->mock;
-	$mock([], []);
+	$mock([], $mock->getDefaultArgs());
+
+	$name = $this->mock->getDefaultArgs()['name'];
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Blocks{$sep}custom{$sep}button{$sep}button.php"));
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestinationCustom', "{$name}{$sep}{$name}.php"));
 
-	$this->assertStringContainsString('Template for the Button Block view.', $output);
-	$this->assertStringContainsString('@package EightshiftBoilerplate', $output);
-	$this->assertStringNotContainsString('Components::render(\'link\', $attributes)', $output);
- });
-
-test('Block CLI command will run under custom command name', function () {
-	$mock = $this->mock;
-	$output = $mock->getCommandName();
-
-	expect($output)->toContain('block');
+	expect($output)->toContain(
+		'Template for the Button Block view.',
+		'@package EightshiftLibs',
+	)
+	->not->toContain(
+		'@package EightshiftBoilerplate'
+	);
 });
 
 test('Block CLI documentation is correct', function () {
-	expect($this->mock->getDoc())->toBeArray();
+	$mock = $this->mock;
+	expect($mock->getDoc())->toBeArray();
 });
 
 test('Block CLI command will fail if block doesn\'t exist', function () {
 	$mock = $this->mock;
-	$mock([], ['name' => 'testing']);
-})->expectException(InvalidBlock::class);
+	$mock([], array_merge(
+		$mock->getDefaultArgs(),
+		[
+			'name' => 'testing'
+		]
+	));
+})->throws(Exception::class, 'Requested item with the name "testing" doesn\'t exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type:');

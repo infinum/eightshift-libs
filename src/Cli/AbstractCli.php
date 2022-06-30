@@ -334,33 +334,29 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @return void
 	 */
-	public function outputWrite(string $outputDir, string $outputFile, array $args = []): void
+	public function outputWrite(string $destination, string $destinationFile, array $args = []): void
 	{
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
 
-		// Set output paths.
-		$outputDir = $this->getOutputDir($outputDir);
-
 		// Set output file path.
-		$outputFile = $this->getOutputFile($outputFile);
-		$outputFile = "{$outputDir}{$outputFile}";
+		$destinationFile = Components::joinPaths([$destination, $destinationFile]);
 
 		// Bailout if file already exists.
-		if (\file_exists($outputFile) && $skipExisting === false) {
-			self::cliError("The file {$outputFile} can\'t be generated because it already exists.");
+		if (\file_exists($destinationFile) && $skipExisting === false) {
+			self::cliError("The file {$destinationFile} can\'t be generated because it already exists.");
 		}
 
 		// Create output dir if it doesn't exist.
-		if (!\is_dir($outputDir)) {
-			\mkdir($outputDir, 0755, true);
+		if (!\is_dir($destination)) {
+			\mkdir($destination, 0755, true);
 		}
 
 		// Open a new file on output.
 		// If there is any error, bailout. For example, user permission.
-		if (\fopen($outputFile, "wb") !== false) {
-			$fp = \fopen($outputFile, "wb");
+		if (\fopen($destinationFile, "wb") !== false) {
+			$fp = \fopen($destinationFile, "wb");
 
 			// Write and close.
 			\fwrite($fp, $this->fileContents);
@@ -368,26 +364,14 @@ abstract class AbstractCli implements CliInterface
 
 			// Return success.
 			if ($skipExisting) {
-				WP_CLI::success("File {$outputFile} successfully renamed.");
+				WP_CLI::success("File {$destinationFile} successfully renamed.");
 			} else {
-				WP_CLI::success("File {$outputFile} successfully created.");
+				WP_CLI::success("File {$destinationFile} successfully created.");
 			}
 			return;
 		}
 
-		self::cliError("File {$outputFile} couldn\'t be created. There was an error.");
-	}
-
-	/**
-	 * Get full output dir path
-	 *
-	 * @param string $path Project specific path.
-	 *
-	 * @return string
-	 */
-	public function getOutputDir(string $path = ''): string
-	{
-		return Components::getProjectPaths('cliOuput', $path);
+		self::cliError("File {$destinationFile} couldn\'t be created. There was an error.");
 	}
 
 	/**
