@@ -1,2 +1,2 @@
 <?php
-// Assets example file.
+// Global Assets example file.

@@ -145,6 +145,8 @@ function setupMocks() {
 	Functions\when('trailingslashit')->alias(function(string $string) {
 		return rtrim( $string, '/\\' );
 	});
+
+	Functions\when('is_wp_version_compatible')->justReturn(true);
 }
 
 /**

@@ -24,7 +24,7 @@ test('Storybook CLI command will correctly copy the Storybook class with default
 	$mock = $this->mock;
 	$mock([], []);
 
-	$output = \file_get_contents(Components::getProjectPaths('blocksStorybookDestination', 'storybook.php'));
+	$output = \file_get_contents(Components::getProjectPaths('blocksAssetsDestination', 'storybook.php'));
 
 	expect($output)->toContain('Storybook example file');
 });

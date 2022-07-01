@@ -10,46 +10,30 @@ use EightshiftLibs\Helpers\Components;
 use WP_Block_Editor_Context;
 
 use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 use function Tests\setupMocks;
 
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
+	setBeforeEach();
 
-	$this->config = mock('alias:EightshiftBoilerplate\Config\Config');
+	// $this->config = mock('alias:EightshiftBoilerplate\Config\Config');
 
-	Functions\when('is_wp_version_compatible')->justReturn(true);
-
-	$this->blocksExample = new BlocksExample();
+	$this->mock = new BlocksExample();
 });
 
 afterEach(function() {
-	Monkey\tearDown();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
-test('Register method will call init hooks', function () {
-
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
-
-	$this->blocksExample->register();
-
-	expect(has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->getBlocksDataFullRaw()'))->toBe(10);
-	expect(has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->registerBlocks()'))->toBe(11);
-});
-
-test('Register method will call block_categories_all hooks', function () {
-
-	$this->blocksExample->register();
+test('Register method will call all register hooks', function () {
+	$this->mock->register();
 
 	expect(has_filter('block_categories_all', 'EightshiftBoilerplate\Blocks\BlocksExample->getCustomCategory()'))->toBe(10);
-});
-
-test('Register method will call after_setup_theme hooks', function () {
-
-	$this->blocksExample->register();
-
+	expect(has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->getBlocksDataFullRaw()'))->toBe(10);
+	expect(has_action('init', 'EightshiftBoilerplate\Blocks\BlocksExample->registerBlocks()'))->toBe(11);
 	expect(has_action('after_setup_theme', 'EightshiftBoilerplate\Blocks\BlocksExample->addThemeSupport()'))->toBe(25);
 	expect(has_action('after_setup_theme', 'EightshiftBoilerplate\Blocks\BlocksExample->changeEditorColorPalette()'))->toBe(11);
 });
@@ -62,7 +46,7 @@ test('addThemeSupport method will call add_theme_support() function with differe
 		putenv("{$envName}=true");
 	});
 
-	$this->blocksExample->addThemeSupport();
+	$this->mock->addThemeSupport();
 
 	expect(\getenv('ALIGN_WIDE'))->toBe('true');
 });
@@ -73,11 +57,11 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 
 	$post = mock('WP_Post');
 
-	$blocks = $this->blocksExample->getAllBlocksListOld(true, $post);
+	$blocks = $this->mock->getAllBlocksListOld(true, $post);
 
 	expect($blocks)->toBeTrue();
 
-	$blocks = $this->blocksExample->getAllBlocksListOld(false, $post);
+	$blocks = $this->mock->getAllBlocksListOld(false, $post);
 
 	expect($blocks)->toBeFalse();
 });
@@ -88,7 +72,7 @@ test('Asserts that getAllBlocksList will return true if post type is eightshift-
 	$blockContext->post = mock('WP_Post');
 	$blockContext->post->post_type = 'eightshift-forms';
 
-	$blocks = $this->blocksExample->getAllBlocksList([], $blockContext);
+	$blocks = $this->mock->getAllBlocksList([], $blockContext);
 
 	expect($blocks)
 		->toBeTrue();
@@ -100,7 +84,7 @@ test('Asserts that getAllBlocksList first argument is not bool and return first 
 	$blockContext->post = mock('WP_Post');
 	$blockContext->post->post_type = 'post';
 
-	$blocks = $this->blocksExample->getAllBlocksList(['test'], $blockContext);
+	$blocks = $this->mock->getAllBlocksList(['test'], $blockContext);
 
 	expect($blocks)
 		->toBeArray()
@@ -113,13 +97,9 @@ test('Asserts that getAllBlocksListOld will return only projects blocks for olde
 
 	$post = mock(\WP_Post::class);
 
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+	$this->mock->getBlocksDataFullRaw();
 
-	$this->blocksExample->getBlocksDataFullRaw();
-
-	$list = $this->blocksExample->getAllBlocksListOld([], $post);
+	$list = $this->mock->getAllBlocksListOld([], $post);
 
 	expect($list)
 		->toBeArray()
@@ -138,7 +118,7 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 
 	Components::setConfigFlags();
 
-	$blocks = $this->blocksExample->getAllBlocksList(false, $blockContext);
+	$blocks = $this->mock->getAllBlocksList(false, $blockContext);
 
 	expect($blocks)
 		->toBeArray()
@@ -155,7 +135,7 @@ test('Asserts that render component will load view template.', function () {
 		->shouldReceive('getProjectPath')
 		->andReturn('tests/data');
 
-	$block = $this->blocksExample->render($blockManifest, '');
+	$block = $this->mock->render($blockManifest, '');
 
 	expect($block)
 		->toBeString()
@@ -173,7 +153,7 @@ test('Asserts that render will throw error if block view is missing.', function 
 		->shouldReceive('getProjectPath')
 		->andReturn('tests/data');
 
-	$this->blocksExample->render($blockManifest, '');
+	$this->mock->render($blockManifest, '');
 })->throws(InvalidBlock::class);
 
 test('Asserts that render will throw error if wrapper view is missing.', function () {
@@ -186,7 +166,7 @@ test('Asserts that render will throw error if wrapper view is missing.', functio
 		->shouldReceive('getProjectPath')
 		->andReturn('fake');
 
-	$this->blocksExample->render($blockManifest, '');
+	$this->mock->render($blockManifest, '');
 
 })->throws(InvalidBlock::class);
 
@@ -195,7 +175,7 @@ test('Asserts that renderWrapperView will return a valid file.', function () {
 	$wrapperManifest = \dirname(__FILE__, 2) . '/data/src/Blocks/wrapper/wrapper.php';
 
 	\ob_start();
-	$this->blocksExample->renderWrapperView($wrapperManifest, []);
+	$this->mock->renderWrapperView($wrapperManifest, []);
 	$content = \ob_get_clean();
 
 	expect(\trim($content))
@@ -204,13 +184,13 @@ test('Asserts that renderWrapperView will return a valid file.', function () {
 });
 
 test('Asserts that renderWrapperView will throw error if path is not valid.', function () {
-	$this->blocksExample->renderWrapperView('fake path', []);
+	$this->mock->renderWrapperView('fake path', []);
 })->throws(InvalidBlock::class);
 
 test('Asserts that getCustomCategory will return categories array.', function () {
 
 	$blockContext = mock('WP_Block_Editor_Context');
-	$category = $this->blocksExample->getCustomCategory([], $blockContext);
+	$category = $this->mock->getCustomCategory([], $blockContext);
 
 	expect($category)->toBeArray();
 	
@@ -222,7 +202,7 @@ test('Asserts that getCustomCategory will return categories array.', function ()
 test('Asserts that getCustomCategory will throw error if first argument is not array.', function () {
 
 	$blockContext = mock('WP_Block_Editor_Context');
-	$this->blocksExample->getCustomCategory('', $blockContext);
+	$this->mock->getCustomCategory('', $blockContext);
 
 })->throws(\TypeError::class);
 
@@ -238,9 +218,9 @@ test('changeEditorColorPalette method will call add_theme_support() function wit
 		->shouldReceive('getProjectPath')
 		->andReturn('tests/data');
 
-	$this->blocksExample->getBlocksDataFullRaw();
+	$this->mock->getBlocksDataFullRaw();
 
-	$this->blocksExample->changeEditorColorPalette();
+	$this->mock->changeEditorColorPalette();
 
 	expect(\getenv('EDITOR_COLOR_PALETTE'))->toBe('true');
 });
@@ -257,9 +237,9 @@ test('registerBlocks method will register all blocks.', function () {
 		->shouldReceive('getProjectPath')
 		->andReturn('tests/data');
 
-	$this->blocksExample->getBlocksDataFullRaw();
+	$this->mock->getBlocksDataFullRaw();
 
-	$this->blocksExample->registerBlocks();
+	$this->mock->registerBlocks();
 
 	expect(\getenv('BLOCK_TYPE'))->toBe('true');
 });
@@ -267,7 +247,7 @@ test('registerBlocks method will register all blocks.', function () {
 test('getCustomCategoryOld method will return an array.', function () {
 	$post = mock('WP_Post');
 
-	$categoryList = $this->blocksExample->getCustomCategoryOld([], $post);
+	$categoryList = $this->mock->getCustomCategoryOld([], $post);
 
 	expect($categoryList)->toBeArray();
 	
@@ -350,7 +330,7 @@ test('filterBlocksContent method will return an array.', function () {
 			],
 	];
 
-	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
+	$filteredBlockContent = $this->mock->filterBlocksContent($parsedBlock, []);
 
 	expect($filteredBlockContent)->toBeArray();
 });
@@ -375,7 +355,7 @@ test('filterBlocksContent method will not filter out the paragraph with content.
 			],
 	];
 
-	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
+	$filteredBlockContent = $this->mock->filterBlocksContent($parsedBlock, []);
 
 	expect($filteredBlockContent)
 		->toBeArray()
@@ -407,9 +387,9 @@ test('filterBlocksContent method will filter out the paragraph without content.'
 	];
 
 	// Set namespace data.
-	$this->blocksExample->getBlocksDataFullRaw();
+	$this->mock->getBlocksDataFullRaw();
 
-	$filteredBlockContent = $this->blocksExample->filterBlocksContent($parsedBlock, []);
+	$filteredBlockContent = $this->mock->filterBlocksContent($parsedBlock, []);
 
 	expect($filteredBlockContent)
 		->toBeArray()

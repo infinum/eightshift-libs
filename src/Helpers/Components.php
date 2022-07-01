@@ -108,7 +108,7 @@ class Components
 			$component = \ltrim($component, $sep);
 			$componentPath = $component;
 		} else {
-			$componentPath = Components::getProjectPaths('blocksComponents', "{$component}{$sep}{$component}.php", $sep);
+			$componentPath = Components::getProjectPaths('blocksDestinationComponents', "{$component}{$sep}{$component}.php", $sep);
 		}
 
 		$componentPath = "{$parentPath}{$componentPath}";
@@ -178,18 +178,18 @@ class Components
 			case 'block':
 			case 'blocks':
 			case 'custom':
-				$path = Components::getProjectPaths('blocksCustom', $partialPath);
+				$path = Components::getProjectPaths('blocksDestinationCustom', $partialPath);
 				break;
 			case 'component':
 			case 'components':
-				$path = Components::getProjectPaths('blocksComponents', $partialPath);
+				$path = Components::getProjectPaths('blocksDestinationComponents', $partialPath);
 				break;
 			case 'variation':
 			case 'variations':
-				$path = Components::getProjectPaths('blocksVariations', $partialPath);
+				$path = Components::getProjectPaths('blocksDestinationVariations', $partialPath);
 				break;
 			case 'wrapper':
-				$path = Components::getProjectPaths('blocksWrapper', $partialPath);
+				$path = Components::getProjectPaths('blocksDestinationWrapper', $partialPath);
 				break;
 			default:
 				$path = Components::getProjectPaths('root', $partialPath);
@@ -298,6 +298,8 @@ class Components
 		'wpContent',
 		'libs',
 
+		'blocksGlobalAssetsSource',
+		'blocksAssetsSource',
 		'blocksStorybookSource',
 		'blocksSource',
 		'blocksSourceCustom',
@@ -305,6 +307,8 @@ class Components
 		'blocksSourceVariations',
 		'blocksSourceWrapper',
 
+		'blocksGlobalAssetsDestination',
+		'blocksAssetsDestination',
 		'blocksStorybookDestination',
 		'blocksDestination',
 		'blocksDestinationCustom',
@@ -338,6 +342,7 @@ class Components
 		$testsDataPath = ["tests", "data"];
 		$blocksPath = ["src", "Blocks"];
 		$storybookPath = "storybook";
+		$assetsPath = "assets";
 		$cliOutputFolder = "cliOutput";
 
 		$name = '';
@@ -362,7 +367,7 @@ class Components
 			case 'cliOuput':
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
-					$path = "cliOutput";
+					$path = $cliOutputFolder;
 				}
 
 				break;
@@ -378,6 +383,20 @@ class Components
 
 				if (\getenv('ES_TEST')) {
 					$path = '';
+				}
+				break;
+			case 'blocksGlobalAssetsSource':
+				$path = self::joinPaths([...$flibsPath, $assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path =  self::joinPaths([...$testsDataPath, $assetsPath]);
+				}
+				break;
+			case 'blocksAssetsSource':
+				$path = self::joinPaths([...$flibsPath, ...$blocksPath, $assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path =  self::joinPaths([...$testsDataPath, ...$blocksPath, $assetsPath]);
 				}
 				break;
 			case 'blocksStorybookSource':
@@ -407,6 +426,20 @@ class Components
 				$name = 'wrapper';
 				break;
 
+			case 'blocksGlobalAssetsDestination':
+				$path = self::joinPaths([$assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path =  self::joinPaths([$cliOutputFolder, $assetsPath]);
+				}
+				break;
+			case 'blocksAssetsDestination':
+				$path = self::joinPaths([$assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path =  self::joinPaths([$cliOutputFolder, $assetsPath]);
+				}
+				break;
 			case 'blocksStorybookDestination':
 				$path = self::joinPaths([".{$storybookPath}"]);
 

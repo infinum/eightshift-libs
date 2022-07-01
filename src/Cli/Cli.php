@@ -18,6 +18,8 @@ use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Blocks\BlockComponentCli;
 use EightshiftLibs\Blocks\BlockCli;
+use EightshiftLibs\Blocks\BlocksAssetsCli;
+use EightshiftLibs\Blocks\BlocksGlobalAssetsCli;
 use EightshiftLibs\Blocks\BlocksStorybookCli;
 use EightshiftLibs\Blocks\BlockVariationCli;
 use EightshiftLibs\Blocks\BlockWrapperCli;
@@ -144,6 +146,8 @@ class Cli
 	 * @var class-string[]
 	 */
 	public const BLOCKS_CLASSES = [
+		BlocksAssetsCli::class,
+		BlocksGlobalAssetsCli::class,
 		BlockCli::class,
 		BlockComponentCli::class,
 		BlockVariationCli::class,
