@@ -2,22 +2,19 @@
 
 namespace Tests\Unit\Blocks;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
 use WP_Block_Editor_Context;
 
+use function Tests\buildTestBlocks;
 use function Tests\mock;
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
-use function Tests\setupMocks;
 
 beforeEach(function() {
 	setBeforeEach();
-
-	// $this->config = mock('alias:EightshiftBoilerplate\Config\Config');
 
 	$this->mock = new BlocksExample();
 });
@@ -97,6 +94,8 @@ test('Asserts that getAllBlocksListOld will return only projects blocks for olde
 
 	$post = mock(\WP_Post::class);
 
+	buildTestBlocks();
+
 	$this->mock->getBlocksDataFullRaw();
 
 	$list = $this->mock->getAllBlocksListOld([], $post);
@@ -113,6 +112,8 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 
 	$blockContext = mock(WP_Block_Editor_Context::class);
 	$blockContext->post = null;
+
+	buildTestBlocks();
 
 	(new BlocksExample())->getBlocksDataFullRaw();
 
@@ -131,9 +132,7 @@ test('Asserts that render component will load view template.', function () {
 		'blockName' => 'button',
 	];
 
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+	buildTestBlocks();
 
 	$block = $this->mock->render($blockManifest, '');
 
@@ -149,9 +148,7 @@ test('Asserts that render will throw error if block view is missing.', function 
 		'blockName' => 'fake',
 	];
 
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+	buildTestBlocks();
 
 	$this->mock->render($blockManifest, '');
 })->throws(InvalidBlock::class);
@@ -162,9 +159,7 @@ test('Asserts that render will throw error if wrapper view is missing.', functio
 		'blockName' => 'fake',
 	];
 
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('fake');
+	buildTestBlocks();
 
 	$this->mock->render($blockManifest, '');
 
@@ -172,10 +167,12 @@ test('Asserts that render will throw error if wrapper view is missing.', functio
 
 test('Asserts that renderWrapperView will return a valid file.', function () {
 
-	$wrapperManifest = \dirname(__FILE__, 2) . '/data/src/Blocks/wrapper/wrapper.php';
+	buildTestBlocks();
+
+	$wrapperFile = Components::getProjectPaths('blocksDestinationWrapper', 'wrapper.php');
 
 	\ob_start();
-	$this->mock->renderWrapperView($wrapperManifest, []);
+	$this->mock->renderWrapperView($wrapperFile, []);
 	$content = \ob_get_clean();
 
 	expect(\trim($content))
@@ -214,9 +211,7 @@ test('changeEditorColorPalette method will call add_theme_support() function wit
 		putenv("{$envName}=true");
 	});
 
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+	buildTestBlocks();
 
 	$this->mock->getBlocksDataFullRaw();
 
@@ -233,9 +228,7 @@ test('registerBlocks method will register all blocks.', function () {
 		putenv('BLOCK_TYPE=true');
 	});
 
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
+	buildTestBlocks();
 
 	$this->mock->getBlocksDataFullRaw();
 
@@ -259,9 +252,6 @@ test('getCustomCategoryOld method will return an array.', function () {
 });
 
 test('filterBlocksContent method will return an array.', function () {
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
 
 	$parsedBlock = [
 		'blockName' => 'eightshift-boilerplate/jumbotron',
@@ -336,9 +326,6 @@ test('filterBlocksContent method will return an array.', function () {
 });
 
 test('filterBlocksContent method will not filter out the paragraph with content.', function () {
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
 
 	$parsedBlock = [
 		'blockName' => 'eightshift-boilerplate/paragraph',
@@ -368,9 +355,6 @@ test('filterBlocksContent method will not filter out the paragraph with content.
 });
 
 test('filterBlocksContent method will filter out the paragraph without content.', function () {
-	$this->config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
 
 	$parsedBlock = [
 		'blockName' => 'eightshift-boilerplate/paragraph',
@@ -387,6 +371,7 @@ test('filterBlocksContent method will filter out the paragraph without content.'
 	];
 
 	// Set namespace data.
+	buildTestBlocks();
 	$this->mock->getBlocksDataFullRaw();
 
 	$filteredBlockContent = $this->mock->filterBlocksContent($parsedBlock, []);

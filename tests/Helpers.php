@@ -5,6 +5,7 @@ namespace Tests;
 use Brain\Monkey\Functions;
 use Mockery;
 use Brain\Monkey;
+use EightshiftLibs\Blocks\BlocksInitCli;
 use Exception;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
@@ -260,22 +261,6 @@ function getProjectRootPath(): string
 }
 
 /**
- * Get projects composer file for mocks.
- *
- * @return array
- */
-function getProjectComposerFile(): array
-{
-	return [
-		'autoload' => [
-			'psr-4' => [
-				'EightshiftBoilerplate\\' => 'test',
-			],
-		]
-	];
-}
-
-/**
  * Get file in cliOutput folder.
  *
  * @param string $path Path to get.
@@ -295,23 +280,13 @@ function getCliOutputFile(string $path = ''): string
 	return \file_get_contents($pathFile);
 }
 
-function getMockedPaths($type) {
-	$sep = \DIRECTORY_SEPARATOR;
-	$path = '';
-
-	switch ($type) {
-		case 'rootPath':
-			$path = \dirname(__FILE__, 2);
-			break;
-		case 'setupPath':
-			$path = \dirname(__FILE__, 2);
-			break;
-		default:
-			$path = '';
-			break;
-	}
-
-	return $path;
+/**
+ * Build all blocks setup output.
+ *
+ * @return void
+ */
+function buildTestBlocks() {
+	(new BlocksInitCli('boilerplate'))->__invoke([], []);
 }
 
 /**
@@ -326,19 +301,3 @@ function mock(string $class): MockInterface
 	return Mockery::mock($class);
 }
 
-/**
- * Mock Mockery interface.
- *
- * @param string $class Class to mock.
- *
- * @return MockInterface
- */
-function mockTemp(string $class): MockInterface
-{
-	$mock = mock($class)->makePartial();
-	$mock->shouldReceive('getProjectRootPath')->andReturn(getCliOutputPath());
-	$mock->shouldReceive('getFrontendLibsBlockPath')->andReturn(getDataPath());
-	$mock->shouldReceive('getComposer')->andReturn(getProjectComposerFile());
-
-	return $mock;
-}
