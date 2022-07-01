@@ -74,7 +74,7 @@ class SetupCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'path',
-					'description' => 'Define absolute folder path wehere setup file will be created.',
+					'description' => 'Define absolute folder path where setup file will be created.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('path'),
 				],

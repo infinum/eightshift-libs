@@ -53,7 +53,7 @@ class ConfigProjectCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'root' => self::OUTPUT_DIR,
+			'path' => Components::getProjectPaths('projectRoot'),
 		];
 	}
 
@@ -69,10 +69,10 @@ class ConfigProjectCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'root',
-					'description' => 'Define project root relative to initialization file of WP CLI.',
+					'name' => 'path',
+					'description' => 'Define absolute  path to project root folder.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('root'),
+					'default' => $this->getDefaultArg('path'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -97,7 +97,7 @@ class ConfigProjectCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$root = $this->getArg($assocArgs, 'root');
+		$path = $this->getArg($assocArgs, 'path');
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
@@ -105,7 +105,7 @@ class ConfigProjectCli extends AbstractCli
 			->renameTextDomain($assocArgs);
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite($root, 'wp-config-project.php', $assocArgs);
+		$class->outputWrite($path, 'wp-config-project.php', $assocArgs);
 
 		WP_CLI::success("Please do the following steps manually to complete the setup:");
 		WP_CLI::success("1. In wp-config.php - Make sure to define WP_ENVIRONMENT_TYPE const to 'development' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'development' ); ?>`");

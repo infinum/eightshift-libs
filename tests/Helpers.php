@@ -184,6 +184,9 @@ function setAfterEach($delete = true) {
 	putenv('ES_CLI_ERROR_HAPPENED');
 	putenv('ES_CLI_LOG_HAPPENED');
 	putenv('ES_CLI_RUNCOMMAND_HAPPENED');
+
+	global $esBlocks;
+	$esBlocks = null;
 }
 
 /**

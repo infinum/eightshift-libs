@@ -4,6 +4,7 @@ namespace Tests\Unit\ConfigProject;
 
 use EightshiftLibs\Cli\ParentGroups\CliProject;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
@@ -42,9 +43,7 @@ test('getCommandName will return correct value', function () {
 test('getDefaultArgs will return correct array', function () {
 	expect($this->mock->getDefaultArgs())
 		->toBeArray()
-		->toMatchArray([
-			'root' => '../../../',
-		]);
+		->toHaveKeys(['path']);
 });
 
 //---------------------------------------------------------------------------------//
@@ -56,7 +55,7 @@ test('getDoc will return correct array', function () {
 		->toBeArray()
 		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
 		->and(count($docs['synopsis']))->toEqual(1)
-		->and($docs['synopsis'][0]['name'])->toEqual('root');
+		->and($docs['synopsis'][0]['name'])->toEqual('path');
 });
 
 //---------------------------------------------------------------------------------//
@@ -64,10 +63,12 @@ test('getDoc will return correct array', function () {
 test('__invoke will will correctly copy example class with default args', function () {
 	$mock = $this->mock;
 	$mock([], [
-		'root' => './'
+		'path' => Components::getProjectPaths('cliOutput'),
 	]);
 
-	expect(getCliOutputFile('wp-config-project.php'))
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "wp-config-project.php"));
+
+	expect($output)
 		->toContain(
 			'WP_ENVIRONMENT_TYPE',
 			'WP_POST_REVISIONS',

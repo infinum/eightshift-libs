@@ -72,9 +72,12 @@ class BlocksInitCli extends AbstractCli
 			],
 			'test' => [
 				'button',
+				'button-false',
 				'heading',
 				'layout',
+				'responsiveVariables',
 				'typography',
+				'variables',
 			],
 		],
 		BlockVariationCli::class => [

@@ -73,7 +73,7 @@ class BuildCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'path',
-					'description' => 'Define absolute folder path wehere build script file will be created.',
+					'description' => 'Define absolute folder path where build script file will be created.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('path'),
 				],

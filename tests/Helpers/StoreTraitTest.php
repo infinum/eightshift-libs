@@ -5,20 +5,19 @@ namespace Tests\Unit\Helpers;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Helpers\Components;
 
+use function Tests\buildTestBlocks;
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
 
 beforeEach(function () {
 	setBeforeEach();
 
+	buildTestBlocks();
 	(new BlocksExample())->getBlocksDataFullRaw();
 });
 
 afterEach(function () {
 	setAfterEach();
-
-	global $esBlocks;
-	$esBlocks = null;
 });
 
 // ------------------------------------------

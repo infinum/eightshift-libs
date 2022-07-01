@@ -66,7 +66,7 @@ class CiExcludeCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'path',
-					'description' => 'Define absolute folder path wehere exclude file file will be created.',
+					'description' => 'Define absolute folder path where exclude file file will be created.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('path'),
 				],
