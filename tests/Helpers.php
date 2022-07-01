@@ -154,6 +154,8 @@ function setupMocks() {
 	});
 
 	Functions\when('is_wp_version_compatible')->justReturn(true);
+
+	Functions\when('wp_nonce_field')->justReturn('nonce');
 }
 
 /**
@@ -178,8 +180,11 @@ function setAfterEach($delete = true) {
 		deleteCliOutput();
 	}
 
-	putenv('ES_SIDEAFFECT');
-	putenv('ES_SIDEAFFECT_ADDITIONAL');
+	for ($i = 1; $i <= 10; $i++ ) {
+		putenv("ES_SIDEAFFECT_{$i}");
+		putenv("ES_SIDEAFFECT_1");
+	}
+
 	putenv('ES_CLI_SUCCESS_HAPPENED');
 	putenv('ES_CLI_ERROR_HAPPENED');
 	putenv('ES_CLI_LOG_HAPPENED');

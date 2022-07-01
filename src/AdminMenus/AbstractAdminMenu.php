@@ -29,20 +29,34 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	 */
 	public function register(): void
 	{
-		\add_action(
-			'admin_menu',
-			function () {
-				\add_menu_page(
-					$this->getTitle(),
-					$this->getMenuTitle(),
-					$this->getCapability(),
-					$this->getMenuSlug(),
-					[$this, 'processAdminMenu'],
-					$this->getIcon(),
-					$this->getPosition()
-				);
-			}
+		\add_action('admin_menu', [$this, 'callback'], $this->getPriorityOrder());
+	}
+
+	/**
+	 * Return action callback method.
+	 *
+	 * @return void
+	 */
+	public function callback(): void {
+		\add_menu_page(
+			$this->getTitle(),
+			$this->getMenuTitle(),
+			$this->getCapability(),
+			$this->getMenuSlug(),
+			[$this, 'processAdminMenu'],
+			$this->getIcon(),
+			$this->getPosition()
 		);
+	}
+
+	/**
+	 * Return hook priority order.
+	 *
+	 * @return integer
+	 */
+	public function getPriorityOrder(): int
+	{
+		return 10;
 	}
 
 	/**

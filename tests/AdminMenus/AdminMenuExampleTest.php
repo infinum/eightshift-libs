@@ -2,41 +2,56 @@
 
 namespace Tests\Unit\AdminMenus;
 
-use Brain\Monkey;
 use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\AdminMenus\AdminMenuExample;
 
 use function Tests\buildTestBlocks;
-use function Tests\setupMocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
+beforeEach(function () {
+	setBeforeEach();
 
-	$this->example = new AdminMenuExample();
+	$this->mock = new AdminMenuExample();
 });
 
-afterEach(function() {
-	Monkey\tearDown();
+afterEach(function () {
+	setAfterEach();
+
+	unset($this->mock);
 });
 
+//---------------------------------------------------------------------------------//
 
-test('Register method will call admin_menu hook', function () {
-	Actions\expectAdded('admin_menu')->with(\Mockery::type('Closure'));
+test('register will load all hooks', function () {
 
-	$this->example->register();
+	$this->mock->register();
 
-	$this->assertSame(10, has_action('admin_menu', 'function()'));
+	expect(has_action('admin_menu', 'EightshiftBoilerplate\AdminMenus\AdminMenuExample->callback()'))
+		->toBe(10);
 });
 
+//---------------------------------------------------------------------------------//
 
-test('processAdminMenu will render the component', function() {
+test('callback will load correct method', function () {
+
+	$action = 'add_menu_page';
+	Functions\when($action)->justReturn(putenv("ES_SIDEAFFECT_1={$action}"));
+
+	$this->mock->callback();
+
+	expect(getenv('ES_SIDEAFFECT_1'))->toEqual($action);
+});
+
+//---------------------------------------------------------------------------------//
+
+test('processAdminMenu will echo component view', function () {
+
 	buildTestBlocks();
-	Functions\when('wp_nonce_field')->justReturn('nonce');
 
 	ob_start();
-	$this->example->processAdminMenu([]);
+	$this->mock->processAdminMenu([]);
 	$contents = ob_get_clean();
 
 	expect($contents)
@@ -44,18 +59,18 @@ test('processAdminMenu will render the component', function() {
 		->toBe('<div>Hi!</div>');
 });
 
-test('processAdminMenu will render the error if the component is missing', function() {
-	Functions\when('wp_nonce_field')->justReturn('nonce');
-
-	$faultyExample = new class extends AdminMenuExample {
+test('processAdminMenu will echo error if component is missing', function () {
+	$mock = new class extends AdminMenuExample {
 		protected function getViewComponent(): string
 		{
-			return 'test';
+			return 'missing';
 		}
 	};
 
+	buildTestBlocks();
+
 	ob_start();
-	$faultyExample->processAdminMenu([]);
+	$mock->processAdminMenu([]);
 	$contents = ob_get_clean();
 
 	expect($contents)
@@ -63,14 +78,33 @@ test('processAdminMenu will render the error if the component is missing', funct
 		->toContain('<pre>Unable to locate component by path:');
 });
 
+// test('processAdminMenu will render the error if the component is missing', function() {
+// 	Functions\when('wp_nonce_field')->justReturn('nonce');
 
-test('getIcon will return the default icon', function() {
+// 	$faultyExample = new class extends AdminMenuExample {
+// 		protected function getViewComponent(): string
+// 		{
+// 			return 'test';
+// 		}
+// 	};
 
-	// We shouldn't do this, but the add_menu_page is called in a closure.
-	$method = new \ReflectionMethod('EightshiftBoilerplate\\AdminMenus\\AdminMenuExample', 'getIcon');
-	$method->setAccessible(true);
+// 	ob_start();
+// 	$faultyExample->processAdminMenu([]);
+// 	$contents = ob_get_clean();
 
-	expect($method->invoke(new AdminMenuExample()))
-		->not->toBeEmpty()
-		->toBe('%menu_icon%');
-});
+// 	expect($contents)
+// 		->not->toBeEmpty()
+// 		->toContain('<pre>Unable to locate component by path:');
+// });
+
+
+// test('getIcon will return the default icon', function() {
+
+// 	// We shouldn't do this, but the add_menu_page is called in a closure.
+// 	$method = new \ReflectionMethod('EightshiftBoilerplate\\AdminMenus\\AdminMenuExample', 'getIcon');
+// 	$method->setAccessible(true);
+
+// 	expect($method->invoke(new AdminMenuExample()))
+// 		->not->toBeEmpty()
+// 		->toBe('%menu_icon%');
+// });
