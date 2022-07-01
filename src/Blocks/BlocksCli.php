@@ -139,41 +139,41 @@ class BlocksCli extends AbstractCli
 	 */
 	private function blocksInit(array $args): void
 	{
-		$root = Components::getProjectPaths('root');
-		$rootNode = Components::getProjectPaths('blocksSource');
+		// $root = Components::getProjectPaths('root');
+		// $rootNode = Components::getProjectPaths('blocksSource');
 
-		$folders = [
-			'assetsGlobal' => "{$root}/assets",
-			'blocks' => "{$root}/src/Blocks",
-			'assets' => "{$root}/src/Blocks/assets",
-			'components' => "{$root}/src/Blocks/components",
-			'custom' => "{$root}/src/Blocks/custom",
-			'variations' => "{$root}/src/Blocks/variations",
-		];
+		// $folders = [
+		// 	'assetsGlobal' => "{$root}/assets",
+		// 	'blocks' => "{$root}/src/Blocks",
+		// 	'assets' => "{$root}/src/Blocks/assets",
+		// 	'components' => "{$root}/src/Blocks/components",
+		// 	'custom' => "{$root}/src/Blocks/custom",
+		// 	'variations' => "{$root}/src/Blocks/variations",
+		// ];
 
-		foreach ($folders as $folder) {
-			if (!\file_exists($folder)) {
-				\mkdir($folder);
-			}
-		}
+		// foreach ($folders as $folder) {
+		// 	if (!\file_exists($folder)) {
+		// 		\mkdir($folder);
+		// 	}
+		// }
 
-		$this->copyRecursively("{$rootNode}/assets/", "{$folders['assetsGlobal']}/");
-		$this->copyRecursively("{$rootNode}/src/Blocks/assets/", "{$folders['assets']}/");
-		$this->copyRecursively("{$rootNode}/src/Blocks/variations/", "{$folders['variations']}/");
-		\copy("{$rootNode}/src/Blocks/manifest.json", "{$folders['blocks']}/manifest.json");
+		// $this->copyRecursively("{$rootNode}/assets/", "{$folders['assetsGlobal']}/");
+		// $this->copyRecursively("{$rootNode}/src/Blocks/assets/", "{$folders['assets']}/");
+		// $this->copyRecursively("{$rootNode}/src/Blocks/variations/", "{$folders['variations']}/");
+		// \copy("{$rootNode}/src/Blocks/manifest.json", "{$folders['blocks']}/manifest.json");
 
-		$commandParentName = CliBlocks::COMMAND_NAME;
+		// $commandParentName = CliBlocks::COMMAND_NAME;
 
-		WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} wrapper {$this->prepareArgsManual($args)}");
+		// WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} wrapper {$this->prepareArgsManual($args)}");
 
-		foreach (static::COMPONENTS as $component) {
-			WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} component --name={$component} {$this->prepareArgsManual($args)}");
-		}
+		// foreach (static::COMPONENTS as $component) {
+		// 	WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} component --name={$component} {$this->prepareArgsManual($args)}");
+		// }
 
-		foreach (static::BLOCKS as $block) {
-			WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} block --name={$block} {$this->prepareArgsManual($args)}");
-		}
+		// foreach (static::BLOCKS as $block) {
+		// 	WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} block --name={$block} {$this->prepareArgsManual($args)}");
+		// }
 
-		WP_CLI::success('Blocks successfully set.');
+		// WP_CLI::success('Blocks successfully set.');
 	}
 }
