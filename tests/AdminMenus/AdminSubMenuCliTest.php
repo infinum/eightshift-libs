@@ -25,7 +25,7 @@ test('Admin submenu CLI command will correctly copy the admin menu example class
 	$mock([], $mock->getDefaultArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}AdminMenus{$sep}ExampleMenuSlugAdminSubMenu.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}AdminMenus{$sep}ExampleMenuSlugAdminSubMenu.php"));
 
 	expect($output)
 		->toContain('class ExampleMenuSlugAdminSubMenu extends AbstractAdminSubMenu', 'Admin Title')
@@ -43,7 +43,7 @@ test('Admin submenu CLI command will correctly copy the admin menu class with se
 	]);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}AdminMenus{$sep}ReusableBlockOptionsAdminSubMenu.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}AdminMenus{$sep}ReusableBlockOptionsAdminSubMenu.php"));
 
 	expect($output)
 		->toContain('class ReusableBlockOptionsAdminSubMenu extends AbstractAdminSubMenu', 'Options', 'edit_reusable_blocks')

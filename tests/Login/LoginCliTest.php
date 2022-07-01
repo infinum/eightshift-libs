@@ -25,7 +25,7 @@ test('Login CLI command will correctly copy the Login class with defaults', func
 	$mock([], []);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Login{$sep}Login.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Login{$sep}Login.php"));
 
 	$this->assertStringContainsString('class Login implements ServiceInterface', $output);
 	$this->assertStringContainsString('@package EightshiftLibs\Login', $output);
@@ -40,7 +40,7 @@ test('Login CLI command will correctly copy the Login class with set arguments',
 	]);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Login{$sep}Login.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Login{$sep}Login.php"));
 
 	$this->assertStringContainsString('namespace CoolTheme\Login;', $output);
 });

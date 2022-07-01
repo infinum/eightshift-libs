@@ -2,57 +2,35 @@
 
 namespace Tests\Unit\Setup;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Setup\SetupCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->setup = new SetupCli('boilerplate');
+	$this->mock = new SetupCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Setup CLI command will correctly copy the Setup class with defaults', function () {
-	$setup = $this->setup;
-	$setup([], $setup->getDefaultArgs());
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/setup.json');
-	$this->assertStringContainsString('twentytwentyone', $generatedFile);
-	$this->assertStringNotContainsString('random string', $generatedFile);
-});
-
-test('Setup CLI command will correctly copy the Setup class with set parameters', function () {
-	$setup = $this->setup;
-	$setup([], [
-		'root' => 'test',
+	$mock = $this->mock;
+	$mock([], [
+		'root' => Components::getProjectPaths('setupJson'),
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/test/setup.json');
-	$this->assertStringContainsString('twentytwentyone', $generatedFile);
-	$this->assertStringNotContainsString('random string', $generatedFile);
+	$output = \file_get_contents(Components::getProjectPaths('setupJson', 'setup.json'));
+
+	expect($output)->toContain('staging');
 });
 
 test('Setup CLI documentation is correct', function () {
-	expect($this->setup->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

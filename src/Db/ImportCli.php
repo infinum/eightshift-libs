@@ -50,8 +50,7 @@ class ImportCli extends AbstractCli
 		return [
 			'from' => '',
 			'to' => '',
-			'fileName' => 'setup.json',
-			'path' => Components::getProjectPaths('setupJson'),
+			'setup_file' => Components::getProjectPaths('setupJson', 'setup.json'),
 		];
 	}
 
@@ -103,12 +102,11 @@ class ImportCli extends AbstractCli
 
 		try {
 			dbImport( // phpcs:ignore
-				$this->getArg($assocArgs, 'path'),
+				$this->getArg($assocArgs, 'setup_file'),
 				[
 					'from' => $this->getArg($assocArgs, 'from'),
 					'to' => $this->getArg($assocArgs, 'to'),
-				],
-				$this->getArg($assocArgs, 'fileName')
+				]
 			);
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

@@ -15,47 +15,36 @@ if (!function_exists('dbImport')) {
 	/**
 	 * Importing database.
 	 *
-	 * @param string $projectRootPath Root of the project where config is located.
+	 * @param string $setupFile Setup file path.
 	 * @param array<string, mixed> $args Optional arguments.
-	 * @param string $setupFile Define setup file name.
 	 *
 	 * @return void
 	 */
-	function dbImport(string $projectRootPath, array $args = [], string $setupFile = 'setup.json')
+	function dbImport(string $setupFile, array $args = [])
 	{
 		// Check if mandatory parameters exists.
 		$from = $args['from'] ?? '';
 		$to = $args['to'] ?? '';
 
 		if (empty($from)) {
-			CliHelpers::cliError("--from parameter is mandatory. Please provide one url key from {$setupFile} file.");
+			CliHelpers::cliError("--from parameter is mandatory. Please provide one url key from setup.json file.");
 		}
 
 		if (empty($to)) {
-			CliHelpers::cliError("--to parameter is mandatory. Please provide one url key from {$setupFile} file.");
+			CliHelpers::cliError("--to parameter is mandatory. Please provide one url key from setup.json file.");
 		}
 
-		// Change execution folder.
-		if (!is_dir($projectRootPath)) {
-			CliHelpers::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
-		}
-
-		$sep = \DIRECTORY_SEPARATOR;
-		$projectRootPath = \trim($projectRootPath, $sep);
-		$setupFile = \trim($setupFile, $sep);
-		$setupFilePath = "{$sep}{$projectRootPath}{$sep}{$setupFile}";
-
-		// Check if setup exists.
-		if (!file_exists($setupFilePath)) {
-			CliHelpers::cliError("setup.json is missing at this path: {$setupFilePath}.");
+		// Check if file exists.
+		if (is_dir($setupFile) && !file_exists($setupFile)) {
+			CliHelpers::cliError("Setup file doesn't exist on this path: {$setupFile}.");
 		}
 
 		// Parse json file to array.
-		$data = json_decode(implode(' ', (array)file($setupFilePath)), true);
+		$data = json_decode(implode(' ', (array)file($setupFile)), true);
 
 		// Check if $data is empty.
 		if (empty($data)) {
-			CliHelpers::cliError("{$setupFilePath} is empty.");
+			CliHelpers::cliError("Setup file is empty on this path: {$setupFile}.");
 		}
 
 		// Check if urls key exists.

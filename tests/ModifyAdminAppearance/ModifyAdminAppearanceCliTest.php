@@ -25,7 +25,7 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 	$mock([], []);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}ModifyAdminAppearance{$sep}ModifyAdminAppearance.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}ModifyAdminAppearance{$sep}ModifyAdminAppearance.php"));
 
 	$this->assertStringContainsString('class ModifyAdminAppearance implements ServiceInterface', $output);
 	$this->assertStringContainsString('@package EightshiftLibs\ModifyAdminAppearance', $output);
@@ -40,7 +40,7 @@ test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppea
 	]);
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}ModifyAdminAppearance{$sep}ModifyAdminAppearance.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}ModifyAdminAppearance{$sep}ModifyAdminAppearance.php"));
 
 	$this->assertStringContainsString('namespace CoolTheme\ModifyAdminAppearance;', $output);
 });

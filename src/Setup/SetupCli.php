@@ -13,6 +13,7 @@ namespace EightshiftLibs\Setup;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliProject;
 use EightshiftLibs\Cli\ParentGroups\CliSetup;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class SetupCli
@@ -44,6 +45,20 @@ class SetupCli extends AbstractCli
 	public function getCommandName(): string
 	{
 		return CliSetup::COMMAND_NAME;
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'root' => Components::getProjectPaths('projectRoot'),
+			'file_name' => 'setup.json',
+			'source_path' => __DIR__,
+		];
 	}
 
 	/**
@@ -88,9 +103,11 @@ class SetupCli extends AbstractCli
 	{
 		// Get Props.
 		$root = $this->getArg($assocArgs, 'root');
+		$fileName = $this->getArg($assocArgs, 'file_name');
+		$sourcePath = $this->getArg($assocArgs, 'source_path');
 
 		// Get setup.json example file, and create the one in the project.
-		$this->getExampleTemplate(__DIR__, 'setup.json')
-			->outputWrite($root, 'setup.json', $assocArgs);
+		$this->getExampleTemplate($sourcePath, $fileName)
+			->outputWrite($root, $fileName, $assocArgs);
 	}
 }

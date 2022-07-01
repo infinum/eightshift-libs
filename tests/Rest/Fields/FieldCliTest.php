@@ -25,7 +25,7 @@ test('REST field CLI command will correctly copy the field class with defaults',
 	$mock([], $mock->getDefaultArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Rest{$sep}Fields{$sep}TitleField.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}TitleField.php"));
 
 	$this->assertStringContainsString('class TitleField extends AbstractField implements CallableFieldInterface', $output);
 	$this->assertStringContainsString('return \'title\';', $output);
@@ -43,7 +43,7 @@ test('REST field CLI command will correctly copy the field class with arguments'
 	$objectType = $mockNameArguments['object_type'];
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Rest{$sep}Fields{$sep}{$fullFieldName}.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}{$fullFieldName}.php"));
 
 	$this->assertStringContainsString("class {$fullFieldName} extends AbstractField implements CallableFieldInterface", $output);
 	$this->assertStringContainsString("return '{$objectType}';", $output);

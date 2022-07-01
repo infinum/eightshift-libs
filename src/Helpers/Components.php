@@ -295,7 +295,7 @@ class Components
 		'projectRoot',
 		'srcDestination',
 		'setupJson',
-		'cliOuput',
+		'cliOutput',
 		'wpContent',
 		'libs',
 
@@ -357,12 +357,10 @@ class Components
 					$internalPrefix = \dirname(__FILE__, 3);
 				}
 				break;
-			case 'setupJson':
-				$internalPrefix = \dirname(__FILE__, 8);
-
+			case 'testsData':
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
-					$path = self::joinPaths([$cliOutputPath, "setup"]);
+					$path = self::joinPaths([...$testsDataPath]);
 				}
 
 				break;
@@ -375,7 +373,7 @@ class Components
 				}
 
 				break;
-			case 'cliOuput':
+			case 'cliOutput':
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
 					$path = $cliOutputPath;

@@ -24,7 +24,7 @@ test('Escaped view command will correctly copy the EscapedView class with defaul
 
 	// Check the output dir if the generated method is correctly generated.
 	$sep = \DIRECTORY_SEPARATOR;
-	$mock = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}View{$sep}EscapedView.php"));
+	$mock = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}View{$sep}EscapedView.php"));
 
 	$this->assertNotEmpty($mock);
 	$this->assertStringContainsString('class EscapedView extends AbstractEscapedView implements ServiceInterface', $mock);
