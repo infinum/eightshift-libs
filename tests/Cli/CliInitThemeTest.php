@@ -2,53 +2,27 @@
 
 namespace Tests\Unit\Cli;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftLibs\Cli\CliInitTheme;
 
 use function Patchwork\{redefine, always};
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	Monkey\setUp();
+	setBeforeEach();
 
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('log')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('runcommand')
-		->andReturn(putenv("THEME_INIT_CALLED=true"));
-
-	$this->cliInitTheme = new CliInitTheme('setup_theme');
+	$this->mock = new CliInitTheme('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
 
-	Monkey\tearDown();
+	unset($this->mock);
 });
-
 
 test('Initializing the project command returns correct command name', function () {
-	$commandName = $this->cliInitTheme->getCommandName();
+	$commandName = $this->mock->getCommandName();
 
 	$this->assertIsString($commandName);
 	$this->assertSame('theme', $commandName);
@@ -56,17 +30,17 @@ test('Initializing the project command returns correct command name', function (
 
 
 test('CliInitTheme CLI documentation is correct', function () {
-	expect($this->cliInitTheme->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });
 
 
 test('InitTheme CLI command will correctly copy the project classes', function () {
 	Functions\when('shell_exec')->returnArg();
 
-	$configProject = $this->cliInitTheme;
+	$configProject = $this->mock;
 	$configProject([], []);
 
-	$this->assertSame('true', \getenv('THEME_INIT_CALLED'));
+	$this->assertSame('boilerplate create blocks ', \getenv('ES_CLI_RUN_COMMAND_HAPPENED'));
 });
 
 
@@ -74,8 +48,8 @@ test('InitTheme CLI command runs in case WP is not installed', function () {
 	redefine('shell_exec', always(true));
 	redefine('function_exists', always(false));
 
-	$configProject = $this->cliInitTheme;
+	$configProject = $this->mock;
 	$configProject([], []);
 
-	$this->assertSame('true', \getenv('THEME_INIT_CALLED'));
+	$this->assertSame('boilerplate create blocks ', \getenv('ES_CLI_RUN_COMMAND_HAPPENED'));
 });

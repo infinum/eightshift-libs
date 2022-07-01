@@ -12,19 +12,13 @@ namespace EightshiftLibs\CiExclude;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class CiExcludeCli
  */
 class CiExcludeCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -53,7 +47,7 @@ class CiExcludeCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'root' => self::OUTPUT_DIR,
+			'path' => Components::getProjectPaths('projectRoot'),
 			'project_name' => 'eightshift-boilerplate',
 			'project_type' => 'themes',
 		];
@@ -71,10 +65,10 @@ class CiExcludeCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'root',
-					'description' => 'Define project root relative to initialization file of WP CLI.',
+					'name' => 'path',
+					'description' => 'Define absolute folder path wehere exclude file file will be created.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('root'),
+					'default' => $this->getDefaultArg('path'),
 				],
 				[
 					'type' => 'assoc',
@@ -114,14 +108,16 @@ class CiExcludeCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$root = $this->getArg($assocArgs, 'root');
+		$path = $this->getArg($assocArgs, 'path');
 		$projectName = $this->getArg($assocArgs, 'project_name');
 		$projectType = $this->getArg($assocArgs, 'project_type');
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, 'ci-exclude.txt')
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->searchReplaceString('<?php $output = \'', '')
+			->searchReplaceString('\';', '')
 			->searchReplaceString($this->getArgTemplate('project_name'), $projectName)
 			->searchReplaceString($this->getArgTemplate('project_type'), $projectType)
-			->outputWrite($root, 'ci-exclude.txt', $assocArgs);
+			->outputWrite($path, 'ci-exclude.txt', $assocArgs);
 	}
 }

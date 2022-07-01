@@ -64,7 +64,7 @@ test('getDoc will return correct array', function () {
 
 test('__invoke will log correct msg if import is success', function () {
 	(new SetupCli('boilerplate'))->__invoke([], [
-		'root' => Components::getProjectPaths('cliOutput', 'setup'),
+		'path' => Components::getProjectPaths('cliOutput', 'setup'),
 		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
 
@@ -97,7 +97,7 @@ test('__invoke will fail if --to parameter is not specified', function () {
 
 test('__invoke will fail if setup.json is empty', function () {
 	(new SetupCli('boilerplate'))->__invoke([], [
-		'root' => Components::getProjectPaths('cliOutput', 'setup'),
+		'path' => Components::getProjectPaths('cliOutput', 'setup'),
 		'file_name' => 'setup-empty.json',
 		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
@@ -113,7 +113,7 @@ test('__invoke will fail if setup.json is empty', function () {
 
 test('__invoke will fail if setup.json is missing url keys', function () {
 	(new SetupCli('boilerplate'))->__invoke([], [
-		'root' => Components::getProjectPaths('cliOutput', 'setup'),
+		'path' => Components::getProjectPaths('cliOutput', 'setup'),
 		'file_name' => 'setup-missing-urls.json',
 		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
@@ -129,7 +129,7 @@ test('__invoke will fail if setup.json is missing url keys', function () {
 
 test('__invoke will fail if setup.json is missing url "from" key', function () {
 	(new SetupCli('boilerplate'))->__invoke([], [
-		'root' => Components::getProjectPaths('cliOutput', 'setup'),
+		'path' => Components::getProjectPaths('cliOutput', 'setup'),
 		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
 
@@ -143,7 +143,7 @@ test('__invoke will fail if setup.json is missing url "from" key', function () {
 
 test('__invoke will fail if setup.json is missing url "to" key', function () {
 	(new SetupCli('boilerplate'))->__invoke([], [
-		'root' => Components::getProjectPaths('cliOutput', 'setup'),
+		'path' => Components::getProjectPaths('cliOutput', 'setup'),
 		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
 

@@ -12,6 +12,7 @@ namespace EightshiftLibs\Build;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class BuildCli
@@ -53,7 +54,7 @@ class BuildCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'root' => self::OUTPUT_DIR,
+			'path' => Components::getProjectPaths('projectRoot', 'bin'),
 			'project_name' => 'eightshift-boilerplate',
 			'project_type' => 'themes',
 		];
@@ -71,10 +72,10 @@ class BuildCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'root',
-					'description' => 'Define project root relative to initialization file of WP CLI.',
+					'name' => 'path',
+					'description' => 'Define absolute folder path wehere build script file will be created.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('root'),
+					'default' => $this->getDefaultArg('path'),
 				],
 				[
 					'type' => 'assoc',
@@ -113,12 +114,12 @@ class BuildCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$root = $this->getArg($assocArgs, 'root');
+		$path = $this->getArg($assocArgs, 'path');
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameProjectName($assocArgs)
 			->renameProjectType($assocArgs)
-			->outputWrite($root . 'bin', 'build.sh', $assocArgs);
+			->outputWrite($path, 'build.sh', $assocArgs);
 	}
 }

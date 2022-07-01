@@ -128,6 +128,12 @@ function setupMocks() {
 			putenv("ES_CLI_ADD_COMMAND_HAPPENED={$message}");
 		});
 
+	$wpCliMock
+		->shouldReceive('colorize')
+		->andReturnUsing(function ($message) {
+			return $message;
+		});
+
 	// Mock attachment function.
 	Functions\when('get_attached_file')->justReturn('test.jpg');
 

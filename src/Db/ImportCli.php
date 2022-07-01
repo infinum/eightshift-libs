@@ -47,10 +47,12 @@ class ImportCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
+		$sep = \DIRECTORY_SEPARATOR;
+
 		return [
 			'from' => '',
 			'to' => '',
-			'setup_file' => Components::getProjectPaths('setupJson', 'setup.json'),
+			'setup_file' => Components::getProjectPaths('cliOutput', "setup{$sep}setup.json"),
 		];
 	}
 

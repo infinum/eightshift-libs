@@ -294,7 +294,6 @@ class Components
 	public const PROJECT_PATHS = [
 		'projectRoot',
 		'srcDestination',
-		'setupJson',
 		'cliOutput',
 		'wpContent',
 		'libs',

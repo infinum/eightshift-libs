@@ -4,10 +4,10 @@ namespace Tests\Unit\CiExclude;
 
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
-use function Tests\getCliOutputFile;
 
 beforeEach(function () {
 	setBeforeEach();
@@ -40,13 +40,13 @@ test('getCommandName will return correct value', function () {
 //---------------------------------------------------------------------------------//
 
 test('getDefaultArgs will return correct array', function () {
-	expect($this->mock->getDefaultArgs())
+	$args = $this->mock->getDefaultArgs();
+
+	expect($args)
 		->toBeArray()
-		->toMatchArray([
-			'root' => '../../../',
-			'project_name' => 'eightshift-boilerplate',
-			'project_type' => 'themes',
-		]);
+		->toHaveKeys(['path', 'project_name', 'project_type'])
+		->and($args['project_name'])->toEqual('eightshift-boilerplate')
+		->and($args['project_type'])->toEqual('themes');
 });
 
 //---------------------------------------------------------------------------------//
@@ -58,7 +58,7 @@ test('getDoc will return correct array', function () {
 		->toBeArray()
 		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
 		->and(count($docs['synopsis']))->toEqual(3)
-		->and($docs['synopsis'][0]['name'])->toEqual('root')
+		->and($docs['synopsis'][0]['name'])->toEqual('path')
 		->and($docs['synopsis'][1]['name'])->toEqual('project_name')
 		->and($docs['synopsis'][2]['name'])->toEqual('project_type');
 });
@@ -70,11 +70,13 @@ test('__invoke will will correctly copy example class with default args', functi
 	$mock([], array_merge(
 		$this->mock->getDefaultArgs(),
 		[
-			'root' => './',
+			'path' => Components::getProjectPaths('cliOutput'),
 		]
 	));
 
-	expect(getCliOutputFile('ci-exclude.txt'))
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', 'ci-exclude.txt'));
+
+	expect($output)
 		->toContain(
 			'eightshift-boilerplate',
 			'themes',
@@ -88,12 +90,14 @@ test('__invoke will will correctly copy example class with default args', functi
 test('__invoke will will correctly copy example class with custom args', function () {
 	$mock = $this->mock;
 	$mock([], [
-		'root' => './',
+		'path' => Components::getProjectPaths('cliOutput'),
 		'project_name' => 'test',
 		'project_type' => 'plugins',
 	]);
 
-	expect(getCliOutputFile('ci-exclude.txt'))
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', 'ci-exclude.txt'));
+
+	expect($output)
 		->toContain(
 			'test',
 			'plugins',

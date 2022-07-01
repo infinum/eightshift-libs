@@ -55,7 +55,7 @@ class SetupCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'root' => Components::getProjectPaths('projectRoot'),
+			'path' => Components::getProjectPaths('projectRoot'),
 			'file_name' => 'setup.json',
 			'source_path' => __DIR__,
 		];
@@ -73,10 +73,17 @@ class SetupCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'root',
-					'description' => 'Define project root relative to initialization file of WP CLI.',
+					'name' => 'path',
+					'description' => 'Define absolute folder path wehere setup file will be created.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('root'),
+					'default' => $this->getDefaultArg('path'),
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'file_name',
+					'description' => 'Define file that will be created in the path location.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('file_name'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -102,12 +109,12 @@ class SetupCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$root = $this->getArg($assocArgs, 'root');
+		$path = $this->getArg($assocArgs, 'path');
 		$fileName = $this->getArg($assocArgs, 'file_name');
 		$sourcePath = $this->getArg($assocArgs, 'source_path');
 
 		// Get setup.json example file, and create the one in the project.
 		$this->getExampleTemplate($sourcePath, $fileName)
-			->outputWrite($root, $fileName, $assocArgs);
+			->outputWrite($path, $fileName, $assocArgs);
 	}
 }

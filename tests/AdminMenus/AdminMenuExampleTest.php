@@ -7,6 +7,7 @@ use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\AdminMenus\AdminMenuExample;
 
+use function Tests\buildTestBlocks;
 use function Tests\setupMocks;
 
 beforeEach(function() {
@@ -31,6 +32,7 @@ test('Register method will call admin_menu hook', function () {
 
 
 test('processAdminMenu will render the component', function() {
+	buildTestBlocks();
 	Functions\when('wp_nonce_field')->justReturn('nonce');
 
 	ob_start();

@@ -1,3 +1,4 @@
+<?php $output = '
 .git
 .gitignore
 license.txt
@@ -23,3 +24,4 @@ README.md
 /wp-content/%project_type%/%project_name%/postcss.config.js
 /wp-content/%project_type%/%project_name%/README.md
 /wp-content/%project_type%/%project_name%/webpack.config.js
+';

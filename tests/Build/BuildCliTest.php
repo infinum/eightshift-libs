@@ -3,56 +3,36 @@
 namespace Tests\Unit\Build;
 
 use EightshiftLibs\Build\BuildCli;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->buildCli = new BuildCli('boilerplate');
+	$this->mock = new BuildCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Build CLI will correctly copy the build script with defaults', function () {
-	$buildCli = $this->buildCli;
-	$buildCli([], [
-		'root' => './'
+	$sep = \DIRECTORY_SEPARATOR;
+
+	$mock = $this->mock;
+	$mock([], [
+		'path' => Components::getProjectPaths('cliOutput', 'bin'),
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/bin/build.sh');
-	$this->assertStringNotContainsString('random string', $generatedFile);
-});
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "bin{$sep}build.sh"));
 
-test('Build CLI will correctly copy the build script to a given folder', function () {
-	$buildCli = $this->buildCli;
-	$buildCli([], [
-		'root' => 'test/',
-	]);
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/test/bin/build.sh');
-	$this->assertStringNotContainsString('random string', $generatedFile);
+	$this->assertStringNotContainsString('random string', $output);
 });
 
 test('Build CLI documentation is correct', function () {
-	expect($this->buildCli->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

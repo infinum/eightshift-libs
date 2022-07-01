@@ -21,12 +21,15 @@ afterEach(function () {
 });
 
 test('Setup CLI command will correctly copy the Setup class with defaults', function () {
+	$sep = \DIRECTORY_SEPARATOR;
+
 	$mock = $this->mock;
 	$mock([], [
-		'root' => Components::getProjectPaths('setupJson'),
+		'path' => Components::getProjectPaths('cliOutput', 'setup'),
+		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
 
-	$output = \file_get_contents(Components::getProjectPaths('setupJson', 'setup.json'));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "setup{$sep}setup.json"));
 
 	expect($output)->toContain('staging');
 });
