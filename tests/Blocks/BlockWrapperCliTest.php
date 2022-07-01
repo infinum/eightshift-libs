@@ -22,12 +22,11 @@ afterEach(function () {
 
 test('Wrapper CLI command will correctly copy the Wrapper class with defaults', function () {
 	$mock = $this->mock;
-	$mock([], [$this->mock->getDefaultArgs()]);
+	$mock([], []);
 
-	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Blocks{$sep}wrapper{$sep}wrapper.php"));
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestinationWrapper', 'wrapper.php'));
 
-	$this->assertStringContainsString('<div>Wrapper!</div>', $output);
+	expect($output)->toContain('Fake wrapper');
  });
 
  test('Wrapper CLI command will run under custom command name', function () {

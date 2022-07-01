@@ -96,5 +96,7 @@ class BlockComponentCli extends AbstractBlocksCli
 		);
 
 		WP_CLI::log('--------------------------------------------------');
+
+		WP_CLI::success('Please run `npm start` again to make sure everything works correctly.');
 	}
 }

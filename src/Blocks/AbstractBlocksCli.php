@@ -25,11 +25,14 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 * @param array<string, mixed> $assocArgs Array of arguments from WP-CLI command.
 	 * @param string $source Source path.
 	 * @param string $destination Destination path.
+	 * @param bool $isSingle Is single folder item.
 	 *
 	 * @return void
 	 */
-	protected function moveItems(array $assocArgs, string $source, string $destination): void
+	protected function moveItems(array $assocArgs, string $source, string $destination, bool $isSingle = false): void
 	{
+		$sep = \DIRECTORY_SEPARATOR;
+
 		// Get Props.
 		$skipExisting = $this->getSkipExisting($assocArgs);
 
@@ -55,6 +58,13 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		$sourceItems = \array_diff(\scandir($source), ['..', '.']);
 		$sourceItems = array_values($sourceItems);
+
+		if ($isSingle) {
+			$sourceItems = [
+				$name,
+			];
+		}
+
 		$sourceItemsOuput = \implode(\PHP_EOL, $sourceItems);
 
 		if (!$sourceItems) {
@@ -89,6 +99,11 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$fullSource = Components::joinPaths([$source, $item]);
 			$fullDestination = Components::joinPaths([$destination, $item]);
 
+			if ($isSingle) {
+				$fullSource = $source;
+				$fullDestination = $destination;
+			}
+
 			// Create folder in project if missing.
 			if (!\is_dir($fullDestination)) {
 				\mkdir($fullDestination);
@@ -106,8 +121,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$partials = array_values($partials);
 
 				$partialsOutput = \array_map(
-					static function ($item) {
-						return "partials/{$item}";
+					static function ($item) use ($sep) {
+						return "partials{$sep}{$item}";
 					},
 					$partials
 				);

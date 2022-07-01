@@ -4,15 +4,10 @@ namespace Tests\Unit\Block;
 
 use EightshiftLibs\Blocks\BlockVariationCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\getCliOutputFile;
-use function Tests\mock;
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
-use function Tests\getCliOutputPath;
-use function Tests\getDataPath;
-use function Tests\getProjectComposerFile;
-use function Tests\mockTemp;
 
 beforeEach(function () {
 	setBeforeEach();
@@ -67,22 +62,19 @@ test('getDoc will return correct array', function () {
 //---------------------------------------------------------------------------------//
 
 test('__invoke will correctly copy example variation with default args', function () {
-	$mock = mockTemp(BlockVariationCli::class);
-	$mock([], $this->mock->getDefaultArgs([]));
+	$mock = $this->mock;
+	$mock([], $mock->getDefaultArgs());
 
-	expect(getCliOutputFile('src/Blocks/variations/button-block/manifest.json'))
+	$name = $this->mock->getDefaultArgs()['name'];
+
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestinationVariations', "{$name}{$sep}manifest.json"));
+
+	expect($output)
 		->toContain(
 			'button',
 			'button-full-width',
 			'Button Full Width',
 		)
-		->and(\getenv('ES_CLI_SUCCESS_HAPPENED'))->toContain('Please start');
+		->and(\getenv('ES_CLI_SUCCESS_HAPPENED'))->toContain('Please run');
 });
-
-test('__invoke will throw error if variation source folder is missing', function () {
-	$mock = mock(BlockVariationCli::class)->makePartial();
-	$mock->shouldReceive('getProjectRootPath')->andReturn(getCliOutputPath('test'));
-	$mock->shouldReceive('getFrontendLibsBlockPath')->andReturn(getDataPath('test'));
-	$mock->shouldReceive('getComposer')->andReturn(getProjectComposerFile());
-	$mock([], $this->mock->getDefaultArgs([]));
-})->throws('The variation source folder is missing!');

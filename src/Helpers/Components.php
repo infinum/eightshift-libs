@@ -298,12 +298,14 @@ class Components
 		'wpContent',
 		'libs',
 
+		'storybookSource',
 		'blocksSource',
 		'blocksSourceCustom',
 		'blocksSourceComponents',
 		'blocksSourceVariations',
 		'blocksSourceWrapper',
 
+		'storybookDestination',
 		'blocksDestination',
 		'blocksDestinationCustom',
 		'blocksDestinationComponents',
@@ -335,6 +337,7 @@ class Components
 		$libsPath = ["vendor", "infinum", "eightshift-libs"];
 		$testsDataPath = ["tests", "data"];
 		$blocksPath = ["src", "Blocks"];
+		$storybookPath = ["storybook"];
 		$cliOutputFolder = "cliOutput";
 
 		$name = '';
@@ -377,6 +380,13 @@ class Components
 					$path = '';
 				}
 				break;
+			case 'storybookSource':
+				$path = self::joinPaths([...$flibsPath, ...$storybookPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path =  self::joinPaths([...$testsDataPath, ...$storybookPath]);
+				}
+				break;
 			case 'blocksSource':
 				$path = self::joinPaths([...$flibsPath, ...$blocksPath]);
 
@@ -397,11 +407,18 @@ class Components
 				$name = 'wrapper';
 				break;
 
-			case 'blocksDestination':
-				$path = self::joinPaths($blocksPath);
+			case 'storybookDestination':
+				$path = self::joinPaths($storybookPath);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputFolder, ...$blocksPath]);
+					$path =  self::joinPaths([$cliOutputFolder, ...$storybookPath]);
+				}
+				break;
+			case 'blocksDestination':
+				$path = self::joinPaths($storybookPath);
+
+				if (\getenv('ES_TEST')) {
+					$path =  self::joinPaths([$cliOutputFolder, ...$storybookPath]);
 				}
 				break;
 			case 'blocksDestinationCustom':
@@ -460,6 +477,9 @@ class Components
 	 */
  	public static function joinPaths(array $paths): string
 	{
-		return implode(\DIRECTORY_SEPARATOR, $paths);
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = implode($sep, $paths);
+
+		return str_replace("{$sep}{$sep}", $sep, $path);
 	}
 }

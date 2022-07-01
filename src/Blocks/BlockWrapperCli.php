@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
-use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
 use WP_CLI;
@@ -18,7 +17,7 @@ use WP_CLI;
 /**
  * Class BlockWrapperCli
  */
-class BlockWrapperCli extends AbstractCli
+class BlockWrapperCli extends AbstractBlocksCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -66,48 +65,17 @@ class BlockWrapperCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		// Get Props.
-		$name = 'wrapper';
-
-		// Set optional arguments.
-		$skipExisting = $this->getSkipExisting($assocArgs);
-
-		$sourcePath = Components::getProjectPaths('blocksSource', $name);
-		$destinationPath = Components::getProjectPaths('blocks', $name);
-
-		// Destination exists.
-		if (\file_exists($destinationPath) && $skipExisting === false) {
-			self::cliError(
-				\sprintf( // phpcs:ignore Eightshift.Commenting.FunctionComment.WrongStyle
-					'The wrapper exists in your project on this "%s" path. Please check or remove that folder before running this command again.',
-					$destinationPath
-				)
-			);
-		} else {
-			\mkdir($destinationPath);
-		}
-
-		$this->copyRecursively($sourcePath, $destinationPath);
-
-		WP_CLI::success('Wrapper successfully moved to your project.');
+		$this->moveItems(
+			[
+				'name' => 'wrapper',
+			],
+			Components::getProjectPaths('blocksSourceWrapper'),
+			Components::getProjectPaths('blocksDestinationWrapper'),
+			true
+		);
 
 		WP_CLI::log('--------------------------------------------------');
 
-		foreach ($this->getFullBlocksFiles($name) as $file) {
-			// Set output file path.
-			$class = $this->getExampleTemplate($destinationPath, $file, true);
-
-			if (!empty($class->fileContents)) {
-				$class->renameProjectName($assocArgs)
-					->renameNamespace($assocArgs)
-					->renameTextDomainFrontendLibs($assocArgs)
-					->renameUseFrontendLibs($assocArgs)
-					->outputWrite($destinationPath, $file, ['skip_existing' => true]);
-			}
-		}
-
-		WP_CLI::log('--------------------------------------------------');
-
-		WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
+		WP_CLI::success('Please run `npm start` again to make sure everything works correctly.');
 	}
 }

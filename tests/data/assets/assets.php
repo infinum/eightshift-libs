@@ -1,0 +1,2 @@
+<?php
+// Assets example file.
