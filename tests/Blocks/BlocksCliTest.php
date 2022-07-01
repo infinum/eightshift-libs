@@ -24,8 +24,7 @@ test('Blocks CLI command will correctly copy the Blocks class with defaults', fu
 	$mock = $this->mock;
 	$mock([], []);
 
-	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Blocks{$sep}Blocks.php"));
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestination', "Blocks.php"));
 
 	$this->assertStringContainsString('class Blocks extends AbstractBlocks', $output);
 	$this->assertStringContainsString('@package EightshiftLibs\Blocks', $output);
@@ -39,8 +38,7 @@ test('Blocks CLI command will correctly copy the Blocks class with set arguments
 		'namespace' => 'CoolTheme',
 	]);
 
-	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}Blocks{$sep}Blocks.php"));
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestination', "Blocks.php"));
 
 	$this->assertStringContainsString('namespace CoolTheme\Blocks;', $output);
 });

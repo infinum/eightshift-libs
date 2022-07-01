@@ -293,6 +293,7 @@ class Components
 	 */
 	public const PROJECT_PATHS = [
 		'projectRoot',
+		'srcDestination',
 		'setupJson',
 		'cliOuput',
 		'wpContent',
@@ -340,10 +341,11 @@ class Components
 		$flibsPath = ["node_modules", "@eightshift", "frontend-libs", "blocks", "init"];
 		$libsPath = ["vendor", "infinum", "eightshift-libs"];
 		$testsDataPath = ["tests", "data"];
-		$blocksPath = ["src", "Blocks"];
+		$srcPath = "src";
+		$blocksPath = [$srcPath, "Blocks"];
 		$storybookPath = "storybook";
 		$assetsPath = "assets";
-		$cliOutputFolder = "cliOutput";
+		$cliOutputPath = "cliOutput";
 
 		$name = '';
 
@@ -360,14 +362,23 @@ class Components
 
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
-					$path = self::joinPaths([$cliOutputFolder, "setup"]);
+					$path = self::joinPaths([$cliOutputPath, "setup"]);
+				}
+
+				break;
+			case 'srcDestination':
+				$path = $srcPath;
+
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = self::joinPaths([$cliOutputPath, $srcPath]);
 				}
 
 				break;
 			case 'cliOuput':
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
-					$path = $cliOutputFolder;
+					$path = $cliOutputPath;
 				}
 
 				break;
@@ -430,28 +441,28 @@ class Components
 				$path = self::joinPaths([$assetsPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputFolder, $assetsPath]);
+					$path =  self::joinPaths([$cliOutputPath, $assetsPath]);
 				}
 				break;
 			case 'blocksAssetsDestination':
-				$path = self::joinPaths([$assetsPath]);
+				$path = self::joinPaths([...$blocksPath, $assetsPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputFolder, $assetsPath]);
+					$path =  self::joinPaths([$cliOutputPath, ...$blocksPath, $assetsPath]);
 				}
 				break;
 			case 'blocksStorybookDestination':
 				$path = self::joinPaths([".{$storybookPath}"]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputFolder, ".{$storybookPath}"]);
+					$path =  self::joinPaths([$cliOutputPath, ".{$storybookPath}"]);
 				}
 				break;
 			case 'blocksDestination':
 				$path = self::joinPaths($blocksPath);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputFolder, ...$blocksPath]);
+					$path =  self::joinPaths([$cliOutputPath, ...$blocksPath]);
 				}
 				break;
 			case 'blocksDestinationCustom':
@@ -487,7 +498,7 @@ class Components
 				$path = self::joinPaths([...$blocksPath, $name]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputFolder, ...$blocksPath, $name]);
+					$path =  self::joinPaths([$cliOutputPath, ...$blocksPath, $name]);
 				}
 				break;
 		}

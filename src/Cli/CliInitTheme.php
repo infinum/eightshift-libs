@@ -100,10 +100,8 @@ class CliInitTheme extends AbstractCli
 
 		WP_CLI::log('--------------------------------------------------');
 
-		if (!\getenv('ES_TEST')) {
-			WP_CLI::log('We have copied everyting that you need in your active theme. Now make sure that you naviate inside and type:');
-			WP_CLI::log(WP_CLI::colorize('%Mnpm run start%n'));
-		}
+		WP_CLI::log('We have copied everyting that you need in your active theme. Now make sure that you naviate inside and type:');
+		WP_CLI::log(WP_CLI::colorize('%Mnpm run start%n'));
 
 		WP_CLI::log('--------------------------------------------------');
 

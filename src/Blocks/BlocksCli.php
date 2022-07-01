@@ -12,65 +12,13 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
-use WP_CLI;
 
 /**
  * Class BlocksCli
  */
 class BlocksCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks';
-
-	/**
-	 * List of components only used in the project init.
-	 * All components are read from the disc path.
-	 *
-	 * @var string[]
-	 */
-	public const COMPONENTS = [
-		'button',
-		'card',
-		'copyright',
-		'drawer',
-		'footer',
-		'hamburger',
-		'head',
-		'header',
-		'heading',
-		'icon',
-		'image',
-		'layout-three-columns',
-		'lists',
-		'logo',
-		'menu',
-		'paragraph',
-		'tracking-before-body-end',
-		'tracking-head',
-	];
-
-	/**
-	 * List of blocks only used in the project init.
-	 * All blocks are read from the disc path.
-	 *
-	 * @var string[]
-	 */
-	public const BLOCKS = [
-		'button',
-		'card',
-		'group',
-		'heading',
-		'image',
-		'lists',
-		'paragraph',
-	];
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -115,65 +63,13 @@ class BlocksCli extends AbstractCli
 	{
 		$className = $this->getClassShortName();
 
+		$class = $this->getExampleTemplate(__DIR__, $className);
+
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $className)
-			->renameClassName($className)
+		$class->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameTextDomainFrontendLibs($assocArgs)
-			->renameUse($assocArgs);
-
-		if (!\getenv('ES_TEST')) {
-			$this->blocksInit($assocArgs);
-		}
-
-		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
-	}
-
-	/**
-	 * Copy blocks from Eightshift-frontend-libs to project
-	 *
-	 * @param string[] $args Arguments array.
-	 *
-	 * @return void
-	 */
-	private function blocksInit(array $args): void
-	{
-		// $root = Components::getProjectPaths('root');
-		// $rootNode = Components::getProjectPaths('blocksSource');
-
-		// $folders = [
-		// 	'assetsGlobal' => "{$root}/assets",
-		// 	'blocks' => "{$root}/src/Blocks",
-		// 	'assets' => "{$root}/src/Blocks/assets",
-		// 	'components' => "{$root}/src/Blocks/components",
-		// 	'custom' => "{$root}/src/Blocks/custom",
-		// 	'variations' => "{$root}/src/Blocks/variations",
-		// ];
-
-		// foreach ($folders as $folder) {
-		// 	if (!\file_exists($folder)) {
-		// 		\mkdir($folder);
-		// 	}
-		// }
-
-		// $this->copyRecursively("{$rootNode}/assets/", "{$folders['assetsGlobal']}/");
-		// $this->copyRecursively("{$rootNode}/src/Blocks/assets/", "{$folders['assets']}/");
-		// $this->copyRecursively("{$rootNode}/src/Blocks/variations/", "{$folders['variations']}/");
-		// \copy("{$rootNode}/src/Blocks/manifest.json", "{$folders['blocks']}/manifest.json");
-
-		// $commandParentName = CliBlocks::COMMAND_NAME;
-
-		// WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} wrapper {$this->prepareArgsManual($args)}");
-
-		// foreach (static::COMPONENTS as $component) {
-		// 	WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} component --name={$component} {$this->prepareArgsManual($args)}");
-		// }
-
-		// foreach (static::BLOCKS as $block) {
-		// 	WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} block --name={$block} {$this->prepareArgsManual($args)}");
-		// }
-
-		// WP_CLI::success('Blocks successfully set.');
+			->renameUse($assocArgs)
+			->outputWrite(Components::getProjectPaths('blocksDestination'), "{$className}.php", $assocArgs);
 	}
 }

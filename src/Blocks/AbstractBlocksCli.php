@@ -25,11 +25,11 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 * @param array<string, mixed> $assocArgs Array of arguments from WP-CLI command.
 	 * @param string $source Source path.
 	 * @param string $destination Destination path.
-	 * @param bool $isSingle Is single folder item.
+	 * @param bool $isSingleFolder Is single folder item.
 	 *
 	 * @return void
 	 */
-	protected function moveItems(array $assocArgs, string $source, string $destination, bool $isSingle = false): void
+	protected function moveItems(array $assocArgs, string $source, string $destination, bool $isSingleFolder = false): void
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
@@ -40,6 +40,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$name = $this->getArg($assocArgs, 'name');
 		$name = str_replace(' ', '', $name);
 		$name = \trim($name, \DIRECTORY_SEPARATOR);
+
+		$isFile = \strpos($name, '.') !== false;
 
 		$itemsList = [$name];
 
@@ -59,7 +61,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$sourceItems = \array_diff(\scandir($source), ['..', '.']);
 		$sourceItems = array_values($sourceItems);
 
-		if ($isSingle) {
+		if ($isSingleFolder || $isFile) {
 			$sourceItems = [
 				$name,
 			];
@@ -72,15 +74,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 				\sprintf(
 					'%s path doesn\'t contain anything. Please check if you have eightshift-frontend-libs instaled.',
 					$source
-				)
-			);
-		}
-
-		if (\file_exists($destination) && $skipExisting === false) {
-			self::cliError(
-				\sprintf(
-					'%s path exists. If you want to override the destination folder plase use --skip_existing="true" argument.',
-					$destination
 				)
 			);
 		}
@@ -99,18 +92,26 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$fullSource = Components::joinPaths([$source, $item]);
 			$fullDestination = Components::joinPaths([$destination, $item]);
 
-			if ($isSingle) {
+			if ($isSingleFolder) {
 				$fullSource = $source;
 				$fullDestination = $destination;
 			}
 
-			// Create folder in project if missing.
-			if (!\is_dir($fullDestination)) {
-				\mkdir($fullDestination);
+			if (\file_exists($fullDestination) && $skipExisting === false && !$isSingleFolder) {
+				self::cliError(
+					\sprintf(
+						'%s path exists. If you want to override the destination folder plase use --skip_existing="true" argument.',
+						$fullDestination
+					)
+				);
 			}
 
 			// Move item to project folder.
-			$this->copyRecursively($fullSource, $fullDestination);
+			if ($isFile) {
+				$this->copyItem($fullSource, $fullDestination);
+			} else {
+				$this->copyRecursively($fullSource, $fullDestination);
+			}
 
 			$partialsOutput = [];
 			$partialsPath = Components::joinPaths([$fullDestination, 'partials']);
@@ -138,11 +139,11 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$class = $this->getExampleTemplate($fullDestination, $innerItem, true);
 
 				if (!empty($class->fileContents)) {
-					$class->renameProjectName($assocArgs)
-						->renameNamespace($assocArgs)
-						->renameTextDomainFrontendLibs($assocArgs)
-						->renameUseFrontendLibs($assocArgs)
-						->outputWrite($fullDestination, $innerItem, ['skip_existing' => true]);
+					// $class->renameProjectName($assocArgs)
+					// 	->renameNamespace($assocArgs)
+					// 	->renameTextDomainFrontendLibs($assocArgs)
+					// 	->renameUseFrontendLibs($assocArgs)
+					// 	->outputWrite($fullDestination, $innerItem, ['skip_existing' => true]);
 				}
 			}
 

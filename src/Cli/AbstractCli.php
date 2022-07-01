@@ -328,24 +328,29 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Open an updated file and create it on output location
 	 *
-	 * @param string $outputDir Absolute path to output from project root dir.
-	 * @param string $outputFile Absolute path to output file.
+	 * @param string $destination Absolute path to output.
+	 * @param string $fileName File name to use on a new file..
 	 * @param array<string, mixed> $args Optional arguments.
 	 *
 	 * @return void
 	 */
-	public function outputWrite(string $destination, string $destinationFile, array $args = []): void
+	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
 
 		// Set output file path.
-		$destinationFile = Components::joinPaths([$destination, $destinationFile]);
+		$destinationFile = Components::joinPaths([$destination, $fileName]);
 
 		// Bailout if file already exists.
 		if (\file_exists($destinationFile) && $skipExisting === false) {
-			self::cliError("The file {$destinationFile} can\'t be generated because it already exists.");
+			self::cliError(
+				\sprintf(
+					"The file %s can\'t be generated because it already exists.",
+					$destinationFile
+				)
+			);
 		}
 
 		// Create output dir if it doesn't exist.
@@ -355,23 +360,38 @@ abstract class AbstractCli implements CliInterface
 
 		// Open a new file on output.
 		// If there is any error, bailout. For example, user permission.
-		if (\fopen($destinationFile, "wb") !== false) {
-			$fp = \fopen($destinationFile, "wb");
-
-			// Write and close.
-			\fwrite($fp, $this->fileContents);
-			\fclose($fp);
-
-			// Return success.
-			if ($skipExisting) {
-				WP_CLI::success("File {$destinationFile} successfully renamed.");
-			} else {
-				WP_CLI::success("File {$destinationFile} successfully created.");
-			}
-			return;
+		if (\fopen($destinationFile, "wb") === false) {
+			self::cliError(
+				\sprintf(
+					"The file %s couldn\'t be created. There was an error.",
+					$destinationFile
+				)
+			);
 		}
 
-		self::cliError("File {$destinationFile} couldn\'t be created. There was an error.");
+		$fp = \fopen($destinationFile, "wb");
+
+		// Write and close.
+		\fwrite($fp, $this->fileContents);
+		\fclose($fp);
+
+		// Return success.
+		if ($skipExisting) {
+			WP_CLI::success(
+				\sprintf(
+					"The file %s was successfully renamed.",
+					$destinationFile
+				)
+			);
+		} else {
+			WP_CLI::success(
+				\sprintf(
+					"The file %s was successfully created.",
+					$destinationFile
+				)
+			);
+		}
+		return;
 	}
 
 	/**
@@ -900,6 +920,10 @@ abstract class AbstractCli implements CliInterface
 	 */
 	protected function copyRecursively(string $source, string $destination): void
 	{
+		if (!\is_dir($destination)) {
+			\mkdir($destination, 0755, true);
+		}
+
 		try {
 			$iterator = new RecursiveIteratorIterator(
 				new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
@@ -923,5 +947,23 @@ abstract class AbstractCli implements CliInterface
 				\copy($item->getPathname(), $destinationPath);
 			}
 		}
+	}
+
+	/**
+	 * Copy item from source to destination.
+	 *
+	 * @param string $source Source path.
+	 * @param string $destination Destination path.
+	 *
+	 * @return void
+	 */
+	protected function copyItem(string $source, string $destination) {
+		$dir = \dirname($destination);
+
+		if (!\file_exists($dir)) {
+			\mkdir($dir, 0755, true);
+		}
+
+		\copy($source, $destination);
 	}
 }
