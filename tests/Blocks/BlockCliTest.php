@@ -31,6 +31,8 @@ test('Block CLI command will correctly copy the Block class with defaults', func
 	$sep = \DIRECTORY_SEPARATOR;
 	$output = \file_get_contents(Components::getProjectPaths('blocksDestinationCustom', "{$name}{$sep}{$name}.php"));
 
+	var_dump($output);
+
 	expect($output)->toContain(
 		'Template for the Button Block view.',
 		'@package EightshiftLibs',
