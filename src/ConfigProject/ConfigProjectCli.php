@@ -21,11 +21,6 @@ use WP_CLI;
 class ConfigProjectCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
-
-	/**
 	 * Get WPCLI command parent name
 	 *
 	 * @return string

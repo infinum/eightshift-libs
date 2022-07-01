@@ -8,7 +8,6 @@ use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
-use function Tests\getCliOutputFile;
 
 beforeEach(function () {
 	setBeforeEach();

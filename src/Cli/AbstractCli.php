@@ -51,13 +51,6 @@ abstract class AbstractCli implements CliInterface
 	protected string $fileContents;
 
 	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = '';
-
-	/**
 	 * Output template name.
 	 *
 	 * @var string

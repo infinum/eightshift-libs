@@ -12,19 +12,13 @@ namespace EightshiftLibs\GitIgnore;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class GitIgnoreCli
  */
 class GitIgnoreCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -53,7 +47,7 @@ class GitIgnoreCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'root' => self::OUTPUT_DIR,
+			'path' => Components::getProjectPaths('projectRoot'),
 		];
 	}
 
@@ -69,10 +63,10 @@ class GitIgnoreCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'root',
-					'description' => 'Define project root relative to initialization file of WP CLI.',
+					'name' => 'path',
+					'description' => 'Define absolute folder path where gitignore file file will be created.',
 					'optional' => true,
-					'default' => $this->getDefaultArg('root'),
+					'default' => $this->getDefaultArg('path'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -98,10 +92,10 @@ class GitIgnoreCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		// Get Props.
-		$root = $this->getArg($assocArgs, 'root');
+		$path = $this->getArg($assocArgs, 'path');
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, '.gitignore')
-			->outputWrite($root, '.gitignore', $assocArgs);
+			->outputWrite($path, '.gitignore', $assocArgs);
 	}
 }

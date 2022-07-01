@@ -4,36 +4,23 @@ namespace Tests\Unit\Config;
 
 use EightshiftLibs\Config\ConfigCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->config = new ConfigCli('boilerplate');
+	$this->mock = new ConfigCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
-});
+	setAfterEach();
 
+	unset($this->mock);
+});
 
 test('Custom acf meta CLI command will correctly copy the Config class with defaults', function () {
-	$config = $this->config;
+	$config = $this->mock;
 	$config([], $config->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
@@ -47,7 +34,6 @@ test('Custom acf meta CLI command will correctly copy the Config class with defa
 	$this->assertStringNotContainsString('someRandomMethod', $generatedConfig);
 });
 
-
 test('Custom acf meta CLI documentation is correct', function () {
-	expect($this->config->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

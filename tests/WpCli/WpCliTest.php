@@ -15,7 +15,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-	// setAfterEach();
+	setAfterEach();
 
 	unset($this->mock);
 });

@@ -12,17 +12,13 @@ namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ServiceExampleCli
  */
 class ServiceExampleCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src';
-
 	/**
 	 * Template name.
 	 */
@@ -130,6 +126,6 @@ class ServiceExampleCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->searchReplaceString('\\Services;', "{$newNamespace};")
-			->outputWrite(static::OUTPUT_DIR . $ds . $folder, $classNameNew, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
 	}
 }

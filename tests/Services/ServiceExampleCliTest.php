@@ -5,8 +5,6 @@ namespace Tests\Unit\Services;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceExampleCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
 
