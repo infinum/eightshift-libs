@@ -12,19 +12,13 @@ namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class FieldCli
  */
 class FieldCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Fields';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -118,6 +112,6 @@ class FieldCli extends AbstractCli
 			->renameUse($assocArgs)
 			->searchReplaceString($this->getArgTemplate('object_type'), $objectType)
 			->searchReplaceString($this->getArgTemplate('field_name'), $fieldName)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Fields'), "{$className}.php", $assocArgs);
 	}
 }

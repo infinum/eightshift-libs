@@ -20,13 +20,6 @@ use EightshiftLibs\Helpers\Components;
 class BlockPatternCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'BlockPatterns';
-
-	/**
 	 * Get WPCLI command parent name
 	 *
 	 * @return string
@@ -134,17 +127,15 @@ class BlockPatternCli extends AbstractCli
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->searchReplaceString($this->getArgTemplate('title'), $title)
 			->searchReplaceString($this->getArgTemplate('name'), $name)
 			->searchReplaceString($this->getArgTemplate('content'), $content)
-			->searchReplaceString($this->getArgTemplate('description'), $description);
-
-		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->searchReplaceString($this->getArgTemplate('description'), $description)
+			->outputWrite(Components::getProjectPaths('srcDestination', 'BlockPatterns'), "{$className}.php", $assocArgs);
 	}
 
 	/**

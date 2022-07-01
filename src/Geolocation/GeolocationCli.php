@@ -14,19 +14,13 @@ namespace EightshiftLibs\Geolocation;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class GeolocationCli
  */
 class GeolocationCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Geolocation';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -117,6 +111,6 @@ class GeolocationCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('cookie_name'), $cookieName);
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Geolocation'), "{$className}.php", $assocArgs);
 	}
 }

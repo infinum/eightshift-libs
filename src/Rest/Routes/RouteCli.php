@@ -12,6 +12,7 @@ namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
@@ -19,13 +20,6 @@ use WP_CLI;
  */
 class RouteCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Routes';
-
 	/**
 	 * Route method enum.
 	 *
@@ -146,6 +140,6 @@ class RouteCli extends AbstractCli
 			->renameUse($assocArgs)
 			->searchReplaceString($this->getArgTemplate('endpoint_slug'), $endpointSlug)
 			->searchReplaceString("'{$this->getArgTemplate('method')}'", static::VERB_ENUM[$method])
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Routes'), "{$className}.php", $assocArgs);
 	}
 }

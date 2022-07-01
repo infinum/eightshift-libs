@@ -12,17 +12,13 @@ namespace EightshiftLibs\Columns\Media;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class WebPMediaColumnCli.
  */
 class WebPMediaColumnCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Columns' . \DIRECTORY_SEPARATOR . 'Media';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -81,6 +77,6 @@ class WebPMediaColumnCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Columns' . \DIRECTORY_SEPARATOR . 'Media'), "{$className}.php", $assocArgs);
 	}
 }

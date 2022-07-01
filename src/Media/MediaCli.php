@@ -12,17 +12,13 @@ namespace EightshiftLibs\Media;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class MediaCli
  */
 class MediaCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Media';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -80,6 +76,6 @@ class MediaCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Media'), "{$className}.php", $assocArgs);
 	}
 }

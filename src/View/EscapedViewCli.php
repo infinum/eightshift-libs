@@ -12,17 +12,13 @@ namespace EightshiftLibs\View;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class EscapedViewCli
  */
 class EscapedViewCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'View';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -80,6 +76,6 @@ class EscapedViewCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'View'), "{$className}.php", $assocArgs);
 	}
 }

@@ -12,19 +12,13 @@ namespace EightshiftLibs\CustomTaxonomy;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class TaxonomyCli
  */
 class TaxonomyCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomTaxonomy';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -147,6 +141,6 @@ class TaxonomyCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('label_lowercaps'), \strtolower($label))
 			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
 			->searchReplaceString($this->getArgTemplate('plural_label_lowecaps'), \strtolower($pluralLabel))
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'CustomTaxonomy'), "{$className}.php", $assocArgs);
 	}
 }

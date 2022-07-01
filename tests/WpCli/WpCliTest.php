@@ -15,7 +15,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-	setAfterEach();
+	// setAfterEach();
 
 	unset($this->mock);
 });
@@ -25,10 +25,9 @@ test('Custom command CLI command will correctly copy the Custom command class wi
 	$mock = $this->mock;
 	$mock([], $mock->getDefaultArgs());
 
-
 	// Check the output dir if the generated method is correctly generated.
 	$sep = \DIRECTORY_SEPARATOR;
-	$mock = \file_get_contents(Components::getProjectPaths('cliOuput', "src{$sep}WpCli{$sep}TestWpCli.php"));
+	$mock = \file_get_contents(Components::getProjectPaths('srcDestination', "WpCli{$sep}TestWpCli.php"));
 
 	$this->assertStringContainsString('class TestWpCli implements ServiceCliInterface', $mock);
 	$this->assertStringContainsString('function register', $mock);

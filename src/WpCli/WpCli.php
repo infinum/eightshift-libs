@@ -12,19 +12,13 @@ namespace EightshiftLibs\WpCli;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class WpCli
  */
 class WpCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'WpCli';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -111,6 +105,6 @@ class WpCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->searchReplaceString($this->getArgTemplate('command_name'), $commandName)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'WpCli'), "{$className}.php", $assocArgs);
 	}
 }
