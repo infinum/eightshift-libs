@@ -32,14 +32,18 @@ class InitThemeCli extends AbstractCli
 	 * @var class-string[]
 	 */
 	public const COMMANDS = [
-		ConfigCli::class,
-		MainCli::class,
-		ManifestCli::class,
-		EnqueueAdminCli::class,
-		EnqueueBlocksCli::class,
-		EnqueueThemeCli::class,
-		MenuCli::class,
-		InitBlocksCli::class,
+		'service classes' => [
+			ConfigCli::class,
+			MainCli::class,
+			ManifestCli::class,
+			EnqueueAdminCli::class,
+			EnqueueBlocksCli::class,
+			EnqueueThemeCli::class,
+			MenuCli::class,
+		],
+		'block editor files' => [
+			InitBlocksCli::class,
+		]
 	];
 
 	/**
@@ -87,11 +91,17 @@ class InitThemeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		foreach (static::COMMANDS as $className) {
-			$reflectionClass = new ReflectionClass($className);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+		foreach (static::COMMANDS as $parentName => $parentClasses) {
+			$this->cliLog(sprintf('Setting %s', $parentName), 'C');
 
-			$class->__invoke([], []);
+			foreach ($parentClasses as $className) {
+				$reflectionClass = new ReflectionClass($className);
+				$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+
+				$class->__invoke([], [
+					'groupOutput' => true,
+				]);
+			}
 		}
 	}
 }
