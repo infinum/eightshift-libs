@@ -45,7 +45,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		$itemsList = [$name];
 
-		if (gettype($name) === 'array') {
+		if (\strpos($name, ',') !== false || \strpos($name, ', ') !== false) {
 			$itemsList = explode(',', $name);
 		}
 

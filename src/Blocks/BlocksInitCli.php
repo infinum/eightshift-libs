@@ -142,9 +142,7 @@ class BlocksInitCli extends AbstractCli
 					$innerItems = $items['test'];
 				}
 
-				foreach ($innerItems as $item) {
-					$class->__invoke([], ['name' => $item]);
-				}
+				$class->__invoke([], ['name' =>  implode(",", $innerItems)]);
 			} else {
 				$class->__invoke([], []);
 			}
