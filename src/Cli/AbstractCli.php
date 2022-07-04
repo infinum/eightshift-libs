@@ -325,6 +325,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
+		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
@@ -364,21 +365,23 @@ abstract class AbstractCli implements CliInterface
 		\fwrite($fp, $this->fileContents);
 		\fclose($fp);
 
-		// Return success.
-		if ($skipExisting) {
-			WP_CLI::success(
-				\sprintf(
-					"The file %s was successfully renamed.",
-					$destinationFile
-				)
-			);
-		} else {
-			WP_CLI::success(
-				\sprintf(
-					"The file %s was successfully created.",
-					$destinationFile
-				)
-			);
+		if (!$groupOutput) {
+			// Return success.
+			if ($skipExisting) {
+				WP_CLI::success(
+					\sprintf(
+						"The file %s was successfully renamed.",
+						$destinationFile
+					)
+				);
+			} else {
+				WP_CLI::success(
+					\sprintf(
+						"The file %s was successfully created.",
+						$destinationFile
+					)
+				);
+			}
 		}
 		return;
 	}

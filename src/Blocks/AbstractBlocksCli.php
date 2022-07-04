@@ -34,6 +34,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		// Get Props.
 		$skipExisting = $this->getSkipExisting($assocArgs);
+		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
 		// Clean up name.
 		$name = $this->getArg($assocArgs, 'name');
@@ -142,7 +143,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 						->renameNamespace($assocArgs)
 						->renameTextDomainFrontendLibs($assocArgs)
 						->renameUseFrontendLibs($assocArgs)
-						->outputWrite($fullDestination, $innerItem, ['skip_existing' => true]);
+						->outputWrite($fullDestination, $innerItem, [
+							'skip_existing' => true,
+							'groupOutput' => $groupOutput,
+						]);
 				}
 			}
 

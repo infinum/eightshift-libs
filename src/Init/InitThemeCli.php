@@ -92,7 +92,7 @@ class InitThemeCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		foreach (static::COMMANDS as $parentName => $parentClasses) {
-			$this->cliLog(sprintf('Setting %s', $parentName), 'C');
+			$this->cliLog(sprintf('Setting %s:', $parentName), 'C');
 
 			foreach ($parentClasses as $className) {
 				$reflectionClass = new ReflectionClass($className);
@@ -102,6 +102,8 @@ class InitThemeCli extends AbstractCli
 					'groupOutput' => true,
 				]);
 			}
+
+			$this->cliLog('--------------------------------------------------');
 		}
 	}
 }
