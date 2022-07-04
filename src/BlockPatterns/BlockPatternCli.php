@@ -36,7 +36,7 @@ class BlockPatternCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_pattern';
+		return 'create_block_pattern';
 	}
 
 	/**

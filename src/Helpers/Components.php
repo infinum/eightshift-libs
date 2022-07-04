@@ -350,7 +350,7 @@ class Components
 
 		switch ($type) {
 			case 'projectRoot':
-				$internalPrefix = \dirname(__FILE__, 8);
+				$internalPrefix = \dirname(__FILE__, 9);
 
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
