@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
-use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
 
 /**
@@ -25,7 +25,7 @@ class BlocksManifestCli extends AbstractBlocksCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliCreate::COMMAND_NAME;
+		return CliBlocks::COMMAND_NAME;
 	}
 
 	/**
