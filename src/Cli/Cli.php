@@ -20,6 +20,7 @@ use EightshiftLibs\Blocks\BlockComponentCli;
 use EightshiftLibs\Blocks\BlockCli;
 use EightshiftLibs\Blocks\BlocksAssetsCli;
 use EightshiftLibs\Blocks\BlocksGlobalAssetsCli;
+use EightshiftLibs\Blocks\BlocksManifestCli;
 use EightshiftLibs\Blocks\BlocksStorybookCli;
 use EightshiftLibs\Blocks\BlockVariationCli;
 use EightshiftLibs\Blocks\BlockWrapperCli;
@@ -146,6 +147,7 @@ class Cli
 	 * @var class-string[]
 	 */
 	public const BLOCKS_CLASSES = [
+		BlocksManifestCli::class,
 		BlocksAssetsCli::class,
 		BlocksGlobalAssetsCli::class,
 		BlockCli::class,
