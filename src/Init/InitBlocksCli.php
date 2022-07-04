@@ -20,7 +20,7 @@ use EightshiftLibs\Blocks\UseStorybookCli;
 use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Cli\ParentGroups\CliInit;
 use ReflectionClass;
 use WP_CLI;
 
@@ -102,7 +102,7 @@ class InitBlocksCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliCreate::COMMAND_NAME;
+		return CliInit::COMMAND_NAME;
 	}
 
 	/**
