@@ -150,7 +150,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			WP_CLI::success(
 				\sprintf(
 					"%s successfully moved to your project on this path %s.",
-					$name,
+					$item,
 					$destination
 				)
 			);

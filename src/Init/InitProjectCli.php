@@ -27,7 +27,6 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
 use ReflectionClass;
-use WP_CLI;
 
 /**
  * Class InitProjectCli
@@ -39,15 +38,8 @@ class InitProjectCli extends AbstractCli
 	 *
 	 * @var class-string[]
 	 */
-	public const INIT_PROJECT_CLASSES = [
-		ConfigCli::class,
-		MainCli::class,
-		ManifestCli::class,
-		EnqueueAdminCli::class,
-		EnqueueBlocksCli::class,
-		EnqueueThemeCli::class,
-		MenuCli::class,
-		BlocksCli::class,
+	public const COMMANDS = [
+		InitThemeCli::class,
 		GitIgnoreCli::class,
 		SetupCli::class,
 		CiExcludeCli::class,
@@ -102,24 +94,11 @@ class InitProjectCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		foreach (static::INIT_PROJECT_CLASSES as $item) {
-			$reflectionClass = new ReflectionClass($item);
-
+		foreach (static::COMMANDS as $className) {
+			$reflectionClass = new ReflectionClass($className);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
-				WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
-			}
+			$class->__invoke([], []);
 		}
-
-		WP_CLI::log('--------------------------------------------------');
-
-		if (!\getenv('ES_TEST')) {
-			WP_CLI::log((string)shell_exec('npm run start')); // phpcs:ignore
-		}
-
-		WP_CLI::log('--------------------------------------------------');
-
-		WP_CLI::success('All commands are finished.');
 	}
 }

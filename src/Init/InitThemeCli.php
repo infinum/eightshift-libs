@@ -20,7 +20,6 @@ use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Menu\MenuCli;
 use ReflectionClass;
-use WP_CLI;
 
 /**
  * Class InitThemeCli
@@ -88,7 +87,7 @@ class InitThemeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		foreach (static::COMMANDS as $className => $items) {
+		foreach (static::COMMANDS as $className) {
 			$reflectionClass = new ReflectionClass($className);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
