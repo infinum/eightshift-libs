@@ -12,7 +12,6 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Helpers\Components;
-use WP_CLI;
 
 /**
  * Abstract class used for Blocks and Components
@@ -52,7 +51,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		if (!is_dir($source)) {
 			self::cliError(
 				\sprintf(
-					'%s path doesn\'t exist. Please check if you have eightshift-frontend-libs instaled.',
+					'File `%s` path doesn\'t exist. Please check if you have eightshift-frontend-libs instaled.',
 					$source,
 				)
 			);
@@ -72,7 +71,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		if (!$sourceItems) {
 			self::cliError(
 				\sprintf(
-					'%s path doesn\'t contain anything. Please check if you have eightshift-frontend-libs instaled.',
+					'File `%s` path doesn\'t contain anything. Please check if you have eightshift-frontend-libs instaled.',
 					$source
 				)
 			);
@@ -82,7 +81,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if (!in_array($item, $sourceItems, true)) {
 				self::cliError(
 					\sprintf(
-						'Requested item with the name "%s" doesn\'t exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type: \n%s',
+						'Requested item with the name `%s` doesn\'t exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type: \n%s',
 						$item,
 						$sourceItemsOuput
 					)
@@ -100,7 +99,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if (\file_exists($fullDestination) && $skipExisting === false && !$isSingleFolder) {
 				self::cliError(
 					\sprintf(
-						'%s path exists. If you want to override the destination folder plase use --skip_existing="true" argument.',
+						'File on this `%s` path exists. If you want to override the destination folder plase use --skip_existing="true" argument.',
 						$fullDestination
 					)
 				);
@@ -147,9 +146,9 @@ abstract class AbstractBlocksCli extends AbstractCli
 				}
 			}
 
-			WP_CLI::success(
+			$this->cliLog(
 				\sprintf(
-					"%s successfully moved to your project on this path %s.",
+					"File `%s` successfully moved to your project on this path `%s`.",
 					$item,
 					$destination
 				)

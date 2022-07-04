@@ -69,6 +69,8 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$groupOutput = $assocArgs['groupOutput'] ?? false;
+
 		$this->moveItems(
 			[
 				'name' => 'assets',
@@ -78,8 +80,10 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 			true
 		);
 
-		WP_CLI::log('--------------------------------------------------');
+		if (!$groupOutput) {
+			WP_CLI::log('--------------------------------------------------');
 
-		WP_CLI::success('Please run `npm start` again to make sure everything works correctly.');
+			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "C");
+		}
 	}
 }

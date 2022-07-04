@@ -12,6 +12,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
+use WP_CLI;
 
 /**
  * Class UseManifestCli
@@ -59,6 +60,8 @@ class UseManifestCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$groupOutput = $assocArgs['groupOutput'] ?? false;
+
 		$this->moveItems(
 			[
 				'name' => 'manifest.json',
@@ -66,5 +69,11 @@ class UseManifestCli extends AbstractBlocksCli
 			Components::getProjectPaths('blocksSource'),
 			Components::getProjectPaths('blocksDestination')
 		);
+
+		if (!$groupOutput) {
+			WP_CLI::log('--------------------------------------------------');
+
+			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "C");
+		}
 	}
 }
