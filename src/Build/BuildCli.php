@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Build;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 
 /**
@@ -26,7 +26,7 @@ class BuildCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliProject::COMMAND_NAME;
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**

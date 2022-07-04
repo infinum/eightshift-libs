@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Readme;
 
-use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Readme\ReadmeCli;
 
@@ -26,7 +26,7 @@ afterEach(function () {
 test('getCommandParentName will return correct value', function () {
 	expect($this->mock->getCommandParentName())
 		->toBeString()
-		->toEqual(CliProject::COMMAND_NAME);
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
 //---------------------------------------------------------------------------------//

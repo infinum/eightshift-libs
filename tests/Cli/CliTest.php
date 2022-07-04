@@ -2,18 +2,10 @@
 
 namespace Tests\Unit\Cli;
 
-use EightshiftLibs\Blocks\BlockCli;
-use EightshiftLibs\Blocks\BlockComponentCli;
-use EightshiftLibs\Blocks\BlocksStorybookCli;
-use EightshiftLibs\Blocks\BlockVariationCli;
-use EightshiftLibs\Blocks\BlockWrapperCli;
 use EightshiftLibs\Cli\Cli;
 use EightshiftLibs\Cli\CliReset;
 use EightshiftLibs\Cli\CliRunAll;
 use EightshiftLibs\Cli\CliShowAll;
-use EightshiftLibs\Db\ExportCli;
-use EightshiftLibs\Db\ImportCli;
-use EightshiftLibs\Setup\UpdateCli;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
@@ -34,8 +26,8 @@ afterEach(function () {
 	setAfterEach();
 });
 
-test('Cli getPublicClasses return correct class list', function () {
-	$publicClasses = $this->cli->getPublicClasses();
+test('Cli getCommandsClasses return correct class list', function () {
+	$publicClasses = $this->cli->getCommandsClasses();
 
 	expect($publicClasses)
 		->toBeArray()

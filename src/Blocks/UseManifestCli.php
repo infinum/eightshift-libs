@@ -14,9 +14,9 @@ use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
 
 /**
- * Class BlocksManifestCli
+ * Class UseManifestCli
  */
-class BlocksManifestCli extends AbstractBlocksCli
+class UseManifestCli extends AbstractBlocksCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -35,7 +35,7 @@ class BlocksManifestCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'manifest';
+		return 'use_manifest';
 	}
 
 	/**

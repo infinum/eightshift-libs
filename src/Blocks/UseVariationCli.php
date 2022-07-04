@@ -15,9 +15,9 @@ use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
- * Class BlockVariationCli
+ * Class UseVariationCli
  */
-class BlockVariationCli extends AbstractBlocksCli
+class UseVariationCli extends AbstractBlocksCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class BlockVariationCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'variation';
+		return 'use_variation';
 	}
 
 	/**

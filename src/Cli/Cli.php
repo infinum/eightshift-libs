@@ -16,23 +16,21 @@ use EightshiftLibs\AdminMenus\AdminSubMenuCli;
 use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
-use EightshiftLibs\Blocks\BlockComponentCli;
-use EightshiftLibs\Blocks\BlockCli;
-use EightshiftLibs\Blocks\BlocksAssetsCli;
-use EightshiftLibs\Blocks\BlocksGlobalAssetsCli;
-use EightshiftLibs\Blocks\BlocksManifestCli;
-use EightshiftLibs\Blocks\BlocksStorybookCli;
-use EightshiftLibs\Blocks\BlockVariationCli;
-use EightshiftLibs\Blocks\BlockWrapperCli;
+use EightshiftLibs\Blocks\UseComponentCli;
+use EightshiftLibs\Blocks\UseBlockCli;
+use EightshiftLibs\Blocks\UseAssetsCli;
+use EightshiftLibs\Blocks\UseGlobalAssetsCli;
+use EightshiftLibs\Blocks\UseManifestCli;
+use EightshiftLibs\Blocks\UseStorybookCli;
+use EightshiftLibs\Blocks\UseVariationCli;
+use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Cli\ParentGroups\CliProject;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
-use EightshiftLibs\Cli\ParentGroups\CliSetup;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
-use EightshiftLibs\Cli\ParentGroups\CliWebp;
+use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
@@ -58,6 +56,8 @@ use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\Init\InitProjectCli;
+use EightshiftLibs\Init\InitThemeCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
@@ -76,31 +76,28 @@ use WP_CLI;
 class Cli
 {
 	/**
-	 * All classes defined as parent list commands.
+	 * All commands defined as parent list commands.
 	 *
 	 * @var class-string[]
 	 */
-	public const PARENTS_LIST = [
+	public const PARENT_COMMANDS = [
 		CliCreate::class,
-		CliProject::class,
 		CliRun::class,
-		CliSetup::class,
 		CliBlocks::class,
-		CliWebp::class,
+		CliInit::class,
 	];
 
 	/**
-	 * All classes and commands that can be used on development and public WP CLI.
+	 * All commands that are service classes type. Command prefix - create.
 	 *
 	 * @var class-string[]
 	 */
-	public const CLASSES_LIST = [
+	public const CREATE_COMMANDS = [
 		AdminMenuCli::class,
 		AdminReusableBlocksMenuCli::class,
 		AdminSubMenuCli::class,
 		AcfMetaCli::class,
 		AnalyticsGdprCli::class,
-		BlocksCli::class,
 		EnqueueAdminCli::class,
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
@@ -132,52 +129,44 @@ class Cli
 	];
 
 	/**
-	 * All classes and commands that can be used on WP project.
+	 * All commands that can be used on WP project directly from the libs. Command prefix - run.
 	 *
 	 * @var class-string[]
 	 */
-	public const COMMANDS_LIST = [
+	public const RUN_COMMANDS = [
 		RegenerateWebPMediaCli::class,
 		UseWebPMediaCli::class,
-	];
-
-	/**
-	 * All classes and commands used only for WPCLI - blocks.
-	 *
-	 * @var class-string[]
-	 */
-	public const BLOCKS_CLASSES = [
-		BlocksManifestCli::class,
-		BlocksAssetsCli::class,
-		BlocksGlobalAssetsCli::class,
-		BlockCli::class,
-		BlockComponentCli::class,
-		BlockVariationCli::class,
-		BlockWrapperCli::class,
-		BlockPatternCli::class,
-		BlocksStorybookCli::class,
-	];
-
-	/**
-	 * All classes and commands used only for WPCLI - project.
-	 *
-	 * @var class-string[]
-	 */
-	public const PROJECT_CLASSES = [
 		ExportCli::class,
 		ImportCli::class,
 		UpdateCli::class,
 	];
 
 	/**
-	 * All classes and commands used for project setup.
+	 * All  commands used for block editor. Command prefix - blocks.
 	 *
 	 * @var class-string[]
 	 */
-	public const SETUP_CLASSES = [
-		CliInitTheme::class,
-		CliInitProject::class,
-		CliInitAll::class,
+	public const BLOCKS_COMMANDS = [
+		BlocksCli::class,
+		BlockPatternCli::class,
+		UseStorybookCli::class,
+		UseManifestCli::class,
+		UseAssetsCli::class,
+		UseGlobalAssetsCli::class,
+		UseBlockCli::class,
+		UseComponentCli::class,
+		UseVariationCli::class,
+		UseWrapperCli::class,
+	];
+
+	/**
+	 * All commands used for setting up. Command prefix - init.
+	 *
+	 * @var class-string[]
+	 */
+	public const INIT_COMMANDS = [
+		InitThemeCli::class,
+		InitProjectCli::class,
 	];
 
 	/**
@@ -185,15 +174,14 @@ class Cli
 	 *
 	 * @return class-string[]
 	 */
-	public function getPublicClasses(): array
+	public function getCommandsClasses(): array
 	{
-		return \array_merge(
-			static::CLASSES_LIST,
-			static::BLOCKS_CLASSES,
-			static::PROJECT_CLASSES,
-			static::SETUP_CLASSES,
-			static::COMMANDS_LIST
-		);
+		return [
+			...static::CREATE_COMMANDS,
+			...static::BLOCKS_COMMANDS,
+			...static::INIT_COMMANDS,
+			...static::RUN_COMMANDS
+		];
 	}
 
 	/**
@@ -213,7 +201,7 @@ class Cli
 			WP_CLI::add_command($commandParentName, new CliBoilerplate());
 
 			// Register all top level commands.
-			foreach (self::PARENTS_LIST as $item) {
+			foreach (self::PARENT_COMMANDS as $item) {
 				$reflectionClass = new ReflectionClass($item);
 				$class = $reflectionClass->newInstanceArgs();
 				$name = $reflectionClass->getConstant('COMMAND_NAME');
@@ -222,7 +210,7 @@ class Cli
 			}
 		}
 
-		foreach ($this->getPublicClasses() as $item) {
+		foreach ($this->getCommandsClasses() as $item) {
 			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([$commandParentName]);
 

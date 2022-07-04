@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\ParentGroups\CliProject;
-use EightshiftLibs\Cli\ParentGroups\CliSetup;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Helpers\Components;
 
 /**
@@ -27,7 +27,7 @@ class SetupCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliProject::COMMAND_NAME;
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -37,7 +37,7 @@ class SetupCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return CliSetup::COMMAND_NAME;
+		return 'setup';
 	}
 
 	/**

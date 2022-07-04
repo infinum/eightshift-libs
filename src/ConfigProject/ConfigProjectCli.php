@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\ConfigProject;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
@@ -27,7 +27,7 @@ class ConfigProjectCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliProject::COMMAND_NAME;
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**

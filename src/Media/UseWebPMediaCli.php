@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Media;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\ParentGroups\CliWebp;
+use EightshiftLibs\Cli\ParentGroups\CliRun;
 use WP_CLI;
 
 /**
@@ -38,7 +38,7 @@ class UseWebPMediaCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliWebp::COMMAND_NAME;
+		return CliRun::COMMAND_NAME;
 	}
 
 	/**

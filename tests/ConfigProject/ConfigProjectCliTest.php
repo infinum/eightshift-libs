@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\ConfigProject;
 
-use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\Helpers\Components;
 
@@ -26,7 +26,7 @@ afterEach(function () {
 test('getCommandParentName will return correct value', function () {
 	expect($this->mock->getCommandParentName())
 		->toBeString()
-		->toEqual(CliProject::COMMAND_NAME);
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
 //---------------------------------------------------------------------------------//

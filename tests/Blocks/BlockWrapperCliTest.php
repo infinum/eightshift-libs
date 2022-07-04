@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Block;
 
-use EightshiftLibs\Blocks\BlockWrapperCli;
+use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
@@ -11,7 +11,7 @@ use function Tests\setBeforeEach;
 beforeEach(function () {
 	setBeforeEach();
 
-	$this->mock = new BlockWrapperCli('boilerplate');
+	$this->mock = new UseWrapperCli('boilerplate');
 });
 
 afterEach(function () {

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Block;
 
-use EightshiftLibs\Blocks\BlockVariationCli;
+use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
 
@@ -12,7 +12,7 @@ use function Tests\setBeforeEach;
 beforeEach(function () {
 	setBeforeEach();
 
-	$this->mock = new BlockVariationCli('boilerplate');
+	$this->mock = new UseVariationCli('boilerplate');
 });
 
 afterEach(function () {
@@ -34,7 +34,7 @@ test('getCommandParentName will return correct value', function () {
 test('getCommandName will return correct value', function () {
 	expect($this->mock->getCommandName())
 		->toBeString()
-		->toEqual('variation');
+		->toEqual('use_variation');
 });
 
 //---------------------------------------------------------------------------------//

@@ -15,9 +15,9 @@ use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
- * Class BlockCli
+ * Class UseBlockCli
  */
-class BlockCli extends AbstractBlocksCli
+class UseBlockCli extends AbstractBlocksCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class BlockCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'block';
+		return 'use_block';
 	}
 
 	/**

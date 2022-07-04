@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Blocks Wrapper.
+ * Class that registers WPCLI command for Blocks Storybook.
  *
  * @package EightshiftLibs\Blocks
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
- * Class BlockWrapperCli
+ * Class UseStorybookCli
  */
-class BlockWrapperCli extends AbstractBlocksCli
+class UseStorybookCli extends AbstractBlocksCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class BlockWrapperCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'wrapper';
+		return 'use_storybook';
 	}
 
 	/**
@@ -47,18 +47,22 @@ class BlockWrapperCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy wrapper from our library to your project.',
-			'longdesc' => "
+			'shortdesc' => 'Setup storybook in your project.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to copy all configuration files to your project needed to run Storybook.
+
 				## EXAMPLES
 
-				# Copy wrapper.
+				# Create Storybook config:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
-				Our wrapper can be found here:
-				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/wrapper
-			"
+				Storybook config will be created from this folder:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/storybook
+			"),
 		];
 	}
 
@@ -67,10 +71,10 @@ class BlockWrapperCli extends AbstractBlocksCli
 	{
 		$this->moveItems(
 			[
-				'name' => 'wrapper',
+				'name' => 'storybook',
 			],
-			Components::getProjectPaths('blocksSourceWrapper'),
-			Components::getProjectPaths('blocksDestinationWrapper'),
+			Components::getProjectPaths('blocksStorybookSource'),
+			Components::getProjectPaths('blocksStorybookDestination'),
 			true
 		);
 

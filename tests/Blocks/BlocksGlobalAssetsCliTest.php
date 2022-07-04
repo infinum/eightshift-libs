@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Block;
 
-use EightshiftLibs\Blocks\BlocksGlobalAssetsCli;
+use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
@@ -11,7 +11,7 @@ use function Tests\setBeforeEach;
 beforeEach(function () {
 	setBeforeEach();
 
-	$this->mock = new BlocksGlobalAssetsCli('boilerplate');
+	$this->mock = new UseGlobalAssetsCli('boilerplate');
 });
 
 afterEach(function () {

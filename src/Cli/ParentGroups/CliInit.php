@@ -15,10 +15,10 @@ use WP_CLI_Command;
 /**
  * Initially setup your project like theme, plugin, project, etc. These commands should be used only once.
  */
-class CliSetup extends WP_CLI_Command
+class CliInit extends WP_CLI_Command
 {
 	/**
 	 * Cli command name parent constant.
 	 */
-	public const COMMAND_NAME = 'setup';
+	public const COMMAND_NAME = 'init';
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Blocks assets.
+ * Class that registers WPCLI command for Blocks Wrapper.
  *
  * @package EightshiftLibs\Blocks
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
- * Class BlocksAssetsCli
+ * Class UseWrapperCli
  */
-class BlocksAssetsCli extends AbstractBlocksCli
+class UseWrapperCli extends AbstractBlocksCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class BlocksAssetsCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'blocks_assets';
+		return 'use_wrapper';
 	}
 
 	/**
@@ -47,22 +47,18 @@ class BlocksAssetsCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy assets from our library to your project.',
-			'longdesc' => $this->prepareLongDesc("
-				## USAGE
-
-				Used to copy pre-created assets from our library to your project. After copying you can modify it in any way you see fit.
-
+			'shortdesc' => 'Copy wrapper from our library to your project.',
+			'longdesc' => "
 				## EXAMPLES
 
-				# Copy assets.
+				# Copy wrapper.
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
-				Assets will be created from this folder:
-				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/assets
-			"),
+				Our wrapper can be found here:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/wrapper
+			"
 		];
 	}
 
@@ -71,10 +67,10 @@ class BlocksAssetsCli extends AbstractBlocksCli
 	{
 		$this->moveItems(
 			[
-				'name' => 'assets',
+				'name' => 'wrapper',
 			],
-			Components::getProjectPaths('blocksAssetsSource'),
-			Components::getProjectPaths('blocksAssetsDestination'),
+			Components::getProjectPaths('blocksSourceWrapper'),
+			Components::getProjectPaths('blocksDestinationWrapper'),
 			true
 		);
 

@@ -3,7 +3,7 @@
 /**
  * Class that registers WPCLI commands used as top level placeholders.
  *
- * @package EightshiftLibs\Cli\TopLevelGroup
+ * @package EightshiftLibs\Cli\ParentGroups
  */
 
 declare(strict_types=1);

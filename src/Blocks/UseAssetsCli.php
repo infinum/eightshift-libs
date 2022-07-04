@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Blocks global assets.
+ * Class that registers WPCLI command for Blocks assets.
  *
  * @package EightshiftLibs\Blocks
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
- * Class BlocksGlobalAssetsCli
+ * Class UseAssetsCli
  */
-class BlocksGlobalAssetsCli extends AbstractBlocksCli
+class UseAssetsCli extends AbstractBlocksCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class BlocksGlobalAssetsCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'blocks_global_assets';
+		return 'use_assets';
 	}
 
 	/**
@@ -47,21 +47,21 @@ class BlocksGlobalAssetsCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy global assets from our library to your project.',
+			'shortdesc' => 'Copy assets from our library to your project.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to copy pre-created global assets from our library to your project. After copying you can modify it in any way you see fit.
+				Used to copy pre-created assets from our library to your project. After copying you can modify it in any way you see fit.
 
 				## EXAMPLES
 
-				# Copy global assets.
+				# Copy assets.
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
-				Global assets will be created from this folder:
-				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/assets
+				Assets will be created from this folder:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/assets
 			"),
 		];
 	}
@@ -73,8 +73,8 @@ class BlocksGlobalAssetsCli extends AbstractBlocksCli
 			[
 				'name' => 'assets',
 			],
-			Components::getProjectPaths('blocksGlobalAssetsSource'),
-			Components::getProjectPaths('blocksGlobalAssetsDestination'),
+			Components::getProjectPaths('blocksAssetsSource'),
+			Components::getProjectPaths('blocksAssetsDestination'),
 			true
 		);
 

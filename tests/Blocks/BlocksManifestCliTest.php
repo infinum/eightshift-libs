@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Block;
 
-use EightshiftLibs\Blocks\BlocksManifestCli;
+use EightshiftLibs\Blocks\UseManifestCli;
 use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
@@ -11,7 +11,7 @@ use function Tests\setBeforeEach;
 beforeEach(function () {
 	setBeforeEach();
 
-	$this->mock = new BlocksManifestCli('boilerplate');
+	$this->mock = new UseManifestCli('boilerplate');
 });
 
 afterEach(function () {

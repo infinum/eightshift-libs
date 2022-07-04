@@ -3,7 +3,7 @@
 namespace Tests\Unit\CiExclude;
 
 use EightshiftLibs\CiExclude\CiExcludeCli;
-use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
@@ -26,7 +26,7 @@ afterEach(function () {
 test('getCommandParentName will return correct value', function () {
 	expect($this->mock->getCommandParentName())
 		->toBeString()
-		->toEqual(CliProject::COMMAND_NAME);
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
 //---------------------------------------------------------------------------------//

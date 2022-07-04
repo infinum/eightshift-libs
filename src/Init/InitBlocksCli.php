@@ -3,38 +3,43 @@
 /**
  * Class that registers WPCLI command for Blocks init.
  *
- * @package EightshiftLibs\Blocks
+ * @package EightshiftLibs\Init
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Blocks;
+namespace EightshiftLibs\Init;
 
-use EightshiftLibs\BlockPatterns\BlockPatternCli;
+use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Blocks\UseAssetsCli;
+use EightshiftLibs\Blocks\UseBlockCli;
+use EightshiftLibs\Blocks\UseComponentCli;
+use EightshiftLibs\Blocks\UseGlobalAssetsCli;
+use EightshiftLibs\Blocks\UseManifestCli;
+use EightshiftLibs\Blocks\UseStorybookCli;
+use EightshiftLibs\Blocks\UseVariationCli;
+use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Cli\ParentGroups\CliBlocks;
-use EightshiftLibs\Helpers\Components;
 use ReflectionClass;
 use WP_CLI;
 
 /**
- * Class BlocksInitCli
+ * Class InitBlocksCli
  */
-class BlocksInitCli extends AbstractCli
+class InitBlocksCli extends AbstractCli
 {
 	/**
 	 * All commands to run on init for the 
 	 */
 	public const INIT = [
 		BlocksCli::class => [],
-		BlocksAssetsCli::class => [],
-		// BlockPatternCli::class => [],
-		BlocksStorybookCli::class => [],
-		BlocksGlobalAssetsCli::class => [],
-		BlockWrapperCli::class => [],
-		BlocksManifestCli::class => [],
-		BlockCli::class => [
+		UseAssetsCli::class => [],
+		UseStorybookCli::class => [],
+		UseGlobalAssetsCli::class => [],
+		UseWrapperCli::class => [],
+		UseManifestCli::class => [],
+		UseBlockCli::class => [
 			'default' => [
 				'button',
 				'card',
@@ -49,7 +54,7 @@ class BlocksInitCli extends AbstractCli
 				'heading',
 			],
 		],
-		BlockComponentCli::class => [
+		UseComponentCli::class => [
 			'default' => [
 				'button',
 				'card',
@@ -80,7 +85,7 @@ class BlocksInitCli extends AbstractCli
 				'variables',
 			],
 		],
-		BlockVariationCli::class => [
+		UseVariationCli::class => [
 			'default' => [
 				'button-block',
 			],

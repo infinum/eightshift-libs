@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\Unit\Blocks;
+namespace Tests\Unit\Init;
 
-use EightshiftLibs\Blocks\BlocksInitCli;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Init\InitBlocksCli;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
@@ -11,7 +10,7 @@ use function Tests\setBeforeEach;
 beforeEach(function () {
 	setBeforeEach();
 
-	$this->mock = new BlocksInitCli('boilerplate');
+	$this->mock = new InitBlocksCli('boilerplate');
 });
 
 afterEach(function () {

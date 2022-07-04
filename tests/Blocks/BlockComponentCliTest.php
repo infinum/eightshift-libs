@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Block;
 
-use EightshiftLibs\Blocks\BlockComponentCli;
+use EightshiftLibs\Blocks\UseComponentCli;
 use EightshiftLibs\Helpers\Components;
 use Exception;
 
@@ -12,7 +12,7 @@ use function Tests\setBeforeEach;
 beforeEach(function () {
 	setBeforeEach();
 
-	$this->mock = new BlockComponentCli('boilerplate');
+	$this->mock = new UseComponentCli('boilerplate');
 });
 
 afterEach(function () {

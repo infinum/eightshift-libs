@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Blocks Storybook.
+ * Class that registers WPCLI command for Blocks global assets.
  *
  * @package EightshiftLibs\Blocks
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
- * Class BlocksStorybookCli
+ * Class UseGlobalAssetsCli
  */
-class BlocksStorybookCli extends AbstractBlocksCli
+class UseGlobalAssetsCli extends AbstractBlocksCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class BlocksStorybookCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'blocks_storybook';
+		return 'use_global_assets';
 	}
 
 	/**
@@ -47,21 +47,21 @@ class BlocksStorybookCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Setup storybook in your project.',
+			'shortdesc' => 'Copy global assets from our library to your project.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to copy all configuration files to your project needed to run Storybook.
+				Used to copy pre-created global assets from our library to your project. After copying you can modify it in any way you see fit.
 
 				## EXAMPLES
 
-				# Create Storybook config:
+				# Copy global assets.
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
-				Storybook config will be created from this folder:
-				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/storybook
+				Global assets will be created from this folder:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/assets
 			"),
 		];
 	}
@@ -71,10 +71,10 @@ class BlocksStorybookCli extends AbstractBlocksCli
 	{
 		$this->moveItems(
 			[
-				'name' => 'storybook',
+				'name' => 'assets',
 			],
-			Components::getProjectPaths('blocksStorybookSource'),
-			Components::getProjectPaths('blocksStorybookDestination'),
+			Components::getProjectPaths('blocksGlobalAssetsSource'),
+			Components::getProjectPaths('blocksGlobalAssetsDestination'),
 			true
 		);
 

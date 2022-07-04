@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\AdminMenus;
 
-use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\AdminMenus\AdminMenuExample;
 

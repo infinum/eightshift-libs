@@ -5,7 +5,7 @@ namespace Tests;
 use Brain\Monkey\Functions;
 use Mockery;
 use Brain\Monkey;
-use EightshiftLibs\Blocks\BlocksInitCli;
+use EightshiftLibs\Init\InitBlocksCli;
 use Exception;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
@@ -300,7 +300,7 @@ function getCliOutputFile(string $path = ''): string
  * @return void
  */
 function buildTestBlocks() {
-	(new BlocksInitCli('boilerplate'))->__invoke([], []);
+	(new InitBlocksCli('boilerplate'))->__invoke([], []);
 }
 
 /**

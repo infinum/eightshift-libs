@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Block;
 
-use EightshiftLibs\Blocks\BlocksStorybookCli;
+use EightshiftLibs\Blocks\UseStorybookCli;
 use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
@@ -11,7 +11,7 @@ use function Tests\setBeforeEach;
 beforeEach(function () {
 	setBeforeEach();
 
-	$this->mock = new BlocksStorybookCli('boilerplate');
+	$this->mock = new UseStorybookCli('boilerplate');
 });
 
 afterEach(function () {
