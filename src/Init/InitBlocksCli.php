@@ -22,7 +22,6 @@ use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use ReflectionClass;
-use WP_CLI;
 
 /**
  * Class InitBlocksCli
