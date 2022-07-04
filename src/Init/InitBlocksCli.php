@@ -17,7 +17,6 @@ use EightshiftLibs\Blocks\UseComponentCli;
 use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Blocks\UseManifestCli;
 use EightshiftLibs\Blocks\UseStorybookCli;
-use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
@@ -31,7 +30,7 @@ class InitBlocksCli extends AbstractCli
 	/**
 	 * All commands to run on init for the 
 	 */
-	public const INIT = [
+	public const COMMANDS = [
 		BlocksCli::class => [],
 		UseAssetsCli::class => [],
 		UseStorybookCli::class => [],
@@ -84,14 +83,6 @@ class InitBlocksCli extends AbstractCli
 				'variables',
 			],
 		],
-		UseVariationCli::class => [
-			'default' => [
-				'button-block',
-			],
-			'test' => [
-				'button-block',
-			],
-		],
 	];
 
 	/**
@@ -111,7 +102,7 @@ class InitBlocksCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'blocks_init';
+		return 'blocks';
 	}
 
 	/**
@@ -135,7 +126,7 @@ class InitBlocksCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		foreach (static::INIT as $className => $items) {
+		foreach (static::COMMANDS as $className => $items) {
 			$reflectionClass = new ReflectionClass($className);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 

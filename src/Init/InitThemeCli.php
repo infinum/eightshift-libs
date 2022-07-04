@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Init;
 
-use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Config\ConfigCli;
@@ -33,7 +32,7 @@ class InitThemeCli extends AbstractCli
 	 *
 	 * @var class-string[]
 	 */
-	public const INIT_THEME_CLASSES = [
+	public const COMMANDS = [
 		ConfigCli::class,
 		MainCli::class,
 		ManifestCli::class,
@@ -41,7 +40,7 @@ class InitThemeCli extends AbstractCli
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
 		MenuCli::class,
-		BlocksCli::class,
+		InitBlocksCli::class,
 	];
 
 	/**
@@ -89,23 +88,11 @@ class InitThemeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		foreach (static::INIT_THEME_CLASSES as $item) {
-			$reflectionClass = new ReflectionClass($item);
-
+		foreach (static::COMMANDS as $className => $items) {
+			$reflectionClass = new ReflectionClass($className);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
-				WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($assocArgs)}");
-			}
+			$class->__invoke([], []);
 		}
-
-		WP_CLI::log('--------------------------------------------------');
-
-		WP_CLI::log('We have copied everyting that you need in your active theme. Now make sure that you naviate inside and type:');
-		WP_CLI::log(WP_CLI::colorize('%Mnpm run start%n'));
-
-		WP_CLI::log('--------------------------------------------------');
-
-		WP_CLI::success('You are ready to start developing, good luck.');
 	}
 }
