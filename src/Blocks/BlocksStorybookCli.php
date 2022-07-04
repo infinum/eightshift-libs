@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
-use EightshiftLibs\Cli\ParentGroups\CliSetup;
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
@@ -26,7 +26,7 @@ class BlocksStorybookCli extends AbstractBlocksCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliSetup::COMMAND_NAME;
+		return CliBlocks::COMMAND_NAME;
 	}
 
 	/**

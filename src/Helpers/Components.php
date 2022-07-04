@@ -331,7 +331,7 @@ class Components
 		$sep = \DIRECTORY_SEPARATOR;
 
 		$path = '';
-		$internalPrefix = \dirname(__FILE__, 5);
+		$internalPrefix = \dirname(__FILE__, 6);
 
 		if (\getenv('ES_TEST')) {
 			$internalPrefix = \dirname(__FILE__, 3);
@@ -380,7 +380,7 @@ class Components
 
 				break;
 			case 'wpContent':
-				$internalPrefix = \dirname(__FILE__, 6);
+				$internalPrefix = \dirname(__FILE__, 7);
 
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
