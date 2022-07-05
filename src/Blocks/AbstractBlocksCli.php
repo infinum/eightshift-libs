@@ -12,6 +12,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Helpers\Components;
+use WP_CLI;
 
 /**
  * Abstract class used for Blocks and Components
@@ -24,11 +25,12 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 * @param array<string, mixed> $args Array of arguments from WP-CLI command.
 	 * @param string $source Source path.
 	 * @param string $destination Destination path.
+	 * @param string $type Type of items used for output log.
 	 * @param bool $isSingleFolder Is single folder item.
 	 *
 	 * @return void
 	 */
-	protected function moveItems(array $args, string $source, string $destination, bool $isSingleFolder = false): void
+	protected function moveItems(array $args, string $source, string $destination, string $type, bool $isSingleFolder = false): void
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
@@ -37,7 +39,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$groupOutput = $args['groupOutput'] ?? false;
 
 		// Clean up name.
-		$name = $this->getArg($args, 'name');
+		$name = $args['name'] ?? '';
 		$name = str_replace(' ', '', $name);
 		$name = \trim($name, \DIRECTORY_SEPARATOR);
 
@@ -52,7 +54,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 		if (!is_dir($source)) {
 			self::cliError(
 				\sprintf(
-					'File `%s` path doesn\'t exist. Please check if you have eightshift-frontend-libs instaled.',
+					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
+					ucfirst($type),
 					$source,
 				)
 			);
@@ -72,7 +75,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 		if (!$sourceItems) {
 			self::cliError(
 				\sprintf(
-					'File `%s` path doesn\'t contain anything. Please check if you have eightshift-frontend-libs instaled.',
+					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
+					ucfirst($type),
 					$source
 				)
 			);
@@ -82,7 +86,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if (!in_array($item, $sourceItems, true)) {
 				self::cliError(
 					\sprintf(
-						'Requested item with the name `%s` doesn\'t exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type: \n%s',
+						"Requested %s with the name `%s` doesn't exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type: \n%s",
+						$type,
 						$item,
 						$sourceItemsOuput
 					)
@@ -100,7 +105,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if (\file_exists($fullDestination) && $skipExisting === false && !$isSingleFolder) {
 				self::cliError(
 					\sprintf(
-						'File on this `%s` path exists. If you want to override the destination folder plase use --skip_existing="true" argument.',
+						"%s files exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
+						ucfirst($type),
 						$fullDestination
 					)
 				);
@@ -150,9 +156,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				}
 			}
 
-			$this->cliLog(
+			WP_CLI::success(
 				\sprintf(
-					"File `%s` successfully moved to your project on this path `%s`.",
+					"%s files successfully moved to your project on this path `%s`.",
+					ucfirst($type),
 					$item,
 					$destination
 				)

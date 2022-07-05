@@ -95,6 +95,7 @@ class UseBlockCli extends AbstractBlocksCli
 			$assocArgs,
 			Components::getProjectPaths('blocksSourceCustom'),
 			Components::getProjectPaths('blocksDestinationCustom'),
+			'block'
 		);
 
 		if (!$groupOutput) {

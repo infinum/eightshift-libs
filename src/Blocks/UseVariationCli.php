@@ -95,6 +95,7 @@ class UseVariationCli extends AbstractBlocksCli
 			$assocArgs,
 			Components::getProjectPaths('blocksSourceVariations'),
 			Components::getProjectPaths('blocksDestinationVariations'),
+			'variation'
 		);
 
 		if (!$groupOutput) {

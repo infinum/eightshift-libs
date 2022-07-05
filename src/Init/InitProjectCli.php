@@ -39,13 +39,23 @@ class InitProjectCli extends AbstractCli
 	 * @var class-string[]
 	 */
 	public const COMMANDS = [
-		InitThemeCli::class,
-		GitIgnoreCli::class,
-		SetupCli::class,
-		CiExcludeCli::class,
-		BuildCli::class,
-		ReadmeCli::class,
-		ConfigProjectCli::class,
+		[
+			'label' => '',
+			'items' => [
+				InitThemeCli::class,
+			],
+		],
+		[
+			'label' => 'Setting project specific files:',
+			'items' => [
+				GitIgnoreCli::class,
+				SetupCli::class,
+				CiExcludeCli::class,
+				BuildCli::class,
+				ReadmeCli::class,
+				ConfigProjectCli::class,
+			],
+		],
 	];
 
 	/**
@@ -94,11 +104,26 @@ class InitProjectCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		foreach (static::COMMANDS as $className) {
-			$reflectionClass = new ReflectionClass($className);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+		foreach (static::COMMANDS as $item) {
+			$label = $item['label'] ?? '';
+			$items = $item['items'] ?? '';
 
-			$class->__invoke([], []);
+			if ($label) {
+				$this->cliLog($label, 'C');
+			}
+
+			if ($items) {
+				foreach ($items as $className) {
+					$reflectionClass = new ReflectionClass($className);
+					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+	
+					$class->__invoke([], [
+						'groupOutput' => true,
+					]);
+				}
+			}
+
+			$this->cliLog('--------------------------------------------------');
 		}
 	}
 }

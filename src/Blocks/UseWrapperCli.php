@@ -74,6 +74,7 @@ class UseWrapperCli extends AbstractBlocksCli
 			],
 			Components::getProjectPaths('blocksSourceWrapper'),
 			Components::getProjectPaths('blocksDestinationWrapper'),
+			'wrapper',
 			true
 		);
 

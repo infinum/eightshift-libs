@@ -78,6 +78,7 @@ class UseStorybookCli extends AbstractBlocksCli
 			],
 			Components::getProjectPaths('blocksStorybookSource'),
 			Components::getProjectPaths('blocksStorybookDestination'),
+			'storybook',
 			true
 		);
 

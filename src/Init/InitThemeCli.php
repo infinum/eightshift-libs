@@ -32,18 +32,24 @@ class InitThemeCli extends AbstractCli
 	 * @var class-string[]
 	 */
 	public const COMMANDS = [
-		'service classes' => [
-			ConfigCli::class,
-			MainCli::class,
-			ManifestCli::class,
-			EnqueueAdminCli::class,
-			EnqueueBlocksCli::class,
-			EnqueueThemeCli::class,
-			MenuCli::class,
+		[
+			'label' => 'Setting theme service classes:',
+			'items' => [
+				ConfigCli::class,
+				MainCli::class,
+				ManifestCli::class,
+				EnqueueAdminCli::class,
+				EnqueueBlocksCli::class,
+				EnqueueThemeCli::class,
+				MenuCli::class,
+			],
 		],
-		'block editor files' => [
-			InitBlocksCli::class,
-		]
+		[
+			'label' => 'Setting theme block editor files:',
+			'items' => [
+				InitBlocksCli::class,
+			]
+		],
 	];
 
 	/**
@@ -91,16 +97,23 @@ class InitThemeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		foreach (static::COMMANDS as $parentName => $parentClasses) {
-			$this->cliLog(sprintf('Setting theme %s:', $parentName), 'C');
+		foreach (static::COMMANDS as $item) {
+			$label = $item['label'] ?? '';
+			$items = $item['items'] ?? '';
 
-			foreach ($parentClasses as $className) {
-				$reflectionClass = new ReflectionClass($className);
-				$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+			if ($label) {
+				$this->cliLog($label, 'C');
+			}
 
-				$class->__invoke([], [
-					'groupOutput' => true,
-				]);
+			if ($items) {
+				foreach ($items as $className) {
+					$reflectionClass = new ReflectionClass($className);
+					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
+	
+					$class->__invoke([], [
+						'groupOutput' => true,
+					]);
+				}
 			}
 
 			$this->cliLog('--------------------------------------------------');
