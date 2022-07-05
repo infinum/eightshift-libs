@@ -126,7 +126,7 @@ class InitBlocksCli extends AbstractCli
 			'shortdesc' => 'Create all files for blocks to work.',
 			'synopsis' => [
 				[
-					'type' => 'assoc',
+					'type' => 'flag',
 					'name' => 'use_all',
 					'description' => 'Output all items to your project.',
 					'optional' => true,

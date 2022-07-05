@@ -2,12 +2,11 @@
 
 namespace Tests\Unit\Geolocation;
 
-use EightshiftLibs\Geolocation\GeolocationExample;
-
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
 use function Tests\getDataPath;
 use Brain\Monkey\Functions;
+use EightshiftBoilerplate\Geolocation\GeolocationExample;
 use Exception;
 
 use function Tests\mock;

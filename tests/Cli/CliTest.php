@@ -37,7 +37,7 @@ test('Cli getCommandsClasses return correct class list', function () {
 
 	expect(\count($publicClasses))
 		->toBeInt()
-		->toBe(51); // Public classes count.
+		->toBe(52); // Public classes count.
 });
 
 test('Running load command works', function() {

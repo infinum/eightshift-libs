@@ -56,6 +56,7 @@ use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Init\InitBlocksCli;
 use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
@@ -169,6 +170,7 @@ class Cli
 		InitThemeCli::class,
 		InitProjectCli::class,
 		InitBlocksCli::class,
+		InitAllCli::class,
 	];
 
 	/**
