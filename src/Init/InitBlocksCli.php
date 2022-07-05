@@ -139,13 +139,28 @@ class InitBlocksCli extends AbstractCli
 
 				$class->__invoke([], [
 					'name' =>  implode(",", $innerItems),
-					'groupOutput' => true,
+					 array_merge([
+						$assocArgs,
+						[
+							'groupOutput' => true,
+						]
+					])
 				]);
 			} else {
 				$class->__invoke([], [
-					'groupOutput' => true,
+					 array_merge([
+						$assocArgs,
+						[
+							'groupOutput' => true,
+						]
+					])
 				]);
 			}
 		}
+
+		$this->cliLog('--------------------------------------------------');
+
+		$this->cliLog('We have moved everything you need to start creating WordPress blocks. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
+		$this->cliLog('Happy developing!', "C");
 	}
 }

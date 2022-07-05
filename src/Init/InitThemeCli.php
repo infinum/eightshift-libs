@@ -113,13 +113,19 @@ class InitThemeCli extends AbstractCli
 					$reflectionClass = new ReflectionClass($className);
 					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 	
-					$class->__invoke([], [
-						'groupOutput' => $type === 'blocks',
-					]);
+					$class->__invoke([], array_merge([
+						$assocArgs,
+						[
+							'groupOutput' => $type === 'blocks',
+						]
+					]));
 				}
 			}
 
 			$this->cliLog('--------------------------------------------------');
+
+			$this->cliLog('We have moved everything you need to start creating awesome WordPress theme. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
+			$this->cliLog('Happy developing!', "C");
 		}
 	}
 }
