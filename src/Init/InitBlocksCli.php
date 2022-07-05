@@ -128,6 +128,8 @@ class InitBlocksCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
+		$this->cliLog(esc_html__('Setting block editor files:', 'eightshift-libs'), 'C');
+
 		foreach (static::COMMANDS as $className => $items) {
 			$reflectionClass = new ReflectionClass($className);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
@@ -158,8 +160,8 @@ class InitBlocksCli extends AbstractCli
 
 		if (!$groupOutput) {
 			$this->cliLog('--------------------------------------------------');
-			$this->cliLog('We have moved everything you need to start creating WordPress blocks. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
-			$this->cliLog('Happy developing!', "C");
+			$this->cliLog('We have moved everything you need to start creating WordPress blocks. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
+			$this->cliLog('Happy developing!', "M");
 		}
 	}
 }

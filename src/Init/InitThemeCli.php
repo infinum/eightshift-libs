@@ -34,7 +34,7 @@ class InitThemeCli extends AbstractCli
 	public const COMMANDS = [
 		[
 			'type' => 'sc',
-			'label' => 'Setting theme service classes:',
+			'label' => 'Setting service classes:',
 			'items' => [
 				ConfigCli::class,
 				MainCli::class,
@@ -47,7 +47,7 @@ class InitThemeCli extends AbstractCli
 		],
 		[
 			'type' => 'blocks',
-			'label' => 'Setting theme block editor files:',
+			'label' => '',
 			'items' => [
 				InitBlocksCli::class,
 			],
@@ -123,12 +123,13 @@ class InitThemeCli extends AbstractCli
 					));
 				}
 			}
+
+			$this->cliLog('--------------------------------------------------');
 		}
 
 		if (!$groupOutput) {
-			$this->cliLog('--------------------------------------------------');
-			$this->cliLog('We have moved everything you need to start creating awesome WordPress theme. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
-			$this->cliLog('Happy developing!', "C");
+			$this->cliLog('We have moved everything you need, to start creating your awesome WordPress theme. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
+			$this->cliLog('Happy developing!', "M");
 		}
 	}
 }
