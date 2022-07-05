@@ -2,59 +2,49 @@
 
 namespace Tests\Unit\Manifest;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Manifest\ManifestCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-    $wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->manifest = new ManifestCli('boilerplate');
+	$this->mock = new ManifestCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Manifest CLI command will correctly copy the Manifest class with defaults', function () {
-	$manifest = $this->manifest;
-	$manifest([], []);
+	$mock = $this->mock;
+	$mock([], []);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedManifest = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Manifest/Manifest.php');
-	$this->assertStringContainsString('class Manifest extends AbstractManifest', $generatedManifest);
-	$this->assertStringContainsString('setAssetsManifestRaw', $generatedManifest);
-	$this->assertStringContainsString('manifest-item', $generatedManifest);
-	$this->assertStringNotContainsString('random string', $generatedManifest);
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Manifest{$sep}Manifest.php"));
+
+	$this->assertStringContainsString('class Manifest extends AbstractManifest', $output);
+	$this->assertStringContainsString('setAssetsManifestRaw', $output);
+	$this->assertStringContainsString('manifest-item', $output);
+	$this->assertStringNotContainsString('random string', $output);
 });
 
 test('Manifest CLI command will correctly copy the Manifest class with set arguments', function () {
-	$manifest = $this->manifest;
-	$manifest([], [
+	$mock = $this->mock;
+	$mock([], [
 		'namespace' => 'MyTheme',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedManifest = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Manifest/Manifest.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Manifest{$sep}Manifest.php"));
 
-	$this->assertStringContainsString('namespace MyTheme\Manifest;', $generatedManifest);
+	$this->assertStringContainsString('namespace MyTheme\Manifest;', $output);
 });
 
 test('Manifest CLI documentation is correct', function () {
-	expect($this->manifest->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

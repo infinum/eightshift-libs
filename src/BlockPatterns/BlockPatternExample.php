@@ -45,7 +45,7 @@ class BlockPatternExample extends AbstractBlockPattern
 	 */
 	protected function getName(): string
 	{
-		return 'example-name';
+		return '%name%';
 	}
 
 	/**
@@ -55,7 +55,7 @@ class BlockPatternExample extends AbstractBlockPattern
 	 */
 	protected function getTitle(): string
 	{
-		return 'example-title';
+		return '%title%';
 	}
 
 	/**
@@ -65,7 +65,7 @@ class BlockPatternExample extends AbstractBlockPattern
 	 */
 	protected function getDescription(): string
 	{
-		return 'example-description';
+		return '%description%';
 	}
 
 	/**
@@ -77,6 +77,6 @@ class BlockPatternExample extends AbstractBlockPattern
 	 */
 	protected function getContent(): string
 	{
-		return 'example-content';
+		return '%content%';
 	}
 }

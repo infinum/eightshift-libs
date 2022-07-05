@@ -76,7 +76,7 @@ if (!function_exists('dbExport')) {
 		}
 
 		// Finishing.
-		WP_CLI::success("Export complete! File {$exportFileName} is located in {$projectRootPath} folder.");
+		WP_CLI::success("Export complete! File `{$exportFileName}` is located in `{$projectRootPath}` folder.");
 		WP_CLI::log('--------------------------------------------------');
 
 		// Remove old db export file if it exists.

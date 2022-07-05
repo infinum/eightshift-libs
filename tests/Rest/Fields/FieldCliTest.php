@@ -2,63 +2,51 @@
 
 namespace Tests\Unit\CustomPostType;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Rest\Fields\FieldCli;
-use Exception;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->field = new FieldCli('boilerplate');
+	$this->mock = new FieldCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
-});
+	setAfterEach();
 
+	unset($this->mock);
+});
 
 test('REST field CLI command will correctly copy the field class with defaults', function () {
-	$field = $this->field;
-	$field([], $field->getDevelopArgs([]));
+	$mock = $this->mock;
+	$mock([], $mock->getDefaultArgs());
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Rest/Fields/TitleField.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}TitleField.php"));
 
-	$this->assertStringContainsString('class TitleField extends AbstractField implements CallableFieldInterface', $generatedField);
-	$this->assertStringContainsString('return \'title\';', $generatedField);
-	$this->assertStringContainsString('return \'post\';', $generatedField);
-	$this->assertStringContainsString('get_callback', $generatedField);
-	$this->assertStringContainsString('rest_ensure_response', $generatedField);
-	$this->assertStringNotContainsString('ExampleRoute', $generatedField);
+	$this->assertStringContainsString('class TitleField extends AbstractField implements CallableFieldInterface', $output);
+	$this->assertStringContainsString('return \'title\';', $output);
+	$this->assertStringContainsString('return \'post\';', $output);
+	$this->assertStringContainsString('get_callback', $output);
+	$this->assertStringContainsString('rest_ensure_response', $output);
+	$this->assertStringNotContainsString('ExampleRoute', $output);
 });
 
-test('REST field CLI command will correctly copy the field class with arguments', function ($fieldNameArguments) {
-	$field = $this->field;
-	$field([], $fieldNameArguments);
-	$fullFieldName = "{$this->field->getFileName($fieldNameArguments['field_name'])}Field";
-	$objectType = $fieldNameArguments['object_type'];
+test('REST field CLI command will correctly copy the field class with arguments', function ($mockNameArguments) {
+	$mock = $this->mock;
+	$mock([], $mockNameArguments);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedField = \file_get_contents(\dirname(__FILE__, 4) . "/cliOutput/src/Rest/Fields/{$fullFieldName}.php");
+	$fullFieldName = "{$this->mock->getFileName($mockNameArguments['field_name'])}Field";
+	$objectType = $mockNameArguments['object_type'];
 
-	$this->assertStringContainsString("class {$fullFieldName} extends AbstractField implements CallableFieldInterface", $generatedField);
-	$this->assertStringContainsString("return '{$objectType}';", $generatedField);
-	$this->assertStringNotContainsString('example-post-type', $generatedField);
-	$this->assertStringNotContainsString('example-field', $generatedField);
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}{$fullFieldName}.php"));
+
+	$this->assertStringContainsString("class {$fullFieldName} extends AbstractField implements CallableFieldInterface", $output);
+	$this->assertStringContainsString("return '{$objectType}';", $output);
+	$this->assertStringNotContainsString('example-post-type', $output);
+	$this->assertStringNotContainsString('example-field', $output);
 })->with('correctFieldNameArguments');

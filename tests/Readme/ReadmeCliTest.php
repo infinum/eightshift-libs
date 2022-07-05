@@ -2,67 +2,77 @@
 
 namespace Tests\Unit\Readme;
 
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Readme\ReadmeCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$this->readme = new ReadmeCli('boilerplate');
+	$this->mock = new ReadmeCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
-test('Readme CLI command will correctly copy the readme file with defaults', function () {
-	$readme = $this->readme;
-	$readme([], $readme->getDevelopArgs([]));
+//---------------------------------------------------------------------------------//
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/README.md';
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedReadme = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('This is the official repository of the {Project name}.', $generatedReadme);
-	$this->assertStringNotContainsString('footer.php', $generatedReadme);
-	$this->assertFileExists($outputPath);
+test('getCommandParentName will return correct value', function () {
+	expect($this->mock->getCommandParentName())
+		->toBeString()
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
-test('Readme CLI command will run under custom command name', function () {
-	$readme = $this->readme;
-	$result = $readme->getCommandName();
+//---------------------------------------------------------------------------------//
 
-	$this->assertStringContainsString('readme', $result);
+test('getCommandName will return correct value', function () {
+	expect($this->mock->getCommandName())
+		->toBeString()
+		->toEqual('readme');
 });
 
-test('Readme CLI command will correctly copy the readme in the custom folder with set arguments', function () {
-	$readme = $this->readme;
-	$readme([], [
-		'root' => './test',
+//---------------------------------------------------------------------------------//
+
+test('getDefaultArgs will return correct array', function () {
+	expect($this->mock->getDefaultArgs())
+		->toBeArray()
+		->toHaveKeys(['path']);
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getDoc will return correct array', function () {
+	$docs = $this->mock->getDoc();
+
+	expect($docs)
+		->toBeArray()
+		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
+		->and(count($docs['synopsis']))->toEqual(1)
+		->and($docs['synopsis'][0]['name'])->toEqual('path');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('__invoke will will correctly copy example class with default args', function () {
+	$mock = $this->mock;
+	$mock([], [
+		'path' => Components::getProjectPaths('cliOutput'),
 	]);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/test/README.md';
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', 'README.md'));
 
-	$this->assertFileExists($outputPath);
-});
-
-test('Readme CLI documentation is correct', function () {
-	expect($this->readme->getDoc())->toBeArray();
+	expect($output)
+		->toContain(
+			'This is the official repository of the {Project name}.',
+			'Installation',
+			'Once you clone this repository, you\'ll need to build it:',
+			'Development',
+			'Environments',
+		);
 });

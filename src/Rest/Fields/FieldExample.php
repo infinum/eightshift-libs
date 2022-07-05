@@ -27,7 +27,7 @@ class FieldExample extends AbstractField implements CallableFieldInterface
 	 */
 	protected function getObjectType()
 	{
-		return 'example-post-type';
+		return '%object_type%';
 	}
 
 	/**
@@ -37,7 +37,7 @@ class FieldExample extends AbstractField implements CallableFieldInterface
 	 */
 	protected function getFieldName(): string
 	{
-		return 'example-field';
+		return '%field_name%';
 	}
 
 	/**

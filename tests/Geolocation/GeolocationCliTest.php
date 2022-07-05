@@ -34,7 +34,7 @@ test('Geolocation CLI command name is correct', function () {
 
 test('Geolocation CLI command will correctly copy the geolocation example class with default args', function () {
 	$mock = $this->geolocationCli;
-	$args = $mock->getDefaultArgs([]);
+	$args = $mock->getDefaultArgs();
 	$mock([], $args);
 
 	// Check the output dir if the generated method is correctly generated.
@@ -47,7 +47,7 @@ test('Geolocation CLI command will correctly copy the geolocation example class 
 
 test('Geolocation CLI command will correctly copy the geolocation example class with develop args', function () {
 	$mock = $this->geolocationCli;
-	$args = $mock->getDevelopArgs([]);
+	$args = $mock->getDefaultArgs();
 	$mock([], $args);
 
 	// Check the output dir if the generated method is correctly generated.

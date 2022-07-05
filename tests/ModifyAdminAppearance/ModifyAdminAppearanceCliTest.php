@@ -2,64 +2,50 @@
 
 namespace Tests\Unit\ModifyAdminAppearance;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$this->modifyAdminAppearance = new ModifyAdminAppearanceCli('boilerplate');
+	$this->mock = new ModifyAdminAppearanceCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppearance class with defaults', function () {
-	$modifyAdminAppearance = $this->modifyAdminAppearance;
-	$modifyAdminAppearance([], []);
+	$mock = $this->mock;
+	$mock([], []);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php';
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}ModifyAdminAppearance{$sep}ModifyAdminAppearance.php"));
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedModifyAdminAppearance = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('class ModifyAdminAppearance implements ServiceInterface', $generatedModifyAdminAppearance);
-	$this->assertStringContainsString('@package EightshiftLibs\ModifyAdminAppearance', $generatedModifyAdminAppearance);
-	$this->assertStringContainsString('namespace EightshiftLibs\ModifyAdminAppearance', $generatedModifyAdminAppearance);
-	$this->assertStringNotContainsString('footer.php', $generatedModifyAdminAppearance);
-	$this->assertFileExists($outputPath);
+	$this->assertStringContainsString('class ModifyAdminAppearance implements ServiceInterface', $output);
+	$this->assertStringContainsString('@package EightshiftLibs\ModifyAdminAppearance', $output);
+	$this->assertStringContainsString('namespace EightshiftLibs\ModifyAdminAppearance', $output);
+	$this->assertStringNotContainsString('footer.php', $output);
 });
 
 test('ModifyAdminAppearance CLI command will correctly copy the ModifyAdminAppearance class with set arguments', function () {
-	$modifyAdminAppearance = $this->modifyAdminAppearance;
-	$modifyAdminAppearance([], [
+	$mock = $this->mock;
+	$mock([], [
 		'namespace' => 'CoolTheme',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedModifyAdminAppearance = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/ModifyAdminAppearance/ModifyAdminAppearance.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}ModifyAdminAppearance{$sep}ModifyAdminAppearance.php"));
 
-	$this->assertStringContainsString('namespace CoolTheme\ModifyAdminAppearance;', $generatedModifyAdminAppearance);
+	$this->assertStringContainsString('namespace CoolTheme\ModifyAdminAppearance;', $output);
 });
 
 
 test('ModifyAdminAppearance CLI documentation is correct', function () {
-	expect($this->modifyAdminAppearance->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

@@ -11,7 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\CiExclude;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\ParentGroups\CliProject;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class CiExcludeCli
@@ -19,20 +20,13 @@ use EightshiftLibs\Cli\ParentGroups\CliProject;
 class CiExcludeCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
-
-	/**
 	 * Get WPCLI command parent name
 	 *
 	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliProject::COMMAND_NAME;
+		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
@@ -46,16 +40,16 @@ class CiExcludeCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
+	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'root' => $args[1] ?? './',
+			'path' => Components::getProjectPaths('projectRoot'),
+			'project_name' => 'eightshift-boilerplate',
+			'project_type' => 'themes',
 		];
 	}
 
@@ -71,21 +65,24 @@ class CiExcludeCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'root',
-					'description' => 'Define project root relative to initialization file of WP CLI.',
+					'name' => 'path',
+					'description' => 'Define absolute folder path where exclude file file will be created.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('path'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'project_name',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('project_name'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'project_type',
 					'description' => 'Set project file name, if theme use theme folder name, if plugin use plugin folder name. Default is themes.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('project_type'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -110,13 +107,19 @@ class CiExcludeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
+		$path = $this->getArg($assocArgs, 'path');
+		$projectName = $this->getArg($assocArgs, 'project_name');
+		$projectType = $this->getArg($assocArgs, 'project_type');
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, 'ci-exclude.txt')
-			->renameProjectName($assocArgs)
-			->renameProjectType($assocArgs)
-			->outputWrite($root, 'ci-exclude.txt', $assocArgs);
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
+			->searchReplaceString('<?php $output = \'', '')
+			->searchReplaceString('\';', '')
+			->searchReplaceString($this->getArgTemplate('project_name'), $projectName)
+			->searchReplaceString($this->getArgTemplate('project_type'), $projectType)
+			->outputWrite($path, 'ci-exclude.txt', $assocArgs);
 	}
 }

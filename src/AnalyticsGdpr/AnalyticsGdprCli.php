@@ -12,17 +12,13 @@ namespace EightshiftLibs\AnalyticsGdpr;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class AnalyticsGdprCli
  */
 class AnalyticsGdprCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AnalyticsGdpr';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -77,6 +73,8 @@ class AnalyticsGdprCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		$this->getExampleTemplate(__DIR__, $className)
@@ -84,6 +82,6 @@ class AnalyticsGdprCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'AnalyticsGdpr'), "{$className}.php", $assocArgs);
 	}
 }

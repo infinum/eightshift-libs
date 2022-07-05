@@ -12,17 +12,13 @@ namespace EightshiftLibs\Main;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class MainCli
  */
 class MainCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Main';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -74,11 +70,15 @@ class MainCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
+		$className = $this->getClassShortName();
+
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
-			->renameClassName($this->getClassShortName())
+		$this->getExampleTemplate(__DIR__, $className)
+			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $this->getClassShortName(), $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Main'), "{$className}.php", $assocArgs);
 	}
 }

@@ -12,19 +12,13 @@ namespace EightshiftLibs\AdminMenus;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class AdminMenuCli
  */
 class AdminMenuCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AdminMenus';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -43,25 +37,6 @@ class AdminMenuCli extends AbstractCli
 	public function getCommandName(): string
 	{
 		return 'admin_menu';
-	}
-
-	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'title' => 'Test Title',
-			'menu_title' => 'Test Menu Title',
-			'capability' => 'test_edit_posts',
-			'menu_slug' => 'test_title',
-			'menu_icon' => 'dashicons-admin-media',
-			'menu_position' => 50,
-		];
 	}
 
 	/**
@@ -151,6 +126,8 @@ class AdminMenuCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Arguments.
 		$title = $this->getArg($assocArgs, 'title');
 		$menuTitle = $this->getArg($assocArgs, 'menu_title');
@@ -183,6 +160,6 @@ class AdminMenuCli extends AbstractCli
 		}
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
 	}
 }

@@ -12,17 +12,13 @@ namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class EnqueueAdminCli
  */
 class EnqueueAdminCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Enqueue' . \DIRECTORY_SEPARATOR . 'Admin';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -73,6 +69,8 @@ class EnqueueAdminCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -80,6 +78,6 @@ class EnqueueAdminCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Enqueue' . \DIRECTORY_SEPARATOR . 'Admin'), "{$className}.php", $assocArgs);
 	}
 }

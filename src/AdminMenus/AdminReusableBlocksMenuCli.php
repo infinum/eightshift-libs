@@ -12,19 +12,13 @@ namespace EightshiftLibs\AdminMenus;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class AdminReusableBlocksMenuCli
  */
 class AdminReusableBlocksMenuCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AdminMenus';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -43,24 +37,6 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	public function getCommandName(): string
 	{
 		return 'admin_reusable_blocks_menu';
-	}
-
-	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'title' => 'Test Reusable Blocks',
-			'menu_title' => 'Test Reusable Blocks',
-			'capability' => 'test_edit_posts',
-			'menu_icon' => 'dashicons-editor-generic',
-			'menu_position' => 100,
-		];
 	}
 
 	/**
@@ -94,14 +70,14 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 					'name' => 'title',
 					'description' => 'The text to be displayed in the title tags of the page when the menu is selected.',
 					'optional' => true,
-					'default' => 'Reusable Blocks',
+					'default' => $this->getDefaultArg('title'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_title',
 					'description' => 'The text to be used for the menu.',
 					'optional' => true,
-					'default' => 'Reusable Blocks',
+					'default' => $this->getDefaultArg('menu_title'),
 				],
 				[
 					'type' => 'assoc',
@@ -146,6 +122,8 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Arguments.
 		$title = $this->getArg($assocArgs, 'title');
 		$menuTitle = $this->getArg($assocArgs, 'menu_title');
@@ -176,6 +154,6 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 		}
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
 	}
 }

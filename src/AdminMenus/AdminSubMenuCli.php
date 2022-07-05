@@ -12,19 +12,13 @@ namespace EightshiftLibs\AdminMenus;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class AdminSubMenuCli
  */
 class AdminSubMenuCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'AdminMenus';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -43,24 +37,6 @@ class AdminSubMenuCli extends AbstractCli
 	public function getCommandName(): string
 	{
 		return 'admin_sub_menu';
-	}
-
-	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'parent_slug' => 'test-example-menu-slug',
-			'title' => 'Test Admin Title',
-			'menu_title' => 'Test Admin Sub Menu Title',
-			'capability' => 'test_edit_posts',
-			'menu_slug' => 'test_admin_title',
-		];
 	}
 
 	/**
@@ -141,6 +117,8 @@ class AdminSubMenuCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Arguments.
 		$parentSlug = $this->getArg($assocArgs, 'parent_slug');
 		$title = $this->getArg($assocArgs, 'title');
@@ -153,7 +131,7 @@ class AdminSubMenuCli extends AbstractCli
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
@@ -162,9 +140,7 @@ class AdminSubMenuCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('title'), $title)
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle)
 			->searchReplaceString($this->getArgTemplate('capability'), $capability)
-			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug);
-
-		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug)
+			->outputWrite(Components::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
 	}
 }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Config;
 
 use EightshiftLibs\Exception\InvalidPath;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * The project config class.
@@ -31,7 +32,7 @@ abstract class AbstractConfigData implements ConfigDataInterface
 	public static function getProjectPath(string $path = ''): string
 	{
 		$locations = [
-			\trailingslashit(\dirname(__DIR__, 5)) . $path,
+			Components::getProjectPaths('root', $path),
 			\trailingslashit(\get_stylesheet_directory()) . $path,
 			\trailingslashit(\get_template_directory()) . $path,
 		];

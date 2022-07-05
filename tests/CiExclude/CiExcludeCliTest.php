@@ -3,79 +3,107 @@
 namespace Tests\Unit\CiExclude;
 
 use EightshiftLibs\CiExclude\CiExcludeCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$this->ciexclude = new CiExcludeCli('boilerplate');
+	$this->mock = new CiExcludeCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
-test('CiExclude CLI command will correctly copy the ci-exclude text file with defaults', function () {
-	$ciexclude = $this->ciexclude;
-	$ciexclude([], $ciexclude->getDevelopArgs([]));
+//---------------------------------------------------------------------------------//
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/ci-exclude.txt';
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedExclude = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('eightshift-boilerplate', $generatedExclude);
-	$this->assertStringNotContainsString('footer.php', $generatedExclude);
-	$this->assertFileExists($outputPath);
+test('getCommandParentName will return correct value', function () {
+	expect($this->mock->getCommandParentName())
+		->toBeString()
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
-test('CiExclude CLI command will run under custom command name', function () {
-	$ciexclude = $this->ciexclude;
-	$result = $ciexclude->getCommandName();
+//---------------------------------------------------------------------------------//
 
-	expect($result)->toContain('ci_exclude');
+test('getCommandName will return correct value', function () {
+	expect($this->mock->getCommandName())
+		->toBeString()
+		->toEqual('ci_exclude');
 });
 
-test('CiExclude CLI command will correctly copy the ci-exclude file in the custom folder with set arguments', function () {
-	$ciexclude = $this->ciexclude;
-	$ciexclude([], [
-		'root' => './test',
+//---------------------------------------------------------------------------------//
+
+test('getDefaultArgs will return correct array', function () {
+	$args = $this->mock->getDefaultArgs();
+
+	expect($args)
+		->toBeArray()
+		->toHaveKeys(['path', 'project_name', 'project_type'])
+		->and($args['project_name'])->toEqual('eightshift-boilerplate')
+		->and($args['project_type'])->toEqual('themes');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getDoc will return correct array', function () {
+	$docs = $this->mock->getDoc();
+
+	expect($docs)
+		->toBeArray()
+		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
+		->and(count($docs['synopsis']))->toEqual(3)
+		->and($docs['synopsis'][0]['name'])->toEqual('path')
+		->and($docs['synopsis'][1]['name'])->toEqual('project_name')
+		->and($docs['synopsis'][2]['name'])->toEqual('project_type');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('__invoke will will correctly copy example class with default args', function () {
+	$mock = $this->mock;
+	$mock([], array_merge(
+		$this->mock->getDefaultArgs(),
+		[
+			'path' => Components::getProjectPaths('cliOutput'),
+		]
+	));
+
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', 'ci-exclude.txt'));
+
+	expect($output)
+		->toContain(
+			'eightshift-boilerplate',
+			'themes',
+		)
+		->not->toContain(
+			'%project_type%',
+			'%project_type%',
+		);
+});
+
+test('__invoke will will correctly copy example class with custom args', function () {
+	$mock = $this->mock;
+	$mock([], [
+		'path' => Components::getProjectPaths('cliOutput'),
+		'project_name' => 'test',
+		'project_type' => 'plugins',
 	]);
 
-	$this->assertFileExists(\dirname(__FILE__, 3) . '/cliOutput/test/ci-exclude.txt');
-});
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', 'ci-exclude.txt'));
 
-test('CiExclude CLI command will correctly copy the ci-exclude file with set arguments', function () {
-	$ciexclude = $this->ciexclude;
-	$ciexclude([], [
-		'root' => './',
-		'project_name' => 'coolPlugin',
-		'project_type' => 'plugin',
-	]);
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedExclude = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/ci-exclude.txt');
-
-	$this->assertStringContainsString('/wp-content/plugin/coolPlugin/node_modules', $generatedExclude);
-});
-
-
-test('CiExclude CLI documentation is correct', function () {
-	expect($this->ciexclude->getDoc())->toBeArray();
+	expect($output)
+		->toContain(
+			'test',
+			'plugins',
+		)
+		->not->toContain(
+			'%project_type%',
+			'%project_type%',
+		);
 });

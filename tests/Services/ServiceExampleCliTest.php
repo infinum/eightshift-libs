@@ -2,70 +2,53 @@
 
 namespace Tests\Unit\Services;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceExampleCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$this->services = new ServiceExampleCli('boilerplate');
+	$this->mock = new ServiceExampleCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Services CLI command will correctly copy the Services class with defaults', function () {
-	$services = $this->services;
-	$services([], $services->getDevelopArgs([]));
+	$mock = $this->mock;
+	$mock([], $mock->getDefaultArgs());
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/TestFolder/TMP/TestTest.php';
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}TestFolder{$sep}TMP{$sep}TestTest.php"));
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedService = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('class TestTest implements ServiceInterface', $generatedService);
-	$this->assertStringContainsString('namespace EightshiftLibs\TestFolder\TMP', $generatedService);
-	$this->assertStringContainsString('@package EightshiftLibs\TestFolder\TMP', $generatedService);
-	$this->assertStringNotContainsString('footer.php', $generatedService);
-	$this->assertFileExists($outputPath);
+	$this->assertStringContainsString('class TestTest implements ServiceInterface', $output);
+	$this->assertStringContainsString('namespace EightshiftLibs\TestFolder\TMP', $output);
+	$this->assertStringContainsString('@package EightshiftLibs\TestFolder\TMP', $output);
+	$this->assertStringNotContainsString('footer.php', $output);
 });
 
 test('Services CLI command will correctly copy the Services class with set arguments', function () {
-	$services = $this->services;
-	$services([], [
+	$mock = $this->mock;
+	$mock([], [
 		'namespace' => 'CoolTheme',
 		'folder' => 'FolderName',
 		'file_name' => 'FileName',
 	]);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/FolderName/FileName.php';
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}FolderName{$sep}FileName.php"));
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedService = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('class FileName implements ServiceInterface', $generatedService);
-	$this->assertStringContainsString('namespace CoolTheme\FolderName', $generatedService);
-	$this->assertStringContainsString('@package CoolTheme\FolderName', $generatedService);
-	$this->assertFileExists($outputPath);
+	$this->assertStringContainsString('class FileName implements ServiceInterface', $output);
+	$this->assertStringContainsString('namespace CoolTheme\FolderName', $output);
+	$this->assertStringContainsString('@package CoolTheme\FolderName', $output);
 });
 
 test('Services CLI documentation is correct', function () {
-	expect($this->services->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

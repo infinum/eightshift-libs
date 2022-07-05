@@ -4,36 +4,24 @@ namespace Tests\Unit\Enqueue\Theme;
 
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->enqueueTheme = new EnqueueThemeCli('boilerplate');
+	$this->mock = new EnqueueThemeCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Custom enqueue theme CLI command will correctly copy the Enqueue Theme class', function () {
-	$theme = $this->enqueueTheme;
-	$theme([], $theme->getDevelopArgs([]));
+	$theme = $this->mock;
+	$theme([], $theme->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedTheme = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Theme/EnqueueTheme.php');
@@ -45,5 +33,5 @@ test('Custom enqueue theme CLI command will correctly copy the Enqueue Theme cla
 
 
 test('Custom Enqueue Theme CLI documentation is correct', function () {
-	expect($this->enqueueTheme->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

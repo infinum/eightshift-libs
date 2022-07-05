@@ -4,38 +4,24 @@ namespace Tests\Unit\AnalyticsGdpr;
 
 use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->analyticsGdpr = new AnalyticsGdprCli('boilerplate');
+	$this->mock = new AnalyticsGdprCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	$output = dirname(__FILE__, 3) . '/cliOutput';
+	setAfterEach();
 
-	deleteCliOutput($output);
+	unset($this->mock);
 });
 
 
 test('Custom Analytics & GDPR Settings CLI command will correctly copy the AnalyticsGdpr class with defaults', function () {
-	$analyticsGdpr = $this->analyticsGdpr;
+	$analyticsGdpr = $this->mock;
 	$analyticsGdpr([], []);
 
 	// Check the output dir if the generated method is correctly generated.
@@ -55,7 +41,7 @@ test('Custom Analytics & GDPR Settings CLI command will correctly copy the Analy
 });
 
 test('Custom GDPR settings CLI documentation is correct', function () {
-	$analyticsGdpr = $this->analyticsGdpr;
+	$analyticsGdpr = $this->mock;
 
 	$documentation = $analyticsGdpr->getDoc();
 

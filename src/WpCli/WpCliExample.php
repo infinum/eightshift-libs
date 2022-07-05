@@ -24,7 +24,7 @@ class WpCliExample implements ServiceCliInterface
 	 *
 	 * @var string
 	 */
-	public const COMMAND_NAME = 'command_name';
+	public const COMMAND_NAME = '%command_name%';
 
 	/**
 	 * Register method for WPCLI command
