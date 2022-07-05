@@ -113,12 +113,12 @@ class InitThemeCli extends AbstractCli
 					$reflectionClass = new ReflectionClass($className);
 					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 	
-					$class->__invoke([], array_merge([
+					$class->__invoke([], array_merge(
 						$assocArgs,
 						[
 							'groupOutput' => $type === 'blocks',
 						]
-					]));
+					));
 				}
 			}
 			$this->cliLog('--------------------------------------------------');

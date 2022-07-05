@@ -139,22 +139,22 @@ class InitBlocksCli extends AbstractCli
 
 				$class->__invoke([], [
 					'name' =>  implode(",", $innerItems),
-					 array_merge([
+					 array_merge(
 						$assocArgs,
 						[
 							'groupOutput' => true,
 						]
-					])
+					)
 				]);
 			} else {
-				$class->__invoke([], [
-					 array_merge([
+				$class->__invoke([], 
+					 array_merge(
 						$assocArgs,
 						[
 							'groupOutput' => true,
 						]
-					])
-				]);
+					)
+				);
 			}
 		}
 
