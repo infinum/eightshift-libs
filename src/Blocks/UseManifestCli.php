@@ -47,12 +47,20 @@ class UseManifestCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy global assets manifest.json file from our library to your project.',
+			'shortdesc' => 'Copy global settings manifest.json file from our library to your project.',
 			'longdesc' => $this->prepareLongDesc("
 				This file is a block editor main setting file where you can find color, option and much more.
 
 				## EXAMPLES
-				$ wp {$this->commandParentName} create manifest
+
+				# Copy manifest.json:
+					$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+
+				## RESOURCES
+
+				Manifest.json file will be created from this file:
+				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/manifest.json
 			"),
 		];
 	}

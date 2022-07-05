@@ -64,7 +64,7 @@ class UseBlockCli extends AbstractBlocksCli
 				[
 					'type' => 'assoc',
 					'name' => 'name',
-					'description' => 'Specify block name.',
+					'description' => 'Specify block name. You can specify multiple blocks by comma separator.',
 					'optional' => false,
 				],
 			],
@@ -75,8 +75,11 @@ class UseBlockCli extends AbstractBlocksCli
 
 				## EXAMPLES
 
-				# Copy block by name.
+				# Copy block by name:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph'
+
+				# Copy multiple block by name:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph, heading'
 
 				## RESOURCES
 

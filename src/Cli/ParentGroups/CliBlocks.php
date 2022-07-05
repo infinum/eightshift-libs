@@ -18,13 +18,13 @@ use WP_CLI_Command;
  * ## EXAMPLES
  *
  *    # Copy block by name.
- *    $ wp boilerplate blocks block --name='paragraph'
+ *    $ wp boilerplate blocks use_block --name='paragraph'
  *
  *    # Copy component by name.
- *    $ wp boilerplate blocks component --name='heading'
+ *    $ wp boilerplate blocks use_component --name='heading'
  *
  *    # Copy wrapper.
- *    $ wp boilerplate blocks wrapper
+ *    $ wp boilerplate blocks use_wrapper
  */
 class CliBlocks extends WP_CLI_Command
 {

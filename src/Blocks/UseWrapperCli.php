@@ -51,7 +51,7 @@ class UseWrapperCli extends AbstractBlocksCli
 			'longdesc' => $this->prepareLongDesc("
 				## EXAMPLES
 
-				# Copy wrapper.
+				# Copy wrapper:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES

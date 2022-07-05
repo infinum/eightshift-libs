@@ -55,7 +55,7 @@ class UseAssetsCli extends AbstractBlocksCli
 
 				## EXAMPLES
 
-				# Copy assets.
+				# Copy assets:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES

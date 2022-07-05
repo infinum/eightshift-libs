@@ -71,7 +71,7 @@ class UseComponentCli extends AbstractBlocksCli
 				[
 					'type' => 'assoc',
 					'name' => 'name',
-					'description' => 'Specify component name.',
+					'description' => 'Specify component name. You can specify multiple components by comma separator.',
 					'optional' => false,
 				],
 			],
@@ -84,6 +84,9 @@ class UseComponentCli extends AbstractBlocksCli
 
 				# Copy component by name:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph'
+
+				# Copy multiple component by name:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph, heading'
 
 				## RESOURCES
 
