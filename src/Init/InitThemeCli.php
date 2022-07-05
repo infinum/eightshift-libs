@@ -99,6 +99,8 @@ class InitThemeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$groupOutput = $assocArgs['groupOutput'] ?? false;
+
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
 			$items = $item['items'] ?? [];
@@ -121,10 +123,12 @@ class InitThemeCli extends AbstractCli
 					));
 				}
 			}
-			$this->cliLog('--------------------------------------------------');
 		}
 
-		$this->cliLog('We have moved everything you need to start creating awesome WordPress theme. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
-		$this->cliLog('Happy developing!', "C");
+		if (!$groupOutput) {
+			$this->cliLog('--------------------------------------------------');
+			$this->cliLog('We have moved everything you need to start creating awesome WordPress theme. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
+			$this->cliLog('Happy developing!', "C");
+		}
 	}
 }

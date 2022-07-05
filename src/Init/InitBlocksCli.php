@@ -126,6 +126,8 @@ class InitBlocksCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$groupOutput = $assocArgs['groupOutput'] ?? false;
+
 		foreach (static::COMMANDS as $className => $items) {
 			$reflectionClass = new ReflectionClass($className);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
@@ -137,30 +139,27 @@ class InitBlocksCli extends AbstractCli
 					$innerItems = $items['test'];
 				}
 
-				$class->__invoke([], [
-					'name' =>  implode(",", $innerItems),
-					 array_merge(
-						$assocArgs,
-						[
-							'groupOutput' => true,
-						]
-					)
-				]);
+				$class->__invoke([], array_merge(
+					$assocArgs,
+					[
+						'name' =>  implode(",", $innerItems),
+						'groupOutput' => true,
+					]
+				));
 			} else {
-				$class->__invoke([], 
-					 array_merge(
-						$assocArgs,
-						[
-							'groupOutput' => true,
-						]
-					)
-				);
+				$class->__invoke([], array_merge(
+					$assocArgs,
+					[
+						'groupOutput' => true,
+					]
+				));
 			}
 		}
 
-		$this->cliLog('--------------------------------------------------');
-
-		$this->cliLog('We have moved everything you need to start creating WordPress blocks. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
-		$this->cliLog('Happy developing!', "C");
+		if (!$groupOutput) {
+			$this->cliLog('--------------------------------------------------');
+			$this->cliLog('We have moved everything you need to start creating WordPress blocks. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
+			$this->cliLog('Happy developing!', "C");
+		}
 	}
 }
