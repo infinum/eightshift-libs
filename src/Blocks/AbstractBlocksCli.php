@@ -56,7 +56,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				\sprintf(
 					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
 					ucfirst($type),
-					$source,
+					$this->getShortenCliPathOutput($source)
 				)
 			);
 		}
@@ -75,7 +75,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				\sprintf(
 					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
 					ucfirst($type),
-					$source
+					$this->getShortenCliPathOutput($source)
 				)
 			);
 		}
@@ -105,7 +105,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 					\sprintf(
 						"%s files exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
 						ucfirst($type),
-						$fullDestination
+						$this->getShortenCliPathOutput($fullDestination)
 					)
 				);
 			}
@@ -157,18 +157,18 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if ($type === 'component' || $type === 'block') {
 				WP_CLI::success(
 					\sprintf(
-						"%s files with name `%s` were successfully created in your project on this path: `%s`.",
-						ucfirst($type),
+						"Added %s `%s` at `%s`.",
+						$type,
 						$item,
-						$destination
+						$this->getShortenCliPathOutput($destination)
 					)
 				);
 			} else {
 				WP_CLI::success(
 					\sprintf(
-						"%s files successfully created in your project on this path: `%s`.",
-						ucfirst($type),
-						$destination
+						"`%s` created at `%s`.",
+						$type,
+						$this->getShortenCliPathOutput($destination)
 					)
 				);
 			}

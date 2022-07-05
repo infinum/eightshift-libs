@@ -341,7 +341,7 @@ abstract class AbstractCli implements CliInterface
 					"%s file `%s` exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
 					ucfirst($typeOutput),
 					$fileName,
-					$destinationFile
+					$this->getShortenCliPathOutput($destinationFile)
 				)
 			);
 		}
@@ -359,7 +359,7 @@ abstract class AbstractCli implements CliInterface
 					"%s file `%s` couldn't be created. There was an unknown error.",
 					ucfirst($typeOutput),
 					$fileName,
-					$destinationFile
+					$this->getShortenCliPathOutput($destinationFile)
 				)
 			);
 		}
@@ -375,19 +375,17 @@ abstract class AbstractCli implements CliInterface
 			if ($skipExisting) {
 				WP_CLI::success(
 					\sprintf(
-						"%s file `%s` was successfully renamed in your project on this path: `%s`.",
-						ucfirst($typeOutput),
+						"`%s` renamed at `%s`.",
 						$fileName,
-						$destinationFile
+						$this->getShortenCliPathOutput($destinationFile)
 					)
 				);
 			} else {
 				WP_CLI::success(
 					\sprintf(
-						"%s file `%s` was successfully created in your project on this path: `%s`.",
-						ucfirst($typeOutput),
+						"`%s` created at `%s`.",
 						$fileName,
-						$destinationFile
+						$this->getShortenCliPathOutput($destinationFile)
 					)
 				);
 			}

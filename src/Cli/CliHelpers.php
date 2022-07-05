@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 use WP_CLI\ExitException;
 
@@ -77,5 +78,16 @@ trait CliHelpers
 		return;
 	}
 
-	
+	/**
+	 * Return shorten CLI path output
+	 *
+	 * @param string $path Path to check.
+	 * @param string $ref Ref from getProjectPaths to remove.
+	 *
+	 * @return string
+	 */
+	protected function getShortenCliPathOutput(string $path, string $ref = 'projectRoot'): string
+	{
+		return str_replace(Components::getProjectPaths($ref), '', $path);
+	}
 }
