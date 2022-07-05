@@ -199,11 +199,17 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$this->cliLog('Note:', 'B');
 			$this->cliLog(
 				sprintf(
-					esc_html__('We have found that this %s has dependencies, please run this commands also:', 'eightshift-libs'),
+					esc_html__("We have found that this %s has dependencies, please run this commands also if you don't have it in your project:", 'eightshift-libs'),
 					$type
 				)
 			);
 			$componentsCommandName = UseComponentCli::COMMAND_NAME;
+			$allDependencies = array_map(
+				static function ($item) {
+					return Components::camelToKebabCase($item);
+				},
+				$dependencies
+			);
 			$allDependencies = implode(', ', $dependencies);
 			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
 		}
