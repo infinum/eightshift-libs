@@ -78,7 +78,6 @@ class UseStorybookCli extends AbstractBlocksCli
 				$assocArgs,
 				[
 					'name' => 'storybook',
-					'groupOutput' => $groupOutput,
 				],
 			),
 			Components::getProjectPaths('blocksStorybookSource'),

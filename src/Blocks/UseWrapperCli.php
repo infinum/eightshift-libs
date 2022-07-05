@@ -74,7 +74,6 @@ class UseWrapperCli extends AbstractBlocksCli
 				$assocArgs,
 				[
 					'name' => 'wrapper',
-					'groupOutput' => $groupOutput,
 				],
 			),
 			Components::getProjectPaths('blocksSourceWrapper'),

@@ -78,7 +78,6 @@ class UseAssetsCli extends AbstractBlocksCli
 				$assocArgs,
 				[
 					'name' => 'assets',
-					'groupOutput' => $groupOutput,
 				],
 			),
 			Components::getProjectPaths('blocksAssetsSource'),
