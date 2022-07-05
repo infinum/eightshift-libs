@@ -970,21 +970,29 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Output WP_CLI log with color.
-	 *
-	 * @param string $msg Msg to output.
-	 * @param string $color Color to use from this list https://make.wordpress.org/cli/handbook/references/internal-api/wp-cli-colorize/
+	 * Return cli intro.
 	 *
 	 * @return void
 	 */
-	protected function cliLog(string $msg, string $color = ''): void
+	protected function getIntroText(): void
 	{
-		if ($color) {
-			WP_CLI::log(WP_CLI::colorize("%{$color}{$msg}%n"));
-			return;
-		}
-
-		WP_CLI::log($msg);
-		return;
+		$this->cliLog($this->prepareLongDesc(".
+		---------------------------------------------------------------------------------------
+		._____   ___    ____   _   _   _____   ____    _   _   ___   _____   _____ 
+		| ____| |_ _|  / ___| | | | | |_   _| / ___|  | | | | |_ _| |  ___| |_   _|
+		|  _|    | |  | |  _  | |_| |   | |   \___ \  | |_| |  | |  | |_      | |  
+		| |___   | |  | |_| | |  _  |   | |    ___) | |  _  |  | |  |  _|     | |  
+		|_____| |___|  \____| |_| |_|   |_|   |____/  |_| |_| |___| |_|       |_|  
+		.____     ___    ___   _       _____   ____    ____    _          _      _____   _____ 
+		| __ )   / _ \  |_ _| | |     | ____| |  _ \  |  _ \  | |        / \    |_   _| | ____|
+		|  _ \  | | | |  | |  | |     |  _|   | |_) | | |_) | | |       / _ \     | |   |  _|  
+		| |_) | | |_| |  | |  | |___  | |___  |  _ <  |  __/  | |___   / ___ \    | |   | |___ 
+		|____/   \___/  |___| |_____| |_____| |_| \_\ |_|     |_____| /_/   \_\   |_|   |_____|
+		.
+		Thank you for using Eightshift boilerplate for your project.
+		Documentation can be found on this link: https://infinum.github.io/eightshift-docs/.
+		---------------------------------------------------------------------------------------
+		.
+		"), 'M');
 	}
 }

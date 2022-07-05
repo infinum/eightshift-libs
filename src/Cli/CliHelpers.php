@@ -57,4 +57,25 @@ trait CliHelpers
 
 		return $splitName[\count($splitName) - 1];
 	}
+
+	/**
+	 * Output WP_CLI log with color.
+	 *
+	 * @param string $msg Msg to output.
+	 * @param string $color Color to use from this list https://make.wordpress.org/cli/handbook/references/internal-api/wp-cli-colorize/
+	 *
+	 * @return void
+	 */
+	protected function cliLog(string $msg, string $color = ''): void
+	{
+		if ($color) {
+			WP_CLI::log(WP_CLI::colorize("%{$color}{$msg}%n"));
+			return;
+		}
+
+		WP_CLI::log($msg);
+		return;
+	}
+
+	
 }

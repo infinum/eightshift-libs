@@ -102,19 +102,22 @@ class ConfigProjectCli extends AbstractCli
 		// Output final class to new file/folder and finish.
 		$class->outputWrite($path, 'wp-config-project.php', $assocArgs);
 
-		$this->cliLog('Please do the following steps manually to complete the wp-config-project.php setup:', 'C');
-		$this->cliLog("1. In wp-config.php - Make sure to define WP_ENVIRONMENT_TYPE const to 'development' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'development' ); ?>`", 'C');
+		$this->cliLog('', 'B');
+		$this->cliLog('Please do the following steps manually to complete the `wp-config-project.php` setup:', 'B');
+		$this->cliLog("1. Open `wp-config.php` file located in the root of your project.", 'B');
+		$this->cliLog("2. Make sure to define `WP_ENVIRONMENT_TYPE` constant to 'development' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'development' ); ?>`.", 'B');
+		$this->cliLog("3. Make sure to require `wp-config-project.php` (at the end of the file) but before the `wp-settings.php`. Like this:`);", 'B');
 		$this->cliLog("
 		/** Absolute path to the WordPress directory. */
 		if ( !\defined('ABSPATH') ) {
 			define('ABSPATH', \dirname(__FILE__) . '/');
 		}
-		
+
 		// Include wp config for your project.
 		 require_once(ABSPATH . 'wp-config-project.php');
-		
+
 		/** Sets up WordPress vars and included files. */
 		require_once(ABSPATH . 'wp-settings.php');
-		", 'C');
+		", 'B');
 	}
 }
