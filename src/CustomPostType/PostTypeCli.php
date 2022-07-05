@@ -142,6 +142,8 @@ class PostTypeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$label = $this->getArg($assocArgs, 'label');
 		$slug = $this->prepareSlug($this->getArg($assocArgs, 'slug'));

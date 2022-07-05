@@ -107,6 +107,8 @@ class ExportCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		require Components::getProjectPaths('libs', 'src/Db/DbExport.php');
 
 		try {

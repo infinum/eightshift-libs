@@ -100,6 +100,10 @@ class InitProjectCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
+		if(!$groupOutput) {
+			$this->getIntroText();
+		}
+
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
 			$items = $item['items'] ?? [];
@@ -118,6 +122,7 @@ class InitProjectCli extends AbstractCli
 						$assocArgs,
 						[
 							'groupOutput' => $type === 'theme',
+							'introOutput' => false,
 						]
 					));
 				}

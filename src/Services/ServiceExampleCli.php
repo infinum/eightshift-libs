@@ -101,6 +101,8 @@ class ServiceExampleCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$folder = $this->getArg($assocArgs, 'folder');
 		$fileName = $this->prepareSlug($this->getArg($assocArgs, 'file_name'));

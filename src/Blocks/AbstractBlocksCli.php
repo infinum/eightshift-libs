@@ -70,8 +70,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 			];
 		}
 
-		$sourceItemsOuput = \implode(\PHP_EOL, $sourceItems);
-
 		if (!$sourceItems) {
 			self::cliError(
 				\sprintf(
@@ -86,10 +84,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if (!in_array($item, $sourceItems, true)) {
 				self::cliError(
 					\sprintf(
-						"Requested %s with the name `%s` doesn't exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type: \n%s",
+						"Requested %s with the name `%s` doesn't exist in our library please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://infinum.github.io/eightshift-docs/storybook/",
 						$type,
 						$item,
-						$sourceItemsOuput
+						\implode(\PHP_EOL, $sourceItems)
 					)
 				);
 			}

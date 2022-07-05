@@ -107,6 +107,8 @@ class CiExcludeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$path = $this->getArg($assocArgs, 'path');
 		$projectName = $this->getArg($assocArgs, 'project_name');

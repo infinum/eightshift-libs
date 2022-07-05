@@ -140,6 +140,7 @@ class UpdateCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
 
 		$setupFilename = 'setup.json';
 

@@ -117,6 +117,8 @@ class TaxonomyCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$label = $this->getArg($assocArgs, 'label');
 		$pluralLabel = $this->getArg($assocArgs, 'plural_label');

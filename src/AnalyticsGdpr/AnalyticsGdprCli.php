@@ -73,6 +73,8 @@ class AnalyticsGdprCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		$this->getExampleTemplate(__DIR__, $className)

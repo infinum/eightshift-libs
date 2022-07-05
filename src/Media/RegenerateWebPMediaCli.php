@@ -143,6 +143,8 @@ class RegenerateWebPMediaCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$quality = $this->getArg($assocArgs, 'quality');
 		$action = $this->getArg($assocArgs, 'action');
 		$ids = $this->getArg($assocArgs, 'ids');

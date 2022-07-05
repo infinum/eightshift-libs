@@ -126,6 +126,8 @@ class AdminMenuCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Arguments.
 		$title = $this->getArg($assocArgs, 'title');
 		$menuTitle = $this->getArg($assocArgs, 'menu_title');

@@ -61,6 +61,8 @@ class BlocksCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		$class = $this->getExampleTemplate(__DIR__, $className);

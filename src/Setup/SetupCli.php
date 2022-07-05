@@ -101,6 +101,8 @@ class SetupCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$path = $this->getArg($assocArgs, 'path');
 		$fileName = $this->getArg($assocArgs, 'file_name');

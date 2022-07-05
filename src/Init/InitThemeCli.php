@@ -101,6 +101,10 @@ class InitThemeCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
+		if(!$groupOutput) {
+			$this->getIntroText();
+		}
+
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
 			$items = $item['items'] ?? [];
@@ -119,6 +123,7 @@ class InitThemeCli extends AbstractCli
 						$assocArgs,
 						[
 							'groupOutput' => $type === 'blocks',
+							'introOutput' => false,
 						]
 					));
 				}

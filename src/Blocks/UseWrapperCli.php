@@ -65,6 +65,8 @@ class UseWrapperCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
 		$this->moveItems(

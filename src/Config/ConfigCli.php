@@ -106,6 +106,8 @@ class ConfigCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$name = $this->getArg($assocArgs, 'name');
 		$version = $this->getArg($assocArgs, 'version');

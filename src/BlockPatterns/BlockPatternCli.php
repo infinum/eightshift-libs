@@ -113,6 +113,8 @@ class BlockPatternCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$title = $this->getArg($assocArgs, 'title');
 		$name = $this->getArg($assocArgs, 'name');

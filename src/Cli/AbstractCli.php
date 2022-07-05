@@ -974,8 +974,14 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @return void
 	 */
-	protected function getIntroText(): void
+	protected function getIntroText(array $arg = []): void
 	{
+		$introOutput = $arg['introOutput'] ?? true;
+
+		if (!$introOutput) {
+			return;
+		}
+
 		$this->cliLog($this->prepareLongDesc(".
 		---------------------------------------------------------------------------------------
 		._____   ___    ____   _   _   _____   ____    _   _   ___   _____   _____ 

@@ -128,6 +128,10 @@ class InitBlocksCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
+		if(!$groupOutput) {
+			$this->getIntroText();
+		}
+
 		$this->cliLog(esc_html__('Setting block editor files:', 'eightshift-libs'), 'C');
 
 		foreach (static::COMMANDS as $className => $items) {
@@ -146,6 +150,7 @@ class InitBlocksCli extends AbstractCli
 					[
 						'name' =>  implode(",", $innerItems),
 						'groupOutput' => true,
+						'introOutput' => false,
 					]
 				));
 			} else {
@@ -153,6 +158,7 @@ class InitBlocksCli extends AbstractCli
 					$assocArgs,
 					[
 						'groupOutput' => true,
+						'introOutput' => false,
 					]
 				));
 			}

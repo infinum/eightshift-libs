@@ -97,6 +97,8 @@ class FieldCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$fieldName = $this->getArg($assocArgs, 'field_name');
 		$objectType = $this->prepareSlug($this->getArg($assocArgs, 'object_type'));

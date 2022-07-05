@@ -118,6 +118,8 @@ class RouteCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$endpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'endpoint_slug'));
 		$method = \strtoupper($this->getArg($assocArgs, 'method'));

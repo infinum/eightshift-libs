@@ -93,6 +93,8 @@ class AcfMetaCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
 		$fieldName = $this->prepareSlug($this->getArg($assocArgs, 'name'));
 

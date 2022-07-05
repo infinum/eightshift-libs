@@ -89,6 +89,8 @@ class UseComponentCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs) // phpcs:ignore Eightshift.Commenting.FunctionComment.WrongStyle
 	{
+		$this->getIntroText($assocArgs);
+
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
 		$this->moveItems(
