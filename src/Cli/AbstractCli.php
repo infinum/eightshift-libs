@@ -325,7 +325,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$groupOutput = $args['groupOutput'] ?? false;
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);

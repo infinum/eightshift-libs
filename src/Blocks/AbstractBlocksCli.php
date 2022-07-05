@@ -21,23 +21,23 @@ abstract class AbstractBlocksCli extends AbstractCli
 	/**
 	 * Move items for the block editor to project folder.
 	 *
-	 * @param array<string, mixed> $assocArgs Array of arguments from WP-CLI command.
+	 * @param array<string, mixed> $args Array of arguments from WP-CLI command.
 	 * @param string $source Source path.
 	 * @param string $destination Destination path.
 	 * @param bool $isSingleFolder Is single folder item.
 	 *
 	 * @return void
 	 */
-	protected function moveItems(array $assocArgs, string $source, string $destination, bool $isSingleFolder = false): void
+	protected function moveItems(array $args, string $source, string $destination, bool $isSingleFolder = false): void
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
 		// Get Props.
-		$skipExisting = $this->getSkipExisting($assocArgs);
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$skipExisting = $this->getSkipExisting($args);
+		$groupOutput = $args['groupOutput'] ?? false;
 
 		// Clean up name.
-		$name = $this->getArg($assocArgs, 'name');
+		$name = $this->getArg($args, 'name');
 		$name = str_replace(' ', '', $name);
 		$name = \trim($name, \DIRECTORY_SEPARATOR);
 
@@ -139,10 +139,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$class = $this->getExampleTemplate($fullDestination, $innerItem, true);
 
 				if (!empty($class->fileContents)) {
-					$class->renameProjectName($assocArgs)
-						->renameNamespace($assocArgs)
-						->renameTextDomainFrontendLibs($assocArgs)
-						->renameUseFrontendLibs($assocArgs)
+					$class->renameProjectName($args)
+						->renameNamespace($args)
+						->renameTextDomainFrontendLibs($args)
+						->renameUseFrontendLibs($args)
 						->outputWrite($fullDestination, $innerItem, [
 							'skip_existing' => true,
 							'groupOutput' => $groupOutput,
