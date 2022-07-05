@@ -33,6 +33,7 @@ class InitThemeCli extends AbstractCli
 	 */
 	public const COMMANDS = [
 		[
+			'type' => 'sc',
 			'label' => 'Setting theme service classes:',
 			'items' => [
 				ConfigCli::class,
@@ -45,6 +46,7 @@ class InitThemeCli extends AbstractCli
 			],
 		],
 		[
+			'type' => 'blocks',
 			'label' => 'Setting theme block editor files:',
 			'items' => [
 				InitBlocksCli::class,
@@ -100,6 +102,7 @@ class InitThemeCli extends AbstractCli
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
 			$items = $item['items'] ?? [];
+			$type = $item['type'] ?? '';
 
 			if ($label) {
 				$this->cliLog($label, 'C');
@@ -111,7 +114,7 @@ class InitThemeCli extends AbstractCli
 					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 	
 					$class->__invoke([], [
-						'groupOutput' => true,
+						'groupOutput' => $type === 'blocks',
 					]);
 				}
 			}
