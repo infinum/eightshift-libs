@@ -370,14 +370,14 @@ abstract class AbstractCli implements CliInterface
 			if ($skipExisting) {
 				WP_CLI::success(
 					\sprintf(
-						"The file %s was successfully renamed.",
+						"The file `%s` was successfully renamed.",
 						$destinationFile
 					)
 				);
 			} else {
 				WP_CLI::success(
 					\sprintf(
-						"The file %s was successfully created.",
+						"The file `%s` was successfully created.",
 						$destinationFile
 					)
 				);

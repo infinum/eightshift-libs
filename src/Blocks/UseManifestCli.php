@@ -65,6 +65,7 @@ class UseManifestCli extends AbstractBlocksCli
 		$this->moveItems(
 			[
 				'name' => 'manifest.json',
+				'groupOutput' => $groupOutput,
 			],
 			Components::getProjectPaths('blocksSource'),
 			Components::getProjectPaths('blocksDestination')

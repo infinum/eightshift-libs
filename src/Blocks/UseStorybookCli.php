@@ -74,6 +74,7 @@ class UseStorybookCli extends AbstractBlocksCli
 		$this->moveItems(
 			[
 				'name' => 'storybook',
+				'groupOutput' => $groupOutput,
 			],
 			Components::getProjectPaths('blocksStorybookSource'),
 			Components::getProjectPaths('blocksStorybookDestination'),

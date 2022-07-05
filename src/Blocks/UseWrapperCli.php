@@ -70,6 +70,7 @@ class UseWrapperCli extends AbstractBlocksCli
 		$this->moveItems(
 			[
 				'name' => 'wrapper',
+				'groupOutput' => $groupOutput,
 			],
 			Components::getProjectPaths('blocksSourceWrapper'),
 			Components::getProjectPaths('blocksDestinationWrapper'),

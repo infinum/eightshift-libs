@@ -74,6 +74,7 @@ class UseAssetsCli extends AbstractBlocksCli
 		$this->moveItems(
 			[
 				'name' => 'assets',
+				'groupOutput' => $groupOutput,
 			],
 			Components::getProjectPaths('blocksAssetsSource'),
 			Components::getProjectPaths('blocksAssetsDestination'),
