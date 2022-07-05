@@ -80,10 +80,10 @@ class GeolocationCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				# Create service class with custom cookie name:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --cookie_name='test_cookie'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --cookie_name='test_cookie'
 
 				## RESOURCES
 

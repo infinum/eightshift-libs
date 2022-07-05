@@ -87,7 +87,7 @@ class ImportCli extends AbstractCli
 				## EXAMPLES
 
 				# Run db import command:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --from='production' --to='develop'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --from='production' --to='develop'
 
 				## RESOURCES
 

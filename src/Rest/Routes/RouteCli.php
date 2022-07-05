@@ -105,7 +105,7 @@ class RouteCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --endpoint_slug='test-route'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --endpoint_slug='test-route'
 
 				## RESOURCES
 

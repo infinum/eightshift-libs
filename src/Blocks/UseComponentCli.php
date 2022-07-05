@@ -83,7 +83,7 @@ class UseComponentCli extends AbstractBlocksCli
 				## EXAMPLES
 
 				# Copy component by name:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph'
 
 				## RESOURCES
 

@@ -129,7 +129,7 @@ class PostTypeCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --label='Jobs' --slug='jobs' --rewrite_url='jobs' --rest_endpoint_slug='jobs'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --label='Jobs' --slug='jobs' --rewrite_url='jobs' --rest_endpoint_slug='jobs'
 
 				## RESOURCES
 

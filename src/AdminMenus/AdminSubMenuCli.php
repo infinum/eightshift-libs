@@ -104,7 +104,7 @@ class AdminSubMenuCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --parent_slug='shop' --title='Content' --menu_title='content' --capability='edit_posts' --menu_slug='es-content'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --parent_slug='shop' --title='Content' --menu_title='content' --capability='edit_posts' --menu_slug='es-content'
 
 				## RESOURCES
 

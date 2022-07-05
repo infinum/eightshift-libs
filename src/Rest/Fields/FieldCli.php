@@ -84,7 +84,7 @@ class FieldCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --field_name='title'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --field_name='title'
 
 				## RESOURCES
 

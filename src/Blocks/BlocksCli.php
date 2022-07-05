@@ -48,13 +48,20 @@ class BlocksCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Create blocks service class.',
-			'longdesc' => "
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
 				This file is a main entrypoint for all our block editor setup.
 				We use it to register all blocks, limit what blocks user can see, and lots more.
 
 				## EXAMPLES
-				$ wp boilerplate create_blocks
-			",
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Blocks/BlocksExample.php
+			"),
 		];
 	}
 

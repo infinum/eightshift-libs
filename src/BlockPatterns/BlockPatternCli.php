@@ -100,7 +100,7 @@ class BlockPatternCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --title='Button' --description='This is description' --capability='edit_posts' --menu_slug='es-content'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --title='Button' --description='This is description' --capability='edit_posts' --menu_slug='es-content'
 
 				## RESOURCES
 

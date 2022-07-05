@@ -68,7 +68,7 @@ class UseWebPMediaCli extends AbstractCli
 				## EXAMPLES
 
 				# Toggle frontend media to use WebP format.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 			"),
 		];
 	}

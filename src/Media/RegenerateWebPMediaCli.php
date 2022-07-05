@@ -114,28 +114,28 @@ class RegenerateWebPMediaCli extends AbstractCli
 
 				## EXAMPLES
 				# Regenerate all supported media to WebP format.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				# Regenerate only one attachment by ID.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911'
 
 				# Regenerate multiple attachments by IDs.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911, 1692, 1302'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911, 1692, 1302'
 
 				# Force regenerate attachments no matter if they all-ready exist.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --force='true'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --force='true'
 
 				# Regenerate media with diffferent quality.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --quality='90'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --quality='90'
 
 				# Delete all WebP media formats.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --action='delete'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --action='delete'
 
 				# Delete only one WebP attachment by ID.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911' --action='delete'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911' --action='delete'
 
 				# Delete multiple WebP attachments by ID.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911, 1692, 1302' --action='delete'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911, 1692, 1302' --action='delete'
 			"),
 		];
 	}

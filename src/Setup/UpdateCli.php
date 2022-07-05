@@ -129,10 +129,10 @@ class UpdateCli extends AbstractCli
 				## EXAMPLES
 
 				# Update everything:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				# Update everything but skip plugins:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --skip_plugins='true'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --skip_plugins='true'
 			"),
 		];
 	}

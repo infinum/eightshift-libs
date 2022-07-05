@@ -88,7 +88,7 @@ class ServiceExampleCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --folder='test' --file_name='Test'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --folder='test' --file_name='Test'
 
 				## RESOURCES
 

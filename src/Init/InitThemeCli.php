@@ -91,7 +91,7 @@ class InitThemeCli extends AbstractCli
 				## EXAMPLES
 
 				# Setup theme:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 			"),
 		];
 	}

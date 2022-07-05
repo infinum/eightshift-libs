@@ -48,17 +48,17 @@ class UseWrapperCli extends AbstractBlocksCli
 	{
 		return [
 			'shortdesc' => 'Copy wrapper from our library to your project.',
-			'longdesc' => "
+			'longdesc' => $this->prepareLongDesc("
 				## EXAMPLES
 
 				# Copy wrapper.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
 				Our wrapper can be found here:
 				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/wrapper
-			"
+			"),
 		];
 	}
 

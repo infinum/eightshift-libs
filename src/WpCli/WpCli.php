@@ -76,7 +76,7 @@ class WpCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --command_name='test'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --command_name='test'
 
 				## RESOURCES
 

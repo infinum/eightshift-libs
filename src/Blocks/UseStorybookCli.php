@@ -47,7 +47,7 @@ class UseStorybookCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Setup storybook in your project.',
+			'shortdesc' => 'Copy storybook config from our library to your project.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -56,7 +56,7 @@ class UseStorybookCli extends AbstractBlocksCli
 				## EXAMPLES
 
 				# Create Storybook config:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 

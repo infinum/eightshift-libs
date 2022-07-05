@@ -47,13 +47,13 @@ class UseManifestCli extends AbstractBlocksCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create blocks manifest.json file.',
-			'longdesc' => "
+			'shortdesc' => 'Copy global assets manifest.json file from our library to your project.',
+			'longdesc' => $this->prepareLongDesc("
 				This file is a block editor main setting file where you can find color, option and much more.
 
 				## EXAMPLES
-				$ wp boilerplate create manifest
-			",
+				$ wp {$this->commandParentName} create manifest
+			"),
 		];
 	}
 

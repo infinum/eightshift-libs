@@ -91,10 +91,10 @@ class ExportCli extends AbstractCli
 				## EXAMPLES
 
 				# Run db export command:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				# Run db export command without uploads folder:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --skip_uploads='true'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --skip_uploads='true'
 
 				## RESOURCES
 

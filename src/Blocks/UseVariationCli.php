@@ -76,7 +76,7 @@ class UseVariationCli extends AbstractBlocksCli
 				## EXAMPLES
 
 				# Copy variation by name.
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --name='button-block'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='button-block'
 
 				## RESOURCES
 
