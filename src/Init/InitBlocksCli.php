@@ -21,6 +21,7 @@ use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
+use EightshiftLibs\Helpers\Components;
 use ReflectionClass;
 
 /**
@@ -123,6 +124,15 @@ class InitBlocksCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Create all files for blocks to work.',
+			'synopsis' => [
+				[
+					'type' => 'assoc',
+					'name' => 'use_all',
+					'description' => 'Output all items to your project.',
+					'optional' => true,
+					'default' => false,
+				],
+			],
 			'longdesc' => $this->prepareLongDesc("
 				This command will copy all initial block, componens, manifests na service classes to you project in order to start using block editor.
 
@@ -136,6 +146,7 @@ class InitBlocksCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$all = $assocArgs['use_all'] ?? false;
 
 		if (!$groupOutput) {
 			$this->getIntroText();
@@ -143,7 +154,50 @@ class InitBlocksCli extends AbstractCli
 
 		$this->cliLog(\esc_html__('Setting block editor files:', 'eightshift-libs'), 'C');
 
-		foreach (static::COMMANDS as $className => $items) {
+		$commands = static::COMMANDS;
+
+		if ($all) {
+			$commands = [];
+			$type = \getenv('ES_TEST') ? 'test' : 'default';
+
+			foreach (\array_keys(static::COMMANDS) as $command) {
+				switch ($command) {
+					case UseBlockCli::class:
+						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceCustom'));
+						break;
+					case UseComponentCli::class:
+						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceComponents'));
+						break;
+					case UseVariationCli::class:
+						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceVariations'));
+						break;
+					default:
+						$commands[$command] = [];
+						break;
+				}
+			}
+		}
+
+		$this->getInitBlocks($assocArgs, $commands);
+
+		if (!$groupOutput) {
+			$this->cliLog('--------------------------------------------------');
+			$this->cliLog('We have moved everything you need to start creating WordPress blocks. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
+			$this->cliLog('Happy developing!', "M");
+		}
+	}
+
+	/**
+	 * Init block by providing list of commands
+	 *
+	 * @param array<string, mixed> $assocArgs List of argument for options.
+	 * @param array<string, mixed> $commands Commands to use.
+	 *
+	 * @return void
+	 */
+	private function getInitBlocks(array $assocArgs, array $commands): void
+	{
+		foreach ($commands as $className => $items) {
 			$reflectionClass = new ReflectionClass($className);
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
@@ -173,12 +227,6 @@ class InitBlocksCli extends AbstractCli
 					]
 				));
 			}
-		}
-
-		if (!$groupOutput) {
-			$this->cliLog('--------------------------------------------------');
-			$this->cliLog('We have moved everything you need to start creating WordPress blocks. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
-			$this->cliLog('Happy developing!', "M");
 		}
 	}
 }

@@ -90,4 +90,19 @@ trait CliHelpers
 	{
 		return \str_replace(Components::getProjectPaths($ref), '', $path);
 	}
+
+	/**
+	 * Scan folder for items.
+	 *
+	 * @param string $path Path to search.
+	 *
+	 * @return array<int, string>
+	 */
+	protected function getFolderItems(string $path): array
+	{
+		$output = \array_diff(\scandir($path), ['..', '.']);
+		$output = \array_values($output);
+
+		return $output;
+	}
 }
