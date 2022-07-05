@@ -54,7 +54,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			self::cliError(
 				\sprintf(
 					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
-					ucfirst($type),
+					$type,
 					$this->getShortenCliPathOutput($source)
 				)
 			);
@@ -73,7 +73,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			self::cliError(
 				\sprintf(
 					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
-					ucfirst($type),
+					$type,
 					$this->getShortenCliPathOutput($source)
 				)
 			);
@@ -103,7 +103,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				self::cliError(
 					\sprintf(
 						"%s files exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
-						ucfirst($type),
+						$type,
 						$this->getShortenCliPathOutput($fullDestination)
 					)
 				);
@@ -162,6 +162,12 @@ abstract class AbstractBlocksCli extends AbstractCli
 						$this->getShortenCliPathOutput($destination)
 					)
 				);
+
+				$checkDependency = $args['checkDependency'] ?? true;
+
+				if ($checkDependency) {
+					$this->outputDependencyItems($fullSource, $type);
+				}
 			} else {
 				WP_CLI::success(
 					\sprintf(
@@ -171,6 +177,35 @@ abstract class AbstractBlocksCli extends AbstractCli
 					)
 				);
 			}
+		}
+	}
+
+	/**
+	 * Determin if item has dependencies and output helper commands.
+	 *
+	 * @param string $source Source or the item.
+	 * @param string $type Type for log.
+	 *
+	 * @return void
+	 */
+	private function outputDependencyItems(string $source, string $type): void
+	{
+		$manifest = Components::getManifestDirect($source);
+
+		$dependencies = $manifest['components'] ?? [];
+
+		if ($dependencies) {
+			$this->cliLog('');
+			$this->cliLog('Note:', 'B');
+			$this->cliLog(
+				sprintf(
+					esc_html__('We have found that this %s has dependencies, please run this commands also:', 'eightshift-libs'),
+					$type
+				)
+			);
+			$componentsCommandName = UseComponentCli::COMMAND_NAME;
+			$allDependencies = implode(', ', $dependencies);
+			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
 		}
 	}
 }

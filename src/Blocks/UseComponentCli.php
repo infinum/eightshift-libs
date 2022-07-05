@@ -20,6 +20,13 @@ use WP_CLI;
 class UseComponentCli extends AbstractBlocksCli
 {
 	/**
+	 * Command name.
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'use_component';
+
+	/**
 	 * Get WPCLI command parent name
 	 *
 	 * @return string
@@ -36,7 +43,7 @@ class UseComponentCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_component';
+		return self::COMMAND_NAME;
 	}
 
 	/**

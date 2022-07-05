@@ -151,6 +151,7 @@ class InitBlocksCli extends AbstractCli
 						'name' =>  implode(",", $innerItems),
 						'groupOutput' => true,
 						'introOutput' => false,
+						'checkDependency' => false,
 					]
 				));
 			} else {
@@ -159,6 +160,7 @@ class InitBlocksCli extends AbstractCli
 					[
 						'groupOutput' => true,
 						'introOutput' => false,
+						'checkDependency' => false,
 					]
 				));
 			}

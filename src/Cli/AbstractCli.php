@@ -339,7 +339,7 @@ abstract class AbstractCli implements CliInterface
 			self::cliError(
 				\sprintf(
 					"%s file `%s` exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
-					ucfirst($typeOutput),
+					$typeOutput,
 					$fileName,
 					$this->getShortenCliPathOutput($destinationFile)
 				)
@@ -357,7 +357,7 @@ abstract class AbstractCli implements CliInterface
 			self::cliError(
 				\sprintf(
 					"%s file `%s` couldn't be created. There was an unknown error.",
-					ucfirst($typeOutput),
+					$typeOutput,
 					$fileName,
 					$this->getShortenCliPathOutput($destinationFile)
 				)
