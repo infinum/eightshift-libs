@@ -17,6 +17,7 @@ use EightshiftLibs\Blocks\UseComponentCli;
 use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Blocks\UseManifestCli;
 use EightshiftLibs\Blocks\UseStorybookCli;
+use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
@@ -83,6 +84,14 @@ class InitBlocksCli extends AbstractCli
 				'variables',
 			],
 		],
+		UseVariationCli::class => [
+			'default' => [
+				'button-block'
+			],
+			'test' => [
+				'button-block'
+			]
+		]
 	];
 
 	/**
