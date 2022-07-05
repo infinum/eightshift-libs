@@ -159,7 +159,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if ($type === 'component' || $type === 'block') {
 				WP_CLI::success(
 					\sprintf(
-						"%s files with name `%s` were successfully created in your project on this path `%s`.",
+						"%s files with name `%s` were successfully created in your project on this path: `%s`.",
 						ucfirst($type),
 						$item,
 						$destination
@@ -168,7 +168,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			} else {
 				WP_CLI::success(
 					\sprintf(
-						"%s files successfully created in your project on this path `%s`.",
+						"%s files successfully created in your project on this path: `%s`.",
 						ucfirst($type),
 						$destination
 					)

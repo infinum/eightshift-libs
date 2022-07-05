@@ -338,8 +338,9 @@ abstract class AbstractCli implements CliInterface
 		if (\file_exists($destinationFile) && $skipExisting === false) {
 			self::cliError(
 				\sprintf(
-					"%s file exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
+					"%s file `%s` exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
 					ucfirst($typeOutput),
+					$fileName,
 					$destinationFile
 				)
 			);
@@ -357,6 +358,7 @@ abstract class AbstractCli implements CliInterface
 				\sprintf(
 					"%s file `%s` couldn't be created. There was an unknown error.",
 					ucfirst($typeOutput),
+					$fileName,
 					$destinationFile
 				)
 			);
@@ -368,25 +370,27 @@ abstract class AbstractCli implements CliInterface
 		\fwrite($fp, $this->fileContents);
 		\fclose($fp);
 
-		// Return success.
-		if ($skipExisting) {
-			WP_CLI::success(
-				\sprintf(
-					"%s file `%s` was successfully renamed in your project on this path `%s`.",
-					ucfirst($typeOutput),
-					$fileName,
-					$destinationFile
-				)
-			);
-		} else {
-			WP_CLI::success(
-				\sprintf(
-					"%s file `%s` was successfully created in your project on this path `%s`.",
-					ucfirst($typeOutput),
-					$fileName,
-					$destinationFile
-				)
-			);
+		if (!$groupOutput) {
+			// Return success.
+			if ($skipExisting) {
+				WP_CLI::success(
+					\sprintf(
+						"%s file `%s` was successfully renamed in your project on this path: `%s`.",
+						ucfirst($typeOutput),
+						$fileName,
+						$destinationFile
+					)
+				);
+			} else {
+				WP_CLI::success(
+					\sprintf(
+						"%s file `%s` was successfully created in your project on this path: `%s`.",
+						ucfirst($typeOutput),
+						$fileName,
+						$destinationFile
+					)
+				);
+			}
 		}
 
 		return;
