@@ -28,7 +28,7 @@ class InitProjectCli extends AbstractCli
 	/**
 	 * All classes for initial theme setup for project
 	 *
-	 * @var class-string[]
+	 * @var array<int, mixed>
 	 */
 	public const COMMANDS = [
 		[
@@ -100,7 +100,7 @@ class InitProjectCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
-		if(!$groupOutput) {
+		if (!$groupOutput) {
 			$this->getIntroText();
 		}
 
@@ -117,8 +117,8 @@ class InitProjectCli extends AbstractCli
 				foreach ($items as $className) {
 					$reflectionClass = new ReflectionClass($className);
 					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-	
-					$class->__invoke([], array_merge(
+
+					$class->__invoke([], \array_merge(
 						$assocArgs,
 						[
 							'groupOutput' => $type === 'theme',

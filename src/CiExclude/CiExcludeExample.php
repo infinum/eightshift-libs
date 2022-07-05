@@ -1,3 +1,4 @@
+
 <?php $output = '
 .git
 .gitignore

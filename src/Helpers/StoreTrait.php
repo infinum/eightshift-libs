@@ -585,7 +585,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			foreach(Components::PROJECT_PATHS as $value) {
+			foreach (Components::PROJECT_PATHS as $value) {
 				$esBlocks[self::getStoreName()]['paths'][$value] = Components::getProjectPaths($value);
 			}
 		}

@@ -73,5 +73,5 @@ test('__invoke will will correctly copy example class with default args', functi
 			'WP_POST_REVISIONS',
 			'WP_DEBUG_DISPLAY',
 		)
-		->and(\getenv('ES_CLI_SUCCESS_HAPPENED'))->toContain('Sets up WordPress vars and included files.');
+		->and(\getenv('ES_CLI_LOG_HAPPENED'))->toContain('Sets up WordPress vars and included files');
 });

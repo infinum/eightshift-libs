@@ -37,7 +37,8 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	 *
 	 * @return void
 	 */
-	public function callback(): void {
+	public function callback(): void
+	{
 		\add_menu_page(
 			$this->getTitle(),
 			$this->getMenuTitle(),

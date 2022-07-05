@@ -161,6 +161,5 @@ class AdminMenuCli extends AbstractCli
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite(Components::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
-		
 	}
 }

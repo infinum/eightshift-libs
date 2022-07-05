@@ -506,7 +506,7 @@ class Components
 
 		$path = self::joinPaths([$prefix, $path, $sufix]);
 
-		return str_replace("{$sep}{$sep}", $sep, $path);
+		return \str_replace("{$sep}{$sep}", $sep, $path);
 	}
 
 	/**
@@ -516,11 +516,11 @@ class Components
 	 *
 	 * @return string
 	 */
- 	public static function joinPaths(array $paths): string
+	public static function joinPaths(array $paths): string
 	{
 		$sep = \DIRECTORY_SEPARATOR;
-		$path = implode($sep, $paths);
+		$path = \implode($sep, $paths);
 
-		return str_replace("{$sep}{$sep}", $sep, $path);
+		return \str_replace("{$sep}{$sep}", $sep, $path);
 	}
 }

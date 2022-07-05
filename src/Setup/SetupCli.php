@@ -12,7 +12,6 @@ namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Helpers\Components;
 
 /**

@@ -33,12 +33,10 @@ test('InitThemeCli CLI documentation is correct', function () {
 	expect($this->mock->getDoc())->toBeArray();
 });
 
-
 test('InitTheme CLI command will correctly copy the project classes', function () {
-	Functions\when('shell_exec')->returnArg();
+	$mock = $this->mock;
+	$mock([], $mock->getDefaultArgs());
 
-	$configProject = $this->mock;
-	$configProject([], []);
-
-	$this->assertSame('boilerplate blocks use_blocks_class ', \getenv('ES_CLI_RUN_COMMAND_HAPPENED'));
+	expect(\getenv('ES_CLI_LOG_HAPPENED'))
+		->toContain('Happy developing!');
 });

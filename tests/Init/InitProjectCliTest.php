@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Init;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Init\InitProjectCli;
 
 use function Tests\setAfterEach;
@@ -26,15 +27,19 @@ test('Initializing the project command returns correct command name', function (
 	$this->assertSame('project', $commandName);
 });
 
-
 test('InitProjectCli CLI documentation is correct', function () {
 	expect($this->mock->getDoc())->toBeArray();
 });
 
-
 test('InitProject CLI command will correctly copy the project classes', function () {
-	$configProject = $this->mock;
-	$configProject([], []);
+	$mock = $this->mock;
+	$mock([], \array_merge(
+		$mock->getDefaultArgs(),
+		[
+			'path' => Components::getProjectPaths('cliOutput'),
+		]
+	));
 
-	expect(\getenv('ES_CLI_SUCCESS_HAPPENED'))->toEqual('All commands are finished.');
+	expect(\getenv('ES_CLI_LOG_HAPPENED'))
+	->toContain('Happy developing!');
 });

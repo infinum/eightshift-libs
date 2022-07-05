@@ -39,7 +39,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		// Clean up name.
 		$name = $args['name'] ?? '';
-		$name = str_replace(' ', '', $name);
+		$name = \str_replace(' ', '', $name);
 		$name = \trim($name, \DIRECTORY_SEPARATOR);
 
 		$isFile = \strpos($name, '.') !== false;
@@ -47,12 +47,13 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$itemsList = [$name];
 
 		if (\strpos($name, ',') !== false || \strpos($name, ', ') !== false) {
-			$itemsList = explode(',', $name);
+			$itemsList = \explode(',', $name);
 		}
 
-		if (!is_dir($source)) {
+		if (!\is_dir($source)) {
 			self::cliError(
 				\sprintf(
+					// translators: %s will be replaced with type of item, and shorten cli path.
 					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
 					$type,
 					$this->getShortenCliPathOutput($source)
@@ -61,7 +62,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		}
 
 		$sourceItems = \array_diff(\scandir($source), ['..', '.']);
-		$sourceItems = array_values($sourceItems);
+		$sourceItems = \array_values($sourceItems);
 
 		if ($isSingleFolder || $isFile) {
 			$sourceItems = [
@@ -72,6 +73,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		if (!$sourceItems) {
 			self::cliError(
 				\sprintf(
+					// translators: %s will be replaced with type of item, and shorten cli path.
 					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
 					$type,
 					$this->getShortenCliPathOutput($source)
@@ -80,9 +82,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 		}
 
 		foreach ($itemsList as $item) {
-			if (!in_array($item, $sourceItems, true)) {
+			if (!\in_array($item, $sourceItems, true)) {
 				self::cliError(
 					\sprintf(
+						// translators: %s will be replaced with type of item, item name and shorten cli path.
 						"Requested %s with the name `%s` doesn't exist in our library please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://infinum.github.io/eightshift-docs/storybook/",
 						$type,
 						$item,
@@ -102,6 +105,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if (\file_exists($fullDestination) && $skipExisting === false && !$isSingleFolder) {
 				self::cliError(
 					\sprintf(
+						// translators: %s will be replaced with type of item, and shorten cli path.
 						"%s files exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
 						$type,
 						$this->getShortenCliPathOutput($fullDestination)
@@ -122,7 +126,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			// Check if we have partials folder. If so output and that folder with items in it.
 			if (\is_dir($partialsPath)) {
 				$partials = \array_diff(\scandir($partialsPath), ['..', '.']);
-				$partials = array_values($partials);
+				$partials = \array_values($partials);
 
 				$partialsOutput = \array_map(
 					static function ($item) use ($sep) {
@@ -156,6 +160,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if ($type === 'component' || $type === 'block') {
 				WP_CLI::success(
 					\sprintf(
+						// translators: %s will be replaced with type of item, item name and shorten cli path.
 						"Added %s `%s` at `%s`.",
 						$type,
 						$item,
@@ -171,6 +176,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			} else {
 				WP_CLI::success(
 					\sprintf(
+						// translators: %s will be replaced with type of item, and shorten cli path.
 						"`%s` created at `%s`.",
 						$type,
 						$this->getShortenCliPathOutput($destination)
@@ -198,19 +204,20 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$this->cliLog('');
 			$this->cliLog('Note:', 'B');
 			$this->cliLog(
-				sprintf(
-					esc_html__("We have found that this %s has dependencies, please run this commands also if you don't have it in your project:", 'eightshift-libs'),
+				\sprintf(
+					// translators: %s will be replaced with type of item.
+					\esc_html__("We have found that this %s has dependencies, please run this commands also if you don't have it in your project:", 'eightshift-libs'),
 					$type
 				)
 			);
 			$componentsCommandName = UseComponentCli::COMMAND_NAME;
-			$allDependencies = array_map(
+			$allDependencies = \array_map(
 				static function ($item) {
 					return Components::camelToKebabCase($item);
 				},
 				$dependencies
 			);
-			$allDependencies = implode(', ', $dependencies);
+			$allDependencies = \implode(', ', $dependencies);
 			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
 		}
 	}

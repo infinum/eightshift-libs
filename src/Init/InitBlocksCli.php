@@ -28,7 +28,7 @@ use ReflectionClass;
 class InitBlocksCli extends AbstractCli
 {
 	/**
-	 * All commands to run on init for the 
+	 * All commands to run on init.
 	 */
 	public const COMMANDS = [
 		BlocksCli::class => [],
@@ -128,11 +128,11 @@ class InitBlocksCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
-		if(!$groupOutput) {
+		if (!$groupOutput) {
 			$this->getIntroText();
 		}
 
-		$this->cliLog(esc_html__('Setting block editor files:', 'eightshift-libs'), 'C');
+		$this->cliLog(\esc_html__('Setting block editor files:', 'eightshift-libs'), 'C');
 
 		foreach (static::COMMANDS as $className => $items) {
 			$reflectionClass = new ReflectionClass($className);
@@ -145,17 +145,17 @@ class InitBlocksCli extends AbstractCli
 					$innerItems = $items['test'];
 				}
 
-				$class->__invoke([], array_merge(
+				$class->__invoke([], \array_merge(
 					$assocArgs,
 					[
-						'name' =>  implode(",", $innerItems),
+						'name' => \implode(",", $innerItems),
 						'groupOutput' => true,
 						'introOutput' => false,
 						'checkDependency' => false,
 					]
 				));
 			} else {
-				$class->__invoke([], array_merge(
+				$class->__invoke([], \array_merge(
 					$assocArgs,
 					[
 						'groupOutput' => true,

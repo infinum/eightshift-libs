@@ -76,5 +76,5 @@ test('__invoke will correctly copy example variation with default args', functio
 			'button-full-width',
 			'Button Full Width',
 		)
-		->and(\getenv('ES_CLI_SUCCESS_HAPPENED'))->toContain('Please run');
+		->and(\getenv('ES_CLI_LOG_HAPPENED'))->toContain('Please run');
 });

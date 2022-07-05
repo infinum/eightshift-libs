@@ -13,7 +13,6 @@ namespace EightshiftLibs\ConfigProject;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
-use WP_CLI;
 
 /**
  * Class ConfigProjectCli

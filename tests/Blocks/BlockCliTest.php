@@ -53,4 +53,4 @@ test('Block CLI command will fail if block doesn\'t exist', function () {
 			'name' => 'testing'
 		]
 	));
-})->throws(Exception::class, 'Requested item with the name "testing" doesn\'t exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type:');
+})->throws(Exception::class, 'You can find all available items on this list:');

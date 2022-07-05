@@ -23,7 +23,7 @@ afterEach(function () {
 
  test('Component CLI command will correctly copy the Component class with defaults', function () {
 	$mock = $this->mock;
-	$mock([], [$this->mock->getDefaultArgs()]);
+	$mock([], $this->mock->getDefaultArgs());
 
 	$name = $this->mock->getDefaultArgs()['name'];
 
@@ -37,7 +37,7 @@ afterEach(function () {
 
 test('Component CLI documentation is correct', function () {
 	$mock = $this->mock;
-	expect($mock->getDoc())->toBeArray();;
+	expect($mock->getDoc())->toBeArray();
 });
 
 test('Component CLI command will fail if Component doesn\'t exist', function () {
@@ -48,4 +48,4 @@ test('Component CLI command will fail if Component doesn\'t exist', function () 
 			'name' => 'testing'
 		]
 	));
-})->throws(Exception::class, 'Requested item with the name "testing" doesn\'t exist in our library please review you search.\nYou can find all available items on this link: https://infinum.github.io/eightshift-docs/storybook/, \nor use this list for available items you can type:');
+})->throws(Exception::class, 'Requested component with the name');

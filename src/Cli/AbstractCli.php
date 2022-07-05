@@ -356,7 +356,7 @@ abstract class AbstractCli implements CliInterface
 		if (\fopen($destinationFile, "wb") === false) {
 			self::cliError(
 				\sprintf(
-					"%s file `%s` couldn't be created. There was an unknown error.",
+					"%s file `%s` couldn't be created on this path `%s`. There was an unknown error.",
 					$typeOutput,
 					$fileName,
 					$this->getShortenCliPathOutput($destinationFile)
@@ -957,7 +957,8 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @return void
 	 */
-	protected function copyItem(string $source, string $destination) {
+	protected function copyItem(string $source, string $destination): void
+	{
 		$dir = \dirname($destination);
 
 		if (!\file_exists($dir)) {
@@ -969,6 +970,8 @@ abstract class AbstractCli implements CliInterface
 
 	/**
 	 * Return cli intro.
+	 *
+	 * @param array<string, mixed> $arg $argument to pass.
 	 *
 	 * @return void
 	 */

@@ -78,7 +78,7 @@ if (!function_exists('dbImport')) {
 			$toScheme = $to['scheme'];
 		}
 
-		if (!\getenv('ES_TEST')) {
+		if (!getenv('ES_TEST')) {
 			// Define db export file name.
 			$dbFileName = 'latest.sql';
 

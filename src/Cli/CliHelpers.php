@@ -63,7 +63,7 @@ trait CliHelpers
 	 * Output WP_CLI log with color.
 	 *
 	 * @param string $msg Msg to output.
-	 * @param string $color Color to use from this list https://make.wordpress.org/cli/handbook/references/internal-api/wp-cli-colorize/
+	 * @param string $color Color to use from this list https://make.wordpress.org/cli/handbook/references/internal-api/wp-cli-colorize/.
 	 *
 	 * @return void
 	 */
@@ -88,6 +88,6 @@ trait CliHelpers
 	 */
 	protected function getShortenCliPathOutput(string $path, string $ref = 'projectRoot'): string
 	{
-		return str_replace(Components::getProjectPaths($ref), '', $path);
+		return \str_replace(Components::getProjectPaths($ref), '', $path);
 	}
 }
