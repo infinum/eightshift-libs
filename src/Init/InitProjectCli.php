@@ -117,11 +117,10 @@ class InitProjectCli extends AbstractCli
 					]));
 				}
 			}
-
 			$this->cliLog('--------------------------------------------------');
-
-			$this->cliLog('We have moved everything you need to start creating awesome WordPress project. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
-			$this->cliLog('Happy developing!', "C");
 		}
+
+		$this->cliLog('We have moved everything you need to start creating awesome WordPress project. Please type `npm start` in your terminal to kickstart your assets bundle process.', "C");
+		$this->cliLog('Happy developing!', "C");
 	}
 }
