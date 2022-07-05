@@ -156,14 +156,24 @@ abstract class AbstractBlocksCli extends AbstractCli
 				}
 			}
 
-			WP_CLI::success(
-				\sprintf(
-					"%s files successfully moved to your project on this path `%s`.",
-					ucfirst($type),
-					$item,
-					$destination
-				)
-			);
+			if ($type === 'component' || $type === 'block') {
+				WP_CLI::success(
+					\sprintf(
+						"%s files with name `%s` were successfully created in your project on this path `%s`.",
+						ucfirst($type),
+						$item,
+						$destination
+					)
+				);
+			} else {
+				WP_CLI::success(
+					\sprintf(
+						"%s files successfully created in your project on this path `%s`.",
+						ucfirst($type),
+						$destination
+					)
+				);
+			}
 		}
 	}
 }

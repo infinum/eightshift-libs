@@ -326,6 +326,7 @@ abstract class AbstractCli implements CliInterface
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
 		$groupOutput = $args['groupOutput'] ?? false;
+		$typeOutput = $args['typeOutput'] ?? 'service class';
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
@@ -337,7 +338,8 @@ abstract class AbstractCli implements CliInterface
 		if (\file_exists($destinationFile) && $skipExisting === false) {
 			self::cliError(
 				\sprintf(
-					"The file %s can\'t be generated because it already exists.",
+					"%s file exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
+					ucfirst($typeOutput),
 					$destinationFile
 				)
 			);
@@ -353,7 +355,8 @@ abstract class AbstractCli implements CliInterface
 		if (\fopen($destinationFile, "wb") === false) {
 			self::cliError(
 				\sprintf(
-					"The file %s couldn\'t be created. There was an error.",
+					"%s file `%s` couldn't be created. There was an unknown error.",
+					ucfirst($typeOutput),
 					$destinationFile
 				)
 			);
@@ -365,23 +368,25 @@ abstract class AbstractCli implements CliInterface
 		\fwrite($fp, $this->fileContents);
 		\fclose($fp);
 
-		if (!$groupOutput) {
-			// Return success.
-			if ($skipExisting) {
-				WP_CLI::success(
-					\sprintf(
-						"The file `%s` was successfully renamed.",
-						$destinationFile
-					)
-				);
-			} else {
-				WP_CLI::success(
-					\sprintf(
-						"The file `%s` was successfully created.",
-						$destinationFile
-					)
-				);
-			}
+		// Return success.
+		if ($skipExisting) {
+			WP_CLI::success(
+				\sprintf(
+					"%s file `%s` was successfully renamed in your project on this path `%s`.",
+					ucfirst($typeOutput),
+					$fileName,
+					$destinationFile
+				)
+			);
+		} else {
+			WP_CLI::success(
+				\sprintf(
+					"%s file `%s` was successfully created in your project on this path `%s`.",
+					ucfirst($typeOutput),
+					$fileName,
+					$destinationFile
+				)
+			);
 		}
 
 		return;

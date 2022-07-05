@@ -10,20 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Init;
 
-use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Build\BuildCli;
 use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
-use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
-use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
-use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
-use EightshiftLibs\Main\MainCli;
-use EightshiftLibs\Manifest\ManifestCli;
-use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
 use ReflectionClass;
@@ -106,7 +98,7 @@ class InitProjectCli extends AbstractCli
 	{
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? '';
+			$items = $item['items'] ?? [];
 
 			if ($label) {
 				$this->cliLog($label, 'C');

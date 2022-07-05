@@ -78,7 +78,7 @@ class UseAssetsCli extends AbstractBlocksCli
 			],
 			Components::getProjectPaths('blocksAssetsSource'),
 			Components::getProjectPaths('blocksAssetsDestination'),
-			'assets'
+			'assets',
 			true
 		);
 

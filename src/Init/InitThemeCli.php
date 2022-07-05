@@ -48,7 +48,7 @@ class InitThemeCli extends AbstractCli
 			'label' => 'Setting theme block editor files:',
 			'items' => [
 				InitBlocksCli::class,
-			]
+			],
 		],
 	];
 
@@ -99,7 +99,7 @@ class InitThemeCli extends AbstractCli
 	{
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? '';
+			$items = $item['items'] ?? [];
 
 			if ($label) {
 				$this->cliLog($label, 'C');
