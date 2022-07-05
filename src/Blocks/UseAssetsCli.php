@@ -72,10 +72,13 @@ class UseAssetsCli extends AbstractBlocksCli
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
 		$this->moveItems(
-			[
-				'name' => 'assets',
-				'groupOutput' => $groupOutput,
-			],
+			array_merge(
+				$assocArgs,
+				[
+					'name' => 'assets',
+					'groupOutput' => $groupOutput,
+				],
+			),
 			Components::getProjectPaths('blocksAssetsSource'),
 			Components::getProjectPaths('blocksAssetsDestination'),
 			'assets',

@@ -63,10 +63,13 @@ class UseManifestCli extends AbstractBlocksCli
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
 		$this->moveItems(
-			[
-				'name' => 'manifest.json',
-				'groupOutput' => $groupOutput,
-			],
+			array_merge(
+				$assocArgs,
+				[
+					'name' => 'manifest.json',
+					'groupOutput' => $groupOutput,
+				],
+			),
 			Components::getProjectPaths('blocksSource'),
 			Components::getProjectPaths('blocksDestination'),
 			'manifest.json'

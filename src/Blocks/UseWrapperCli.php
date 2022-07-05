@@ -68,10 +68,13 @@ class UseWrapperCli extends AbstractBlocksCli
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
 		$this->moveItems(
-			[
-				'name' => 'wrapper',
-				'groupOutput' => $groupOutput,
-			],
+			array_merge(
+				$assocArgs,
+				[
+					'name' => 'wrapper',
+					'groupOutput' => $groupOutput,
+				],
+			),
 			Components::getProjectPaths('blocksSourceWrapper'),
 			Components::getProjectPaths('blocksDestinationWrapper'),
 			'wrapper',

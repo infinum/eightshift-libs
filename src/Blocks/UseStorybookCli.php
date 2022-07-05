@@ -72,10 +72,13 @@ class UseStorybookCli extends AbstractBlocksCli
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
 		$this->moveItems(
-			[
-				'name' => 'storybook',
-				'groupOutput' => $groupOutput,
-			],
+			array_merge(
+				$assocArgs,
+				[
+					'name' => 'storybook',
+					'groupOutput' => $groupOutput,
+				],
+			),
 			Components::getProjectPaths('blocksStorybookSource'),
 			Components::getProjectPaths('blocksStorybookDestination'),
 			'storybook',
