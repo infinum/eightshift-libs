@@ -36,7 +36,7 @@ class UseStorybookCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_storybook';
+		return 'use storybook';
 	}
 
 	/**

@@ -36,7 +36,7 @@ class UseManifestCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_manifest';
+		return 'use manifest';
 	}
 
 	/**
