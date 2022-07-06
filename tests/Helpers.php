@@ -5,6 +5,7 @@ namespace Tests;
 use Brain\Monkey\Functions;
 use Mockery;
 use Brain\Monkey;
+use EightshiftBoilerplate\Blocks\BlocksExample;
 use EightshiftLibs\Init\InitBlocksCli;
 use Exception;
 use Mockery\MockInterface;
@@ -301,6 +302,8 @@ function getCliOutputFile(string $path = ''): string
  */
 function buildTestBlocks() {
 	(new InitBlocksCli('boilerplate'))->__invoke([], []);
+
+	(new BlocksExample())->getBlocksDataFullRaw();
 }
 
 /**

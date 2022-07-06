@@ -96,8 +96,6 @@ test('Asserts that getAllBlocksListOld will return only projects blocks for olde
 
 	buildTestBlocks();
 
-	$this->mock->getBlocksDataFullRaw();
-
 	$list = $this->mock->getAllBlocksListOld([], $post);
 
 	expect($list)
@@ -114,8 +112,6 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 	$blockContext->post = null;
 
 	buildTestBlocks();
-
-	(new BlocksExample())->getBlocksDataFullRaw();
 
 	Components::setConfigFlags();
 
@@ -213,8 +209,6 @@ test('changeEditorColorPalette method will call add_theme_support() function wit
 
 	buildTestBlocks();
 
-	$this->mock->getBlocksDataFullRaw();
-
 	$this->mock->changeEditorColorPalette();
 
 	expect(\getenv('EDITOR_COLOR_PALETTE'))->toBe('true');
@@ -229,8 +223,6 @@ test('registerBlocks method will register all blocks.', function () {
 	});
 
 	buildTestBlocks();
-
-	$this->mock->getBlocksDataFullRaw();
 
 	$this->mock->registerBlocks();
 
@@ -372,7 +364,6 @@ test('filterBlocksContent method will filter out the paragraph without content.'
 
 	// Set namespace data.
 	buildTestBlocks();
-	$this->mock->getBlocksDataFullRaw();
 
 	$filteredBlockContent = $this->mock->filterBlocksContent($parsedBlock, []);
 

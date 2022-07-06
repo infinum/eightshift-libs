@@ -15,7 +15,6 @@ beforeEach(function () {
 	setBeforeEach();
 
 	buildTestBlocks();
-	(new BlocksExample())->getBlocksDataFullRaw();
 });
 
 afterEach(function () {

@@ -5,7 +5,6 @@ namespace Tests\Unit\Helpers;
 use EightshiftLibs\Helpers\Components;
 
 use Brain\Monkey\Functions;
-use EightshiftBoilerplate\Blocks\BlocksExample;
 
 use function Tests\buildTestBlocks;
 use function Tests\setAfterEach;
@@ -15,7 +14,6 @@ beforeEach(function () {
 	setBeforeEach();
 
 	buildTestBlocks();
-	(new BlocksExample())->getBlocksDataFullRaw();
 });
 
 afterEach(function () {

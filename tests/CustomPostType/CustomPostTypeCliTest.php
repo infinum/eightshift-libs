@@ -35,7 +35,7 @@ test('getCommandParentName will return correct value', function () {
 test('getCommandName will return correct value', function () {
 	expect($this->mock->getCommandName())
 		->toBeString()
-		->toEqual('post_type');
+		->toEqual('post-type');
 });
 
 //---------------------------------------------------------------------------------//

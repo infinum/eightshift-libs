@@ -34,7 +34,7 @@ test('getCommandParentName will return correct value', function () {
 test('getCommandName will return correct value', function () {
 	expect($this->mock->getCommandName())
 		->toBeString()
-		->toEqual('admin_reusable_blocks_menu');
+		->toEqual('admin-reusable-blocks-menu');
 });
 
 //---------------------------------------------------------------------------------//
