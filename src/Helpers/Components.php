@@ -387,7 +387,7 @@ class Components
 				}
 				break;
 			case 'libs':
-				$path =  self::joinPaths($libsPath);
+				$path = self::joinPaths($libsPath);
 
 				if (\getenv('ES_TEST')) {
 					$path = '';
@@ -397,28 +397,28 @@ class Components
 				$path = self::joinPaths([...$flibsPath, $assetsPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([...$testsDataPath, $assetsPath]);
+					$path = self::joinPaths([...$testsDataPath, $assetsPath]);
 				}
 				break;
 			case 'blocksAssetsSource':
 				$path = self::joinPaths([...$flibsPath, ...$blocksPath, $assetsPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([...$testsDataPath, ...$blocksPath, $assetsPath]);
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $assetsPath]);
 				}
 				break;
 			case 'blocksStorybookSource':
 				$path = self::joinPaths([...$flibsPath, $storybookPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([...$testsDataPath, $storybookPath]);
+					$path = self::joinPaths([...$testsDataPath, $storybookPath]);
 				}
 				break;
 			case 'blocksSource':
 				$path = self::joinPaths([...$flibsPath, ...$blocksPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([...$testsDataPath, ...$blocksPath]);
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
 				}
 				break;
 			case 'blocksSourceCustom':
@@ -438,28 +438,28 @@ class Components
 				$path = self::joinPaths([$assetsPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputPath, $assetsPath]);
+					$path = self::joinPaths([$cliOutputPath, $assetsPath]);
 				}
 				break;
 			case 'blocksAssetsDestination':
 				$path = self::joinPaths([...$blocksPath, $assetsPath]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputPath, ...$blocksPath, $assetsPath]);
+					$path = self::joinPaths([$cliOutputPath, ...$blocksPath, $assetsPath]);
 				}
 				break;
 			case 'blocksStorybookDestination':
 				$path = self::joinPaths([".{$storybookPath}"]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputPath, ".{$storybookPath}"]);
+					$path = self::joinPaths([$cliOutputPath, ".{$storybookPath}"]);
 				}
 				break;
 			case 'blocksDestination':
 				$path = self::joinPaths($blocksPath);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputPath, ...$blocksPath]);
+					$path = self::joinPaths([$cliOutputPath, ...$blocksPath]);
 				}
 				break;
 			case 'blocksDestinationCustom':
@@ -484,7 +484,7 @@ class Components
 				$path = self::joinPaths([...$flibsPath, ...$blocksPath, $name]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);
 				}
 				break;
 
@@ -495,7 +495,7 @@ class Components
 				$path = self::joinPaths([...$blocksPath, $name]);
 
 				if (\getenv('ES_TEST')) {
-					$path =  self::joinPaths([$cliOutputPath, ...$blocksPath, $name]);
+					$path = self::joinPaths([$cliOutputPath, ...$blocksPath, $name]);
 				}
 				break;
 		}
