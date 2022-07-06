@@ -29,11 +29,12 @@ test('Custom command CLI command will correctly copy the Custom command class wi
 	$sep = \DIRECTORY_SEPARATOR;
 	$mock = \file_get_contents(Components::getProjectPaths('srcDestination', "WpCli{$sep}TestWpCli.php"));
 
-	$this->assertStringContainsString('class TestWpCli implements ServiceCliInterface', $mock);
-	$this->assertStringContainsString('function register', $mock);
-	$this->assertStringContainsString('function registerCommand', $mock);
-	$this->assertStringContainsString('function getDocs', $mock);
-	$this->assertStringContainsString('function __invoke', $mock);
+	expect($mock)
+		->assertContains('class TestWpCli implements ServiceCliInterface', $mock)
+		->assertContains('function register', $mock)
+		->assertContains('function registerCommand', $mock)
+		->assertContains('function getDocs', $mock)
+		->assertContains('function __invoke', $mock);
 });
 
 
