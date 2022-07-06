@@ -133,7 +133,7 @@ class InitThemeCli extends AbstractCli
 		}
 
 		if (!$groupOutput) {
-			$this->cliLog('We have moved everything you need, to start creating your awesome WordPress theme. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
+			$this->cliLog('We have moved everything you need to start creating your awesome WordPress theme. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
 			$this->cliLog('Happy developing!', "M");
 		}
 	}
