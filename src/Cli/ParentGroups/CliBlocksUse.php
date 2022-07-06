@@ -13,7 +13,7 @@ namespace EightshiftLibs\Cli\ParentGroups;
 use WP_CLI_Command;
 
 /**
- * Block editor specific features for your project like blocks, components, wrapper, etc.
+ * Copy functionality from our library to your project like blocks, components, wrapper, etc.
  *
  * ## EXAMPLES
  *
@@ -26,10 +26,10 @@ use WP_CLI_Command;
  *    # Copy wrapper.
  *    $ wp boilerplate blocks use wrapper
  */
-class CliBlocks extends WP_CLI_Command
+class CliBlocksUse extends WP_CLI_Command
 {
 	/**
 	 * Cli command name parent constant.
 	 */
-	public const COMMAND_NAME = 'blocks';
+	public const COMMAND_NAME = 'blocks use';
 }
