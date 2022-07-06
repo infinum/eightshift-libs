@@ -51,7 +51,7 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to copy pre-created global assets from our library to your project. After copying you can modify it in any way you see fit.
+				Used to copy pre-created global assets from our library to your project. After copying you can modify them in any way you see fit.
 
 				## EXAMPLES
 
