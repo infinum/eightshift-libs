@@ -36,7 +36,7 @@ class AcfMetaCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'acf_meta';
+		return 'acf-meta';
 	}
 
 	/**

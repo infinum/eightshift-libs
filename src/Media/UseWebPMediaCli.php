@@ -48,7 +48,7 @@ class UseWebPMediaCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use_webp_media';
+		return 'use-webp-media';
 	}
 
 	/**

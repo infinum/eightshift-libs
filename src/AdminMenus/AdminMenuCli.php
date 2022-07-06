@@ -36,7 +36,7 @@ class AdminMenuCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'admin_menu';
+		return 'admin-menu';
 	}
 
 	/**

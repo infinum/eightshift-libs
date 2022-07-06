@@ -36,7 +36,7 @@ class EnqueueThemeCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'enqueue_theme';
+		return 'enqueue-theme';
 	}
 
 	/**

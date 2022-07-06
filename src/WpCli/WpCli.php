@@ -36,7 +36,7 @@ class WpCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'wp_cli';
+		return 'wp-cli';
 	}
 
 	/**

@@ -36,7 +36,7 @@ class BlocksCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'create blocks_class';
+		return 'create blocks-class';
 	}
 
 	/**

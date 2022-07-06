@@ -36,7 +36,7 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use global_assets';
+		return 'use global-assets';
 	}
 
 	/**

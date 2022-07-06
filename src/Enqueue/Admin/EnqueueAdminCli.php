@@ -36,7 +36,7 @@ class EnqueueAdminCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'enqueue_admin';
+		return 'enqueue-admin';
 	}
 
 	/**

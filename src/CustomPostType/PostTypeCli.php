@@ -36,7 +36,7 @@ class PostTypeCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'post_type';
+		return 'post-type';
 	}
 
 	/**

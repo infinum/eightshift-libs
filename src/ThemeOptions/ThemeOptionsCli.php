@@ -36,7 +36,7 @@ class ThemeOptionsCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'theme_options';
+		return 'theme-options';
 	}
 
 	/**

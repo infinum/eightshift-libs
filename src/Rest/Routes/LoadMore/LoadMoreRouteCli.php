@@ -36,7 +36,7 @@ class LoadMoreRouteCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'rest_route_load_more';
+		return 'rest-route-load-more';
 	}
 
 	/**

@@ -50,7 +50,7 @@ class RouteCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'rest_route';
+		return 'rest-route';
 	}
 
 	/**

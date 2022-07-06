@@ -36,7 +36,7 @@ class EnqueueBlocksCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'enqueue_blocks';
+		return 'enqueue-blocks';
 	}
 
 	/**

@@ -36,7 +36,7 @@ class ConfigProjectCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'config_project';
+		return 'config-project';
 	}
 
 	/**

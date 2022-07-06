@@ -41,7 +41,7 @@ class ServiceExampleCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'service_example';
+		return 'service-example';
 	}
 
 	/**

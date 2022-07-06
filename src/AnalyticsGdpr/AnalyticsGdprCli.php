@@ -36,7 +36,7 @@ class AnalyticsGdprCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'analytics_gdpr_settings';
+		return 'analytics-gdpr-settings';
 	}
 
 	/**

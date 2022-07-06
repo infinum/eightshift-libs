@@ -42,7 +42,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'regenerate_media';
+		return 'regenerate-media';
 	}
 
 	/**

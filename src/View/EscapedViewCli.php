@@ -36,7 +36,7 @@ class EscapedViewCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'escaped_view';
+		return 'escaped-view';
 	}
 
 	/**

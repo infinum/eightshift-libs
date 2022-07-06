@@ -36,7 +36,7 @@ class WebPMediaColumnCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'webp_media_column';
+		return 'webp-media-column';
 	}
 
 	/**

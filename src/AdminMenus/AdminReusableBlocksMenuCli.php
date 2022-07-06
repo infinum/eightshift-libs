@@ -36,7 +36,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'admin_reusable_blocks_menu';
+		return 'admin-reusable-blocks-menu';
 	}
 
 	/**

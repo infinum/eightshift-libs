@@ -36,7 +36,7 @@ class ModifyAdminAppearanceCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'modify_admin_appearance';
+		return 'modify-admin-appearance';
 	}
 
 	/**

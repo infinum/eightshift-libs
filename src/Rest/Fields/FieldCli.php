@@ -36,7 +36,7 @@ class FieldCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'rest_field';
+		return 'rest-field';
 	}
 
 	/**
