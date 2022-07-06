@@ -64,7 +64,7 @@ class GitIgnoreCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'path',
-					'description' => 'Define absolute folder path where gitignore file file will be created.',
+					'description' => "Define absolute folder path where `.gitignore` file will be created.",
 					'optional' => true,
 					'default' => $this->getDefaultArg('path'),
 				],
