@@ -27,7 +27,7 @@ use ReflectionClass;
 class InitThemeCli extends AbstractCli
 {
 	/**
-	 * All classes for initial theme setup for project
+	 * All classes for initial theme setup for project.
 	 *
 	 * @var array<int, mixed>
 	 */
