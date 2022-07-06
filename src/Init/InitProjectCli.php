@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Init;
 
-use EightshiftLibs\Build\BuildCli;
-use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
@@ -44,8 +42,6 @@ class InitProjectCli extends AbstractCli
 			'items' => [
 				GitIgnoreCli::class,
 				SetupCli::class,
-				CiExcludeCli::class,
-				BuildCli::class,
 				ReadmeCli::class,
 				ConfigProjectCli::class,
 			],

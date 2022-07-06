@@ -24,8 +24,6 @@ use EightshiftLibs\Blocks\UseManifestCli;
 use EightshiftLibs\Blocks\UseStorybookCli;
 use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
-use EightshiftLibs\Build\BuildCli;
-use EightshiftLibs\CiExclude\CiExcludeCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
@@ -118,8 +116,6 @@ class Cli
 		RouteCli::class,
 		ServiceExampleCli::class,
 		ThemeOptionsCli::class,
-		BuildCli::class,
-		CiExcludeCli::class,
 		ConfigProjectCli::class,
 		GitIgnoreCli::class,
 		WebPMediaColumnCli::class,
