@@ -64,7 +64,7 @@ class ConfigProjectCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'path',
-					'description' => 'Define absolute  path to project root folder.',
+					'description' => 'Define absolute path to project root folder.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('path'),
 				],
