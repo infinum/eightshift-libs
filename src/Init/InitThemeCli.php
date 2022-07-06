@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command initial setup of theme project.
+ * Class that registers WP-CLI command initial setup of theme project.
  *
  * @package EightshiftLibs\Cli
  */
