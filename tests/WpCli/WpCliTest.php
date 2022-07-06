@@ -30,11 +30,13 @@ test('Custom command CLI command will correctly copy the Custom command class wi
 	$mock = \file_get_contents(Components::getProjectPaths('srcDestination', "WpCli{$sep}TestWpCli.php"));
 
 	expect($mock)
-		->assertContains('class TestWpCli implements ServiceCliInterface', $mock)
-		->assertContains('function register', $mock)
-		->assertContains('function registerCommand', $mock)
-		->assertContains('function getDocs', $mock)
-		->assertContains('function __invoke', $mock);
+		->toContain(
+			'class TestWpCli implements ServiceCliInterface',
+			'function register',
+			'function registerCommand',
+			'function getDocs',
+			'function __invoke',
+		);
 });
 
 

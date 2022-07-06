@@ -67,7 +67,7 @@ class UseStorybookCli extends AbstractBlocksCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs) // phpcs:ignore
+	public function __invoke(array $args, array $assocArgs)
 	{
 		$this->getIntroText($assocArgs);
 
