@@ -592,7 +592,7 @@ trait StoreTrait
 	}
 
 	/**
-	 * Get path details.
+	 * Get paths details.
 	 *
 	 * @return array<mixed>
 	 */
