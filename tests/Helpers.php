@@ -265,7 +265,7 @@ function getCliOutputPath(string $path = ''): string
 }
 
 /**
- * Get projects root path for mocks.
+ * Get project root path for mocks.
  *
  * @return string
  */
