@@ -5,9 +5,6 @@ namespace Tests\Unit\Setup;
 use EightshiftLibs\Setup\UpdateCli;
 use Exception;
 
-use function Brain\Monkey\Functions\when;
-use function Tests\deleteCliOutput;
-use function Tests\mock;
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
 

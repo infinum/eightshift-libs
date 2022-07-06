@@ -4,10 +4,10 @@ namespace Tests\Unit\CustomTaxonomy;
 
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
-use function Tests\getCliOutputFile;
 
 beforeEach(function () {
 	setBeforeEach();
@@ -73,7 +73,10 @@ test('__invoke will will correctly copy example class with default args', functi
 	$mock = $this->mock;
 	$mock([], $this->mock->getDefaultArgs());
 
-	expect(getCliOutputFile('src/CustomTaxonomy/LocationTaxonomy.php'))
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = file_get_contents(Components::getProjectPaths('srcDestination', "CustomTaxonomy{$sep}LocationTaxonomy.php"));
+
+	expect($output)
 		->toContain(
 			'class LocationTaxonomy',
 			'Location',
@@ -102,7 +105,10 @@ test('__invoke will will correctly copy example class with custom args', functio
 		'post_type_slug' => 'product',
 	]);
 
-	expect(getCliOutputFile('src/CustomTaxonomy/TestTaxonomy.php'))
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = file_get_contents(Components::getProjectPaths('srcDestination', "CustomTaxonomy{$sep}TestTaxonomy.php"));
+
+	expect($output)
 		->toContain(
 			'class TestTaxonomy',
 			'Test',

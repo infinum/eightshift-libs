@@ -3,10 +3,10 @@
 namespace Tests\Unit\BlockPatterns;
 
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
-use function Tests\getCliOutputPath;
 
 beforeEach(function () {
 	setBeforeEach();
@@ -27,7 +27,9 @@ test('Block pattern CLI command will correctly copy the Block Pattern class with
 	$mock([], $this->mock->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
-	$output = \file_get_contents(getCliOutputPath('src/BlockPatterns/ExampleTitleBlockPattern.php'));
+	$sep = \DIRECTORY_SEPARATOR;
+
+	$output = \file_get_contents(Components::getProjectPaths('srcDestination', "BlockPatterns{$sep}ExampleTitleBlockPattern.php"));
 
 	expect($output)
 		->toContain(

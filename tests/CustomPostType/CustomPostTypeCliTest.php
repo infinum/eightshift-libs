@@ -4,11 +4,10 @@ namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\CustomPostType\PostTypeCli;
-
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
-use function Tests\getCliOutputFile;
 
 beforeEach(function () {
 	setBeforeEach();
@@ -80,7 +79,11 @@ test('__invoke will will correctly copy example class with default args', functi
 	$mock = $this->mock;
 	$mock([], $this->mock->getDefaultArgs());
 
-	expect(getCliOutputFile('src/CustomPostType/ProductPostType.php'))
+	$sep = \DIRECTORY_SEPARATOR;
+
+	$output = file_get_contents(Components::getProjectPaths('srcDestination', "CustomPostType{$sep}ProductPostType.php"));
+
+	expect($output)
 		->toContain(
 			'class ProductPostType',
 			'Product',
@@ -118,7 +121,10 @@ test('__invoke will will correctly copy example class with custom args', functio
 		'menu_icon' => 'admin-panel',
 	]);
 
-	expect(getCliOutputFile('src/CustomPostType/TestPostType.php'))
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = file_get_contents(Components::getProjectPaths('srcDestination', "CustomPostType{$sep}TestPostType.php"));
+
+	expect($output)
 		->toContain(
 			'class TestPostType',
 			'Test',

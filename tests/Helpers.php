@@ -183,7 +183,6 @@ function setAfterEach($delete = true) {
 
 	for ($i = 1; $i <= 10; $i++ ) {
 		putenv("ES_SIDEAFFECT_{$i}");
-		putenv("ES_SIDEAFFECT_1");
 	}
 
 	putenv('ES_CLI_SUCCESS_HAPPENED');
@@ -225,74 +224,6 @@ function deleteCliOutput(string $dir = '') : void
 	}
 
 	rmdir($dir);
-}
-
-/**
- * Get path to data mocks.
- *
- * @param string $path Path to attach.
- *
- * @return string
- */
-function getDataPath(string $path = ''): string
-{
-	$sep = \DIRECTORY_SEPARATOR;
-	$internalPath = __DIR__ . "{$sep}data";
-
-	if ($path) {
-		return "{$internalPath}{$sep}{$path}";
-	}
-
-	return $internalPath;
-}
-
-/**
- * Get path to cliOutput mocks.
- *
- * @param string $path Path to attach.
- *
- * @return string
- */
-function getCliOutputPath(string $path = ''): string
-{
-	$sep = \DIRECTORY_SEPARATOR;
-	$internalPath = getProjectRootPath() . "{$sep}cliOutput";
-
-	if ($path) {
-		return "{$internalPath}{$sep}{$path}";
-	}
-
-	return $internalPath;
-}
-
-/**
- * Get project root path for mocks.
- *
- * @return string
- */
-function getProjectRootPath(): string
-{
-	return \dirname(__FILE__, 2);
-}
-
-/**
- * Get file in cliOutput folder.
- *
- * @param string $path Path to get.
- *
- * @throws Exception If file is missing.
- *
- * @return string
- */
-function getCliOutputFile(string $path = ''): string
-{
-	$pathFile = getCliOutputPath($path);
-
-	if (!file_exists($pathFile)) {
-		throw new Exception("File missing on this path: {$pathFile}");
-	}
-
-	return \file_get_contents($pathFile);
 }
 
 /**

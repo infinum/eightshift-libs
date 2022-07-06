@@ -5,8 +5,6 @@ namespace Tests\Unit\I18n;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\I18n\I18nCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
 
