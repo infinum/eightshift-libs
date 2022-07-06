@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command initial setup of theme project.
+ * Class that registers WP-CLI command initial setup of theme project.
  *
  * @package EightshiftLibs\Init
  */
@@ -26,7 +26,7 @@ use ReflectionClass;
 class InitProjectCli extends AbstractCli
 {
 	/**
-	 * All classes for initial theme setup for project
+	 * All classes for initial theme setup for project.
 	 *
 	 * @var array<int, mixed>
 	 */
@@ -53,7 +53,7 @@ class InitProjectCli extends AbstractCli
 	];
 
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name.
 	 *
 	 * @return string
 	 */
@@ -63,7 +63,7 @@ class InitProjectCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name.
 	 *
 	 * @return string
 	 */
@@ -73,7 +73,7 @@ class InitProjectCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc.
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
@@ -131,7 +131,7 @@ class InitProjectCli extends AbstractCli
 
 		if (!$groupOutput) {
 			$this->cliLog('--------------------------------------------------');
-			$this->cliLog('We have moved everything you need, to start creating your awesome WordPress project. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
+			$this->cliLog('We have moved everything you need to start creating your awesome WordPress project. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
 			$this->cliLog('Happy developing!', "M");
 		}
 	}

@@ -131,7 +131,7 @@ class Cli
 	];
 
 	/**
-	 * All commands that can be used on WP project directly from the libs. Command prefix - run.
+	 * All commands that can be used on a WP project directly from the libs. Command prefix - run.
 	 *
 	 * @var class-string[]
 	 */
@@ -144,7 +144,7 @@ class Cli
 	];
 
 	/**
-	 * All  commands used for block editor. Command prefix - blocks.
+	 * All commands used for block editor. Command prefix - blocks.
 	 *
 	 * @var class-string[]
 	 */

@@ -49,7 +49,7 @@ class UseManifestCli extends AbstractBlocksCli
 		return [
 			'shortdesc' => 'Copy global settings manifest.json file from our library to your project.',
 			'longdesc' => $this->prepareLongDesc("
-				This file is a block editor main setting file where you can find color, option and much more.
+				This file is a block editor's main setting file where you can find the color, options, and much more.
 
 				## EXAMPLES
 
@@ -87,7 +87,7 @@ class UseManifestCli extends AbstractBlocksCli
 		if (!$groupOutput) {
 			WP_CLI::log('--------------------------------------------------');
 
-			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "M");
+			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', 'M');
 		}
 	}
 }

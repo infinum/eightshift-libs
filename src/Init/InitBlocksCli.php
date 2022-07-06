@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Blocks init.
+ * Class that registers WP-CLI command for Blocks init.
  *
  * @package EightshiftLibs\Init
  */
@@ -96,7 +96,7 @@ class InitBlocksCli extends AbstractCli
 	];
 
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name.
 	 *
 	 * @return string
 	 */
@@ -106,7 +106,7 @@ class InitBlocksCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name.
 	 *
 	 * @return string
 	 */
@@ -116,7 +116,7 @@ class InitBlocksCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc.
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
@@ -134,7 +134,7 @@ class InitBlocksCli extends AbstractCli
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
-				This command will copy all initial block, componens, manifests na service classes to you project in order to start using block editor.
+				This command will copy all initial block, components, manifests and service classes to you project in order to start using block editor.
 
 				## EXAMPLES
 				$ wp {$this->commandParentName} create blocks_init
@@ -188,7 +188,7 @@ class InitBlocksCli extends AbstractCli
 	}
 
 	/**
-	 * Init block by providing list of commands
+	 * Init block by providing list of commands.
 	 *
 	 * @param array<string, mixed> $assocArgs List of argument for options.
 	 * @param array<string, mixed> $commands Commands to use.

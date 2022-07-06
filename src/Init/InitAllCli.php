@@ -21,7 +21,7 @@ use ReflectionClass;
 class InitAllCli extends AbstractCli
 {
 	/**
-	 * All classes for initial theme setup for project
+	 * All classes for initial theme setup for project.
 	 *
 	 * @var array<int, mixed>
 	 */
@@ -41,7 +41,7 @@ class InitAllCli extends AbstractCli
 	];
 
 	/**
-	 * Get WPCLI command parent name
+	 * Get WPCLI command parent name.
 	 *
 	 * @return string
 	 */
@@ -51,7 +51,7 @@ class InitAllCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WPCLI command name.
 	 *
 	 * @return string
 	 */
@@ -61,7 +61,7 @@ class InitAllCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WPCLI command doc.
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
