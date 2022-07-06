@@ -187,7 +187,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 	}
 
 	/**
-	 * Determin if item has dependencies and output helper commands.
+	 * Determine if the item has dependencies and output helper commands.
 	 *
 	 * @param string $source Source or the item.
 	 * @param string $type Type for log.
