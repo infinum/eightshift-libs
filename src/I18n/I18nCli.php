@@ -73,6 +73,14 @@ class I18nCli extends AbstractCli
 
 		$className = $this->getClassShortName();
 
+		$sep = \DIRECTORY_SEPARATOR;
+
+		$sourceLanguages = Components::getProjectPaths('srcDestination', "I18n{$sep}languages");
+
+		if (!\is_dir($sourceLanguages)) {
+			\mkdir($sourceLanguages, 0755, true);
+		}
+
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
