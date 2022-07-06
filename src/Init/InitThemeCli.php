@@ -65,7 +65,7 @@ class InitThemeCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name.
 	 *
 	 * @return string
 	 */
