@@ -85,7 +85,7 @@ class UseComponentCli extends AbstractBlocksCli
 				# Copy component by name:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph'
 
-				# Copy multiple component by name:
+				# Copy multiple components by name:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph, heading'
 
 				## RESOURCES
