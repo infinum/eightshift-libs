@@ -3,7 +3,7 @@
 We created an WP-CLI commands for all the features of the Eightshift-Libs.
 
 ## Develop
-You can run this commands by mocking them in the tests.
+You can run these commands by mocking them in the tests.
 
 ## Boilerplate
 You can run this command to show all available commands in WordPress env:
