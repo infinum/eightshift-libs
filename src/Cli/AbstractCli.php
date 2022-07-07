@@ -338,7 +338,7 @@ abstract class AbstractCli implements CliInterface
 		if (\file_exists($destinationFile) && $skipExisting === false) {
 			self::cliError(
 				\sprintf(
-					"%s file `%s` exist on this path: `%s`. If you want to override the destination folder plase use --skip_existing='true' argument.",
+					"%s file `%s` exist on this path: `%s`. If you want to override the destination folder please use --skip_existing='true' argument.",
 					$typeOutput,
 					$fileName,
 					$this->getShortenCliPathOutput($destinationFile)
