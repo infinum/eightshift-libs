@@ -74,7 +74,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			self::cliError(
 				\sprintf(
 					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs instaled.",
+					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
 					$type,
 					$this->getShortenCliPathOutput($source)
 				)
