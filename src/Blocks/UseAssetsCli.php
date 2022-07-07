@@ -36,7 +36,7 @@ class UseAssetsCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use assets';
+		return 'use-assets';
 	}
 
 	/**

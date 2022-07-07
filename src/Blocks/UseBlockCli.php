@@ -36,7 +36,7 @@ class UseBlockCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use block';
+		return 'use-block';
 	}
 
 	/**

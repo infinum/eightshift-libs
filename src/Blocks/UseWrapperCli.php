@@ -36,7 +36,7 @@ class UseWrapperCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use wrapper';
+		return 'use-wrapper';
 	}
 
 	/**

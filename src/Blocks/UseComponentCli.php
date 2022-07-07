@@ -24,7 +24,7 @@ class UseComponentCli extends AbstractBlocksCli
 	 *
 	 * @var string
 	 */
-	public const COMMAND_NAME = 'use component';
+	public const COMMAND_NAME = 'use-component';
 
 	/**
 	 * Get WPCLI command parent name

@@ -36,7 +36,7 @@ class UseVariationCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use variation';
+		return 'use-variation';
 	}
 
 	/**
