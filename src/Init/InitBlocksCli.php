@@ -190,7 +190,7 @@ class InitBlocksCli extends AbstractCli
 	/**
 	 * Init block by providing list of commands.
 	 *
-	 * @param array<string, mixed> $assocArgs List of argument for options.
+	 * @param array<string, mixed> $assocArgs List of arguments for options.
 	 * @param array<string, mixed> $commands Commands to use.
 	 *
 	 * @return void
