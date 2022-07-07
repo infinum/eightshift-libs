@@ -134,7 +134,7 @@ class InitBlocksCli extends AbstractCli
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
-				This command will copy all initial block, components, manifests and service classes to you project in order to start using block editor.
+				This command will copy all initial blocks, components, manifests and service classes to you project in order to start using block editor.
 
 				## EXAMPLES
 				$ wp {$this->commandParentName} create blocks_init
