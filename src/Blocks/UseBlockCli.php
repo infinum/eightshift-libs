@@ -78,7 +78,7 @@ class UseBlockCli extends AbstractBlocksCli
 				# Copy block by name:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph'
 
-				# Copy multiple block by name:
+				# Copy multiple blocks by name:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='paragraph, heading'
 
 				## RESOURCES
