@@ -12,17 +12,13 @@ namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ServiceExampleCli
  */
 class ServiceExampleCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src';
-
 	/**
 	 * Template name.
 	 */
@@ -45,21 +41,19 @@ class ServiceExampleCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'service_example';
+		return 'service-example';
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
+	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'folder' => $args[1] ?? 'TestFolder/TMP',
-			'file_name' => $args[2] ?? 'TestTest',
+			'folder' => 'TestFolder/TMP',
+			'file_name' => 'TestTest',
 		];
 	}
 
@@ -94,7 +88,7 @@ class ServiceExampleCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --folder='test' --file_name='Test'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --folder='test' --file_name='Test'
 
 				## RESOURCES
 
@@ -107,9 +101,11 @@ class ServiceExampleCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$folder = $assocArgs['folder'] ?? '';
-		$fileName = $this->prepareSlug($assocArgs['file_name'] ?? '');
+		$folder = $this->getArg($assocArgs, 'folder');
+		$fileName = $this->prepareSlug($this->getArg($assocArgs, 'file_name'));
 
 		// Get full class name.
 		$className = $this->getClassShortName();
@@ -132,6 +128,6 @@ class ServiceExampleCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->searchReplaceString('\\Services;', "{$newNamespace};")
-			->outputWrite(static::OUTPUT_DIR . $ds . $folder, $classNameNew, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
 	}
 }

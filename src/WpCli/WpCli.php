@@ -12,19 +12,13 @@ namespace EightshiftLibs\WpCli;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class WpCli
  */
 class WpCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'WpCli';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -42,20 +36,18 @@ class WpCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'wp_cli';
+		return 'wp-cli';
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
+	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'command_name' => $args[1] ?? 'test',
+			'command_name' => 'test',
 		];
 	}
 
@@ -84,7 +76,7 @@ class WpCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --command_name='test'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --command_name='test'
 
 				## RESOURCES
 
@@ -100,8 +92,10 @@ class WpCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$commandName = $assocArgs['command_name'] ?? 'custom-command';
+		$commandName = $this->getArg($assocArgs, 'command_name');
 
 		// Get full class name.
 		$className = $this->getFileName($commandName);
@@ -112,7 +106,7 @@ class WpCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(true), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('command_name', $commandName)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->searchReplaceString($this->getArgTemplate('command_name'), $commandName)
+			->outputWrite(Components::getProjectPaths('srcDestination', 'WpCli'), "{$className}.php", $assocArgs);
 	}
 }

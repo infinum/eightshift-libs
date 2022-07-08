@@ -2,20 +2,19 @@
 
 namespace Tests\Unit\Login;
 
-use Brain\Monkey;
 use EightshiftBoilerplate\Main\MainExample;
 
-use function Tests\setupMocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
+	setBeforeEach();
 
 	$this->main = new MainExample([], '');
 });
 
 afterEach(function() {
-	Monkey\tearDown();
+	setAfterEach();
 });
 
 test('Register method will call init hook', function () {

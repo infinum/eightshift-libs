@@ -12,17 +12,13 @@ namespace EightshiftLibs\Rest\Routes\LoadMore;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class LoadMoreRouteCli
  */
 class LoadMoreRouteCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Routes';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -40,19 +36,7 @@ class LoadMoreRouteCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'rest_route_load_more';
-	}
-
-	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [];
+		return 'rest-route-load-more';
 	}
 
 	/**
@@ -72,7 +56,7 @@ class LoadMoreRouteCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
@@ -85,16 +69,16 @@ class LoadMoreRouteCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $className)
+		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs);
-
-		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->renameTextDomain($assocArgs)
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Routes'), "{$className}.php", $assocArgs);
 	}
 }

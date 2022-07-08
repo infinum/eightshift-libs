@@ -2,65 +2,52 @@
 
 namespace Tests\Unit\Menu;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Menu\MenuCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-    $wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->menu = new MenuCli('boilerplate');
+	$this->mock = new MenuCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
-});
+	setAfterEach();
 
+	unset($this->mock);
+});
 
 test('Menu CLI command will correctly copy the Menu class with defaults', function () {
-	$menu = $this->menu;
-	$menu([], []);
+	$mock = $this->mock;
+	$mock([], []);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMenu = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Menu/Menu.php');
-	$this->assertStringContainsString('class Menu extends AbstractMenu', $generatedMenu);
-	$this->assertStringContainsString('header_main_nav', $generatedMenu);
-	$this->assertStringNotContainsString('rendom string', $generatedMenu);
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Menu{$sep}Menu.php"));
+
+	$this->assertStringContainsString('class Menu extends AbstractMenu', $output);
+	$this->assertStringContainsString('header_main_nav', $output);
+	$this->assertStringNotContainsString('rendom string', $output);
 });
 
-
 test('Menu CLI command will correctly copy the Menu class with set arguments', function () {
-	$menu = $this->menu;
-	$menu([], [
+	$mock = $this->mock;
+	$mock([], [
 		'namespace' => 'CoolTheme',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMenu = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Menu/Menu.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Menu{$sep}Menu.php"));
 
-	$this->assertStringContainsString('class Menu extends AbstractMenu', $generatedMenu);
-	$this->assertStringContainsString('namespace CoolTheme\Menu;', $generatedMenu);
-	$this->assertStringContainsString('header_main_nav', $generatedMenu);
-	$this->assertStringNotContainsString('rendom string', $generatedMenu);
+	$this->assertStringContainsString('class Menu extends AbstractMenu', $output);
+	$this->assertStringContainsString('namespace CoolTheme\Menu;', $output);
+	$this->assertStringContainsString('header_main_nav', $output);
+	$this->assertStringNotContainsString('rendom string', $output);
 });
 
-
 test('Menu CLI documentation is correct', function () {
-	expect($this->menu->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });
 

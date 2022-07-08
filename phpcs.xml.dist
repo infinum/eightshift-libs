@@ -78,4 +78,14 @@
 			<property name="ignoreComments" value="true" />
 		</properties>
 	</rule>
+
+	<!-- Add additional extending CLI classes. -->
+	<rule ref="Eightshift.Commenting.FunctionComment">
+		<properties>
+			<property name="allowedExtendedClasses" type="array">
+				<element value="AbstractCli"/>
+				<element value="AbstractBlocksCli"/>
+			</property>
+		</properties>
+	</rule>
 </ruleset>

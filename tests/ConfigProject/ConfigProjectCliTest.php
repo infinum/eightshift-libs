@@ -2,69 +2,76 @@
 
 namespace Tests\Unit\ConfigProject;
 
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->configProject = new ConfigProjectCli('boilerplate');
+	$this->mock = new ConfigProjectCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
-test('ConfigProject CLI command will correctly copy the ConfigProject class with defaults', function () {
-	$configProject = $this->configProject;
-	$configProject([], $configProject->getDevelopArgs([]));
+//---------------------------------------------------------------------------------//
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/wp-config-project.php';
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedConfigProject = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('!\defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
-	$this->assertStringContainsString('@package EightshiftLibs', $generatedConfigProject);
-	$this->assertStringNotContainsString('footer.php', $generatedConfigProject);
-	$this->assertFileExists($outputPath);
+test('getCommandParentName will return correct value', function () {
+	expect($this->mock->getCommandParentName())
+		->toBeString()
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
-test('ConfigProject CLI command will run under custom command name', function () {
-	$configProject = $this->configProject;
-	$result = $configProject->getCommandName();
+//---------------------------------------------------------------------------------//
 
-	$this->assertStringContainsString('config_project', $result);
+test('getCommandName will return correct value', function () {
+	expect($this->mock->getCommandName())
+		->toBeString()
+		->toEqual('config-project');
 });
 
-test('ConfigProject CLI command will correctly copy the ConfigProject class with set arguments', function () {
-	$configProject = $this->configProject;
-	$configProject([], [
-		'root' => './test',
+//---------------------------------------------------------------------------------//
+
+test('getDefaultArgs will return correct array', function () {
+	expect($this->mock->getDefaultArgs())
+		->toBeArray()
+		->toHaveKeys(['path']);
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getDoc will return correct array', function () {
+	$docs = $this->mock->getDoc();
+
+	expect($docs)
+		->toBeArray()
+		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
+		->and(count($docs['synopsis']))->toEqual(1)
+		->and($docs['synopsis'][0]['name'])->toEqual('path');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('__invoke will will correctly copy example class with default args', function () {
+	$mock = $this->mock;
+	$mock([], [
+		'path' => Components::getProjectPaths('cliOutput'),
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedConfigProject = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/test/wp-config-project.php');
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "wp-config-project.php"));
 
-	$this->assertStringContainsString('!\defined(\'WP_ENVIRONMENT_TYPE\')', $generatedConfigProject);
-});
-
-test('ConfigProject CLI documentation is correct', function () {
-	expect($this->configProject->getDoc())->toBeArray();
+	expect($output)
+		->toContain(
+			'WP_ENVIRONMENT_TYPE',
+			'WP_POST_REVISIONS',
+			'WP_DEBUG_DISPLAY',
+		)
+		->and(\getenv('ES_CLI_LOG_HAPPENED'))->toContain('Sets up WordPress vars and included files');
 });

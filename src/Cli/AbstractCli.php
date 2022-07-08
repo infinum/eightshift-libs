@@ -51,13 +51,6 @@ abstract class AbstractCli implements CliInterface
 	protected string $fileContents;
 
 	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = '';
-
-	/**
 	 * Output template name.
 	 *
 	 * @var string
@@ -160,27 +153,6 @@ abstract class AbstractCli implements CliInterface
 			$class,
 			$this->prepareCommandDocs($this->getDoc(), $this->getGlobalSynopsis())
 		);
-	}
-
-	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, int|string|boolean>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		$output = [];
-
-		$i = 1;
-		foreach ($this->getDefaultArgs() as $key => $value) {
-			$output[$key] = $args[$i] ?? $value;
-
-			$i++;
-		}
-
-		return $output;
 	}
 
 	/**
@@ -345,84 +317,81 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Open an updated file and create it on output location
 	 *
-	 * @param string $outputDir Absolute path to output from project root dir.
-	 * @param string $outputFile Absolute path to output file.
+	 * @param string $destination Absolute path to output.
+	 * @param string $fileName File name to use on a new file..
 	 * @param array<string, mixed> $args Optional arguments.
 	 *
 	 * @return void
 	 */
-	public function outputWrite(string $outputDir, string $outputFile, array $args = []): void
+	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
+		$groupOutput = $args['groupOutput'] ?? false;
+		$typeOutput = $args['typeOutput'] ?? 'service class';
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
 
-		// Set output paths.
-		$outputDir = $this->getOutputDir($outputDir);
-
 		// Set output file path.
-		$outputFile = $this->getOutputFile($outputFile);
-		$outputFile = "{$outputDir}{$outputFile}";
+		$destinationFile = Components::joinPaths([$destination, $fileName]);
 
 		// Bailout if file already exists.
-		if (\file_exists($outputFile) && $skipExisting === false) {
-			self::cliError("The file {$outputFile} can\'t be generated because it already exists.");
+		if (\file_exists($destinationFile) && $skipExisting === false) {
+			self::cliError(
+				\sprintf(
+					"%s file `%s` exist on this path: `%s`. If you want to override the destination folder please use --skip_existing='true' argument.",
+					$typeOutput,
+					$fileName,
+					$this->getShortenCliPathOutput($destinationFile)
+				)
+			);
 		}
 
 		// Create output dir if it doesn't exist.
-		if (!\is_dir($outputDir)) {
-			\mkdir($outputDir, 0755, true);
+		if (!\is_dir($destination)) {
+			\mkdir($destination, 0755, true);
 		}
 
 		// Open a new file on output.
 		// If there is any error, bailout. For example, user permission.
-		if (\fopen($outputFile, "wb") !== false) {
-			$fp = \fopen($outputFile, "wb");
+		if (\fopen($destinationFile, "wb") === false) {
+			self::cliError(
+				\sprintf(
+					"%s file `%s` couldn't be created on this path `%s`. There was an unknown error.",
+					$typeOutput,
+					$fileName,
+					$this->getShortenCliPathOutput($destinationFile)
+				)
+			);
+		}
 
-			// Write and close.
-			\fwrite($fp, $this->fileContents);
-			\fclose($fp);
+		$fp = \fopen($destinationFile, "wb");
 
+		// Write and close.
+		\fwrite($fp, $this->fileContents);
+		\fclose($fp);
+
+		if (!$groupOutput) {
 			// Return success.
 			if ($skipExisting) {
-				WP_CLI::success("File {$outputFile} successfully renamed.");
+				WP_CLI::success(
+					\sprintf(
+						"`%s` renamed at `%s`.",
+						$fileName,
+						$this->getShortenCliPathOutput($destinationFile)
+					)
+				);
 			} else {
-				WP_CLI::success("File {$outputFile} successfully created.");
+				WP_CLI::success(
+					\sprintf(
+						"`%s` created at `%s`.",
+						$fileName,
+						$this->getShortenCliPathOutput($destinationFile)
+					)
+				);
 			}
-			return;
 		}
 
-		self::cliError("File {$outputFile} couldn\'t be created. There was an error.");
-	}
-
-	/**
-	 * Get full output dir path
-	 *
-	 * @param string $path Project specific path.
-	 *
-	 * @return string
-	 */
-	public function getOutputDir(string $path = ''): string
-	{
-		$ds = \DIRECTORY_SEPARATOR;
-
-		if (\function_exists('\add_action') && !\getenv('ES_TEST')) {
-			$root = $this->getProjectRootPath();
-		} else {
-			$root = "{$this->getProjectRootPath(true)}{$ds}cliOutput";
-		}
-
-		$root = \rtrim($root, $ds);
-		$root = \trim($root, $ds);
-
-		$path = \rtrim($path, $ds);
-		$path = \trim($path, $ds);
-
-		if ($ds === '/') {
-			return "{$ds}{$root}{$ds}{$path}";
-		}
-
-		return "{$root}{$ds}{$path}";
+		return;
 	}
 
 	/**
@@ -436,7 +405,6 @@ abstract class AbstractCli implements CliInterface
 	{
 		$ds = \DIRECTORY_SEPARATOR;
 
-		$file = \rtrim($file, $ds);
 		$file = \trim($file, $ds);
 
 		if (\strpos($file, '.') !== false) {
@@ -459,15 +427,15 @@ abstract class AbstractCli implements CliInterface
 		$namespace = $this->getNamespace($args);
 		$vendorPrefix = $this->getVendorPrefix($args);
 
-		if (\function_exists('\add_action') && !\getenv('ES_TEST')) {
+		if (\getenv('ES_TEST')) {
 			$output = \str_replace(
-				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
+				'namespace EightshiftBoilerplate\\',
 				"namespace {$namespace}\\",
 				$output
 			);
 		} else {
 			$output = \str_replace(
-				'namespace EightshiftBoilerplate\\',
+				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
 				"namespace {$namespace}\\",
 				$output
 			);
@@ -495,7 +463,13 @@ abstract class AbstractCli implements CliInterface
 		$prefixUse = 'use';
 		$prefixPackage = '@package';
 
-		if (\function_exists('\add_action')) {
+		if (\getenv('ES_TEST')) {
+			$output = \str_replace(
+				"{$prefixUse} EightshiftBoilerplate\\",
+				"{$prefixUse} {$namespace}\\",
+				$output
+			);
+		} else {
 			$output = \str_replace(
 				"{$prefixUse} EightshiftBoilerplateVendor\\",
 				"{$prefixUse} {$vendorPrefix}\\",
@@ -504,12 +478,6 @@ abstract class AbstractCli implements CliInterface
 
 			$output = \str_replace(
 				"{$prefixUse} {$vendorPrefix}\EightshiftBoilerplate\\",
-				"{$prefixUse} {$namespace}\\",
-				$output
-			);
-		} else {
-			$output = \str_replace(
-				"{$prefixUse} EightshiftBoilerplate\\",
 				"{$prefixUse} {$namespace}\\",
 				$output
 			);
@@ -617,8 +585,9 @@ abstract class AbstractCli implements CliInterface
 	{
 		$projectName = 'eightshift-boilerplate';
 
-		if (\function_exists('\add_action') && !\getenv('ES_TEST')) {
-			$projectName = \basename(\dirname(__DIR__, 5));
+		// Don't use this option on the tests.
+		if (!\getenv('ES_TEST')) {
+			$projectName = \basename(Components::getProjectPaths('root'));
 		}
 
 		if (isset($args['project_name'])) {
@@ -645,8 +614,9 @@ abstract class AbstractCli implements CliInterface
 	{
 		$projectType = 'themes';
 
-		if (\function_exists('\add_action')) {
-			$projectType = \basename(\dirname(__DIR__, 6));
+		// Don't use this option on the tests.
+		if (!\getenv('ES_TEST')) {
+			$projectType = \basename(Components::getProjectPaths('wpContent'));
 		}
 
 		if (isset($args['project_type'])) {
@@ -720,13 +690,8 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getComposer(array $args = []): array
 	{
-		$ds = \DIRECTORY_SEPARATOR;
 		if (!isset($args['config_path'])) {
-			if (\function_exists('\add_action')) {
-				$composerPath = "{$this->getProjectRootPath()}{$ds}composer.json";
-			} else {
-				$composerPath = "{$this->getProjectRootPath(true)}{$ds}composer.json";
-			}
+			$composerPath = Components::getProjectPaths('root', 'composer.json');
 		} else {
 			$composerPath = $args['config_path'];
 		}
@@ -811,13 +776,12 @@ abstract class AbstractCli implements CliInterface
 	 * Loop array of classes and output the commands
 	 *
 	 * @param class-string[] $items Array of classes.
-	 * @param bool $run Run or log output.
 	 * @param array<string, mixed> $args CLI command args.
 	 *
 	 * @return void
 	 * @throws ReflectionException Reflection exception.
 	 */
-	public function getEvalLoop(array $items = [], bool $run = false, array $args = []): void
+	public function getEvalLoop(array $items = [], array $args = []): void
 	{
 		foreach ($items as $item) {
 			$reflectionClass = new ReflectionClass($item);
@@ -825,112 +789,9 @@ abstract class AbstractCli implements CliInterface
 			$class = $reflectionClass->newInstanceArgs(['null']);
 
 			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
-				if (\function_exists('\add_action')) {
-					WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
-				} else {
-					$sep = \DIRECTORY_SEPARATOR;
-
-					if (!$run) {
-						WP_CLI::log("wp eval-file bin{$sep}cli.php {$class->getCommandParentName()}_{$class->getCommandName()} --skip-wordpress");
-					} else {
-						WP_CLI::runcommand("eval-file bin{$sep}cli.php {$class->getCommandParentName()}_{$class->getCommandName()} --skip-wordpress");
-					}
-				}
+				WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
 			}
 		}
-	}
-
-	/**
-	 * Run reset command in develop mode only
-	 *
-	 * @return void
-	 */
-	public function runReset(): void
-	{
-		$reset = new CliReset('');
-		$sep = \DIRECTORY_SEPARATOR;
-		WP_CLI::runcommand("eval-file bin{$sep}cli.php {$reset->getCommandParentName()}_{$reset->getCommandName()} --skip-wordpress");
-	}
-
-	/**
-	 * Returns projects root folder based on the environment
-	 *
-	 * @param bool $isDev Returns path based on the env.
-	 *
-	 * @return string
-	 */
-	public function getProjectRootPath(bool $isDev = false): string
-	{
-		$output = \dirname(__DIR__, 5);
-
-		if ($isDev || \getenv('ES_TEST') !== false) {
-			$output = \dirname(__DIR__, 2);
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Returns projects root where config is installed based on the environment
-	 *
-	 * @param bool $isDev Returns path based on the env.
-	 *
-	 * @return string
-	 */
-	public function getProjectConfigRootPath(bool $isDev = false): string
-	{
-		$output = \dirname(__DIR__, 8);
-
-		if ($isDev) {
-			$output = \dirname(__DIR__, 2);
-		}
-
-		if (\getenv('ES_TEST')) {
-			$output = \dirname(__DIR__, 2);
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Returns Eightshift frontend libs path
-	 *
-	 * @param string $path Additional path.
-	 *
-	 * @return string
-	 */
-	public function getFrontendLibsPath(string $path = ''): string
-	{
-		$ds = \DIRECTORY_SEPARATOR;
-		return "{$this->getProjectRootPath()}{$ds}node_modules{$ds}@eightshift{$ds}frontend-libs{$ds}{$path}";
-	}
-
-	/**
-	 * Returns Eightshift libs path
-	 *
-	 * @param string $path Additional path.
-	 *
-	 * @return string
-	 */
-	public function getLibsPath(string $path = ''): string
-	{
-		$ds = \DIRECTORY_SEPARATOR;
-		if (\getenv('ES_TEST')) {
-			return "{$this->getProjectRootPath()}{$ds}{$path}";
-		}
-
-		return "{$this->getProjectRootPath()}{$ds}vendor{$ds}infinum{$ds}eightshift-libs{$ds}{$path}";
-	}
-
-	/**
-	 * Returns Eightshift frontend libs blocks init path.
-	 *
-	 * @return string
-	 */
-	public function getFrontendLibsBlockPath(): string
-	{
-		$ds = \DIRECTORY_SEPARATOR;
-		return $this->getFrontendLibsPath("blocks{$ds}init");
 	}
 
 	/**
@@ -1059,6 +920,10 @@ abstract class AbstractCli implements CliInterface
 	 */
 	protected function copyRecursively(string $source, string $destination): void
 	{
+		if (!\is_dir($destination)) {
+			\mkdir($destination, 0755, true);
+		}
+
 		try {
 			$iterator = new RecursiveIteratorIterator(
 				new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
@@ -1082,5 +947,59 @@ abstract class AbstractCli implements CliInterface
 				\copy($item->getPathname(), $destinationPath);
 			}
 		}
+	}
+
+	/**
+	 * Copy item from source to destination.
+	 *
+	 * @param string $source Source path.
+	 * @param string $destination Destination path.
+	 *
+	 * @return void
+	 */
+	protected function copyItem(string $source, string $destination): void
+	{
+		$dir = \dirname($destination);
+
+		if (!\file_exists($dir)) {
+			\mkdir($dir, 0755, true);
+		}
+
+		\copy($source, $destination);
+	}
+
+	/**
+	 * Return cli intro.
+	 *
+	 * @param array<string, mixed> $arg $argument to pass.
+	 *
+	 * @return void
+	 */
+	protected function getIntroText(array $arg = []): void
+	{
+		$introOutput = $arg['introOutput'] ?? true;
+
+		if (!$introOutput) {
+			return;
+		}
+
+		$this->cliLog($this->prepareLongDesc(".
+		---------------------------------------------------------------------------------------
+		._____   ___    ____   _   _   _____   ____    _   _   ___   _____   _____ 
+		| ____| |_ _|  / ___| | | | | |_   _| / ___|  | | | | |_ _| |  ___| |_   _|
+		|  _|    | |  | |  _  | |_| |   | |   \___ \  | |_| |  | |  | |_      | |  
+		| |___   | |  | |_| | |  _  |   | |    ___) | |  _  |  | |  |  _|     | |  
+		|_____| |___|  \____| |_| |_|   |_|   |____/  |_| |_| |___| |_|       |_|  
+		.____     ___    ___   _       _____   ____    ____    _          _      _____   _____ 
+		| __ )   / _ \  |_ _| | |     | ____| |  _ \  |  _ \  | |        / \    |_   _| | ____|
+		|  _ \  | | | |  | |  | |     |  _|   | |_) | | |_) | | |       / _ \     | |   |  _|  
+		| |_) | | |_| |  | |  | |___  | |___  |  _ <  |  __/  | |___   / ___ \    | |   | |___ 
+		|____/   \___/  |___| |_____| |_____| |_| \_\ |_|     |_____| /_/   \_\   |_|   |_____|
+		.
+		Thank you for using Eightshift boilerplate for your project.
+		Documentation can be found on this link: https://infinum.github.io/eightshift-docs/.
+		---------------------------------------------------------------------------------------
+		.
+		"), 'M');
 	}
 }

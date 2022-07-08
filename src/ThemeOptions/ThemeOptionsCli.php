@@ -12,17 +12,13 @@ namespace EightshiftLibs\ThemeOptions;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ThemeOptionsCli
  */
 class ThemeOptionsCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'ThemeOptions';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -40,7 +36,7 @@ class ThemeOptionsCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'theme_options';
+		return 'theme-options';
 	}
 
 	/**
@@ -61,7 +57,7 @@ class ThemeOptionsCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
@@ -77,6 +73,8 @@ class ThemeOptionsCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -85,6 +83,6 @@ class ThemeOptionsCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'ThemeOptions'), "{$className}.php", $assocArgs);
 	}
 }

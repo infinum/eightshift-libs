@@ -12,17 +12,13 @@ namespace EightshiftLibs\ModifyAdminAppearance;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ModifyAdminAppearanceCli
  */
 class ModifyAdminAppearanceCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'ModifyAdminAppearance';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -40,7 +36,7 @@ class ModifyAdminAppearanceCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'modify_admin_appearance';
+		return 'modify-admin-appearance';
 	}
 
 	/**
@@ -60,7 +56,7 @@ class ModifyAdminAppearanceCli extends AbstractCli
 			## EXAMPLES
 
 			# Create service class:
-			$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+			$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 			## RESOURCES
 
@@ -73,6 +69,8 @@ class ModifyAdminAppearanceCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -80,6 +78,6 @@ class ModifyAdminAppearanceCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'ModifyAdminAppearance'), "{$className}.php", $assocArgs);
 	}
 }

@@ -2,52 +2,44 @@
 
 namespace Tests\Unit\WpCli;
 
-use EightshiftBoilerplate\WpCli\WpCliExample;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\WpCli\WpCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->customCommand = new WpCli('boilerplate');
+	$this->mock = new WpCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 
 test('Custom command CLI command will correctly copy the Custom command class with defaults', function () {
-	$customCommand = $this->customCommand;
-	$customCommand([], $customCommand->getDevelopArgs([]));
+	$mock = $this->mock;
+	$mock([], $mock->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
-	$customCommand = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/WpCli/TestWpCli.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$mock = \file_get_contents(Components::getProjectPaths('srcDestination', "WpCli{$sep}TestWpCli.php"));
 
-	$this->assertStringContainsString('class TestWpCli implements ServiceCliInterface', $customCommand);
-	$this->assertStringContainsString('function register', $customCommand);
-	$this->assertStringContainsString('function registerCommand', $customCommand);
-	$this->assertStringContainsString('function getDocs', $customCommand);
-	$this->assertStringContainsString('function __invoke', $customCommand);
+	expect($mock)
+		->toContain(
+			'class TestWpCli implements ServiceCliInterface',
+			'function register',
+			'function registerCommand',
+			'function getDocs',
+			'function __invoke',
+		);
 });
 
 
 test('Custom command CLI documentation is correct', function () {
-	expect($this->customCommand->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

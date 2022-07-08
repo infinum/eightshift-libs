@@ -34,6 +34,7 @@ trait StoreTrait
 		'variations' => [],
 		'settings' => [],
 		'styles' => [],
+		'paths' => [],
 	];
 
 	/**
@@ -43,7 +44,7 @@ trait StoreTrait
 	 */
 	public static function getStoreName(): string
 	{
-		return \basename(\dirname(__DIR__, 5));
+		return \basename(Components::getProjectPaths('root'));
 	}
 
 	/**
@@ -572,5 +573,31 @@ trait StoreTrait
 	public static function getStyles(): array
 	{
 		return self::getStore()['styles'] ?? [];
+	}
+
+	/**
+	 * Set paths details.
+	 *
+	 * @return void
+	 */
+	public static function setPaths(): void
+	{
+		global $esBlocks;
+
+		if (self::getStore()) {
+			foreach (Components::PROJECT_PATHS as $value) {
+				$esBlocks[self::getStoreName()]['paths'][$value] = Components::getProjectPaths($value);
+			}
+		}
+	}
+
+	/**
+	 * Get paths details.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getPaths(): array
+	{
+		return self::getStore()['paths'] ?? [];
 	}
 }

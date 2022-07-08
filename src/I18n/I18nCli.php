@@ -12,19 +12,13 @@ namespace EightshiftLibs\I18n;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class I18nCli
  */
 class I18nCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'I18n';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -62,7 +56,7 @@ class I18nCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
@@ -75,13 +69,23 @@ class I18nCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
+
+		$sep = \DIRECTORY_SEPARATOR;
+
+		$sourceLanguages = Components::getProjectPaths('srcDestination', "I18n{$sep}languages");
+
+		if (!\is_dir($sourceLanguages)) {
+			\mkdir($sourceLanguages, 0755, true);
+		}
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'I18n'), "{$className}.php", $assocArgs);
 	}
 }

@@ -24,7 +24,7 @@ test('Check if CLI command name is correct.', function () {
 
 	expect($mock)
 		->toBeString()
-		->toEqual('webp_media_column');
+		->toEqual('webp-media-column');
 });
 
 test('Check if CLI command documentation is correct.', function () {
@@ -34,7 +34,7 @@ test('Check if CLI command documentation is correct.', function () {
 test('Check if CLI command will correctly copy the WebPMediaColums class with defaults.', function () {
 	$mock = $this->webPMediaColumnCliMock;
 
-	$mock([], $mock->getDevelopArgs([]));
+	$mock([], $mock->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$output = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Columns/Media/WebPMediaColumn.php');

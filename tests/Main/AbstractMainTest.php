@@ -5,31 +5,19 @@ namespace Tests\Unit\Main;
 use EightshiftLibs\Main\AbstractMain;
 use EightshiftLibs\Main\MainCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$this->main = new MainCli('boilerplate');
+	$this->mock = new MainCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Abstract main will instantiate services', function () {

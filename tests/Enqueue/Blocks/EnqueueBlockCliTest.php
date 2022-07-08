@@ -4,38 +4,26 @@ namespace Tests\Unit\EnqueueBlock;
 
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->ebc = new EnqueueBlocksCli('boilerplate');
+	$this->mock = new EnqueueBlocksCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 /**
  * Making an appropriate class with all it's key strings.
  */
 test('Enqueue Block CLI command will make appropriate class.', function () {
-	$ebc = $this->ebc;
+	$ebc = $this->mock;
 	$ebc([], []);
 
 	$generatedEBC = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
@@ -61,7 +49,7 @@ test('Enqueue Block CLI command will make appropriate class.', function () {
  * Testing if correct namespace will be set.
  */
 test('Enqueue Block CLI command will set correct namespace.', function () {
-	$ebc = $this->ebc;
+	$ebc = $this->mock;
 	$ebc([],[
 		'namespace' => 'NewTheme',
 	]);
@@ -75,7 +63,7 @@ test('Enqueue Block CLI command will set correct namespace.', function () {
  * Testing if correct functions will be generated.
  */
 test('Enqueue Block CLI command will set correct functions.', function () {
-	$ebc = $this->ebc;
+	$ebc = $this->mock;
 	$ebc([], []);
 
 	$generatedEBC = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
@@ -85,5 +73,5 @@ test('Enqueue Block CLI command will set correct functions.', function () {
 });
 
 test('Custom Enqueue Blocks CLI documentation is correct', function () {
-	expect($this->ebc->getDoc())->toBeArray();
+	expect($this->mock->getDoc())->toBeArray();
 });

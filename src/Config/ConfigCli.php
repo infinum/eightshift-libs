@@ -12,17 +12,13 @@ namespace EightshiftLibs\Config;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ConfigCli
  */
 class ConfigCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Config';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -44,18 +40,16 @@ class ConfigCli extends AbstractCli
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
+	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'name' => $args[1] ?? 'Boilerplate',
-			'version' => $args[2] ?? '1',
-			'routes_version' => $args[5] ?? 'v2',
+			'name' => 'Boilerplate',
+			'version' => '1',
+			'routes_version' => '2',
 		];
 	}
 
@@ -74,18 +68,21 @@ class ConfigCli extends AbstractCli
 					'name' => 'name',
 					'description' => 'Define project name.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('name'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'version',
 					'description' => 'Define project version.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('version'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'routes_version',
 					'description' => 'Define project REST version.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('routes_version'),
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -96,7 +93,7 @@ class ConfigCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
@@ -109,10 +106,12 @@ class ConfigCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$name = $assocArgs['name'] ?? '';
-		$version = $assocArgs['version'] ?? '';
-		$routesVersion = $assocArgs['routes_version'] ?? '';
+		$name = $this->getArg($assocArgs, 'name');
+		$version = $this->getArg($assocArgs, 'version');
+		$routesVersion = $this->getArg($assocArgs, 'routes_version');
 
 		$className = $this->getClassShortName();
 
@@ -123,18 +122,18 @@ class ConfigCli extends AbstractCli
 			->renameUse($assocArgs);
 
 		if (!empty($name)) {
-			$class->searchReplaceString('eightshift-libs', $name);
+			$class->searchReplaceString($this->getArgTemplate('name'), $name);
 		}
 
 		if (!empty($version)) {
-			$class->searchReplaceString('1.0.0', $version);
+			$class->searchReplaceString($this->getArgTemplate('version'), $version);
 		}
 
 		if (!empty($routesVersion)) {
-			$class->searchReplaceString('v1', $routesVersion);
+			$class->searchReplaceString($this->getArgTemplate('routes_version'), $routesVersion);
 		}
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$className}.php", $assocArgs);
 	}
 }

@@ -12,19 +12,13 @@ namespace EightshiftLibs\Enqueue\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class EnqueueBlocksCli
  */
 class EnqueueBlocksCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Enqueue' . \DIRECTORY_SEPARATOR . 'Blocks';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -42,7 +36,7 @@ class EnqueueBlocksCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'enqueue_blocks';
+		return 'enqueue-blocks';
 	}
 
 	/**
@@ -62,7 +56,7 @@ class EnqueueBlocksCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
@@ -75,6 +69,8 @@ class EnqueueBlocksCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -82,6 +78,6 @@ class EnqueueBlocksCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Enqueue' . \DIRECTORY_SEPARATOR . 'Blocks'), "{$className}.php", $assocArgs);
 	}
 }

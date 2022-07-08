@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Geolocation;
 
-use EightshiftLibs\Geolocation\GeolocationExample;
+use EightshiftBoilerplate\Geolocation\GeolocationExample;
 use Exception;
 
 use function Tests\setAfterEach;

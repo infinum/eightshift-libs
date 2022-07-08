@@ -27,7 +27,7 @@ class ConfigExample extends AbstractConfigData
 	 */
 	public static function getProjectName(): string
 	{
-		return 'eightshift-libs';
+		return '%name%';
 	}
 
 	/**
@@ -37,7 +37,7 @@ class ConfigExample extends AbstractConfigData
 	 */
 	public static function getProjectVersion(): string
 	{
-		return '1.0.0';
+		return '%version%';
 	}
 
 	/**
@@ -61,6 +61,6 @@ class ConfigExample extends AbstractConfigData
 	 */
 	public static function getProjectRoutesVersion(): string
 	{
-		return 'v1';
+		return '%routes_version%';
 	}
 }

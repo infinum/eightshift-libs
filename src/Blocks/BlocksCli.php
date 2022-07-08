@@ -11,9 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
-use WP_CLI;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class BlocksCli
@@ -21,70 +20,13 @@ use WP_CLI;
 class BlocksCli extends AbstractCli
 {
 	/**
-	 * Toggle to see if this is running inside tests or not
-	 *
-	 * @var bool
-	 */
-	private $isTest;
-
-	/**
-	 * Output dir relative path
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Blocks';
-
-	/**
-	 * List of components only used in the project init.
-	 * All components are read from the disc path.
-	 *
-	 * @var string[]
-	 */
-	public const COMPONENTS = [
-		'button',
-		'card',
-		'copyright',
-		'drawer',
-		'footer',
-		'hamburger',
-		'head',
-		'header',
-		'heading',
-		'icon',
-		'image',
-		'layout-three-columns',
-		'lists',
-		'logo',
-		'menu',
-		'paragraph',
-		'tracking-before-body-end',
-		'tracking-head',
-	];
-
-	/**
-	 * List of blocks only used in the project init.
-	 * All blocks are read from the disc path.
-	 *
-	 * @var string[]
-	 */
-	public const BLOCKS = [
-		'button',
-		'card',
-		'group',
-		'heading',
-		'image',
-		'lists',
-		'paragraph',
-	];
-
-	/**
 	 * Get WPCLI command parent name
 	 *
 	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliCreate::COMMAND_NAME;
+		return CliBlocks::COMMAND_NAME;
 	}
 
 	/**
@@ -94,7 +36,7 @@ class BlocksCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'blocks';
+		return 'create-blocks-class';
 	}
 
 	/**
@@ -106,92 +48,37 @@ class BlocksCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Create blocks service class.',
-			'longdesc' => "
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
 				This file is a main entrypoint for all our block editor setup.
-				We use it to register all blocks, limit what blocks user can see, and lots more.
+				It's used to register blocks, define which blocks are allowed, and more.
 
 				## EXAMPLES
-				$ wp boilerplate create_blocks
-			",
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Blocks/BlocksExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
+		$class = $this->getExampleTemplate(__DIR__, $className);
+
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $className)
-			->renameClassName($className)
+		$class->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameTextDomainFrontendLibs($assocArgs)
-			->renameUse($assocArgs);
-
-		if (! \defined('ES_DEVELOP_MODE')) {
-			if (!$this->isTest && \function_exists('\add_action')) {
-				$this->blocksInit($assocArgs);
-			}
-		}
-
-		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
-	}
-
-	/**
-	 * Copy blocks from Eightshift-frontend-libs to project
-	 *
-	 * @param string[] $args Arguments array.
-	 *
-	 * @return void
-	 */
-	private function blocksInit(array $args): void
-	{
-		$root = $this->getProjectRootPath();
-		$rootNode = $this->getFrontendLibsBlockPath();
-
-		$folders = [
-			'assetsGlobal' => "{$root}/assets",
-			'blocks' => "{$root}/src/Blocks",
-			'assets' => "{$root}/src/Blocks/assets",
-			'components' => "{$root}/src/Blocks/components",
-			'custom' => "{$root}/src/Blocks/custom",
-			'variations' => "{$root}/src/Blocks/variations",
-		];
-
-		foreach ($folders as $folder) {
-			if (!\file_exists($folder)) {
-				\mkdir($folder);
-			}
-		}
-
-		$this->copyRecursively("{$rootNode}/assets/", "{$folders['assetsGlobal']}/");
-		$this->copyRecursively("{$rootNode}/src/Blocks/assets/", "{$folders['assets']}/");
-		$this->copyRecursively("{$rootNode}/src/Blocks/variations/", "{$folders['variations']}/");
-		\copy("{$rootNode}/src/Blocks/manifest.json", "{$folders['blocks']}/manifest.json");
-
-		$commandParentName = CliBlocks::COMMAND_NAME;
-
-		WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} wrapper {$this->prepareArgsManual($args)}");
-
-		foreach (static::COMPONENTS as $component) {
-			WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} component --name={$component} {$this->prepareArgsManual($args)}");
-		}
-
-		foreach (static::BLOCKS as $block) {
-			WP_CLI::runcommand("{$this->commandParentName} {$commandParentName} block --name={$block} {$this->prepareArgsManual($args)}");
-		}
-
-		WP_CLI::success('Blocks successfully set.');
-	}
-
-	/**
-	 * Used when running tests.
-	 *
-	 * @return void
-	 */
-	public function setTest(): void
-	{
-		$this->isTest = true;
+			->renameUse($assocArgs)
+			->outputWrite(Components::getProjectPaths('blocksDestination'), "{$className}.php", $assocArgs);
 	}
 }

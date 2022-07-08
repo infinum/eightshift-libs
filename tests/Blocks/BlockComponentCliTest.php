@@ -2,69 +2,50 @@
 
 namespace Tests\Unit\Block;
 
-use EightshiftLibs\Blocks\BlockComponentCli;
+use EightshiftLibs\Blocks\UseComponentCli;
+use EightshiftLibs\Helpers\Components;
+use Exception;
 
-use EightshiftLibs\Exception\InvalidBlock;
-
-use function Tests\mock;
 use function Tests\setAfterEach;
 use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
 	setBeforeEach();
 
-	$this->component = new BlockComponentCli('boilerplate');
+	$this->mock = new UseComponentCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
 	setAfterEach();
 
-	unset($this->component);
+	unset($this->mock);
 });
 
  test('Component CLI command will correctly copy the Component class with defaults', function () {
-	$componentMock = mock(BlockComponentCli::class)
-		->makePartial()
-		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(\dirname(__FILE__, 2) . '/data');
+	$mock = $this->mock;
+	$mock([], $this->mock->getDefaultArgs());
 
-	$mock = $componentMock->getMock();
+	$name = $this->mock->getDefaultArgs()['name'];
 
-	$mock([], [$this->component->getDevelopArgs([])]);
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestinationComponents', "{$name}{$sep}{$name}.php"));
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button/button.php';
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedComponent = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('<div>Hello!</div>', $generatedComponent);
-	$this->assertFileExists($outputPath);
- });
-
- test('Component CLI command will run under custom command name', function () {
-	$component = $this->component;
-	$result = $component->getCommandName();
-
-	$this->assertStringContainsString('component', $result);
+	expect($output)->toContain(
+		'Fake component',
+	);
 });
 
 test('Component CLI documentation is correct', function () {
-	expect($this->component->getDoc())->toBeArray();
+	$mock = $this->mock;
+	expect($mock->getDoc())->toBeArray();
 });
 
 test('Component CLI command will fail if Component doesn\'t exist', function () {
-	$componentMock = mock(BlockComponentCli::class)
-		->makePartial()
-		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(\dirname(__FILE__, 2) . '/data');
-
-	$mock = $componentMock->getMock();
-
-	$mock([], ['name' => 'testing']);
-})->expectException(InvalidBlock::class);
+	$mock = $this->mock;
+	$mock([], array_merge(
+		$mock->getDefaultArgs(),
+		[
+			'name' => 'testing'
+		]
+	));
+})->throws(Exception::class, 'Requested component with the name');

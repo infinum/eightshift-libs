@@ -4,28 +4,20 @@ namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Helpers\Components;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
-use EightshiftBoilerplate\Blocks\BlocksExample;
 
-use function Tests\setupMocks;
+use function Tests\buildTestBlocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
-});
+beforeEach(function () {
+	setBeforeEach();
 
-afterAll(function() {
-	Monkey\tearDown();
-});
-
-beforeEach(function() {
-	(new BlocksExample())->getBlocksDataFullRaw();
+	buildTestBlocks();
 });
 
 afterEach(function () {
-	global $esBlocks;
-	$esBlocks = null;
+	setAfterEach();
 });
 
 // ------------------------------------------
@@ -104,7 +96,7 @@ test('outputCssVariables returns empty string if variable keys are missing in ma
 });
 
 test('outputCssVariables works when correct attributes are passed to it', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
 
 	Components::setConfigOutputCssGlobally(false);
 	Components::setConfigOutputCssOptimize(false);
@@ -125,7 +117,7 @@ test('outputCssVariables works when correct attributes are passed to it', functi
 });
 
 test('outputCssVariables works when correct attributes are passed to it and has a unique name', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
 
 	Components::setConfigOutputCssGlobally(false);
 	Components::setConfigOutputCssOptimize(false);
@@ -151,7 +143,7 @@ test('outputCssVariables outputs the style tag in default way if the outputCssGl
 	Components::setConfigOutputCssGlobally(false);
 	Components::setConfigOutputCssOptimize(false);
 
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
 
 	$attributes = [
 		'variableValue' => 'value3',
@@ -171,7 +163,7 @@ test('outputCssVariables outputs the style tag in default way if the outputCssGl
 });
 
 test('outputCssVariables outputs the style tag in inline way if the outputCssGlobally is set to true', function () {
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
 
 	$attributes = [
 		'variableValue' => 'value3',
@@ -246,7 +238,8 @@ test('Asserts that "outputCssVariablesInline" will return empty style tag if sty
 test('Asserts that "outputCssVariablesInline" will return style tag with the correct styles.', function () {
 	Components::setConfigOutputCssOptimize(false);
 
-	$manifest = Components::getManifest(dirname(__FILE__, 2) . '/data/src/Blocks/components/variables');
+	;
+	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
 	$attributes = [
 		'variableValue' => 'value3',
 	];

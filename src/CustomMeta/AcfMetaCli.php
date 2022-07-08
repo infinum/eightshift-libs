@@ -12,19 +12,13 @@ namespace EightshiftLibs\CustomMeta;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class AcfMetaCli
  */
 class AcfMetaCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomMeta';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -42,20 +36,18 @@ class AcfMetaCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'acf_meta';
+		return 'acf-meta';
 	}
 
 	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
+	 * Define default arguments.
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'name' => $args[1] ?? 'title',
+			'name' => 'title',
 		];
 	}
 
@@ -85,7 +77,7 @@ class AcfMetaCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
@@ -101,8 +93,10 @@ class AcfMetaCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['name'] ?? '');
+		$fieldName = $this->prepareSlug($this->getArg($assocArgs, 'name'));
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);
@@ -113,6 +107,6 @@ class AcfMetaCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'CustomMeta'), "{$className}.php", $assocArgs);
 	}
 }

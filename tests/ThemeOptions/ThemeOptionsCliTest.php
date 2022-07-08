@@ -2,66 +2,57 @@
 
 namespace Tests\Unit\ThemeOptions;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->themeOptions = new ThemeOptionsCli('boilerplate');
+	$this->mock = new ThemeOptionsCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 
 test('Custom theme options CLI command will correctly copy the theme options class with defaults', function () {
-	$themeOptions = $this->themeOptions;
-	$themeOptions([], []);
+	$mock = $this->mock;
+	$mock([], []);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMeta = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/ThemeOptions/ThemeOptions.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}ThemeOptions{$sep}ThemeOptions.php"));
 
-		expect($generatedMeta)
+		expect($output)
 			->toBeString()
-			->toContain('class ThemeOptions implements ServiceInterface')
-			->toContain('acf_add_options_page')
-			->toContain('acf_add_local_field_group')
-			->toContain('createThemeOptionsPage')
-			->toContain('registerThemeOptions')
+			->toContain(
+				'class ThemeOptions implements ServiceInterface',
+				'acf_add_options_page',
+				'acf_add_local_field_group',
+				'createThemeOptionsPage',
+				'registerThemeOptions'
+			)
 			->not->toContain('someRandomMethod');
 });
 
 test('Custom theme options CLI documentation is correct', function () {
-	expect($this->themeOptions->getDoc())->toBeArray();
-	$themeOptions = $this->themeOptions;
+	expect($this->mock->getDoc())->toBeArray();
+	$mock = $this->mock;
 
-	$documentation = $themeOptions->getDoc();
+	$mock = $mock->getDoc();
 
 	$descKey = 'shortdesc';
 
-		expect($documentation)
+		expect($mock)
 			->toBeArray()
 			->toHaveKey($descKey);
 
-		expect($documentation[$descKey])
+		expect($mock[$descKey])
 			->toBeString()
 			->toBe('Create project Theme Options service class using ACF plugin.');
 });

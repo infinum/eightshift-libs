@@ -14,19 +14,13 @@ namespace EightshiftLibs\Geolocation;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class GeolocationCli
  */
 class GeolocationCli extends AbstractCli
 {
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Geolocation';
-
 	/**
 	 * Get WPCLI command parent name
 	 *
@@ -45,20 +39,6 @@ class GeolocationCli extends AbstractCli
 	public function getCommandName(): string
 	{
 		return 'geolocation';
-	}
-
-	/**
-	 * Define default develop props.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getDevelopArgs(array $args): array
-	{
-		return [
-			'cookie_name' => 'es-geolocation-test',
-		];
 	}
 
 	/**
@@ -100,10 +80,10 @@ class GeolocationCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				# Create service class with custom cookie name:
-				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --cookie_name='test_cookie'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --cookie_name='test_cookie'
 
 				## RESOURCES
 
@@ -116,8 +96,10 @@ class GeolocationCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Arguments.
-		$cookie_name = $this->getArg($assocArgs, 'cookie_name');
+		$cookieName = $this->getArg($assocArgs, 'cookie_name');
 
 		// Get full class name.
 		$className = $this->getClassShortName();
@@ -128,9 +110,9 @@ class GeolocationCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->searchReplaceString($this->getArgTemplate('cookie_name'), $cookie_name);
+			->searchReplaceString($this->getArgTemplate('cookie_name'), $cookieName);
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Geolocation'), "{$className}.php", $assocArgs);
 	}
 }
