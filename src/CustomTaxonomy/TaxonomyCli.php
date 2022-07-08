@@ -74,7 +74,7 @@ class TaxonomyCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'plural_label',
-					'description' => 'The label of the custom taxonomy to show in WP admin but as a plural version.',
+					'description' => 'The plural form of the custom taxonomy label.',
 					'optional' => false,
 				],
 				[
