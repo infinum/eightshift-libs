@@ -52,7 +52,7 @@ class BlocksCli extends AbstractCli
 				## USAGE
 
 				This file is a main entrypoint for all our block editor setup.
-				We use it to register all blocks, limit what blocks user can see, and lots more.
+				It's used to register blocks, define which blocks are allowed, and more.
 
 				## EXAMPLES
 
