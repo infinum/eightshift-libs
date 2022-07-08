@@ -71,7 +71,7 @@ class UseComponentCli extends AbstractBlocksCli
 				[
 					'type' => 'assoc',
 					'name' => 'name',
-					'description' => 'Specify component name. You can specify multiple components (separate them with comma).',
+					'description' => 'Specify component name. You can specify multiple components by separating them with a comma.',
 					'optional' => false,
 				],
 			],
