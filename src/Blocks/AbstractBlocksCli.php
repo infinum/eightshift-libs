@@ -123,7 +123,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$partialsOutput = [];
 			$partialsPath = Components::joinPaths([$fullDestination, 'partials']);
 
-			// Check if we have partials folder. If so output and that folder with items in it.
+			// Check if we have partials folder. If so output that folder with items in it.
 			if (\is_dir($partialsPath)) {
 				$partials = \array_diff(\scandir($partialsPath), ['..', '.']);
 				$partials = \array_values($partials);
