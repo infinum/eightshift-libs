@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Blocks assets.
+ * Class that registers WP-CLI command for Blocks assets.
  *
  * @package EightshiftLibs\Blocks
  */
