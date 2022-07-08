@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.0.0] - 2022-07-11
+
+### Removed
+- Bin cli command.
+- Ei-exclude cli command.
+- Build cli command.
+
+### Changed
+- Updated packages.
+- Updated tests.
+- Refactored all cli commands for better usability and output.
+- Most of the cli command names and prefixes.
+- Internal way of moving blocks and files to the project to be faster.
+
+### Added
+- Descriptions for all cli commands with examples and links to repos.
+- New service class for Geolocation.
+- New service class for WebP and helpers.
+
 ## [5.1.0] - 2022-05-09
 
 ### Added:
@@ -327,6 +346,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.0.0]: https://github.com/infinum/eightshift-libs/compare/5.1.0...v6.0.0
 [5.1.0]: https://github.com/infinum/eightshift-libs/compare/5.0.2...v5.1.0
 [5.0.2]: https://github.com/infinum/eightshift-libs/compare/5.0.1...v5.0.2
 [5.0.1]: https://github.com/infinum/eightshift-libs/compare/5.0.0...v5.0.1

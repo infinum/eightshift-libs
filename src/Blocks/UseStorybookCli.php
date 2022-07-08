@@ -53,6 +53,15 @@ class UseStorybookCli extends AbstractBlocksCli
 
 				Used to copy all configuration files to your project needed to run Storybook.
 
+				## INSTALATION
+
+				After you run the cli command please follow this steps:
+				1. Run `npm install @eightshift/storybook --save-dev` command in the terminal to install the storybook package.
+				2. Open package.json.
+				3. Add to scrips: `\"storybookBuild\": \"build-storybook -s public -o storybook\"`
+				4. Add to scripts: `\"storybook\": \"start-storybook -s public\"`
+				5. Start storybook by running this command `npm run storybook`.
+
 				## EXAMPLES
 
 				# Create Storybook config:
