@@ -137,7 +137,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			}
 
 			$innerItems = \array_merge(
-				$this->getFullBlocksFiles($name),
+				$this->getFullBlocksFiles($item),
 				$partialsOutput
 			);
 
