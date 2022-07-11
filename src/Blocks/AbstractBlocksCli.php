@@ -173,6 +173,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 				if ($checkDependency) {
 					$this->outputDependencyItems($fullSource, $type);
 				}
+
+				$this->outputNodeModuleDependencyItems($fullSource, $type);
 			} else {
 				WP_CLI::success(
 					\sprintf(
@@ -221,6 +223,19 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$allDependencies = \implode(', ', $dependencies);
 			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
 		}
+	}
+
+	/**
+	 * Determine if the item has node_module dependencies and output helper commands.
+	 *
+	 * @param string $source Source or the item.
+	 * @param string $type Type for log.
+	 *
+	 * @return void
+	 */
+	private function outputNodeModuleDependencyItems(string $source, string $type): void
+	{
+		$manifest = Components::getManifestDirect($source);
 
 		// Node_module dependency.
 		$nodeDependencies = $manifest['nodeDependency'] ?? [];
