@@ -34,7 +34,6 @@ class InitPluginCli extends AbstractCli
 			'items' => [
 				ConfigCli::class,
 				MainCli::class,
-				ManifestCli::class,
 			],
 		],
 	];
