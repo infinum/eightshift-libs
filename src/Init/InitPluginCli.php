@@ -14,7 +14,6 @@ use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\Main\MainCli;
-use EightshiftLibs\Manifest\ManifestCli;
 use ReflectionClass;
 
 /**
