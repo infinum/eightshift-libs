@@ -56,6 +56,7 @@ use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Init\InitBlocksCli;
+use EightshiftLibs\Init\InitPluginCli;
 use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
@@ -164,6 +165,7 @@ class Cli
 	 */
 	public const INIT_COMMANDS = [
 		InitThemeCli::class,
+		InitPluginCli::class,
 		InitProjectCli::class,
 		InitBlocksCli::class,
 		InitAllCli::class,

@@ -50,7 +50,7 @@ test('getDefaultArgs will return correct array', function () {
 			'rest_endpoint_slug' => 'products',
 			'capability' => 'post',
 			'menu_position' => 20,
-			'menu_icon' => 'admin-settings',
+			'menu_icon' => 'dashicons-admin-settings',
 		]);
 });
 
@@ -93,7 +93,7 @@ test('__invoke will will correctly copy example class with default args', functi
 			'products',
 			'post',
 			'20',
-			'admin-settings',
+			'dashicons-admin-settings',
 		)
 		->not->toContain(
 			'class PostTypeExample',

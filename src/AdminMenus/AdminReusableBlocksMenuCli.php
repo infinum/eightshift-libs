@@ -50,7 +50,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 			'title' => 'Reusable Blocks',
 			'menu_title' => 'Reusable Blocks',
 			'capability' => 'edit_posts',
-			'menu_icon' => 'dashicons-admin-table',
+			'menu_icon' => 'dashicons-table-row-before',
 			'menu_position' => 4,
 		];
 	}

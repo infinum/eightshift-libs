@@ -54,7 +54,7 @@ class PostTypeCli extends AbstractCli
 			'rest_endpoint_slug' => 'products',
 			'capability' => 'post',
 			'menu_position' => 20,
-			'menu_icon' => 'admin-settings',
+			'menu_icon' => 'dashicons-admin-settings',
 		];
 	}
 

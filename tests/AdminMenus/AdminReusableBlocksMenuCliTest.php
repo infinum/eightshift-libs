@@ -46,7 +46,7 @@ test('getDefaultArgs will return correct array', function () {
 			'title' => 'Reusable Blocks',
 			'menu_title' => 'Reusable Blocks',
 			'capability' => 'edit_posts',
-			'menu_icon' => 'dashicons-admin-table',
+			'menu_icon' => 'dashicons-table-row-before',
 			'menu_position' => 4,
 		]);
 });
@@ -82,7 +82,7 @@ test('__invoke will will correctly copy example class with default args', functi
 			'Reusable Blocks',
 			'Reusable Blocks',
 			'edit_posts',
-			'dashicons-admin-table',
+			'dashicons-table-row-before',
 		)
 		->not->toContain(
 			'class AdminReusableBlocksMenuExample',
@@ -100,7 +100,7 @@ test('__invoke will will correctly copy example class with custom args', functio
 		'title' => 'Reusable Blocks Test',
 		'menu_title' => 'Reusable Blocks Test',
 		'capability' => 'edit_posts_test',
-		'menu_icon' => 'dashicons-admin-table-test',
+		'menu_icon' => 'dashicons-table-row-before-test',
 		'menu_position' => 5,
 	]);
 
@@ -113,7 +113,7 @@ test('__invoke will will correctly copy example class with custom args', functio
 			'Reusable Blocks Test',
 			'Reusable Blocks Test',
 			'edit_posts_test',
-			'dashicons-admin-table-test',
+			'dashicons-table-row-before-test',
 		)
 		->not->toContain(
 			'class AdminReusableBlocksMenuExample',
