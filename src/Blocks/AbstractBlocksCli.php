@@ -198,11 +198,12 @@ abstract class AbstractBlocksCli extends AbstractCli
 	{
 		$manifest = Components::getManifestDirect($source);
 
+		// Component dependency.
 		$dependencies = $manifest['components'] ?? [];
 
 		if ($dependencies) {
 			$this->cliLog('');
-			$this->cliLog('Note:', 'B');
+			$this->cliLog('Dependency note:', 'B');
 			$this->cliLog(
 				\sprintf(
 					// translators: %s will be replaced with type of item.
@@ -219,6 +220,25 @@ abstract class AbstractBlocksCli extends AbstractCli
 			);
 			$allDependencies = \implode(', ', $dependencies);
 			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
+		}
+
+		// Node_module dependency.
+		$nodeDependencies = $manifest['nodeDependency'] ?? [];
+
+		if ($nodeDependencies) {
+			$this->cliLog('');
+			$this->cliLog('Node_modules Note:', 'B');
+			$this->cliLog(
+				\sprintf(
+					// translators: %s will be replaced with type of item.
+					\esc_html__("We have found that this %s has some node_module dependencies, please run these commands also if you don't have it in your project:", 'eightshift-libs'),
+					$type
+				)
+			);
+
+			foreach ($nodeDependencies as $nitem) {
+				$this->cliLog("npm install {$nitem}", 'C');
+			}
 		}
 	}
 }
