@@ -25,11 +25,11 @@ test('REST field CLI command will correctly copy the field class with defaults',
 	$mock([], $mock->getDefaultArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}TitleField.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}TitleCustomField.php"));
 
-	$this->assertStringContainsString('class TitleField extends AbstractField implements CallableFieldInterface', $output);
-	$this->assertStringContainsString('return \'title\';', $output);
-	$this->assertStringContainsString('return \'post\';', $output);
+	$this->assertStringContainsString('class TitleCustomField extends AbstractField implements CallableFieldInterface', $output);
+	$this->assertStringContainsString('return \'title-custom\';', $output);
+	$this->assertStringContainsString('return \'example\';', $output);
 	$this->assertStringContainsString('get_callback', $output);
 	$this->assertStringContainsString('rest_ensure_response', $output);
 	$this->assertStringNotContainsString('ExampleRoute', $output);

@@ -47,8 +47,8 @@ class FieldCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'field_name' => 'title',
-			'object_type' => 'post',
+			'field_name' => 'title-custom',
+			'object_type' => 'example',
 		];
 	}
 
