@@ -51,8 +51,10 @@ class ServiceExampleCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
+		$sep = \DIRECTORY_SEPARATOR;
+
 		return [
-			'folder' => 'TestFolder/TMP',
+			'folder' => "TestFolder{$sep}TMP",
 			'file_name' => 'TestTest',
 		];
 	}
