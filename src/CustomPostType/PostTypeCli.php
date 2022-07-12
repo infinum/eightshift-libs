@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\CustomPostType;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class PostTypeCli
@@ -18,30 +20,41 @@ use EightshiftLibs\Cli\AbstractCli;
 class PostTypeCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomPostType';
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
 
 	/**
-	 * Define default develop props.
+	 * Get WPCLI command name
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getCommandName(): string
+	{
+		return 'post-type';
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
 	{
 		return [
-			'label' => $args[1] ?? 'Product',
-			'slug' => $args[2] ?? 'product',
-			'rewrite_url' => $args[3] ?? 'product',
-			'rest_endpoint_slug' => $args[4] ?? 'products',
-			'capability' => $args[5] ?? 'post',
-			'menu_position' => $args[6] ?? 40,
-			'menu_icon' => $args[7] ?? 'admin-settings',
-			'plural_label' => $args[8] ?? 'Products',
+			'label' => 'Product',
+			'plural_label' => 'Products',
+			'slug' => 'product',
+			'rewrite_url' => 'product',
+			'rest_endpoint_slug' => 'products',
+			'capability' => 'post',
+			'menu_position' => 20,
+			'menu_icon' => 'dashicons-admin-settings',
 		];
 	}
 
@@ -53,72 +66,93 @@ class PostTypeCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates custom post type class file.',
+			'shortdesc' => 'Create custom post type service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom post type to show in WP admin.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'plural_label',
+					'description' => 'The plural label for the custom post type. Used for label generation. If not specified, the plural will be an "s" appended to the singular label.', // phpcs:ignore Generic.Files.LineLength.TooLong
+					'optional' => false,
+					'default' => $this->getDefaultArg('plural_label'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The custom post type slug. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rewrite_url',
 					'description' => 'The custom post type url. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom post type REST-API endpoint slug. Example: locations.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'capability',
 					'description' => 'The default capability for the custom post types. Example: post.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('capability'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_position',
 					'description' => 'The default menu position for the custom post types. Example: 20.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('menu_position'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_icon',
 					'description' => 'The default menu icon for the custom post types. Example: dashicons-analytics.',
 					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'plural_label',
-					'description' => 'The plural label of the custom post type. Used for label generation. If not specified the plural will have appended s at the end of the label.', // phpcs:ignore Generic.Files.LineLength.TooLong
-					'optional' => true,
+					'default' => $this->getDefaultArg('menu_icon'),
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create custom post type for all your custom data.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --label='Jobs' --slug='jobs' --rewrite_url='jobs' --rest_endpoint_slug='jobs'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/CustomPostType/PostTypeExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$label = $assocArgs['label'] ?? 'Custom Post Type';
-		$slug = $this->prepareSlug($assocArgs['slug'] ?? 'custom-post-type');
-		$rewriteUrl = $this->prepareSlug($assocArgs['rewrite_url'] ?? 'custom-post-type');
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? 'custom-post-type');
-		$capability = $assocArgs['capability'] ?? '';
-		$menuPosition = (string) ($assocArgs['menu_position'] ?? '');
-		$menuIcon = $assocArgs['menu_icon'] ?? '';
-		$pluralLabel = $assocArgs['plural_label'] ?? $label . 's';
+		$label = $this->getArg($assocArgs, 'label');
+		$slug = $this->prepareSlug($this->getArg($assocArgs, 'slug'));
+		$rewriteUrl = $this->prepareSlug($this->getArg($assocArgs, 'rewrite_url'));
+		$restEndpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'rest_endpoint_slug'));
+		$capability = $this->getArg($assocArgs, 'capability');
+		$menuPosition = $this->getArg($assocArgs, 'menu_position');
+		$menuIcon = $this->getArg($assocArgs, 'menu_icon');
+		$pluralLabel = $this->getArg($assocArgs, 'plural_label');
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
@@ -130,27 +164,27 @@ class PostTypeCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->searchReplaceString('example-slug', $slug)
-			->searchReplaceString('example-url-slug', $rewriteUrl)
-			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
-			->searchReplaceString('Singular Name', $label)
-			->searchReplaceString('singular name', \strtolower($label))
-			->searchReplaceString('Plural Name', $pluralLabel)
-			->searchReplaceString('plural name', \strtolower($pluralLabel));
+			->searchReplaceString($this->getArgTemplate('slug'), $slug)
+			->searchReplaceString($this->getArgTemplate('rewrite_url'), $rewriteUrl)
+			->searchReplaceString($this->getArgTemplate('rest_endpoint_slug'), $restEndpointSlug)
+			->searchReplaceString($this->getArgTemplate('label'), $label)
+			->searchReplaceString($this->getArgTemplate('label_lowercaps'), \strtolower($label))
+			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
+			->searchReplaceString($this->getArgTemplate('plural_label_lowecaps'), \strtolower($pluralLabel));
 
 		if (!empty($capability)) {
-			$class->searchReplaceString("'post'", "'{$capability}'");
+			$class->searchReplaceString($this->getArgTemplate('capability'), $capability);
 		}
 
 		if (!empty($menuPosition)) {
-			$class->searchReplaceString('20', $menuPosition);
+			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);
 		}
 
 		if (!empty($menuIcon)) {
-			$class->searchReplaceString('dashicons-analytics', $menuIcon);
+			$class->searchReplaceString($this->getArgTemplate('menu_icon'), $menuIcon);
 		}
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'CustomPostType'), "{$className}.php", $assocArgs);
 	}
 }

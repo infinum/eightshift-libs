@@ -11,20 +11,23 @@ declare(strict_types=1);
 namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class SetupCli
  */
 class SetupCli extends AbstractCli
 {
-	public const SETUP_CLI_COMMAND_NAME = 'init_setup';
-
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -33,20 +36,20 @@ class SetupCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return self::SETUP_CLI_COMMAND_NAME;
+		return 'setup';
 	}
 
 	/**
-	 * Define default develop props.
+	 * Define default arguments.
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'root' => $args[1] ?? './',
+			'path' => Components::getProjectPaths('projectRoot'),
+			'file_name' => 'setup.json',
+			'source_path' => __DIR__,
 		];
 	}
 
@@ -58,26 +61,54 @@ class SetupCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for automatic project setup and update.',
+			'shortdesc' => 'Copy setup.json file used  for automatic project setup and update.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'root',
-					'description' => 'Define project root relative to initialization file of WP CLI.',
+					'name' => 'path',
+					'description' => 'Define absolute folder path where setup file will be created.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('path'),
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'file_name',
+					'description' => 'Define file that will be created in the path location.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('file_name'),
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to list all your project configurations like themes, plugins, core, environments, etc.
+				This file will be copied to your project root folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Setup/setup.json
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
+		$path = $this->getArg($assocArgs, 'path');
+		$fileName = $this->getArg($assocArgs, 'file_name');
+		$sourcePath = $this->getArg($assocArgs, 'source_path');
 
 		// Get setup.json example file, and create the one in the project.
-		$this->getExampleTemplate(__DIR__, 'setup.json')
-			->outputWrite($root, 'setup.json', $assocArgs);
+		$this->getExampleTemplate($sourcePath, $fileName)
+			->outputWrite($path, $fileName, $assocArgs);
 	}
 }

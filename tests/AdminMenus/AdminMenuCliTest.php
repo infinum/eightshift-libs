@@ -3,79 +3,129 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\AdminMenus\AdminMenuCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->cpt = new AdminMenuCli('boilerplate');
+	$this->mock = new AdminMenuCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
+//---------------------------------------------------------------------------------//
 
-test('Admin menu CLI command will correctly copy the admin menu example class with defaults', function () {
-	$cpt = $this->cpt;
-	$cpt([], $cpt->getDevelopArgs([]));
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminTitleAdminMenu.php');
-
-	$this->assertStringContainsString('class AdminTitleAdminMenu extends AbstractAdminMenu', $generatedCPT, 'Class name not correctly set');
-	$this->assertStringContainsString('Admin Title', $generatedCPT, 'Menu title not correctly replaced');
-	$this->assertStringNotContainsString('product', $generatedCPT);
+test('getCommandParentName will return correct value', function () {
+	expect($this->mock->getCommandParentName())
+		->toBeString()
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
+//---------------------------------------------------------------------------------//
 
-test('Admin menu CLI command will correctly copy the admin menu class with set arguments', function () {
-	$cpt = $this->cpt;
-	$cpt([], [
-		'title' => 'Reusable Blocks',
-		'menu_title' => 'Reusable Blocks',
-		'capability' => 'edit_reusable_blocks',
-		'menu_slug' => 'reusable-blocks',
-		'menu_icon' => 'dashicons-editor-table',
+test('getCommandName will return correct value', function () {
+	expect($this->mock->getCommandName())
+		->toBeString()
+		->toEqual('admin-menu');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getDefaultArgs will return correct array', function () {
+	expect($this->mock->getDefaultArgs())
+		->toBeArray()
+		->toMatchArray([
+			'title' => 'Admin Title',
+			'menu_title' => 'Admin Menu Title',
+			'capability' => 'edit_posts',
+			'menu_slug' => 'example-menu-slug',
+			'menu_icon' => 'dashicons-admin-generic',
+			'menu_position' => 100,
+		]);
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getDoc will return correct array', function () {
+	$docs = $this->mock->getDoc();
+
+	expect($docs)
+		->toBeArray()
+		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
+		->and(count($docs['synopsis']))->toEqual(6)
+		->and($docs['synopsis'][0]['name'])->toEqual('title')
+		->and($docs['synopsis'][1]['name'])->toEqual('menu_title')
+		->and($docs['synopsis'][2]['name'])->toEqual('capability')
+		->and($docs['synopsis'][3]['name'])->toEqual('menu_slug')
+		->and($docs['synopsis'][4]['name'])->toEqual('menu_icon')
+		->and($docs['synopsis'][5]['name'])->toEqual('menu_position');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('__invoke will will correctly copy example class with default args', function () {
+	$mock = $this->mock;
+	$mock([], $this->mock->getDefaultArgs([]));
+
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('srcDestination', "AdminMenus{$sep}ExampleMenuSlugAdminMenu.php"));
+
+	expect($output)
+		->toContain(
+			'class ExampleMenuSlugAdminMenu',
+			'Admin Title',
+			'Admin Menu Title',
+			'edit_posts',
+			'example-menu-slug',
+			'dashicons-admin-generic',
+		)
+		->not->toContain(
+			'class AdminMenuExample',
+			'%title%',
+			'%menu_title%',
+			'%capability%',
+			'%menu_slug%',
+			'%menu_icon%',
+		);
+});
+
+test('__invoke will will correctly copy example class with custom args', function () {
+	$mock = $this->mock;
+	$mock([], [
+		'title' => 'Admin Title Test',
+		'menu_title' => 'Admin Menu Title Test',
+		'capability' => 'edit_posts_test',
+		'menu_slug' => 'example-menu-slug-test',
+		'menu_icon' => 'dashicons-admin-generic-test',
+		'menu_position' => 200,
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/ReusableBlocksAdminMenu.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('srcDestination', "AdminMenus{$sep}ExampleMenuSlugTestAdminMenu.php"));
 
-	$this->assertStringContainsString('class ReusableBlocksAdminMenu extends AbstractAdminMenu', $generatedCPT, 'Class name not correctly set');
-	$this->assertStringContainsString('Reusable Blocks', $generatedCPT, 'Menu title not correctly replaced');
-	$this->assertStringContainsString('edit_reusable_blocks', $generatedCPT, 'Capability not correctly replaced');
-	$this->assertStringContainsString('100', $generatedCPT, 'Menu position not correctly replaced');
-	$this->assertStringContainsString('dashicons-editor-table', $generatedCPT, 'Icon not correctly replaced');
-	$this->assertStringNotContainsString('dashicons-analytics', $generatedCPT, 'String found that should not be here');
-});
-
-
-test('Admin menu CLI documentation is correct', function () {
-	$cpt = $this->cpt;
-
-	$documentation = $cpt->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Generates admin menu class file.', $documentation[$key]);
+	expect($output)
+		->toContain(
+			'class ExampleMenuSlugTestAdminMenu',
+			'Admin Title Test',
+			'Admin Menu Title Test',
+			'edit_posts_test',
+			'example-menu-slug-test',
+			'dashicons-admin-generic-test',
+		)
+		->not->toContain(
+			'class AdminMenuExample',
+			'%title%',
+			'%menu_title%',
+			'%capability%',
+			'%menu_slug%',
+			'%menu_icon%',
+		);
 });

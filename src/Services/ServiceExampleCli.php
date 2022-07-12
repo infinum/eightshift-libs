@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ServiceExampleCli
@@ -18,27 +20,42 @@ use EightshiftLibs\Cli\AbstractCli;
 class ServiceExampleCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
-	 */
-	public const OUTPUT_DIR = 'src';
-
-	/**
 	 * Template name.
 	 */
 	public const TEMPLATE = 'Service';
 
 	/**
-	 * Define default develop props.
+	 * Get WPCLI command parent name
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getCommandParentName(): string
 	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'service-example';
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+
 		return [
-			'folder' => $args[1] ?? 'TestFolder/TMP',
-			'file_name' => $args[2] ?? 'TestTest',
+			'folder' => "TestFolder{$sep}TMP",
+			'file_name' => 'TestTest',
 		];
 	}
 
@@ -50,30 +67,47 @@ class ServiceExampleCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates empty generic service class.',
+			'shortdesc' => 'Create empty generic service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'folder',
 					'description' => 'The output folder path relative to src folder. Example: main or `main` or `config` or nested `main/config`',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'file_name',
 					'description' => 'The output file name. Example: Main',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create generic service class to kickstart your custom service class.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --folder='test' --file_name='Test'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Services/ServiceExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$folder = $assocArgs['folder'] ?? '';
-		$fileName = $this->prepareSlug($assocArgs['file_name'] ?? '');
+		$folder = $this->getArg($assocArgs, 'folder');
+		$fileName = $this->prepareSlug($this->getArg($assocArgs, 'file_name'));
 
 		// Get full class name.
 		$className = $this->getClassShortName();
@@ -96,6 +130,6 @@ class ServiceExampleCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->searchReplaceString('\\Services;', "{$newNamespace};")
-			->outputWrite(static::OUTPUT_DIR . $ds . $folder, $classNameNew, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
 	}
 }

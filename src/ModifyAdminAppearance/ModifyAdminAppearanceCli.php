@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\ModifyAdminAppearance;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ModifyAdminAppearanceCli
@@ -18,9 +20,24 @@ use EightshiftLibs\Cli\AbstractCli;
 class ModifyAdminAppearanceCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'ModifyAdminAppearance';
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'modify-admin-appearance';
+	}
 
 	/**
 	 * Get WPCLI command doc
@@ -30,13 +47,30 @@ class ModifyAdminAppearanceCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates Modify Admin Appearance class.',
+			'shortdesc' => 'Create modify admin appearance class.',
+			'longdesc' => $this->prepareLongDesc("
+			## USAGE
+
+			Used to create admin appearance service class to register features that change the admin based on the environment like colors.
+
+			## EXAMPLES
+
+			# Create service class:
+			$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+			## RESOURCES
+
+			Service class will be created from this example:
+			https://github.com/infinum/eightshift-libs/blob/develop/src/ModifyAdminAppearance/ModifyAdminAppearanceExample.php
+		"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -44,6 +78,6 @@ class ModifyAdminAppearanceCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'ModifyAdminAppearance'), "{$className}.php", $assocArgs);
 	}
 }

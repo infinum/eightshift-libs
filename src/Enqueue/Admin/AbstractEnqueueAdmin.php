@@ -30,6 +30,27 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 */
 	protected ManifestInterface $manifest;
 
+
+	/**
+	 * Get admin Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getAdminStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-styles";
+	}
+
+	/**
+	 * Get admin JavaScript handle.
+	 *
+	 * @return string
+	 */
+	public function getAdminScriptHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-scripts";
+	}
+
 	/**
 	 * Register the Stylesheets for the admin area.
 	 *
@@ -38,7 +59,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	public function enqueueStyles(): void
 	{
 		if (!$this->getConditionUse()) {
-			$handle = "{$this->getAssetsPrefix()}-styles";
+			$handle = $this->getAdminStyleHandle();
 
 			\wp_register_style(
 				$handle,
@@ -60,7 +81,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	public function enqueueScripts(): void
 	{
 		if (!$this->getConditionUse()) {
-			$handle = "{$this->getAssetsPrefix()}-scripts";
+			$handle = $this->getAdminScriptHandle();
 
 			\wp_register_script(
 				$handle,

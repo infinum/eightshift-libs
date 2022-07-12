@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\View;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class EscapedViewCli
@@ -18,9 +20,24 @@ use EightshiftLibs\Cli\AbstractCli;
 class EscapedViewCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'View';
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'escaped-view';
+	}
 
 	/**
 	 * Get WPCLI command doc
@@ -30,13 +47,30 @@ class EscapedViewCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates project Escape view class.',
+			'shortdesc' => 'Create escaped view service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create escaped view service class to list all tags you want to escape or enable.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/View/EscapedViewExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -44,6 +78,6 @@ class EscapedViewCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'View'), "{$className}.php", $assocArgs);
 	}
 }

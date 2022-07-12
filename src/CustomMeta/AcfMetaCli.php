@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\CustomMeta;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class AcfMetaCli
@@ -18,23 +20,34 @@ use EightshiftLibs\Cli\AbstractCli;
 class AcfMetaCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomMeta';
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
 
 	/**
-	 * Define default develop props.
+	 * Get WPCLI command name
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getCommandName(): string
+	{
+		return 'acf-meta';
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
 	{
 		return [
-			'name' => $args[1] ?? 'title',
+			'name' => 'title',
 		];
 	}
 
@@ -46,23 +59,44 @@ class AcfMetaCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates custom ACF meta fields class file.',
+			'shortdesc' => 'Create Advanced Custom Fields service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'The name of the custom meta slug. Example: title.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create Advanced Custom Fields service class for registering custom fields in your project using the PHP way.
+				ACF plugin must be installed.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/CustomMeta/AcfMetaExample.php
+
+				ACF documentation:
+				https://www.advancedcustomfields.com/resources/register-fields-via-php/
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['name'] ?? '');
+		$fieldName = $this->prepareSlug($this->getArg($assocArgs, 'name'));
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);
@@ -73,6 +107,6 @@ class AcfMetaCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'CustomMeta'), "{$className}.php", $assocArgs);
 	}
 }

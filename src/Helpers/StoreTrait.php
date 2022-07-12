@@ -31,8 +31,10 @@ trait StoreTrait
 			'useWrapper' => true,
 		],
 		'wrapper' => [],
+		'variations' => [],
 		'settings' => [],
 		'styles' => [],
+		'paths' => [],
 	];
 
 	/**
@@ -42,7 +44,7 @@ trait StoreTrait
 	 */
 	public static function getStoreName(): string
 	{
-		return \basename(\dirname(__DIR__, 5));
+		return \basename(Components::getProjectPaths('root'));
 	}
 
 	/**
@@ -160,6 +162,50 @@ trait StoreTrait
 		);
 
 		return \reset($components) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	}
+
+	/**
+	 * Set variations details.
+	 *
+	 * @param array<mixed> $variations Variations list to store.
+	 *
+	 * @return void
+	 */
+	public static function setVariations(array $variations): void
+	{
+		global $esBlocks;
+
+		if (self::getStore()) {
+			$esBlocks[self::getStoreName()]['variations'] = $variations;
+		}
+	}
+
+	/**
+	 * Get variations details.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getVariations(): array
+	{
+		return self::getStore()['variations'] ?? [];
+	}
+
+	/**
+	 * Get variation details.
+	 *
+	 * @param string $variation Variation name to get.
+	 * @return array<mixed>
+	 */
+	public static function getVariation(string $variation): array
+	{
+		$variations = \array_filter(
+			self::getVariations(),
+			static function ($item) use ($variation) {
+				return $item['name'] === $variation;
+			}
+		);
+
+		return \reset($variations) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	}
 
 	/**
@@ -527,5 +573,31 @@ trait StoreTrait
 	public static function getStyles(): array
 	{
 		return self::getStore()['styles'] ?? [];
+	}
+
+	/**
+	 * Set paths details.
+	 *
+	 * @return void
+	 */
+	public static function setPaths(): void
+	{
+		global $esBlocks;
+
+		if (self::getStore()) {
+			foreach (Components::PROJECT_PATHS as $value) {
+				$esBlocks[self::getStoreName()]['paths'][$value] = Components::getProjectPaths($value);
+			}
+		}
+	}
+
+	/**
+	 * Get paths details.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getPaths(): array
+	{
+		return self::getStore()['paths'] ?? [];
 	}
 }

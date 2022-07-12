@@ -2,73 +2,50 @@
 
 namespace Tests\Unit\Main;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Main\MainCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$this->main = new MainCli('boilerplate');
+	$this->mock = new MainCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Main CLI command will correctly copy the Main class with defaults', function () {
-	$main = $this->main;
-	$main([], []);
+	$mock = $this->mock;
+	$mock([], []);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/Main/Main.php';
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Main{$sep}Main.php"));
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMain = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('class Main extends AbstractMain', $generatedMain);
-	$this->assertStringContainsString('@package EightshiftLibs\Main', $generatedMain);
-	$this->assertStringContainsString('namespace EightshiftLibs\Main', $generatedMain);
-	$this->assertStringNotContainsString('footer.php', $generatedMain);
-	$this->assertFileExists($outputPath);
+	$this->assertStringContainsString('class Main extends AbstractMain', $output);
+	$this->assertStringContainsString('@package EightshiftLibs\Main', $output);
+	$this->assertStringContainsString('namespace EightshiftLibs\Main', $output);
+	$this->assertStringNotContainsString('footer.php', $output);
 });
 
 test('Main CLI command will correctly copy the Main class with set arguments', function () {
-	$main = $this->main;
-	$main([], [
+	$mock = $this->mock;
+	$mock([], [
 		'namespace' => 'CoolTheme',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedMain = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Main/Main.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Main{$sep}Main.php"));
 
-	$this->assertStringContainsString('namespace CoolTheme\Main', $generatedMain);
-	$this->assertStringNotContainsString('namespace EightshiftLibs\Main', $generatedMain);
+	$this->assertStringContainsString('namespace CoolTheme\Main', $output);
+	$this->assertStringNotContainsString('namespace EightshiftLibs\Main', $output);
 });
 
 test('Main CLI documentation is correct', function () {
-	$main = $this->main;
-
-	$documentation = $main->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates Main class file for all other features using service container pattern.', $documentation[$key]);
+	expect($this->mock->getDoc())->toBeArray();
 });

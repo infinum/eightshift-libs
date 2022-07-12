@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
@@ -18,20 +20,6 @@ use WP_CLI;
  */
 class RouteCli extends AbstractCli
 {
-	/**
-	 * CLI command name
-	 *
-	 * @var string
-	 */
-	public const COMMAND_NAME = 'create_rest_route';
-
-	/**
-	 * Output dir relative path.
-	 *
-	 * @var string
-	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Routes';
-
 	/**
 	 * Route method enum.
 	 *
@@ -46,68 +34,95 @@ class RouteCli extends AbstractCli
 	];
 
 	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
 	 * Get WPCLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'rest-route';
 	}
 
 	/**
-	 * Define default develop props.
+	 * Define default arguments.
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'endpoint_slug' => $args[1] ?? 'test',
-			'method' => $args[2] ?? 'get',
+			'endpoint_slug' => 'test',
+			'method' => 'get',
 		];
 	}
 
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array<string, array<int, array<string, bool|string>>|string>
+	 * @return array<string, mixed>
 	 */
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates REST-API Route in your project.',
+			'shortdesc' => 'Create REST-API route service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'endpoint_slug',
 					'description' => 'The name of the endpoint slug. Example: test-route.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'method',
 					'description' => 'HTTP verb must be one of: GET, POST, PATCH, PUT, or DELETE.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
+					'optional' => true,
+					'default' => $this->getDefaultArg('method'),
+					'options' => [
+						'GET',
+						'POST',
+						'PATCH',
+						'PUT',
+						'DELETE',
+					],
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create REST-API service class to register custom route.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --endpoint_slug='test-route'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Rest/Routes/RouteExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$endpointSlug = $this->prepareSlug($assocArgs['endpoint_slug'] ?? 'test-route');
-
-		// If slug is empty throw error.
-		if (empty($endpointSlug)) {
-			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
-		}
-
-		$method = \strtoupper($assocArgs['method'] ?? 'get');
+		$endpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'endpoint_slug'));
+		$method = \strtoupper($this->getArg($assocArgs, 'method'));
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
@@ -125,8 +140,8 @@ class RouteCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('/example-route', "/{$endpointSlug}")
-			->searchReplaceString('static::READABLE', static::VERB_ENUM[$method])
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->searchReplaceString($this->getArgTemplate('endpoint_slug'), $endpointSlug)
+			->searchReplaceString("'{$this->getArgTemplate('method')}'", static::VERB_ENUM[$method])
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Routes'), "{$className}.php", $assocArgs);
 	}
 }

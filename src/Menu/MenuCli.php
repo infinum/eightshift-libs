@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Menu;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class MenuCli
@@ -18,9 +20,24 @@ use EightshiftLibs\Cli\AbstractCli;
 class MenuCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Menu';
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'menu';
+	}
 
 	/**
 	 * Get WPCLI command doc
@@ -30,13 +47,30 @@ class MenuCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates menu class.',
+			'shortdesc' => 'Create menu service class.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create menu service class to register custom menus, menu walkers and etc.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Menu/MenuExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -45,6 +79,6 @@ class MenuCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Menu'), "{$className}.php", $assocArgs);
 	}
 }

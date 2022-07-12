@@ -12,6 +12,8 @@ namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\CliHelpers;
+use EightshiftLibs\Cli\ParentGroups\CliRun;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 use WP_CLI\ExitException;
 
@@ -20,7 +22,15 @@ use WP_CLI\ExitException;
  */
 class UpdateCli extends AbstractCli
 {
-	public const COMMAND_NAME = 'run_update';
+	/**
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
+	 */
+	public function getCommandParentName(): string
+	{
+		return CliRun::COMMAND_NAME;
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -29,72 +39,120 @@ class UpdateCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return self::COMMAND_NAME;
+		return 'update';
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'skip_core' => 'false',
+			'skip_plugins' => 'false',
+			'skip_plugins_core' => 'false',
+			'skip_plugins_github' => 'false',
+			'skip_themes' => 'false',
+		];
 	}
 
 	/**
 	 * Get WPCLI command doc
 	 *
-	 * @return array<string, array<int, array<string, bool|string>>|string>
+	 * @return array<string, mixed>
 	 */
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Run project update with details stored in setup.json file.',
+			'shortdesc' => 'Update your project based on your settings file.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'skip_core',
 					'description' => 'If you want to skip core update/installation, provide bool on this attr.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('skip_core'),
+					'options' => [
+						'true',
+						'false',
+					],
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_plugins',
 					'description' => 'If you want to skip all plugins update/installation, provide bool on this attr.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('skip_plugins'),
+					'options' => [
+						'true',
+						'false',
+					],
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_plugins_core',
 					'description' => 'If you want to skip plugins only from core update/installation, provide bool on this attr.',
 					'optional' => true,
+					'options' => [
+						'true',
+						'false',
+					],
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_plugins_github',
 					'description' => 'If you want to skip plugins only from github update/installation, provide bool on this attr.',
 					'optional' => true,
+					'options' => [
+						'true',
+						'false',
+					],
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'skip_themes',
 					'description' => 'If you want to skip themes update/installation, provide bool on this attr.',
 					'optional' => true,
+					'options' => [
+						'true',
+						'false',
+					],
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used as a project command to update your project like theme, plugins, core and etc.
+
+				## EXAMPLES
+
+				# Update everything:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				# Update everything but skip plugins:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --skip_plugins='true'
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
 
 		$setupFilename = 'setup.json';
 
-		if (\getenv('ES_TEST') !== false) {
-			$setupFilename = $this->getProjectConfigRootPath() . '/cliOutput/setup.json';
-		}
-
 		try {
 			$this->setup(
-				$this->getProjectConfigRootPath(),
+				Components::getProjectPaths('projectRoot'),
 				[
-					'skip_core' => $assocArgs['skip_core'] ?? false,
-					'skip_plugins' => $assocArgs['skip_plugins'] ?? false,
-					'skip_plugins_core' => $assocArgs['skip_plugins_core'] ?? false,
-					'skip_plugins_github' => $assocArgs['skip_plugins_github'] ?? false,
-					'skip_themes' => $assocArgs['skip_themes'] ?? false,
+					'skip_core' => $this->getArg($assocArgs, 'skip_core'),
+					'skip_plugins' => $this->getArg($assocArgs, 'skip_plugins'),
+					'skip_plugins_core' => $this->getArg($assocArgs, 'skip_plugins_core'),
+					'skip_plugins_github' => $this->getArg($assocArgs, 'skip_plugins_github'),
+					'skip_themes' => $this->getArg($assocArgs, 'skip_themes'),
 				],
 				$setupFilename
 			);
@@ -116,11 +174,11 @@ class UpdateCli extends AbstractCli
 	private function setup(string $projectRootPath, array $args = [], string $setupFile = 'setup.json')
 	{
 		// Check if optional parameters exists.
-		$skipCore = $args['skip_core'] ?? false;
-		$skipPlugins = $args['skip_plugins'] ?? false;
-		$skipPluginsCore = $args['skip_plugins_core'] ?? false;
-		$skipPluginsGithub = $args['skip_plugins_github'] ?? false;
-		$skipThemes = $args['skip_themes'] ?? false;
+		$skipCore = $this->getArg($args, 'skip_core');
+		$skipPlugins = $this->getArg($args, 'skip_plugins');
+		$skipPluginsCore = $this->getArg($args, 'skip_plugins_core');
+		$skipPluginsGithub = $this->getArg($args, 'skip_plugins_github');
+		$skipThemes = $this->getArg($args, 'skip_themes');
 
 		// Change execution folder.
 		if (!\is_dir($projectRootPath)) {

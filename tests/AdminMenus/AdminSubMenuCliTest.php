@@ -3,77 +3,126 @@
 namespace Tests\Unit\CustomPostType;
 
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->cpt = new AdminSubMenuCli('boilerplate');
+	$this->mock = new AdminSubMenuCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
+//---------------------------------------------------------------------------------//
 
-test('Admin submenu CLI command will correctly copy the admin menu example class with defaults', function () {
-	$cpt = $this->cpt;
-	$cpt([], $cpt->getDevelopArgs([]));
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/AdminTitleAdminSubMenu.php');
-
-	$this->assertStringContainsString('class AdminTitleAdminSubMenu extends AbstractAdminSubMenu', $generatedCPT, 'Class name not correctly set');
-	$this->assertStringContainsString('Admin Title', $generatedCPT, 'Menu title not correctly replaced');
-	$this->assertStringNotContainsString('product', $generatedCPT);
+test('getCommandParentName will return correct value', function () {
+	expect($this->mock->getCommandParentName())
+		->toBeString()
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
+//---------------------------------------------------------------------------------//
 
-test('Admin submenu CLI command will correctly copy the admin menu class with set arguments', function () {
-	$cpt = $this->cpt;
-	$cpt([], [
-		'parent_slug' => 'reusable-blocks',
-		'title' => 'Options',
-		'menu_title' => 'Options',
-		'capability' => 'edit_reusable_blocks',
-		'menu_slug' => 'reusable-block-options',
+test('getCommandName will return correct value', function () {
+	expect($this->mock->getCommandName())
+		->toBeString()
+		->toEqual('admin-sub-menu');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getDefaultArgs will return correct array', function () {
+	expect($this->mock->getDefaultArgs())
+		->toBeArray()
+		->toMatchArray([
+			'parent_slug' => 'example-parent-slug',
+			'title' => 'Admin Title',
+			'menu_title' => 'Admin Sub Menu Title',
+			'capability' => 'edit_posts',
+			'menu_slug' => 'example-menu-slug',
+		]);
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getDoc will return correct array', function () {
+	$docs = $this->mock->getDoc();
+
+	expect($docs)
+		->toBeArray()
+		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
+		->and(count($docs['synopsis']))->toEqual(5)
+		->and($docs['synopsis'][0]['name'])->toEqual('parent_slug')
+		->and($docs['synopsis'][1]['name'])->toEqual('title')
+		->and($docs['synopsis'][2]['name'])->toEqual('menu_title')
+		->and($docs['synopsis'][3]['name'])->toEqual('capability')
+		->and($docs['synopsis'][4]['name'])->toEqual('menu_slug');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('__invoke will will correctly copy example class with default args', function () {
+	$mock = $this->mock;
+	$mock([], $this->mock->getDefaultArgs([]));
+
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('srcDestination', "AdminMenus{$sep}ExampleMenuSlugAdminSubMenu.php"));
+
+	expect($output)
+		->toContain(
+			'class ExampleMenuSlugAdminSubMenu',
+			'example-parent-slug',
+			'Admin Title',
+			'Admin Sub Menu Title',
+			'edit_posts',
+			'example-menu-slug',
+		)
+		->not->toContain(
+			'class AdminSubMenuExample',
+			'%parent_slug%',
+			'%title%',
+			'%menu_title%',
+			'%capability%',
+			'%menu_slug%',
+		);
+});
+
+test('__invoke will will correctly copy example class with custom args', function () {
+	$mock = $this->mock;
+	$mock([], [
+		'parent_slug' => 'example-parent-slug-test',
+		'title' => 'Admin Title Test',
+		'menu_title' => 'Admin Sub Menu Title Test',
+		'capability' => 'edit_posts_test',
+		'menu_slug' => 'example-menu-slug-test',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedCPT = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/AdminMenus/ReusableBlockOptionsAdminSubMenu.php');
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('srcDestination', "AdminMenus{$sep}ExampleMenuSlugTestAdminSubMenu.php"));
 
-	$this->assertStringContainsString('class ReusableBlockOptionsAdminSubMenu extends AbstractAdminSubMenu', $generatedCPT, 'Class name not correctly set');
-	$this->assertStringContainsString('Options', $generatedCPT, 'Menu title not correctly replaced');
-	$this->assertStringContainsString('edit_reusable_blocks', $generatedCPT, 'Capability not correctly replaced');
-	$this->assertStringNotContainsString('dashicons-analytics', $generatedCPT, 'String found that should not be here');
-});
-
-
-test('Admin submenu CLI documentation is correct', function () {
-	$cpt = $this->cpt;
-
-	$documentation = $cpt->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Generates admin sub menu class file.', $documentation[$key]);
+	expect($output)
+		->toContain(
+			'class ExampleMenuSlugTestAdminSubMenu',
+			'example-parent-slug-test',
+			'Admin Title Test',
+			'Admin Sub Menu Title Test',
+			'edit_posts_test',
+			'example-menu-slug-test',
+		)
+		->not->toContain(
+			'class AdminSubMenuExample',
+			'%parent_slug%',
+			'%title%',
+			'%menu_title%',
+			'%capability%',
+			'%menu_slug%',
+		);
 });

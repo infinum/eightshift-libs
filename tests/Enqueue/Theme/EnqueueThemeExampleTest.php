@@ -109,3 +109,19 @@ test('enqueueScripts method will enqueue scripts in a theme', function () {
 	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
 	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
 });
+
+test('getThemeScriptHandle will return string', function () {
+	$adminHandle = $this->themeEnqueue->getThemeScriptHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});
+
+test('getThemeStyleHandle will return string', function () {
+	$adminHandle = $this->themeEnqueue->getThemeStyleHandle();
+
+	expect($adminHandle)
+		->toBeString()
+		->not->toBeArray();
+});

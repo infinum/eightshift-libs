@@ -13,15 +13,23 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\AdminMenus\AdminMenuCli;
 use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
+use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
-use EightshiftLibs\Blocks\BlockComponentCli;
-use EightshiftLibs\Blocks\BlockCli;
-use EightshiftLibs\Blocks\BlocksStorybookCli;
-use EightshiftLibs\Blocks\BlockVariationCli;
-use EightshiftLibs\Blocks\BlockWrapperCli;
-use EightshiftLibs\Build\BuildCli;
-use EightshiftLibs\CiExclude\CiExcludeCli;
+use EightshiftLibs\Blocks\UseComponentCli;
+use EightshiftLibs\Blocks\UseBlockCli;
+use EightshiftLibs\Blocks\UseAssetsCli;
+use EightshiftLibs\Blocks\UseGlobalAssetsCli;
+use EightshiftLibs\Blocks\UseManifestCli;
+use EightshiftLibs\Blocks\UseStorybookCli;
+use EightshiftLibs\Blocks\UseVariationCli;
+use EightshiftLibs\Blocks\UseWrapperCli;
+use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Cli\ParentGroups\CliRun;
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
+use EightshiftLibs\Cli\ParentGroups\CliInit;
+use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\View\EscapedViewCli;
@@ -44,14 +52,24 @@ use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Db\ExportCli;
 use EightshiftLibs\Db\ImportCli;
+use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\Init\InitAllCli;
+use EightshiftLibs\Init\InitBlocksCli;
+use EightshiftLibs\Init\InitPluginCli;
+use EightshiftLibs\Init\InitProjectCli;
+use EightshiftLibs\Init\InitThemeCli;
+use EightshiftLibs\Media\RegenerateWebPMediaCli;
+use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
+use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 use EightshiftLibs\Setup\UpdateCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
+use WP_CLI;
 
 /**
  * Class Cli
@@ -59,16 +77,28 @@ use Exception;
 class Cli
 {
 	/**
-	 * All classes and commands that can be used on development and public WP CLI.
+	 * All commands defined as parent list commands.
 	 *
 	 * @var class-string[]
 	 */
-	public const CLASSES_LIST = [
+	public const PARENT_COMMANDS = [
+		CliCreate::class,
+		CliRun::class,
+		CliBlocks::class,
+		CliInit::class,
+	];
+
+	/**
+	 * All commands that are service classes type. Command prefix - create.
+	 *
+	 * @var class-string[]
+	 */
+	public const CREATE_COMMANDS = [
 		AdminMenuCli::class,
 		AdminReusableBlocksMenuCli::class,
 		AdminSubMenuCli::class,
 		AcfMetaCli::class,
-		BlocksCli::class,
+		AnalyticsGdprCli::class,
 		EnqueueAdminCli::class,
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
@@ -87,123 +117,73 @@ class Cli
 		RouteCli::class,
 		ServiceExampleCli::class,
 		ThemeOptionsCli::class,
-		BuildCli::class,
-		CiExcludeCli::class,
 		ConfigProjectCli::class,
 		GitIgnoreCli::class,
+		WebPMediaColumnCli::class,
 		ReadmeCli::class,
 		SetupCli::class,
 		WpCli::class,
+		GeolocationCli::class,
+		LoadMoreRouteCli::class
 	];
 
 	/**
-	 * All classes and commands used only for WPCLI - blocks.
+	 * All commands that can be used on a WP project directly from the libs. Command prefix - run.
 	 *
 	 * @var class-string[]
 	 */
-	public const BLOCKS_CLASSES = [
-		BlockCli::class,
-		BlockComponentCli::class,
-		BlockVariationCli::class,
-		BlockWrapperCli::class,
-		BlockPatternCli::class,
-		BlocksStorybookCli::class,
-	];
-
-	/**
-	 * All classes and commands used only for WPCLI - project.
-	 *
-	 * @var class-string[]
-	 */
-	public const PROJECT_CLASSES = [
+	public const RUN_COMMANDS = [
+		RegenerateWebPMediaCli::class,
+		UseWebPMediaCli::class,
 		ExportCli::class,
 		ImportCli::class,
 		UpdateCli::class,
 	];
 
 	/**
-	 * All classes and commands used for project setup.
+	 * All commands used for block editor. Command prefix - blocks.
 	 *
 	 * @var class-string[]
 	 */
-	public const SETUP_CLASSES = [
-		CliInitTheme::class,
-		CliInitProject::class,
-		CliInitAll::class,
+	public const BLOCKS_COMMANDS = [
+		BlocksCli::class,
+		BlockPatternCli::class,
+		UseStorybookCli::class,
+		UseManifestCli::class,
+		UseAssetsCli::class,
+		UseGlobalAssetsCli::class,
+		UseBlockCli::class,
+		UseComponentCli::class,
+		UseVariationCli::class,
+		UseWrapperCli::class,
 	];
 
 	/**
-	 * All classes and commands used only for development.
+	 * All commands used for setting up. Command prefix - init.
 	 *
 	 * @var class-string[]
 	 */
-	public const DEVELOP_CLASSES = [
-		CliReset::class,
-		CliRunAll::class,
-		CliShowAll::class,
+	public const INIT_COMMANDS = [
+		InitThemeCli::class,
+		InitPluginCli::class,
+		InitProjectCli::class,
+		InitBlocksCli::class,
+		InitAllCli::class,
 	];
-
-	/**
-	 * Define all classes to register for development.
-	 *
-	 * @return class-string[]
-	 */
-	public function getDevelopClasses(): array
-	{
-		return \array_merge(
-			static::CLASSES_LIST,
-			static::DEVELOP_CLASSES,
-			static::SETUP_CLASSES
-		);
-	}
 
 	/**
 	 * Define all classes to register for normal WP.
 	 *
 	 * @return class-string[]
 	 */
-	public function getPublicClasses(): array
+	public function getCommandsClasses(): array
 	{
-		return \array_merge(
-			static::CLASSES_LIST,
-			static::BLOCKS_CLASSES,
-			static::PROJECT_CLASSES,
-			static::SETUP_CLASSES
-		);
-	}
-
-	/**
-	 * Run all CLI commands for develop.
-	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @throws Exception Exception if the class doesn't exist.
-	 *
-	 * @return void
-	 */
-	public function loadDevelop(array $args = []): void
-	{
-		$commandName = $args[0] ?? '';
-
-		if (empty($commandName)) {
-			CliHelpers::cliError('First argument must be a valid command name.');
-		}
-
-		foreach ($this->getDevelopClasses() as $item) {
-			$reflectionClass = new ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs(['null']);
-
-			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getDevelopArgs') && \method_exists($class, '__invoke')) {
-				if ($class->getCommandName() === $commandName) {
-					$class->__invoke(
-						[],
-						$class->getDevelopArgs($args)
-					);
-
-					break;
-				}
-			}
-		}
+		return [
+			...static::CREATE_COMMANDS,
+			...static::BLOCKS_COMMANDS,
+			...static::INIT_COMMANDS,
+			...static::RUN_COMMANDS
+		];
 	}
 
 	/**
@@ -217,7 +197,22 @@ class Cli
 	 */
 	public function load(string $commandParentName): void
 	{
-		foreach ($this->getPublicClasses() as $item) {
+		// Duplicate condition because WP_CLI will throw error on the project.
+		if (!\getenv('ES_TEST') && \defined('WP_CLI')) {
+			// Top Level command name.
+			WP_CLI::add_command($commandParentName, new CliBoilerplate());
+
+			// Register all top level commands.
+			foreach (self::PARENT_COMMANDS as $item) {
+				$reflectionClass = new ReflectionClass($item);
+				$class = $reflectionClass->newInstanceArgs();
+				$name = $reflectionClass->getConstant('COMMAND_NAME');
+
+				WP_CLI::add_command("{$commandParentName} {$name}", $class);
+			}
+		}
+
+		foreach ($this->getCommandsClasses() as $item) {
 			$reflectionClass = new ReflectionClass($item);
 			$class = $reflectionClass->newInstanceArgs([$commandParentName]);
 

@@ -5,27 +5,20 @@ namespace Tests\Unit\Helpers;
 use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
 
-use Brain\Monkey;
 use EightshiftBoilerplate\Blocks\BlocksExample;
 
-use function Tests\setupMocks;
+use function Tests\buildTestBlocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
+beforeEach(function () {
+	setBeforeEach();
+
+	buildTestBlocks();
 });
 
-afterAll(function() {
-	Monkey\tearDown();
-});
-
-beforeEach(function() {
-	(new BlocksExample())->getBlocksDataFullRaw();
-});
-
-afterEach(function() {
-	global $esBlocks;
-	$esBlocks = null;
+afterEach(function () {
+	setAfterEach();
 });
 
 // ------------------------------------------

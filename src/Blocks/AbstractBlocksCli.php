@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
 /**
@@ -19,130 +20,240 @@ use WP_CLI;
 abstract class AbstractBlocksCli extends AbstractCli
 {
 	/**
-	 * Move block/component to project folder.
+	 * Move items for the block editor to project folder.
 	 *
-	 * @param array<string, mixed> $assocArgs Array of arguments from WP-CLI command.
-	 * @param string $outputDir Output dir path.
-	 * @param bool $isComponents Is output used for components.
+	 * @param array<string, mixed> $args Array of arguments from WP-CLI command.
+	 * @param string $source Source path.
+	 * @param string $destination Destination path.
+	 * @param string $type Type of items used for output log.
+	 * @param bool $isSingleFolder Is single folder item.
 	 *
 	 * @return void
 	 */
-	protected function blocksMove(array $assocArgs, string $outputDir, bool $isComponents = false): void
+	protected function moveItems(array $args, string $source, string $destination, string $type, bool $isSingleFolder = false): void
 	{
+		$sep = \DIRECTORY_SEPARATOR;
+
 		// Get Props.
-		$name = $assocArgs['name'] ?? '';
+		$skipExisting = $this->getSkipExisting($args);
 
-		// Set optional arguments.
-		$skipExisting = $this->getSkipExisting($assocArgs);
+		// Clean up name.
+		$name = $args['name'] ?? '';
+		$name = \str_replace(' ', '', $name);
+		$name = \trim($name, \DIRECTORY_SEPARATOR);
 
-		$root = $this->getProjectRootPath();
-		$rootNode = $this->getFrontendLibsBlockPath();
+		$isFile = \strpos($name, '.') !== false;
 
-		$ds = \DIRECTORY_SEPARATOR;
-		$sourcePathFolder = "{$rootNode}{$ds}{$outputDir}{$ds}";
+		$itemsList = [$name];
 
-		$blocks = \scandir($sourcePathFolder);
-		$blocksFullList = \array_diff((array)$blocks, ['..', '.']);
-
-		$blocks = [$name];
-
-		// If you pass a name "all" it will move all blocks/components to the project.
-		if ($name === 'all') {
-			$skipExisting = true;
-			$blocks = $blocksFullList;
+		if (\strpos($name, ',') !== false || \strpos($name, ', ') !== false) {
+			$itemsList = \explode(',', $name);
 		}
 
-		// Iterate blocks/components.
-		foreach ($blocks as $block) {
-			$path = "{$outputDir}{$ds}{$block}";
-			$sourcePath = "{$sourcePathFolder}{$block}";
+		if (!\is_dir($source)) {
+			self::cliError(
+				\sprintf(
+					// translators: %s will be replaced with type of item, and shorten cli path.
+					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
+					$type,
+					$this->getShortenCliPathOutput($source)
+				)
+			);
+		}
 
-			if (!\getenv('TEST')) {
-				$destinationPath = "{$root}{$ds}{$path}";
-			} else {
-				$destinationPath = "{$this->getProjectRootPath(true)}{$ds}cliOutput";
-			}
+		$sourceItems = \array_diff(\scandir($source), ['..', '.']);
+		$sourceItems = \array_values($sourceItems);
 
-			$typePlural = !$isComponents ?  'blocks' : 'components';
-			$typeSingular = !$isComponents ?  'block' : 'component';
+		if ($isSingleFolder || $isFile) {
+			$sourceItems = [
+				$name,
+			];
+		}
 
-			// Source doesn't exist.
-			if (!\file_exists($sourcePath)) {
-				// Make a list for output.
-				$blocksList = \implode(\PHP_EOL, $blocksFullList);
+		if (!$sourceItems) {
+			self::cliError(
+				\sprintf(
+					// translators: %s will be replaced with type of item, and shorten cli path.
+					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
+					$type,
+					$this->getShortenCliPathOutput($source)
+				)
+			);
+		}
 
-				WP_CLI::log(
-					"Please check the docs for all available {$typePlural}."
-				);
-				WP_CLI::log(
-					"You can find all available {$typePlural} on this link: https://infinum.github.io/eightshift-docs/storybook/."
-				);
-				WP_CLI::log(
-					"Or here is the list of all available {$typeSingular} names: \n{$blocksList}"
-				);
-
-				self::cliError("The {$typeSingular} '{$sourcePath}' doesn\'t exist in our library.");
-			}
-
-			// Destination exists.
-			if (\file_exists($destinationPath) && $skipExisting === false) {
+		foreach ($itemsList as $item) {
+			if (!\in_array($item, $sourceItems, true)) {
 				self::cliError(
 					\sprintf(
-						'The %s in you project exists on this "%s" path. Please check or remove that folder before running this command again.',
-						$typeSingular,
-						$destinationPath,
+						// translators: %s will be replaced with type of item, item name and shorten cli path.
+						"Requested %s with the name `%s` doesn't exist in our library. Please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://infinum.github.io/eightshift-docs/storybook/",
+						$type,
+						$item,
+						\implode(\PHP_EOL, $sourceItems)
 					)
 				);
 			}
 
-			// Move all files from library to project.
-			$this->moveBlock($destinationPath, $sourcePath, $block, $assocArgs, $path, $typeSingular);
-		}
+			$fullSource = Components::joinPaths([$source, $item]);
+			$fullDestination = Components::joinPaths([$destination, $item]);
 
-		WP_CLI::success('Please start `npm start` again to make sure everything works correctly.');
+			if ($isSingleFolder) {
+				$fullSource = $source;
+				$fullDestination = $destination;
+			}
+
+			if (\file_exists($fullDestination) && $skipExisting === false && !$isSingleFolder) {
+				self::cliError(
+					\sprintf(
+						// translators: %s will be replaced with type of item, and shorten cli path.
+						"%s files exist on this path: `%s`. If you want to override the destination folder please use --skip_existing='true' argument.",
+						$type,
+						$this->getShortenCliPathOutput($fullDestination)
+					)
+				);
+			}
+
+			// Move item to project folder.
+			if ($isFile) {
+				$this->copyItem($fullSource, $fullDestination);
+			} else {
+				$this->copyRecursively($fullSource, $fullDestination);
+			}
+
+			$partialsOutput = [];
+			$partialsPath = Components::joinPaths([$fullDestination, 'partials']);
+
+			// Check if we have partials folder. If so output that folder with items in it.
+			if (\is_dir($partialsPath)) {
+				$partials = \array_diff(\scandir($partialsPath), ['..', '.']);
+				$partials = \array_values($partials);
+
+				$partialsOutput = \array_map(
+					static function ($item) use ($sep) {
+						return "partials{$sep}{$item}";
+					},
+					$partials
+				);
+			}
+
+			$innerItems = \array_merge(
+				$this->getFullBlocksFiles($item),
+				$partialsOutput
+			);
+
+			foreach ($innerItems as $innerItem) {
+				// Set output file path.
+				$class = $this->getExampleTemplate($fullDestination, $innerItem, true);
+
+				if (!empty($class->fileContents)) {
+					$class->renameProjectName($args)
+						->renameNamespace($args)
+						->renameTextDomainFrontendLibs($args)
+						->renameUseFrontendLibs($args)
+						->outputWrite($fullDestination, $innerItem, [
+							'skip_existing' => true,
+							'groupOutput' => true,
+						]);
+				}
+			}
+
+			if ($type === 'component' || $type === 'block') {
+				WP_CLI::success(
+					\sprintf(
+						// translators: %s will be replaced with type of item, item name and shorten cli path.
+						"Added %s `%s` at `%s`.",
+						$type,
+						$item,
+						$this->getShortenCliPathOutput($destination)
+					)
+				);
+
+				$checkDependency = $args['checkDependency'] ?? true;
+
+				if ($checkDependency) {
+					$this->outputDependencyItems($fullSource, $type);
+				}
+
+				$this->outputNodeModuleDependencyItems($fullSource, $type);
+			} else {
+				WP_CLI::success(
+					\sprintf(
+						// translators: %s will be replaced with type of item, and shorten cli path.
+						"`%s` created at `%s`.",
+						$type,
+						$this->getShortenCliPathOutput($destination)
+					)
+				);
+			}
+		}
 	}
 
 	/**
-	 * Move block/component from frontend libs to project.
+	 * Determine if the item has dependencies and output helper commands.
 	 *
-	 * @param string $destinationPath Path where to move.
-	 * @param string $sourcePath Path of the block/component.
-	 * @param string $name Name of block/component.
-	 * @param array<string, mixed> $assocArgs WP-CLI command arguments.
-	 * @param string $path Path to write.
-	 * @param string $typeSingular If block or component output string.
+	 * @param string $source Source or the item.
+	 * @param string $type Type for log.
 	 *
 	 * @return void
 	 */
-	private function moveBlock(string $destinationPath, string $sourcePath, string $name, array $assocArgs, string $path, string $typeSingular): void
+	private function outputDependencyItems(string $source, string $type): void
 	{
-		$ds = \DIRECTORY_SEPARATOR;
-		// Create folder in project if missing.
-		\mkdir("{$destinationPath}{$ds}");
+		$manifest = Components::getManifestDirect($source);
 
-		// Move block/component to project folder.
-		$this->copyRecursively($sourcePath, "{$destinationPath}{$ds}");
+		// Component dependency.
+		$dependencies = $manifest['components'] ?? [];
 
-		$typeSingular = \ucfirst($typeSingular);
+		if ($dependencies) {
+			$this->cliLog('');
+			$this->cliLog('Dependency note:', 'B');
+			$this->cliLog(
+				\sprintf(
+					// translators: %s will be replaced with type of item.
+					\esc_html__("We have found that this %s has dependencies, please run these commands also if you don't have it in your project:", 'eightshift-libs'),
+					$type
+				)
+			);
+			$componentsCommandName = UseComponentCli::COMMAND_NAME;
+			$allDependencies = \array_map(
+				static function ($item) {
+					return Components::camelToKebabCase($item);
+				},
+				$dependencies
+			);
+			$allDependencies = \implode(', ', $dependencies);
+			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
+		}
+	}
 
-		WP_CLI::success("{$typeSingular} successfully moved to your project.");
+	/**
+	 * Determine if the item has node_module dependencies and output helper commands.
+	 *
+	 * @param string $source Source or the item.
+	 * @param string $type Type for log.
+	 *
+	 * @return void
+	 */
+	private function outputNodeModuleDependencyItems(string $source, string $type): void
+	{
+		$manifest = Components::getManifestDirect($source);
 
-		WP_CLI::log('--------------------------------------------------');
+		// Node_module dependency.
+		$nodeDependencies = $manifest['nodeDependency'] ?? [];
 
-		// Move all files from library to project.
-		foreach ($this->getFullBlocksFiles($name) as $file) {
-			// Set output file path.
-			$class = $this->getExampleTemplate($destinationPath, $file, true);
+		if ($nodeDependencies) {
+			$this->cliLog('');
+			$this->cliLog('Node_modules Note:', 'B');
+			$this->cliLog(
+				\sprintf(
+					// translators: %s will be replaced with type of item.
+					\esc_html__("We have found that this %s has some node_module dependencies, please run these commands also if you don't have it in your project:", 'eightshift-libs'),
+					$type
+				)
+			);
 
-			if (!empty($class->fileContents)) {
-				$class->renameProjectName($assocArgs)
-					->renameNamespace($assocArgs)
-					->renameTextDomainFrontendLibs($assocArgs)
-					->renameUseFrontendLibs($assocArgs)
-					->outputWrite($path, $file, ['skip_existing' => true]);
+			foreach ($nodeDependencies as $nitem) {
+				$this->cliLog("npm install {$nitem}", 'C');
 			}
 		}
-
-		WP_CLI::log('--------------------------------------------------');
 	}
 }

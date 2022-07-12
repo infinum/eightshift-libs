@@ -2,92 +2,55 @@
 
 namespace Tests\Unit\Block;
 
-use EightshiftLibs\Blocks\BlockCli;
+use EightshiftLibs\Blocks\UseBlockCli;
 
-use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Helpers\Components;
+use Exception;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
-use function Tests\setupMocks;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	setupMocks();
+	setBeforeEach();
 
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('log')
-		->andReturnArg(0);
-
-	$this->block = new BlockCli('boilerplate');
+	$this->mock = new UseBlockCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
- test('Block CLI command will correctly copy the Block class with defaults', function () {
-	$blockMock = mock(BlockCli::class)
-		->makePartial()
-		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(\dirname(__FILE__, 2) . '/data');
+test('Block CLI command will correctly copy the Block class with defaults', function () {
+	$mock = $this->mock;
+	$mock([], $mock->getDefaultArgs());
 
-	$mock = $blockMock->getMock();
+	$name = $this->mock->getDefaultArgs()['name'];
 
-	$mock([], [$this->block->getDevelopArgs([])]);
+	$sep = \DIRECTORY_SEPARATOR;
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestinationCustom', "{$name}{$sep}{$name}.php"));
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/button/button.php';
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedBlock = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('Template for the Button Block view.', $generatedBlock);
-	$this->assertStringContainsString('@package EightshiftBoilerplate', $generatedBlock);
-	$this->assertStringNotContainsString('Components::render(\'link\', $attributes)', $generatedBlock);
-	$this->assertFileExists($outputPath);
- });
-
-test('Block CLI command will run under custom command name', function () {
-	$block = $this->block;
-	$result = $block->getCommandName();
-
-	$this->assertStringContainsString('use_block', $result);
+	expect($output)->toContain(
+		'Template for the Button Block view.',
+		'@package EightshiftLibs',
+	)
+	->not->toContain(
+		'@package EightshiftBoilerplate'
+	);
 });
 
 test('Block CLI documentation is correct', function () {
-	$block = $this->block;
-
-	$documentation = $block->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Copy Block from library to your project.', $documentation[$key]);
+	$mock = $this->mock;
+	expect($mock->getDoc())->toBeArray();
 });
 
 test('Block CLI command will fail if block doesn\'t exist', function () {
-	$blockMock = mock(BlockCli::class)
-		->makePartial()
-		->shouldReceive('getFrontendLibsBlockPath')
-		->andReturn(\dirname(__FILE__, 2) . '/data');
-
-	$mock = $blockMock->getMock();
-
-	$mock([], ['name' => 'testing']);
-})->expectException(InvalidBlock::class);
+	$mock = $this->mock;
+	$mock([], array_merge(
+		$mock->getDefaultArgs(),
+		[
+			'name' => 'testing'
+		]
+	));
+})->throws(Exception::class, 'You can find all available items on this list:');

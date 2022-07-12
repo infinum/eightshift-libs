@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
-use EightshiftLibs\Blocks\AbstractBlocks;
 use EightshiftLibs\Exception\ComponentException;
 
 /**
@@ -59,6 +58,11 @@ class Components
 	use LabelGeneratorTrait;
 
 	/**
+	 * Media trait.
+	 */
+	use MediaTrait;
+
+	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
 	 * Note about "parentClass" attribute: If provided, the component will be wrapped with a
@@ -79,12 +83,13 @@ class Components
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
-		if (empty($parentPath)) {
-			$parentPath = \dirname(__DIR__, 5);
-
-			if (\getenv('ES_TEST')) {
-				$parentPath = \dirname(__DIR__, 2);
-			}
+		// If parent path is missing provide project root.
+		if (!$parentPath) {
+			$parentPath = Components::getProjectPaths('root');
+		} else {
+			// Remove slash.
+			$parentPath = \trim($parentPath, $sep);
+			$parentPath = "{$sep}{$parentPath}{$sep}";
 		}
 
 		/**
@@ -100,20 +105,13 @@ class Components
 		 * parentClass__componentName.php
 		 */
 		if (\strpos($component, '.php') !== false) {
-			$parentPath = \rtrim($parentPath, '/');
-			$parentPath = \ltrim($parentPath, '/');
-			$component = \ltrim($component, '/');
-			$componentPath = "{$sep}{$parentPath}{$sep}{$component}";
+			$component = \ltrim($component, $sep);
+			$componentPath = $component;
 		} else {
-			$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT;
-
-			if (\getenv('ES_TEST')) {
-				$blocksPath = AbstractBlocks::PATH_BLOCKS_PARENT_TESTS;
-			}
-
-			$componentsFolderName = AbstractBlocks::PATH_COMPONENTS;
-			$componentPath = "{$parentPath}{$blocksPath}{$componentsFolderName}{$sep}{$component}{$sep}{$component}.php";
+			$componentPath = Components::getProjectPaths('blocksDestinationComponents', "{$component}{$sep}{$component}.php", $sep);
 		}
+
+		$componentPath = "{$parentPath}{$componentPath}";
 
 		if ($useComponentDefaults) {
 			$manifest = Components::getManifest($componentPath);
@@ -142,6 +140,70 @@ class Components
 		if (isset($attributes['parentClass'])) {
 			echo '</div>'; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
 		}
+
+		return \trim((string) \ob_get_clean());
+	}
+
+	/**
+	 * Render component/block partial.
+	 *
+	 * @param string $type Type of content block, component, variable, etc.
+	 * @param string $parent Parent block/component name.
+	 * @param string $name Name of the partial. It can be without extension so .php is used.
+	 * @param array<string, mixed> $attributes Attributes that will be passed to partial.
+	 * @param string $partialFolderName Partial folder name.
+	 *
+	 * @throws ComponentException When we're unable to find the partial.
+	 *
+	 * @return string Partial html.
+	 */
+	public static function renderPartial(
+		string $type,
+		string $parent,
+		string $name,
+		array $attributes = [],
+		string $partialFolderName = 'partials'
+	): string {
+		$sep = \DIRECTORY_SEPARATOR;
+
+		// If no extension is provided use php.
+		if (\strpos($name, '.php') === false) {
+			$name = "{$name}.php";
+		}
+
+		$partialPath = "{$parent}{$sep}{$partialFolderName}{$sep}{$name}";
+
+		// Detect folder based on the name.
+		switch ($type) {
+			case 'block':
+			case 'blocks':
+			case 'custom':
+				$path = Components::getProjectPaths('blocksDestinationCustom', $partialPath);
+				break;
+			case 'component':
+			case 'components':
+				$path = Components::getProjectPaths('blocksDestinationComponents', $partialPath);
+				break;
+			case 'variation':
+			case 'variations':
+				$path = Components::getProjectPaths('blocksDestinationVariations', $partialPath);
+				break;
+			case 'wrapper':
+				$path = Components::getProjectPaths('blocksDestinationWrapper', $partialPath);
+				break;
+			default:
+				$path = Components::getProjectPaths('root', $partialPath);
+				break;
+		}
+
+		// Bailout if file is missing.
+		if (!\file_exists($path)) {
+			throw ComponentException::throwUnableToLocatePartial($path);
+		}
+
+		\ob_start();
+
+		require $path;
 
 		return \trim((string) \ob_get_clean());
 	}
@@ -213,18 +275,252 @@ class Components
 	public static function getManifestDirect(string $path): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;
-		$path = \trim($path, $sep);
+		$path = \rtrim($path, $sep);
 
 		$manifest = "{$path}{$sep}manifest.json";
-
-		if ($sep === '/') {
-			$manifest = "{$sep}{$manifest}";
-		}
 
 		if (!\file_exists($manifest)) {
 			throw ComponentException::throwUnableToLocateComponent($manifest);
 		}
 
 		return \json_decode(\implode(' ', (array)\file($manifest)), true);
+	}
+
+	/**
+	 * Get all project paths for store.
+	 *
+	 * @var array<int, string>
+	 */
+	public const PROJECT_PATHS = [
+		'projectRoot',
+		'srcDestination',
+		'cliOutput',
+		'wpContent',
+		'libs',
+
+		'blocksGlobalAssetsSource',
+		'blocksAssetsSource',
+		'blocksStorybookSource',
+		'blocksSource',
+		'blocksSourceCustom',
+		'blocksSourceComponents',
+		'blocksSourceVariations',
+		'blocksSourceWrapper',
+
+		'blocksGlobalAssetsDestination',
+		'blocksAssetsDestination',
+		'blocksStorybookDestination',
+		'blocksDestination',
+		'blocksDestinationCustom',
+		'blocksDestinationComponents',
+		'blocksDestinationVariations',
+		'blocksDestinationWrapper',
+	];
+
+	/**
+	 * Internal helper for getting all project paths for easy mocking in tests.
+	 *
+	 * @param string $type Type fo path to return.
+	 * @param string $sufix Additional sufix path to add.
+	 * @param string $prefix Additional prefix insted of dirname path.
+	 *
+	 * @return string
+	 */
+	public static function getProjectPaths(string $type = '', string $sufix = '', string $prefix = ''): string
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+
+		$path = '';
+		$internalPrefix = \dirname(__FILE__, 6);
+
+		if (\getenv('ES_TEST')) {
+			$internalPrefix = \dirname(__FILE__, 3);
+		}
+
+		$flibsPath = ["node_modules", "@eightshift", "frontend-libs", "blocks", "init"];
+		$libsPath = ["vendor", "infinum", "eightshift-libs"];
+		$testsDataPath = ["tests", "data"];
+		$srcPath = "src";
+		$blocksPath = [$srcPath, "Blocks"];
+		$storybookPath = "storybook";
+		$assetsPath = "assets";
+		$cliOutputPath = "cliOutput";
+
+		$name = '';
+
+		switch ($type) {
+			case 'projectRoot':
+				$internalPrefix = \dirname(__FILE__, 9);
+
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+				}
+				break;
+			case 'testsData':
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = self::joinPaths([...$testsDataPath]);
+				}
+
+				break;
+			case 'srcDestination':
+				$path = $srcPath;
+
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = self::joinPaths([$cliOutputPath, $srcPath]);
+				}
+
+				break;
+			case 'cliOutput':
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = $cliOutputPath;
+				}
+
+				break;
+			case 'wpContent':
+				$internalPrefix = \dirname(__FILE__, 7);
+
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+				}
+				break;
+			case 'libs':
+				$path = self::joinPaths($libsPath);
+
+				if (\getenv('ES_TEST')) {
+					$path = '';
+				}
+				break;
+			case 'blocksGlobalAssetsSource':
+				$path = self::joinPaths([...$flibsPath, $assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, $assetsPath]);
+				}
+				break;
+			case 'blocksAssetsSource':
+				$path = self::joinPaths([...$flibsPath, ...$blocksPath, $assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $assetsPath]);
+				}
+				break;
+			case 'blocksStorybookSource':
+				$path = self::joinPaths([...$flibsPath, $storybookPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, $storybookPath]);
+				}
+				break;
+			case 'blocksSource':
+				$path = self::joinPaths([...$flibsPath, ...$blocksPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
+				}
+				break;
+			case 'blocksSourceCustom':
+				$name = 'custom';
+				break;
+			case 'blocksSourceComponents':
+				$name = 'components';
+				break;
+			case 'blocksSourceVariations':
+				$name = 'variations';
+				break;
+			case 'blocksSourceWrapper':
+				$name = 'wrapper';
+				break;
+
+			case 'blocksGlobalAssetsDestination':
+				$path = self::joinPaths([$assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([$cliOutputPath, $assetsPath]);
+				}
+				break;
+			case 'blocksAssetsDestination':
+				$path = self::joinPaths([...$blocksPath, $assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([$cliOutputPath, ...$blocksPath, $assetsPath]);
+				}
+				break;
+			case 'blocksStorybookDestination':
+				$path = self::joinPaths([".{$storybookPath}"]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([$cliOutputPath, ".{$storybookPath}"]);
+				}
+				break;
+			case 'blocksDestination':
+				$path = self::joinPaths($blocksPath);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([$cliOutputPath, ...$blocksPath]);
+				}
+				break;
+			case 'blocksDestinationCustom':
+				$name = 'custom';
+				break;
+			case 'blocksDestinationComponents':
+				$name = 'components';
+				break;
+			case 'blocksDestinationVariations':
+				$name = 'variations';
+				break;
+			case 'blocksDestinationWrapper':
+				$name = 'wrapper';
+				break;
+		}
+
+		switch ($type) {
+			case 'blocksSourceCustom':
+			case 'blocksSourceComponents':
+			case 'blocksSourceVariations':
+			case 'blocksSourceWrapper':
+				$path = self::joinPaths([...$flibsPath, ...$blocksPath, $name]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);
+				}
+				break;
+
+			case 'blocksDestinationCustom':
+			case 'blocksDestinationComponents':
+			case 'blocksDestinationVariations':
+			case 'blocksDestinationWrapper':
+				$path = self::joinPaths([...$blocksPath, $name]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([$cliOutputPath, ...$blocksPath, $name]);
+				}
+				break;
+		}
+
+		if (!$prefix) {
+			$prefix = $internalPrefix;
+		}
+
+		$path = self::joinPaths([$prefix, $path, $sufix]);
+
+		return \str_replace("{$sep}{$sep}", $sep, $path);
+	}
+
+	/**
+	 * Paths join
+	 *
+	 * @param array<int, string> $paths Paths to join.
+	 *
+	 * @return string
+	 */
+	public static function joinPaths(array $paths): string
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = \implode($sep, $paths);
+
+		return \str_replace("{$sep}{$sep}", $sep, $path);
 	}
 }

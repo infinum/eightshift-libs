@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Readme;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ReadmeCli
@@ -18,11 +20,14 @@ use EightshiftLibs\Cli\AbstractCli;
 class ReadmeCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public const OUTPUT_DIR = '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR;
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -31,20 +36,18 @@ class ReadmeCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'init_readme';
+		return 'readme';
 	}
 
 	/**
-	 * Define default develop props.
+	 * Define default arguments.
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'root' => $args[1] ?? './',
+			'path' => Components::getProjectPaths('projectRoot'),
 		];
 	}
 
@@ -56,26 +59,45 @@ class ReadmeCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Initialize Command for building your projects readme.',
+			'shortdesc' => 'Copy readme.md file for documentation.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'root',
-					'description' => 'Define project root relative to initialization file of WP CLI.',
+					'name' => 'path',
+					'description' => 'Define absolute folder path where readme file will be created.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('path'),
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to document your project to help yourself and other people.
+				This file will be copied to your project root folder.
+
+				## EXAMPLES
+
+				# Copy file:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				File will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Readme/README.md
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$root = $assocArgs['root'] ?? static::OUTPUT_DIR;
+		$path = $this->getArg($assocArgs, 'path');
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, 'README.md')
-			->outputWrite($root, 'README.md', $assocArgs);
+			->outputWrite($path, 'README.md', $assocArgs);
 	}
 }

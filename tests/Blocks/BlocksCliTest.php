@@ -3,72 +3,46 @@
 namespace Tests\Unit\Blocks;
 
 use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->blocks = new BlocksCli('boilerplate');
-	$this->blocks->setTest();
+	$this->mock = new BlocksCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Blocks CLI command will correctly copy the Blocks class with defaults', function () {
-	$blocks = $this->blocks;
-	$blocks([], []);
+	$mock = $this->mock;
+	$mock([], []);
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/src/Blocks/Blocks.php';
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestination', "Blocks.php"));
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedBlocks = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('class Blocks extends AbstractBlocks', $generatedBlocks);
-	$this->assertStringContainsString('@package EightshiftLibs\Blocks', $generatedBlocks);
-	$this->assertStringContainsString('namespace EightshiftLibs\Blocks', $generatedBlocks);
-	$this->assertStringNotContainsString('footer.php', $generatedBlocks);
-	$this->assertFileExists($outputPath);
+	$this->assertStringContainsString('class Blocks extends AbstractBlocks', $output);
+	$this->assertStringContainsString('@package EightshiftLibs\Blocks', $output);
+	$this->assertStringContainsString('namespace EightshiftLibs\Blocks', $output);
+	$this->assertStringNotContainsString('footer.php', $output);
 });
 
 test('Blocks CLI command will correctly copy the Blocks class with set arguments', function () {
-	$blocks = $this->blocks;
-	$blocks([], [
+	$mock = $this->mock;
+	$mock([], [
 		'namespace' => 'CoolTheme',
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedBlocks = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Blocks/Blocks.php');
+	$output = \file_get_contents(Components::getProjectPaths('blocksDestination', "Blocks.php"));
 
-	$this->assertStringContainsString('namespace CoolTheme\Blocks;', $generatedBlocks);
+	$this->assertStringContainsString('namespace CoolTheme\Blocks;', $output);
 });
 
 test('Blocks CLI documentation is correct', function () {
-	$blocks = $this->blocks;
-
-	$documentation = $blocks->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayNotHasKey('synopsis', $documentation);
-	$this->assertSame('Generates Blocks class.', $documentation[$key]);
+	expect($this->mock->getDoc())->toBeArray();
 });

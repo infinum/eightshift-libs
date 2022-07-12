@@ -23,41 +23,6 @@ use WP_Post;
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
-	 * Relative path to blocks folder.
-	 *
-	 * @var string
-	 */
-	public const PATH_BLOCKS_PARENT = \DIRECTORY_SEPARATOR . 'src' . \DIRECTORY_SEPARATOR . 'Blocks' . \DIRECTORY_SEPARATOR;
-
-	/**
-	 * Relative path to blocks folder in test mode.
-	 *
-	 * @var string
-	 */
-	public const PATH_BLOCKS_PARENT_TESTS = \DIRECTORY_SEPARATOR . 'tests' . \DIRECTORY_SEPARATOR . 'data' . self::PATH_BLOCKS_PARENT;
-
-	/**
-	 * Relative path to custom folder.
-	 *
-	 * @var string
-	 */
-	public const PATH_BLOCKS = 'custom';
-
-	/**
-	 * Relative path to components folder.
-	 *
-	 * @var string
-	 */
-	public const PATH_COMPONENTS = 'components';
-
-	/**
-	 * Relative path to wrapper folder.
-	 *
-	 * @var string
-	 */
-	public const PATH_WRAPPER = 'wrapper';
-
-	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
 	 *
@@ -113,7 +78,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		Components::setSettings($settings);
 		Components::setBlocks($blocks);
 		Components::setComponents($this->getComponentsManifests());
+		Components::setVariations($this->getVariationsManifests());
 		Components::setConfigFlags();
+		Components::setPaths();
 
 		if (Components::getConfigUseWrapper()) {
 			Components::setWrapper($this->getWrapperManifest());
@@ -143,7 +110,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return true;
 		}
 
-		if (\gettype($allowedBlockTypes) === 'boolean') {
+		if (!\is_bool($allowedBlockTypes)) {
 			return $allowedBlockTypes;
 		}
 
@@ -224,13 +191,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		// Get block view path.
 		$sep = \DIRECTORY_SEPARATOR;
-		$blockPathName = self::PATH_BLOCKS;
-		$templatePath = "{$this->getBlocksFolderPath()}{$blockPathName}{$sep}{$blockName}{$sep}{$blockName}.php";
+		$templatePath = Components::getProjectPaths('blocksDestinationCustom', "{$blockName}{$sep}{$blockName}.php");
 
 		// Get block wrapper view path.
 		if (Components::getConfigUseWrapper()) {
-			$wrapperPathName = self::PATH_WRAPPER;
-			$wrapperPath = "{$this->getBlocksFolderPath()}{$wrapperPathName}{$sep}wrapper.php";
+			$wrapperPath = Components::getProjectPaths('blocksDestinationWrapper', 'wrapper.php');
 
 			// Check if wrapper component exists.
 			if (!\file_exists($wrapperPath)) {
@@ -348,9 +313,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$namespace = Components::getSettingsNamespace();
 
 		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
-			if (!($parsedBlock['attrs']['paragraphParagraphContent'])) {
+			$content = $parsedBlock['attrs']['paragraphParagraphContent'] ?? '';
+
+			if (empty($content)) {
 				$parsedBlock['attrs']['wrapperDisable'] = true;
-				$parsedBlock['attrs']['paragraphUse'] = false;
+				$parsedBlock['attrs']['paragraphParagraphUse'] = false;
 			}
 		}
 
@@ -388,22 +355,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get blocks folder absolute path.
-	 *
-	 * @return string
-	 */
-	private function getBlocksFolderPath(): string
-	{
-		$blocksPath = \dirname(__DIR__, 5) . self::PATH_BLOCKS_PARENT;
-
-		if (\getenv('ES_TEST')) {
-			$blocksPath = \dirname(__DIR__, 2) . self::PATH_BLOCKS_PARENT_TESTS;
-		}
-
-		return $blocksPath;
-	}
-
-	/**
 	 * Retrieve block data from manifest.json combined with some additional stuff.
 	 *
 	 * @throws InvalidBlock Throws error if block name is missing.
@@ -413,7 +364,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	private function getBlocksManifests(): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;
-		$pathName = self::PATH_BLOCKS;
+		$path = Components::getProjectPaths('blocksDestinationCustom');
 
 		return \array_map(
 			function (string $blockPath) {
@@ -439,7 +390,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 				return $block;
 			},
-			(array)\glob("{$this->getBlocksFolderPath()}{$pathName}{$sep}*{$sep}manifest.json")
+			(array)\glob("{$path}*{$sep}manifest.json")
 		);
 	}
 
@@ -453,7 +404,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	private function getComponentsManifests(): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;
-		$pathName = self::PATH_COMPONENTS;
+		$path = Components::getProjectPaths('blocksDestinationComponents');
 
 		return \array_map(
 			function (string $componentPath) {
@@ -467,7 +418,35 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 				return $component;
 			},
-			(array)\glob("{$this->getBlocksFolderPath()}{$pathName}{$sep}*{$sep}manifest.json")
+			(array)\glob("{$path}*{$sep}manifest.json")
+		);
+	}
+
+	/**
+	 * Retrieve variations data from manifest.json.
+	 *
+	 * @throws InvalidBlock Throws error if variation name is missing.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getVariationsManifests(): array
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = Components::getProjectPaths('blocksDestinationVariations');
+
+		return \array_map(
+			function (string $variationPath) {
+				$variation = \implode(' ', (array)\file(($variationPath)));
+
+				$variation = Components::parseManifest($variation);
+
+				if (!isset($variation['name'])) {
+					throw InvalidBlock::missingVariationNameException($variationPath);
+				}
+
+				return $variation;
+			},
+			(array)\glob("{$path}*{$sep}manifest.json")
 		);
 	}
 
@@ -480,18 +459,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getWrapperManifest(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$pathName = self::PATH_WRAPPER;
-		$manifestPath = "{$this->getBlocksFolderPath()}{$pathName}{$sep}manifest.json";
+		$path = Components::getProjectPaths('blocksDestinationWrapper', "manifest.json");
 
-		if (!\file_exists($manifestPath)) {
-			throw InvalidBlock::missingWrapperManifestException($manifestPath);
+		if (!\file_exists($path)) {
+			throw InvalidBlock::missingWrapperManifestException($path);
 		}
 
-		$wrapper = \implode(' ', (array)\file($manifestPath));
-		$wrapper = Components::parseManifest($wrapper);
+		$manifest = \implode(' ', (array)\file($path));
+		$manifest = Components::parseManifest($manifest);
 
-		return $wrapper;
+		return $manifest;
 	}
 
 	/**
@@ -504,21 +481,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getSettingsManifest(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$manifestPath = "{$this->getBlocksFolderPath()}{$sep}manifest.json";
+		$path = Components::getProjectPaths('blocksDestination', 'manifest.json');
 
-		if (!\file_exists($manifestPath)) {
-			throw InvalidBlock::missingSettingsManifestException($manifestPath);
+		if (!\file_exists($path)) {
+			throw InvalidBlock::missingSettingsManifestException($path);
 		}
 
-		$settings = \implode(' ', (array)\file(($manifestPath)));
-		$settings = Components::parseManifest($settings);
+		$manifest = \implode(' ', (array)\file(($path)));
+		$manifest = Components::parseManifest($manifest);
 
-		if (!isset($settings['namespace'])) {
+		if (!isset($manifest['namespace'])) {
 			throw InvalidBlock::missingNamespaceException();
 		}
 
-		return $settings;
+		return $manifest;
 	}
 
 	/**

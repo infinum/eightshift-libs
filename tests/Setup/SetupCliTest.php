@@ -2,66 +2,38 @@
 
 namespace Tests\Unit\Setup;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Setup\SetupCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->setup = new SetupCli('boilerplate');
+	$this->mock = new SetupCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Setup CLI command will correctly copy the Setup class with defaults', function () {
-	$setup = $this->setup;
-	$setup([], $setup->getDevelopArgs([]));
+	$sep = \DIRECTORY_SEPARATOR;
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/setup.json');
-	$this->assertStringContainsString('twentytwentyone', $generatedFile);
-	$this->assertStringNotContainsString('random string', $generatedFile);
-});
-
-test('Setup CLI command will correctly copy the Setup class with set parameters', function () {
-	$setup = $this->setup;
-	$setup([], [
-		'root' => 'test',
+	$mock = $this->mock;
+	$mock([], [
+		'path' => Components::getProjectPaths('cliOutput', 'setup'),
+		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
 
-	// Check the output dir if the generated method is correctly generated.
-	$generatedFile = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/test/setup.json');
-	$this->assertStringContainsString('twentytwentyone', $generatedFile);
-	$this->assertStringNotContainsString('random string', $generatedFile);
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "setup{$sep}setup.json"));
+
+	expect($output)->toContain('staging');
 });
 
 test('Setup CLI documentation is correct', function () {
-	$setup = $this->setup;
-
-	$documentation = $setup->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Initialize Command for automatic project setup and update.', $documentation[$key]);
+	expect($this->mock->getDoc())->toBeArray();
 });

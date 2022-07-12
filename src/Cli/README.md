@@ -2,11 +2,11 @@
 
 We created an WP-CLI commands for all the features of the Eightshift-Libs.
 
-To show all available commands in development mode run this command:
+## Develop
+You can run these commands by mocking them in the tests.
 
-```wp eval-file bin/cli.php show_all --skip-wordpress```
-
-To show all available commands in WordPress env run this command:
+## Boilerplate
+You can run this command to show all available commands in WordPress env:
 
 ```wp boilerplate --help```
 

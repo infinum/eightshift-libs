@@ -22,28 +22,28 @@ class PostTypeExample extends AbstractPostType
 	 *
 	 * @var string
 	 */
-	public const POST_TYPE_SLUG = 'example-slug';
+	public const POST_TYPE_SLUG = '%slug%';
 
 	/**
 	 * URL slug for the custom post type.
 	 *
 	 * @var string
 	 */
-	public const POST_TYPE_URL_SLUG = 'example-url-slug';
+	public const POST_TYPE_URL_SLUG = '%rewrite_url%';
 
 	/**
 	 * Rest API Endpoint slug constant.
 	 *
 	 * @var string
 	 */
-	public const REST_API_ENDPOINT_SLUG = 'example-endpoint-slug';
+	public const REST_API_ENDPOINT_SLUG = '%rest_endpoint_slug%';
 
 	/**
 	 * Capability type for projects post type.
 	 *
 	 * @var string
 	 */
-	public const POST_CAPABILITY_TYPE = 'post';
+	public const POST_CAPABILITY_TYPE = '%capability%';
 
 	/**
 	 * Location of menu in sidebar.
@@ -57,7 +57,7 @@ class PostTypeExample extends AbstractPostType
 	 *
 	 * @var string
 	 */
-	public const MENU_ICON = 'dashicons-analytics';
+	public const MENU_ICON = '%menu_icon%';
 
 	/**
 	 * Get the slug to use for the Projects custom post type.
@@ -78,22 +78,22 @@ class PostTypeExample extends AbstractPostType
 	{
 		$nouns = [
 			\esc_html_x(
-				'Singular Name',
+				'%label%',
 				'post type upper case singular name',
 				'eightshift-libs'
 			),
 			\esc_html_x(
-				'singular name',
+				'%label_lowercaps%',
 				'post type lower case singular name',
 				'eightshift-libs'
 			),
 			\esc_html_x(
-				'Plural Name',
+				'%plural_label%',
 				'post type upper case plural name',
 				'eightshift-libs'
 			),
 			\esc_html_x(
-				'plural name',
+				'%plural_label_lowecaps%',
 				'post type lower case plural name',
 				'eightshift-libs'
 			),

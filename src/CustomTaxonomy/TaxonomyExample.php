@@ -22,21 +22,21 @@ class TaxonomyExample extends AbstractTaxonomy
 	 *
 	 * @var string
 	 */
-	public const TAXONOMY_SLUG = 'example-slug';
+	public const TAXONOMY_SLUG = '%slug%';
 
 	/**
 	 * Taxonomy post type slug constant.
 	 *
 	 * @var string
 	 */
-	public const TAXONOMY_POST_TYPE_SLUG = 'post';
+	public const TAXONOMY_POST_TYPE_SLUG = '%post_type_slug%';
 
 	/**
 	 * Rest API Endpoint slug constant.
 	 *
 	 * @var string
 	 */
-	public const REST_API_ENDPOINT_SLUG = 'example-endpoint-slug';
+	public const REST_API_ENDPOINT_SLUG = '%rest_endpoint_slug%';
 
 	/**
 	 * Get the slug of the custom taxonomy
@@ -67,22 +67,22 @@ class TaxonomyExample extends AbstractTaxonomy
 	{
 		$nouns = [
 			\esc_html_x(
-				'Singular Name',
+				'%label%',
 				'taxonomy upper case singular name',
 				'eightshift-libs'
 			),
 			\esc_html_x(
-				'singular name',
+				'%label_lowercaps%',
 				'taxonomy lower case singular name',
 				'eightshift-libs'
 			),
 			\esc_html_x(
-				'Plural Name',
+				'%plural_label%',
 				'taxonomy upper case plural name',
 				'eightshift-libs'
 			),
 			\esc_html_x(
-				'plural name',
+				'%plural_label_lowecaps%',
 				'taxonomy lower case plural name',
 				'eightshift-libs'
 			),

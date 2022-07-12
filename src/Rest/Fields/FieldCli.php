@@ -11,7 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
-use WP_CLI;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class FieldCli
@@ -19,11 +20,14 @@ use WP_CLI;
 class FieldCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'Rest' . \DIRECTORY_SEPARATOR . 'Fields';
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
 
 	/**
 	 * Get WPCLI command name
@@ -32,21 +36,19 @@ class FieldCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'create_rest_field';
+		return 'rest-field';
 	}
 
 	/**
-	 * Define default develop props.
+	 * Define default arguments.
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return array<string, int|string|boolean>
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getDefaultArgs(): array
 	{
 		return [
-			'field_name' => $args[1] ?? 'title',
-			'object_type' => $args[2] ?? 'post',
+			'field_name' => 'title-custom',
+			'object_type' => 'example',
 		];
 	}
 
@@ -58,36 +60,48 @@ class FieldCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates REST-API Field in your project.',
+			'shortdesc' => 'Create REST-API field service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'field_name',
 					'description' => 'The name of the endpoint slug. Example: title.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'object_type',
 					'description' => 'Object(s) the field is being registered to. Example: post.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : true
+					'optional' => true,
+					'default' => $this->getDefaultArg('object_type'),
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create REST-API service class to register custom field.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --field_name='title'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Rest/Fields/FieldExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$fieldName = $this->prepareSlug($assocArgs['field_name'] ?? 'title');
-
-		// If field name is empty throw error.
-		if (empty($fieldName)) {
-			WP_CLI::error("Empty slug provided, please set the slug using --endpoint_slug=\"slug-name\"");
-		}
-
-		$objectType = $this->prepareSlug($assocArgs['object_type'] ?? 'post');
+		$fieldName = $this->getArg($assocArgs, 'field_name');
+		$objectType = $this->prepareSlug($this->getArg($assocArgs, 'object_type'));
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);
@@ -98,8 +112,8 @@ class FieldCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('example-post-type', $objectType)
-			->searchReplaceString('example-field', $fieldName)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->searchReplaceString($this->getArgTemplate('object_type'), $objectType)
+			->searchReplaceString($this->getArgTemplate('field_name'), $fieldName)
+			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Fields'), "{$className}.php", $assocArgs);
 	}
 }

@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\CustomTaxonomy;
 
-use EightshiftBoilerplate\CustomTaxonomy\TaxonomyExample;
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class TaxonomyCli
@@ -19,27 +20,38 @@ use EightshiftLibs\Cli\AbstractCli;
 class TaxonomyCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'CustomTaxonomy';
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
 
 	/**
-	 * Define default develop props.
+	 * Get WPCLI command name
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getCommandName(): string
+	{
+		return 'taxonomy';
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
 	{
 		return [
-			'label' => $args[1] ?? 'Location',
-			'slug' => $args[2] ?? 'location',
-			'rest_endpoint_slug' => $args[3] ?? 'locations',
-			'post_type_slug' => $args[4] ?? 'post',
-			'plural_label' => $args[5] ?? 'Locations',
+			'label' => 'Location',
+			'plural_label' => 'Locations',
+			'slug' => 'location',
+			'rest_endpoint_slug' => 'locations',
+			'post_type_slug' => 'post',
 		];
 	}
 
@@ -51,45 +63,68 @@ class TaxonomyCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates custom taxonomy class file.',
+			'shortdesc' => 'Create custom taxonomy service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'label',
 					'description' => 'The label of the custom taxonomy to show in WP admin.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'plural_label',
+					'description' => 'The plural form of the custom taxonomy label.',
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'slug',
 					'description' => 'The name of the custom taxonomy slug. Example: location.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'rest_endpoint_slug',
 					'description' => 'The name of the custom taxonomy REST-API endpoint slug. Example: locations.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'post_type_slug',
 					'description' => 'The position where to assign the new custom taxonomy. Example: post.',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create custom taxonomy for all your custom data.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --label='Job Positions' --slug='job-position' --rest_endpoint_slug='job-positions' --post_type_slug='user'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/CustomTaxonomy/TaxonomyExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$label = $assocArgs['label'] ?? 'Custom Taxonomy';
-		$slug = $this->prepareSlug($assocArgs['slug'] ?? TaxonomyExample::TAXONOMY_SLUG);
-		$restEndpointSlug = $this->prepareSlug($assocArgs['rest_endpoint_slug'] ?? TaxonomyExample::REST_API_ENDPOINT_SLUG);
-		$postTypeSlug = $this->prepareSlug($assocArgs['post_type_slug'] ?? TaxonomyExample::TAXONOMY_POST_TYPE_SLUG);
-		$pluralLabel = $assocArgs['plural_label'] ?? $label . 's';
+		$label = $this->getArg($assocArgs, 'label');
+		$pluralLabel = $this->getArg($assocArgs, 'plural_label');
+		$slug = $this->prepareSlug($this->getArg($assocArgs, 'slug'));
+		$restEndpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'rest_endpoint_slug'));
+		$postTypeSlug = $this->prepareSlug($this->getArg($assocArgs, 'post_type_slug'));
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
@@ -101,14 +136,13 @@ class TaxonomyCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->searchReplaceString('example-slug', $slug)
-			->searchReplaceString('example-endpoint-slug', $restEndpointSlug)
-			->searchReplaceString("'post'", "'{$postTypeSlug}'")
-			->searchReplaceString('Blog_Taxonomy', $className)
-			->searchReplaceString('Singular Name', $label)
-			->searchReplaceString('singular name', \strtolower($label))
-			->searchReplaceString('Plural Name', $pluralLabel)
-			->searchReplaceString('plural name', \strtolower($pluralLabel))
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->searchReplaceString($this->getArgTemplate('slug'), $slug)
+			->searchReplaceString($this->getArgTemplate('rest_endpoint_slug'), $restEndpointSlug)
+			->searchReplaceString($this->getArgTemplate('post_type_slug'), $postTypeSlug)
+			->searchReplaceString($this->getArgTemplate('label'), $label)
+			->searchReplaceString($this->getArgTemplate('label_lowercaps'), \strtolower($label))
+			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
+			->searchReplaceString($this->getArgTemplate('plural_label_lowecaps'), \strtolower($pluralLabel))
+			->outputWrite(Components::getProjectPaths('srcDestination', 'CustomTaxonomy'), "{$className}.php", $assocArgs);
 	}
 }

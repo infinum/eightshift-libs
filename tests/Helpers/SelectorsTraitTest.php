@@ -5,27 +5,15 @@ namespace Tests\Unit\Helpers;
 use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
 
-use Brain\Monkey;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-use function Tests\setupMocks;
-
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
+beforeEach(function () {
+	setBeforeEach();
 });
 
-afterAll(function() {
-	Monkey\tearDown();
-});
-
-beforeEach(function() {
-	global $esBlocks;
-	$esBlocks = null;
-});
-
-afterEach(function() {
-	global $esBlocks;
-	$esBlocks = null;
+afterEach(function () {
+	setAfterEach();
 });
 
 // ------------------------------------------
@@ -110,4 +98,3 @@ test('Throws type exception if wrong argument type is passed to classnames', fun
 	Components::classnames($argument);
 })->throws(\TypeError::class)
 	->with('errorStringArguments');
-

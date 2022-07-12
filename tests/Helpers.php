@@ -4,6 +4,10 @@ namespace Tests;
 
 use Brain\Monkey\Functions;
 use Mockery;
+use Brain\Monkey;
+use EightshiftBoilerplate\Blocks\BlocksExample;
+use EightshiftLibs\Init\InitBlocksCli;
+use Exception;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -20,10 +24,10 @@ function setupMocks() {
 	Functions\stubEscapeFunctions();
 
 	// Mock the template dir location.
-	Functions\when('get_template_directory')->justReturn(\dirname(__FILE__) . '/data');
+	Functions\when('get_template_directory')->justReturn(\dirname(__FILE__) . \DIRECTORY_SEPARATOR . 'data');
 
 	// Mock the template dir location.
-	Functions\when('get_stylesheet_directory')->justReturn(\dirname(__FILE__) . '/');
+	Functions\when('get_stylesheet_directory')->justReturn(\dirname(__FILE__) . \DIRECTORY_SEPARATOR);
 
 	// Mock escaping function.
 	Functions\when('wp_kses_post')->returnArg();
@@ -52,7 +56,7 @@ function setupMocks() {
 			$response['data'] = $data;
 		}
 
-	    echo json_encode($response, $options);
+		echo json_encode($response, $options);
 	});
 
 	// Mock rest response handler.
@@ -60,6 +64,134 @@ function setupMocks() {
 
 	// Mock site_url function.
 	Functions\when('site_url')->justReturn('https://example.com');
+
+	// Mock wp_get_attachment_metadata function.
+	Functions\when('wp_get_attachment_metadata')->justReturn(attachemntMetaDataMock());
+
+	// Mock get_post_meta function.
+	Functions\when('get_post_meta')->justReturn('');
+
+	// Mock wp_delete_file function.
+	Functions\when('wp_delete_file')->justReturn('');
+
+	// Mock ACF add options page function
+	Functions\when('acf_add_options_page')->justReturn(true);
+
+	// Mock ACF add options subpage function
+	Functions\when('acf_add_options_sub_page')->justReturn(true);
+
+	// Mock ACF add local field group function
+	Functions\when('acf_add_local_field_group')->justReturn(true);
+
+	// Mock current_user_can function.
+	Functions\when('current_user_can')->returnArg();
+
+	// Mock get_field function.
+	Functions\when('get_field')->returnArg();
+
+	// Mock wp_parse_url function.
+	Functions\when('wp_parse_url')->justReturn([
+		'scheme' => 'https',
+		'host' => 'developer.wordpress.org',
+		'path' => '/reference/functions/wp_parse_url/',
+	]);
+
+	$wpCliMock = mock('alias:WP_CLI');
+
+	$wpCliMock
+		->shouldReceive('success')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_SUCCESS_HAPPENED={$message}");
+		});
+
+	$wpCliMock
+		->shouldReceive('error')
+		->andReturnUsing(function ($errorMessage) {
+			putenv("ES_CLI_ERROR_HAPPENED={$errorMessage}");
+			throw new Exception($errorMessage);
+		});
+
+	$wpCliMock
+		->shouldReceive('log')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_LOG_HAPPENED={$message}");
+		});
+
+	$wpCliMock
+		->shouldReceive('runcommand')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_HAPPENED={$message}");
+		});
+
+	$wpCliMock
+		->shouldReceive('add_command')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_ADD_COMMAND_HAPPENED={$message}");
+		});
+
+	$wpCliMock
+		->shouldReceive('colorize')
+		->andReturnUsing(function ($message) {
+			return $message;
+		});
+
+	// Mock attachment function.
+	Functions\when('get_attached_file')->justReturn('test.jpg');
+
+	// Mock attachment function.
+	Functions\when('wp_check_filetype')->justReturn([
+		'ext' => 'jpg',
+		'type' => 'image/jpeg',
+	]);
+
+	if (!defined('DAY_IN_SECONDS')) {
+		define('DAY_IN_SECONDS', 3600);
+	}
+
+	Functions\when('is_admin')->justReturn(false);
+
+	Functions\when('trailingslashit')->alias(function(string $string) {
+		return rtrim( $string, '/\\' );
+	});
+
+	Functions\when('is_wp_version_compatible')->justReturn(true);
+
+	Functions\when('wp_nonce_field')->justReturn('nonce');
+}
+
+/**
+ * Set everything before every test.
+ *
+ * @return void
+ */
+function setBeforeEach() {
+	Monkey\setUp();
+	setupMocks();
+}
+
+/**
+ * Clear everything after each test.
+ *
+ * @return void
+ */
+function setAfterEach($delete = true) {
+	Monkey\tearDown();
+
+	if ($delete) {
+		deleteCliOutput();
+	}
+
+	for ($i = 1; $i <= 10; $i++ ) {
+		putenv("ES_SIDEAFFECT_{$i}");
+	}
+
+	putenv('ES_CLI_SUCCESS_HAPPENED');
+	putenv('ES_CLI_ERROR_HAPPENED');
+	putenv('ES_CLI_LOG_HAPPENED');
+	putenv('ES_CLI_RUNCOMMAND_HAPPENED');
+
+	global $esBlocks;
+	$esBlocks = null;
 }
 
 /**
@@ -71,8 +203,9 @@ function setupMocks() {
  */
 function deleteCliOutput(string $dir = '') : void
 {
+	$sep = \DIRECTORY_SEPARATOR;
 	if (!$dir) {
-		$dir = \dirname(__FILE__, 2) . '/cliOutput';
+		$dir = \dirname(__FILE__, 2) . "{$sep}cliOutput";
 	}
 
 	if (!\is_dir($dir)) {
@@ -93,7 +226,26 @@ function deleteCliOutput(string $dir = '') : void
 	rmdir($dir);
 }
 
+/**
+ * Build all blocks setup output.
+ *
+ * @return void
+ */
+function buildTestBlocks() {
+	(new InitBlocksCli('boilerplate'))->__invoke([], []);
+
+	(new BlocksExample())->getBlocksDataFullRaw();
+}
+
+/**
+ * Mock Mockery interface.
+ *
+ * @param string $class Class to mock.
+ *
+ * @return MockInterface
+ */
 function mock(string $class): MockInterface
 {
 	return Mockery::mock($class);
 }
+

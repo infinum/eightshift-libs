@@ -2,75 +2,76 @@
 
 namespace Tests\Unit\GitIgnore;
 
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
+use EightshiftLibs\Helpers\Components;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-$wpCliMock
-	->shouldReceive('success')
-	->andReturnArg(0);
-
-$wpCliMock
-	->shouldReceive('error')
-	->andReturnArg(0);
-
-$this->gitignore = new GitIgnoreCli('boilerplate');
+	$this->mock = new GitIgnoreCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
+	setAfterEach();
+
+	unset($this->mock);
 });
 
-test('GitIgnore CLI command will correctly copy the .gitignore file with defaults', function () {
-	$gitignore = $this->gitignore;
-	$gitignore([], $gitignore->getDevelopArgs([]));
+//---------------------------------------------------------------------------------//
 
-	$outputPath = \dirname(__FILE__, 3) . '/cliOutput/.gitignore';
-
-	// Check the output dir if the generated method is correctly generated.
-	$generatedIgnore = \file_get_contents($outputPath);
-
-	$this->assertStringContainsString('wp-admin', $generatedIgnore);
-	$this->assertStringNotContainsString('footer.php', $generatedIgnore);
-	$this->assertFileExists($outputPath);
+test('getCommandParentName will return correct value', function () {
+	expect($this->mock->getCommandParentName())
+		->toBeString()
+		->toEqual(CliCreate::COMMAND_NAME);
 });
 
-test('GitIgnore CLI command will run under custom command name', function () {
-	$gitignore = $this->gitignore;
-	$result = $gitignore->getCommandName();
+//---------------------------------------------------------------------------------//
 
-	$this->assertStringContainsString('init_gitignore', $result);
+test('getCommandName will return correct value', function () {
+	expect($this->mock->getCommandName())
+		->toBeString()
+		->toEqual('gitignore');
 });
 
-test('GitIgnore CLI command will correctly copy the .gitignore file in the custom folder with set arguments', function () {
-	$gitignore = $this->gitignore;
-	$gitignore([], [
-		'root' => './test',
+//---------------------------------------------------------------------------------//
+
+test('getDefaultArgs will return correct array', function () {
+	expect($this->mock->getDefaultArgs())
+		->toBeArray()
+		->toHaveKeys(['path']);
+});
+
+//---------------------------------------------------------------------------------//
+
+test('getDoc will return correct array', function () {
+	$docs = $this->mock->getDoc();
+
+	expect($docs)
+		->toBeArray()
+		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
+		->and(count($docs['synopsis']))->toEqual(1)
+		->and($docs['synopsis'][0]['name'])->toEqual('path');
+});
+
+//---------------------------------------------------------------------------------//
+
+test('__invoke will will correctly copy example class with default args', function () {
+	$mock = $this->mock;
+	$mock([], [
+		'path' => Components::getProjectPaths('cliOutput'),
 	]);
 
-	$this->assertFileExists(\dirname(__FILE__, 3) . '/cliOutput/test/.gitignore');
-});
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', '.gitignore'));
 
-
-test('GitIgnore CLI documentation is correct', function () {
-	$gitignore = $this->gitignore;
-
-	$documentation = $gitignore->getDoc();
-
-	$key = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($key, $documentation);
-	$this->assertArrayHasKey('synopsis', $documentation);
-	$this->assertSame('Initialize Command for building your projects gitignore.', $documentation[$key]);
+	expect($output)
+		->toContain(
+			'wp-admin',
+			'/index.php',
+			'wp-content/*',
+			'wp-content/themes/twenty*/',
+		);
 });

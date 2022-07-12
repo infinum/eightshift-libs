@@ -3,63 +3,43 @@
 namespace Tests\Unit\WpCli;
 
 use EightshiftBoilerplate\WpCli\WpCliExample;
-use EightshiftLibs\Services\ServiceCliInterface;
-use RuntimeException;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->customCommand = new WpCliExample();
+	$this->mock = new WpCliExample('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput();
-});
+	setAfterEach();
 
+	unset($this->mock);
+});
 
 test('Register method will call init hook', function () {
-	$this->customCommand->register();
+	$this->mock->register();
 
-	$this->assertSame(10, has_action('cli_init', 'EightshiftBoilerplate\WpCli\WpCliExample->registerCommand()'));
+	expect(has_action('cli_init', 'EightshiftBoilerplate\WpCli\WpCliExample->registerCommand()'))
+		->toEqual(10);
 });
 
 test('Prepare command docs returns correct doc', function() {
-	$customCommand = $this->customCommand->getDocs();
+	$mock = $this->mock->getDocs();
 
-	$this->assertIsArray($customCommand);
-	$this->assertArrayHasKey('shortdesc', $customCommand);
+	expect($mock)
+		->toHaveKeys(['shortdesc']);
 });
 
 test('Custom command class is callable', function() {
-	$customCommand = $this->customCommand;
+	$customCommand = $this->mock;
 
 	expect($customCommand)->toBeCallable();
 });
 
 
 test('Custom command example documentation is correct', function () {
-	$customCommand = $this->customCommand;
-
-	$documentation = $customCommand->getDocs();
-
-	expect($documentation)
-		->toBeArray($documentation)
-		->toHaveKey('shortdesc');
+	expect($this->mock->getDocs())->toBeArray();
 });

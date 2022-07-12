@@ -2,13 +2,12 @@
 
 namespace Tests\Unit\Cli;
 
-use Brain\Monkey;
 use EightshiftLibs\Cli\AbstractCli;
 use ReflectionClass;
 use RuntimeException;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
 class AbstractTest extends AbstractCli {
 	protected string $fileContents = 'use EightshiftBoilerplateVendor\Service; use EightshiftBoilerplate\Test;';
@@ -26,50 +25,31 @@ class AbstractTest extends AbstractCli {
 	{
 		return [];
 	}
+
+	public function getCommandParentName(): string
+	{
+		return '';
+	}
+
+	public function getCommandName(): string
+	{
+		return '';
+	}
+
 };
 
 /**
  * Mock before tests.
  */
 beforeEach(function () {
-	Monkey\setUp();
-
-	$wpCliMock = mock('alias:WP_CLI');
-
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnUsing(function ($message) {
-			putenv("ERROR_HAPPENED={$message}");
-		});
-
-	$wpCliMock
-		->shouldReceive('log')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('runcommand')
-		->andReturn(putenv("INIT_CALLED=true"));
-
-	$wpCliMock
-		->shouldReceive('add_command')
-		->andReturn(putenv("COMMAND_ADDED=true"));
+	setBeforeEach();
 });
 
 /**
  * Cleanup after tests.
  */
 afterEach(function () {
-	deleteCliOutput();
-
-	putenv('ERROR_HAPPENED');
-	putenv('INIT_CALLED');
-	putenv('COMMAND_ADDED');
-
-	Monkey\tearDown();
+	setAfterEach();
 });
 
 
@@ -117,6 +97,7 @@ test('Prepare command docs returns correct doc', function() {
 				'name' => 'random',
 				'description' => 'Random description.',
 				'optional' => true,
+				'default' => 'random',
 			],
 		],
 	];
@@ -167,63 +148,6 @@ test('Block full file list helper works', function() {
 	$this->assertTrue(\array_key_exists('components/button-toolbar.js', \array_flip($output)), 'components/button-toolbar.js is missing.');
 	$this->assertTrue(\array_key_exists('components/button-options.js', \array_flip($output)), 'components/button-options.js is missing.');
 });
-
-
-test('Getting frontend libs block path works', function() {
-	$abstractMock = new AbstractTest('test');
-
-	$output = $abstractMock->getFrontendLibsBlockPath();
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('node_modules/@eightshift/frontend-libs/blocks/init', $output);
-});
-
-
-test('Getting frontend libs path works', function() {
-	$abstractMock = new AbstractTest('test');
-
-	$output = $abstractMock->getFrontendLibsPath('test');
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('node_modules/@eightshift/frontend-libs/test', $output);
-});
-
-
-test('Getting libs path works', function() {
-	$abstractMock = new AbstractTest('test');
-
-	// The test one is covered. Let's see if we can get the one that will be used
-	putenv('ES_TEST');
-	$output = $abstractMock->getLibsPath('test');
-
-	$this->assertIsString($output);
-	$this->assertStringContainsString('/vendor/infinum/eightshift-libs/test', $output);
-
-	putenv('ES_TEST=1');
-});
-
-
-test('Project config root path works if dev is true', function() {
-	$abstractMock = new AbstractTest('test');
-
-	$outputDev = $abstractMock->getProjectConfigRootPath(true);
-
-	$this->assertIsString($outputDev);
-});
-
-
-test('Project config root path works if dev is false', function() {
-	putenv('ES_TEST');
-	$abstractMock = new AbstractTest('test');
-
-	$outputProd = $abstractMock->getProjectConfigRootPath(false);
-
-	$this->assertIsString($outputProd);
-	$this->assertSame('/', $outputProd);
-
-	putenv('ES_TEST=1');
-});
-
 
 test('Preparing slug works', function($slugs) {
 	$abstractMock = new AbstractTest('test');

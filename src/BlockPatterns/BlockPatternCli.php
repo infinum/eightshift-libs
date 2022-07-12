@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\BlockPatterns;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
 
 /**
@@ -19,26 +20,37 @@ use EightshiftLibs\Helpers\Components;
 class BlockPatternCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'BlockPatterns';
+	public function getCommandParentName(): string
+	{
+		return CliBlocks::COMMAND_NAME;
+	}
 
 	/**
-	 * Define default develop props.
+	 * Get WPCLI command name
 	 *
-	 * @param string[] $args WPCLI eval-file arguments.
-	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
-	public function getDevelopArgs(array $args): array
+	public function getCommandName(): string
+	{
+		return 'create block-pattern';
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
 	{
 		return [
-			'title' => $args[1] ?? 'Something',
-			'name' => $args[2] ?? 'eightshift-boilerplate/something',
-			'description' => $args[3] ?? 'This is an example block pattern',
-			'content' => $args[4] ?? '',
+			'title' => 'example-title',
+			'name' => 'example-name',
+			'description' => 'example-description',
+			'content' => 'example-content',
 		];
 	}
 
@@ -50,60 +62,82 @@ class BlockPatternCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates a block pattern.',
+			'shortdesc' => 'Create block pattern service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'Pattern title',
-					'optional' => \defined('ES_DEVELOP_MODE') ? \ES_DEVELOP_MODE : false
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'name',
 					'description' => 'Pattern name with namespace. If not provided will be generated from title. Example: eightshift/pattern-name',
 					'optional' => true,
+					'default' => $this->getDefaultArg('name'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'description',
 					'description' => 'Description of the pattern.',
 					'optional' => true,
+					'default' => $this->getDefaultArg('description'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'content',
 					'description' => 'Content of the pattern. Needs to be the WP block markup (tho most likely you\'d add this manually after you generate the pattern)',
 					'optional' => true,
+					'default' => $this->getDefaultArg('content'),
 				],
 			],
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create service class to register custom block pattern.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --title='Button' --description='This is description' --capability='edit_posts' --menu_slug='es-content'
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/BlockPatterns/BlockPatternExample.php
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		// Get Props.
-		$title = $assocArgs['title'] ?? '';
-		$name = isset($assocArgs['name']) ? $assocArgs['name'] : $this->generateName($title);
-		$content = $assocArgs['content'] ?? '';
-		$description = isset($assocArgs['description']) ? $assocArgs['description'] : 'Description of this pattern';
+		$title = $this->getArg($assocArgs, 'title');
+		$name = $this->getArg($assocArgs, 'name');
+		$content = $this->getArg($assocArgs, 'content');
+		$description = $this->getArg($assocArgs, 'description');
+
+		if (!$name) {
+			$name = $this->generateName($title);
+		}
 
 		$className = $this->getFileName($title);
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
+		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->searchReplaceString('example-name', $name)
-			->searchReplaceString('example-title', $title)
-			->searchReplaceString('example-description', $description)
-			->searchReplaceString('example-content', $content);
-
-		// Output final class to new file/folder and finish.
-		$class->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->searchReplaceString($this->getArgTemplate('title'), $title)
+			->searchReplaceString($this->getArgTemplate('name'), $name)
+			->searchReplaceString($this->getArgTemplate('content'), $content)
+			->searchReplaceString($this->getArgTemplate('description'), $description)
+			->outputWrite(Components::getProjectPaths('srcDestination', 'BlockPatterns'), "{$className}.php", $assocArgs);
 	}
 
 	/**

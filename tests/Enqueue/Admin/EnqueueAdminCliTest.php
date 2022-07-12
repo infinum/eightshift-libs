@@ -4,36 +4,24 @@ namespace Tests\Unit\Enqueue\Admin;
 
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 
-use function Tests\deleteCliOutput;
-use function Tests\mock;
+use function Tests\setAfterEach;
+use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	$wpCliMock = mock('alias:WP_CLI');
+	setBeforeEach();
 
-	$wpCliMock
-		->shouldReceive('success')
-		->andReturnArg(0);
-
-	$wpCliMock
-		->shouldReceive('error')
-		->andReturnArg(0);
-
-	$this->enqueueAdmin = new EnqueueAdminCli('boilerplate');
+	$this->mock = new EnqueueAdminCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
-	deleteCliOutput(\dirname(__FILE__, 4) . '/cliOutput');
+	setAfterEach();
+
+	unset($this->mock);
 });
 
 test('Custom Enqueue Admin CLI command will correctly copy the Enqueue Admin class', function () {
-	$admin = $this->enqueueAdmin;
-	$admin([], $admin->getDevelopArgs([]));
+	$admin = $this->mock;
+	$admin([], $admin->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedAdmin = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Admin/EnqueueAdmin.php');
@@ -45,11 +33,5 @@ test('Custom Enqueue Admin CLI command will correctly copy the Enqueue Admin cla
 
 
 test('Custom Enqueue Admin CLI documentation is correct', function () {
-	$admin = $this->enqueueAdmin;
-	$documentation = $admin->getDoc();
-	$descKey = 'shortdesc';
-
-	$this->assertIsArray($documentation);
-	$this->assertArrayHasKey($descKey, $documentation);
-	$this->assertSame('Generates Enqueue Admin class.', $documentation[$descKey]);
+	expect($this->mock->getDoc())->toBeArray();
 });

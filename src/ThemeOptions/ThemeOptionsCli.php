@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\ThemeOptions;
 
 use EightshiftLibs\Cli\AbstractCli;
+use EightshiftLibs\Cli\ParentGroups\CliCreate;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Class ThemeOptionsCli
@@ -18,9 +20,24 @@ use EightshiftLibs\Cli\AbstractCli;
 class ThemeOptionsCli extends AbstractCli
 {
 	/**
-	 * Output dir relative path.
+	 * Get WPCLI command parent name
+	 *
+	 * @return string
 	 */
-	public const OUTPUT_DIR = 'src' . \DIRECTORY_SEPARATOR . 'ThemeOptions';
+	public function getCommandParentName(): string
+	{
+		return CliCreate::COMMAND_NAME;
+	}
+
+	/**
+	 * Get WPCLI command name
+	 *
+	 * @return string
+	 */
+	public function getCommandName(): string
+	{
+		return 'theme-options';
+	}
 
 	/**
 	 * Get WPCLI command doc
@@ -30,13 +47,34 @@ class ThemeOptionsCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Generates project Theme Options class using ACF.',
+			'shortdesc' => 'Create project Theme Options service class using ACF plugin.',
+			'longdesc' => $this->prepareLongDesc("
+				## USAGE
+
+				Used to create Advanced Custom Fields theme options service class to register project specific options.
+				ACF plugin must be installed.
+
+				## EXAMPLES
+
+				# Create service class:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				## RESOURCES
+
+				Service class will be created from this example:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/ThemeOptions/ThemeOptionsExample.php
+
+				ACF documentation:
+				https://www.advancedcustomfields.com/resources/options-page/
+			"),
 		];
 	}
 
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$this->getIntroText($assocArgs);
+
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -45,6 +83,6 @@ class ThemeOptionsCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->outputWrite(static::OUTPUT_DIR, $className, $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', 'ThemeOptions'), "{$className}.php", $assocArgs);
 	}
 }
