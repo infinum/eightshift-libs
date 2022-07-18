@@ -28,7 +28,7 @@ test('Abstract main will instantiate services', function () {
 		}
 	};
 
-	$loader = require \dirname(__DIR__, 2). '/vendor/autoload.php';
+	$loader = require \dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 	$mainClass = new MainTest($loader->getPrefixesPsr4(), 'Tests\data\src');
 
@@ -50,7 +50,7 @@ test('Caching compiled services works', function() {
 		}
 	};
 
-	$loader = require \dirname(__DIR__, 2). '/vendor/autoload.php';
+	$loader = require \dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 	$mainClass = new MainCompiledTest($loader->getPrefixesPsr4(), 'Tests\data\src');
 
