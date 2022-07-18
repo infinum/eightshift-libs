@@ -30,7 +30,7 @@ jobs:
     steps:
       # Checkout repository
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Setup PHP versions, run checks
       - name: PHP setup
@@ -43,7 +43,7 @@ jobs:
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v1
+        uses: ramsey/composer-install@v2
         with:
           dependency-versions: highest
 
@@ -65,7 +65,7 @@ jobs:
     steps:
      # Checkout repository
      - name: Checkout
-       uses: actions/checkout@v2
+       uses: actions/checkout@v3
 
      # Setup PHP versions, run checks
      - name: PHP setup
@@ -77,7 +77,7 @@ jobs:
      # Install dependencies and handle caching in one go.
      # @link https://github.com/marketplace/actions/install-composer-dependencies
      - name: Install Composer dependencies
-       uses: ramsey/composer-install@v1
+       uses: ramsey/composer-install@v2
        with:
          dependency-versions: highest
 

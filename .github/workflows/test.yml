@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: PHP setup
         uses: shivammathur/setup-php@v2
@@ -35,7 +35,7 @@ jobs:
       # Install dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-composer-dependencies
       - name: Install Composer dependencies
-        uses: "ramsey/composer-install@v1"
+        uses: ramsey/composer-install@v2
         with:
           dependency-versions: highest
 
@@ -46,7 +46,7 @@ jobs:
         run: composer test:coverage -q # We don't need an output for coverage, codecov will do that.
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./tests/coverage/clover.xml
