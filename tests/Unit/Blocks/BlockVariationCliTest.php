@@ -6,18 +6,11 @@ use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new UseVariationCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

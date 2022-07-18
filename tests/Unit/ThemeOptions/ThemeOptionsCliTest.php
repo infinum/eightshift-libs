@@ -5,18 +5,11 @@ namespace Tests\Unit\ThemeOptions;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new ThemeOptionsCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

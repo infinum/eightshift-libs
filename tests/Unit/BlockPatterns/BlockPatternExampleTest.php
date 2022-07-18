@@ -6,17 +6,8 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\BlockPatterns\BlockPatternExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->example = new BlockPatternExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('Register method will call init hook', function () {

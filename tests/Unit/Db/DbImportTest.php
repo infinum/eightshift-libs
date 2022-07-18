@@ -8,18 +8,11 @@ use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Setup\SetupCli;
 use Exception;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function() {
-	setBeforeEach();
-
 	$this->mock = new ImportCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

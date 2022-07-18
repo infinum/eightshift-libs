@@ -4,17 +4,8 @@ namespace Tests\Unit\Login;
 
 use EightshiftBoilerplate\Main\MainExample;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function() {
-	setBeforeEach();
-
 	$this->main = new MainExample([], '');
-});
-
-afterEach(function() {
-	setAfterEach();
 });
 
 test('Register method will call init hook', function () {

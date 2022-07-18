@@ -3,20 +3,7 @@
 namespace Tests\Unit\Exception;
 
 use EightshiftLibs\Exception\FailedToLoadView;
-
-use Brain\Monkey;
 use Exception;
-
-use function Tests\setupMocks;
-
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterAll(function() {
-	Monkey\tearDown();
-});
 
 test('Checks if the viewException method will return correct response.', function () {
 

@@ -6,18 +6,11 @@ use EightshiftLibs\AdminMenus\AdminMenuCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new AdminMenuCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

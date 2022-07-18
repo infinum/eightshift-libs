@@ -6,20 +6,11 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Rest\Fields\FieldExample;
 
-use function Tests\setupMocks;
 use function Tests\mock;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->field = new FieldExample();
 
 	$this->wpRestServer = mock('alias:WP_REST_Server');
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 

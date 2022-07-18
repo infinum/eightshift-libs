@@ -4,22 +4,9 @@ namespace Tests\Unit\Cli;
 
 use EightshiftLibs\Cli\CliHelpers;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
-beforeEach(function () {
-	setBeforeEach();
-});
 
-/**
- * Cleanup after tests.
- */
-afterEach(function () {
-	setAfterEach();
-});
+
 
 test('Return correct name - getGithubPluginName', function ($input, $output) {
 	$case = CliHelpers::getGithubPluginName($input);

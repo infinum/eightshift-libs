@@ -6,15 +6,11 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setupMocks;
 
 /**
  * Setup before each test.
  */
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
   Functions\when('parse_blocks')
     ->alias(function($blocks) {
       return $blocks;
@@ -42,10 +38,6 @@ beforeEach(function() {
 /**
  * Cleanup after each test.
  */
-afterEach(function() {
-	Monkey\tearDown();
-});
-
 /**
  * Checking if reading time is correct based on the content that appears in
  * dataset postsDifferentLength.

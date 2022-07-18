@@ -5,17 +5,8 @@ namespace Tests\Unit\ThemeOptions;
 use Brain\Monkey;
 use EightshiftBoilerplate\ThemeOptions\ThemeOptionsExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->example = new ThemeOptionsExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('Register method will bail out if ACF is not registered/activated', function () {

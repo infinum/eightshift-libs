@@ -3,19 +3,13 @@
 namespace Tests\Unit\AnalyticsGdpr;
 
 use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
-
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
+use EightshiftLibs\Helpers\Components;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new AnalyticsGdprCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 
@@ -25,7 +19,7 @@ test('Custom Analytics & GDPR Settings CLI command will correctly copy the Analy
 	$analyticsGdpr([], []);
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedMeta = file_get_contents(dirname(__FILE__, 3) . '/cliOutput/src/AnalyticsGdpr/AnalyticsGdpr.php');
+	$generatedMeta = file_get_contents(Components::getProjectPaths('srcDestination', 'AnalyticsGdpr/AnalyticsGdpr.php'));
 
 	expect($generatedMeta)
 		->toBeString()
@@ -50,7 +44,7 @@ test('Custom GDPR settings CLI documentation is correct', function () {
 	expect($documentation)
 		->toBeArray()
 		->toHaveKey($descKey);
-	
+
 	expect($documentation[$descKey])
 		->toBeString()
 		->toBe('Create project Analytics and GDPR Settings classes using ACF plugin.');

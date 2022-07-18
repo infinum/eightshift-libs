@@ -6,18 +6,11 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new PostTypeCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

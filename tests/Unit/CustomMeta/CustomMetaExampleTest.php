@@ -6,17 +6,8 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\CustomMeta\AcfMetaExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->example = new AcfMetaExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 

@@ -6,8 +6,6 @@ use EightshiftLibs\Cli\AbstractCli;
 use ReflectionClass;
 use RuntimeException;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
 class AbstractTest extends AbstractCli {
 	protected string $fileContents = 'use EightshiftBoilerplateVendor\Service; use EightshiftBoilerplate\Test;';
@@ -38,19 +36,8 @@ class AbstractTest extends AbstractCli {
 
 };
 
-/**
- * Mock before tests.
- */
-beforeEach(function () {
-	setBeforeEach();
-});
 
-/**
- * Cleanup after tests.
- */
-afterEach(function () {
-	setAfterEach();
-});
+
 
 
 test('Register method will call the cli_init hooks', function() {

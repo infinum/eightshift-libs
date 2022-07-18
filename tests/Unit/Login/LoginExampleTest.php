@@ -6,17 +6,8 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Login\LoginExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->login = new LoginExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('Register method will call init hook', function () {

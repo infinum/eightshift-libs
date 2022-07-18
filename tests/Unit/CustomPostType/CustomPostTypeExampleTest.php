@@ -6,17 +6,8 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\CustomPostType\PostTypeExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->example = new PostTypeExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 

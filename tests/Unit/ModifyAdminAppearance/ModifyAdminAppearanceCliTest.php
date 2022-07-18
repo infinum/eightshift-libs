@@ -5,18 +5,11 @@ namespace Tests\Unit\ModifyAdminAppearance;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new ModifyAdminAppearanceCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

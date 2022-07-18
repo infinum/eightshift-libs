@@ -4,19 +4,6 @@ namespace Tests\Unit\Exception;
 
 use EightshiftLibs\Exception\InvalidBlock;
 
-use Brain\Monkey;
-
-use function Tests\setupMocks;
-
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterAll(function() {
-	Monkey\tearDown();
-});
-
 test('Checks if missingBlocksException will return correct response.', function () {
 
 	$missingBlocks = InvalidBlock::missingBlocksException();

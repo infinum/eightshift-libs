@@ -3,19 +3,13 @@
 namespace Tests\Unit\Enqueue\Theme;
 
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
-
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
+use EightshiftLibs\Helpers\Components;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new EnqueueThemeCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 
@@ -24,11 +18,12 @@ test('Custom enqueue theme CLI command will correctly copy the Enqueue Theme cla
 	$theme([], $theme->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedTheme = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Theme/EnqueueTheme.php');
+	$generatedTheme = \file_get_contents(Components::getProjectPaths('srcDestination', 'Enqueue/Theme/EnqueueTheme.php'));
 
-	$this->assertStringContainsString('class EnqueueTheme extends AbstractEnqueueTheme', $generatedTheme);
-	$this->assertStringContainsString('wp_enqueue_scripts', $generatedTheme);
-	$this->assertStringNotContainsString('admin_enqueue_scripts', $generatedTheme);
+	expect($generatedTheme)
+		->toContain('class EnqueueTheme extends AbstractEnqueueTheme')
+		->toContain('wp_enqueue_scripts')
+		->not->toContain('admin_enqueue_scripts');
 });
 
 

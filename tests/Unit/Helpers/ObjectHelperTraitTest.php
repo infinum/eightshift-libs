@@ -6,23 +6,12 @@ use Brain\Monkey\Functions;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Helpers\ObjectHelperTrait;
 
-use Brain\Monkey;
 use EightshiftLibs\Exception\InvalidManifest;
 
-use function Tests\setupMocks;
 
 class MockObjectHelper {
 	use ObjectHelperTrait;
 }
-
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterAll(function() {
-	Monkey\tearDown();
-});
 
 beforeEach(function () {
 	$this->mockHelper = new MockObjectHelper();

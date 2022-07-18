@@ -4,12 +4,7 @@ namespace Tests\Unit\Columns\Media;
 
 use EightshiftBoilerplate\Columns\Media\WebPMediaColumnExample;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->webPMediaColumnExampleMock = new WebPMediaColumnExample();
 
 	$this->webPMediaColumnExampleMockColumns = [
@@ -19,8 +14,6 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	$this->webPMediaColumnExampleMockColumns = [];
 });
 

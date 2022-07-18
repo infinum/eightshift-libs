@@ -5,18 +5,11 @@ namespace Tests\Unit\Setup;
 use EightshiftLibs\Setup\UpdateCli;
 use Exception;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new UpdateCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

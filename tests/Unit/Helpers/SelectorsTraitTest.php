@@ -5,16 +5,6 @@ namespace Tests\Unit\Helpers;
 use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
-beforeEach(function () {
-	setBeforeEach();
-});
-
-afterEach(function () {
-	setAfterEach();
-});
 
 // ------------------------------------------
 // selector

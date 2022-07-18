@@ -5,18 +5,11 @@ namespace Tests\Unit\BlockPatterns;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new BlockPatternCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 
@@ -59,7 +52,7 @@ test('Block pattern CLI command will correctly copy the Block pattern class with
 	]);
 
 	// Check the output dir if the generated method is correctly generated.
-	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/BlockPatterns/YourOwnThingBlockPattern.php');
+	$output = \file_get_contents(Components::getProjectPaths('srcDestination', 'BlockPatterns/YourOwnThingBlockPattern.php'));
 
 	expect($output)
 	->toContain(
@@ -87,7 +80,7 @@ test('Block pattern CLI command will generate a name from title if "name" argume
 		'content' => 'this-one-has-some-content',
 	]);
 
-	$output = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/BlockPatterns/YourOwnThingBlockPattern.php');
+	$output = \file_get_contents(Components::getProjectPaths('srcDestination', 'BlockPatterns/YourOwnThingBlockPattern.php'));
 
 	expect($output)
 	->toContain(

@@ -6,18 +6,12 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\AdminMenus\AdminMenuExample;
 
 use function Tests\buildTestBlocks;
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new AdminMenuExample();
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

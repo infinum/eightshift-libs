@@ -5,18 +5,11 @@ namespace Tests\Unit\I18n;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\I18n\I18nCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new I18nCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

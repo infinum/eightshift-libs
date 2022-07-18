@@ -6,18 +6,11 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
 use EightshiftLibs\Helpers\Components;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new TaxonomyCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

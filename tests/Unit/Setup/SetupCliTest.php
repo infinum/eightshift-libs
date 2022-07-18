@@ -5,18 +5,11 @@ namespace Tests\Unit\Setup;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Setup\SetupCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new SetupCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

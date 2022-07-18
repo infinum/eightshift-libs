@@ -2,11 +2,10 @@
 
 namespace Tests\Unit\Media;
 
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Media\AbstractMedia;
 use Brain\Monkey\Functions;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
 class AbstractMediaTest extends AbstractMedia {
 	public function register(): void
@@ -16,10 +15,8 @@ class AbstractMediaTest extends AbstractMedia {
 };
 
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mockMedia = attachemntMetaDataMock();
-	$this->mockPath = dirname(__FILE__, 2) . '/data/media';
+	$this->mockPath = Components::getProjectPaths('testsData', 'media');
 	$this->mockFileName = 'test';
 
 	Functions\when('get_attached_file')->justReturn("{$this->mockPath}/{$this->mockFileName}.png");
@@ -30,8 +27,6 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	$mockSizes = [
 		"{$this->mockPath}/{$this->mockFileName}.webp",
 		"{$this->mockPath}/{$this->mockFileName}-150x150.webp",

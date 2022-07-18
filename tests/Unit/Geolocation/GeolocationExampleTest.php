@@ -5,17 +5,8 @@ namespace Tests\Unit\Geolocation;
 use EightshiftBoilerplate\Geolocation\GeolocationExample;
 use Exception;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->geolocation = new GeolocationExample();
-});
-
-afterEach(function () {
-	setAfterEach();
 });
 
 test('Register method will call correct hooks', function () {

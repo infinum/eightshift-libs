@@ -5,18 +5,11 @@ namespace Tests\Unit\Manifest;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Manifest\ManifestCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new ManifestCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

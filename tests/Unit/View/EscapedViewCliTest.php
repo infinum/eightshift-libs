@@ -5,17 +5,8 @@ namespace Tests\Unit\View;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\View\EscapedViewCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new EscapedViewCli('boilerplate');
-});
-
-afterEach(function () {
-	setAfterEach();
 });
 
 test('Escaped view command will correctly copy the EscapedView class with defaults', function () {

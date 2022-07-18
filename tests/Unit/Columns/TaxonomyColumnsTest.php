@@ -2,19 +2,7 @@
 
 namespace Tests\Unit\Columns;
 
-use Brain\Monkey;
 use EightshiftLibs\Columns\Taxonomy\AbstractTaxonomyColumns;
-
-use function Tests\setupMocks;
-
-beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
-});
 
 test('Hooks are registered for the custom taxonomy columns', function() {
 	class TaxonomyColumnMock extends AbstractTaxonomyColumns {

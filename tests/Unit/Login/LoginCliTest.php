@@ -5,18 +5,11 @@ namespace Tests\Unit\Login;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Login\LoginCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new LoginCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

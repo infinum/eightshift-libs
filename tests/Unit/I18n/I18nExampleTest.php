@@ -6,18 +6,9 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\I18n\I18nExample;
 
-use function Tests\setupMocks;
 use function Tests\mock;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->i18n = new I18nExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('Register method will call init hook', function () {

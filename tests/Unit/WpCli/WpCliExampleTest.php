@@ -4,18 +4,11 @@ namespace Tests\Unit\WpCli;
 
 use EightshiftBoilerplate\WpCli\WpCliExample;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new WpCliExample('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

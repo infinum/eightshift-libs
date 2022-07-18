@@ -5,18 +5,11 @@ namespace Tests\Unit\CustomPostType;
 use EightshiftLibs\Db\ExportCli;
 use Brain\Monkey\Functions;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new ExportCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

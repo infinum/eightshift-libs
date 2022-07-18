@@ -6,17 +6,8 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\CustomTaxonomy\TaxonomyExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->example = new TaxonomyExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('if taxonomy actions are registered', function () {

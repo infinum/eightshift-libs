@@ -6,17 +6,8 @@ use Brain\Monkey;
 use Brain\Monkey\Actions;
 use EightshiftBoilerplate\AdminMenus\AdminReusableBlocksMenuExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->example = new AdminReusableBlocksMenuExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 

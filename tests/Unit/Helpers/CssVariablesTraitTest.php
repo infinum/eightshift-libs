@@ -7,17 +7,9 @@ use EightshiftLibs\Helpers\Components;
 use Brain\Monkey\Functions;
 
 use function Tests\buildTestBlocks;
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	buildTestBlocks();
-});
-
-afterEach(function () {
-	setAfterEach();
 });
 
 // ------------------------------------------

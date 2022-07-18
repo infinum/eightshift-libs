@@ -2,19 +2,7 @@
 
 namespace Tests\Unit\Columns;
 
-use Brain\Monkey;
 use EightshiftLibs\Columns\PostType\AbstractPostTypeColumns;
-
-use function Tests\setupMocks;
-
-beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
-});
 
 test('Hooks are registered for the custom post type columns', function() {
 	class PostTypeColumnMock extends AbstractPostTypeColumns {

@@ -3,19 +3,13 @@
 namespace Tests\Unit\EnqueueBlock;
 
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
-
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
+use EightshiftLibs\Helpers\Components;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new EnqueueBlocksCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 
@@ -26,23 +20,19 @@ test('Enqueue Block CLI command will make appropriate class.', function () {
 	$ebc = $this->mock;
 	$ebc([], []);
 
-	$generatedEBC = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
-	$this->assertStringContainsString('class EnqueueBlocks extends AbstractEnqueueBlocks', $generatedEBC);
+	$generatedEBC = \file_get_contents(Components::getProjectPaths('srcDestination', 'Enqueue/Blocks/EnqueueBlocks.php'));
 
-	$this->assertStringContainsString('enqueue_block_editor_assets', $generatedEBC);
-	$this->assertStringContainsString('enqueueBlockEditorScript', $generatedEBC);
-
-	$this->assertStringContainsString('enqueue_block_editor_assets', $generatedEBC);
-	$this->assertStringContainsString('enqueueBlockEditorStyle', $generatedEBC);
-
-	$this->assertStringContainsString('enqueue_block_assets', $generatedEBC);
-	$this->assertStringContainsString('enqueueBlockStyle', $generatedEBC);
-
-	$this->assertStringContainsString('wp_enqueue_scripts', $generatedEBC);
-	$this->assertStringContainsString('enqueueBlockFrontendScript', $generatedEBC);
-
-	$this->assertStringContainsString('wp_enqueue_scripts', $generatedEBC);
-	$this->assertStringContainsString('enqueueBlockFrontendStyle', $generatedEBC);
+	expect($generatedEBC)
+		->toContain('class EnqueueBlocks extends AbstractEnqueueBlocks')
+		->toContain('enqueue_block_editor_assets')
+		->toContain('enqueueBlockEditorScript')
+		->toContain('enqueue_block_editor_assets')
+		->toContain('enqueueBlockEditorStyle')
+		->toContain('enqueue_block_assets')
+		->toContain('enqueueBlockStyle')
+		->toContain('wp_enqueue_scripts')
+		->toContain('enqueueBlockFrontendScript')
+		->toContain('wp_enqueue_scripts');
 });
 
 /**
@@ -54,9 +44,9 @@ test('Enqueue Block CLI command will set correct namespace.', function () {
 		'namespace' => 'NewTheme',
 	]);
 
-	$generatedEBC = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
+	$generatedEBC = \file_get_contents(Components::getProjectPaths('srcDestination', 'Enqueue/Blocks/EnqueueBlocks.php'));
 
-	$this->assertStringContainsString('namespace NewTheme\Enqueue\Blocks;', $generatedEBC);
+	expect($generatedEBC)->toContain('namespace NewTheme\Enqueue\Blocks;');
 });
 
 /**
@@ -66,10 +56,11 @@ test('Enqueue Block CLI command will set correct functions.', function () {
 	$ebc = $this->mock;
 	$ebc([], []);
 
-	$generatedEBC = \file_get_contents(\dirname(__FILE__, 4) . '/cliOutput/src/Enqueue/Blocks/EnqueueBlocks.php');
+	$generatedEBC = \file_get_contents(Components::getProjectPaths('srcDestination', 'Enqueue/Blocks/EnqueueBlocks.php'));
 
-	$this->assertStringContainsString('getAssetsPrefix', $generatedEBC);
-	$this->assertStringContainsString('getAssetsVersion', $generatedEBC);
+	expect($generatedEBC)
+		->toContain('getAssetsPrefix')
+		->toContain('getAssetsVersion');
 });
 
 test('Custom Enqueue Blocks CLI documentation is correct', function () {

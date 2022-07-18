@@ -4,19 +4,6 @@ namespace Tests\Unit\Exception;
 
 use EightshiftLibs\Exception\InvalidService;
 
-use Brain\Monkey;
-
-use function Tests\setupMocks;
-
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterAll(function() {
-	Monkey\tearDown();
-});
-
 test('Checks if the fromService method will return correct response.', function () {
 
 	$service = 'nonexistent';

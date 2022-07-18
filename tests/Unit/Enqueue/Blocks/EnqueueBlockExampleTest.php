@@ -8,7 +8,6 @@ use EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample;
 use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
-use function Tests\setupMocks;
 use function Tests\mock;
 
 class EnqueueBlockExampleTest extends EnqueueBlocksExample {
@@ -31,9 +30,6 @@ class EnqueueBlockExampleTest extends EnqueueBlocksExample {
  * Setup before each test.
  */
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	// Setting imaginary values for mock and testing.
 	$this->projectName = 'NewProject';
 	$this->projectVersion = '3.1.23';

@@ -6,17 +6,8 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\ModifyAdminAppearance\ModifyAdminAppearanceExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->modifyAdminAppearance = new ModifyAdminAppearanceExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('Register method will call init hook', function () {

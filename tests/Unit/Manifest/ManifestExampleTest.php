@@ -6,12 +6,7 @@ use Brain\Monkey;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
 use function Tests\mock;
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	// Setup Config mock.
 	mock('alias:EightshiftBoilerplate\Config\Config')
 		->shouldReceive([
@@ -20,10 +15,6 @@ beforeEach(function() {
 		]);
 
 	$this->example = new ManifestExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('Register method will call init hook', function () {

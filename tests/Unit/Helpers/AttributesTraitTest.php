@@ -9,17 +9,9 @@ use Exception;
 
 use function Tests\buildTestBlocks;
 use function Tests\mock;
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	buildTestBlocks();
-});
-
-afterEach(function () {
-	setAfterEach();
 });
 
 // ------------------------------------------
@@ -46,7 +38,7 @@ test('checkAttr will throw an exception in the case that the block name is missi
 
 
 test('Asserts that checkAttr works in case attribute is boolean', function () {
-	$manifest = Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button/');
+	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'button'));
 	$attributes['buttonIsAnchor'] = true;
 
 	$results = Components::checkAttr('buttonIsAnchor', $attributes, $manifest);

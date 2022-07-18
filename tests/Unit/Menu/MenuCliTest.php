@@ -5,18 +5,11 @@ namespace Tests\Unit\Menu;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Menu\MenuCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new MenuCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

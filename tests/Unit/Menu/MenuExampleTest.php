@@ -8,13 +8,8 @@ use EightshiftBoilerplate\Menu\MenuExample;
 
 use EightshiftLibs\Menu\AbstractMenu;
 
-use function Tests\setupMocks;
 use function Tests\mock;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	mock('Walker_Nav_Menu');
 
 	Functions\when('register_nav_menus')->alias(function($args) {

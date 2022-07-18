@@ -3,19 +3,13 @@
 namespace Tests\Unit\Config;
 
 use EightshiftLibs\Config\ConfigCli;
-
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
+use EightshiftLibs\Helpers\Components;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new ConfigCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 
@@ -24,7 +18,7 @@ test('Custom acf meta CLI command will correctly copy the Config class with defa
 	$config([], $config->getDefaultArgs());
 
 	// Check the output dir if the generated method is correctly generated.
-	$generatedConfig = \file_get_contents(\dirname(__FILE__, 3) . '/cliOutput/src/Config/Config.php');
+	$generatedConfig = \file_get_contents(Components::getProjectPaths('srcDestination', 'Config/Config.php'));
 
 	$this->assertStringContainsString('class Config extends AbstractConfigData', $generatedConfig);
 	$this->assertStringContainsString('getProjectName', $generatedConfig);

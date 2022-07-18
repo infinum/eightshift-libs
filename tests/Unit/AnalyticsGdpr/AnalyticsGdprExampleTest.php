@@ -5,17 +5,8 @@ namespace Tests\Unit\AnalyticsGdpr;
 use Brain\Monkey;
 use EightshiftBoilerplate\AnalyticsGdpr\AnalyticsGdprExample;
 
-use function Tests\setupMocks;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->example = new AnalyticsGdprExample();
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 test('Register method will bail out if ACF is not registered/activated', function () {

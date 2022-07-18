@@ -5,17 +5,8 @@ namespace Tests\Unit\Media;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Media\MediaExample;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function() {
-	setBeforeEach();
-
 	$this->media = new MediaExample();
-});
-
-afterEach(function() {
-	setAfterEach();
 });
 
 test('Register method will call init hook', function () {

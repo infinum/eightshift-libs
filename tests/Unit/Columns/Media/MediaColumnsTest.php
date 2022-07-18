@@ -4,17 +4,6 @@ namespace Tests\Unit\Columns;
 
 use EightshiftLibs\Columns\Media\AbstractMediaColumns;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
-beforeEach(function() {
-	setBeforeEach();
-});
-
-afterEach(function() {
-	setAfterEach();
-});
-
 test('Hooks are registered for the custom user columns', function() {
 	class MediaColumnMock extends AbstractMediaColumns {
 

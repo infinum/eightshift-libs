@@ -6,18 +6,12 @@ use Brain\Monkey\Functions;
 use EightshiftLibs\Init\InitThemeCli;
 
 use function Patchwork\{redefine, always};
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new InitThemeCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

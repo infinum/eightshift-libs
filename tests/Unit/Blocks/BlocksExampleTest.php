@@ -10,18 +10,12 @@ use WP_Block_Editor_Context;
 
 use function Tests\buildTestBlocks;
 use function Tests\mock;
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
 beforeEach(function() {
-	setBeforeEach();
-
 	$this->mock = new BlocksExample();
 });
 
 afterEach(function() {
-	setAfterEach();
-
 	unset($this->mock);
 });
 
@@ -186,7 +180,7 @@ test('Asserts that getCustomCategory will return categories array.', function ()
 	$category = $this->mock->getCustomCategory([], $blockContext);
 
 	expect($category)->toBeArray();
-	
+
 	expect($category[0])
 		->toBeArray()
 		->toContain('eightshift');
@@ -235,7 +229,7 @@ test('getCustomCategoryOld method will return an array.', function () {
 	$categoryList = $this->mock->getCustomCategoryOld([], $post);
 
 	expect($categoryList)->toBeArray();
-	
+
 	expect($categoryList[0])
 		->toBeArray()
 		->toHaveKey('slug')

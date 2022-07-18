@@ -5,19 +5,6 @@ namespace Tests\Unit\Exception;
 use EightshiftLibs\Exception\ComponentException;
 use stdClass;
 
-use Brain\Monkey;
-
-use function Tests\setupMocks;
-
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterAll(function() {
-	Monkey\tearDown();
-});
-
 test('Checks if the throwNotStringOrArray method functions correctly.',
 	function ($argument) {
 		$exceptionObject = ComponentException::throwNotStringOrArray($argument);

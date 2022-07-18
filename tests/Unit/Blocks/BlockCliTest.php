@@ -7,18 +7,11 @@ use EightshiftLibs\Blocks\UseBlockCli;
 use EightshiftLibs\Helpers\Components;
 use Exception;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new UseBlockCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

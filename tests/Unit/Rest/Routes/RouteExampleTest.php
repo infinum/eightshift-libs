@@ -6,13 +6,8 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Rest\Routes\RouteExample;
 
-use function Tests\setupMocks;
 use function Tests\mock;
-
 beforeEach(function() {
-	Monkey\setUp();
-	setupMocks();
-
 	$this->route = new RouteExample();
 	$this->projectNamespace = 'LibsTests';
 	$this->projectVersion = '1.0';
@@ -37,10 +32,6 @@ beforeEach(function() {
 	$this->wpRestRequest
 		->shouldReceive('get_body')
 		->andReturn(json_encode([$this->mockRequestKey => $this->mockRequestValue]));
-});
-
-afterEach(function() {
-	Monkey\tearDown();
 });
 
 

@@ -5,20 +5,10 @@ namespace Tests\Unit\Helpers;
 use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Helpers\Components;
 
-use EightshiftBoilerplate\Blocks\BlocksExample;
-
 use function Tests\buildTestBlocks;
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
 beforeEach(function () {
-	setBeforeEach();
-
 	buildTestBlocks();
-});
-
-afterEach(function () {
-	setAfterEach();
 });
 
 // ------------------------------------------
@@ -64,19 +54,16 @@ test('Asserts that render used components defaults', function () {
 // ------------------------------------------
 
 test('Asserts that "getManifest" will return correct files if path name is used.', function () {
-	expect(Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/wrapper'))
+	expect(Components::getManifest(Components::getProjectPaths('testsData', 'src/Blocks/wrapper')))
 		->toBeArray()
-		->toHaveKey('componentName');
-
-	expect(Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks'))
+		->toHaveKey('componentName')
+		->and(Components::getManifest(Components::getProjectPaths('testsData', 'src/Blocks')))
 		->toBeArray()
-		->toHaveKey('namespace');
-
-	expect(Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button'))
+		->toHaveKey('namespace')
+		->and(Components::getManifest(Components::getProjectPaths('testsData', 'src/Blocks/components/button')))
 		->toBeArray()
-		->toHaveKey('componentName');
-
-	expect(Components::getManifest(\dirname(__FILE__, 2) . '/data/src/Blocks/custom/button'))
+		->toHaveKey('componentName')
+		->and(Components::getManifest(Components::getProjectPaths('testsData', 'src/Blocks/custom/button')))
 		->toBeArray()
 		->toHaveKey('blockName');
 });
@@ -84,17 +71,14 @@ test('Asserts that "getManifest" will return correct files if path name is used.
 test('Asserts that "getManifest" will return correct files if name is used.', function () {
 	expect(Components::getManifest('wrapper'))
 		->toBeArray()
-		->toHaveKey('componentName');
-
-	expect(Components::getManifest('settings'))
+		->toHaveKey('componentName')
+		->and(Components::getManifest('settings'))
 		->toBeArray()
-		->toHaveKey('namespace');
-
-	expect(Components::getManifest('component', 'button'))
+		->toHaveKey('namespace')
+		->and(Components::getManifest('component', 'button'))
 		->toBeArray()
-		->toHaveKey('componentName');
-
-	expect(Components::getManifest('block', 'button'))
+		->toHaveKey('componentName')
+		->and(Components::getManifest('block', 'button'))
 		->toBeArray()
 		->toHaveKey('blockName');
 });
@@ -104,7 +88,7 @@ test('Asserts that "getManifest" will return correct files if name is used.', fu
 // ------------------------------------------
 
 test('Asserts that reading manifest.json using getManifest will return an array', function () {
-	$results = Components::getManifestDirect(\dirname(__FILE__, 2) . '/data/src/Blocks/components/button');
+	$results = Components::getManifestDirect(Components::getProjectPaths('testsData', 'src/Blocks/components/button'));
 
 	expect($results)
 		->toBeArray()

@@ -5,18 +5,11 @@ namespace Tests\Unit\Init;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Init\InitBlocksCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new InitBlocksCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

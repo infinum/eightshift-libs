@@ -4,7 +4,7 @@ namespace Tests\Unit\Autowiring;
 
 use EightshiftBoilerplate\Main\MainExample;
 use EightshiftLibs\Exception\{InvalidAutowireDependency, NonPsr4CompliantClass};
-use Tests\Datasets\Autowiring\Deep\Deeper\ServiceNoDependenciesDeep;
+use EightshiftLibs\Helpers\Components;
 use Tests\Datasets\Autowiring\Dependencies\{ClassDepWithNoDependencies,
 	ClassImplementingInterfaceDependency,
 	ClassLvl1Dependency,
@@ -18,8 +18,7 @@ use Tests\Datasets\Autowiring\Dependencies\{ClassDepWithNoDependencies,
 	InterfaceDependency
 };
 use Tests\Datasets\Autowiring\Dependencies\SubNamespace1\SomeClass;
-use Tests\Datasets\Autowiring\NonServices\SomeFactory;
-use Tests\Datasets\Autowiring\Services\{ServiceNoDependencies,
+use Tests\Datasets\Autowiring\Services\{
 	ServiceWithClassDep,
 	ServiceWithDeepClassDep,
 	ServiceWithDeepDependencyTree,
@@ -35,7 +34,7 @@ beforeEach(function() {
 
 	$this->main = new MainExample([
 		'Tests\\Datasets\\Autowiring\\' => [
-            \dirname(__FILE__, 2) . '/Datasets/Autowiring',
+			Components::getProjectPaths('projectRoot', 'tests/Datasets/Autowiring')
 		],
 	], 'Tests\Datasets\Autowiring');
 
@@ -78,57 +77,53 @@ beforeEach(function() {
 
 test('Building service classes works', function () {
 	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-	$this->assertGreaterThan(0, \count($dependencyTree));
-});
 
-test('Service classes are correctly included in the list', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-	$this->assertContains(ServiceNoDependencies::class, $dependencyTree);
-	$this->assertContains(ServiceNoDependenciesDeep::class, $dependencyTree);
-});
-
-test('Non-service classes are NOT auto-wired', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-	$this->assertNotContains(SomeFactory::class, $dependencyTree);
-});
-
-test('Service classes with class dependencies are properly auto-wired', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-
-	// Service with 1 level deep dependency tree.
-	$this->assertArrayHasKey(ServiceWithClassDep::class, $dependencyTree, 'Is service with single class dependency auto-wired?');
-	$this->assertContains(ClassDepWithNoDependencies::class, $dependencyTree[ServiceWithClassDep::class], 'Is service class dependency in the array of dependencies?');
-
-	// Service with 2 levels deep dependency tree.
-	$this->assertArrayHasKey(ServiceWithDeepClassDep::class, $dependencyTree, 'Is service with single class dependency (which has its own dependency) auto-wired?');
-	$this->assertContains(ClassWithDependency::class, $dependencyTree[ServiceWithDeepClassDep::class], 'Is service class dependency in the array of dependencies?');
-	$this->assertArrayHasKey(ClassWithDependency::class, $dependencyTree, 'Is the lvl 1 class dependency auto-wired?');
-	$this->assertContains(ClassDepWithNoDependencies::class, $dependencyTree[ClassWithDependency::class], 'Is the lvl 2 class dependency auto-wired?');
-});
-
-test('Service classes with interface dependencies are properly auto-wired', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-	$this->assertArrayHasKey(ServiceWithInterfaceDep::class, $dependencyTree, 'Is service with single interface dependency auto-wired?');
-	$this->assertContains(ClassImplementingInterfaceDependency::class, $dependencyTree[ServiceWithInterfaceDep::class], 'Is service class dependency in the array of dependencies?');
-});
-
-test('Service classes with multiple dependencies are properly auto-wired', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-	$this->assertArrayHasKey(ServiceWithMultipleDeps::class, $dependencyTree, 'Is service with 2 dependencies auto-wired?');
-	$this->assertContains(ClassImplementingInterfaceDependency::class, $dependencyTree[ServiceWithMultipleDeps::class], 'Is interface-based class dependency in the array of dependencies?');
-	$this->assertContains(ClassDepWithNoDependencies::class, $dependencyTree[ServiceWithMultipleDeps::class], 'Is class dependency in the array of dependencies?');
-});
-
-test('Service classes with primitive dependencies are NOT auto-wired', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-	$this->assertNotContains(ServiceWithPrimitiveDep::class, $dependencyTree);
+	expect($dependencyTree)
+		->toBeArray()
+		->not->toBeEmpty()
+		->toHaveKey(ServiceWithInterfaceDepWrongName::class)
+		->toHaveKey(ServiceWithInterfaceDepMoreThanOneClassFound::class)
+		->toHaveKey(ServiceWithClassDep::class) // Is service with single class dependency auto-wired?
+		->toHaveKey(ServiceWithDeepClassDep::class) // Service with 2 levels deep dependency tree.
+		->toHaveKey(ClassWithDependency::class) // Is the lvl 1 class dependency auto-wired?
+		->toHaveKey(ServiceWithInterfaceDep::class) // Is service with single interface dependency auto-wired?
+		->toHaveKey(ServiceWithMultipleDeps::class) // Is service with 2 dependencies auto-wired?
+		->toHaveKey(ServiceWithPrimitiveDep::class)
+		->toHaveKey(ServiceWithPrimitiveDepHasDefault::class)
+		->toHaveKey(ServiceWithDeepDependencyTree::class) // Deep dependencies are correctly autowired.
+		->toHaveKey(ClassLvl1Dependency::class)
+		->toHaveKey(ClassLvl2Dependency::class)
+		->toHaveKey(ClassLvl3Dependency::class)
+		->toHaveKey(ClassLvl4Dependency::class)
+		->toHaveKey(ClassLvl5Dependency::class)
+		->toHaveKey(ClassLvl6Dependency::class)
+		->toContain(ClassLvl7Dependency::class)
+		->not->toHaveKey(ServiceNoDe::class)
+		// Autowiring should not touch abstract classes, interfaces and traits
+		->not->toHaveKey(MockAbstractClass::class)
+		->not->toHaveKey(InterfaceDependency::class)
+		->not->toHaveKey(MockTrait::class)
+		->and($dependencyTree[ServiceWithClassDep::class][0]) // Service with 1 level deep dependency tree.
+		->toBe(ClassDepWithNoDependencies::class)
+		->and($dependencyTree[ServiceWithDeepClassDep::class][0]) // Service with 2 level deep dependency tree.
+		->toBe(ClassWithDependency::class)
+		->and($dependencyTree[ClassWithDependency::class][0]) // Is the lvl 2 class dependency auto-wired?
+		->toBe(ClassDepWithNoDependencies::class)
+		->and($dependencyTree[ServiceWithInterfaceDep::class][0]) // Is service class dependency in the array of dependencies?
+		->toBe(ClassImplementingInterfaceDependency::class)
+		->and($dependencyTree[ServiceWithMultipleDeps::class][0]) // Is interface-based class dependency in the array of dependencies?
+		->toBe(ClassImplementingInterfaceDependency::class)
+		->and($dependencyTree[ServiceWithInterfaceDepWrongName::class][0])
+		->toBe(ClassImplementingInterfaceDependency::class)
+		->and($dependencyTree[ServiceWithInterfaceDepMoreThanOneClassFound::class][0])
+		->toBe(SomeClass::class)
+		->and($dependencyTree[ServiceWithPrimitiveDep::class][0])
+		->toBe('some string')
+		->and($dependencyTree[ServiceWithPrimitiveDepHasDefault::class][0])
+		->toBe('some string')
+		->and($dependencyTree[ServiceWithMultipleDeps::class][1]) // Is class dependency in the array of dependencies?
+		->toBe(ClassDepWithNoDependencies::class)
+		->not->toContain(ServiceWithPrimitiveDep::class); // Service classes with primitive dependencies are NOT auto-wired
 });
 
 test('Service classes with interface dependencies that cant be matched to exactly 1 class should throw exception.', function () {
@@ -139,48 +134,6 @@ test('Services with Invalid namespace (non PSR-4 compliant) will not be auto-wir
 	$this->main->buildServiceClasses($this->manuallyDefinedDependencies, false);
 })->throws(NonPsr4CompliantClass::class);
 
-test('Autowiring should not touch abstract classes, interfaces and traits', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-	$this->assertNotContains(MockAbstractClass::class, $dependencyTree);
-	$this->assertNotContains(InterfaceDependency::class, $dependencyTree);
-	$this->assertNotContains(MockTrait::class, $dependencyTree);
-});
-
-test('Autowiring does not throw exceptions on blocks', function () {
-	$this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertTrue(true);
-});
-
 test('Autowiring throws exception on primitive deps which are not manually configured', function () {
 	$this->main->buildServiceClasses($this->manualDepsNoPrimitive, true);
 })->throws(InvalidAutowireDependency::class);
-
-test('buildServiceClasses includes all manually defined dependency trees', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertArrayHasKey(ServiceWithInterfaceDepWrongName::class, $dependencyTree);
-	$this->assertArrayHasKey(ServiceWithInterfaceDepMoreThanOneClassFound::class, $dependencyTree);
-	$this->assertArrayHasKey(ServiceWithPrimitiveDep::class, $dependencyTree);
-	$this->assertArrayHasKey(ServiceWithPrimitiveDepHasDefault::class, $dependencyTree);
-	$this->assertIsArray($dependencyTree[ServiceWithInterfaceDepWrongName::class]);
-	$this->assertIsArray($dependencyTree[ServiceWithInterfaceDepMoreThanOneClassFound::class]);
-	$this->assertIsArray($dependencyTree[ServiceWithPrimitiveDep::class]);
-	$this->assertIsArray($dependencyTree[ServiceWithPrimitiveDepHasDefault::class]);
-	$this->assertContains(ClassImplementingInterfaceDependency::class, $dependencyTree[ServiceWithInterfaceDepWrongName::class] );
-	$this->assertContains(SomeClass::class, $dependencyTree[ServiceWithInterfaceDepMoreThanOneClassFound::class] );
-	$this->assertContains('some string', $dependencyTree[ServiceWithPrimitiveDep::class] );
-	$this->assertContains('some string', $dependencyTree[ServiceWithPrimitiveDepHasDefault::class] );
-});
-
-test('Deep dependencies are correctly auto-wired', function () {
-	$dependencyTree = $this->main->buildServiceClasses($this->manuallyDefinedDependencies, true);
-	$this->assertIsArray($dependencyTree);
-	$this->assertArrayHasKey(ServiceWithDeepDependencyTree::class, $dependencyTree);
-	$this->assertArrayHasKey(ClassLvl1Dependency::class, $dependencyTree);
-	$this->assertArrayHasKey(ClassLvl2Dependency::class, $dependencyTree);
-	$this->assertArrayHasKey(ClassLvl3Dependency::class, $dependencyTree);
-	$this->assertArrayHasKey(ClassLvl4Dependency::class, $dependencyTree);
-	$this->assertArrayHasKey(ClassLvl5Dependency::class, $dependencyTree);
-	$this->assertArrayHasKey(ClassLvl6Dependency::class, $dependencyTree);
-	$this->assertContains(ClassLvl7Dependency::class, $dependencyTree);
-});

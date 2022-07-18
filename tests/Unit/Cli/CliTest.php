@@ -7,24 +7,11 @@ use EightshiftLibs\Cli\CliReset;
 use EightshiftLibs\Cli\CliRunAll;
 use EightshiftLibs\Cli\CliShowAll;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->cli = new Cli();
 });
 
-/**
- * Cleanup after tests.
- */
-afterEach(function () {
-	setAfterEach();
-});
 
 test('Cli getCommandsClasses return correct class list', function () {
 	$publicClasses = $this->cli->getCommandsClasses();

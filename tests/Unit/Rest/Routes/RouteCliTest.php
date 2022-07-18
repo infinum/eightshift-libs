@@ -5,18 +5,11 @@ namespace Tests\Unit\CustomPostType;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Rest\Routes\RouteCli;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function () {
-	setBeforeEach();
-
 	$this->mock = new RouteCli('boilerplate');
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 

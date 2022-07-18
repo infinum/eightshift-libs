@@ -4,19 +4,6 @@ namespace Tests\Unit\Exception;
 
 use EightshiftLibs\Exception\InvalidCallback;
 
-use Brain\Monkey;
-
-use function Tests\setupMocks;
-
-beforeAll(function () {
-	Monkey\setUp();
-	setupMocks();
-});
-
-afterAll(function() {
-	Monkey\tearDown();
-});
-
 test('Checks if the fromCallback method will return correct response.', function () {
 
 	$callback = 'randomText';

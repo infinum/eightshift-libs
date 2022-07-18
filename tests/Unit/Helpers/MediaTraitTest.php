@@ -3,18 +3,7 @@
 namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Helpers\Components;
-
 use Brain\Monkey\Functions;
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
-beforeEach(function() {
-	setBeforeEach();
-});
-
-afterEach(function() {
-	setAfterEach();
-});
 
 test('Check if getWebPMedia will return webp image format.', function() {
 	$mock = Components::getWebPMedia('image.jpg');

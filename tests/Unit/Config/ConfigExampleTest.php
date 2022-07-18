@@ -4,18 +4,11 @@ namespace Tests\Unit\Config;
 
 use EightshiftBoilerplate\Config\ConfigExample;
 
-use function Tests\setAfterEach;
-use function Tests\setBeforeEach;
-
 beforeEach(function() {
-	setBeforeEach();
-
 	$this->mock = new ConfigExample();
 });
 
 afterEach(function () {
-	setAfterEach();
-
 	unset($this->mock);
 });
 
