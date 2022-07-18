@@ -82,4 +82,4 @@ jobs:
          dependency-versions: highest
 
      - name: Check code consistency using PHPStan
-       run: composer analyze
+       run: composer test:types
