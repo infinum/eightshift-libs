@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Unit\CustomPostType;
+namespace Tests\Unit\Rest\Routes;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Rest\Routes\RouteExample;
 
 use function Tests\mock;
+
 beforeEach(function() {
 	$this->route = new RouteExample();
 	$this->projectNamespace = 'LibsTests';

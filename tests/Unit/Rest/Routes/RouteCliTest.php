@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\CustomPostType;
+namespace Tests\Unit\Rest\Routes;
 
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Rest\Routes\RouteCli;
