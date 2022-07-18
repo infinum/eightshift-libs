@@ -32,13 +32,11 @@
     "php-di/php-di": "^6.3"
   },
   "require-dev": {
-    "brain/monkey": "^2.6",
     "captainhook/captainhook": "^5.10",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "infinum/eightshift-coding-standards": "^1.6",
     "pestphp/pest": "^1.2",
     "php-stubs/wordpress-stubs": "^5.9",
-    "phpunit/phpunit": "^9.5",
     "roave/security-advisories": "dev-master",
     "szepeviktor/phpstan-wordpress": "^1.0.3",
     "wp-cli/wp-cli": "^2.4",
