@@ -110,15 +110,18 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return true;
 		}
 
-		if (!\is_bool($allowedBlockTypes)) {
+		if (\is_bool($allowedBlockTypes)) {
 			return $allowedBlockTypes;
 		}
 
-		$allowedBlockTypes = \array_map(
-			function ($block) {
-				return $block['blockFullName'];
-			},
-			Components::getBlocks()
+		$allowedBlockTypes = \array_merge(
+			\array_map(
+				function ($block) {
+					return $block['blockFullName'];
+				},
+				Components::getBlocks(),
+			),
+			$allowedBlockTypes,
 		);
 
 		// Allow reusable block.
