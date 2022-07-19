@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use EightshiftLibs\Helpers\Components;
 use Brain\Monkey\Functions;
+use EightshiftLibs\Helpers\Components;
 
 test('Check if getWebPMedia will return webp image format.', function() {
 	$mock = Components::getWebPMedia('image.jpg');

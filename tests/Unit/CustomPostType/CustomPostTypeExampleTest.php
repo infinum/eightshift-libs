@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\CustomPostType;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\CustomPostType\PostTypeExample;
 

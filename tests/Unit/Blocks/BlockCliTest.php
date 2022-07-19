@@ -3,7 +3,6 @@
 namespace Tests\Unit\Block;
 
 use EightshiftLibs\Blocks\UseBlockCli;
-
 use EightshiftLibs\Helpers\Components;
 use Exception;
 

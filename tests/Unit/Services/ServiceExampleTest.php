@@ -2,12 +2,14 @@
 
 namespace Tests\Unit\Login;
 
-use Brain\Monkey;
-use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Services\ServiceExample;
 
 beforeEach(function() {
 	$this->service = new ServiceExample();
+});
+
+afterEach(function () {
+	unset($this->service);
 });
 
 test('Service Example test register method', function () {

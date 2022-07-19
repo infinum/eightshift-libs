@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\AnalyticsGdpr;
 
-use Brain\Monkey;
 use EightshiftBoilerplate\AnalyticsGdpr\AnalyticsGdprExample;
 
 beforeEach(function() {

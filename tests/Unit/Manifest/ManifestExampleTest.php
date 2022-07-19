@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Manifest;
 
-use Brain\Monkey;
 use EightshiftBoilerplate\Manifest\ManifestExample;
 
 use function Tests\mock;
+
 beforeEach(function() {
 	// Setup Config mock.
 	mock('alias:EightshiftBoilerplate\Config\Config')

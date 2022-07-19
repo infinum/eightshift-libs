@@ -14,6 +14,9 @@ beforeEach(function () {
 	$this->mockLogger = new MockErrorLogger();
 });
 
+afterEach(function () {
+	unset($this->mockLogger);
+});
 
 test('Test restResponseHandler will return expected result in case of success', function () {
 	$response = $this->mockLogger->restResponseHandler(200, 'Some status', 'Some message', ['fake data']);

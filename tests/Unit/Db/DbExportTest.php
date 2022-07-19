@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\CustomPostType;
 
-use EightshiftLibs\Db\ExportCli;
 use Brain\Monkey\Functions;
+use EightshiftLibs\Db\ExportCli;
 
 beforeEach(function () {
 	$this->mock = new ExportCli('boilerplate');

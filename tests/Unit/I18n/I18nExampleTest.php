@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\I18n;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\I18n\I18nExample;
 
 use function Tests\mock;
+
 beforeEach(function() {
 	$this->i18n = new I18nExample();
 });

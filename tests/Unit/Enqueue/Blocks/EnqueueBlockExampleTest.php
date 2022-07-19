@@ -5,8 +5,8 @@ namespace Tests\Unit\Enqueue\Blocks;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample;
-use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftBoilerplate\Manifest\ManifestExample;
+use EightshiftLibs\Manifest\ManifestInterface;
 
 use function Tests\mock;
 

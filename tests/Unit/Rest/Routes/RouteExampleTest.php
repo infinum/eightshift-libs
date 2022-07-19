@@ -34,6 +34,18 @@ beforeEach(function() {
 		->andReturn(json_encode([$this->mockRequestKey => $this->mockRequestValue]));
 });
 
+afterEach(function () {
+	unset(
+		$this->route,
+		$this->projectNamespace,
+		$this->projectVersion,
+		$this->mockRequestKey,
+		$this->mockRequestValue,
+		$this->wpRestServer,
+		$this->wpRestRequest,
+	);
+});
+
 
 test('Register method will call init hook', function () {
 	$this->route->register();

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Helpers;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftLibs\Helpers\Components;
 

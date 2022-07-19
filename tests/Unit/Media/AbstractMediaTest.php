@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Media;
 
+use Brain\Monkey\Functions;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Media\AbstractMedia;
-use Brain\Monkey\Functions;
 
 
 class AbstractMediaTest extends AbstractMedia {

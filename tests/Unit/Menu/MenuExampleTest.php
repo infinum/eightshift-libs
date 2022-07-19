@@ -5,10 +5,10 @@ namespace Tests\Unit\Menu;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Menu\MenuExample;
-
 use EightshiftLibs\Menu\AbstractMenu;
 
 use function Tests\mock;
+
 beforeEach(function() {
 	mock('Walker_Nav_Menu');
 

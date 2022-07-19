@@ -2,17 +2,20 @@
 
 namespace Tests\Unit\CustomPostType;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Rest\Fields\FieldExample;
 
 use function Tests\mock;
+
 beforeEach(function() {
 	$this->field = new FieldExample();
 
 	$this->wpRestServer = mock('alias:WP_REST_Server');
 });
 
+afterEach(function () {
+	unset($this->field, $this->wpRestServer);
+});
 
 test('Register method will call init hook', function () {
 	$this->field->register();

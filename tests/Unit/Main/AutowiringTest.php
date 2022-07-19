@@ -5,7 +5,8 @@ namespace Tests\Unit\Autowiring;
 use EightshiftBoilerplate\Main\MainExample;
 use EightshiftLibs\Exception\{InvalidAutowireDependency, NonPsr4CompliantClass};
 use EightshiftLibs\Helpers\Components;
-use Tests\Datasets\Autowiring\Dependencies\{ClassDepWithNoDependencies,
+use Tests\Datasets\Autowiring\Dependencies\{
+	ClassDepWithNoDependencies,
 	ClassImplementingInterfaceDependency,
 	ClassLvl1Dependency,
 	ClassLvl2Dependency,
@@ -31,7 +32,6 @@ use Tests\Datasets\Autowiring\Services\{
 };
 
 beforeEach(function() {
-
 	$this->main = new MainExample([
 		'Tests\\Datasets\\Autowiring\\' => [
 			Components::getProjectPaths('projectRoot', 'tests/Datasets/Autowiring')
@@ -73,6 +73,15 @@ beforeEach(function() {
 			'some string',
 		],
 	];
+});
+
+afterEach(function () {
+	unset(
+		$this->main,
+		$this->manuallyDefinedDependencies,
+		$this->manualDepsNoPrimitive,
+		$this->manualDepsNoPrimitiveHasDefaults,
+	);
 });
 
 test('Building service classes works', function () {

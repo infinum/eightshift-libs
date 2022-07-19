@@ -4,10 +4,6 @@ namespace Tests\Unit\Cli;
 
 use EightshiftLibs\Cli\CliHelpers;
 
-
-
-
-
 test('Return correct name - getGithubPluginName', function ($input, $output) {
 	$case = CliHelpers::getGithubPluginName($input);
 

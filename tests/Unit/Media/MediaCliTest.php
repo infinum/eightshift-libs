@@ -9,6 +9,9 @@ beforeEach(function () {
 	$this->mediaCli = new MediaCli('boilerplate');
 });
 
+afterEach(function () {
+	unset($this->mediaCli);
+});
 
 test('Media CLI command will correctly copy the Media class with defaults', function () {
 	$mock = $this->mediaCli;

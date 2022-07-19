@@ -9,6 +9,10 @@ beforeEach(function () {
 	$this->mock = new EscapedViewCli('boilerplate');
 });
 
+afterEach(function () {
+	unset($this->mock);
+});
+
 test('Escaped view command will correctly copy the EscapedView class with defaults', function () {
 	$mock = $this->mock;
 	$mock([], $mock->getDefaultArgs());

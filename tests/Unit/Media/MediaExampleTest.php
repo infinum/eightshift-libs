@@ -9,6 +9,10 @@ beforeEach(function() {
 	$this->media = new MediaExample();
 });
 
+afterEach(function () {
+	unset($this->media);
+});
+
 test('Register method will call init hook', function () {
 	$this->media->register();
 

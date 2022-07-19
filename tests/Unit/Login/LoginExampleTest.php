@@ -2,12 +2,15 @@
 
 namespace Tests\Unit\Login;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Login\LoginExample;
 
 beforeEach(function() {
 	$this->login = new LoginExample();
+});
+
+afterEach(function () {
+	unset($this->login);
 });
 
 test('Register method will call init hook', function () {

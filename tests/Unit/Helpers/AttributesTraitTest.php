@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use EightshiftLibs\Helpers\Components;
-
 use EightshiftBoilerplate\Blocks\BlocksExample;
+use EightshiftLibs\Helpers\Components;
 use Exception;
 
 use function Tests\buildTestBlocks;

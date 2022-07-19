@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use EightshiftLibs\Helpers\Components;
-
 use Brain\Monkey\Functions;
+use EightshiftLibs\Helpers\Components;
 
 use function Tests\buildTestBlocks;
 

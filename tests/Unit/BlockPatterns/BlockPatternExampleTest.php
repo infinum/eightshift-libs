@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\BlockPatterns;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\BlockPatterns\BlockPatternExample;
 

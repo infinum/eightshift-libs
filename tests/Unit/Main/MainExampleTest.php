@@ -8,6 +8,10 @@ beforeEach(function() {
 	$this->main = new MainExample([], '');
 });
 
+afterEach(function () {
+	unset($this->main);
+});
+
 test('Register method will call init hook', function () {
 	$this->main->register();
 

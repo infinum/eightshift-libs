@@ -2,10 +2,7 @@
 
 namespace Tests\Unit\Init;
 
-use Brain\Monkey\Functions;
 use EightshiftLibs\Init\InitThemeCli;
-
-use function Patchwork\{redefine, always};
 
 beforeEach(function () {
 	$this->mock = new InitThemeCli('boilerplate');

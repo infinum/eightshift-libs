@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\CustomTaxonomy;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\CustomTaxonomy\TaxonomyExample;
 

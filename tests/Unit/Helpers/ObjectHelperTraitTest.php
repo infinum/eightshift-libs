@@ -3,10 +3,9 @@
 namespace Tests\Unit\Helpers;
 
 use Brain\Monkey\Functions;
+use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Helpers\ObjectHelperTrait;
-
-use EightshiftLibs\Exception\InvalidManifest;
 
 
 class MockObjectHelper {

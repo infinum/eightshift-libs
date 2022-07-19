@@ -2,12 +2,15 @@
 
 namespace Tests\Unit\Login;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\ModifyAdminAppearance\ModifyAdminAppearanceExample;
 
 beforeEach(function() {
 	$this->modifyAdminAppearance = new ModifyAdminAppearanceExample();
+});
+
+afterEach(function () {
+	unset($this->modifyAdminAppearance);
 });
 
 test('Register method will call init hook', function () {
