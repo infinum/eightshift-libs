@@ -26,8 +26,7 @@ beforeEach(function() {
 });
 
 afterEach(function() {
-	Monkey\tearDown();
-
+	unset($this->example);
 	putenv('REGISTERED_MENU');
 });
 

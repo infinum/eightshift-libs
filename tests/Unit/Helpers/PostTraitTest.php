@@ -5,7 +5,6 @@ namespace Tests\Unit\Helpers;
 use Brain\Monkey\Functions;
 use EightshiftLibs\Helpers\Components;
 
-
 /**
  * Setup before each test.
  */
@@ -23,7 +22,7 @@ beforeEach(function() {
   Functions\when('render_block')
     ->alias(function($block) {
       $renderedBlock = '';
-      foreach($block as $blockIndex => $blockContent) {
+      foreach($block as $blockContent) {
         $renderedBlock = $renderedBlock . "<div>" . $blockContent . "</div>";
       }
 

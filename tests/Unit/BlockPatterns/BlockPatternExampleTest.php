@@ -9,6 +9,10 @@ beforeEach(function() {
 	$this->example = new BlockPatternExample();
 });
 
+afterEach(function () {
+	unset($this->example);
+});
+
 test('Register method will call init hook', function () {
 	$this->example->register();
 

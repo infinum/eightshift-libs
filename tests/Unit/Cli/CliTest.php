@@ -12,6 +12,9 @@ beforeEach(function () {
 	$this->cli = new Cli();
 });
 
+afterEach(function () {
+	unset($this->cli);
+});
 
 test('Cli getCommandsClasses return correct class list', function () {
 	$publicClasses = $this->cli->getCommandsClasses();
@@ -20,11 +23,11 @@ test('Cli getCommandsClasses return correct class list', function () {
 		->toBeArray()
 		->not->toHaveKey(CliReset::class)
 		->not->toHaveKey(CliRunAll::class)
-		->not->toHaveKey(CliShowAll::class);
-
-	expect(\count($publicClasses))
+		->not->toHaveKey(CliShowAll::class)
+		->and(\count($publicClasses))
 		->toBeInt()
-		->toBe(51); // Public classes count.
+		->toBe(51);
+	// Public classes count.
 });
 
 test('Running load command works', function() {

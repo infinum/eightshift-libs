@@ -14,7 +14,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-	$this->webPMediaColumnExampleMockColumns = [];
+	unset($this->webPMediaColumnExampleMock, $this->webPMediaColumnExampleMockColumns);
 });
 
 test('Check if addColumnName function will return columns with new column name.', function () {

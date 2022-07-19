@@ -9,6 +9,10 @@ beforeEach(function() {
 	$this->example = new TaxonomyExample();
 });
 
+afterEach(function () {
+	unset($this->example);
+});
+
 test('if taxonomy actions are registered', function () {
 	$this->example->register();
 

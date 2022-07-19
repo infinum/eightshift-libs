@@ -60,7 +60,7 @@ beforeEach(function() {
 });
 
 afterEach(function() {
-	Monkey\tearDown();
+	unset($this->themeEnqueue);
 
 	putenv('REGISTER_STYLE');
 	putenv('ENQUEUE_STYLE');

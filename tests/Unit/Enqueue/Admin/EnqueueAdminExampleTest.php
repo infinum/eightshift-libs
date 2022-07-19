@@ -26,6 +26,7 @@ class EnqueueAdminExampleTest extends EnqueueAdminExample {
 		];
 	}
 };
+
 beforeEach(function() {
 	// Setup Config mock.
 	mock('alias:EightshiftBoilerplate\Config\Config')
@@ -72,7 +73,7 @@ beforeEach(function() {
 });
 
 afterEach(function() {
-	Monkey\tearDown();
+	unset($this->adminEnqueue, $this->hookSuffix);
 
 	putenv('REGISTER_STYLE');
 	putenv('ENQUEUE_STYLE');
@@ -80,7 +81,6 @@ afterEach(function() {
 	putenv('ENQUEUE_SCRIPT');
 	putenv('SIDEAFFECT');
 });
-
 
 test('Register method will call login_enqueue_scripts and admin_enqueue_scripts hook', function () {
 	$this->adminEnqueue->register();

@@ -11,6 +11,10 @@ beforeEach(function() {
 	$this->i18n = new I18nExample();
 });
 
+afterEach(function () {
+	unset($this->i18n);
+});
+
 test('Register method will call init hook', function () {
 	$this->i18n->register();
 

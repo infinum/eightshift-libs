@@ -9,6 +9,9 @@ beforeEach(function() {
 	$this->example = new AdminReusableBlocksMenuExample();
 });
 
+afterEach(function () {
+	unset($this->example);
+});
 
 test('Register method will call admin_menu hook', function () {
 	Actions\expectAdded('admin_menu')->with(\Mockery::type('Closure'));

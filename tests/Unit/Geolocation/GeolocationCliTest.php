@@ -10,6 +10,10 @@ beforeEach(function () {
 	$this->geolocationCli = new GeolocationCli('boilerplate');
 });
 
+afterEach(function () {
+	unset($this->geolocationCli);
+});
+
 test('Geolocation CLI command parent name is correct', function () {
 	$mock = $this->geolocationCli;
 	$commandName = $mock->getCommandParentName();

@@ -37,6 +37,12 @@ afterEach(function () {
 			unlink($size);
 		}
 	}
+
+	unset(
+		$this->mockMedia,
+		$this->mockPath,
+		$this->mockFileName,
+	);
 });
 
 test('Check if generateWebPMedia will return provided metadata.', function() {

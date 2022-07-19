@@ -9,6 +9,10 @@ beforeEach(function () {
 	$this->webPMediaColumnCliMock = new WebPMediaColumnCli('boilerplate');
 });
 
+afterEach(function () {
+	unset($this->webPMediaColumnCliMock);
+});
+
 test('Check if CLI command name is correct.', function () {
 	$mock = $this->webPMediaColumnCliMock;
 

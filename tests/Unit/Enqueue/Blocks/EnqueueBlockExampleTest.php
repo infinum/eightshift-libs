@@ -86,7 +86,11 @@ beforeEach(function() {
  * Cleanup after each test.
  */
 afterEach(function() {
-	Monkey\tearDown();
+	unset(
+		$this->projectName,
+		$this->projectVersion,
+		$this->blockEnqueue,
+	);
 
 	putenv('REGISTER_STYLE');
 	putenv('ENQUEUE_STYLE');

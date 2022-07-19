@@ -8,6 +8,10 @@ beforeEach(function() {
 	$this->example = new AnalyticsGdprExample();
 });
 
+afterEach(function () {
+	unset($this->example);
+});
+
 test('Register method will bail out if ACF is not registered/activated', function () {
 	expect($this->example->register())->toBeNull();
 });

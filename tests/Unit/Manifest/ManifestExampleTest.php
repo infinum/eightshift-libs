@@ -17,6 +17,10 @@ beforeEach(function() {
 	$this->example = new ManifestExample();
 });
 
+afterEach(function () {
+	unset($this->example);
+});
+
 test('Register method will call init hook', function () {
 	$this->example->register();
 
