@@ -9,6 +9,13 @@ dataset('errorStringArguments', [
 	new class{}
 ]);
 
+dataset('getAllBlocksListAllTypesArguments', [
+	true,
+	false,
+	[[]],
+	[['test']]
+]);
+
 dataset('correctArguments', [
 	'simple',
 	'string with spaces',

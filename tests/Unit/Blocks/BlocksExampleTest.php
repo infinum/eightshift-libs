@@ -42,7 +42,7 @@ test('addThemeSupport method will call add_theme_support() function with differe
 	expect(\getenv('ALIGN_WIDE'))->toBe('true');
 });
 
-test('Asserts that getAllBlocksList first argument is boolean and return the provided attribute as return value for older WP versions.', function () {
+test('Asserts that getAllBlocksListOld first argument is boolean and return the provided attribute as return value for older WP versions.', function () {
 
 	Functions\when('is_wp_version_compatible')->justReturn(false);
 
@@ -57,32 +57,7 @@ test('Asserts that getAllBlocksList first argument is boolean and return the pro
 	expect($blocks)->toBeFalse();
 });
 
-test('Asserts that getAllBlocksList will return true if post type is eightshift-forms for WP 5.8.', function () {
-
-	$blockContext = mock('WP_Block_Editor_Context');
-	$blockContext->post = mock('WP_Post');
-	$blockContext->post->post_type = 'eightshift-forms';
-
-	$blocks = $this->mock->getAllBlocksList([], $blockContext);
-
-	expect($blocks)
-		->toBeTrue();
-});
-
-test('Asserts that getAllBlocksList first argument is not bool and return first argument for WP 5.8.', function () {
-
-	$blockContext = mock('WP_Block_Editor_Context');
-	$blockContext->post = mock('WP_Post');
-	$blockContext->post->post_type = 'post';
-
-	$blocks = $this->mock->getAllBlocksList(['test'], $blockContext);
-
-	expect($blocks)
-		->toBeArray()
-		->toContain('test');
-});
-
-test('Asserts that getAllBlocksListOld will return only projects blocks for older versions.', function () {
+test('Asserts that getAllBlocksListOld will return only projects blocks for older WP versions.', function () {
 
 	Functions\when('is_wp_version_compatible')->justReturn(false);
 
@@ -100,8 +75,57 @@ test('Asserts that getAllBlocksListOld will return only projects blocks for olde
 		->toContain('core/template');
 });
 
-test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.', function () {
+test('Asserts that getAllBlocksList will return true if post type is eightshift-forms for WP 5.8.', function () {
 
+	$blockContext = mock('WP_Block_Editor_Context');
+	$blockContext->post = mock('WP_Post');
+	$blockContext->post->post_type = 'eightshift-forms';
+
+	$blocks = $this->mock->getAllBlocksList([], $blockContext);
+
+	expect($blocks)
+		->toBeTrue();
+});
+
+test('Asserts that getAllBlocksList first argument is bool and return first argument for WP 5.8.', function () {
+
+	$blockContext = mock('WP_Block_Editor_Context');
+	$blockContext->post = mock('WP_Post');
+	$blockContext->post->post_type = 'post';
+
+	$blocks = $this->mock->getAllBlocksList(true, $blockContext);
+
+	expect($blocks)->toBeTrue();
+
+	$blocks = $this->mock->getAllBlocksList(false, $blockContext);
+
+	expect($blocks)->toBeFalse();
+});
+
+test('Asserts that getAllBlocksList first argument is not bool and return first argument for WP 5.8.', function () {
+
+	$blockContext = mock('WP_Block_Editor_Context');
+	$blockContext->post = mock('WP_Post');
+	$blockContext->post->post_type = 'post';
+
+	$blocks = $this->mock->getAllBlocksList(['test'], $blockContext);
+
+	expect($blocks)
+		->toBeArray()
+		->toContain('test');
+});
+
+test('Asserts that getAllBlocksList with all types of arguments throw error for older WP versions.', function ($argument) {
+
+	Functions\when('is_wp_version_compatible')->justReturn(false);
+
+	$post = mock('WP_Post');
+
+	$this->mock->getAllBlocksList($argument, $post);
+})->throws(\TypeError::class)
+->with('getAllBlocksListAllTypesArguments');
+
+test('Asserts that getAllBlocksList will return projects blocks and passed blocks for WP 5.8.', function () {
 	$blockContext = mock(WP_Block_Editor_Context::class);
 	$blockContext->post = null;
 
@@ -109,7 +133,22 @@ test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.
 
 	Components::setConfigFlags();
 
-	$blocks = $this->mock->getAllBlocksList(false, $blockContext);
+	$blocks = $this->mock->getAllBlocksList(['test'], $blockContext);
+
+	expect($blocks)
+		->toBeArray()
+		->toContain('eightshift-boilerplate/button', 'eightshift-boilerplate/heading', 'core/block', 'core/template', 'test');
+});
+
+test('Asserts that getAllBlocksList will return only projects blocks for WP 5.8.', function () {
+	$blockContext = mock(WP_Block_Editor_Context::class);
+	$blockContext->post = null;
+
+	buildTestBlocks();
+
+	Components::setConfigFlags();
+
+	$blocks = $this->mock->getAllBlocksList([], $blockContext);
 
 	expect($blocks)
 		->toBeArray()
