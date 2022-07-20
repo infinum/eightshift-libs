@@ -321,12 +321,12 @@ class Components
 	 * Internal helper for getting all project paths for easy mocking in tests.
 	 *
 	 * @param string $type Type fo path to return.
-	 * @param string $sufix Additional sufix path to add.
-	 * @param string $prefix Additional prefix insted of dirname path.
+	 * @param string $suffix Additional suffix path to add.
+	 * @param string $prefix Additional prefix instead of dirname path.
 	 *
 	 * @return string
 	 */
-	public static function getProjectPaths(string $type = '', string $sufix = '', string $prefix = ''): string
+	public static function getProjectPaths(string $type = '', string $suffix = '', string $prefix = ''): string
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
@@ -421,15 +421,19 @@ class Components
 					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
 				}
 				break;
+			case 'blocksDestinationCustom':
 			case 'blocksSourceCustom':
 				$name = 'custom';
 				break;
+			case 'blocksDestinationComponents':
 			case 'blocksSourceComponents':
 				$name = 'components';
 				break;
+			case 'blocksDestinationVariations':
 			case 'blocksSourceVariations':
 				$name = 'variations';
 				break;
+			case 'blocksDestinationWrapper':
 			case 'blocksSourceWrapper':
 				$name = 'wrapper';
 				break;
@@ -462,18 +466,6 @@ class Components
 					$path = self::joinPaths([$cliOutputPath, ...$blocksPath]);
 				}
 				break;
-			case 'blocksDestinationCustom':
-				$name = 'custom';
-				break;
-			case 'blocksDestinationComponents':
-				$name = 'components';
-				break;
-			case 'blocksDestinationVariations':
-				$name = 'variations';
-				break;
-			case 'blocksDestinationWrapper':
-				$name = 'wrapper';
-				break;
 		}
 
 		switch ($type) {
@@ -504,7 +496,7 @@ class Components
 			$prefix = $internalPrefix;
 		}
 
-		$path = self::joinPaths([$prefix, $path, $sufix]);
+		$path = self::joinPaths([$prefix, $path, $suffix]);
 
 		return \str_replace("{$sep}{$sep}", $sep, $path);
 	}
