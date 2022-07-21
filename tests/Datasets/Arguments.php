@@ -9,7 +9,7 @@ dataset('errorStringArguments', [
 	new class{}
 ]);
 
-dataset('getAllBlocksListAllTypesArguments', [
+dataset('getAllAllowedBlocksListAllTypesArguments', [
 	true,
 	false,
 	[[]],
