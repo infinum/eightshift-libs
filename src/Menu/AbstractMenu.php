@@ -59,7 +59,7 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 		$cssClassModifiers = '',
 		bool $outputMenu = true
 	) {
-		// Check to see if any css modifiers were supplied.
+		// Check to see if any CSS modifiers were supplied.
 		$modifiers = '';
 
 		if (!empty($cssClassModifiers)) {

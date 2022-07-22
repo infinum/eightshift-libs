@@ -133,7 +133,7 @@ trait ObjectHelperTrait
 	}
 
 	/**
-	 * Convert string from kebab to camel case
+	 * Convert string from kebab to camel case.
 	 *
 	 * @param string $stringToConvert    String to convert.
 	 * @param string $separator Separator to use for conversion.
