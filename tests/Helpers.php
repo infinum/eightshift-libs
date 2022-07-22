@@ -25,7 +25,7 @@ function buildTestBlocks() {
  *
  * @return MockInterface
  */
-function mock(string $class): MockInterface
+function mock(string $classname): MockInterface
 {
-	return Mockery::mock($class);
+	return Mockery::mock($classname);
 }

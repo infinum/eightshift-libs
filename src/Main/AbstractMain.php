@@ -44,12 +44,12 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Constructs object and inserts prefixes from composer.
 	 *
 	 * @param array<string, mixed> $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
-	 * @param string $namespace Projects namespace.
+	 * @param string $projectNamespace Projects namespace.
 	 */
-	public function __construct(array $psr4Prefixes, string $namespace)
+	public function __construct(array $psr4Prefixes, string $projectNamespace)
 	{
 		$this->psr4Prefixes = $psr4Prefixes;
-		$this->namespace = $namespace;
+		$this->namespace = $projectNamespace;
 	}
 
 	/**

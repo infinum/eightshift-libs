@@ -305,13 +305,13 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Generate example template file/class name
 	 *
-	 * @param string $string File name.
+	 * @param string $filename File name.
 	 *
 	 * @return string
 	 */
-	public function getExampleFileName(string $string): string
+	public function getExampleFileName(string $filename): string
 	{
-		return "{$string}Example";
+		return "{$filename}Example";
 	}
 
 	/**
@@ -759,17 +759,17 @@ abstract class AbstractCli implements CliInterface
 	 * Convert _ to -, empty space to - and convert everything to lowercase
 	 * if the string contains empty space.
 	 *
-	 * @param string $string String to convert.
+	 * @param string $stringToConvert String to convert.
 	 *
 	 * @return string
 	 */
-	public function prepareSlug(string $string): string
+	public function prepareSlug(string $stringToConvert): string
 	{
-		if (\strpos($string, ' ') !== false) {
-			$string = \strtolower($string);
+		if (\strpos($stringToConvert, ' ') !== false) {
+			$stringToConvert = \strtolower($stringToConvert);
 		}
 
-		return \str_replace('_', '-', \str_replace(' ', '-', $string));
+		return \str_replace('_', '-', \str_replace(' ', '-', $stringToConvert));
 	}
 
 	/**

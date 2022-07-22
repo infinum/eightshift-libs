@@ -18,7 +18,7 @@ interface CallableFieldInterface
 	/**
 	 * Method that returns rest response for custom fields get_callback callable
 	 *
-	 * @param object|array<string, mixed> $object Post or custom post type object of the request.
+	 * @param object|array<string, mixed> $postObject Post or custom post type object of the request.
 	 * @param string       $attr Rest field/attr string identifier from the second parameter
 	 *                           of your register_rest_field() declaration.
 	 * @param object       $request Full request payload - as a WP_REST_Request object.
@@ -29,5 +29,5 @@ interface CallableFieldInterface
 	 *               is already an instance, WP_HTTP_Response, otherwise
 	 *               returns a new WP_REST_Response instance.
 	 */
-	public function fieldCallback($object, string $attr, object $request, string $objectType);
+	public function fieldCallback($postObject, string $attr, object $request, string $objectType);
 }
