@@ -42,10 +42,16 @@ test('Manifest example contains correct manifest file path', function () {
 });
 
 test('Setting manifest data manually works', function() {
+	/** getAssetsManifestItem returns an empty string when ES_TEST is set, to prevent issues with automatically parsing manifest data
+	*	during tests. However, when setting manifest data manually, these issues aren't present, so the ES_TEST environment variable
+	*	is temporarily unset during this test.
+	*/
+	putenv('ES_TEST');
 	$this->example->setAssetsManifestRaw();
 
 	$item = $this->example->getAssetsManifestItem('application.css');
 
 	$this->assertIsString($item);
 	$this->assertSame('https://example.com/wp-content/themes/eightshift-boilerplate/public/application.css', $item);
+	putenv('ES_TEST=true');
 });
