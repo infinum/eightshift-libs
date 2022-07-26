@@ -13,7 +13,7 @@ test('Hooks are registered for the custom taxonomy columns', function() {
 			return [];
 		}
 
-		public function renderColumnContent(string $columnName, int $termId): string
+		public function renderColumnContent(string $columnOutput, string $columnName, int $termId): string
 		{
 			return 'content';
 		}
