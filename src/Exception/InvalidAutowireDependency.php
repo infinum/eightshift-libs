@@ -72,10 +72,11 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 	 * Throws an exception if we find a primitive dependency on a class that's not been manually built.
 	 *
 	 * @param string $className Class name we're looking for.
+	 * @param string $param Parameter name that is causing the issue.
 	 *
 	 * @return static
 	 */
-	public static function throwPrimitiveDependencyFound(string $className): InvalidAutowireDependency
+	public static function throwPrimitiveDependencyFound(string $className, string $param): InvalidAutowireDependency
 	{
 		return new InvalidAutowireDependency(
 			\sprintf(
