@@ -80,10 +80,11 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 		return new InvalidAutowireDependency(
 			\sprintf(
 				/* translators: %s is replaced with the className and interfaceName. */
-				"Found a primitive dependency for %s. Autowire is unable to figure out what value needs to be injected here.
+				"Found a primitive dependency for %s with param %s. Autowire is unable to figure out what value needs to be injected here.
 				Please define the dependency tree for this class manually using \$main->getServiceClasses().
 				See: https://infinum.github.io/eightshift-docs/docs/basics/autowiring#what-if-my-class-has-a-primitive-parameter-string-int-etc-inside-a-constructor-method",
-				$className
+				$className,
+				$param
 			)
 		);
 	}

@@ -129,7 +129,7 @@ class Autowiring
 		// Ignore dependencies for autowire and main class.
 		$ignorePaths = \array_flip([
 			'psr4Prefixes',
-			'namespace',
+			'projectNamespace',
 		]);
 
 		$dependencyTree = [];
@@ -153,7 +153,7 @@ class Autowiring
 				// to check if this parameter has a default value or not (so we need to throw an exception regardless).
 				// See: https://www.php.net/manual/en/class.reflectionnamedtype.php.
 				if ($isBuiltin && !isset($ignorePaths[$reflParam->getName()])) {
-					throw InvalidAutowireDependency::throwPrimitiveDependencyFound($relevantClass);
+					throw InvalidAutowireDependency::throwPrimitiveDependencyFound($relevantClass, $reflParam->getName());
 				}
 
 				// Keeping PHPStan happy.
