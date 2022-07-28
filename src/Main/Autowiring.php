@@ -191,15 +191,15 @@ class Autowiring
 	/**
 	 * Returns all classes in namespace.
 	 *
-	 * @param string $namespace Name of namespace.
+	 * @param string $namespaceName Name of namespace.
 	 * @param array<string, mixed> $psr4Prefixes Array of psr-4 compliant namespaces and their accompanying folders.
 	 *
 	 * @return string[]
 	 */
-	private function getClassesInNamespace(string $namespace, array $psr4Prefixes): array
+	private function getClassesInNamespace(string $namespaceName, array $psr4Prefixes): array
 	{
 		$classes = [];
-		$namespaceWithSlash = "{$namespace}\\";
+		$namespaceWithSlash = "{$namespaceName}\\";
 		$pathToNamespace = $psr4Prefixes[$namespaceWithSlash][0] ?? '';
 
 		if (!\is_dir($pathToNamespace)) {
@@ -213,7 +213,7 @@ class Autowiring
 			}
 
 			if (\preg_match('/^[A-Z]{1}[A-Za-z0-9]+\.php/', $file->getFileName())) {
-				$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespace, $pathToNamespace);
+				$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespaceName, $pathToNamespace);
 			}
 		}
 

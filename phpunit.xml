@@ -6,7 +6,7 @@
 >
 	<testsuites>
 		<testsuite name="Unit Test Suite">
-			<directory suffix="Test.php">./tests</directory>
+			<directory>./tests/Unit/</directory>
 		</testsuite>
 	</testsuites>
 	<php>
@@ -23,7 +23,7 @@
 		</exclude>
 		<report>
 			<clover outputFile="tests/coverage/clover.xml"/>
-			<html outputDirectory="tests/coverage/html" lowUpperBound="50" highLowerBound="90"/>
+			<html outputDirectory="tests/coverage/html" />
 		</report>
 	</coverage>
 </phpunit>

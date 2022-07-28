@@ -101,18 +101,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get all blocks with full block name.
+	 * Get all allowed blocks with the full block name.
 	 *
-	 * Used to limit what blocks are going to be used in your project using allowed_block_types_all filter.
+	 * Used to define blocks that are going to be used in your project using allowed_block_types_all filter.
+	 * The function behaves similar to the native function except that it appends all the project blocks to
+	 * the array of block type slugs sent as the first attribute.
 	 *
 	 * @hook allowed_block_types_all Available from WP 5.8.
 	 *
 	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
 	 * @param WP_Block_Editor_Context $blockEditorContext The current block editor context.
 	 *
-	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
+	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of all allowed blocks.
 	 */
-	public function getAllBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
+	public function getAllAllowedBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
 	{
 		// Allow forms to be used correctly.
 		if (
@@ -123,15 +125,18 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return true;
 		}
 
-		if (!\is_bool($allowedBlockTypes)) {
+		if (\is_bool($allowedBlockTypes)) {
 			return $allowedBlockTypes;
 		}
 
-		$allowedBlockTypes = \array_map(
-			function ($block) {
-				return $block['blockFullName'];
-			},
-			Components::getBlocks()
+		$allowedBlockTypes = \array_merge(
+			\array_map(
+				function ($block) {
+					return $block['blockFullName'];
+				},
+				Components::getBlocks(),
+			),
+			$allowedBlockTypes,
 		);
 
 		// Allow reusable block.
@@ -139,6 +144,25 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$allowedBlockTypes[] = 'core/template';
 
 		return $allowedBlockTypes;
+	}
+
+	/**
+	 * Get the default list of blocks with the full block name attribute that are defined in the project.
+	 *
+	 * Used to limit what blocks are going to be used in your project using allowed_block_types_all filter.
+	 * It is most commonly used directly as a callback for allowed_block_types_all filter.
+	 * The first parameter doesn't have any influence on what the function returns.
+	 *
+	 * @hook allowed_block_types_all Available from WP 5.8.
+	 *
+	 * @param bool|string[] $allowedBlockTypes Doesn't have any influence on what function returns.
+	 * @param WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 *
+	 * @return string[] The default list of blocks defined in the project.
+	 */
+	public function getAllBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
+	{
+		return $this->getAllAllowedBlocksList([], $blockEditorContext);
 	}
 
 	/**

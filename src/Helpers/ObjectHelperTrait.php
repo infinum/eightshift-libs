@@ -38,29 +38,29 @@ trait ObjectHelperTrait
 	/**
 	 * Check if json is valid
 	 *
-	 * @param string $string String to check.
+	 * @param string $jsonString String to check.
 	 *
 	 * @return bool
 	 */
-	public static function isJson(string $string): bool
+	public static function isJson(string $jsonString): bool
 	{
-		\json_decode($string);
+		\json_decode($jsonString);
 		return (\json_last_error() === \JSON_ERROR_NONE);
 	}
 
 	/**
 	 * Flatten multidimensional array.
 	 *
-	 * @param array<mixed> $array Multidimensional array.
+	 * @param array<mixed> $arrayToFlatten Multidimensional array to flatten.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function flattenArray(array $array): array
+	public static function flattenArray(array $arrayToFlatten): array
 	{
 		$output = [];
 
 		\array_walk_recursive(
-			$array,
+			$arrayToFlatten,
 			function ($a) use (&$output) {
 				if (!empty($a)) {
 					$output[] = $a;
@@ -76,16 +76,16 @@ trait ObjectHelperTrait
 	 *
 	 * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
 	 *
-	 * @param array<mixed> $array Provided array.
+	 * @param array<mixed> $arrayToSanitize Provided array.
 	 * @param string $sanitizationFunction WordPress function used for sanitization purposes.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function sanitizeArray(array $array, string $sanitizationFunction): array
+	public static function sanitizeArray(array $arrayToSanitize, string $sanitizationFunction): array
 	{
 		$sanitized = [];
 
-		foreach ($array as $key => $value) {
+		foreach ($arrayToSanitize as $key => $value) {
 			if (\is_array($value)) {
 				$sanitizedValue = self::sanitizeArray($value, $sanitizationFunction);
 				$sanitized[$key] = $sanitizedValue;
@@ -121,28 +121,28 @@ trait ObjectHelperTrait
 	/**
 	 * Convert string from camel to kebab case
 	 *
-	 * @param string $string String to convert.
+	 * @param string $convert String to convert.
 	 *
 	 * @return string
 	 */
-	public static function camelToKebabCase(string $string): string
+	public static function camelToKebabCase(string $convert): string
 	{
-		$output = \ltrim(\mb_strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $string)), '-');
+		$output = \ltrim(\mb_strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $convert)), '-');
 		$output = \str_replace(['_', ' '], '-', $output);
 		return \str_replace('--', '-', $output);
 	}
 
 	/**
-	 * Convert string from kebab to camel case
+	 * Convert string from kebab to camel case.
 	 *
-	 * @param string $string    String to convert.
+	 * @param string $stringToConvert    String to convert.
 	 * @param string $separator Separator to use for conversion.
 	 *
 	 * @return string
 	 */
-	public static function kebabToCamelCase(string $string, string $separator = '-'): string
+	public static function kebabToCamelCase(string $stringToConvert, string $separator = '-'): string
 	{
-		return \lcfirst(\str_replace($separator, '', \ucwords($string, $separator)));
+		return \lcfirst(\str_replace($separator, '', \ucwords($stringToConvert, $separator)));
 	}
 
 	/**
@@ -170,15 +170,15 @@ trait ObjectHelperTrait
 	 *
 	 * @link https://stackoverflow.com/a/15198925/629127
 	 *
-	 * @param string $string JSON string to validate.
+	 * @param string $manifest JSON string to validate.
 	 *
 	 * @throws InvalidManifest Error in the case json file has errors.
 	 *
 	 * @return array<string, mixed> Parsed JSON string into an array.
 	 */
-	public static function parseManifest(string $string): array
+	public static function parseManifest(string $manifest): array
 	{
-		$result = \json_decode($string, true);
+		$result = \json_decode($manifest, true);
 
 		switch (\json_last_error()) {
 			case \JSON_ERROR_NONE:

@@ -44,15 +44,15 @@ abstract class AbstractTaxonomyColumns implements ServiceInterface
 	abstract public function addColumnName(array $columns): array;
 
 	/**
-	 * Render the taxonomy column content in the custom taxonomy column
+	 * Render the taxonomy column content in the custom taxonomy column.
 	 *
-	 * @param string $string Blank string.
+	 * @param string $columnOutput Column output.
 	 * @param string $columnName Name of the column.
 	 * @param int    $termId Term ID.
 	 *
 	 * @return string The content to display in the custom column.
 	 */
-	abstract public function renderColumnContent(string $string, string $columnName, int $termId): string;
+	abstract public function renderColumnContent(string $columnOutput, string $columnName, int $termId): string;
 
 	/**
 	 * Get the array of slugs of the taxonomies where the additional column should appear.
