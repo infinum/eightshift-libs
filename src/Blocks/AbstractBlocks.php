@@ -23,6 +23,11 @@ use WP_Post;
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
+	 * Legacy trait.
+	 */
+	use TraitBlocksLegacy;
+
+	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
 	 *
@@ -60,13 +65,21 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		// Get global settings direct from file.
 		$settings = $this->getSettingsManifest();
 
-		$namespace = $settings['namespace'];
+		$settingsNamespace = $settings['namespace'];
 
 		$blocks = \array_map(
-			static function ($block) use ($namespace) {
+			function ($block) use ($settingsNamespace) {
 				// Check if blocks-namespace is defined in block or in global manifest settings.
+				$namespace = $block['namespace'] ?? $settingsNamespace;
+
+				// Add common attributes to the store for later usage.
+				$commonAttributes = $this->getCommonAttributes($namespace, $block['blockName']);
+
 				$block['namespace'] = $namespace;
-				$block['blockFullName'] = "{$namespace}/{$block['blockName']}";
+
+				foreach ($commonAttributes as $attributeName => $attributeValue) {
+					$block[$attributeName] = $attributeValue['default'];
+				}
 
 				return $block;
 			},
@@ -129,41 +142,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Get all blocks with full block name - legacy.
-	 *
-	 * Used to limit what blocks are going to be used in your project using allowed_block_types filter.
-	 *
-	 * @hook allowed_block_types This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
-	 *
-	 * @param bool|string[] $allowedBlockTypes Array of block type slugs, or boolean to enable/disable all.
-	 * @param WP_Post $post The post resource data.
-	 *
-	 * @return bool|string[] Boolean if you want to disallow or allow all blocks, or a list of allowed blocks.
-	 */
-	public function getAllBlocksListOld($allowedBlockTypes, WP_Post $post)
-	{
-		if (\gettype($allowedBlockTypes) === 'boolean') {
-			return $allowedBlockTypes;
-		}
-
-		$allowedBlockTypes = \array_map(
-			function ($block) {
-				return $block['blockFullName'];
-			},
-			Components::getBlocks()
-		);
-
-		// Allow reusable block.
-		$allowedBlockTypes[] = 'core/block';
-		$allowedBlockTypes[] = 'core/template';
-
-		return $allowedBlockTypes;
-	}
-
-	/**
 	 * Method used to register all custom blocks with data fetched from blocks manifest.json.
-	 *
-	 * @throws InvalidBlock Throws error if blocks are missing.
 	 *
 	 * @return void
 	 */
@@ -172,6 +151,40 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		foreach (Components::getBlocks() as $block) {
 			$this->registerBlock($block);
 		}
+	}
+
+	/**
+	 * Set none Eightshift block to use wrapper options.
+	 *
+	 * @param array<string, mixed> $parsedBlock Array of block details.
+	 * @param array<string, mixed> $sourceBlock Array of block source details.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function setNoneEightshiftBlocksWrapper(array $parsedBlock, array $sourceBlock): array
+	{
+		$namespace = Components::getSettingsNamespace();
+
+		if ($parsedBlock['blockName'] === null) {
+			return $parsedBlock;
+		}
+
+		$wrapperDisable = $parsedBlock['attrs']['wrapperDisable'] ?? false;
+
+		$blockNamespace = \explode('/', $parsedBlock['blockName'])[0];
+
+		if ($namespace !== $blockNamespace && !$wrapperDisable) {
+			$unique = Components::getUnique();
+			$manifest = Components::getWrapper();
+			$customBlockName = Components::getSettingsGlobalVariablesCustomBlockName();
+			$blockWrapClass = \str_replace('/', '-', $parsedBlock['blockName']);
+			$css = Components::outputCssVariables($parsedBlock['attrs'], $manifest, $unique, [], $customBlockName);
+
+			$parsedBlock['innerHTML'] = '<div class="wrapper ' . \esc_attr($customBlockName) . ' ' . \esc_attr($blockWrapClass) . '" data-id="' . \esc_attr($unique) . '">' . $css . $parsedBlock['innerHTML'] . '</div>'; // phpcs:ignore Generic.Files.LineLength.TooLong
+			$parsedBlock['innerContent'][0] = '<div class="wrapper ' . \esc_attr($customBlockName) . ' ' . \esc_attr($blockWrapClass) . '" data-id="' . \esc_attr($unique) . '">' . $css . $parsedBlock['innerContent'][0] . '</div>'; // phpcs:ignore Generic.Files.LineLength.TooLong
+		}
+
+		return $parsedBlock;
 	}
 
 	/**
@@ -235,32 +248,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @return array<int, array<string, string|null>> Array of categories for block types.
 	 */
 	public function getCustomCategory(array $categories, WP_Block_Editor_Context $blockEditorContext): array
-	{
-		return \array_merge(
-			$categories,
-			[
-				[
-					'slug' => 'eightshift',
-					'title' => \esc_html__('Eightshift', 'eightshift-libs'),
-					'icon' => 'admin-settings',
-				],
-			]
-		);
-	}
-
-	/**
-	 * Create custom category to assign all custom blocks - legacy.
-	 *
-	 * This category will be shown on all blocks list in "Add Block" button.
-	 *
-	 * @hook block_categories This is a WP 5 - WP 5.7 compatible hook callback. Will not work with WP 5.8!
-	 *
-	 * @param array<int, array<string, string|null>> $categories Array of categories for block types.
-	 * @param WP_Post $post Post being loaded.
-	 *
-	 * @return array<int, array<string, string|null>> Array of categories for block types.
-	 */
-	public function getCustomCategoryOld(array $categories, WP_Post $post): array
 	{
 		return \array_merge(
 			$categories,
@@ -512,7 +499,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	private function getAttributes(array $blockDetails): array
 	{
 		$blockName = $blockDetails['blockName'];
-		$blockClassPrefix = Components::getSettingsBlockClassPrefix();
+		$namespace = $blockDetails['namespace'];
 
 		$wrapperAttributes = [];
 
@@ -521,40 +508,56 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		return \array_merge(
-			[
-				'blockName' => [
-					'type' => 'string',
-					'default' => $blockName,
-				],
-				// Used to pass reference to all components.
-				'blockClientId' => [
-					'type' => 'string',
-				],
-				'blockTopLevelId' => [
-					'type' => 'string',
-					'default' => Components::getUnique(),
-				],
-				'blockFullName' => [
-					'type' => 'string',
-					'default' => $blockDetails['blockFullName'],
-				],
-				'blockClass' => [
-					'type' => 'string',
-					'default' => "{$blockClassPrefix}-{$blockName}",
-				],
-				'blockJsClass' => [
-					'type' => 'string',
-					'default' => "js-{$blockClassPrefix}-{$blockName}",
-				],
-				'blockSsr' => [
-					'type' => 'boolean',
-					'default' => false,
-				],
-			],
+			$this->getCommonAttributes($namespace, $blockName),
 			Components::getSettingsAttributes(),
 			$wrapperAttributes,
 			$this->prepareComponentAttributes($blockDetails)
 		);
+	}
+
+	/**
+	 * Get common attributes.
+	 *
+	 * @param string $namespace Namespace prefix.
+	 * @param string $blockName Block name without namespace.
+	 * @param boolean $isInternalBlock Define if block is internal or other.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getCommonAttributes(string $namespace, string $blockName, bool $isInternalBlock = true): array
+	{
+		$prefix = 'block';
+
+		return [
+			'blockName' => [
+				'type' => 'string',
+				'default' => $blockName,
+			],
+			'blockClientId' => [
+				'type' => 'string',
+				'default' => Components::getUnique(),
+			],
+			'blockFullName' => [
+				'type' => 'string',
+				'default' => "{$namespace}/{$blockName}",
+			],
+			'blockWrapClass' => [
+				'type' => 'string',
+				'default' => "{$namespace}-{$blockName}",
+			],
+			'blockClass' => [
+				'type' => 'string',
+				'default' => $isInternalBlock ? "{$prefix}-{$blockName}" : "{$prefix}-{$namespace}-{$blockName}",
+			],
+			'blockJsClass' => [
+				'type' => 'string',
+				'default' => $isInternalBlock ? "js-{$prefix}-{$blockName}" : "js-{$prefix}-{$namespace}-{$blockName}",
+			],
+			'blockSsr' => [
+				'type' => 'boolean',
+				'default' => false,
+			],
+		];
 	}
 
 	/**

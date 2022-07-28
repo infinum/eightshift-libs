@@ -159,8 +159,8 @@ trait AttributesTrait
 		$includes = [
 			'blockName',
 			'blockClientId',
-			'blockTopLevelId',
 			'blockFullName',
+			'blockWrapClass',
 			'blockClass',
 			'blockJsClass',
 			'blockStyles',
