@@ -56,7 +56,6 @@ trait CliHelpers
 		}
 
 		WP_CLI::log($msg);
-		return;
 	}
 
 	/**
