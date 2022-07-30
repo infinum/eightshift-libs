@@ -32,6 +32,7 @@ use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
+use EightshiftLibs\Setup\PluginManageCli;
 use EightshiftLibs\View\EscapedViewCli;
 use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
