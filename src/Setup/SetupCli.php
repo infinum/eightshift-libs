@@ -61,7 +61,7 @@ class SetupCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy setup.json file used  for automatic project setup and update.',
+			'shortdesc' => 'Copy setup.json file used for automatic project setup and update.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -81,7 +81,8 @@ class SetupCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to list all your project configurations like themes, plugins, core, environments, etc.
+				Used to list all your project configuration like themes and their versions,
+				plugins (wp.org, paid, added to repo or from github release), core version, environments, etc.
 				This file will be copied to your project root folder.
 
 				## EXAMPLES
