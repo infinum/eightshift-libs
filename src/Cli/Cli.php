@@ -124,7 +124,7 @@ class Cli
 		SetupCli::class,
 		WpCli::class,
 		GeolocationCli::class,
-		LoadMoreRouteCli::class
+		LoadMoreRouteCli::class,
 	];
 
 	/**
@@ -138,6 +138,7 @@ class Cli
 		ExportCli::class,
 		ImportCli::class,
 		UpdateCli::class,
+		PluginInstallCli::class,
 	];
 
 	/**
