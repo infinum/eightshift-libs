@@ -73,7 +73,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 */
 	public function getAssetsManifestItem(string $key): string
 	{
-		if (\defined('WP_CLI') || getenv('ES_TEST')) {
+		if (\defined('WP_CLI') || \getenv('ES_TEST')) {
 			return '';
 		}
 
