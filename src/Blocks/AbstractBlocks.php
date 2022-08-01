@@ -177,6 +177,33 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 	}
 
+	public function setNoneEightshiftBlocksWrapperAttributes(array $block, array $sourceBlock, ?WP_Block $parentBlock): array
+	{
+		$useWrapper = Components::getConfigUseWrapper();
+
+		if ($block['blockName'] === null || !$useWrapper) {
+			return $block;
+		}
+
+		$blockDetails = \explode('/', $block['blockName']);
+		$blockNamespace = $blockDetails[0];
+		$blockName = $blockDetails[1];
+
+		$block['attrs'] = array_merge(
+			$block['attrs'],
+			array_map(
+				static function($item) {
+					return $item['default'];
+				},
+				$this->getCommonAttributes($blockNamespace, $blockName)
+			)
+		);
+
+		$block['blockIsParent'] = $parentBlock instanceof WP_Block;
+
+		return $block;
+	}
+
 	/**
 	 * Set none Eightshift block to use wrapper options.
 	 *
@@ -185,30 +212,27 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function setNoneEightshiftBlocksWrapper(array $parsedBlock, array $sourceBlock): array
+	public function setNoneEightshiftBlocksWrapperContent(string $blockContent, array $block)
 	{
 		$namespace = Components::getSettingsNamespace();
+		$useWrapper = Components::getConfigUseWrapper();
 
-		if ($parsedBlock['blockName'] === null) {
-			return $parsedBlock;
+		$blockName = $block['blockName'];
+
+		if ($blockName === null || !$useWrapper) {
+			return $blockContent;
 		}
 
-		$wrapperDisable = $parsedBlock['attrs']['wrapperDisable'] ?? false;
+		$blockDetails = \explode('/', $blockName);
+		$blockNamespace = $blockDetails[0];
 
-		$blockNamespace = \explode('/', $parsedBlock['blockName'])[0];
-
-		if ($namespace !== $blockNamespace && !$wrapperDisable) {
-			$unique = Components::getUnique();
-			$manifest = Components::getWrapper();
-			$customBlockName = Components::getSettingsGlobalVariablesCustomBlockName();
-			$blockWrapClass = \str_replace('/', '-', $parsedBlock['blockName']);
-			$css = Components::outputCssVariables($parsedBlock['attrs'], $manifest, $unique, [], $customBlockName);
-
-			$parsedBlock['innerHTML'] = '<div class="wrapper ' . \esc_attr($customBlockName) . ' ' . \esc_attr($blockWrapClass) . '" data-id="' . \esc_attr($unique) . '">' . $css . $parsedBlock['innerHTML'] . '</div>'; // phpcs:ignore Generic.Files.LineLength.TooLong
-			$parsedBlock['innerContent'][0] = '<div class="wrapper ' . \esc_attr($customBlockName) . ' ' . \esc_attr($blockWrapClass) . '" data-id="' . \esc_attr($unique) . '">' . $css . $parsedBlock['innerContent'][0] . '</div>'; // phpcs:ignore Generic.Files.LineLength.TooLong
+		if ($namespace === $blockNamespace || $block['blockIsParent']) {
+			return $blockContent;
 		}
 
-		return $parsedBlock;
+		$blockContent = $this->getBlockViewWithWrapper($blockContent, $block['attrs'], '', true);
+
+		return $blockContent;
 	}
 
 	/**
@@ -230,33 +254,17 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$sep = \DIRECTORY_SEPARATOR;
 		$templatePath = Components::getProjectPaths('blocksDestinationCustom', "{$blockName}{$sep}{$blockName}.php");
 
-		// Get block wrapper view path.
-		if (Components::getConfigUseWrapper()) {
-			$wrapperPath = Components::getProjectPaths('blocksDestinationWrapper', 'wrapper.php');
-
-			// Check if wrapper component exists.
-			if (!\file_exists($wrapperPath)) {
-				throw InvalidBlock::missingWrapperViewException($wrapperPath);
-			}
-
-			// Check if actual block exists.
-			if (!\file_exists($templatePath)) {
-				throw InvalidBlock::missingViewException($blockName, $templatePath);
-			}
-
-			// If everything is ok, return the contents of the template (return, NOT echo).
-			\ob_start();
-			include $wrapperPath;
-			$output = \ob_get_clean();
-		} else {
-			\ob_start();
-			include $templatePath;
-			$output = \ob_get_clean();
+		// Check if actual block exists.
+		if (!\file_exists($templatePath)) {
+			throw InvalidBlock::missingViewException($blockName, $templatePath);
 		}
 
-		unset($blockName, $templatePath, $wrapperPath, $attributes, $innerBlockContent);
+		// Get block wrapper view path.
+		if (Components::getConfigUseWrapper()) {
+			return $this->getBlockViewWithWrapper($templatePath, $attributes, $innerBlockContent);
+		}
 
-		return (string)$output;
+		return $this->getBlockView($templatePath, $attributes, $innerBlockContent);
 	}
 
 	/**
@@ -283,30 +291,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				],
 			]
 		);
-	}
-
-	/**
-	 * Locate and return template part with passed attributes for wrapper.
-	 *
-	 * Used to render php block wrapper view.
-	 *
-	 * @param string $src String with URL path to template.
-	 * @param array<string, mixed> $attributes Attributes array to pass in template.
-	 * @param string|null $innerBlockContent If using inner blocks content pass the data.
-	 *
-	 * @throws InvalidBlock Throws an error if wrapper file doesn't exist.
-	 *
-	 * @return void Includes an HTML view, or throws an error if the view is missing.
-	 */
-	public function renderWrapperView(string $src, array $attributes, ?string $innerBlockContent = null): void
-	{
-		if (!\file_exists($src)) {
-			throw InvalidBlock::missingWrapperViewException($src);
-		}
-
-		include $src;
-
-		unset($src, $attributes, $innerBlockContent);
 	}
 
 	/**
@@ -690,5 +674,62 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$output,
 			$this->prepareComponentAttribute($manifest, '', $name, $newParent, true)
 		);
+	}
+
+	/**
+	 * Return Block view file with wrapper.
+	 *
+	 * @param string $src Src of block to find.
+	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
+	 * @param string $innerBlockContent Block's content if using inner blocks.
+	 *
+	 * @return string
+	 */
+	private function getBlockViewWithWrapper(string $src, array $attributes, string $innerBlockContent, bool $isDirect = false) {
+		$wrapperPath = Components::getProjectPaths('blocksDestinationWrapper', 'wrapper.php');
+
+		// Check if wrapper component exists.
+		if (!\file_exists($wrapperPath)) {
+			throw InvalidBlock::missingWrapperViewException($wrapperPath);
+		}
+
+		// Stored to variable so it can be used later in the view.
+		if ($isDirect) {
+			$wrapperChildren = $src;
+		} else {
+			$wrapperChildren = $this->getBlockView(
+				$src,
+				$attributes,
+				$innerBlockContent
+			);
+		}
+
+		// If everything is ok, return the contents of the template (return, NOT echo).
+		\ob_start();
+		include $wrapperPath;
+		$output = \ob_get_clean();
+
+		unset($src, $attributes, $innerBlockContent, $isDirect, $wrapperPath, $wrapperChildren);
+
+		return (string)$output;
+	}
+
+	/**
+	 * Return Block view file clean, without wrapper.
+	 *
+	 * @param string $src Src of block to find.
+	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
+	 * @param string $innerBlockContent Block's content if using inner blocks.
+	 *
+	 * @return string
+	 */
+	private function getBlockView(string $src, array $attributes, string $innerBlockContent) {
+		\ob_start();
+		include $src;
+		$output = \ob_get_clean();
+
+		unset($src, $attributes, $innerBlockContent);
+
+		return (string)$output;
 	}
 }

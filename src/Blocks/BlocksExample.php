@@ -47,7 +47,8 @@ class BlocksExample extends AbstractBlocks
 
 		// Filter block content.
 		\add_filter('render_block_data', [$this, 'filterBlocksContent'], 10, 2);
-		\add_filter('render_block_data', [$this, 'setNoneEightshiftBlocksWrapper'], 10, 2);
+		\add_filter('render_block_data', [$this, 'setNoneEightshiftBlocksWrapperAttributes'], 10, 3);
+		\add_filter('render_block', [$this, 'setNoneEightshiftBlocksWrapperContent'], 10, 2);
 
 		// Output inline css variables.
 		\add_action('wp_footer', [$this, 'outputCssVariablesInline']);

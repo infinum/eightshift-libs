@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
+use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
 use WP_Post;
 
@@ -74,5 +75,29 @@ trait TraitBlocksLegacy
 				],
 			]
 		);
+	}
+
+	/**
+	 * Locate and return template part with passed attributes for wrapper.
+	 *
+	 * Used to render php block wrapper view.
+	 *
+	 * @param string $src String with URL path to template.
+	 * @param array<string, mixed> $attributes Attributes array to pass in template.
+	 * @param string|null $innerBlockContent If using inner blocks content pass the data.
+	 *
+	 * @throws InvalidBlock Throws an error if wrapper file doesn't exist.
+	 *
+	 * @return void Includes an HTML view, or throws an error if the view is missing.
+	 */
+	public function renderWrapperViewOld(string $src, array $attributes, ?string $innerBlockContent = null): void
+	{
+		if (!\file_exists($src)) {
+			throw InvalidBlock::missingWrapperViewException($src);
+		}
+
+		include $src;
+
+		unset($src, $attributes, $innerBlockContent);
 	}
 }
