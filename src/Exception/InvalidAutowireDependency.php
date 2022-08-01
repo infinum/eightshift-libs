@@ -72,18 +72,20 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 	 * Throws an exception if we find a primitive dependency on a class that's not been manually built.
 	 *
 	 * @param string $className Class name we're looking for.
+	 * @param string $param Parameter name that is causing the issue.
 	 *
 	 * @return static
 	 */
-	public static function throwPrimitiveDependencyFound(string $className): InvalidAutowireDependency
+	public static function throwPrimitiveDependencyFound(string $className, string $param): InvalidAutowireDependency
 	{
 		return new InvalidAutowireDependency(
 			\sprintf(
 				/* translators: %s is replaced with the className and interfaceName. */
-				"Found a primitive dependency for %s. Autowire is unable to figure out what value needs to be injected here.
+				"Found a primitive dependency for %s with param %s. Autowire is unable to figure out what value needs to be injected here.
 				Please define the dependency tree for this class manually using \$main->getServiceClasses().
 				See: https://infinum.github.io/eightshift-docs/docs/basics/autowiring#what-if-my-class-has-a-primitive-parameter-string-int-etc-inside-a-constructor-method",
-				$className
+				$className,
+				$param
 			)
 		);
 	}
