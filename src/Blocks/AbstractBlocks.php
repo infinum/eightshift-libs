@@ -14,6 +14,7 @@ namespace EightshiftLibs\Blocks;
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
+use WP_Block;
 use WP_Block_Editor_Context;
 use WP_Post;
 
