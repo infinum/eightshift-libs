@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.1.0] - 2022-08-01
+
+### Updated
+- Manifest fetching in tests bug.
+- All methods to be PHP8 safe in case of arguments naming.
+- Allow all blocks that was broken from the last deploy.
+
+### Added
+- New tests.
+
 ## [6.0.0] - 2022-07-11
 
 ### Removed
@@ -346,6 +356,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.1.0]: https://github.com/infinum/eightshift-libs/compare/6.0.0...v6.1.0
 [6.0.0]: https://github.com/infinum/eightshift-libs/compare/5.1.0...v6.0.0
 [5.1.0]: https://github.com/infinum/eightshift-libs/compare/5.0.2...v5.1.0
 [5.0.2]: https://github.com/infinum/eightshift-libs/compare/5.0.1...v5.0.2
