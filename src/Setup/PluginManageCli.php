@@ -154,22 +154,22 @@ class PluginManageCli extends AbstractCli
 		 * Check associated arguments. Based on which one is present
 		 * toggle the behavior of the CLI command.
 		 */
-		if (in_array('install-core', $assocArgs, true)) {
+		if (\in_array('install-core', $assocArgs, true)) {
 			$this->installWpOrgPlugins($setup);
 			return;
 		}
 
-		if (in_array('install-github', $assocArgs, true)) {
+		if (\in_array('install-github', $assocArgs, true)) {
 			$this->installGitHubPlugins($setup);
 			return;
 		}
 
-		if (in_array('install-paid', $assocArgs, true)) {
+		if (\in_array('install-paid', $assocArgs, true)) {
 			$this->installPaidPlugins($setup);
 			return;
 		}
 
-		if (in_array('delete-plugins', $assocArgs, true)) {
+		if (\in_array('delete-plugins', $assocArgs, true)) {
 			$this->deletePlugins($setup);
 			return;
 		}
@@ -364,6 +364,7 @@ class PluginManageCli extends AbstractCli
 		// Check if env.json exist.
 		$envFile = Components::getProjectPaths('projectRoot') . 'env.json';
 
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- in tests sometimes the env var is 'true' string, sometimes it's '1'. Loose comparison fixes this issue.
 		if (\getenv('ES_TEST') == true) {
 			$envFile = Components::getProjectPaths('testsData') . 'env.json';
 		}
@@ -397,6 +398,7 @@ class PluginManageCli extends AbstractCli
 	{
 		$setupFile = Components::getProjectPaths('wpContent') . 'setup.json';
 
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- in tests sometimes the env var is 'true' string, sometimes it's '1'. Loose comparison fixes this issue.
 		if (\getenv('ES_TEST') == true) {
 			$setupFile = \dirname(__FILE__) . '/setup.json';
 		}
