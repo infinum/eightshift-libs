@@ -26,7 +26,7 @@ class PluginManageCli extends AbstractCli
 	 *
 	 * @var array<string, string|boolean>
 	 */
-	private $cliOptions = [
+	private array $cliOptions = [
 		'return' => true,
 		'parse' => 'json',
 		'launch' => false,
@@ -123,6 +123,7 @@ class PluginManageCli extends AbstractCli
 				
 				If the URl contains the VERSION string, that version will be replaced with the version
 				defined in the setup.json file. Otherwise the latest version available from the URL will be downloaded.
+
 				## EXAMPLES
 				# Install/update all the plugins, delete unused plugins:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
@@ -363,7 +364,7 @@ class PluginManageCli extends AbstractCli
 		// Check if env.json exist.
 		$envFile = Components::getProjectPaths('projectRoot') . 'env.json';
 
-		if (\getenv('ES_TEST') === '1') {
+		if (\getenv('ES_TEST') === 'true') {
 			$envFile = Components::getProjectPaths('testsData') . 'env.json';
 		}
 
@@ -396,7 +397,7 @@ class PluginManageCli extends AbstractCli
 	{
 		$setupFile = Components::getProjectPaths('wpContent') . 'setup.json';
 
-		if (\getenv('ES_TEST') === '1') {
+		if (\getenv('ES_TEST') === 'true') {
 			$setupFile = \dirname(__FILE__) . '/setup.json';
 		}
 
