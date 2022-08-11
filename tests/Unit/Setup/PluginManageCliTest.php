@@ -5,7 +5,6 @@ namespace Tests\Unit\Setup;
 use EightshiftLibs\Setup\PluginManageCli;
 
 use function Brain\Monkey\Functions\when;
-use function Tests\mock;
 
 /**
  * Mock before tests.
@@ -30,7 +29,7 @@ test('Plugin Install CLI command will correctly throw an exception if setup.json
 
 	$pluginManage = $this->pluginManage;
 	$pluginManage([], []);
-})->expectException(\Exception::class);
+})->expectExceptionMessage('File missing on the path:');
 
 test('Plugin Install CLI command will correctly throw an exception if env.json does not exist', function () {
 	when('file_exists')->alias(function($argument) {
@@ -42,6 +41,11 @@ test('Plugin Install CLI command will correctly throw an exception if env.json d
 			return false;
 		}
 	});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin list --fields=name --format=json')
+		->andReturn([['name' => 'contact-form-7'], ['name'=>'wordpress-seo']]);
 
 	$pluginManage = $this->pluginManage;
 	$pluginManage([], []);
@@ -55,6 +59,70 @@ test('Plugin install CLI command will work with default action', function () {
 	// Reset the previously set mock.
 	when('file_exists')->justReturn(true);
 
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin list --fields=name --format=json')
+		->andReturn([['name' => 'contact-form-7'], ['name'=>'wordpress-seo']]);
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin list --fields=name,version --format=json')
+		->andReturn([['name' => 'advanced-custom-fields-pro','version' => '5.10.2'],['name' => 'contact-form-7','version' => '5.1.8'],['name' => 'elementor-pro','version' => '3.7.0'],['name' => 'eightshift-forms','version' => '1.0.0'],['name' => 'query-monitor','version' => '3.6.7'],['name' => 'wp-rocket','version' => '3.11.2']]);
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin delete wordpress-seo')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_DELETE_HAPPENED={$message}");
+		});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin update')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_UPDATE_HAPPENED={$message}");
+		});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_INSTALL_HAPPENED={$message}");
+		});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install query-monitor --force')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_INSTALL_QM_HAPPENED={$message}");
+		});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install "https://github.com/infinum/eightshift-forms/releases/download/1.2.4/release.zip" --force')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_GH_INSTALL_HAPPENED={$message}");
+		});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('for f in ./wp-content/plugins/release*/; do rsync -avh --delete "$f" "./wp-content/plugins/eightshift-forms/" && rm -rf "$f"; done')
+		->andReturnTrue();
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install "https://example.com" --force')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_PAID_1_INSTALL_HAPPENED={$message}");
+		});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install "https://example.com&t=5.10.2" --force')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_PAID_2_INSTALL_HAPPENED={$message}");
+		});
+
 	$pluginManage = $this->pluginManage;
 	$pluginManage([], []);
 
@@ -64,6 +132,18 @@ test('Plugin install CLI command will work with default action', function () {
 });
 
 test('Plugin install CLI command will work when only core plugins should be installed', function () {
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin list --fields=name --format=json')
+		->andReturn([['name' => 'contact-form-7'], ['name'=>'wordpress-seo']]);
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install query-monitor --force')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_INSTALL_QM_HAPPENED={$message}");
+		});
+
 	$pluginManage = $this->pluginManage;
 	$pluginManage([], ['install-core']);
 
@@ -73,6 +153,28 @@ test('Plugin install CLI command will work when only core plugins should be inst
 });
 
 test('Plugin install CLI command will work when only GitHub plugins should be installed', function () {
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin list --fields=name --format=json')
+		->andReturn([['name' => 'contact-form-7'], ['name'=>'wordpress-seo']]);
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin list --fields=name,version --format=json')
+		->andReturn([['name' => 'advanced-custom-fields-pro','version' => '5.10.2'],['name' => 'contact-form-7','version' => '5.1.8'],['name' => 'elementor-pro','version' => '3.7.0'],['name' => 'eightshift-forms','version' => '1.0.0'],['name' => 'query-monitor','version' => '3.6.7'],['name' => 'wp-rocket','version' => '3.11.2']]);
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install "https://github.com/infinum/eightshift-forms/releases/download/1.2.4/release.zip" --force')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_GH_INSTALL_HAPPENED={$message}");
+		});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('for f in ./wp-content/plugins/release*/; do rsync -avh --delete "$f" "./wp-content/plugins/eightshift-forms/" && rm -rf "$f"; done')
+		->andReturnTrue();
+
 	$pluginManage = $this->pluginManage;
 	$pluginManage([], ['install-github']);
 
@@ -82,6 +184,25 @@ test('Plugin install CLI command will work when only GitHub plugins should be in
 });
 
 test('Plugin install CLI command will work when only paid plugins should be installed', function () {
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin list --fields=name --format=json')
+		->andReturn([['name' => 'contact-form-7'], ['name'=>'wordpress-seo']]);
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install "https://example.com" --force')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_PAID_1_INSTALL_HAPPENED={$message}");
+		});
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin install "https://example.com&t=5.10.2" --force')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_PAID_2_INSTALL_HAPPENED={$message}");
+		});
+
 	$pluginManage = $this->pluginManage;
 	$pluginManage([], ['install-paid']);
 
@@ -94,6 +215,18 @@ test('Plugin install CLI command will work when only paid plugins should be inst
 });
 
 test('Plugins install CLI command will delete plugins', function () {
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin list --fields=name --format=json')
+		->andReturn([['name' => 'contact-form-7'], ['name'=>'wordpress-seo']]);
+
+	$this->wpCliMock
+		->shouldReceive('runcommand')
+		->withSomeOfArgs('plugin delete wordpress-seo')
+		->andReturnUsing(function ($message) {
+			putenv("ES_CLI_RUN_COMMAND_PLUGIN_DELETE_HAPPENED={$message}");
+		});
+
 	$pluginManage = $this->pluginManage;
 	$pluginManage([], ['delete-plugins']);
 
