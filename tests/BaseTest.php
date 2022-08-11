@@ -6,12 +6,15 @@ namespace Tests;
 
 use Brain\Monkey\Functions;
 use Exception;
+use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 class BaseTest extends TestCase
 {
+	protected MockInterface $wpCliMock;
+
 	protected function set_up()
 	{
 		parent::set_up();
@@ -92,113 +95,37 @@ class BaseTest extends TestCase
 			'path' => '/reference/functions/wp_parse_url/',
 		]);
 
-		$wpCliMock = mock('alias:WP_CLI');
+		$this->wpCliMock = mock('alias:WP_CLI');
 
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('success')
 			->andReturnUsing(function ($message) {
 				putenv("ES_CLI_SUCCESS_HAPPENED={$message}");
 			});
 
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('error')
 			->andReturnUsing(function ($errorMessage) {
 				putenv("ES_CLI_ERROR_HAPPENED={$errorMessage}");
 				throw new Exception($errorMessage);
 			});
 
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('log')
 			->andReturnUsing(function ($message) {
 				putenv("ES_CLI_LOG_HAPPENED={$message}");
 			});
 
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_HAPPENED={$message}");
-			});
-
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('add_command')
 			->andReturnUsing(function ($message) {
 				putenv("ES_CLI_ADD_COMMAND_HAPPENED={$message}");
 			});
 
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('colorize')
 			->andReturnUsing(function ($message) {
 				return $message;
-			});
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin list --fields=name --format=json')
-			->andReturn([['name' => 'contact-form-7'], ['name'=>'wordpress-seo']]);
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin list --fields=name,version --format=json')
-			->andReturn([['name' => 'advanced-custom-fields-pro','version' => '5.10.2'],['name' => 'contact-form-7','version' => '5.1.8'],['name' => 'elementor-pro','version' => '3.7.0'],['name' => 'eightshift-forms','version' => '1.0.0'],['name' => 'query-monitor','version' => '3.6.7'],['name' => 'wp-rocket','version' => '3.11.2']]);
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin delete wordpress-seo')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_PLUGIN_DELETE_HAPPENED={$message}");
-			});
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin update')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_PLUGIN_UPDATE_HAPPENED={$message}");
-			});
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin install')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_PLUGIN_INSTALL_HAPPENED={$message}");
-			});
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin install query-monitor --force')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_PLUGIN_INSTALL_QM_HAPPENED={$message}");
-			});
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin install "https://github.com/infinum/eightshift-forms/releases/download/1.2.4/release.zip" --force')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_PLUGIN_GH_INSTALL_HAPPENED={$message}");
-			});
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('for f in ./wp-content/plugins/release*/; do rsync -avh --delete "$f" "./wp-content/plugins/eightshift-forms/" && rm -rf "$f"; done')
-			->andReturnTrue();
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin install "https://example.com" --force')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_PLUGIN_PAID_1_INSTALL_HAPPENED={$message}");
-			});
-
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->withSomeOfArgs('plugin install "https://example.com&t=5.10.2" --force')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_PLUGIN_PAID_2_INSTALL_HAPPENED={$message}");
-			});
-
-		$wpCliMock
-			->shouldReceive('log')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_LOG_HAPPENED={$message}");
 			});
 
 		// Mock attachment function.
@@ -242,6 +169,8 @@ class BaseTest extends TestCase
 
 		global $esBlocks;
 		$esBlocks = null;
+
+		unset($this->wpCliMock);
 	}
 
 	/**
