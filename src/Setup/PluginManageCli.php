@@ -154,22 +154,22 @@ class PluginManageCli extends AbstractCli
 		 * Check associated arguments. Based on which one is present
 		 * toggle the behavior of the CLI command.
 		 */
-		if (isset($assocArgs['install-core'])) {
+		if (in_array('install-core', $assocArgs, true)) {
 			$this->installWpOrgPlugins($setup);
 			return;
 		}
 
-		if (isset($assocArgs['install-github'])) {
+		if (in_array('install-github', $assocArgs, true)) {
 			$this->installGitHubPlugins($setup);
 			return;
 		}
 
-		if (isset($assocArgs['install-paid'])) {
+		if (in_array('install-paid', $assocArgs, true)) {
 			$this->installPaidPlugins($setup);
 			return;
 		}
 
-		if (isset($assocArgs['delete-plugins'])) {
+		if (in_array('delete-plugins', $assocArgs, true)) {
 			$this->deletePlugins($setup);
 			return;
 		}
@@ -364,7 +364,7 @@ class PluginManageCli extends AbstractCli
 		// Check if env.json exist.
 		$envFile = Components::getProjectPaths('projectRoot') . 'env.json';
 
-		if (\getenv('ES_TEST') === 'true') {
+		if (\getenv('ES_TEST') == true) {
 			$envFile = Components::getProjectPaths('testsData') . 'env.json';
 		}
 
@@ -397,7 +397,7 @@ class PluginManageCli extends AbstractCli
 	{
 		$setupFile = Components::getProjectPaths('wpContent') . 'setup.json';
 
-		if (\getenv('ES_TEST') === 'true') {
+		if (\getenv('ES_TEST') == true) {
 			$setupFile = \dirname(__FILE__) . '/setup.json';
 		}
 
