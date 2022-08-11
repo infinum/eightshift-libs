@@ -42,7 +42,7 @@ beforeEach(function() {
  */
 test('Correct get reading time function', function ($posts) {
   Functions\when('get_the_content')
-    ->alias(function($more_link_text=null, $strip_teaser=false, $postId) use ($posts) {
+    ->alias(function($more_link_text=null, $strip_teaser=false, $postId=null) use ($posts) {
       return $posts[$postId];
     });
 
