@@ -772,7 +772,7 @@ trait CssVariablesTrait
 			}
 
 			// Output the custom CSS variable by adding the attribute key + custom object key.
-			$output[] = "--{$internalKey}: ${variableValue};";
+			$output[] = "--{$internalKey}: {$variableValue};";
 		}
 
 		return $output;
