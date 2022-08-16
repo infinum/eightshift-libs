@@ -106,11 +106,6 @@ test('Plugin install CLI command will work with default action', function () {
 
 	$this->wpCliMock
 		->shouldReceive('runcommand')
-		->withSomeOfArgs('for f in ./wp-content/plugins/release*/; do rsync -avh --delete "$f" "./wp-content/plugins/eightshift-forms/" && rm -rf "$f"; done')
-		->andReturnTrue();
-
-	$this->wpCliMock
-		->shouldReceive('runcommand')
 		->withSomeOfArgs('plugin install "https://example.com" --force')
 		->andReturnUsing(function ($message) {
 			putenv("ES_CLI_RUN_COMMAND_PLUGIN_PAID_1_INSTALL_HAPPENED={$message}");
@@ -145,7 +140,7 @@ test('Plugin install CLI command will work when only core plugins should be inst
 		});
 
 	$pluginManage = $this->pluginManage;
-	$pluginManage([], ['install-core']);
+	$pluginManage([], ['install-core' => true]);
 
 	expect(getenv('ES_CLI_RUN_COMMAND_PLUGIN_INSTALL_QM_HAPPENED'))
 		->toBeString()
@@ -170,13 +165,8 @@ test('Plugin install CLI command will work when only GitHub plugins should be in
 			putenv("ES_CLI_RUN_COMMAND_PLUGIN_GH_INSTALL_HAPPENED={$message}");
 		});
 
-	$this->wpCliMock
-		->shouldReceive('runcommand')
-		->withSomeOfArgs('for f in ./wp-content/plugins/release*/; do rsync -avh --delete "$f" "./wp-content/plugins/eightshift-forms/" && rm -rf "$f"; done')
-		->andReturnTrue();
-
 	$pluginManage = $this->pluginManage;
-	$pluginManage([], ['install-github']);
+	$pluginManage([], ['install-github' => true]);
 
 	expect(getenv('ES_CLI_RUN_COMMAND_PLUGIN_GH_INSTALL_HAPPENED'))
 		->toBeString()
@@ -204,7 +194,7 @@ test('Plugin install CLI command will work when only paid plugins should be inst
 		});
 
 	$pluginManage = $this->pluginManage;
-	$pluginManage([], ['install-paid']);
+	$pluginManage([], ['install-paid' => true]);
 
 	expect(getenv('ES_CLI_RUN_COMMAND_PLUGIN_PAID_1_INSTALL_HAPPENED'))
 		->toBeString()
@@ -228,7 +218,7 @@ test('Plugins install CLI command will delete plugins', function () {
 		});
 
 	$pluginManage = $this->pluginManage;
-	$pluginManage([], ['delete-plugins']);
+	$pluginManage([], ['delete-plugins' => true]);
 
 	expect(getenv('ES_CLI_RUN_COMMAND_PLUGIN_DELETE_HAPPENED'))
 		->toBeString()
