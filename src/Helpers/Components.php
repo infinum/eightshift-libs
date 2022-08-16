@@ -380,7 +380,7 @@ class Components
 
 				break;
 			case 'wpContent':
-				$internalPrefix = \dirname(__FILE__, 7);
+				$internalPrefix = \dirname(__FILE__, 8);
 
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
