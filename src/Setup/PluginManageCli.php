@@ -154,22 +154,22 @@ class PluginManageCli extends AbstractCli
 		 * Check associated arguments. Based on which one is present
 		 * toggle the behavior of the CLI command.
 		 */
-		if (\in_array('install-core', $assocArgs, true)) {
+		if (isset($assocArgs['install-core'])) {
 			$this->installWpOrgPlugins($setup);
 			return;
 		}
 
-		if (\in_array('install-github', $assocArgs, true)) {
+		if (isset($assocArgs['install-github'])) {
 			$this->installGitHubPlugins($setup);
 			return;
 		}
 
-		if (\in_array('install-paid', $assocArgs, true)) {
+		if (isset($assocArgs['install-paid'])) {
 			$this->installPaidPlugins($setup);
 			return;
 		}
 
-		if (\in_array('delete-plugins', $assocArgs, true)) {
+		if (isset($assocArgs['delete-plugins'])) {
 			$this->deletePlugins($setup);
 			return;
 		}
@@ -310,25 +310,6 @@ class PluginManageCli extends AbstractCli
 	}
 
 	/**
-	 * Extract the GitHub plugin name from the identifier
-	 *
-	 * @param string $name Identifier of the plugin from the setup.json file.
-	 *
-	 * @return string Plugin slug.
-	 */
-	private function getGithubPluginName(string $name): string
-	{
-		// If the plugin doesn't have a namespace, we're good, just return it.
-		if (\strpos($name, '/') === false) {
-			return $name;
-		}
-
-		$splitName = \explode('/', $name);
-
-		return $splitName[\count($splitName) - 1];
-	}
-
-	/**
 	 * Helper used to install the plugin from GitHub
 	 *
 	 * Will install the plugin, and rename the folder, so it's not hashed.
@@ -340,10 +321,7 @@ class PluginManageCli extends AbstractCli
 	 */
 	private function installGHPlugin(string $name, string $version): void
 	{
-		$shortName = $this->getGithubPluginName($name);
-
 		WP_CLI::runcommand("plugin install \"https://github.com/{$name}/releases/download/{$version}/release.zip\" --force");
-		WP_CLI::runcommand("for f in ./wp-content/plugins/release*/; do rsync -avh --delete \"\$f\" \"./wp-content/plugins/{$shortName}/\" && rm -rf \"\$f\"; done"); // Rename the plugin folder.
 	}
 
 	/**
@@ -396,7 +374,7 @@ class PluginManageCli extends AbstractCli
 	 */
 	private function getSetupFile(): array
 	{
-		$setupFile = Components::getProjectPaths('wpContent') . 'setup.json';
+		$setupFile = Components::getProjectPaths('projectRoot') . 'setup.json';
 
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- in tests sometimes the env var is 'true' string, sometimes it's '1'. Loose comparison fixes this issue.
 		if (\getenv('ES_TEST') == true) {
