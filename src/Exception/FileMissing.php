@@ -28,7 +28,7 @@ final class FileMissing extends RuntimeException implements GeneralExceptionInte
 	public static function missingFileOnPath(string $path): FileMissing
 	{
 		$message = \sprintf(
-		/* translators: %1$s will be replaced with file path. */
+			/* translators: %1$s will be replaced with file path. */
 			\esc_html__('File missing on the path: %1$s.', 'eightshift-libs'),
 			$path,
 		);

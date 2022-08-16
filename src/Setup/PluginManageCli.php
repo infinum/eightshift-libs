@@ -121,7 +121,7 @@ class PluginManageCli extends AbstractCli
 					\"wp-rocket\": \"url\",
 				}
 				
-				If the URl contains the VERSION string, that version will be replaced with the version
+				If the URL contains the VERSION string, that version will be replaced with the version
 				defined in the setup.json file. Otherwise the latest version available from the URL will be downloaded.
 
 				## EXAMPLES
