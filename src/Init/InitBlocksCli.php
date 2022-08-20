@@ -152,7 +152,7 @@ class InitBlocksCli extends AbstractCli
 			$this->getIntroText();
 		}
 
-		$this->cliLog(\esc_html__('Creating block editor files:', 'eightshift-libs'), 'C');
+		$this->cliLog('Creating block editor files:', 'C');
 
 		$commands = static::COMMANDS;
 

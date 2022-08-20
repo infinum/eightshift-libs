@@ -208,8 +208,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$this->cliLog('Dependency note:', 'B');
 			$this->cliLog(
 				\sprintf(
-					// translators: %s will be replaced with type of item.
-					\esc_html__("We have found that this %s has dependencies, please run these commands also if you don't have it in your project:", 'eightshift-libs'),
+					"We have found that this %s has dependencies, please run these commands also if you don't have it in your project:",
 					$type
 				)
 			);
@@ -245,8 +244,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$this->cliLog('Node_modules Note:', 'B');
 			$this->cliLog(
 				\sprintf(
-					// translators: %s will be replaced with type of item.
-					\esc_html__("We have found that this %s has some node_module dependencies, please run these commands also if you don't have it in your project:", 'eightshift-libs'),
+					"We have found that this %s has some node_module dependencies, please run these commands also if you don't have it in your project:",
 					$type
 				)
 			);
