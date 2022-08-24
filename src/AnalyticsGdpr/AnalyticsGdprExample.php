@@ -380,7 +380,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'id' => '',
 							],
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'default_value' => \esc_html__('By clicking “I agree”, you accept storing of all cookies on your device to enhance user experience, analyze site usage, and assist in our marketing efforts.', 'eightshift-libs'),
+							'default_value' => \esc_html__('By clicking "I agree", you accept storing of all cookies on your device to enhance user experience, analyze site usage, and assist in our marketing efforts.', 'eightshift-libs'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -804,7 +804,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'id' => '',
 							],
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'default_value' => \esc_html__('Advertising and analytics service cookies that create day-to-day statistics and show ads on their site and on the advertiser’s partners websites.', 'eightshift-libs'),
+							'default_value' => \esc_html__("Advertising and analytics service cookies that create day-to-day statistics and show ads on their site and on the advertiser's partners websites.", 'eightshift-libs'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -847,7 +847,7 @@ class AnalyticsGdprExample implements ServiceInterface
 		return [
 			'basic' => [
 				// phpcs:ignore Generic.Files.LineLength.TooLong
-				'intro' => \get_field(static::BASIC_MODAL_INTRO, 'option') ?? \esc_html__('By clicking “I agree”, you accept storing of all cookies on your device to enhance user experience, analyze site usage, and assist in our marketing efforts.', 'eightshift-libs'),
+				'intro' => \get_field(static::BASIC_MODAL_INTRO, 'option') ?? \esc_html__('By clicking "I agree", you accept storing of all cookies on your device to enhance user experience, analyze site usage, and assist in our marketing efforts.', 'eightshift-libs'),
 				'acceptButton' => \get_field(static::BASIC_MODAL_ACCEPT_BUTTON, 'option') ?? \esc_html__('Accept all', 'eightshift-libs'),
 				'openAdvanced' => \get_field(static::BASIC_MODAL_OPEN_ADVANCED, 'option') ?? \esc_html__('Manage cookies', 'eightshift-libs'),
 			],
@@ -880,7 +880,7 @@ class AnalyticsGdprExample implements ServiceInterface
 				'marketing' => [
 					'title' => \get_field(static::MARKETING_COOKIES_TITLE, 'option') ?? \esc_html__('Marketing cookies', 'eightshift-libs'),
 					// phpcs:ignore Generic.Files.LineLength.TooLong
-					'summary' => \get_field(static::MARKETING_COOKIES_SUMMARY, 'option') ?? \esc_html__('Advertising and analytics service cookies that create day-to-day statistics and show ads on their site and on the advertiser’s partners websites.', 'eightshift-libs'),
+					'summary' => \get_field(static::MARKETING_COOKIES_SUMMARY, 'option') ?? \esc_html__("Advertising and analytics service cookies that create day-to-day statistics and show ads on their site and on the advertiser's partners websites.", 'eightshift-libs'),
 					'activated' => \get_field(static::REQUIRED_COOKIES_ACTIVATED, 'option') ?? true,
 				],
 			],

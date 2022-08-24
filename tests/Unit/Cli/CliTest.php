@@ -33,6 +33,6 @@ test('Cli getCommandsClasses return correct class list', function () {
 test('Running load command works', function() {
 	$this->cli->load('boilerplate');
 
-	// We could add all 36 of the public CLI classes, but I don't think that makes sense ¯\_(ツ)_/¯.
+	// We could add all 36 of the public CLI classes, but I don't think that makes sense.
 	$this->assertSame(10, has_action('cli_init', 'EightshiftLibs\Menu\MenuCli->registerCommand()'));
 });
