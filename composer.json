@@ -28,6 +28,7 @@
 		"ext-dom": "*",
 		"ext-json": "*",
 		"ext-libxml": "*",
+		"mockery/mockery": "1.4.4",
 		"php-di/invoker": "^2.3",
 		"php-di/php-di": "^6.3"
 	},
