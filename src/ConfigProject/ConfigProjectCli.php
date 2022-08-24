@@ -115,7 +115,7 @@ class ConfigProjectCli extends AbstractCli
 		}
 
 		// Include wp config for your project.
-		 require_once(ABSPATH . 'wp-config-project.php');
+		require_once(ABSPATH . 'wp-config-project.php');
 
 		/** Sets up WordPress vars and included files. */
 		require_once(ABSPATH . 'wp-settings.php');

@@ -6,7 +6,7 @@ namespace Tests\Datasets\Autowiring\Dependencies;
 
 class ClassWithDependency
 {
-  public function __construct(ClassDepWithNoDependencies $classDepWithNoDependencies) {
-    $this->classDepWithNoDependencies = $classDepWithNoDependencies;
-  }
+	public function __construct(ClassDepWithNoDependencies $classDepWithNoDependencies) {
+		$this->classDepWithNoDependencies = $classDepWithNoDependencies;
+	}
 }

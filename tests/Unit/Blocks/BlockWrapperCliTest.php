@@ -20,9 +20,9 @@ test('Wrapper CLI command will correctly copy the Wrapper class with defaults', 
 	$output = \file_get_contents(Components::getProjectPaths('blocksDestinationWrapper', 'wrapper.php'));
 
 	expect($output)->toContain('Fake wrapper');
- });
+});
 
- test('Wrapper CLI command will run under custom command name', function () {
+test('Wrapper CLI command will run under custom command name', function () {
 	$mock = $this->mock;
 	$result = $mock->getCommandName();
 

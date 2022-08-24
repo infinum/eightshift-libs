@@ -7,20 +7,20 @@
 /.github export-ignore
 /.gitignore export-ignore
 /.gitattributes export-ignore
+/.phpdoc export-ignore
+/captainhook.json export-ignore
 /docs export-ignore
 /documentation export-ignore
 /CODE_OF_CONDUCT.md export-ignore
+/CHANGELOG.md export-ignore
 /tests export-ignore
+/package export-ignore
 /package.json export-ignore
 /patchwork.json export-ignore
 /phpcs.xml.dist export-ignore
 /phpstan.neon.dist export-ignore
 /phpunit.xml export-ignore
-/package export-ignore
-/docs export-ignore
-/.phpdoc.xml.dist
-
-/package export-ignore
+/phpdoc.dist.xml export-ignore
 
 #
 # Auto detect text files and perform LF normalization
