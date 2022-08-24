@@ -33,6 +33,7 @@
 	},
 	"require-dev": {
 		"captainhook/captainhook": "^5.10",
+		"brain/monkey": "^2.6.1",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
 		"infinum/eightshift-coding-standards": "^1.6",
 		"pestphp/pest": "^1.20",
