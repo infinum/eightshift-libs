@@ -28,7 +28,6 @@
 		"ext-dom": "*",
 		"ext-json": "*",
 		"ext-libxml": "*",
-		"mockery/mockery": "1.4.4",
 		"php-di/invoker": "^2.3",
 		"php-di/php-di": "^6.3"
 	},
@@ -36,7 +35,7 @@
 		"captainhook/captainhook": "^5.10",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
 		"infinum/eightshift-coding-standards": "^1.6",
-		"pestphp/pest": "^1.2",
+		"pestphp/pest": "^1.20",
 		"php-parallel-lint/php-parallel-lint": "^1.3",
 		"php-stubs/wordpress-stubs": "^5.9",
 		"roave/security-advisories": "dev-master",
