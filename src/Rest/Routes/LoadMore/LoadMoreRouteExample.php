@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Rest\Routes;
+namespace EightshiftBoilerplate\Rest\Routes\LoadMore;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Helpers\Components;

@@ -61,6 +61,7 @@ jobs:
       - "byte_level"
       - "syntax_errors"
     strategy:
+      fail-fast: false
       matrix:
         php-version:
           - "7.4"
@@ -156,7 +157,7 @@ jobs:
 
       - name: "Check coding style"
         run: |
-          composer run test:standards -- --runtime-set testVersion '7.4-' --report-full | cs2pr
+          composer run test:standards -- --runtime-set testVersion '7.4-' --report-checkstyle | cs2pr
 
   exported_files:
     name: "5️⃣ Exported files"
