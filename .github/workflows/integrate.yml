@@ -91,7 +91,7 @@ jobs:
       - name: "Upload coverage to Codecov"
         env:
           CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}"
-        if: "env.CODECOV_TOKEN && matrix.php-version == '7.4' && matrix.dependencies == 'highest'"
+        if: "${{ env.CODECOV_TOKEN && matrix.php-version == '7.4' && matrix.dependencies == 'highest' }}"
         uses: "codecov/codecov-action@v3"
         with:
           token: "${{ env.CODECOV_TOKEN }}"
