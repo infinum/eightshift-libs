@@ -25,3 +25,7 @@ trim_trailing_whitespace = false
 # Empty files
 [{.phpdoc/guides/meta.tex.twig,tests/data/setup/setup-empty.json,tests/Datasets/Autowiring/Blocks/components/test-component/test-component.php,tests/Datasets/Autowiring/Blocks/components/component/component.php,tests/data/src/Blocks/custom/button/button-style.scss}]
 insert_final_newline = false
+
+# Funky block comment
+[.phpdoc/css/normalize.css.twig]
+eclint_indent_style = unset
