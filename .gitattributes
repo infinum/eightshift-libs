@@ -4,6 +4,7 @@
 # If you develop for WPCS using Composer, use `--prefer-source`.
 # https://blog.madewithlove.be/post/gitattributes/
 #
+/.editorconfig export-ignore
 /.github export-ignore
 /.gitignore export-ignore
 /.gitattributes export-ignore
