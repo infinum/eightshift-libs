@@ -34,7 +34,7 @@ body:
           label: Expected behavior
           description: Please write a clear and concise description of what you expected to happen.
           placeholder: |
-              Example. I should get this...
+            Example. I should get this...
       validations:
           required: true
 
@@ -42,7 +42,7 @@ body:
       attributes:
           label: Screenshots, screen recording, code snippet
           description: |
-              If possible, please upload a screenshot or screen recording which demonstrates your bug.
+            If possible, please upload a screenshot or screen recording which demonstrates your bug.
       validations:
           required: false
 
@@ -50,7 +50,7 @@ body:
       attributes:
           label: Environment info
           description: |
-               Please include as many relevant details about the environment you are working on.
+            Please include as many relevant details about the environment you are working on.
           placeholder: |
             - PHP version
             - Development environment (MAMP, XAMPP, VVV, Docker, Laravel Valet, none if on live server)
@@ -67,8 +67,8 @@ body:
           description: You can do this by searching https://github.com/infinum/eightshift-libs/issues.
           multiple: false
           options:
-             - 'Yes'
-             - 'No'
+            - 'Yes'
+            - 'No'
       validations:
           required: true
 
@@ -79,8 +79,8 @@ body:
           description: You can do this by searching https://infinum.github.io/eightshift-docs/.
           multiple: false
           options:
-             - 'Yes'
-             - 'No'
+            - 'Yes'
+            - 'No'
       validations:
           required: true
 
@@ -90,7 +90,7 @@ body:
           label: Please confirm that your bug occurs with all plugins uninstalled and with the default WordPress theme active.
           multiple: false
           options:
-             - 'Yes'
-             - 'No'
+            - 'Yes'
+            - 'No'
       validations:
           required: true

@@ -1,0 +1,31 @@
+# https://EditorConfig.org
+
+root = true
+
+[*]
+indent_style = tab
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+block_comment_start = /*
+block_comment = *
+block_comment_end = */
+
+[{**/*.yml,**/*.twig}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+
+# Empty files
+[{.phpdoc/guides/meta.tex.twig,tests/data/setup/setup-empty.json,tests/Datasets/Autowiring/Blocks/components/test-component/test-component.php,tests/Datasets/Autowiring/Blocks/components/component/component.php,tests/data/src/Blocks/custom/button/button-style.scss}]
+insert_final_newline = false
+
+# Funky block comment
+[.phpdoc/css/normalize.css.twig]
+eclint_indent_style = unset

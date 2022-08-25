@@ -37,7 +37,7 @@ body:
       attributes:
           label: Environment info
           description: |
-               Please include as many relevant details about the environment you are working on.
+            Please include as many relevant details about the environment you are working on.
           placeholder: |
             - PHP version
             - Development environment (MAMP, XAMPP, VVV, Docker, Laravel Valet, none if on live server)
@@ -54,8 +54,8 @@ body:
           description: You can do this by searching https://github.com/infinum/eightshift-libs/issues.
           multiple: false
           options:
-             - 'Yes'
-             - 'No'
+            - 'Yes'
+            - 'No'
       validations:
           required: true
 
@@ -66,7 +66,7 @@ body:
           description: You can do this by searching https://infinum.github.io/eightshift-docs/.
           multiple: false
           options:
-             - 'Yes'
-             - 'No'
+            - 'Yes'
+            - 'No'
       validations:
           required: true

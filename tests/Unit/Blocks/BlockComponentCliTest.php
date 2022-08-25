@@ -14,7 +14,7 @@ afterEach(function () {
 	unset($this->mock);
 });
 
- test('Component CLI command will correctly copy the Component class with defaults', function () {
+test('Component CLI command will correctly copy the Component class with defaults', function () {
 	$mock = $this->mock;
 	$mock([], $this->mock->getDefaultArgs());
 

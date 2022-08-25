@@ -103,16 +103,16 @@ test('Sanitization of array works', function() {
 		return "{$str} is sanitized!";
 	});
 
-	 $sanitizedArray = $this->mockHelper->sanitizeArray($array, 'sanitize_text_field');
+	$sanitizedArray = $this->mockHelper->sanitizeArray($array, 'sanitize_text_field');
 
-	 $expectedSanitizedArray = [
+	$expectedSanitizedArray = [
 		'foo' => 'bar is sanitized!',
 		'baz' => [
 			'1 is sanitized!', '2 is sanitized!', '3 is sanitized!'
 		]
 	];
 
-	 $this->assertSame($expectedSanitizedArray, $sanitizedArray);
+	$this->assertSame($expectedSanitizedArray, $sanitizedArray);
 });
 
 // ------------------------------------------

@@ -7,7 +7,7 @@ import readme from './readme.mdx';
 export default {
 	title: `Blocks/${manifest.title}`,
 	parameters: {
-		docs: { 
+		docs: {
 			page: readme
 		}
 	},

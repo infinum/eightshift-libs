@@ -171,8 +171,8 @@ test('Replacing use in frontend libs views works', function() {
 
 	$reflection = new ReflectionClass($abstractMock);
 	$property = $reflection->getProperty('fileContents');
-    $property->setAccessible(true);
-    $contents = $property->getValue($abstractMock);
+	$property->setAccessible(true);
+	$contents = $property->getValue($abstractMock);
 
 	$this->assertSame('use EightshiftLibs\Service; use EightshiftLibs\Test;', $contents);
 });
