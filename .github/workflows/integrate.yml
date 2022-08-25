@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   byte_level:
-    name: "0️⃣ Byte-level"
+    name: "0️⃣ Permission checks"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout code"
@@ -29,12 +29,8 @@ jobs:
         run: |
           test "$(find . -type f -not -path './.git/*' -executable)" = ""
 
-      - name: "Find non-printable ASCII characters"
-        run: |
-          ! LC_ALL=C.UTF-8 find . -type f -name "*.php" -print0 | xargs -0 -- grep -PHn "[^\t -~]"
-
   syntax_errors:
-    name: "1️⃣ Syntax errors"
+    name: "1️⃣ Syntax errors checks"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Set up PHP"
@@ -45,6 +41,10 @@ jobs:
 
       - name: "Checkout code"
         uses: "actions/checkout@v3"
+
+      - name: "Find non-printable ASCII characters"
+        run: |
+          ! LC_ALL=C.UTF-8 find . -type f -name "*.php" -print0 | xargs -0 -- grep -PHn "[^\t -~]"
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@v2"
@@ -74,7 +74,7 @@ jobs:
         uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
-          coverage: "pcov"
+          coverage: "xdebug"
 
       - name: "Checkout code"
         uses: "actions/checkout@v3"
@@ -86,7 +86,6 @@ jobs:
 
       - name: "Execute unit tests"
         run: "composer run test:coverage"
-        # @TODO Functional tests
 
       - name: "Upload coverage to Codecov"
         env:
@@ -101,7 +100,7 @@ jobs:
           fail_ci_if_error: "true"
 
   static_analysis:
-    name: "3️⃣ Static Analysis"
+    name: "3️⃣ Static analysis checks"
     needs:
       - "byte_level"
       - "syntax_errors"
@@ -129,7 +128,7 @@ jobs:
         # @TODO Magic Number Detector, Copy-Paste Detector
 
   coding_standards:
-    name: "4️⃣ Coding Standards"
+    name: "4️⃣ Coding standards checks"
     needs:
       - "byte_level"
       - "syntax_errors"
@@ -160,7 +159,7 @@ jobs:
           composer run test:standards -- -q --report=checkstyle | cs2pr
 
   exported_files:
-    name: "5️⃣ Exported files"
+    name: "5️⃣ Exported files checks"
     needs:
       - "byte_level"
       - "syntax_errors"
@@ -171,7 +170,7 @@ jobs:
 
       - name: "Check exported files"
         run: |
-          EXPECTED="LICENSE,README.md,composer.json"
+          EXPECTED="CHANGELOG.md,LICENSE,README.md,composer.json"
           CURRENT="$(git archive HEAD | tar --list --exclude="src" --exclude="src/*" | paste -s -d ",")"
           echo "CURRENT =${CURRENT}"
           echo "EXPECTED=${EXPECTED}"
