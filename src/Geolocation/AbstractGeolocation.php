@@ -12,6 +12,7 @@ namespace EightshiftLibs\Geolocation;
 
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
+use Exception;
 use Throwable;
 
 /**
@@ -212,7 +213,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 	 *
 	 * @return string
 	 */
-	private function getGeolocation(): string
+	public function getGeolocation(): string
 	{
 		$ipAddr = '';
 
@@ -225,16 +226,25 @@ abstract class AbstractGeolocation implements ServiceInterface
 			$ipAddr = $this->getIpAddress();
 		}
 
-
 		// Skip if empty for some reason or if you are on local computer.
 		if ($ipAddr !== '127.0.0.1' && $ipAddr !== '::1' && !empty($ipAddr)) {
-			try {
-				$phar = $this->getGeolocationPharLocation();
+			$phar = $this->getGeolocationPharLocation();
 
+			if (!\file_exists($phar)) {
+				// translators: %s will be replaced with the phar location.
+				throw new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), $phar));
+			}
+
+			$db = $this->getGeolocationDbLocation();
+
+			if (!\file_exists($db)) {
+				// translators: %s will be replaced with the database location.
+				throw new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), $db));
+			}
+
+			try {
 				// Get data from the local DB.
 				require_once $phar;
-
-				$db = $this->getGeolocationDbLocation();
 
 				// phpcs:disable
 				$reader = new \GeoIp2\Database\Reader($db); // @phpstan-ignore-line
@@ -242,7 +252,6 @@ abstract class AbstractGeolocation implements ServiceInterface
 
 				$record = $reader->country($ipAddr); // @phpstan-ignore-line
 				$cookieCountry = $record->country;
-
 
 				if (!empty($cookieCountry)) {
 					return \strtoupper($cookieCountry->isoCode);
