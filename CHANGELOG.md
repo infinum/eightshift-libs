@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.2.0] - 2022-09-06
+
+### Updated
+- Geolocation method `getGeolocation` is now public.
+- Geolocation method `getGeolocation` better error handling while files are missing.
+
 ## [6.1.0] - 2022-08-01
 
 ### Updated
@@ -356,6 +362,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.2.0]: https://github.com/infinum/eightshift-libs/compare/6.1.0...v6.2.0
 [6.1.0]: https://github.com/infinum/eightshift-libs/compare/6.0.0...v6.1.0
 [6.0.0]: https://github.com/infinum/eightshift-libs/compare/5.1.0...v6.0.0
 [5.1.0]: https://github.com/infinum/eightshift-libs/compare/5.0.2...v5.1.0
