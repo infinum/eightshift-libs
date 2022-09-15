@@ -49,7 +49,7 @@ class ConfigCli extends AbstractCli
 		return [
 			'name' => 'Boilerplate',
 			'version' => '1',
-			'routes_version' => '2',
+			'routes_version' => '1',
 		];
 	}
 
