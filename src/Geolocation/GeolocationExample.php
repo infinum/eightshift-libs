@@ -42,7 +42,7 @@ class GeolocationExample extends AbstractGeolocation
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		return __DIR__ . \DIRECTORY_SEPARATOR . 'geoip2.phar';;
+		return __DIR__ . \DIRECTORY_SEPARATOR . 'geoip2.phar';
 	}
 
 	/**
@@ -52,6 +52,6 @@ class GeolocationExample extends AbstractGeolocation
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		return __DIR__ . \DIRECTORY_SEPARATOR . 'GeoLite2-Country.mmdb';;
+		return __DIR__ . \DIRECTORY_SEPARATOR . 'GeoLite2-Country.mmdb';
 	}
 }
