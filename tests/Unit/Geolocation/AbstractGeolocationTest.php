@@ -21,72 +21,64 @@ afterEach(function () {
 
 //---------------------------------------------------------------------------------//
 
-test('useGeolocation return true', function () {
+test('useGeolocation function will return true', function () {
 	expect($this->geolocation->useGeolocation())->toBeTrue();
 });
 
 //---------------------------------------------------------------------------------//
 
-test('getAdditionalCountries return empty array', function () {
-	expect($this->geolocation->getAdditionalCountries())->toBeArray()->toBeEmpty();
+test('getAdditionalCountries will return an empty array', function () {
+	expect($this->geolocation->getAdditionalCountries())
+		->toBeArray()
+		->toBeEmpty();
 });
 
 //---------------------------------------------------------------------------------//
 
-test('getIpAddress return empty string', function () {
-	expect($this->geolocation->getIpAddress())->toBeString()->toBeEmpty();
+test('getIpAddress will return an empty string', function () {
+	expect($this->geolocation->getIpAddress())
+		->toBeString()
+		->toBeEmpty();
 });
 
 //---------------------------------------------------------------------------------//
 
-test('setLocationCookie will exit if is not frontend', function () {
+test('setLocationCookie will exit on the WordPress admin pages', function () {
 	$action = 'is_admin';
 
-	Functions\when($action)->justReturn(putenv("ES_SIDEAFFECT_1={$action}"));
+	Functions\when($action)->justReturn(putenv("IS_ADMIN_ACTION={$action}"));
 
 	$this->geolocation->setLocationCookie();
 
-	expect(getenv('ES_SIDEAFFECT_1'))->toEqual($action);
+	expect(getenv('IS_ADMIN_ACTION'))->toEqual($action);
 });
 
 test('setLocationCookie will exit if useGeolocation is false', function () {
-	$action = 'is_not_used';
+	Functions\when('is_admin')->justReturn(false);
 
 	$mock = mock(GeolocationExample::class)->makePartial();
 	$mock->shouldReceive('useGeolocation')->andReturn(false);
 
-	Functions\when($action)->justReturn(putenv("ES_SIDEAFFECT_1={$action}"));
-
-	$mock->setLocationCookie();
-
-	expect(getenv('ES_SIDEAFFECT_1'))->toEqual($action);
+	expect($mock->setLocationCookie())->toBeNull();
 });
 
 test('setLocationCookie will exit if cookie is set', function () {
-	$action = 'is_cookie_set';
-
 	$cookieName = $this->geolocation->getGeolocationCookieName();
 
 	$_COOKIE[$cookieName] = 'HR';
 
-	if (isset($cookieName)) {
-		putenv("ES_SIDEAFFECT_1={$action}");
-	}
-
-	$this->geolocation->setLocationCookie();
-
-	expect(getenv('ES_SIDEAFFECT_1'))->toEqual($action);
+	expect($this->geolocation->setLocationCookie())->toBeNull();
 
 	unset($_COOKIE[$cookieName]);
 });
 
-test('setLocationCookie will set cookie to localhost.', function () {
+test('setLocationCookie will set cookie to localhost', function () {
 	$mock = mock(GeolocationExample::class)->makePartial();
 	$mock->shouldReceive('setCookie')
 		->withArgs(function (string $name, string $value) {
 			putenv("ES_SIDEAFFECT_1={$name}");
 			putenv("ES_SIDEAFFECT_2={$value}");
-		});
+		})->andReturnTrue();
 
 	$mock->setLocationCookie();
 
@@ -95,13 +87,15 @@ test('setLocationCookie will set cookie to localhost.', function () {
 		->and(getenv('ES_SIDEAFFECT_2'))->toEqual('localhost');
 });
 
-test('setLocationCookie will set cookie based on the server location.', function () {
+test('setLocationCookie will set cookie based on the server location', function () {
 	$mock = mock(GeolocationExample::class)->makePartial();
 
 	$sep = \DIRECTORY_SEPARATOR;
 
-	$mock->shouldReceive('getGeolocationPharLocation')->andReturn(Components::getProjectPaths('testsData', "geolocation{$sep}geoip.phar"));
-	$mock->shouldReceive('getGeolocationDbLocation')->andReturn(Components::getProjectPaths('testsData', "geolocation{$sep}geoip.mmdb"));
+	$mock->shouldReceive('getGeolocationPharLocation')
+		->andReturn(Components::getProjectPaths('testsData', "geolocation{$sep}geoip.phar"));
+	$mock->shouldReceive('getGeolocationDbLocation')
+		->andReturn(Components::getProjectPaths('testsData', "geolocation{$sep}geoip.mmdb"));
 	$mock->shouldReceive('setCookie')->withArgs(function (string $name, string $value) {
 		putenv("ES_SIDEAFFECT_1={$name}");
 		putenv("ES_SIDEAFFECT_2={$value}");
@@ -116,7 +110,7 @@ test('setLocationCookie will set cookie based on the server location.', function
 	unset($_SERVER['REMOTE_ADDR']);
 });
 
-test('setLocationCookie will set cookie based on the provided manual ip.', function () {
+test('setLocationCookie will set cookie based on the provided manual ip', function () {
 	$mock = mock(GeolocationExample::class)->makePartial();
 
 	$sep = \DIRECTORY_SEPARATOR;
@@ -136,7 +130,7 @@ test('setLocationCookie will set cookie based on the provided manual ip.', funct
 	expect(getenv('ES_SIDEAFFECT_2'))->toEqual('DE');
 });
 
-test('setLocationCookie will throw and error if something is wrong.', function () {
+test('setLocationCookie will exit if geolocation DB is missing', function () {
 	$mock = mock(GeolocationExample::class)->makePartial();
 
 	$sep = \DIRECTORY_SEPARATOR;
@@ -144,21 +138,16 @@ test('setLocationCookie will throw and error if something is wrong.', function (
 	$mock->shouldReceive('getGeolocationPharLocation')
 		->andReturn(Components::getProjectPaths('testsData', "geolocation{$sep}geoip.phar"));
 
-	$mock->shouldReceive('getGeolocationDbLocation')->andThrow(new Exception('test'));
+	$mock->shouldReceive('getGeolocationDbLocation')->andReturn('');
 	$mock->shouldReceive('getIpAddress')->andReturn($this->germanIp);
-	$mock->shouldReceive('setCookie')->withArgs(function (string $name, string $value) {
-		putenv("ES_SIDEAFFECT_1={$name}");
-		putenv("ES_SIDEAFFECT_2={$value}");
-	});
 
 	$mock->setLocationCookie();
-
-	expect(getenv('ES_SIDEAFFECT_2'))->toEqual('ERROR: test');
+	expect($this->geolocation->setLocationCookie())->toBeNull();
 });
 
 //---------------------------------------------------------------------------------//
 
-test('getCountries returns array of correct defaults from manifest and code.', function () {
+test('getCountries returns array of correct defaults from manifest and code', function () {
 	$countries = $this->geolocation->getCountries();
 
 	expect($countries[0])->toBeArray()->toHaveKeys(['label', 'value', 'group'])
@@ -169,7 +158,7 @@ test('getCountries returns array of correct defaults from manifest and code.', f
 		->and($countries[3]['value'])->toEqual('AF');
 });
 
-test('getCountries returns array of defaults with additional items.', function () {
+test('getCountries returns array of defaults with additional items', function () {
 	$mock = mock(GeolocationExample::class)->makePartial();
 	$mock->shouldReceive('getAdditionalCountries')->andReturn([
 		[
