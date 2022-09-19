@@ -22,10 +22,16 @@ test('getGeolocationCookieName will return correct cookie name', function () {
 	expect($this->geolocation->getGeolocationCookieName())->toEqual('%cookie_name%');
 });
 
-test('getGeolocationPharLocation will throw Exception if file is missing in path', function () {
-	$this->geolocation->getGeolocationPharLocation();
-})->throws(Exception::class);
+test('getGeolocationPharLocation will return the location of the geiop2.phar file', function () {
+	$reflection = new \ReflectionClass(GeolocationExample::class);
+	$path = dirname($reflection->getFileName());
 
-test('getGeolocationDbLocation will throw Exception if file is missing in path', function () {
-	$this->geolocation->getGeolocationDbLocation();
-})->throws(Exception::class);
+	expect($this->geolocation->getGeolocationPharLocation())->toEqual($path . \DIRECTORY_SEPARATOR . 'geoip2.phar');
+});
+
+test('getGeolocationDbLocation will return the location of the Geolite2-Country.mmdb file', function () {
+	$reflection = new \ReflectionClass(GeolocationExample::class);
+	$path = dirname($reflection->getFileName());
+
+	expect($this->geolocation->getGeolocationDbLocation())->toEqual($path . \DIRECTORY_SEPARATOR . 'GeoLite2-Country.mmdb');
+});

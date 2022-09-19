@@ -82,16 +82,23 @@ abstract class AbstractGeolocation implements ServiceInterface
 			return;
 		}
 
-		\ob_start();
-
-		$this->setCookie(
-			$cookieName,
-			$this->getGeolocation(),
-			\time() + \DAY_IN_SECONDS,
-			'/'
-		);
-
-		\ob_get_clean();
+		try {
+			$this->setCookie(
+				$cookieName,
+				$this->getGeolocation(),
+				\time() + \DAY_IN_SECONDS,
+				'/'
+			);
+		} catch (Exception $exception) {
+			/*
+			 * The getGeolocation will throw an error if the phar or geo db files are missing,
+			 * but if we threw an exception here, that would break the execution of the WP app.
+			 * This way we'll log the exception, but the site should work fine without setting
+			 * the cookie.
+			 */
+			\error_log("Error code: {$exception->getCode()}, with message: {$exception->getMessage()}"); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			return;
+		}
 	}
 
 	/**
@@ -212,6 +219,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 	 * Gets the 2-digit location code provided by the project.
 	 *
 	 * @return string
+	 * @throws Exception Throws exception in case the geolocation phar or db file are missing.
 	 */
 	public function getGeolocation(): string
 	{
