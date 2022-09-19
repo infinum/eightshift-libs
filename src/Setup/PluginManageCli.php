@@ -112,15 +112,15 @@ class PluginManageCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 				This command will install, delete or update the plugins based on the setup.json file.
-				
+
 				In order to install the premium plugins you will need to have an env.json file which
 				is usually stored in a secret vault. That file should looks something like this:
-				
+
 				{
 					\"advanced-custom-fields-pro\": \"url==&t=VERSION\",
 					\"wp-rocket\": \"url\",
 				}
-				
+
 				If the URL contains the VERSION string, that version will be replaced with the version
 				defined in the setup.json file. Otherwise the latest version available from the URL will be downloaded.
 
@@ -129,10 +129,10 @@ class PluginManageCli extends AbstractCli
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()}
 				# Install/update only the wp.org plugins:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --install-core'
-				
+
 				# Install/update only the paid plugins:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --install-paid'
-				
+
 				# Delete plugins not in the setup.json list:
 				$ wp boilerplate {$this->getCommandParentName()} {$this->getCommandName()} --delete-plugins'
 			"),
