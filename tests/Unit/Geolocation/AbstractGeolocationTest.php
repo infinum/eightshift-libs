@@ -6,6 +6,7 @@ use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Geolocation\GeolocationExample;
 use EightshiftLibs\Helpers\Components;
 use Exception;
+use GeoIp2\Database\Reader;
 
 use function Tests\mock;
 
@@ -143,6 +144,38 @@ test('setLocationCookie will exit if geolocation DB is missing', function () {
 
 	$mock->setLocationCookie();
 	expect($this->geolocation->setLocationCookie())->toBeNull();
+});
+
+test('getGeolocation will throw error if geolocation phar is missing', function () {
+	$mock = mock(GeolocationExample::class)->makePartial();
+
+	$sep = \DIRECTORY_SEPARATOR;
+
+	$mock->shouldReceive('getGeolocationPharLocation')
+		->andReturn('');
+
+	$mock->shouldReceive('getGeolocationDbLocation')
+		->andReturn(Components::getProjectPaths('testsData', "geolocation{$sep}geoip.mmdb"));
+	$mock->shouldReceive('getIpAddress')->andReturn($this->germanIp);
+
+	$mock->getGeolocation();
+})->expectExceptionMessage('Missing Geolocation phar on this location ');
+
+test('getGeolocation will return error if GeoIp reader throws an error', function () {
+	$mock = mock(GeolocationExample::class)->makePartial();
+
+	$sep = \DIRECTORY_SEPARATOR;
+
+	$mock->shouldReceive('getGeolocationPharLocation')
+		->andReturn(Components::getProjectPaths('testsData', "geolocation{$sep}geoip.phar"));
+
+	$mock->shouldReceive('getGeolocationDbLocation')
+		->andReturn(Components::getProjectPaths('testsData', "geolocation{$sep}geoip.mmdb"));
+
+	$mock->shouldReceive('getIpAddress')->andReturn('0.0.0.0');
+
+	expect($mock->getGeolocation())
+	->toBe('ERROR: The address 0.0.0.0 is not in the database.');
 });
 
 //---------------------------------------------------------------------------------//
