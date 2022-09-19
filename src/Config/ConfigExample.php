@@ -61,6 +61,6 @@ class ConfigExample extends AbstractConfigData
 	 */
 	public static function getProjectRoutesVersion(): string
 	{
-		return '%routes_version%';
+		return 'v%routes_version%';
 	}
 }
