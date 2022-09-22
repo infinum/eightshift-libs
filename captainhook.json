@@ -20,11 +20,6 @@
 		"enabled": true,
 		"actions": [
 			{
-				"action": "\\CaptainHook\\App\\Hook\\PHP\\Action\\Linting",
-				"options": [],
-				"conditions": []
-			},
-			{
 				"action": "vendor/bin/pest",
 				"options": [],
 				"conditions": []

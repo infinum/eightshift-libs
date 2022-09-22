@@ -6,12 +6,15 @@ namespace Tests;
 
 use Brain\Monkey\Functions;
 use Exception;
+use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 class BaseTest extends TestCase
 {
+	protected MockInterface $wpCliMock;
+
 	protected function set_up()
 	{
 		parent::set_up();
@@ -92,40 +95,34 @@ class BaseTest extends TestCase
 			'path' => '/reference/functions/wp_parse_url/',
 		]);
 
-		$wpCliMock = mock('alias:WP_CLI');
+		$this->wpCliMock = mock('alias:WP_CLI');
 
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('success')
 			->andReturnUsing(function ($message) {
 				putenv("ES_CLI_SUCCESS_HAPPENED={$message}");
 			});
 
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('error')
 			->andReturnUsing(function ($errorMessage) {
 				putenv("ES_CLI_ERROR_HAPPENED={$errorMessage}");
 				throw new Exception($errorMessage);
 			});
 
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('log')
 			->andReturnUsing(function ($message) {
 				putenv("ES_CLI_LOG_HAPPENED={$message}");
 			});
 
-		$wpCliMock
-			->shouldReceive('runcommand')
-			->andReturnUsing(function ($message) {
-				putenv("ES_CLI_RUN_COMMAND_HAPPENED={$message}");
-			});
-
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('add_command')
 			->andReturnUsing(function ($message) {
 				putenv("ES_CLI_ADD_COMMAND_HAPPENED={$message}");
 			});
 
-		$wpCliMock
+		$this->wpCliMock
 			->shouldReceive('colorize')
 			->andReturnUsing(function ($message) {
 				return $message;
@@ -172,6 +169,8 @@ class BaseTest extends TestCase
 
 		global $esBlocks;
 		$esBlocks = null;
+
+		unset($this->wpCliMock);
 	}
 
 	/**
