@@ -21,3 +21,83 @@ All releases are listed here: https://datahub.io/core/country-list
 
 Files used:
 * manifest.json
+
+## WP-ROCKET Plugin usage
+
+When geolocation is used in combination with WP-Rocket plugin it will not work by default because the cookie is set after the page is loaded and at that point it is too late.
+
+WP-Rocket plugin provides the options to fix this. By using this hook `rocket_advanced_cache_file` we are able to inject our custom function in the page generation process inside the `wp-content/advanced-cache.php` file. By modifying this file we can detect users geolocation from the IP and set the cookie manually before the page is loaded. This way WP-Rocket can detect that cookie and provide the necessary cache. Here is the process of setting it:
+
+1. Set dynamic cookie:
+
+**Filter:**
+```php
+\add_filter('rocket_cache_dynamic_cookies', [$this, 'dynamicCookiesList']);
+```
+
+**Callback:**
+```php
+/**
+ * List all dynamic cookies that will create new cached version.
+ *
+ * @param array<string, mixed> $items Items from the admin.
+ *
+ * @return array<int|string, mixed>
+ */
+public function dynamicCookiesList(array $items): array
+{
+	$items[] = 'esForms-country';
+
+	return $items;
+}
+```
+
+2. Set custom function to advanced-cached.php file.
+
+For `$esFormsPath` variable you must provide the absolute path to the `geolocationDetect.php` file in vendor.
+The provided example works if you have Eightshift-forms in your project.
+
+**Filter:**
+```php
+\add_filter('rocket_advanced_cache_file', [$this, 'addNginxAdvanceCacheRules']);
+```
+
+**Callback:**
+```php
+/**
+ * Add geolocation function in advance-cache.php config file on plugin activation used only with Nginx.
+ *
+ * @param string $content Original file output.
+ */
+public function addNginxAdvanceCacheRules( string $content ) : string {
+	$position = \strpos($content, '$rocket_config_class');
+
+	// This part is string on purpose.
+	$cors_function = '
+	$esFormsPath = ABSPATH . "wp-content/plugins/eightshift-forms/src/Geolocation/geolocationDetect.php";
+	if (file_exists($esFormsPath)) {
+		require_once $esFormsPath;
+		setLocationCookie(
+			ES_GEOLOCAITON_COOKIE_NAME,
+			\ABSPATH . "geolocation" . \DIRECTORY_SEPARATOR . "geoip.phar",
+			\ABSPATH . "geolocation" . \DIRECTORY_SEPARATOR . "geoip.mmdb",
+			ES_GEOLOCAITON_IP
+		);
+	};';
+
+	return \substr_replace($content, $cors_function, $position, 0);
+}
+```
+
+3. Disable `setLocationCookie` filter in your project.
+
+If you have installed Geolocation.php class in your project and you have this filter set, make sure you disable it, or provide the check to be disabled when WP-Rocket cache plugin is active.
+
+**Example:**
+```php
+if (!is_plugin_active('wp-rocket/wp-rocket.php')) {
+	\add_filter('init', [$this, 'setLocationCookie']);
+}
+```
+
+3. Disable `setLocationCookie` filter in your project.
