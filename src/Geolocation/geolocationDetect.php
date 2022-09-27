@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @param string $pharLocation Geolocation phar absolute path.
  * @param string $dbLocation Geolocation db absolute path.
  * @param string $ipAddr Manual IP addres for testing.
- * @param string $expires Cookie expiration time in secounds. Default: current time + 1 day.
+ * @param int $expires Cookie expiration time in secounds. Default: current time + 1 day.
  * @param string $path Cookie path.
  *
  * @return void
@@ -25,7 +25,7 @@ function setLocationCookie(
 	string $pharLocation,
 	string $dbLocation,
 	string $ipAddr = '',
-	string $expires = '',
+	int $expires = 0,
 	string $path = '/'
 ): void {
 	if (isset($_COOKIE[$name])) {
