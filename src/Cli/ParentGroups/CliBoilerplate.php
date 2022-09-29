@@ -24,7 +24,7 @@ use WP_CLI_Command;
  * ## RESOURCES
  *
  * Our documentation is located here:
- * https://infinum.github.io/eightshift-docs/
+ * https://eightshift.com/
  */
 class CliBoilerplate extends WP_CLI_Command
 {
