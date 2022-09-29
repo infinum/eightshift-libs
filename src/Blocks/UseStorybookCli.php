@@ -55,12 +55,8 @@ class UseStorybookCli extends AbstractBlocksCli
 
 				## INSTALATION
 
-				After you run the cli command please follow this steps:
-				1. Run `npm install @eightshift/storybook --save-dev` command in the terminal to install the storybook package.
-				2. Open package.json.
-				3. Add to scrips: `\"storybookBuild\": \"build-storybook -s public -o storybook\"`
-				4. Add to scripts: `\"storybook\": \"start-storybook -s public\"`
-				5. Start storybook by running this command `npm run storybook`.
+				After you run the cli command please follow these steps:
+				{$this->getCommonAfterIntallInstructions()}
 
 				## EXAMPLES
 
@@ -98,7 +94,24 @@ class UseStorybookCli extends AbstractBlocksCli
 		if (!$groupOutput) {
 			WP_CLI::log('--------------------------------------------------');
 
-			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "M");
+			$this->cliLog('Please follow these steps to complete your Storybook setup:', 'M');
+			$this->cliLog($this->prepareLongDesc($this->getCommonAfterIntallInstructions()), 'M');
 		}
+	}
+
+	/**
+	 * Common instalation steps.
+	 *
+	 * @return string
+	 */
+	private function getCommonAfterIntallInstructions(): string
+	{
+		return '
+			1. Run `npm install @eightshift/storybook --save-dev` command in the terminal to install the storybook package.
+			2. Open package.json.
+			3. Add to scrips: `"storybookBuild": "build-storybook -s public -o storybook"`
+			4. Add to scripts: `"storybook": "start-storybook -s public"`
+			5. Start storybook by running this command `npm run storybook`.
+		';
 	}
 }
