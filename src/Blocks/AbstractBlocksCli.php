@@ -201,7 +201,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$manifest = Components::getManifestDirect($source);
 
 		// Component dependency.
-		$dependencies = $manifest['components'] ?? [];
+		$componentsDependencies = $manifest['components'] ?? [];
+		$innerBlocksDependency = $manifest['innerBlocksDependency'] ?? [];
+
+		$dependencies = \array_merge($componentsDependencies, $innerBlocksDependency);
 
 		if ($dependencies) {
 			$this->cliLog('');
@@ -219,7 +222,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				},
 				$dependencies
 			);
-			$allDependencies = \implode(', ', $dependencies);
+			$allDependencies = \implode(', ', \array_unique(\array_values($allDependencies)));
 			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
 		}
 	}
