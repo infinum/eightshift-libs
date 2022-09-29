@@ -32,13 +32,16 @@ function setLocationCookie(
 		return;
 	}
 
+	// Get geolocation from db.
 	$location = getGeolocation($pharLocation, $dbLocation, $ipAddr);
 
+	// If expiration is not set use default of 1 day from current timestamp.
 	if (!$expires) {
 		$expires = time() + DAY_IN_SECONDS;
 	}
 
 	try {
+		// Set cookie in the request.
 		setcookie($name, $location, $expires, $path);
 
 		// Manually set cookie name in $_COOKIE global for cache plugin to work.
