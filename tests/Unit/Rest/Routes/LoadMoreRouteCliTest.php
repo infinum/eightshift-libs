@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit\Rest\Routes\LoadMore;
+namespace Tests\Unit\Rest\Routes;
 
 use EightshiftLibs\Helpers\Components;
-use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
+use EightshiftLibs\Rest\Routes\LoadMoreRouteCli;
 
 beforeEach(function () {
 	$this->mock = new LoadMoreRouteCli('boilerplate');
