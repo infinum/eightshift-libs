@@ -3,12 +3,12 @@
 /**
  * Class that registers WPCLI command for Load More route.
  *
- * @package EightshiftLibs\Rest\Routes
+ * @package EightshiftLibs\Rest\Routes\LoadMore
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Rest\Routes;
+namespace EightshiftLibs\Rest\Routes\LoadMore;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
@@ -69,6 +69,7 @@ class LoadMoreRouteCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$sep = \DIRECTORY_SEPARATOR;
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
@@ -79,6 +80,6 @@ class LoadMoreRouteCli extends AbstractCli
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Routes'), "{$className}.php", $assocArgs);
+			->outputWrite(Components::getProjectPaths('srcDestination', "Rest{$sep}Routes{$sep}LoadMore"), "{$className}.php", $assocArgs);
 	}
 }

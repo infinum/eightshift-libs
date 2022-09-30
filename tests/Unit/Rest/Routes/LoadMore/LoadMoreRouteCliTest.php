@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit\Rest\Routes;
+namespace Tests\Unit\Rest\Routes\LoadMore;
 
 use EightshiftLibs\Helpers\Components;
-use EightshiftLibs\Rest\Routes\LoadMoreRouteCli;
+use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 
 beforeEach(function () {
 	$this->mock = new LoadMoreRouteCli('boilerplate');
@@ -19,7 +19,7 @@ test('REST load more route CLI command will correctly copy the field class with 
 	$mock([], $mock->getDefaultArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Routes{$sep}LoadMoreRoute.php"));
+	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Routes{$sep}LoadMore{$sep}LoadMoreRoute.php"));
 
 	expect($output)
 		->toContain('class LoadMoreRoute extends AbstractRoute implements CallableRouteInterface')

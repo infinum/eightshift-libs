@@ -63,7 +63,7 @@ use EightshiftLibs\Init\InitThemeCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Readme\ReadmeCli;
-use EightshiftLibs\Rest\Routes\LoadMoreRouteCli;
+use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;

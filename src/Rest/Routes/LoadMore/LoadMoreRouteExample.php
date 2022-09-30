@@ -3,12 +3,12 @@
 /**
  * The class register load more route.
  *
- * @package EightshiftBoilerplate\Rest\Routes
+ * @package EightshiftBoilerplate\Rest\Routes\LoadMore
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Rest\Routes;
+namespace EightshiftBoilerplate\Rest\Routes\LoadMore;
 
 use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Helpers\Components;
