@@ -997,7 +997,7 @@ abstract class AbstractCli implements CliInterface
 		|____/   \___/  |___| |_____| |_____| |_| \_\ |_|     |_____| /_/   \_\   |_|   |_____|
 		.
 		Thank you for using Eightshift boilerplate for your project.
-		Documentation can be found on this link: https://infinum.github.io/eightshift-docs/.
+		Documentation can be found on this link: https://eightshift.com/.
 		---------------------------------------------------------------------------------------
 		.
 		"), 'M');

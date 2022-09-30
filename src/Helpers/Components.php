@@ -63,6 +63,37 @@ class Components
 	use MediaTrait;
 
 	/**
+	 * Get all project paths for store.
+	 *
+	 * @var array<int, string>
+	 */
+	public const PROJECT_PATHS = [
+		'projectRoot',
+		'srcDestination',
+		'cliOutput',
+		'wpContent',
+		'libs',
+
+		'blocksGlobalAssetsSource',
+		'blocksAssetsSource',
+		'blocksStorybookSource',
+		'blocksSource',
+		'blocksSourceCustom',
+		'blocksSourceComponents',
+		'blocksSourceVariations',
+		'blocksSourceWrapper',
+
+		'blocksGlobalAssetsDestination',
+		'blocksAssetsDestination',
+		'blocksStorybookDestination',
+		'blocksDestination',
+		'blocksDestinationCustom',
+		'blocksDestinationComponents',
+		'blocksDestinationVariations',
+		'blocksDestinationWrapper',
+	];
+
+	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
 	 * Note about "parentClass" attribute: If provided, the component will be wrapped with a
@@ -285,37 +316,6 @@ class Components
 
 		return \json_decode(\implode(' ', (array)\file($manifest)), true);
 	}
-
-	/**
-	 * Get all project paths for store.
-	 *
-	 * @var array<int, string>
-	 */
-	public const PROJECT_PATHS = [
-		'projectRoot',
-		'srcDestination',
-		'cliOutput',
-		'wpContent',
-		'libs',
-
-		'blocksGlobalAssetsSource',
-		'blocksAssetsSource',
-		'blocksStorybookSource',
-		'blocksSource',
-		'blocksSourceCustom',
-		'blocksSourceComponents',
-		'blocksSourceVariations',
-		'blocksSourceWrapper',
-
-		'blocksGlobalAssetsDestination',
-		'blocksAssetsDestination',
-		'blocksStorybookDestination',
-		'blocksDestination',
-		'blocksDestinationCustom',
-		'blocksDestinationComponents',
-		'blocksDestinationVariations',
-		'blocksDestinationWrapper',
-	];
 
 	/**
 	 * Internal helper for getting all project paths for easy mocking in tests.

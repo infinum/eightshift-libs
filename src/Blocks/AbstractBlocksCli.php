@@ -86,7 +86,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, item name and shorten cli path.
-						"Requested %s with the name `%s` doesn't exist in our library. Please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://infinum.github.io/eightshift-docs/storybook/",
+						"Requested %s with the name `%s` doesn't exist in our library. Please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://eightshift.com/storybook/",
 						$type,
 						$item,
 						\implode(\PHP_EOL, $sourceItems)
@@ -201,7 +201,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$manifest = Components::getManifestDirect($source);
 
 		// Component dependency.
-		$dependencies = $manifest['components'] ?? [];
+		$componentsDependencies = $manifest['components'] ?? [];
+		$innerBlocksDependency = $manifest['innerBlocksDependency'] ?? [];
+
+		$dependencies = \array_merge($componentsDependencies, $innerBlocksDependency);
 
 		if ($dependencies) {
 			$this->cliLog('');
@@ -219,7 +222,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				},
 				$dependencies
 			);
-			$allDependencies = \implode(', ', $dependencies);
+			$allDependencies = \implode(', ', \array_unique(\array_values($allDependencies)));
 			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
 		}
 	}
