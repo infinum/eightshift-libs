@@ -109,7 +109,7 @@ class UseStorybookCli extends AbstractBlocksCli
 		return '
 			1. Run `npm install @eightshift/storybook --save-dev` command in the terminal to install the storybook package.
 			2. Open package.json.
-			3. Add to scrips: `"storybookBuild": "build-storybook -s public -o storybook"`
+			3. Add to scripts: `"storybookBuild": "build-storybook -s public -o storybook"`
 			4. Add to scripts: `"storybook": "start-storybook -s public"`
 			5. Start storybook by running this command `npm run storybook`.
 		';
