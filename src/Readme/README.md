@@ -14,7 +14,7 @@ This is the official repository of the {Project name}.
 
 The project is built using [eightshift-boilerplate](https://github.com/infinum/eightshift-boilerplate), [eightshift-libs](https://github.com/infinum/eightshift-libs), and [eightshift-frontend-libs](https://github.com/infinum/eightshift-frontend-libs).
 
-For more details on how to use them, check out the [official documentation](https://infinum.github.io/eightshift-docs/).
+For more details on how to use them, check out the [official documentation](https://eightshift.com/).
 
 Once you clone this repository, you'll need to build it:
 

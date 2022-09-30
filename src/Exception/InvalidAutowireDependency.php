@@ -37,7 +37,7 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 				When injecting Interface dependencies, please make sure your variable name in __construct()
 				matches the filename of a class implementing that interface (otherwise we don\'t know which class to inject).
 				Alternatively you can define the dependency tree manually for this class using $main->getServiceClasses().
-				See https://infinum.github.io/eightshift-docs/docs/basics/autowiring#what-if-my-class-has-an-interface-parameter-inside-the-constructor-method',
+				See https://eightshift.com/docs/basics/autowiring#what-if-my-class-has-an-interface-parameter-inside-the-constructor-method',
 				$className,
 				$interfaceName
 			)
@@ -60,7 +60,7 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 				'Found more than 1 class called "%1$s" that implements %2$s interface.
 				Please make sure you don\'t have more than 1 class with the same name implementing the same interface.
 				Alternatively, you can manually define dependencies for the class that uses the %3$s interface as a dependency.
-				See: https://infinum.github.io/eightshift-docs/docs/basics/autowiring#what-if-my-class-has-an-interface-parameter-inside-the-constructor-method',
+				See: https://eightshift.com/docs/basics/autowiring#what-if-my-class-has-an-interface-parameter-inside-the-constructor-method',
 				$className,
 				$interfaceName,
 				$interfaceName
@@ -83,7 +83,7 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 				/* translators: %s is replaced with the className and interfaceName. */
 				"Found a primitive dependency for %s with param %s. Autowire is unable to figure out what value needs to be injected here.
 				Please define the dependency tree for this class manually using \$main->getServiceClasses().
-				See: https://infinum.github.io/eightshift-docs/docs/basics/autowiring#what-if-my-class-has-a-primitive-parameter-string-int-etc-inside-a-constructor-method",
+				See: https://eightshift.com/docs/basics/autowiring#what-if-my-class-has-a-primitive-parameter-string-int-etc-inside-a-constructor-method",
 				$className,
 				$param
 			)
