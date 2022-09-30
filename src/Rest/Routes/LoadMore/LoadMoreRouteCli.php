@@ -3,12 +3,12 @@
 /**
  * Class that registers WPCLI command for Load More route.
  *
- * @package EightshiftLibs\Config
+ * @package EightshiftLibs\Rest\Routes
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Rest\Routes\LoadMore;
+namespace EightshiftLibs\Rest\Routes;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
