@@ -82,8 +82,6 @@
 			"@test:standards",
 			"@test:types",
 			"@test:unit"
-		],
-		"analyze": "composer test:types",
-		"standards:check": "composer test:standards"
+		]
 	}
 }
