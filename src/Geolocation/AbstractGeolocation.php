@@ -59,6 +59,16 @@ abstract class AbstractGeolocation implements ServiceInterface
 	}
 
 	/**
+	 * Get geolocation expiration time.
+	 *
+	 * @return int
+	 */
+	public function getGeolocationExpiration(): int
+	{
+		return \time() + \DAY_IN_SECONDS;
+	}
+
+	/**
 	 * Set geolocation cookie.
 	 *
 	 * @return void
@@ -86,7 +96,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 			$this->setCookie(
 				$cookieName,
 				$this->getGeolocation(),
-				\time() + \DAY_IN_SECONDS,
+				$this->getGeolocationExpiration(),
 				'/'
 			);
 		} catch (Exception $exception) {
