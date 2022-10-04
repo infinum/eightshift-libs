@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.3.0] - 2022-10-04
+
+### Added
+- new WP-CLI command for plugins (install/update/delete) from global `setup.json`.
+- new function for providing cookie expiration time.
+- new file providing geolocation with WP-Rocket cache.
+- WP-CLI will now look for an additional key when moving block/components. This key is used to list all inner block dependencies.
+- storybook install WP-CLI description details.
+
+### Fixed
+- WP-CLI log output.
+- config example wrong version output.
+- config CLI wrong command version number.
+- broken tests for geolocation.
+- const public/private position in components.
+- docs link.
+
+### Removed
+- old WP-CLI command for updating plugins from global `setup.json`.
+
 ## [6.2.0] - 2022-09-06
 
 ### Updated
@@ -362,6 +382,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.3.0]: https://github.com/infinum/eightshift-libs/compare/6.2.0...v6.3.0
 [6.2.0]: https://github.com/infinum/eightshift-libs/compare/6.1.0...v6.2.0
 [6.1.0]: https://github.com/infinum/eightshift-libs/compare/6.0.0...v6.1.0
 [6.0.0]: https://github.com/infinum/eightshift-libs/compare/5.1.0...v6.0.0
