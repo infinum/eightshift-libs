@@ -81,14 +81,14 @@ function getGeolocation(string $pharLocation, string $dbLocation, string $ipAddr
 
 		if (!file_exists($phar)) {
 			// translators: %s will be replaced with the phar location.
-			throw new Exception(sprintf(esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), $phar));
+			throw new Exception(sprintf(('Missing Geolocation phar on this location %s'), $phar));
 		}
 
 		$db = $dbLocation;
 
 		if (!file_exists($db)) {
 			// translators: %s will be replaced with the database location.
-			throw new Exception(sprintf(esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), $db));
+			throw new Exception(sprintf(('Missing Geolocation database on this location %s'), $db));
 		}
 
 		try {
