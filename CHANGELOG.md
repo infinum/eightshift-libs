@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.3.1] - 2022-12-23
+
+### Fixed
+- WP-CLI command name for pattern creating.
+
+### Removed
+- unnecessary escape in the geolocation detect.
+
 ## [6.3.0] - 2022-10-04
 
 ### Added
@@ -382,6 +390,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.3.1]: https://github.com/infinum/eightshift-libs/compare/6.3.0...v6.3.1
 [6.3.0]: https://github.com/infinum/eightshift-libs/compare/6.2.0...v6.3.0
 [6.2.0]: https://github.com/infinum/eightshift-libs/compare/6.1.0...v6.2.0
 [6.1.0]: https://github.com/infinum/eightshift-libs/compare/6.0.0...v6.1.0
