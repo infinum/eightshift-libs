@@ -127,6 +127,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		);
 
 		// Allow reusable block.
+		$allowedBlockTypes[] = 'eightshift-forms/forms';
 		$allowedBlockTypes[] = 'core/block';
 		$allowedBlockTypes[] = 'core/template';
 
@@ -178,6 +179,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		);
 
 		// Allow reusable block.
+		$allowedBlockTypes[] = 'eightshift-forms/forms';
 		$allowedBlockTypes[] = 'core/block';
 		$allowedBlockTypes[] = 'core/template';
 
