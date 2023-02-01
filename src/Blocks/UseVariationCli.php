@@ -47,7 +47,7 @@ class UseVariationCli extends AbstractBlocksCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'name' => 'button-block',
+			'name' => 'card-simple',
 		];
 	}
 
@@ -76,7 +76,7 @@ class UseVariationCli extends AbstractBlocksCli
 				## EXAMPLES
 
 				# Copy variation by name:
-				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='button-block'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='card-simple'
 
 				## RESOURCES
 
