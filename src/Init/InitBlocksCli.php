@@ -87,10 +87,10 @@ class InitBlocksCli extends AbstractCli
 		],
 		UseVariationCli::class => [
 			'default' => [
-				'button-block'
+				'card-simple'
 			],
 			'test' => [
-				'button-block'
+				'card-simple'
 			]
 		]
 	];
