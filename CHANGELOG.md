@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.4.0] - 2023-02-21
+
+### Changed
+
+- Changed the default args for init blocks and use block variation CLI commands, as the button-block variation will not exist anymore in FE libs v8.0.
+
 ## [6.3.2] - 2023-01-27
 
 ### Added
@@ -395,6 +401,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.4.0]: https://github.com/infinum/eightshift-libs/compare/6.3.2...v6.4.0
 [6.3.2]: https://github.com/infinum/eightshift-libs/compare/6.3.1...v6.3.2
 [6.3.1]: https://github.com/infinum/eightshift-libs/compare/6.3.0...v6.3.1
 [6.3.0]: https://github.com/infinum/eightshift-libs/compare/6.2.0...v6.3.0
