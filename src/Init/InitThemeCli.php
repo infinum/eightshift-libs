@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Init;
 
+use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
+use EightshiftLibs\AdminMenus\ReusableBlocksHeaderFooterCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Config\ConfigCli;
@@ -18,7 +20,6 @@ use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
 use EightshiftLibs\Manifest\ManifestCli;
-use EightshiftLibs\Menu\MenuCli;
 use ReflectionClass;
 
 /**
@@ -42,7 +43,8 @@ class InitThemeCli extends AbstractCli
 				EnqueueAdminCli::class,
 				EnqueueBlocksCli::class,
 				EnqueueThemeCli::class,
-				MenuCli::class,
+				AdminReusableBlocksMenuCli::class,
+				ReusableBlocksHeaderFooterCli::class,
 			],
 		],
 		[
