@@ -48,6 +48,8 @@ class InitBlocksCli extends AbstractCli
 				'image',
 				'lists',
 				'paragraph',
+				'site-header',
+				'site-footer',
 			],
 			'test' => [
 				'button',
@@ -67,7 +69,6 @@ class InitBlocksCli extends AbstractCli
 				'heading',
 				'icon',
 				'image',
-				'layout-three-columns',
 				'lists',
 				'logo',
 				'menu',
