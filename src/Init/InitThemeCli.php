@@ -134,6 +134,8 @@ class InitThemeCli extends AbstractCli
 			$this->cliLog('--------------------------------------------------');
 		}
 
+		$this->cliLog('Almost ready!', "M");
+
 		// NPM and Composer install.
 		$c1Out = \WP_CLI::launch('npm install');
 		$this->cliLog("{$c1Out}");
