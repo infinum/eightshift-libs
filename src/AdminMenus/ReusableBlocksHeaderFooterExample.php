@@ -50,6 +50,13 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	public const SETTINGS_SECTION_NAME = 'es-header-footer-section';
 
 	/**
+	 * Slug for the WP messages in admin.
+	 *
+	 * @var string
+	 */
+	public const ADMIN_MESSAGE_SLUG = 'es-header-footer-messages';
+
+	/**
 	 * "Header partial" option name.
 	 *
 	 * @var string
@@ -71,21 +78,6 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	public function register(): void
 	{
 		\add_action('admin_init', [$this, 'registerWpSettings']);
-
-		// \add_action(
-		// 	'admin_menu',
-		// 	function () {
-		// 		\add_menu_page(
-		// 			$this->getTitle(),
-		// 			$this->getMenuTitle(),
-		// 			$this->getCapability(),
-		// 			$this->getMenuSlug(),
-		// 			'',
-		// 			$this->getIcon(),
-		// 			$this->getPosition()
-		// 		);
-		// 	}
-		// );
 		\add_action('admin_menu', [$this, 'callback'], $this->getPriorityOrder());
 	}
 
