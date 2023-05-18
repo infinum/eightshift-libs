@@ -71,7 +71,6 @@ class InitBlocksCli extends AbstractCli
 				'image',
 				'lists',
 				'logo',
-				'menu',
 				'paragraph',
 				'tracking-before-body-end',
 				'tracking-head',
