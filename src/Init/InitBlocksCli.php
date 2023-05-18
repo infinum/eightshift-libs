@@ -74,6 +74,7 @@ class InitBlocksCli extends AbstractCli
 				'paragraph',
 				'tracking-before-body-end',
 				'tracking-head',
+				'social-networks',
 			],
 			'test' => [
 				'button',
