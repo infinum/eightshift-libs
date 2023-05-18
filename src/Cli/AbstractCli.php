@@ -1024,6 +1024,6 @@ abstract class AbstractCli implements CliInterface
 		Documentation can be found on this link: https://eightshift.com/.
 		%K---------------------------------------------------------------------------------------%n
 		.
-		"));
+		"), 'mixed');
 	}
 }

@@ -50,6 +50,11 @@ trait CliHelpers
 	 */
 	protected function cliLog(string $msg, string $color = ''): void
 	{
+		if ($color === 'mixed') {
+			WP_CLI::log(WP_CLI::colorize("{$msg}%n"));
+			return;
+		}
+
 		if ($color) {
 			WP_CLI::log(WP_CLI::colorize("%{$color}{$msg}%n"));
 			return;
