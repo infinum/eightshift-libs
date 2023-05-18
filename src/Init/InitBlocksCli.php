@@ -48,7 +48,7 @@ class InitBlocksCli extends AbstractCli
 				'image',
 				'lists',
 				'paragraph',
-				'site-header',
+				'site-navigation',
 				'site-footer',
 			],
 			'test' => [
