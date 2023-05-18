@@ -162,11 +162,11 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	/**
 	 * Get the view component that will render correct view.
 	 *
-	 * @return string View uri.
+	 * @return string View URI.
 	 */
 	protected function getViewComponent(): string
 	{
-		return '';
+		return 'admin-header-footer-picker';
 	}
 
 	/**
