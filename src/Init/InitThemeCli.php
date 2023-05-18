@@ -134,6 +134,31 @@ class InitThemeCli extends AbstractCli
 			$this->cliLog('--------------------------------------------------');
 		}
 
+		// NPM and Composer install.
+		$c1Out = \WP_CLI::runcommand('npm install');
+		$this->cliLog($c1Out);
+		$c2Out = \WP_CLI::runcommand('composer install');
+		$this->cliLog($c2Out);
+		$c3Out = \WP_CLI::runcommand('npm run build');
+		$this->cliLog($c3Out);
+
+		// Add initial posts.
+		$createBlocksOptions = [ 'return' => true ];
+
+		$createFooterCommand = 'post create --post_title="Footer" --post_type="wp_block" --post_status="publish" --porcelain --post_content=\'<!-- wp:eightshift-boilerplate/site-footer {"siteFooterLogoUrl":"/wp-content/themes/t24v7/public/logo.svg","siteFooterCopyrightContent":"Copyright 2023, Eightshift DevKit","siteFooterLinks":[{"id":"5f573082-2354-4b95-baef-0dd9abbe73fd","url":"#","text":"Link","newTab":false}]} /-->\'';
+		$footerReusableBlockId = \WP_CLI::runcommand($createFooterCommand, $createBlocksOptions);
+
+		if (!empty($footerReusableBlockId)) {
+			\WP_CLI::runcommand("option update es-footer-partial {$footerReusableBlockId}", $createBlocksOptions);
+		}
+
+		$createHeaderCommand = 'post create --post_title="Header" --post_type="wp_block" --post_status="publish" --porcelain --post_content=\'<!-- wp:eightshift-boilerplate/site-navigation {"siteNavigationLogoUrl":"https://themedev.test/wp-content/uploads/2023/05/es.png","siteNavigationLinks":[{"id":"9e7d54c8-4271-4b23-9b3b-e163e4bac92b","url":"#","text":"Welcome","newTab":false}]} /-->\'';
+		$headerReusableBlockId = \WP_CLI::runcommand($createHeaderCommand, $createBlocksOptions);
+
+		if (!empty($headerReusableBlockId)) {
+			\WP_CLI::runcommand("option update es-header-partial {$footerReusableBlockId}", $createBlocksOptions);
+		}
+
 		if (!$groupOutput) {
 			$this->cliLog('We have moved everything you need to start creating your awesome WordPress theme. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
 			$this->cliLog('Happy developing!', "M");
