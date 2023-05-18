@@ -1020,7 +1020,7 @@ abstract class AbstractCli implements CliInterface
 		│                                                                                                                                                      │
 		├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
 		│                                                                                                                                                      │
-		│  %GThank you for using Eightshift DevKit!%w                                                                                                          │
+		│  %RThank you for using Eightshift DevKit!                                                                                                              %w│
 		│                                                                                                                                                      │
 		│  %nDocumentation can be found on %bhttps://eightshift.com/%w                                                                                           │
 		│                                                                                                                                                      │
