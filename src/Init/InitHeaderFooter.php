@@ -84,7 +84,7 @@ class InitHeaderFooter extends AbstractCli
 		$headerReusableBlockId = \WP_CLI::runcommand($createHeaderCommand, $createBlocksOptions);
 
 		if (!empty($headerReusableBlockId)) {
-			\WP_CLI::runcommand("option update es-header-partial {$footerReusableBlockId}", $createBlocksOptions);
+			\WP_CLI::runcommand("option update es-header-partial {$headerReusableBlockId}", $createBlocksOptions);
 		}
 
 		$this->cliLog('--------------------------------------------------');
