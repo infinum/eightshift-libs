@@ -1002,7 +1002,7 @@ abstract class AbstractCli implements CliInterface
 
 		█ = red, ▓ = current color, ▒ = transparent
 		*/
-		$this->cliLog("
+		$this->cliLog($this->prepareLongDesc("
 
 		%w╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 		│                                                                                                                                                      │
@@ -1020,12 +1020,11 @@ abstract class AbstractCli implements CliInterface
 		│                                                                                                                                                      │
 		├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
 		│                                                                                                                                                      │
-		│  %RThank you for using Eightshift DevKit!%w                                                                                                            │
-		│                                                                                                                                                      │
+		│  %rThank you for using Eightshift DevKit!%w                                                                                                            │
 		│  %nDocumentation can be found on %bhttps://eightshift.com/%w                                                                                               │
 		│                                                                                                                                                      │
 		╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯%n
 
-		", 'mixed');
+		"), 'mixed');
 	}
 }
