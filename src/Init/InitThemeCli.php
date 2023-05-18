@@ -135,12 +135,12 @@ class InitThemeCli extends AbstractCli
 		}
 
 		// NPM and Composer install.
-		$c1Out = \WP_CLI::runcommand('npm install');
-		$this->cliLog($c1Out);
-		$c2Out = \WP_CLI::runcommand('composer install');
-		$this->cliLog($c2Out);
-		$c3Out = \WP_CLI::runcommand('npm run build');
-		$this->cliLog($c3Out);
+		$c1Out = \WP_CLI::launch('npm install');
+		$this->cliLog("{$c1Out}");
+		$c2Out = \WP_CLI::launch('composer install');
+		$this->cliLog("{$c2Out}");
+		$c3Out = \WP_CLI::launch('npm run build');
+		$this->cliLog("{$c3Out}");
 
 		// Add initial posts.
 		$createBlocksOptions = [ 'return' => true ];
