@@ -94,7 +94,8 @@ class InitBlocksCli extends AbstractCli
 			'test' => [
 				'card-simple'
 			]
-		]
+		],
+		'pwd',
 	];
 
 	/**
