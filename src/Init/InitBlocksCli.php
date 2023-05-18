@@ -75,6 +75,7 @@ class InitBlocksCli extends AbstractCli
 				'tracking-before-body-end',
 				'tracking-head',
 				'social-networks',
+				'admin-header-footer-picker',
 			],
 			'test' => [
 				'button',
