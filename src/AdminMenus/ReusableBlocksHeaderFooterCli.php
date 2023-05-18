@@ -120,6 +120,7 @@ class ReusableBlocksHeaderFooterCli extends AbstractCli
 		$title = $this->getArg($assocArgs, 'title');
 		$menuTitle = $this->getArg($assocArgs, 'menu_title');
 		$menuPosition = (string)($this->getArg($assocArgs, 'menu_position'));
+		$capability = $this->getArg($assocArgs, 'capability');
 
 		// Get full class name.
 		$className = $this->getFileName('');
@@ -132,6 +133,7 @@ class ReusableBlocksHeaderFooterCli extends AbstractCli
 			->renameUse($assocArgs)
 			->renameTextDomain($assocArgs)
 			->searchReplaceString($this->getArgTemplate('title'), $title)
+			->searchReplaceString($this->getArgTemplate('capability'), $capability)
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle);
 
 		if (!empty($menuPosition)) {
