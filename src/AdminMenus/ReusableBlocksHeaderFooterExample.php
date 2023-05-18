@@ -72,20 +72,21 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	{
 		\add_action('admin_init', [$this, 'registerWpSettings']);
 
-		\add_action(
-			'admin_menu',
-			function () {
-				\add_menu_page(
-					$this->getTitle(),
-					$this->getMenuTitle(),
-					$this->getCapability(),
-					$this->getMenuSlug(),
-					'',
-					$this->getIcon(),
-					$this->getPosition()
-				);
-			}
-		);
+		// \add_action(
+		// 	'admin_menu',
+		// 	function () {
+		// 		\add_menu_page(
+		// 			$this->getTitle(),
+		// 			$this->getMenuTitle(),
+		// 			$this->getCapability(),
+		// 			$this->getMenuSlug(),
+		// 			'',
+		// 			$this->getIcon(),
+		// 			$this->getPosition()
+		// 		);
+		// 	}
+		// );
+		\add_action('admin_menu', [$this, 'callback'], $this->getPriorityOrder());
 	}
 
 	/**
