@@ -16,6 +16,7 @@ use EightshiftLibs\AdminMenus\AdminSubMenuCli;
 use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Blocks\RenameBlockCli;
 use EightshiftLibs\Blocks\UseComponentCli;
 use EightshiftLibs\Blocks\UseBlockCli;
 use EightshiftLibs\Blocks\UseAssetsCli;
@@ -148,6 +149,7 @@ class Cli
 	public const BLOCKS_COMMANDS = [
 		BlocksCli::class,
 		BlockPatternCli::class,
+		RenameBlockCli::class,
 		UseStorybookCli::class,
 		UseManifestCli::class,
 		UseAssetsCli::class,
