@@ -126,6 +126,9 @@ trait CliHelpers
 		// Handle commands/code.
 		$output = preg_replace('/`(.*)`/' ,'%w$1%n', $output);
 
+		// Remove blank lines.
+		$output = preg_replace('/^\n+|^[\t\s]*\n+/m' ,'', $output);
+
 		WP_CLI::log(WP_CLI::colorize(self::prepareLongDesc($output)));
 	}
 
