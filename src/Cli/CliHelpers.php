@@ -74,7 +74,7 @@ trait CliHelpers
 	protected function cliLogAlert(string $msg, string $type = 'success', string $heading = ''): void
 	{
 		$colorToUse = '%G';
-		$defaultHeading = __('Success!', 'eightshift-libs');
+		$defaultHeading = __('Success', 'eightshift-libs');
 
 		switch ($type) {
 			case 'warning':

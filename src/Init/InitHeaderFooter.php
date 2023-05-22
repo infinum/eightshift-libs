@@ -89,10 +89,6 @@ class InitHeaderFooter extends AbstractCli
 
 		if (!$groupOutput) {
 			$this->cliLogAlert('Header and footer reusable blocks added');
-
-			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme.\n\nType `npm start` to build all the assets.', 'success', __('Ready to go!', 'eightshift-libs'));
-			$this->cliLogAlert("All the files have been copied, you can start working on your awesome theme.\n\nType `npm start` to build all the assets.", 'success', __('Ready to go!', 'eightshift-libs'));
-			$this->cliLogAlert('If you want to set up the default header and footer, run `wp boilerplate init header-footer`.', 'info', __('Note', 'eightshift-libs'));
 		}
 	}
 }
