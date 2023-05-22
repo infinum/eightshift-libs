@@ -219,6 +219,11 @@ class RenameBlockCli extends AbstractBlocksCli
 		$source = $component ? Components::getProjectPaths('blocksSourceComponents') : Components::getProjectPaths('blocksSourceCustom');
 		$destination = $component ? Components::getProjectPaths('blocksDestinationComponents') : Components::getProjectPaths('blocksDestinationCustom');
 
+        if (is_dir($destination)) {
+            $name = $assocArgs['name'];
+            WP_CLI::error("Folder '$name' already exists in $destination");
+        }
+
 		$this->moveItems(
 			\array_merge(
 				$assocArgs,
