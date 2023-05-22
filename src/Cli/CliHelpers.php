@@ -71,7 +71,7 @@ trait CliHelpers
 	 *
 	 * @return void
 	 */
-	protected function cliLogAlert(string $msg, string $type = 'success', $heading = ''): void
+	protected function cliLogAlert(string $msg, string $type = 'success', string $heading = ''): void
 	{
 		$colorToUse = '%G';
 		$defaultHeading = __('Success!', 'eightshift-libs');
@@ -102,7 +102,7 @@ trait CliHelpers
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "\n{$colorToUse}╰%n";
+			$output .= "{$colorToUse}╰%n";
 		} elseif (preg_match('/\n/', $msg)) {
 			$output = "{$colorToUse}╭\n";
 			$output .= "│ {$headingToUse}\n";
@@ -112,7 +112,7 @@ trait CliHelpers
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "\n{$colorToUse}╰%n";
+			$output .= "{$colorToUse}╰%n";
 		} else {
 			$output = "{$colorToUse}╭\n";
 			$output .= "│ {$headingToUse}\n";
@@ -121,7 +121,7 @@ trait CliHelpers
 		}
 
 		// Handle commands/code.
-		$output = preg_replace('/`(.*)`/' ,'%w$1%n', $output);
+		$output = preg_replace('/`(.*)`/' ,'%W$1%n', $output);
 
 		WP_CLI::log(WP_CLI::colorize($output));
 	}
