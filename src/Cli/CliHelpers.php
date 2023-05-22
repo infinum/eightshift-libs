@@ -95,26 +95,26 @@ trait CliHelpers
 
 		if (strpos($msg, '\n') !== false) {
 			$output = "{$colorToUse}╭
-			│ {$headingToUse}";
+			│ {$headingToUse}
+			";
 
 			foreach(explode('\n', $msg) as $line) {
 				$modifiedLine = trim($line);
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "
-			{$colorToUse}╰";
+			$output .= "{$colorToUse}╰";
 		} elseif (preg_match('/\n/', $msg)) {
 			$output = "{$colorToUse}╭
-			│ {$headingToUse}";
+			│ {$headingToUse}
+			";
 
 			foreach(explode("\n", $msg) as $line) {
 				$modifiedLine = trim($line);
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "
-			{$colorToUse}╰";
+			$output .= "{$colorToUse}╰";
 		} else {
 			$output = "{$colorToUse}╭
 			│ {$headingToUse}
