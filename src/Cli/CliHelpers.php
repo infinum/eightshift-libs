@@ -99,7 +99,7 @@ trait CliHelpers
 
 			foreach(explode('\n', $msg) as $line) {
 				$modifiedLine = trim($line);
-				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
+				$output .= "{$colorToUse}│ %n{$modifiedLine}";
 			}
 
 			$output .= "
@@ -110,7 +110,7 @@ trait CliHelpers
 
 			foreach(explode("\n", $msg) as $line) {
 				$modifiedLine = trim($line);
-				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
+				$output .= "{$colorToUse}│ %n{$modifiedLine}";
 			}
 
 			$output .= "
