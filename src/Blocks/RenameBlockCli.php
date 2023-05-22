@@ -114,11 +114,13 @@ class RenameBlockCli extends AbstractBlocksCli
 	 *
 	 * wp boilerplate blocks rename --name='test' --component='true'
 	 *
-	 * @param array $args Command arguments.
-	 * @param array $assocArgs Command associative arguments.
+	 * @param array<string, mixed> $args Command arguments.
+	 * @param array<string, mixed> $assocArgs $assocArgs Command associative arguments.
 	 * @param string $destination Destination folder.
+	 * 
+	 * @return void
 	 */
-	public function renameBlock($args, $assocArgs, $destination)
+	public function renameBlock($args, $assocArgs, $destination): void
 	{
 		$blockName = $assocArgs['name'];
 
@@ -141,8 +143,10 @@ class RenameBlockCli extends AbstractBlocksCli
 	 * @param string $directory Directory to rename files and folders.
 	 * @param string $blockName The variable for renaming files and folders.
 	 * @param string $newDestinationDir Path to the new destination.
+	 * 
+	 * @return void
 	 */
-	private function renameFilesAndFolders($directory, $blockName, $newDestinationDir)
+	private function renameFilesAndFolders($directory, $blockName, $newDestinationDir): void
 	{
 		$dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS);
 		$iterator = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
@@ -170,8 +174,10 @@ class RenameBlockCli extends AbstractBlocksCli
 	 * @param string $directory Directory to edit file contents.
 	 * @param string $blockName The block name to be used as the variable for editing file contents.
 	 * @param array<string, mixed> $args Array of arguments from WP-CLI command.
+	 * 
+	 * @return void
 	 */
-	private function editFileContents($directory, $blockName, $args)
+	private function editFileContents($directory, $blockName, $args): void
 	{
 		$dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS);
 		$iterator = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
@@ -208,6 +214,7 @@ class RenameBlockCli extends AbstractBlocksCli
 		}
 	}
 
+	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
 		$this->getIntroText($assocArgs);
