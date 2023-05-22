@@ -64,6 +64,46 @@ trait CliHelpers
 	}
 
 	/**
+	 * Fancy WP_CLI log output in a box.
+	 *
+	 * @param string $msg Msg to output.
+	 * @param string $type Type of message, either "success", "error", "warning" or "info".
+	 *
+	 * @return void
+	 */
+	protected function cliLogAlert(string $msg, string $type = 'success', $heading = ''): void
+	{
+		$colorToUse = '%G';
+		$defaultHeading = __('Success!', 'eightshift-libs');
+
+		switch ($type) {
+			case 'warning':
+				$colorToUse = '%Y';
+				$defaultHeading = __('Warning', 'eightshift-libs');
+				break;
+			case 'info':
+				$colorToUse = '%B';
+				$defaultHeading = __('Info', 'eightshift-libs');
+				break;
+			case 'error':
+				$colorToUse = '%R';
+				$defaultHeading = __('Something went wrong', 'eightshift-libs');
+				break;
+		}
+
+		$headingToUse = empty($heading) ? $defaultHeading : $heading;
+
+		$output = "
+		{$colorToUse}╭
+		│ {$headingToUse}
+		│ %n{$msg}{$colorToUse}
+		╰
+		"
+
+		WP_CLI::log($output);
+	}
+
+	/**
 	 * Return shorten CLI path output
 	 *
 	 * @param string $path Path to check.
