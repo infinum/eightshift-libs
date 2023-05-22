@@ -87,10 +87,9 @@ class InitHeaderFooter extends AbstractCli
 			\WP_CLI::runcommand("option update es-header-partial {$headerReusableBlockId}", $createBlocksOptions);
 		}
 
-		$this->cliLog('--------------------------------------------------');
 
 		if (!$groupOutput) {
-			$this->cliLog('Header and footer reusable blocks added!', "M");
+			$this->cliLogAlert('Header and footer reusable blocks added!');
 		}
 	}
 }
