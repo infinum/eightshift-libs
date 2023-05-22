@@ -97,7 +97,7 @@ trait CliHelpers
 		$modifiedMessage = str_replace("\n", "\n{$colorToUse}│ %n", $modifiedMessage);
 
 		// Handle commands/code.
-		$modifiedMessage = preg_replace('`(.*)`' ,'%C$1%n', $modifiedMessage);
+		$modifiedMessage = preg_replace('/`(.*)`/g' ,'%w$1%n', $modifiedMessage);
 
 		$modifiedMessage = trim($modifiedMessage);
 
