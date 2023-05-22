@@ -14,6 +14,7 @@ use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
+
 /**
  * Class RenameBlockCli
  */
@@ -36,7 +37,7 @@ class RenameBlockCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'rename-block';
+		return 'rename';
 	}
 
 	/**
@@ -96,7 +97,7 @@ class RenameBlockCli extends AbstractBlocksCli
      *
      * ## EXAMPLES
      *
-     * wp boilerplate blocks rename-block --name='test'
+     * wp boilerplate blocks rename --name='test'
      *
      * @param array $args Command arguments.
      * @param array $assocArgs Command associative arguments.
