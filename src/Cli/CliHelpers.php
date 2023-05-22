@@ -93,9 +93,15 @@ trait CliHelpers
 
 		$headingToUse = empty($heading) ? $defaultHeading : $heading;
 
+		$modifiedMessage = str_replace('\n', "\n", $msg);
+		$modifiedMessage = str_replace("\n", "\n{$colorToUse}│ %n", $modifiedMessage);
+
+		// Handle commands/code.
+		$modifiedMessage = preg_replace('`(.*)`' ,'%W${1}%n', $modifiedMessage);
+
 		$output = "{$colorToUse}╭
 		│ {$headingToUse}
-		│ %n{$msg}{$colorToUse}
+		│ %n{$modifiedMessage}{$colorToUse}
 		╰
 		";
 
