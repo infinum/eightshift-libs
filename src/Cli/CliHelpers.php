@@ -121,7 +121,7 @@ trait CliHelpers
 		}
 
 		// Handle commands/code.
-		$output = preg_replace('/`(.*)`/' ,'%_%U$1%n', $output);
+		$output = preg_replace('/`(.*)`/' ,'%_$1%n', $output);
 
 		WP_CLI::log(WP_CLI::colorize($output));
 	}
