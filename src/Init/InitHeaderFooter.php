@@ -89,6 +89,9 @@ class InitHeaderFooter extends AbstractCli
 
 		if (!$groupOutput) {
 			$this->cliLogAlert('Header and footer reusable blocks added');
+			$this->cliLogAlert('Header and footer reusable blocks added', 'warning');
+			$this->cliLogAlert('Header and footer reusable blocks added', 'error');
+			$this->cliLogAlert('Header and footer reusable blocks added', 'info');
 		}
 	}
 }
