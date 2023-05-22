@@ -94,29 +94,29 @@ trait CliHelpers
 		$headingToUse = empty($heading) ? $defaultHeading : $heading;
 
 		if (strpos($msg, '\n') !== false) {
-			$output = "{$colorToUse}╭";
-			$output .= "│ {$headingToUse}";
+			$output = "{$colorToUse}╭\n";
+			$output .= "│ {$headingToUse}\n";
 
 			foreach(explode('\n', $msg) as $line) {
 				$modifiedLine = trim($line);
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "{$colorToUse}╰%n";
+			$output .= "\n{$colorToUse}╰%n";
 		} elseif (preg_match('/\n/', $msg)) {
-			$output = "{$colorToUse}╭";
-			$output .= "│ {$headingToUse}";
+			$output = "{$colorToUse}╭\n";
+			$output .= "│ {$headingToUse}\n";
 
 			foreach(explode("\n", $msg) as $line) {
 				$modifiedLine = trim($line);
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "{$colorToUse}╰%n";
+			$output .= "\n{$colorToUse}╰%n";
 		} else {
-			$output = "{$colorToUse}╭";
-			$output .= "│ {$headingToUse}";
-			$output .= "│ %n{$msg}{$colorToUse}";
+			$output = "{$colorToUse}╭\n";
+			$output .= "│ {$headingToUse}\n";
+			$output .= "│ %n{$msg}{$colorToUse}\n";
 			$output .= "╰%n";
 		}
 
