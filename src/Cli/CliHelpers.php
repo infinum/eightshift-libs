@@ -103,7 +103,7 @@ trait CliHelpers
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "{$colorToUse}╰";
+			$output .= "{$colorToUse}\n╰";
 		} elseif (preg_match('/\n/', $msg)) {
 			$output = "{$colorToUse}╭
 			│ {$headingToUse}
@@ -114,7 +114,7 @@ trait CliHelpers
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "{$colorToUse}╰";
+			$output .= "{$colorToUse}\n╰";
 		} else {
 			$output = "{$colorToUse}╭
 			│ {$headingToUse}
