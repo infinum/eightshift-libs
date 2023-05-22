@@ -95,7 +95,7 @@ trait CliHelpers
 
 		if (strpos($msg, '\n') !== false) {
 			$output = "{$colorToUse}╭
-			│ {$headingToUse}";
+			│ {$headingToUse}\n";
 
 			foreach(explode('\n', $msg) as $line) {
 				$modifiedLine = trim($line);
@@ -106,7 +106,7 @@ trait CliHelpers
 			{$colorToUse}╰";
 		} elseif (preg_match('/\n/', $msg)) {
 			$output = "{$colorToUse}╭
-			│ {$headingToUse}";
+			│ {$headingToUse}\n";
 
 			foreach(explode("\n", $msg) as $line) {
 				$modifiedLine = trim($line);
