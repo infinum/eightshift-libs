@@ -100,7 +100,7 @@ trait CliHelpers
 		╰
 		";
 
-		WP_CLI::log($output);
+		WP_CLI::log(WP_CLI::colorize(self::prepareLongDesc($output)));
 	}
 
 	/**
@@ -129,5 +129,19 @@ trait CliHelpers
 		$output = \array_values($output);
 
 		return $output;
+	}
+
+	/**
+	 * Return longdesc output for cli.
+	 * Removes tabs and replaces them with space.
+	 * Adds new line before and after ## heading.
+	 *
+	 * @param string $string String to convert.
+	 *
+	 * @return string
+	 */
+	public static function prepareLongDesc(string $string): string
+	{
+		return \preg_replace('/(##+)(.*)/m', "\n" . '${1}${2}' . "\n", \preg_replace('/\s*^\s*/m', "\n", \trim($string)));
 	}
 }

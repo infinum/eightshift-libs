@@ -893,20 +893,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Return longdesc output for cli.
-	 * Removes tabs and replaces them with space.
-	 * Adds new line before and after ## heading.
-	 *
-	 * @param string $string String to convert.
-	 *
-	 * @return string
-	 */
-	public function prepareLongDesc(string $string): string
-	{
-		return \preg_replace('/(##+)(.*)/m', "\n" . '${1}${2}' . "\n", \preg_replace('/\s*^\s*/m', "\n", \trim($string)));
-	}
-
-	/**
 	 * Recursive copy helper
 	 *
 	 * @link https://stackoverflow.com/a/7775949/629127
