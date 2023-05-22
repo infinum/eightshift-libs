@@ -95,22 +95,22 @@ trait CliHelpers
 
 		if (strpos($msg, '\n') !== false) {
 			$output = "{$colorToUse}╭
-			│ {$headingToUse}\n";
+			│ {$headingToUse}";
 
 			foreach(explode('\n', $msg) as $line) {
 				$modifiedLine = trim($line);
-				$output .= "{$colorToUse}│ %n{$modifiedLine}";
+				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
 			$output .= "
 			{$colorToUse}╰";
 		} elseif (preg_match('/\n/', $msg)) {
 			$output = "{$colorToUse}╭
-			│ {$headingToUse}\n";
+			│ {$headingToUse}";
 
 			foreach(explode("\n", $msg) as $line) {
 				$modifiedLine = trim($line);
-				$output .= "{$colorToUse}│ %n{$modifiedLine}";
+				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
 			$output .= "
@@ -126,12 +126,6 @@ trait CliHelpers
 		// Handle commands/code.
 		$output = preg_replace('/`(.*)`/' ,'%w$1%n', $output);
 
-		// Remove blank lines.
-		$output = preg_replace('/^\n+|^[\t\s]*\n+/m' ,'', $output);
-
-		WP_CLI::log('-----------------');
-		WP_CLI::log(print_r($output, true));
-		WP_CLI::log('-----------------');
 		WP_CLI::log(WP_CLI::colorize(self::prepareLongDesc($output)));
 	}
 
