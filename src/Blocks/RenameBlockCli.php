@@ -101,64 +101,22 @@ class RenameBlockCli extends AbstractBlocksCli
      * @param array $args Command arguments.
      * @param array $assocArgs Command associative arguments.
      */
-    public function renameAndCopyDummyBlock($args, $assocArgs)
+    public function renameBlock($args, $assocArgs)
     {
         $blockName = $assocArgs['name'];
 
-        // Specify the source and destination directories.
-        $sourceDir = Components::getProjectPaths('blocksSourceCustom') . 'dummy/';
-        $destinationDir = Components::getProjectPaths('blocksDestinationCustom') . $blockName;
+        // Specify the destinations directory.
+        $destinationDir = Components::getProjectPaths('blocksDestinationCustom') . 'dummy';
+        $newDestinationDir = Components::getProjectPaths('blocksDestinationCustom') . $blockName;
 
-        if (file_exists( $destinationDir )) {
-            \WP_CLI::error("Block already exist in $destinationDir");
-        } else {
-            // Copy the entire folder to the destination.
-            $this->recursive_copy($sourceDir, $destinationDir);
+        // Rename files and folders in the destination directory.
+        $this->rename_files_folders($destinationDir, $blockName);
 
-            // Rename files and folders in the destination directory.
-            $this->rename_files_folders($destinationDir, $blockName);
+        // Edit the contents of each file in the destination directory.
+        $this->editFileContents($newDestinationDir, $blockName, $args);
 
-            // Edit the contents of each file in the destination directory.
-            $this->editFileContents($destinationDir, $blockName, $args);
-
-            \WP_CLI::success('Folder copied, renamed, and contents modified successfully.');
-        }
-    }
-
-    /**
-     * Recursively copy a folder and its contents to a destination directory.
-     *
-     * @param string $source Source directory.
-     * @param string $destination Destination directory.
-     */
-    private function recursive_copy($source, $destination) 
-    {
-        if (is_dir($source)) {
-            mkdir($destination);
-
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-                \RecursiveIteratorIterator::SELF_FIRST
-            );
-
-            // Iterate over the files and directories
-            foreach ($iterator as $item) {
-                // Generate the destination path for the current item
-                $destPath = $destination . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
-
-                // If the current item is a directory, create it in the destination directory
-                if ($item->isDir()) {
-                    if (!is_dir($destPath)) {
-                        mkdir($destPath, 0755, true);
-                    }
-                } else {
-                    // If the current item is a file, copy it to the destination directory
-                    copy($item->getPathName(), $destPath);
-                }
-            }
-        } else {
-            copy($source, $destination);
-        }
+        \WP_CLI::success('Folder copied, renamed, and contents modified successfully.');
+        
     }
 
     /**
@@ -171,7 +129,9 @@ class RenameBlockCli extends AbstractBlocksCli
     {
         $dir = new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS);
         $iterator = new \RecursiveIteratorIterator($dir, \RecursiveIteratorIterator::SELF_FIRST);
-    
+        
+        $newDestinationDirectory = Components::getProjectPaths('blocksDestinationCustom') . $argument;
+
         foreach ($iterator as $file) {
             if ($file->isFile()) {
                 $filePath = $file->getPathname();
@@ -184,6 +144,9 @@ class RenameBlockCli extends AbstractBlocksCli
                 }
             }
         }
+
+        // Renames parent folder
+        rename($directory, $newDestinationDirectory);
     }
 
     /**
@@ -232,9 +195,21 @@ class RenameBlockCli extends AbstractBlocksCli
 		$this->getIntroText($assocArgs);
 
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
-        
-        $this->renameAndCopyDummyBlock($args, $assocArgs);
-        
+
+        $this->moveItems(
+			\array_merge(
+				$assocArgs,
+				[
+					'name' => 'dummy',
+				],
+			),
+			Components::getProjectPaths('blocksSourceCustom'),
+			Components::getProjectPaths('blocksDestinationCustom'),
+			'block'
+		);
+
+        $this->renameBlock($args, $assocArgs);
+
         if (!$groupOutput) {
 			WP_CLI::log('--------------------------------------------------');
 
