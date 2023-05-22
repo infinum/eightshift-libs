@@ -93,8 +93,7 @@ trait CliHelpers
 
 		$headingToUse = empty($heading) ? $defaultHeading : $heading;
 
-		$output = "
-		{$colorToUse}╭
+		$output = "{$colorToUse}╭
 		│ {$headingToUse}
 		│ %n{$msg}{$colorToUse}
 		╰
