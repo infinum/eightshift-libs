@@ -129,7 +129,9 @@ trait CliHelpers
 		// Remove blank lines.
 		$output = preg_replace('/^\n+|^[\t\s]*\n+/m' ,'', $output);
 
-		WP_CLI::log(var_export($output, true));
+		WP_CLI::log('-----------------');
+		WP_CLI::log(print_r($output, true));
+		WP_CLI::log('-----------------');
 		WP_CLI::log(WP_CLI::colorize(self::prepareLongDesc($output)));
 	}
 
