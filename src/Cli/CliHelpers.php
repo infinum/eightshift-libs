@@ -98,7 +98,7 @@ trait CliHelpers
 		│ {$headingToUse}
 		│ %n{$msg}{$colorToUse}
 		╰
-		"
+		";
 
 		WP_CLI::log($output);
 	}
