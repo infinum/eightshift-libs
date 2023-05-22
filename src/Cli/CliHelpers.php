@@ -94,39 +94,36 @@ trait CliHelpers
 		$headingToUse = empty($heading) ? $defaultHeading : $heading;
 
 		if (strpos($msg, '\n') !== false) {
-			$output = "{$colorToUse}╭
-			│ {$headingToUse}
-			";
+			$output = "{$colorToUse}╭";
+			$output .= "│ {$headingToUse}";
 
 			foreach(explode('\n', $msg) as $line) {
 				$modifiedLine = trim($line);
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "{$colorToUse}\n╰";
+			$output .= "{$colorToUse}╰%n";
 		} elseif (preg_match('/\n/', $msg)) {
-			$output = "{$colorToUse}╭
-			│ {$headingToUse}
-			";
+			$output = "{$colorToUse}╭";
+			$output .= "│ {$headingToUse}";
 
 			foreach(explode("\n", $msg) as $line) {
 				$modifiedLine = trim($line);
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
-			$output .= "{$colorToUse}\n╰";
+			$output .= "{$colorToUse}╰%n";
 		} else {
-			$output = "{$colorToUse}╭
-			│ {$headingToUse}
-			│ %n{$msg}{$colorToUse}
-			╰
-			";
+			$output = "{$colorToUse}╭";
+			$output .= "│ {$headingToUse}";
+			$output .= "│ %n{$msg}{$colorToUse}";
+			$output .= "╰%n";
 		}
 
 		// Handle commands/code.
 		$output = preg_replace('/`(.*)`/' ,'%w$1%n', $output);
 
-		WP_CLI::log(WP_CLI::colorize(self::prepareLongDesc($output)));
+		WP_CLI::log(WP_CLI::colorize($output));
 	}
 
 	/**
