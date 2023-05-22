@@ -12,8 +12,9 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use WP_CLI;
-
 
 /**
  * Class RenameBlockCli
@@ -68,6 +69,15 @@ class RenameBlockCli extends AbstractBlocksCli
 					'description' => 'Specify a new block name.',
 					'optional' => false,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'component',
+					'description' => 'Specify if copied folder should be component.',
+					'optional' => true,
+					'options' => [
+						'true',
+					]
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -76,8 +86,11 @@ class RenameBlockCli extends AbstractBlocksCli
 
 				## EXAMPLES
 
-				# Rename example block by name:
+				# Rename dummy block by name:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='hero'
+
+				# Rename dummy component by name:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --name='hero' --component='true'
 
 				## RESOURCES
 
@@ -87,131 +100,140 @@ class RenameBlockCli extends AbstractBlocksCli
 		];
 	}
 
-    /**
-     * Copy a dummy folder, rename files and folders, and edit files content.
-     *
-     * ## OPTIONS
-     *
-     * <argument>
-     * : The argument to be used as the variable for renaming files and folders.
-     *
-     * ## EXAMPLES
-     *
-     * wp boilerplate blocks rename --name='test'
-     *
-     * @param array $args Command arguments.
-     * @param array $assocArgs Command associative arguments.
-     */
-    public function renameBlock($args, $assocArgs)
-    {
-        $blockName = $assocArgs['name'];
+	/**
+	 * Copy a dummy folder, rename files and folders, and edit files content.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <argument>
+	 * : The argument to be used as the variable for renaming files and folders.
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp boilerplate blocks rename --name='test'
+	 *
+	 * wp boilerplate blocks rename --name='test' --component='true'
+	 *
+	 * @param array $args Command arguments.
+	 * @param array $assocArgs Command associative arguments.
+	 * @param string $destination Destination folder.
+	 */
+	public function renameBlock($args, $assocArgs, $destination)
+	{
+		$blockName = $assocArgs['name'];
 
-        // Specify the destinations directory.
-        $destinationDir = Components::getProjectPaths('blocksDestinationCustom') . 'dummy';
-        $newDestinationDir = Components::getProjectPaths('blocksDestinationCustom') . $blockName;
+		// Specify the destinations directory.
+		$destinationDir = $destination . 'dummy';
+		$newDestinationDir = $destination . $blockName;
 
-        // Rename files and folders in the destination directory.
-        $this->rename_files_folders($destinationDir, $blockName);
+		// Rename files and folders in the destination directory.
+		$this->renameFilesAndFolders($destinationDir, $blockName, $newDestinationDir);
 
-        // Edit the contents of each file in the destination directory.
-        $this->editFileContents($newDestinationDir, $blockName, $args);
+		// Edit the contents of each file in the destination directory.
+		$this->editFileContents($newDestinationDir, $blockName, $args);
 
-        \WP_CLI::success('Folder copied, renamed, and contents modified successfully.');
-        
-    }
+		WP_CLI::success('Folder copied, renamed, and contents modified successfully.');
+	}
 
-    /**
-     * Rename files and folders in a directory.
-     *
-     * @param string $directory Directory to rename files and folders.
-     * @param string $argument The argument to be used as the variable for renaming files and folders.
-     */
-    private function rename_files_folders($directory, $argument) 
-    {
-        $dir = new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS);
-        $iterator = new \RecursiveIteratorIterator($dir, \RecursiveIteratorIterator::SELF_FIRST);
-        
-        $newDestinationDirectory = Components::getProjectPaths('blocksDestinationCustom') . $argument;
+	/**
+	 * Rename files and folders in a directory.
+	 *
+	 * @param string $directory Directory to rename files and folders.
+	 * @param string $blockName The variable for renaming files and folders.
+	 * @param string $newDestinationDir Path to the new destination.
+	 */
+	private function renameFilesAndFolders($directory, $blockName, $newDestinationDir)
+	{
+		$dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS);
+		$iterator = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
 
-        foreach ($iterator as $file) {
-            if ($file->isFile()) {
-                $filePath = $file->getPathname();
-                $fileName = $file->getFilename();
-                $newFileName = str_replace('dummy', $argument, $fileName);
+		foreach ($iterator as $file) {
+			if ($file->isFile()) {
+				$filePath = $file->getPathname();
+				$fileName = $file->getFilename();
+				$newFileName = \str_replace('dummy', $blockName, $fileName);
 
-                if ($newFileName !== $fileName) {
-                    $newFilePath = $file->getPath() . DIRECTORY_SEPARATOR . $newFileName;
-                    rename($filePath, $newFilePath);
-                }
-            }
-        }
+				if ($newFileName !== $fileName) {
+					$newFilePath = $file->getPath() . \DIRECTORY_SEPARATOR . $newFileName;
+					\rename($filePath, $newFilePath);
+				}
+			}
+		}
 
-        // Renames parent folder
-        rename($directory, $newDestinationDirectory);
-    }
+		// Renames parent folder.
+		\rename($directory, $newDestinationDir);
+	}
 
-    /**
-     * Edit the contents of each file in a directory.
-     *
-     * @param string $directory Directory to edit file contents.
-     * @param string $blockName The block name to be used as the variable for editing file contents.
-     * @param array<string, mixed> $args Array of arguments from WP-CLI command.
-     */
-    private function editFileContents($directory, $blockName, $args)
-    {
-        $dir = new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS);
-        $iterator = new \RecursiveIteratorIterator($dir, \RecursiveIteratorIterator::SELF_FIRST);
+	/**
+	 * Edit the contents of each file in a directory.
+	 *
+	 * @param string $directory Directory to edit file contents.
+	 * @param string $blockName The block name to be used as the variable for editing file contents.
+	 * @param array<string, mixed> $args Array of arguments from WP-CLI command.
+	 */
+	private function editFileContents($directory, $blockName, $args)
+	{
+		$dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS);
+		$iterator = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
 
-        $namespace = $this->getNamespace($args);
+		$namespace = $this->getNamespace($args);
 
-        $kebabCaseString = $blockName;
-        $pascalCaseString = \ucfirst(Components::kebabToCamelCase($kebabCaseString));
-        $titleCaseString = ucwords(str_replace('-', ' ', $kebabCaseString));
-        $camelCaseString = Components::kebabToCamelCase($kebabCaseString);
+		$kebabCaseString = $blockName;
+		$pascalCaseString = \ucfirst(Components::kebabToCamelCase($kebabCaseString));
+		$titleCaseString = \ucwords(\str_replace('-', ' ', $kebabCaseString));
+		$camelCaseString = Components::kebabToCamelCase($kebabCaseString);
 
-        foreach ($iterator as $file) {
-            if ($file->isFile()) {
-                $filePath = $file->getPathname();
-                $fileContents = file_get_contents($filePath);
-                $fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
-                
-                $newFileContents = str_replace('%block-name-camel-case%', $camelCaseString, $fileContents);
-                $newFileContents = str_replace('%block-name-pascal-case%', $pascalCaseString, $newFileContents);
-                $newFileContents = str_replace('%block-name-title-case%', $titleCaseString, $newFileContents);
-                $newFileContents = str_replace('%block-name-kebab-case%', $kebabCaseString, $newFileContents);
-                $newFileContents = str_replace('%block-name-kebab-case%', $kebabCaseString, $newFileContents);
-                $newFileContents = str_replace('eightshift-frontend-libs', lcfirst($namespace), $newFileContents);
+		foreach ($iterator as $file) {
+			if ($file->isFile()) {
+				$filePath = $file->getPathname();
+				$fileContents = \file_get_contents($filePath);
+				$fileExt = \pathinfo($filePath, \PATHINFO_EXTENSION);
 
-                if ($fileExt == 'php') {
-                    $newFileContents = str_replace('EightshiftBoilerplate', $namespace, $newFileContents);
-                }
+				$newFileContents = \str_replace('%block-name-camel-case%', $camelCaseString, $fileContents);
+				$newFileContents = \str_replace('%block-name-pascal-case%', $pascalCaseString, $newFileContents);
+				$newFileContents = \str_replace('%block-name-title-case%', $titleCaseString, $newFileContents);
+				$newFileContents = \str_replace('%block-name-kebab-case%', $kebabCaseString, $newFileContents);
+				$newFileContents = \str_replace('%block-name-kebab-case%', $kebabCaseString, $newFileContents);
 
-                file_put_contents( $filePath, $newFileContents );
-            }
-        }
-    }
+				if ($fileExt !== 'json') {
+					$newFileContents = \str_replace('eightshift-frontend-libs', \lcfirst($namespace), $newFileContents);
+				}
 
-    public function __invoke(array $args, array $assocArgs)
+				if ($fileExt === 'php') {
+					$newFileContents = \str_replace('EightshiftBoilerplate', $namespace, $newFileContents);
+				}
+
+				\file_put_contents($filePath, $newFileContents);
+			}
+		}
+	}
+
+	public function __invoke(array $args, array $assocArgs)
 	{
 		$this->getIntroText($assocArgs);
 
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
-        $this->moveItems(
+		$component = isset($assocArgs['component']) ? true : false;
+
+		$source = $component ? Components::getProjectPaths('blocksSourceComponents') : Components::getProjectPaths('blocksSourceCustom');
+		$destination = $component ? Components::getProjectPaths('blocksDestinationComponents') : Components::getProjectPaths('blocksDestinationCustom');
+
+		$this->moveItems(
 			\array_merge(
 				$assocArgs,
 				[
 					'name' => 'dummy',
 				],
 			),
-			Components::getProjectPaths('blocksSourceCustom'),
-			Components::getProjectPaths('blocksDestinationCustom'),
-			'block'
+			$source,
+			$destination,
+			$component ? 'component' : 'block'
 		);
 
-        $this->renameBlock($args, $assocArgs);
+		$this->renameBlock($args, $assocArgs, $destination);
 
-        if (!$groupOutput) {
+		if (!$groupOutput) {
 			WP_CLI::log('--------------------------------------------------');
 
 			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "M");
