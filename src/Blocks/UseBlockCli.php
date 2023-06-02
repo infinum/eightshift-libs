@@ -12,7 +12,6 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
-use WP_CLI;
 
 /**
  * Class UseBlockCli
@@ -104,9 +103,7 @@ class UseBlockCli extends AbstractBlocksCli
 		);
 
 		if (!$groupOutput) {
-			WP_CLI::log('--------------------------------------------------');
-
-			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "M");
+			$this->cliLogAlert('Run `npm start` to make sure everything works correctly.', "M");
 		}
 	}
 }
