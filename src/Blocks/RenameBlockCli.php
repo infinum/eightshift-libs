@@ -117,7 +117,7 @@ class RenameBlockCli extends AbstractBlocksCli
 	 * @param array<string, mixed> $args Command arguments.
 	 * @param array<string, mixed> $assocArgs $assocArgs Command associative arguments.
 	 * @param string $destination Destination folder.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function renameBlock($args, $assocArgs, $destination): void
@@ -143,7 +143,7 @@ class RenameBlockCli extends AbstractBlocksCli
 	 * @param string $directory Directory to rename files and folders.
 	 * @param string $blockName The variable for renaming files and folders.
 	 * @param string $newDestinationDir Path to the new destination.
-	 * 
+	 *
 	 * @return void
 	 */
 	private function renameFilesAndFolders($directory, $blockName, $newDestinationDir): void
@@ -174,7 +174,7 @@ class RenameBlockCli extends AbstractBlocksCli
 	 * @param string $directory Directory to edit file contents.
 	 * @param string $blockName The block name to be used as the variable for editing file contents.
 	 * @param array<string, mixed> $args Array of arguments from WP-CLI command.
-	 * 
+	 *
 	 * @return void
 	 */
 	private function editFileContents($directory, $blockName, $args): void
@@ -228,9 +228,9 @@ class RenameBlockCli extends AbstractBlocksCli
 
 		$name = $assocArgs['name'];
 
-        if (is_dir($destination . $name)) {
-            WP_CLI::error("Folder '$name' already exists in $destination");
-        }
+		if (\is_dir($destination . $name)) {
+			WP_CLI::error("Folder '$name' already exists in $destination");
+		}
 
 		$this->moveItems(
 			\array_merge(
