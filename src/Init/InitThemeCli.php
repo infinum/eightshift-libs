@@ -131,11 +131,11 @@ class InitThemeCli extends AbstractCli
 				}
 			}
 
-			$this->cliLog('--------------------------------------------------');
+			$this->cliLog("\n");
 		}
 
 		if (!$groupOutput) {
-			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!\n\Run `npm start` to build all the assets.', 'success', __('Ready to go!', 'eightshift-libs'));
+			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!\n\nRun `npm start` to build all the assets.', 'success', __('Ready to go!', 'eightshift-libs'));
 			$this->cliLogAlert('If you want to set up the default header and footer, run `wp boilerplate init header-footer` after building assets.', 'info', __('Note', 'eightshift-libs'));
 		}
 	}
