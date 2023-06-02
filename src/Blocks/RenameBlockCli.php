@@ -125,7 +125,7 @@ class RenameBlockCli extends AbstractBlocksCli
 		$blockName = $assocArgs['name'];
 
 		// Specify the destinations directory.
-		$destinationDir = $destination . 'dummy';
+		$destinationDir = $destination . '_dummy';
 		$newDestinationDir = $destination . $blockName;
 
 		// Rename files and folders in the destination directory.
@@ -155,7 +155,7 @@ class RenameBlockCli extends AbstractBlocksCli
 			if ($file->isFile()) {
 				$filePath = $file->getPathname();
 				$fileName = $file->getFilename();
-				$newFileName = \str_replace('dummy', $blockName, $fileName);
+				$newFileName = \str_replace('_dummy', $blockName, $fileName);
 
 				if ($newFileName !== $fileName) {
 					$newFilePath = $file->getPath() . \DIRECTORY_SEPARATOR . $newFileName;
@@ -236,7 +236,7 @@ class RenameBlockCli extends AbstractBlocksCli
 			\array_merge(
 				$assocArgs,
 				[
-					'name' => 'dummy',
+					'name' => '_dummy',
 				],
 			),
 			$source,
