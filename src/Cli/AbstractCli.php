@@ -970,14 +970,14 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		$this->cliLog($this->prepareLongDesc("
-		%w╭──────────────────────────────────────────────────────────────╮
-		│                                                              │
-		│  %R  ███████  ███████  %n                                   %w│
-		│  %R██       ██       ██%n   %9Eightshift%n DevKit                    %w│
-		│  %R██       ██       ██%n                                        %w│
-		│  %R  ███████  ███████  %n   Read docs at %b%_%Uhttps://eightshift.com/%n %w│
-		│                                                              │
-		╰──────────────────────────────────────────────────────────────╯%n
+		%w╭──────────────────────────────────────────────────────────╮
+		│                                                          │
+		│  %R  ███████  ███████  %n   %wThank you for using%n              %w│
+		│  %R██       ██       ██%n   %9Eightshift%n DevKit                %w│
+		│  %R██       ██       ██%n                                    %w│
+		│  %R  ███████  ███████  %n   Read the docs at %_%Ueightshift.com%n  %w│
+		│                                                          │
+		╰──────────────────────────────────────────────────────────╯%n
 		"), 'mixed');
 	}
 }
