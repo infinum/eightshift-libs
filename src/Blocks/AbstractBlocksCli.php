@@ -158,15 +158,15 @@ abstract class AbstractBlocksCli extends AbstractCli
 			}
 
 			if ($type === 'component' || $type === 'block') {
-				WP_CLI::success(
-					\sprintf(
-						// translators: %s will be replaced with type of item, item name and shorten cli path.
-						"Added %s `%s` at `%s`.",
-						$type,
-						$item,
-						$this->getShortenCliPathOutput($destination)
-					)
+				$outputText = \sprintf(
+					// translators: %s will be replaced with type of item, item name and shorten cli path.
+					"Added %s `%s` at `%s`.",
+					$type,
+					$item,
+					$this->getShortenCliPathOutput($destination)
 				);
+
+				$this->cliLog("%G│ %n{$outputText}",'mixed');
 
 				$checkDependency = $args['checkDependency'] ?? true;
 
