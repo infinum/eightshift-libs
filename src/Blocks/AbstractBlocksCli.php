@@ -166,10 +166,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$msgTitle = "{$itemName} ${type} added";
 
 				// if ($groupOutput) {
-					$this->cliLog("%G│ %n{$msgTitle} %9({$path})%n", 'mixed');
+					$this->cliLog("%G│ %n{$msgTitle} %K({$path})%n", 'mixed');
 				// } else {
 					$this->cliLogAlert(implode("\n", [
-						"%9{$path}%n",
+						"%K{$path}%n",
 						'',
 						'Run %Unpm start%n to make sure everything works correctly.'
 					]), 'success', "{$itemName} ${type} added");
