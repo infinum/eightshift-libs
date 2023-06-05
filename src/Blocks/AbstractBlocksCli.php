@@ -166,7 +166,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$msgTitle = "{$itemName} ${type} added";
 
 				// if ($groupOutput) {
-					$this->cliLog("%g│ %n{$msgTitle} %k%9({$path})%n", 'mixed');
+					$this->cliLog("%g│ %n{$msgTitle} %w({$path})%n", 'mixed');
 				// } else {
 					$this->cliLogAlert(implode("\n", [
 						$path,
