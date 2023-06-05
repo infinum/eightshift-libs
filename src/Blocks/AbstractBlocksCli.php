@@ -224,6 +224,12 @@ abstract class AbstractBlocksCli extends AbstractCli
 			);
 			$allDependencies = \implode(', ', \array_unique(\array_values($allDependencies)));
 			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
+
+			$this->cliLogAlert(implode("\n", [
+				"This {$type} has some dependencies",
+				'',
+				"wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'"
+			]), 'info', 'Dependencies');
 		}
 	}
 
