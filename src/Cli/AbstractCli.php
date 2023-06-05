@@ -372,22 +372,12 @@ abstract class AbstractCli implements CliInterface
 
 		if (!$groupOutput) {
 			// Return success.
+			$path = $this->getShortenCliPathOutput($destinationFile);
+
 			if ($skipExisting) {
-				WP_CLI::success(
-					\sprintf(
-						"`%s` renamed at `%s`.",
-						$fileName,
-						$this->getShortenCliPathOutput($destinationFile)
-					)
-				);
+				$this->cliLogAlert($path, 'success', "%U${fileName}%n renamed");
 			} else {
-				WP_CLI::success(
-					\sprintf(
-						"`%s` created at `%s`.",
-						$fileName,
-						$this->getShortenCliPathOutput($destinationFile)
-					)
-				);
+				$this->cliLogAlert($path, 'success', "%U${fileName}%n created");
 			}
 		}
 
