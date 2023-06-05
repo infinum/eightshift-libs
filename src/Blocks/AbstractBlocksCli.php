@@ -226,9 +226,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
 
 			$this->cliLogAlert(implode("\n", [
-				"This {$type} has some dependencies",
+				"This {$type} may need some dependencies to work correctly!",
 				'',
-				"wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'"
+				'To add them to your project, run:',
+				"%W%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'%n"
 			]), 'info', 'Dependencies');
 		}
 	}
