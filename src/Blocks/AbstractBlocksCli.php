@@ -160,27 +160,20 @@ abstract class AbstractBlocksCli extends AbstractCli
 			}
 
 			if ($type === 'component' || $type === 'block') {
-				// $outputText = \sprintf(
-				// 	// translators: %s will be replaced with type of item, item name and shorten cli path.
-				// 	"Added %s `%s` at `%s`.",
-				// 	$type,
-				// 	$item,
-				// 	$this->getShortenCliPathOutput($destination)
-				// );
-
 				$path = $this->getShortenCliPathOutput($destination);
+				$itemName = ucfirst($item);
 
 				$msgTitle = 'Added ' . ucfirst($type) . ' ' . $item;
 
-				if ($groupOutput) {
+				// if ($groupOutput) {
 					$this->cliLog("%G│ %n{$msgTitle} %w({$path})%n", 'mixed');
-				} else {
+				// } else {
 					$this->cliLogAlert(implode("\n", [
 						"%w({$path})%n",
 						'',
 						'Run %Unpm start%n to make sure everything works correctly.'
-					]), 'success', $msgTitle);
-				}
+					]), 'success', "{$itemName} added");
+				// }
 
 				$checkDependency = $args['checkDependency'] ?? true;
 
