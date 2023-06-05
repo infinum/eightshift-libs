@@ -102,8 +102,8 @@ class UseBlockCli extends AbstractBlocksCli
 			'block'
 		);
 
-		if (!$groupOutput) {
-			$this->cliLogAlert('Run `npm start` to make sure everything works correctly.', "M");
-		}
+		// if (!$groupOutput) {
+		// 	$this->cliLogAlert('Run `npm start` to make sure everything works correctly.', "M");
+		// }
 	}
 }

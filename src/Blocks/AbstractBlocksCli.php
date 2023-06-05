@@ -160,18 +160,26 @@ abstract class AbstractBlocksCli extends AbstractCli
 			}
 
 			if ($type === 'component' || $type === 'block') {
-				$outputText = \sprintf(
-					// translators: %s will be replaced with type of item, item name and shorten cli path.
-					"Added %s `%s` at `%s`.",
-					$type,
-					$item,
-					$this->getShortenCliPathOutput($destination)
-				);
+				// $outputText = \sprintf(
+				// 	// translators: %s will be replaced with type of item, item name and shorten cli path.
+				// 	"Added %s `%s` at `%s`.",
+				// 	$type,
+				// 	$item,
+				// 	$this->getShortenCliPathOutput($destination)
+				// );
+
+				$path = $this->getShortenCliPathOutput($destination);
+
+				$msgTitle = 'Added ' . ucfirst($type) . ' ' . $item;
 
 				if ($groupOutput) {
-					$this->cliLog("%G│ %n{$outputText}",'mixed');
+					$this->cliLog("%G│ %n{$msgTitle} %w({$path})%n", 'mixed');
 				} else {
-					$this->cliLogAlert($outputText, 'info');
+					$this->cliLogAlert(implode("\n", [
+						"%w({$path})%n",
+						'',
+						'Run %Unpm start%n to make sure everything works correctly.'
+					]), 'success', $msgTitle);
 				}
 
 				$checkDependency = $args['checkDependency'] ?? true;
@@ -248,7 +256,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				"This {$type} requires some external dependencies to work correctly.",
 				'',
 				'To add them to your project, run:',
-				...array_map(fn($package) => "%Unpm install {$package}%n", $nodeDependencies),
+				...array_map(fn ($package) => "%Unpm install {$package}%n", $nodeDependencies),
 				'',
 				'If a dependency already exists in your project, you can skip it.',
 			]), 'info', 'Packages needed');
