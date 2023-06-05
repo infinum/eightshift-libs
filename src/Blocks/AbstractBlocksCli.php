@@ -207,23 +207,9 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$dependencies = \array_merge($componentsDependencies, $innerBlocksDependency);
 
 		if ($dependencies) {
-			$this->cliLog('');
-			$this->cliLog('Dependency note:', 'B');
-			$this->cliLog(
-				\sprintf(
-					"We have found that this %s has dependencies, please run these commands also if you don't have it in your project:",
-					$type
-				)
-			);
 			$componentsCommandName = UseComponentCli::COMMAND_NAME;
-			$allDependencies = \array_map(
-				static function ($item) {
-					return Components::camelToKebabCase($item);
-				},
-				$dependencies
-			);
+			$allDependencies = \array_map(static fn ($item) => Components::camelToKebabCase($item), $dependencies);
 			$allDependencies = \implode(', ', \array_unique(\array_values($allDependencies)));
-			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
 
 			$this->cliLogAlert(implode("\n", [
 				"This {$type} may need some dependencies to work correctly.",
@@ -264,6 +250,15 @@ abstract class AbstractBlocksCli extends AbstractCli
 			foreach ($nodeDependencies as $nitem) {
 				$this->cliLog("npm install {$nitem}", 'C');
 			}
+
+			$this->cliLogAlert(implode("\n", [
+				"This {$type} may need some NPM dependencies to work correctly.",
+				'',
+				'To add them to your project, run:',
+				...array_map(fn($package) => "%Unpm install {$package}%n\n", $nodeDependencies),
+				'',
+				'If a dependency already exists in your project, you can skip it.',
+			]), 'info', 'NPM packages needed');
 		}
 	}
 }
