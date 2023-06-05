@@ -229,7 +229,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				"This {$type} may need some dependencies to work correctly!",
 				'',
 				'To add them to your project, run:',
-				"%W%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'%n"
+				"%w%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'%n"
 			]), 'info', 'Dependencies');
 		}
 	}
