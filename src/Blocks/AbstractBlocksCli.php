@@ -238,27 +238,14 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$nodeDependencies = $manifest['nodeDependency'] ?? [];
 
 		if ($nodeDependencies) {
-			$this->cliLog('');
-			$this->cliLog('Node_modules Note:', 'B');
-			$this->cliLog(
-				\sprintf(
-					"We have found that this %s has some node_module dependencies, please run these commands also if you don't have it in your project:",
-					$type
-				)
-			);
-
-			foreach ($nodeDependencies as $nitem) {
-				$this->cliLog("npm install {$nitem}", 'C');
-			}
-
 			$this->cliLogAlert(implode("\n", [
-				"This {$type} may need some NPM dependencies to work correctly.",
+				"This {$type} requires some external dependencies to work correctly.",
 				'',
 				'To add them to your project, run:',
-				...array_map(fn($package) => "%Unpm install {$package}%n\n", $nodeDependencies),
+				...array_map(fn($package) => "%Unpm install {$package}%n", $nodeDependencies),
 				'',
 				'If a dependency already exists in your project, you can skip it.',
-			]), 'info', 'NPM packages needed');
+			]), 'info', 'Packages needed');
 		}
 	}
 }
