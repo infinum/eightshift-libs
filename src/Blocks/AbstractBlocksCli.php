@@ -50,6 +50,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$itemsList = \explode(',', $name);
 		}
 
+		$groupOutput = $args['groupOutput'] ?? false;
+
 		if (!\is_dir($source)) {
 			self::cliError(
 				\sprintf(
@@ -166,7 +168,11 @@ abstract class AbstractBlocksCli extends AbstractCli
 					$this->getShortenCliPathOutput($destination)
 				);
 
-				$this->cliLog("%G│ %n{$outputText}",'mixed');
+				if ($groupOutput) {
+					$this->cliLog("%G│ %n{$outputText}",'mixed');
+				} else {
+					$this->cliLogAlert($outputText, 'info');
+				}
 
 				$checkDependency = $args['checkDependency'] ?? true;
 
