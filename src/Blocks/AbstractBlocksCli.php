@@ -163,16 +163,16 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$path = $this->getShortenCliPathOutput($destination);
 				$itemName = ucfirst($item);
 
-				$msgTitle = 'Added ' . ucfirst($type) . ' ' . $item;
+				$msgTitle = "{$itemName} ${type} added";
 
 				// if ($groupOutput) {
-					$this->cliLog("%G│ %n{$msgTitle} %w({$path})%n", 'mixed');
+					$this->cliLog("%G│ %n{$msgTitle} %W({$path})%n", 'mixed');
 				// } else {
 					$this->cliLogAlert(implode("\n", [
-						"%w({$path})%n",
+						"%W({$path})%n",
 						'',
 						'Run %Unpm start%n to make sure everything works correctly.'
-					]), 'success', "{$itemName} added");
+					]), 'success', "{$itemName} ${type} added");
 				// }
 
 				$checkDependency = $args['checkDependency'] ?? true;
