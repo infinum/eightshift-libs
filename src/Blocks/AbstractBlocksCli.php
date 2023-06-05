@@ -165,15 +165,15 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 				$msgTitle = "{$itemName} ${type} added";
 
-				// if ($groupOutput) {
+				if ($groupOutput) {
 					$this->cliLog("%g│ %n{$msgTitle} %w({$path})%n", 'mixed');
-				// } else {
+				} else {
 					$this->cliLogAlert(implode("\n", [
 						$path,
 						'',
 						'Run %Unpm start%n to make sure everything works correctly.'
 					]), 'success', "{$itemName} ${type} added");
-				// }
+				}
 
 				$checkDependency = $args['checkDependency'] ?? true;
 
@@ -183,14 +183,13 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 				$this->outputNodeModuleDependencyItems($fullSource, $type);
 			} else {
-				WP_CLI::success(
-					\sprintf(
-						// translators: %s will be replaced with type of item, and shorten cli path.
-						"`%s` created at `%s`.",
-						$type,
-						$this->getShortenCliPathOutput($destination)
-					)
-				);
+				$path = $this->getShortenCliPathOutput($destination);
+
+				if ($groupOutput) {
+					$this->cliLog("%g│ %n{$type} created %w({$path})%n", 'mixed');
+				} else {
+					$this->cliLogAlert($path, 'success', "${type} added");
+				}
 			}
 		}
 	}
