@@ -145,7 +145,7 @@ abstract class AbstractCli implements CliInterface
 
 		if (!\is_callable($class)) {
 			$className = \get_class($class);
-			self::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
+			self::cliError("Class '{$className}' is not callable.\nMake sure the command class has an __invoke method.");
 		}
 
 		WP_CLI::add_command(
@@ -339,7 +339,7 @@ abstract class AbstractCli implements CliInterface
 			$path = $this->getShortenCliPathOutput($destinationFile);
 
 			self::cliError(
-				"{$typeOutput} '{$fileName}' is already present at\n'{$path}'.\n\nIf you want to override the destination folder use %c--skip_existing='true'%n."
+				"{$typeOutput} '{$fileName}' is already present at\n'{$path}'\n\nIf you want to override the destination folder, use %c--skip_existing='true'%n"
 			);
 		}
 
@@ -351,13 +351,10 @@ abstract class AbstractCli implements CliInterface
 		// Open a new file on output.
 		// If there is any error, bailout. For example, user permission.
 		if (\fopen($destinationFile, "wb") === false) {
+			$path = $this->getShortenCliPathOutput($destinationFile);
+
 			self::cliError(
-				\sprintf(
-					"%s file `%s` couldn't be created on this path `%s`. There was an unknown error.",
-					$typeOutput,
-					$fileName,
-					$this->getShortenCliPathOutput($destinationFile)
-				)
+				"{$typeOutput} '{$fileName}' could not be created at\n'{$path}'\n\nAn unknown error ocurred."
 			);
 		}
 
@@ -686,7 +683,7 @@ abstract class AbstractCli implements CliInterface
 		$composerFile = \file_get_contents($composerPath);
 
 		if ($composerFile === false) {
-			self::cliError("The composer on {$composerPath} path seems to be missing.");
+			self::cliError("Composer was not found at\n{$composerPath}");
 		}
 
 		return \json_decode((string)$composerFile, true);
