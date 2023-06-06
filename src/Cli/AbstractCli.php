@@ -375,9 +375,9 @@ abstract class AbstractCli implements CliInterface
 			$path = $this->getShortenCliPathOutput($destinationFile);
 
 			if ($skipExisting) {
-				$this->cliLogAlert($path, 'success', "%U${fileName}%n renamed");
+				$this->cliLogAlert($path, 'success', "'${fileName}' renamed");
 			} else {
-				$this->cliLogAlert($path, 'success', "%U${fileName}%n created");
+				$this->cliLogAlert($path, 'success', "'${fileName}' created");
 			}
 		}
 
