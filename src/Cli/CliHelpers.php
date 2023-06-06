@@ -31,11 +31,15 @@ trait CliHelpers
 	public static function cliError(string $errorMessage): void
 	{
 		try {
-			// WP_CLI::error($errorMessage);
-			self::cliLogAlert($errorMessage, 'error');
+			// Special condition for test because WP_CLI::error logs to STDERR, and regular log does not.
+			// WP_CLI::error, however, also adds the "Error:" prefix, which is in this case unwanted.
+			if (\getenv('ES_TEST')) {
+				WP_CLI::error($errorMessage);
+			} else {
+				self::cliLogAlert($errorMessage, 'error');
+				WP_CLI::halt(1);
+			}
 
-			// Recreate WP CLI functionality.
-			exit(1);
 			// @codeCoverageIgnoreStart
 			// Cannot test the exit.
 		} catch (ExitException $e) {
@@ -72,47 +76,48 @@ trait CliHelpers
 	 *
 	 * @param string $msg Msg to output.
 	 * @param string $type Type of message, either "success", "error", "warning" or "info".
+	 * @param string $heading Alert heading.
 	 *
 	 * @return void
 	 */
 	protected static function cliLogAlert(string $msg, string $type = 'success', string $heading = ''): void
 	{
 		$colorToUse = '%g';
-		$defaultHeading = __('Success', 'eightshift-libs');
+		$defaultHeading = \__('Success', 'eightshift-libs');
 
 		switch ($type) {
 			case 'warning':
 				$colorToUse = '%y';
-				$defaultHeading = __('Warning', 'eightshift-libs');
+				$defaultHeading = \__('Warning', 'eightshift-libs');
 				break;
 			case 'info':
 				$colorToUse = '%B';
-				$defaultHeading = __('Info', 'eightshift-libs');
+				$defaultHeading = \__('Info', 'eightshift-libs');
 				break;
 			case 'error':
 				$colorToUse = '%R';
-				$defaultHeading = __('Something went wrong', 'eightshift-libs');
+				$defaultHeading = \__('Something went wrong', 'eightshift-libs');
 				break;
 		}
 
 		$headingToUse = empty($heading) ? $defaultHeading : $heading;
 
-		if (strpos($msg, '\n') !== false) {
+		if (\strpos($msg, '\n') !== false) {
 			$output = "{$colorToUse}╭\n";
 			$output .= "│ {$headingToUse}\n";
 
-			foreach(explode('\n', $msg) as $line) {
-				$modifiedLine = trim($line);
+			foreach (\explode('\n', $msg) as $line) {
+				$modifiedLine = \trim($line);
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
 			$output .= "{$colorToUse}╰%n";
-		} elseif (preg_match('/\n/', $msg)) {
+		} elseif (\preg_match('/\n/', $msg)) {
 			$output = "{$colorToUse}╭\n";
 			$output .= "│ {$headingToUse}\n";
 
-			foreach(explode("\n", $msg) as $line) {
-				$modifiedLine = trim($line);
+			foreach (\explode("\n", $msg) as $line) {
+				$modifiedLine = \trim($line);
 				$output .= "{$colorToUse}│ %n{$modifiedLine}\n";
 			}
 
@@ -125,7 +130,7 @@ trait CliHelpers
 		}
 
 		// Handle commands/code.
-		$output = preg_replace('/`(.*)`/' ,'%_$1%n', $output);
+		$output = \preg_replace('/`(.*)`/', '%_$1%n', $output);
 
 		WP_CLI::log(WP_CLI::colorize($output));
 	}

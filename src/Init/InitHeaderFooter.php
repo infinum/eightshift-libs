@@ -12,6 +12,7 @@ namespace EightshiftLibs\Init;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
+use WP_CLI;
 
 /**
  * Class InitHeaderFooter
@@ -71,20 +72,22 @@ class InitHeaderFooter extends AbstractCli
 		}
 
 		// Add initial posts.
-		$createBlocksOptions = [ 'return' => true ];
+		$createBlocksOptions = [
+			'return' => true
+		];
 
-		$createFooterCommand = 'post create --post_title="Footer" --post_type="wp_block" --post_status="publish" --porcelain --post_content=\'<!-- wp:eightshift-boilerplate/site-footer {"siteFooterLogoUrl":"/wp-content/themes/t24v7/public/logo.svg","siteFooterCopyrightContent":"Copyright 2023, Eightshift DevKit","siteFooterLinks":[{"id":"5f573082-2354-4b95-baef-0dd9abbe73fd","url":"#","text":"Link","newTab":false}]} /-->\'';
-		$footerReusableBlockId = \WP_CLI::runcommand($createFooterCommand, $createBlocksOptions);
+		$createFooterCommand = 'post create --post_title="Footer" --post_type="wp_block" --post_status="publish" --porcelain --post_content=\'<!-- wp:eightshift-boilerplate/site-footer {"siteFooterLogoUrl":"/wp-content/themes/t24v7/public/logo.svg","siteFooterCopyrightContent":"Copyright 2023, Eightshift DevKit","siteFooterLinks":[{"id":"5f573082-2354-4b95-baef-0dd9abbe73fd","url":"#","text":"Link","newTab":false}]} /-->\''; // phpcs:ignore Generic.Files.LineLength.TooLong
+		$footerReusableBlockId = WP_CLI::runcommand($createFooterCommand, $createBlocksOptions);
 
 		if (!empty($footerReusableBlockId)) {
-			\WP_CLI::runcommand("option update es-footer-partial {$footerReusableBlockId}", $createBlocksOptions);
+			WP_CLI::runcommand("option update es-footer-partial {$footerReusableBlockId}", $createBlocksOptions);
 		}
 
-		$createHeaderCommand = 'post create --post_title="Header" --post_type="wp_block" --post_status="publish" --porcelain --post_content=\'<!-- wp:eightshift-boilerplate/site-navigation {"siteNavigationLogoUrl":"https://themedev.test/wp-content/uploads/2023/05/es.png","siteNavigationLinks":[{"id":"9e7d54c8-4271-4b23-9b3b-e163e4bac92b","url":"#","text":"Welcome","newTab":false}]} /-->\'';
-		$headerReusableBlockId = \WP_CLI::runcommand($createHeaderCommand, $createBlocksOptions);
+		$createHeaderCommand = 'post create --post_title="Header" --post_type="wp_block" --post_status="publish" --porcelain --post_content=\'<!-- wp:eightshift-boilerplate/site-navigation {"siteNavigationLogoUrl":"https://themedev.test/wp-content/uploads/2023/05/es.png","siteNavigationLinks":[{"id":"9e7d54c8-4271-4b23-9b3b-e163e4bac92b","url":"#","text":"Welcome","newTab":false}]} /-->\''; // phpcs:ignore Generic.Files.LineLength.TooLong
+		$headerReusableBlockId = WP_CLI::runcommand($createHeaderCommand, $createBlocksOptions);
 
 		if (!empty($headerReusableBlockId)) {
-			\WP_CLI::runcommand("option update es-header-partial {$headerReusableBlockId}", $createBlocksOptions);
+			WP_CLI::runcommand("option update es-header-partial {$headerReusableBlockId}", $createBlocksOptions);
 		}
 
 		if (!$groupOutput) {

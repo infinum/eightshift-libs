@@ -93,17 +93,11 @@ class UseBlockCli extends AbstractBlocksCli
 	{
 		$this->getIntroText($assocArgs);
 
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
-
 		$this->moveItems(
 			$assocArgs,
 			Components::getProjectPaths('blocksSourceCustom'),
 			Components::getProjectPaths('blocksDestinationCustom'),
 			'block'
 		);
-
-		// if (!$groupOutput) {
-		// 	$this->cliLogAlert('Run `npm start` to make sure everything works correctly.', "M");
-		// }
 	}
 }

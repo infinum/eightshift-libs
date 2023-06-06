@@ -186,7 +186,7 @@ class InitBlocksCli extends AbstractCli
 		$this->cliLog('╰', 'w');
 
 		if (!$groupOutput) {
-			$this->cliLogAlert('Files copied! Run `npm start` to build all the assets.\n\nHappy developing!', 'success', __('Ready to go!', 'eightshift-libs'));
+			$this->cliLogAlert('Files copied! Run `npm start` to build all the assets.\n\nHappy developing!', 'success', \__('Ready to go!', 'eightshift-libs'));
 		}
 	}
 

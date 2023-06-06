@@ -12,6 +12,7 @@ namespace EightshiftBoilerplate\AdminMenus;
 
 use EightshiftLibs\AdminMenus\AbstractAdminMenu;
 use EightshiftLibs\Helpers\Components;
+use WP_Query;
 
 /**
  * ReusableBlocksHeaderFooterExample class.
@@ -202,7 +203,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 
 		\add_settings_field(
 			self::HEADER_PARTIAL,
-			__('Header partial', 'eightshift-libs'),
+			\__('Header partial', 'eightshift-libs'),
 			[$this, 'renderPartialSelector'],
 			self::ADMIN_MENU_SLUG,
 			self::SETTINGS_SECTION_NAME,
@@ -214,7 +215,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 
 		\add_settings_field(
 			self::FOOTER_PARTIAL,
-			__('Footer partial', 'eightshift-libs'),
+			\__('Footer partial', 'eightshift-libs'),
 			[$this, 'renderPartialSelector'],
 			self::ADMIN_MENU_SLUG,
 			self::SETTINGS_SECTION_NAME,
@@ -228,14 +229,14 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	/**
 	 * Renders the "Header partial" select menu.
 	 *
-	 * @param array<mixed> $args
+	 * @param array<mixed> $args Arguments to pass.
 	 * @return void
 	 */
 	public function renderPartialSelector($args): void
 	{
 		$type = isset($args['type']) && $args['type'] === 'header' ? self::HEADER_PARTIAL : self::FOOTER_PARTIAL;
 
-		$reusableBlocksQuery = new \WP_Query([
+		$reusableBlocksQuery = new WP_Query([
 			'post_type' => 'wp_block',
 			'posts_per_page' => -1,
 			'post_status' => 'publish',
@@ -244,40 +245,40 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 		]);
 
 		if ($reusableBlocksQuery->have_posts()) {
-			$currentValue = get_option($type);
+			$currentValue = \get_option($type);
 			?>
-			<select id="<?php echo esc_attr($args['label_for']); ?>" name="<?php echo esc_attr($type); ?>">
+			<select id="<?php echo \esc_attr($args['label_for']); ?>" name="<?php echo \esc_attr($type); ?>">
 				<option value="">
-					&mdash; <?php esc_html_e('None', 'eightshift-libs'); ?> &mdash;
+					&mdash; <?php \esc_html_e('None', 'eightshift-libs'); ?> &mdash;
 				</option>
 
 				<?php
 				while ($reusableBlocksQuery->have_posts()) {
 					$reusableBlocksQuery->the_post();
-					$postId = get_the_ID();
-					$postTitle = get_the_title();
+					$postId = \get_the_ID();
+					$postTitle = \get_the_title();
 					?>
-					<option value="<?php echo esc_attr((string) $postId); ?>"
-						<?php selected($currentValue, strval($postId), true); ?>
+					<option value="<?php echo \esc_attr((string) $postId); ?>"
+						<?php \selected($currentValue, \strval($postId), true); ?>
 					>
-						<?php echo $postTitle; ?>
+						<?php echo \esc_html($postTitle); ?>
 					</option>
-				<?php
+					<?php
 				}
 
-				wp_reset_postdata();
+				\wp_reset_postdata();
 				?>
 			</select>
 		<?php } else { ?>
-			<i><?php echo esc_html__('No reusable blocks found.', 'eightshift-libs'); ?></i>
-		<?php
+			<i><?php echo \esc_html__('No reusable blocks found.', 'eightshift-libs'); ?></i>
+			<?php
 		}
 	}
 
 	/**
 	 * Renders a reusable block partial.
 	 *
-	 * @param int|string $partialId
+	 * @param int|string $partialId Block partial ID.
 	 * @return void
 	 */
 	public static function renderPartial($partialId): void
@@ -286,11 +287,11 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 			return;
 		}
 
-		$blocksToRender = parse_blocks(get_the_content(null, false, $partialId));
+		$blocksToRender = \parse_blocks(\get_the_content(null, false, $partialId));
 
 		// Filter out empty blocks.
-		$blocksToRenderFiltered = array_values(
-			array_filter(
+		$blocksToRenderFiltered = \array_values(
+			\array_filter(
 				$blocksToRender,
 				static function ($blockArray) {
 					return !empty($blockArray['blockName']);
@@ -298,13 +299,13 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 			)
 		);
 
-		$blocksToRenderRendered = array_map(
+		$blocksToRenderRendered = \array_map(
 			static function ($block) {
-				return render_block($block);
+				return \render_block($block);
 			},
 			$blocksToRenderFiltered // phpcs:ignore
 		);
 
-		echo Components::ensureString($blocksToRenderRendered);
+		echo Components::ensureString($blocksToRenderRendered); // phpcs:ignore
 	}
 }

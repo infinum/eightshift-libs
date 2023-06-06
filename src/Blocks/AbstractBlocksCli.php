@@ -12,7 +12,6 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Helpers\Components;
-use WP_CLI;
 
 /**
  * Abstract class used for Blocks and Components
@@ -161,14 +160,14 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 			if ($type === 'component' || $type === 'block') {
 				$path = $this->getShortenCliPathOutput($destination);
-				$itemName = ucfirst($item);
+				$itemName = \ucfirst($item);
 
 				$msgTitle = "{$itemName} ${type} added";
 
 				if ($groupOutput) {
 					$this->cliLog("%g│ %n{$msgTitle} %w({$path})%n", 'mixed');
 				} else {
-					$this->cliLogAlert(implode("\n", [
+					$this->cliLogAlert(\implode("\n", [
 						$path,
 						'',
 						'Run %Unpm start%n to make sure everything works correctly.'
@@ -217,7 +216,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$allDependencies = \array_map(static fn ($item) => Components::camelToKebabCase($item), $dependencies);
 			$allDependencies = \implode(', ', \array_unique(\array_values($allDependencies)));
 
-			$this->cliLogAlert(implode("\n", [
+			$this->cliLogAlert(\implode("\n", [
 				"This {$type} may need some dependencies to work correctly.",
 				'',
 				'To add them to your project, run:',
@@ -244,11 +243,11 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$nodeDependencies = $manifest['nodeDependency'] ?? [];
 
 		if ($nodeDependencies) {
-			$this->cliLogAlert(implode("\n", [
+			$this->cliLogAlert(\implode("\n", [
 				"This {$type} requires some external dependencies to work correctly.",
 				'',
 				'To add them to your project, run:',
-				...array_map(fn ($package) => "%Unpm install {$package}%n", $nodeDependencies),
+				...\array_map(fn ($package) => "%Unpm install {$package}%n", $nodeDependencies),
 				'',
 				'If a dependency already exists in your project, you can skip it.',
 			]), 'info', 'Packages needed');
