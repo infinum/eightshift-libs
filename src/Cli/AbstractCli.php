@@ -336,13 +336,10 @@ abstract class AbstractCli implements CliInterface
 
 		// Bailout if file already exists.
 		if (\file_exists($destinationFile) && $skipExisting === false) {
+			$path = $this->getShortenCliPathOutput($destinationFile);
+
 			self::cliError(
-				\sprintf(
-					"%s '%s' is already present at %s.\nIf you want to override the destination folder, use %w--skip_existing='true'%n.",
-					$typeOutput,
-					$fileName,
-					$this->getShortenCliPathOutput($destinationFile)
-				)
+				"{$typeOutput} '{$fileName}' is already present at {$path}.\nIf you want to override the destination folder, use %w--skip_existing='true'%n."
 			);
 		}
 
