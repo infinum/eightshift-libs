@@ -339,7 +339,7 @@ abstract class AbstractCli implements CliInterface
 			$path = $this->getShortenCliPathOutput($destinationFile);
 
 			self::cliError(
-				"{$typeOutput} '{$fileName}' is already present at\n'{$path}'.\n\nIf you want to override the destination folder use %U--skip_existing='true'%n."
+				"{$typeOutput} '{$fileName}' is already present at\n'{$path}'.\n\nIf you want to override the destination folder use %c--skip_existing='true'%n."
 			);
 		}
 
