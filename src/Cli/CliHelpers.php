@@ -31,7 +31,11 @@ trait CliHelpers
 	public static function cliError(string $errorMessage): void
 	{
 		try {
-			WP_CLI::error($errorMessage);
+			// WP_CLI::error($errorMessage);
+			self::cliLogAlert($errorMessage, 'error');
+
+			// Recreate WP CLI functionality.
+			exit(1);
 			// @codeCoverageIgnoreStart
 			// Cannot test the exit.
 		} catch (ExitException $e) {
@@ -71,7 +75,7 @@ trait CliHelpers
 	 *
 	 * @return void
 	 */
-	protected function cliLogAlert(string $msg, string $type = 'success', string $heading = ''): void
+	protected static function cliLogAlert(string $msg, string $type = 'success', string $heading = ''): void
 	{
 		$colorToUse = '%g';
 		$defaultHeading = __('Success', 'eightshift-libs');
