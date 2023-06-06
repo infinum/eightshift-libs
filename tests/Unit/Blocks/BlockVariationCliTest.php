@@ -36,7 +36,7 @@ test('getDefaultArgs will return correct array', function () {
 	expect($this->mock->getDefaultArgs())
 		->toBeArray()
 		->toMatchArray([
-			'name' => 'button-block',
+			'name' => 'card-simple',
 		]);
 });
 
@@ -65,9 +65,9 @@ test('__invoke will correctly copy example variation with default args', functio
 
 	expect($output)
 		->toContain(
-			'button',
-			'button-full-width',
-			'Button Full Width',
+			'card',
+			'card-simple',
+			'Card Simple',
 		)
 		->and(\getenv('ES_CLI_LOG_HAPPENED'))->toContain('Please run');
 });
