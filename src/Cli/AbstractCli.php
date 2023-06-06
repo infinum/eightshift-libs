@@ -326,7 +326,7 @@ abstract class AbstractCli implements CliInterface
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
 		$groupOutput = $args['groupOutput'] ?? false;
-		$typeOutput = $args['typeOutput'] ?? 'service class';
+		$typeOutput = $args['typeOutput'] ?? 'Service class';
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
@@ -338,7 +338,7 @@ abstract class AbstractCli implements CliInterface
 		if (\file_exists($destinationFile) && $skipExisting === false) {
 			self::cliError(
 				\sprintf(
-					"%s file `%s` exist on this path: `%s`. If you want to override the destination folder please use --skip_existing='true' argument.",
+					"%s '%s' is already present at %s.\nIf you want to override the destination folder, use %w--skip_existing='true'%n.",
 					$typeOutput,
 					$fileName,
 					$this->getShortenCliPathOutput($destinationFile)
