@@ -48,9 +48,9 @@ You must provide the list of cookies that will be used as dynamic cookies to gen
  */
 public function dynamicCookiesList(array $items): array
 {
-	$items[] = 'esForms-country';
+  $items[] = 'esForms-country';
 
-	return $items;
+  return $items;
 }
 ```
 
@@ -76,16 +76,16 @@ The provided example works if you have Eightshift-forms in your project.
  * @param string $content Original file output.
  */
 public function addNginxAdvanceCacheRules( string $content ) : string {
-	$position = \strpos($content, '$rocket_config_class');
+  $position = \strpos($content, '$rocket_config_class');
 
-	// This part is string on purpose.
-	$cors_function = '
-	$esFormsPath = ABSPATH . "wp-content/plugins/eightshift-forms/src/Geolocation/geolocationDetect.php";
-	if (file_exists($esFormsPath)) {
-		require_once $esFormsPath;
-	};';
+  // This part is string on purpose.
+  $cors_function = '
+  $esFormsPath = ABSPATH . "wp-content/plugins/eightshift-forms/src/Geolocation/geolocationDetect.php";
+  if (file_exists($esFormsPath)) {
+    require_once $esFormsPath;
+  };';
 
-	return \substr_replace($content, $cors_function, $position, 0);
+  return \substr_replace($content, $cors_function, $position, 0);
 }
 ```
 
@@ -96,6 +96,6 @@ If you have installed Geolocation.php class in your project and you have this fi
 **Example:**
 ```php
 if (!\is_plugin_active('wp-rocket/wp-rocket.php')) {
-	\add_filter('init', [$this, 'setLocationCookie']);
+  \add_filter('init', [$this, 'setLocationCookie']);
 }
 ```
