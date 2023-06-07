@@ -120,6 +120,12 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	 */
 	protected function getIcon(): string
 	{
+		// If it's a custom SVG; base64 it.
+		if (\substr(self::ADMIN_REUSABLE_BLOCKS_MENU_ICON, 0, 4) === '<svg') {
+			return 'data:image/svg+xml;base64,' . base64_encode(self::ADMIN_REUSABLE_BLOCKS_MENU_ICON); // phpcs:ignore;
+		}
+
+		// Otherwise just treat it as a DashIcon.
 		return self::ADMIN_REUSABLE_BLOCKS_MENU_ICON;
 	}
 
