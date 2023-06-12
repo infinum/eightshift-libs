@@ -96,17 +96,16 @@ class ReusableBlocksHeaderFooterCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create top level sidebar menu page for reusable blocks for easy usage.
+				Used to initialize reusable block header/footer - adds pickers to the admin.
 
 				## EXAMPLES
 
-				# Create service class:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminReusableBlocksMenuExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/ReusableBlocksHeaderFooterExample.php
 			"),
 		];
 	}
