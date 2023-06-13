@@ -255,11 +255,11 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 				<?php
 				while ($reusableBlocksQuery->have_posts()) {
 					$reusableBlocksQuery->the_post();
-					$postId = \get_the_ID();
+					$postId = (string) \get_the_ID();
 					$postTitle = \get_the_title();
 					?>
-					<option value="<?php echo \esc_attr((string) $postId); ?>"
-						<?php \selected($currentValue, \strval($postId), true); ?>
+					<option value="<?php echo \esc_attr($postId); ?>"
+						<?php \selected($currentValue, $postId, true); ?>
 					>
 						<?php echo \esc_html($postTitle); ?>
 					</option>
