@@ -12,7 +12,6 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Components;
-use WP_CLI;
 
 /**
  * Class UseBlockCli
@@ -94,19 +93,11 @@ class UseBlockCli extends AbstractBlocksCli
 	{
 		$this->getIntroText($assocArgs);
 
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
-
 		$this->moveItems(
 			$assocArgs,
 			Components::getProjectPaths('blocksSourceCustom'),
 			Components::getProjectPaths('blocksDestinationCustom'),
 			'block'
 		);
-
-		if (!$groupOutput) {
-			WP_CLI::log('--------------------------------------------------');
-
-			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "M");
-		}
 	}
 }

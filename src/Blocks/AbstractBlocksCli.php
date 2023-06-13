@@ -12,7 +12,6 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Helpers\Components;
-use WP_CLI;
 
 /**
  * Abstract class used for Blocks and Components
@@ -49,6 +48,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 		if (\strpos($name, ',') !== false || \strpos($name, ', ') !== false) {
 			$itemsList = \explode(',', $name);
 		}
+
+		$groupOutput = $args['groupOutput'] ?? false;
 
 		if (!\is_dir($source)) {
 			self::cliError(
@@ -158,15 +159,20 @@ abstract class AbstractBlocksCli extends AbstractCli
 			}
 
 			if ($type === 'component' || $type === 'block') {
-				WP_CLI::success(
-					\sprintf(
-						// translators: %s will be replaced with type of item, item name and shorten cli path.
-						"Added %s `%s` at `%s`.",
-						$type,
-						$item,
-						$this->getShortenCliPathOutput($destination)
-					)
-				);
+				$path = $this->getShortenCliPathOutput($destination);
+				$itemName = \ucfirst($item);
+
+				$msgTitle = "{$itemName} ${type} added";
+
+				if ($groupOutput) {
+					$this->cliLog("%g│ %n{$msgTitle} %w({$path})%n", 'mixed');
+				} else {
+					$this->cliLogAlert(\implode("\n", [
+						$path,
+						'',
+						'Run %Unpm start%n to make sure everything works correctly.'
+					]), 'success', "{$itemName} ${type} added");
+				}
 
 				$checkDependency = $args['checkDependency'] ?? true;
 
@@ -176,14 +182,13 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 				$this->outputNodeModuleDependencyItems($fullSource, $type);
 			} else {
-				WP_CLI::success(
-					\sprintf(
-						// translators: %s will be replaced with type of item, and shorten cli path.
-						"`%s` created at `%s`.",
-						$type,
-						$this->getShortenCliPathOutput($destination)
-					)
-				);
+				$path = $this->getShortenCliPathOutput($destination);
+
+				if ($groupOutput) {
+					$this->cliLog("%g│ %n{$type} created %w({$path})%n", 'mixed');
+				} else {
+					$this->cliLogAlert($path, 'success', "${type} added");
+				}
 			}
 		}
 	}
@@ -207,23 +212,18 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$dependencies = \array_merge($componentsDependencies, $innerBlocksDependency);
 
 		if ($dependencies) {
-			$this->cliLog('');
-			$this->cliLog('Dependency note:', 'B');
-			$this->cliLog(
-				\sprintf(
-					"We have found that this %s has dependencies, please run these commands also if you don't have it in your project:",
-					$type
-				)
-			);
 			$componentsCommandName = UseComponentCli::COMMAND_NAME;
-			$allDependencies = \array_map(
-				static function ($item) {
-					return Components::camelToKebabCase($item);
-				},
-				$dependencies
-			);
+			$allDependencies = \array_map(static fn ($item) => Components::camelToKebabCase($item), $dependencies);
 			$allDependencies = \implode(', ', \array_unique(\array_values($allDependencies)));
-			$this->cliLog("wp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'", 'C');
+
+			$this->cliLogAlert(\implode("\n", [
+				"This {$type} may need some dependencies to work correctly.",
+				'',
+				'To add them to your project, run:',
+				"%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'%n",
+				'',
+				'If a dependency already exists in your project, you can skip it.',
+			]), 'info', 'Dependencies found');
 		}
 	}
 
@@ -243,18 +243,14 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$nodeDependencies = $manifest['nodeDependency'] ?? [];
 
 		if ($nodeDependencies) {
-			$this->cliLog('');
-			$this->cliLog('Node_modules Note:', 'B');
-			$this->cliLog(
-				\sprintf(
-					"We have found that this %s has some node_module dependencies, please run these commands also if you don't have it in your project:",
-					$type
-				)
-			);
-
-			foreach ($nodeDependencies as $nitem) {
-				$this->cliLog("npm install {$nitem}", 'C');
-			}
+			$this->cliLogAlert(\implode("\n", [
+				"This {$type} requires some external dependencies to work correctly.",
+				'',
+				'To add them to your project, run:',
+				...\array_map(fn ($package) => "%Unpm install {$package}%n", $nodeDependencies),
+				'',
+				'If a dependency already exists in your project, you can skip it.',
+			]), 'info', 'Packages needed');
 		}
 	}
 }

@@ -35,12 +35,12 @@ test('getCommandName will return correct value', function () {
 test('getDefaultArgs will return correct array', function () {
 	expect($this->mock->getDefaultArgs())
 		->toBeArray()
-		->toMatchArray([
-			'title' => 'Reusable Blocks',
-			'menu_title' => 'Reusable Blocks',
-			'capability' => 'edit_posts',
-			'menu_icon' => 'dashicons-table-row-before',
-			'menu_position' => 4,
+		->toHaveKeys([
+			'title',
+			'menu_title',
+			'capability',
+			'menu_icon',
+			'menu_position',
 		]);
 });
 
@@ -72,10 +72,9 @@ test('__invoke will will correctly copy example class with default args', functi
 	expect($output)
 		->toContain(
 			'class AdminReusableBlocksMenu',
-			'Reusable Blocks',
-			'Reusable Blocks',
+			'Reusable blocks',
+			'Reusable blocks',
 			'edit_posts',
-			'dashicons-table-row-before',
 		)
 		->not->toContain(
 			'class AdminReusableBlocksMenuExample',

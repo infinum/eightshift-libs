@@ -145,7 +145,7 @@ abstract class AbstractCli implements CliInterface
 
 		if (!\is_callable($class)) {
 			$className = \get_class($class);
-			self::cliError("The class '{$className}' is not callable. Make sure the command class has an __invoke method.");
+			self::cliError("Class '{$className}' is not callable.\nMake sure the command class has an __invoke method.");
 		}
 
 		WP_CLI::add_command(
@@ -277,7 +277,7 @@ abstract class AbstractCli implements CliInterface
 	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): self
 	{
 		$ds = \DIRECTORY_SEPARATOR;
-		$path = "{$currentDir}{$ds}{$this->getExampleFileName( $fileName )}.php";
+		$path = "{$currentDir}{$ds}{$this->getExampleFileName($fileName)}.php";
 
 		// If you pass file name with extension the version will be used.
 		if (\strpos($fileName, '.') !== false) {
@@ -326,7 +326,7 @@ abstract class AbstractCli implements CliInterface
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
 		$groupOutput = $args['groupOutput'] ?? false;
-		$typeOutput = $args['typeOutput'] ?? 'service class';
+		$typeOutput = $args['typeOutput'] ?? 'Service class';
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
@@ -336,13 +336,10 @@ abstract class AbstractCli implements CliInterface
 
 		// Bailout if file already exists.
 		if (\file_exists($destinationFile) && $skipExisting === false) {
+			$path = $this->getShortenCliPathOutput($destinationFile);
+
 			self::cliError(
-				\sprintf(
-					"%s file `%s` exist on this path: `%s`. If you want to override the destination folder please use --skip_existing='true' argument.",
-					$typeOutput,
-					$fileName,
-					$this->getShortenCliPathOutput($destinationFile)
-				)
+				"{$typeOutput} '{$fileName}' is already present at\n'{$path}'\n\nIf you want to override the destination folder, use %c--skip_existing='true'%n"
 			);
 		}
 
@@ -354,13 +351,10 @@ abstract class AbstractCli implements CliInterface
 		// Open a new file on output.
 		// If there is any error, bailout. For example, user permission.
 		if (\fopen($destinationFile, "wb") === false) {
+			$path = $this->getShortenCliPathOutput($destinationFile);
+
 			self::cliError(
-				\sprintf(
-					"%s file `%s` couldn't be created on this path `%s`. There was an unknown error.",
-					$typeOutput,
-					$fileName,
-					$this->getShortenCliPathOutput($destinationFile)
-				)
+				"{$typeOutput} '{$fileName}' could not be created at\n'{$path}'\n\nAn unknown error ocurred."
 			);
 		}
 
@@ -372,22 +366,12 @@ abstract class AbstractCli implements CliInterface
 
 		if (!$groupOutput) {
 			// Return success.
+			$path = $this->getShortenCliPathOutput($destinationFile);
+
 			if ($skipExisting) {
-				WP_CLI::success(
-					\sprintf(
-						"`%s` renamed at `%s`.",
-						$fileName,
-						$this->getShortenCliPathOutput($destinationFile)
-					)
-				);
+				$this->cliLogAlert($path, 'success', "'${fileName}' renamed");
 			} else {
-				WP_CLI::success(
-					\sprintf(
-						"`%s` created at `%s`.",
-						$fileName,
-						$this->getShortenCliPathOutput($destinationFile)
-					)
-				);
+				$this->cliLogAlert($path, 'success', "'${fileName}' created");
 			}
 		}
 
@@ -699,7 +683,7 @@ abstract class AbstractCli implements CliInterface
 		$composerFile = \file_get_contents($composerPath);
 
 		if ($composerFile === false) {
-			self::cliError("The composer on {$composerPath} path seems to be missing.");
+			self::cliError("Composer was not found at\n{$composerPath}");
 		}
 
 		return \json_decode((string)$composerFile, true);
@@ -893,20 +877,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Return longdesc output for cli.
-	 * Removes tabs and replaces them with space.
-	 * Adds new line before and after ## heading.
-	 *
-	 * @param string $string String to convert.
-	 *
-	 * @return string
-	 */
-	public function prepareLongDesc(string $string): string
-	{
-		return \preg_replace('/(##+)(.*)/m', "\n" . '${1}${2}' . "\n", \preg_replace('/\s*^\s*/m', "\n", \trim($string)));
-	}
-
-	/**
 	 * Recursive copy helper
 	 *
 	 * @link https://stackoverflow.com/a/7775949/629127
@@ -983,23 +953,15 @@ abstract class AbstractCli implements CliInterface
 			return;
 		}
 
-		$this->cliLog($this->prepareLongDesc(".
-		---------------------------------------------------------------------------------------
-		._____   ___    ____   _   _   _____   ____    _   _   ___   _____   _____
-		| ____| |_ _|  / ___| | | | | |_   _| / ___|  | | | | |_ _| |  ___| |_   _|
-		|  _|    | |  | |  _  | |_| |   | |   \___ \  | |_| |  | |  | |_      | |
-		| |___   | |  | |_| | |  _  |   | |    ___) | |  _  |  | |  |  _|     | |
-		|_____| |___|  \____| |_| |_|   |_|   |____/  |_| |_| |___| |_|       |_|
-		.____     ___    ___   _       _____   ____    ____    _          _      _____   _____
-		| __ )   / _ \  |_ _| | |     | ____| |  _ \  |  _ \  | |        / \    |_   _| | ____|
-		|  _ \  | | | |  | |  | |     |  _|   | |_) | | |_) | | |       / _ \     | |   |  _|
-		| |_) | | |_| |  | |  | |___  | |___  |  _ <  |  __/  | |___   / ___ \    | |   | |___
-		|____/   \___/  |___| |_____| |_____| |_| \_\ |_|     |_____| /_/   \_\   |_|   |_____|
-		.
-		Thank you for using Eightshift boilerplate for your project.
-		Documentation can be found on this link: https://eightshift.com/.
-		---------------------------------------------------------------------------------------
-		.
-		"), 'M');
+		$this->cliLog($this->prepareLongDesc("
+		%w╭──────────────────────────────────────────────────────────╮
+		│                                                          │
+		│  %R  ███████  ███████  %n   Thank you for using              %w│
+		│  %R██       ██       ██%n   %9Eightshift DevKit%n                %w│
+		│  %R██       ██       ██%n                                    %w│
+		│  %R  ███████  ███████  %n   Read the docs at %Ueightshift.com%n  %w│
+		│                                                          │
+		╰──────────────────────────────────────────────────────────╯%n
+		"), 'mixed');
 	}
 }

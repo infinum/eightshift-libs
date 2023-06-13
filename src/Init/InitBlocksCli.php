@@ -48,6 +48,8 @@ class InitBlocksCli extends AbstractCli
 				'image',
 				'lists',
 				'paragraph',
+				'site-navigation',
+				'site-footer',
 			],
 			'test' => [
 				'button',
@@ -67,13 +69,13 @@ class InitBlocksCli extends AbstractCli
 				'heading',
 				'icon',
 				'image',
-				'layout-three-columns',
 				'lists',
 				'logo',
-				'menu',
 				'paragraph',
 				'tracking-before-body-end',
 				'tracking-head',
+				'social-networks',
+				'admin-header-footer-picker',
 			],
 			'test' => [
 				'button',
@@ -92,7 +94,7 @@ class InitBlocksCli extends AbstractCli
 			'test' => [
 				'card-simple'
 			]
-		]
+		],
 	];
 
 	/**
@@ -152,7 +154,8 @@ class InitBlocksCli extends AbstractCli
 			$this->getIntroText();
 		}
 
-		$this->cliLog('Creating block editor files:', 'C');
+		$this->cliLog("%w╭\n│ %nCreating block editor files", 'mixed');
+
 
 		$commands = static::COMMANDS;
 
@@ -180,10 +183,10 @@ class InitBlocksCli extends AbstractCli
 
 		$this->getInitBlocks($assocArgs, $commands);
 
+		$this->cliLog('╰', 'w');
+
 		if (!$groupOutput) {
-			$this->cliLog('--------------------------------------------------');
-			$this->cliLog('We have moved everything you need to start creating WordPress blocks. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
-			$this->cliLog('Happy developing!', "M");
+			$this->cliLogAlert('Files copied! Run `npm start` to build all the assets.\n\nHappy developing!', 'success', \__('Ready to go!', 'eightshift-libs'));
 		}
 	}
 

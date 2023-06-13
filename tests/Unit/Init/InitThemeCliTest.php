@@ -29,5 +29,5 @@ test('InitTheme CLI command will correctly copy the project classes', function (
 	$mock([], $mock->getDefaultArgs());
 
 	expect(\getenv('ES_CLI_LOG_HAPPENED'))
-		->toContain('Happy developing!');
+		->toContain('wp boilerplate init header-footer');
 });

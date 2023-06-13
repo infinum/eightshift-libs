@@ -42,9 +42,9 @@ jobs:
       - name: "Checkout code"
         uses: "actions/checkout@v3"
 
-      - name: "Find non-printable ASCII characters"
+      - name: "Find non-printable ASCII characters (box-drawing characters excluded)"
         run: |
-          ! LC_ALL=C.UTF-8 find . -type f -name "*.php" -print0 | xargs -0 -- grep -PHn "[^\t -~]"
+          ! LC_ALL=C.UTF-8 find . -type f -name "*.php" -print0 | xargs -0 -- grep -PHn "[^\t -~\u2500-\u257F]"
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@v2"
