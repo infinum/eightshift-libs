@@ -238,7 +238,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 
 		$reusableBlocksQuery = new WP_Query([
 			'post_type' => 'wp_block',
-			'posts_per_page' => -1,
+			'posts_per_page' => 1000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 			'post_status' => 'publish',
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
