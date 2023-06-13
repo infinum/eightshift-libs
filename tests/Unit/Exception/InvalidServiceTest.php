@@ -11,6 +11,6 @@ test('Checks if the fromService method will return correct response.', function 
 	$exceptionObject = InvalidService::fromService($service);
 
 	$this->assertIsObject($exceptionObject, "The {$exceptionObject} should be an instance of InvalidService class");
-	$this->assertObjectHasProperty('message', $exceptionObject, "Object doesn't contain message attribute");
+	$this->assertObjectHasAttribute('message', $exceptionObject, "Object doesn't contain message attribute");
 	$this->assertSame("The service {$service} is not recognized and cannot be registered.", $exceptionObject->getMessage(), "Strings for message if service name isn't recognised do not match!");
 });
