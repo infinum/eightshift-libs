@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.5.1] - 2023-06-19
+
+### Changed
+- wrong command name was changed from `plugin_manage` to `plugin-manage`.
+- webp helper now has option to add allowed item so you can limit image types you don't want to use webP.
+
 ## [6.5.0] - 2023-06-13
 
 ### Changed
@@ -13,7 +19,6 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [6.4.0] - 2023-02-21
 
 ### Changed
-
 - Changed the default args for init blocks and use block variation CLI commands, as the button-block variation will not exist anymore in FE libs v8.0.
 
 ## [6.3.2] - 2023-01-27
@@ -408,6 +413,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.5.1]: https://github.com/infinum/eightshift-libs/compare/6.5.0...v6.5.1
 [6.5.0]: https://github.com/infinum/eightshift-libs/compare/6.4.0...v6.5.0
 [6.4.0]: https://github.com/infinum/eightshift-libs/compare/6.3.2...v6.4.0
 [6.3.2]: https://github.com/infinum/eightshift-libs/compare/6.3.1...v6.3.2

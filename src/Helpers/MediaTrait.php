@@ -22,10 +22,11 @@ trait MediaTrait
 	 * Return WebP format from the original path.
 	 *
 	 * @param string $path Path to original media file.
+	 * @param array<int, string> $allowd Allowed file types.
 	 *
 	 * @return array<string>
 	 */
-	public static function getWebPMedia(string $path): array
+	public static function getWebPMedia(string $path, array $allowd = AbstractMedia::WEBP_ALLOWED_EXT): array
 	{
 		$typeData = \wp_check_filetype($path);
 		$ext = $typeData['ext'];
@@ -37,7 +38,7 @@ trait MediaTrait
 			];
 		}
 
-		$allowed = \array_flip(AbstractMedia::WEBP_ALLOWED_EXT);
+		$allowed = \array_flip($allowd);
 
 		if (!isset($allowed[$ext])) {
 			return [];
