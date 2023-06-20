@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.5.2] - 2023-06-20
+
+### Changed
+- updating random Id generator to output 8 rather than 32 characters.
+
 ## [6.5.1] - 2023-06-19
 
 ### Changed
@@ -413,6 +418,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.5.2]: https://github.com/infinum/eightshift-libs/compare/6.5.1...v6.5.2
 [6.5.1]: https://github.com/infinum/eightshift-libs/compare/6.5.0...v6.5.1
 [6.5.0]: https://github.com/infinum/eightshift-libs/compare/6.4.0...v6.5.0
 [6.4.0]: https://github.com/infinum/eightshift-libs/compare/6.3.2...v6.4.0
