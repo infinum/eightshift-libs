@@ -238,7 +238,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 
 		$reusableBlocksQuery = new WP_Query([
 			'post_type' => 'wp_block',
-			'posts_per_page' => -1,
+			'posts_per_page' => 1000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 			'post_status' => 'publish',
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
@@ -255,11 +255,11 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 				<?php
 				while ($reusableBlocksQuery->have_posts()) {
 					$reusableBlocksQuery->the_post();
-					$postId = \get_the_ID();
+					$postId = (string) \get_the_ID();
 					$postTitle = \get_the_title();
 					?>
-					<option value="<?php echo \esc_attr((string) $postId); ?>"
-						<?php \selected($currentValue, \strval($postId), true); ?>
+					<option value="<?php echo \esc_attr($postId); ?>"
+						<?php \selected($currentValue, $postId, true); ?>
 					>
 						<?php echo \esc_html($postTitle); ?>
 					</option>
