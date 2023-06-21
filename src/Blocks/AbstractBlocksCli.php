@@ -162,7 +162,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$path = $this->getShortenCliPathOutput($destination);
 				$itemName = \ucfirst($item);
 
-				$msgTitle = "{$itemName} ${type} added";
+				$msgTitle = "{$itemName} {$type} added";
 
 				if ($groupOutput) {
 					$this->cliLog("%g│ %n{$msgTitle} %w({$path})%n", 'mixed');
@@ -171,7 +171,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 						$path,
 						'',
 						'Run %Unpm start%n to make sure everything works correctly.'
-					]), 'success', "{$itemName} ${type} added");
+					]), 'success', "{$itemName} {$type} added");
 				}
 
 				$checkDependency = $args['checkDependency'] ?? true;
@@ -187,7 +187,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				if ($groupOutput) {
 					$this->cliLog("%g│ %n{$type} created %w({$path})%n", 'mixed');
 				} else {
-					$this->cliLogAlert($path, 'success', "${type} added");
+					$this->cliLogAlert($path, 'success', "{$type} added");
 				}
 			}
 		}
