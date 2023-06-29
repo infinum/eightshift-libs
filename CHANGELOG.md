@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.5.3] - 2023-06-29
+
+### Fixed
+- column media wrong filter name.
+- deprecation notice in the CLI.
+
 ## [6.5.2] - 2023-06-20
 
 ### Changed
@@ -418,6 +424,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.5.3]: https://github.com/infinum/eightshift-libs/compare/6.5.2...v6.5.3
 [6.5.2]: https://github.com/infinum/eightshift-libs/compare/6.5.1...v6.5.2
 [6.5.1]: https://github.com/infinum/eightshift-libs/compare/6.5.0...v6.5.1
 [6.5.0]: https://github.com/infinum/eightshift-libs/compare/6.4.0...v6.5.0
