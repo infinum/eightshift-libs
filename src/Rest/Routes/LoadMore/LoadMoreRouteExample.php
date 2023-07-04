@@ -92,7 +92,6 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 					'cards',
 					[
 						'items' => $response,
-						'blockSsr' => true,
 					]
 				);
 			default:

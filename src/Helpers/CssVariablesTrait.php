@@ -126,10 +126,10 @@ trait CssVariablesTrait
 		}
 
 		// Load normal styles if server side render is used.
-		$ssr = $attributes['blockSsr'] ?? false;
+		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
-		if (!Components::getConfigOutputCssGlobally() || $ssr) {
+		if (!Components::getConfigOutputCssGlobally() || (\wp_is_json_request() && $context === 'edit')) {
 			return self::getCssVariablesTypeDefault($name, $data, $manifest, $unique);
 		}
 
@@ -146,8 +146,11 @@ trait CssVariablesTrait
 	 */
 	public static function outputCssVariablesInline(): string
 	{
-		// If default output just exit.
-		if (!Components::getConfigOutputCssGlobally()) {
+		// Load normal styles if server side render is used.
+		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		// If default output just echo.
+		if (!Components::getConfigOutputCssGlobally() || (\wp_is_json_request() && $context === 'edit')) {
 			return '';
 		}
 
