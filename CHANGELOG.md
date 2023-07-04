@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.5.4] - 2023-07-04
+
+### Fixed
+- you no longer need to add the "blockSsr" attribute when loading a block via server-side rendering. It will automatically utilize global CSS variables and provide the necessary styles.
+
 ## [6.5.3] - 2023-06-29
 
 ### Fixed
@@ -424,6 +429,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.5.4]: https://github.com/infinum/eightshift-libs/compare/6.5.3...v6.5.4
 [6.5.3]: https://github.com/infinum/eightshift-libs/compare/6.5.2...v6.5.3
 [6.5.2]: https://github.com/infinum/eightshift-libs/compare/6.5.1...v6.5.2
 [6.5.1]: https://github.com/infinum/eightshift-libs/compare/6.5.0...v6.5.1
