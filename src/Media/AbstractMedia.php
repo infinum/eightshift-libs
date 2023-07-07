@@ -60,6 +60,15 @@ abstract class AbstractMedia implements ServiceInterface
 	 */
 	public function deleteWebPMedia(int $attachmentId): void
 	{
+		// WPML will not delete the file unless all files are removed from all languages.
+		if (\has_filter('wpml_element_has_translations')) {
+			$isTranslated = \apply_filters('wpml_element_has_translations', null, $attachmentId, 'attachment');
+
+			if ($isTranslated) {
+				return;
+			}
+		}
+
 		$this->deleteWebPMediaOriginal($attachmentId);
 		$this->deleteWebPMediaAllSizes($attachmentId);
 	}
