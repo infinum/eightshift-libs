@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.5.6] - 2023-07-17
+
+### Fixed
+- Assets dependency function now returns array<int, string> instead of array<string, mixed>.
+
 ## [6.5.5] - 2023-07-07
 
 ### Fixed
@@ -434,6 +439,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.5.6]: https://github.com/infinum/eightshift-libs/compare/6.5.5...v6.5.6
 [6.5.5]: https://github.com/infinum/eightshift-libs/compare/6.5.4...v6.5.5
 [6.5.4]: https://github.com/infinum/eightshift-libs/compare/6.5.3...v6.5.4
 [6.5.3]: https://github.com/infinum/eightshift-libs/compare/6.5.2...v6.5.3
