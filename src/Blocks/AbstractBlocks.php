@@ -131,7 +131,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$allowedBlockTypes[] = 'core/block';
 		$allowedBlockTypes[] = 'core/template';
 
-		return $allowedBlockTypes;
+		return \apply_filters('all_allowed_block_list', $allowedBlockTypes, $blockEditorContext);
 	}
 
 	/**
