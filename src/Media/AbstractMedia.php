@@ -23,11 +23,18 @@ abstract class AbstractMedia implements ServiceInterface
 	use MediaWebPTrait;
 
 	/**
-	 * WebP Quality compression range 0-100.
+	 * WebP allowed extensions.
 	 *
 	 * @var array<string>
 	 */
 	public const WEBP_ALLOWED_EXT = ['gif', 'jpg', 'jpeg', 'png', 'bmp'];
+
+	/**
+	 * WebP Quality compression range 0-100.
+	 *
+	 * @var int
+	 */
+	public const WEBP_QUALITY = 80;
 
 	/**
 	 * Generate WebP media images.
@@ -53,6 +60,15 @@ abstract class AbstractMedia implements ServiceInterface
 	 */
 	public function deleteWebPMedia(int $attachmentId): void
 	{
+		// WPML will not delete the file unless all files are removed from all languages.
+		if (\has_filter('wpml_element_has_translations')) {
+			$isTranslated = \apply_filters('wpml_element_has_translations', null, $attachmentId, 'attachment');
+
+			if ($isTranslated) {
+				return;
+			}
+		}
+
 		$this->deleteWebPMediaOriginal($attachmentId);
 		$this->deleteWebPMediaAllSizes($attachmentId);
 	}
@@ -64,6 +80,6 @@ abstract class AbstractMedia implements ServiceInterface
 	 */
 	protected function getMediaWebPQuality(): int
 	{
-		return 80;
+		return self::WEBP_QUALITY;
 	}
 }

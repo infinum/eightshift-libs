@@ -58,6 +58,7 @@ use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Init\InitBlocksCli;
+use EightshiftLibs\Init\InitHeaderFooter;
 use EightshiftLibs\Init\InitPluginCli;
 use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
@@ -171,6 +172,7 @@ class Cli
 		InitProjectCli::class,
 		InitBlocksCli::class,
 		InitAllCli::class,
+		InitHeaderFooter::class,
 	];
 
 	/**

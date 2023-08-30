@@ -50,7 +50,7 @@ class PluginManageCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'plugin_manage';
+		return 'plugin-manage';
 	}
 
 	/**
