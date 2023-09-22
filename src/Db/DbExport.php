@@ -27,7 +27,11 @@ if (!function_exists('dbExport')) {
 
 		// Change execution folder.
 		if (!is_dir($projectRootPath)) {
-			CliHelpers::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
+			$errorClass = new class () {
+				use CliHelpers;
+			};
+
+			$errorClass::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
 		}
 
 		chdir($projectRootPath);
