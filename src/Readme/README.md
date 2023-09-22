@@ -4,8 +4,8 @@ This is the official repository of the {Project name}.
 
 ## Requirements
 
-1. PHP 7.4
-2. Node 12
+1. PHP 7.4 or higher
+2. Node 16+
 3. [Node.js](https://nodejs.org/en/)
 4. [Composer](https://getcomposer.org/)
 5. [(Optional) WP cli](https://wp-cli.org/)
