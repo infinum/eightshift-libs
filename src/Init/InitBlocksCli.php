@@ -156,7 +156,6 @@ class InitBlocksCli extends AbstractCli
 
 		$this->cliLog("%w╭\n│ %nCreating block editor files", 'mixed');
 
-
 		$commands = static::COMMANDS;
 
 		if ($all) {
