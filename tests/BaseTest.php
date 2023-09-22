@@ -150,6 +150,30 @@ class BaseTest extends TestCase
 		Functions\when('is_wp_version_compatible')->justReturn(true);
 
 		Functions\when('wp_nonce_field')->justReturn('nonce');
+
+		// Mock https://developer.wordpress.org/reference/functions/wp_is_json_media_type/ function
+		Functions\when('wp_is_json_media_type')->alias(function ($mediaType) {
+			static $cache = array();
+
+			if ( ! isset( $cache[ $mediaType ] ) ) {
+				$cache[ $mediaType ] = (bool) preg_match( '/(^|\s|,)application\/([\w!#\$&-\^\.\+]+\+)?json(\+oembed)?($|\s|;|,)/i', $mediaType );
+			}
+
+			return $cache[ $mediaType ];
+		});
+
+		// Mock https://developer.wordpress.org/reference/functions/wp_is_json_request/ function
+		Functions\when('wp_is_json_request')->alias(function () {
+			if ( isset( $_SERVER['HTTP_ACCEPT'] ) && wp_is_json_media_type( $_SERVER['HTTP_ACCEPT'] ) ) {
+				return true;
+			}
+
+			if ( isset( $_SERVER['CONTENT_TYPE'] ) && wp_is_json_media_type( $_SERVER['CONTENT_TYPE'] ) ) {
+				return true;
+			}
+
+			return false;
+		});
 	}
 
 	protected function tear_down()
