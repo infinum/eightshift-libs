@@ -24,7 +24,7 @@
 	<rule ref="PHPCompatibilityWP"/>
 
 	<!-- Support only latest 3 WP versions. -->
-	<config name="minimum_supported_wp_version" value="5.6"/>
+	<config name="minimum_supported_wp_version" value="6.0"/>
 
 	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
@@ -55,9 +55,26 @@
 		<exclude-pattern>*/src/Cli/*</exclude-pattern>
 	</rule>
 
-	<rule ref="WordPress.Security.EscapeOutput.OutputNotEscaped">
-		<exclude-pattern>*/src/**/*Cli.php</exclude-pattern>
-		<exclude-pattern>*/src/Cli/*</exclude-pattern>
+	<!-- Ignore unescaped exceptions. All Eightshift exceptions are escaped. -->
+	<rule ref="Eightshift.Security.ComponentsEscape.ExceptionNotEscaped">
+		<severity>0</severity>
+	</rule>
+
+	<!-- Ignore filesystem alternative functions. -->
+	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_mkdir">
+		<severity>0</severity>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions.unlink_unlink">
+		<severity>0</severity>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_fopen">
+		<severity>0</severity>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_fwrite">
+		<severity>0</severity>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_fclose">
+		<severity>0</severity>
 	</rule>
 
 	<rule ref="Generic.Files.LineLength">
