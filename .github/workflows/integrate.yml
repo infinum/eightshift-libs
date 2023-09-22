@@ -23,7 +23,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout code"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Check file permissions"
         run: |
@@ -40,7 +40,7 @@ jobs:
           coverage: "none"
 
       - name: "Checkout code"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Find non-printable ASCII characters (box-drawing characters excluded)"
         run: |
@@ -64,7 +64,7 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "7.4"
+          - ["7.4", "8.0", "8.1", "8.2"]
         dependencies:
           - "lowest"
           - "highest"
@@ -77,14 +77,18 @@ jobs:
           coverage: "xdebug"
 
       - name: "Checkout code"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
-      - name: "Execute unit tests"
+      - name: "Execute unit tests without coverage"
+        run: "composer run test:unit"
+
+      - name: "Execute unit tests with coverage"
+        if: "${{ env.CODECOV_TOKEN && matrix.php-version == '7.4' && matrix.dependencies == 'highest' }}"
         run: "composer run test:coverage"
 
       - name: "Upload coverage to Codecov"
@@ -113,7 +117,7 @@ jobs:
           coverage: "none"
 
       - name: "Checkout code"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Validate Composer configuration"
         run: "composer validate --strict"
@@ -142,7 +146,7 @@ jobs:
           tools: "cs2pr"
 
       - name: "Checkout code"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Check adherence to EditorConfig"
         uses: "greut/eclint-action@v0"
@@ -166,7 +170,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout code"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Check exported files"
         run: |
