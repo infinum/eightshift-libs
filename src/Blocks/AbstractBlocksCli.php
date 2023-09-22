@@ -56,7 +56,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			self::cliError(
 				\sprintf(
 					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
+					"%s file doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
 					$type,
 					$this->getShortenCliPathOutput($source)
 				)
@@ -91,8 +91,16 @@ abstract class AbstractBlocksCli extends AbstractCli
 			);
 		}
 
+		$itemExists = false;
 		foreach ($itemsList as $item) {
-			if (!isset($sourceItems[$item])) {
+			foreach ($sourceItems as $sourceName => $sourceFolder) {
+				if (strpos($sourceName, $item) !== false) {
+					$itemExists = true;
+					break;
+				}
+			}
+
+			if (!$itemExists) {
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, item name and shorten cli path.
@@ -103,8 +111,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 					)
 				);
 			}
-
-			$source = $sourceItems[$item];
 
 			$fullSource = Components::joinPaths([$source, $item]);
 			$fullDestination = Components::joinPaths([$destination, $item]);
