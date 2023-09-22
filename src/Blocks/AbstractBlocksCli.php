@@ -94,7 +94,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$itemExists = false;
 		foreach ($itemsList as $item) {
 			foreach ($sourceItems as $sourceName => $sourceFolder) {
-				if (strpos($sourceName, $item) !== false) {
+				if (\strpos($sourceName, $item) !== false) {
 					$itemExists = true;
 					break;
 				}
