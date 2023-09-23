@@ -11,8 +11,11 @@ test('Checks if the viewException method will return correct response.', functio
 	$exception = new Exception('Error message');
 
 	$exceptionObject = FailedToLoadView::viewException($uri, $exception);
+	$message = "Could not load the View URI: {$uri}. Reason: {$exception->getMessage()}.";
 
-	$this->assertIsObject($exceptionObject, "The {$exceptionObject} should be an instance of FailedToLoadView class");
-	$this->assertObjectHasProperty('message', $exceptionObject, "Object doesn't contain message attribute");
-	$this->assertSame("Could not load the View URI: {$uri}. Reason: {$exception->getMessage()}.", $exceptionObject->getMessage(), "Strings for exception messages do not match!");
+	expect($exceptionObject)->toBeObject()
+		->toBeInstanceOf(FailedToLoadView::class)
+		->toHaveProperty('message')
+		->and($message)
+		->toEqual($exceptionObject->getMessage());
 });
