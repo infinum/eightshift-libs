@@ -13,6 +13,47 @@ use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 class BaseTest extends TestCase
 {
+	// Preventing dynamic properties deprecation notices in tests.
+	protected $adminEnqueue;
+	protected $blocksEnqueue;
+	protected $blocksExample;
+	protected $cli;
+	protected $example;
+	protected $field;
+	protected $geolocation;
+	protected $geolocationCli;
+	protected $germanIp;
+	protected $hookSuffix;
+	protected $i18n;
+	protected $login;
+	protected $main;
+	protected $manualDepsNoPrimitive;
+	protected $manuallyDefinedDependencies;
+	protected $media;
+	protected $mediaCli;
+	protected $mock;
+	protected $mockFileName;
+	protected $mockHelper;
+	protected $mockLogger;
+	protected $mockMedia;
+	protected $mockPath;
+	protected $mockRequestKey;
+	protected $modifyAdminAppearance;
+	protected $pluginManage;
+	protected $post;
+	protected $projectName;
+	protected $projectNamespace;
+	protected $projectVersion;
+	protected $regenerateWebPMediaCli;
+	protected $route;
+	protected $service;
+	protected $shortcode;
+	protected $themeEnqueue;
+	protected $webPMediaColumnCliMock;
+	protected $webPMediaColumnExampleMock;
+	protected $webPMediaColumnExampleMockColumns;
+	protected $wpRestServer;
+
 	protected MockInterface $wpCliMock;
 
 	protected function set_up()
