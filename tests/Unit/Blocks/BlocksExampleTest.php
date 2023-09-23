@@ -84,7 +84,7 @@ test('Asserts that getAllBlocksList with all types of arguments throw error for 
 })->throws(\TypeError::class)
 ->with('getAllAllowedBlocksListAllTypesArguments');
 
-test('Asserts that getAllBlocksList is not influence by the first parameter', function ($argument) {
+test('Asserts that getAllBlocksList is not influenced by the first parameter', function ($argument) {
 
 	$blockContext = mock(WP_Block_Editor_Context::class);
 	$blockContext->post = null;
