@@ -67,7 +67,13 @@ jobs:
         dependencies:
           - "lowest"
           - "highest"
+        allowed_failure: [ false ]
+        # Allow failure on non-released version of PHP.
+        include:
+          - php: '8.3'
+            allowed_failure: true
     runs-on: "ubuntu-latest"
+    continue-on-error: ${{ matrix.allowed_failure }}
     steps:
       - name: "Set up PHP"
         uses: "shivammathur/setup-php@v2"
