@@ -93,7 +93,14 @@ abstract class AbstractBlocksCli extends AbstractCli
 					$itemExists = true;
 					break;
 				}
+
+				// in the case of folders, we should also check the source folders.
+				if (\strpos($sourceFolder, $item) !== false) {
+					$itemExists = true;
+					break;
+				}
 			}
+
 
 			if (!$itemExists) {
 				self::cliError(
