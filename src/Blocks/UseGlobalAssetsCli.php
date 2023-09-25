@@ -82,7 +82,7 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 			),
 			Components::getProjectPaths('blocksGlobalAssetsSource'),
 			Components::getProjectPaths('blocksGlobalAssetsDestination'),
-			'assets',
+			'assets folder',
 			true
 		);
 
