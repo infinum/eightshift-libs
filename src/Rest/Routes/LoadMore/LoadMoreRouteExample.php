@@ -53,7 +53,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	/**
 	 * Get the base url of the route
 	 *
-	 * @return string The base URL for route you are adding.
+	 * @return string The base URL for the route you are adding.
 	 */
 	protected function getRouteName(): string
 	{
@@ -63,7 +63,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	/**
 	 * Get callback arguments array
 	 *
-	 * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
+	 * @return array Either an array of options for the endpoint or an array of arrays for multiple methods.
 	 */
 	protected function getCallbackArguments(): array
 	{
@@ -75,7 +75,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Map load more data reponse with the component to provide to output.
+	 * Map load more data response with the component to provide to output.
 	 *
 	 * @param string $type Type of load more used, usually block name.
 	 * @param array<int> $response Response of IDs.
@@ -158,11 +158,11 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	 * Get load more data.
 	 *
 	 * @param array<string, mixed> $query WP_Query to request.
-	 * @param string $type Type of usage for later maping.
+	 * @param string $type Type of usage for later mapping.
 	 * @param array<string> $initialItems Initial items that are loaded in dom.
-	 * @param string $urlLoadMoreAction Action to use, on click on on page refresh.
+	 * @param string $urlLoadMoreAction Action to use, on click on page refresh.
 	 * @param integer $currentPage Current page counter.
-	 * @param array<string, mixed> $config Config array of overides.
+	 * @param array<string, mixed> $config Config array of overrides.
 	 *
 	 * @return array<string, mixed>|WP_Error
 	 */
@@ -171,7 +171,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 		// Prepare parameters.
 		$perPageOverride = $config['perPageOverride'] ?? '';
 
-		// Bailout if query is missing.
+		// Bailout if the query is missing.
 		if (!$query) {
 			return new WP_Error(
 				'error_missing_query',
@@ -183,7 +183,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 		if (!$type) {
 			return new WP_Error(
 				'error_missing_type',
-				\esc_html__('Your request is missing type param. This is used to filter whate response will the method return.', 'eightshift-boilerplate')
+				\esc_html__('Your request is missing type param. This is used to filter which response will the method return.', 'eightshift-boilerplate')
 			);
 		}
 
@@ -192,7 +192,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 			return new WP_Error(
 				'error_missing_initial_items',
 				\esc_html__(
-					'Your request is missing initialItems param. This is used to determin number of items to load and what items to exclude from new requests.',
+					'Your request is missing initialItems param. This is used to determine the number of items to load and which items to exclude from new requests.',
 					'eightshift-boilerplate'
 				)
 			);
@@ -201,7 +201,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 		// Prepare original query.
 		$originalQuery = $this->prepareOriginalQuery($query, $initialItems, $perPageOverride);
 
-		// Create new query from original to be able to refference the original query later on.
+		// Create new query from original to be able to reference the original query later on.
 		$newQuery = $originalQuery;
 
 		// In case we are using api to load data on page refresh via get parameter update per page to new value.
@@ -215,12 +215,12 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 		// Make a loop for ids.
 		$theQuery = new WP_Query($newQuery);
 
-		// Bailout if query is empty.
+		// Bailout if the query is empty.
 		if (!$theQuery->have_posts()) {
 			return new WP_Error(
 				'error_empty_load_more_query',
 				\esc_html__(
-					'Your request returns empty load more query so it can\'t show anything. Please check the query sent to the ajax.',
+					'Your request returns an empty load more query so it doesn\'t show anything. Please check the query sent to ajax.',
 					'eightshift-boilerplate'
 				)
 			);
@@ -242,13 +242,13 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 		return [
 			'body' => $this->getMappedData($type, $response),
 			'query' => $newQuery,
-			'currentPage' => $urlLoadMoreAction === 'true' ? $currentPage : $currentPage + 1 , // If url load just remain on the current page number.
+			'currentPage' => $urlLoadMoreAction === 'true' ? $currentPage : $currentPage + 1 , // If URL, load just remains on the current page number.
 			'maxPages' => $this->getMaxCount($originalQuery, $initialItems),
 		];
 	}
 
 	/**
-	 * Detect max count of regular query without offsets used for initial load.
+	 * Detect the max count of a regular query without offsets used for the initial load.
 	 *
 	 * @param array<string, mixed> $query Array of props for WP_Query.
 	 * @param array<string> $initialItems Array of initial items in dom.
@@ -284,12 +284,12 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 			$query['fields'] = 'ids';
 		}
 
-		// Use initial items count for number of items if nothing is provided.
+		// Use the initial items count for the number of items if nothing is provided.
 		if (!isset($query['posts_per_page'])) {
 			$query['posts_per_page'] = \count($initialItems);
 		}
 
-		// Ovderride items count if provided.
+		// Override items count if provided.
 		if ($perPageOverride) {
 			$query['posts_per_page'] = $perPageOverride;
 		}
