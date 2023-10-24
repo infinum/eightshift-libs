@@ -139,10 +139,19 @@ class Components
 			$component = \ltrim($component, $sep);
 			$componentPath = $component;
 		} else {
-			$componentPath = Components::getProjectPaths('blocksDestinationComponents', "{$component}{$sep}{$component}.php", $sep);
+			if ($component === 'wrapper') {
+				$componentPath = Components::getProjectPaths('blocksDestinationWrapper', "{$component}.php", $sep);
+			} else {
+				$componentPath = Components::getProjectPaths('blocksDestinationComponents', "{$component}{$sep}{$component}.php", $sep);
+			}
 		}
 
 		$componentPath = "{$parentPath}{$componentPath}";
+
+		// Security check.
+		if (!\preg_match('(themes|plugins)', $componentPath)) {
+			throw ComponentException::throwPrivatePath();
+		}
 
 		if ($useComponentDefaults) {
 			$manifest = Components::getManifest($componentPath);
@@ -230,6 +239,11 @@ class Components
 		// Bailout if file is missing.
 		if (!\file_exists($path)) {
 			throw ComponentException::throwUnableToLocatePartial($path);
+		}
+
+		// Security check.
+		if (!\preg_match('(themes|plugins)', $path)) {
+			throw ComponentException::throwPrivatePath();
 		}
 
 		\ob_start();
