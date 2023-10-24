@@ -6,7 +6,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [6.5.7] - 2023-10-24
 
-## Changed
+### Changed
 - `render` and `renderPartial` methods are now no longer able to call the php files outside of themes/plugin folders. This is a security measure to prevent the execution of arbitrary code.
 - `render` method can now call `wrapper` as a component name.
 
