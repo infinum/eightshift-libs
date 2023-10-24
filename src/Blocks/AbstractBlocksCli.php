@@ -26,10 +26,11 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 * @param string $destination Destination path.
 	 * @param string $type Type of items used for output log.
 	 * @param bool $isSingleFolder Is single folder item.
+	 * @param string $sourcePrivate Source private libs path.
 	 *
 	 * @return void
 	 */
-	protected function moveItems(array $args, string $source, string $destination, string $type, bool $isSingleFolder = false): void
+	protected function moveItems(array $args, string $source, string $destination, string $type, bool $isSingleFolder = false, string $sourcePrivate = ''): void
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
@@ -62,12 +63,20 @@ abstract class AbstractBlocksCli extends AbstractCli
 			);
 		}
 
-		$sourceItems = \array_diff(\scandir($source), ['..', '.']);
-		$sourceItems = \array_values($sourceItems);
+		$sourceItems = \array_diff(\scandir($source) ?: [], ['..', '.']); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$sourceItems = \array_fill_keys(\array_values($sourceItems), $source);
+		$sourceItemsPrivate = [];
 
-		if ($isSingleFolder || $isFile) {
+		if ($sourcePrivate) {
+			$sourceItemsPrivate = \array_diff(\scandir($sourcePrivate) ?: [], ['..', '.']); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			$sourceItemsPrivate = \array_fill_keys(\array_values($sourceItemsPrivate), $sourcePrivate);
+		}
+
+		$sourceItems = \array_merge($sourceItems, $sourceItemsPrivate);
+
+		if (($isSingleFolder || $isFile) && isset($sourceItems[$name])) {
 			$sourceItems = [
-				$name,
+				$name => $sourceItems[$name],
 			];
 		}
 
@@ -83,17 +92,19 @@ abstract class AbstractBlocksCli extends AbstractCli
 		}
 
 		foreach ($itemsList as $item) {
-			if (!\in_array($item, $sourceItems, true)) {
+			if (!isset($sourceItems[$item])) {
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, item name and shorten cli path.
 						"Requested %s with the name `%s` doesn't exist in our library. Please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://eightshift.com/storybook/",
 						$type,
 						$item,
-						\implode(\PHP_EOL, $sourceItems)
+						\implode(\PHP_EOL, \array_keys($sourceItems))
 					)
 				);
 			}
+
+			$source = $sourceItems[$item];
 
 			$fullSource = Components::joinPaths([$source, $item]);
 			$fullDestination = Components::joinPaths([$destination, $item]);

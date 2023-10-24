@@ -139,10 +139,19 @@ class Components
 			$component = \ltrim($component, $sep);
 			$componentPath = $component;
 		} else {
-			$componentPath = Components::getProjectPaths('blocksDestinationComponents', "{$component}{$sep}{$component}.php", $sep);
+			if ($component === 'wrapper') {
+				$componentPath = Components::getProjectPaths('blocksDestinationWrapper', "{$component}.php", $sep);
+			} else {
+				$componentPath = Components::getProjectPaths('blocksDestinationComponents', "{$component}{$sep}{$component}.php", $sep);
+			}
 		}
 
 		$componentPath = "{$parentPath}{$componentPath}";
+
+		// Security check.
+		if (!\preg_match('(themes|plugins)', $componentPath)) {
+			throw ComponentException::throwPrivatePath();
+		}
 
 		if ($useComponentDefaults) {
 			$manifest = Components::getManifest($componentPath);
@@ -230,6 +239,11 @@ class Components
 		// Bailout if file is missing.
 		if (!\file_exists($path)) {
 			throw ComponentException::throwUnableToLocatePartial($path);
+		}
+
+		// Security check.
+		if (!\preg_match('(themes|plugins)', $path)) {
+			throw ComponentException::throwPrivatePath();
 		}
 
 		\ob_start();
@@ -338,6 +352,7 @@ class Components
 		}
 
 		$flibsPath = ["node_modules", "@eightshift", "frontend-libs", "blocks", "init"];
+		$fPLibsPath = ["node_modules", "@eightshift", "frontend-libs-private", "blocks", "init"];
 		$libsPath = ["vendor", "infinum", "eightshift-libs"];
 		$testsDataPath = ["tests", "data"];
 		$srcPath = "src";
@@ -421,16 +436,26 @@ class Components
 					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
 				}
 				break;
+			case 'blocksPrivateSource':
+				$path = self::joinPaths([...$fPLibsPath, ...$blocksPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
+				}
+				break;
 			case 'blocksDestinationCustom':
 			case 'blocksSourceCustom':
+			case 'blocksPrivateSourceCustom':
 				$name = 'custom';
 				break;
 			case 'blocksDestinationComponents':
 			case 'blocksSourceComponents':
+			case 'blocksPrivateSourceComponents':
 				$name = 'components';
 				break;
 			case 'blocksDestinationVariations':
 			case 'blocksSourceVariations':
+			case 'blocksPrivateSourceVariations':
 				$name = 'variations';
 				break;
 			case 'blocksDestinationWrapper':
@@ -480,6 +505,16 @@ class Components
 				}
 				break;
 
+			case 'blocksPrivateSourceCustom':
+			case 'blocksPrivateSourceComponents':
+			case 'blocksPrivateSourceVariations':
+				$path = self::joinPaths([...$fPLibsPath, ...$blocksPath, $name]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);
+				}
+				break;
+
 			case 'blocksDestinationCustom':
 			case 'blocksDestinationComponents':
 			case 'blocksDestinationVariations':
@@ -500,7 +535,6 @@ class Components
 
 		return \str_replace("{$sep}{$sep}", $sep, $path);
 	}
-
 	/**
 	 * Paths join
 	 *

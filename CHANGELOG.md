@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+
+## [6.5.7] - 2023-10-24
+
+## Changed
+- `render` and `renderPartial` methods are now no longer able to call the php files outside of themes/plugin folders. This is a security measure to prevent the execution of arbitrary code.
+- `render` method can now call `wrapper` as a component name.
+
 ## [6.5.6] - 2023-07-17
 
 ### Fixed
@@ -439,6 +446,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[6.5.6]: https://github.com/infinum/eightshift-libs/compare/6.5.6...v6.5.7
 [6.5.6]: https://github.com/infinum/eightshift-libs/compare/6.5.5...v6.5.6
 [6.5.5]: https://github.com/infinum/eightshift-libs/compare/6.5.4...v6.5.5
 [6.5.4]: https://github.com/infinum/eightshift-libs/compare/6.5.3...v6.5.4
