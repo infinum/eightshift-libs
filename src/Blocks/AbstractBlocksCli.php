@@ -56,7 +56,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			self::cliError(
 				\sprintf(
 					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
+					"%s file doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
 					$type,
 					$this->getShortenCliPathOutput($source)
 				)
@@ -74,25 +74,35 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		$sourceItems = \array_merge($sourceItems, $sourceItemsPrivate);
 
-		if (($isSingleFolder || $isFile) && isset($sourceItems[$name])) {
-			$sourceItems = [
-				$name => $sourceItems[$name],
-			];
-		}
-
 		if (!$sourceItems) {
 			self::cliError(
 				\sprintf(
-					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
+					// translators: %1$s will be replaced with type of item, %2$s the type and %3$s and shorten cli path.
+					'%1$s %2$s doesn\'t exist on this path: `%3$s`. Please check if you have eightshift-frontend-libs installed.',
 					$type,
+					$isFile ? 'file' : 'folder',
 					$this->getShortenCliPathOutput($source)
 				)
 			);
 		}
 
+		$itemExists = false;
 		foreach ($itemsList as $item) {
-			if (!isset($sourceItems[$item])) {
+			foreach ($sourceItems as $sourceItem => $sourceFolder) {
+				if (\strpos($sourceItem, $item) !== false) {
+					$itemExists = true;
+					break;
+				}
+
+				// in the case of folders, we should also check the source folders.
+				if (\strpos($sourceFolder, $item) !== false) {
+					$itemExists = true;
+					break;
+				}
+			}
+
+
+			if (!$itemExists) {
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, item name and shorten cli path.
@@ -103,8 +113,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 					)
 				);
 			}
-
-			$source = $sourceItems[$item];
 
 			$fullSource = Components::joinPaths([$source, $item]);
 			$fullDestination = Components::joinPaths([$destination, $item]);

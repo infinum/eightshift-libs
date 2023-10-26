@@ -81,7 +81,7 @@ class UseManifestCli extends AbstractBlocksCli
 			),
 			Components::getProjectPaths('blocksSource'),
 			Components::getProjectPaths('blocksDestination'),
-			'manifest.json'
+			'file'
 		);
 
 		if (!$groupOutput) {

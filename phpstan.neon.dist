@@ -13,7 +13,5 @@ parameters:
 	excludePaths:
 		- src/**/*Example.php
 	ignoreErrors:
-		# Uses func_get_args()
-		- '/^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$/'
 		# Ignore errors about reflection class variable being undefined. Errors are caught.
 		- '/^Variable \$reflectionClass might not be defined\.$/'

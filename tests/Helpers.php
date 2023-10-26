@@ -12,7 +12,8 @@ use Mockery\MockInterface;
  *
  * @return void
  */
-function buildTestBlocks() {
+function buildTestBlocks()
+{
 	(new InitBlocksCli('boilerplate'))->__invoke([], []);
 
 	(new BlocksExample())->getBlocksDataFullRaw();
