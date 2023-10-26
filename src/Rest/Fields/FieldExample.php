@@ -23,11 +23,11 @@ class FieldExample extends AbstractField implements CallableFieldInterface
 	 *
 	 * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
 	 *
-	 * @return string|array
+	 * @return array<int, string>
 	 */
-	protected function getObjectType()
+	protected function getObjectType(): array
 	{
-		return '%object_type%';
+		return ['%object_type%'];
 	}
 
 	/**
@@ -43,7 +43,7 @@ class FieldExample extends AbstractField implements CallableFieldInterface
 	/**
 	 * Get callback arguments array
 	 *
-	 * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
+	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
 	 */
 	protected function getCallbackArguments(): array
 	{
@@ -66,7 +66,7 @@ class FieldExample extends AbstractField implements CallableFieldInterface
 	 *               is already an instance, WP_HTTP_Response, otherwise
 	 *               returns a new WP_REST_Response instance.
 	 */
-	public function fieldCallback($postObject, string $attr, object $request, string $objectType)
+	public function fieldCallback($postObject, string $attr, object $request, string $objectType) // @phpstan-ignore-line
 	{
 		return \rest_ensure_response('output data');
 	}

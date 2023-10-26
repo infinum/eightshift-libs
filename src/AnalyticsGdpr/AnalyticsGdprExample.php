@@ -836,7 +836,7 @@ class AnalyticsGdprExample implements ServiceInterface
 	/**
 	 * Prepare the data for usage inside of the GDPR modal template.
 	 *
-	 * @return array<string, array> Prepared array filled with the data from options page.
+	 * @return array<string, array<mixed>> Prepared array filled with the data from options page.
 	 */
 	public function prepareGdprModalData(): array
 	{

@@ -15,3 +15,4 @@ parameters:
 	ignoreErrors:
 		# Ignore errors about reflection class variable being undefined. Errors are caught.
 		- '/^Variable \$reflectionClass might not be defined\.$/'
+	checkGenericClassInNonGenericObjectType: false

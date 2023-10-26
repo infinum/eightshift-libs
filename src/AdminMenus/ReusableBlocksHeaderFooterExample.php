@@ -34,7 +34,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	/**
 	 * Admin icon.
 	 */
-	public const ADMIN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 1A1.5 1.5 0 0 0 0 2.5V4h20V2.5A1.5 1.5 0 0 0 18.5 1h-17ZM20 5H0v10h20V5ZM0 17.5V16h20v1.5a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 0 17.5ZM19 6H1v8h18V6Z" fill="black"/></svg>'; // phpcs:ignore
+	public const ADMIN_ICON = 'dashicons-embed-photo';
 
 	/**
 	 * Menu position for reusable blocks menu.

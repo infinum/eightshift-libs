@@ -41,7 +41,7 @@
 		"php-stubs/wordpress-stubs": "^6.3",
 		"roave/security-advisories": "dev-master",
 		"szepeviktor/phpstan-wordpress": "^1.0.3",
-		"wp-cli/wp-cli": "^2.4",
+		"wp-cli/wp-cli": "^2.9",
 		"yoast/wp-test-utils": "^1.0"
 	},
 	"autoload": {
