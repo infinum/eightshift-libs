@@ -42,48 +42,6 @@ test('addThemeSupport method will call add_theme_support() function with differe
 	expect(\getenv('ALIGN_WIDE'))->toBe('true');
 });
 
-test('Asserts that getAllBlocksListOld first argument is boolean and return the provided attribute as return value for older WP versions.', function () {
-
-	Functions\when('is_wp_version_compatible')->justReturn(false);
-
-	$post = mock('WP_Post');
-
-	$blocks = $this->mock->getAllBlocksListOld(true, $post);
-
-	expect($blocks)->toBeTrue();
-
-	$blocks = $this->mock->getAllBlocksListOld(false, $post);
-
-	expect($blocks)->toBeFalse();
-});
-
-test('Asserts that getAllBlocksListOld will return only projects blocks for older WP versions.', function () {
-
-	Functions\when('is_wp_version_compatible')->justReturn(false);
-
-	$post = mock(\WP_Post::class);
-
-	buildTestBlocks();
-
-	$list = $this->mock->getAllBlocksListOld([], $post);
-
-	expect($list)
-		->toBeArray()
-		->not->toContain('core/paragraph')
-		->toContain('eightshift-boilerplate/button', 'core/block', 'core/template');
-});
-
-
-test('Asserts that getAllBlocksList with all types of arguments throw error for older WP versions.', function ($argument) {
-
-	Functions\when('is_wp_version_compatible')->justReturn(false);
-
-	$post = mock('WP_Post');
-
-	$this->mock->getAllBlocksList($argument, $post);
-})->throws(\TypeError::class)
-->with('getAllAllowedBlocksListAllTypesArguments');
-
 test('Asserts that getAllBlocksList is not influenced by the first parameter', function ($argument) {
 
 	$blockContext = mock(WP_Block_Editor_Context::class);
@@ -145,16 +103,6 @@ test('Asserts that getAllAllowedBlocksList first argument is not bool and return
 		->not->toContain('core/paragraph')
 		->toContain('test', 'eightshift-boilerplate/button', 'core/block', 'core/template');
 });
-
-test('Asserts that getAllAllowedBlocksList with all types of arguments throw error for older WP versions.', function ($argument) {
-
-	Functions\when('is_wp_version_compatible')->justReturn(false);
-
-	$post = mock('WP_Post');
-
-	$this->mock->getAllAllowedBlocksList($argument, $post);
-})->throws(\TypeError::class)
-->with('getAllAllowedBlocksListAllTypesArguments');
 
 test('Asserts that getAllAllowedBlocksList will return projects blocks and passed blocks for WP 5.8.', function () {
 	$blockContext = mock(WP_Block_Editor_Context::class);
@@ -291,20 +239,6 @@ test('registerBlocks method will register all blocks.', function () {
 	$this->mock->registerBlocks();
 
 	expect(\getenv('BLOCK_TYPE'))->toBe('true');
-});
-
-test('getCustomCategoryOld method will return an array.', function () {
-	$post = mock('WP_Post');
-
-	$categoryList = $this->mock->getCustomCategoryOld([], $post);
-
-	expect($categoryList)->toBeArray();
-
-	expect($categoryList[0])
-		->toBeArray()
-		->toHaveKey('slug')
-		->toHaveKey('title')
-		->toHaveKey('icon');
 });
 
 test('filterBlocksContent method will return an array.', function () {
