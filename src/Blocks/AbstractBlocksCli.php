@@ -67,7 +67,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$sourceItems = \array_fill_keys(\array_values($sourceItems), $source);
 		$sourceItemsPrivate = [];
 
-		if ($sourcePrivate) {
+		if (\is_dir($sourcePrivate)) {
 			$sourceItemsPrivate = \array_diff(\scandir($sourcePrivate) ?: [], ['..', '.']); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			$sourceItemsPrivate = \array_fill_keys(\array_values($sourceItemsPrivate), $sourcePrivate);
 		}
