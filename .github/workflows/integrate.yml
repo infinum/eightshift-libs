@@ -65,9 +65,7 @@ jobs:
       matrix:
         php-version: ["7.4", "8.0", "8.1", "8.2"]
         dependencies:
-          - "lowest"
           - "highest"
-        allowed_failure: [ false ]
         # Allow failure on non-released version of PHP.
         include:
           - php: "8.1"
