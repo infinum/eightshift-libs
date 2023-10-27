@@ -67,7 +67,6 @@ jobs:
         dependencies:
           - "highest"
     runs-on: "ubuntu-latest"
-    continue-on-error: ${{ matrix.allowed_failure }}
     steps:
       - name: "Set up PHP"
         uses: "shivammathur/setup-php@v2"
