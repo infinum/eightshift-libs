@@ -22,7 +22,7 @@ test('REST field CLI command will correctly copy the field class with defaults',
 
 	$this->assertStringContainsString('class TitleCustomField extends AbstractField implements CallableFieldInterface', $output);
 	$this->assertStringContainsString('return \'title-custom\';', $output);
-	$this->assertStringContainsString('return \'example\';', $output);
+	$this->assertStringContainsString('return [\'example\'];', $output);
 	$this->assertStringContainsString('get_callback', $output);
 	$this->assertStringContainsString('rest_ensure_response', $output);
 	$this->assertStringNotContainsString('ExampleRoute', $output);
@@ -39,7 +39,7 @@ test('REST field CLI command will correctly copy the field class with arguments'
 	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}{$fullFieldName}.php"));
 
 	$this->assertStringContainsString("class {$fullFieldName} extends AbstractField implements CallableFieldInterface", $output);
-	$this->assertStringContainsString("return '{$objectType}';", $output);
+	$this->assertStringContainsString("return ['{$objectType}'];", $output);
 	$this->assertStringNotContainsString('example-post-type', $output);
 	$this->assertStringNotContainsString('example-field', $output);
 })->with('correctFieldNameArguments');

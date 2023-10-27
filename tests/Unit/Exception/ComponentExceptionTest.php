@@ -43,3 +43,26 @@ test('Checks if throwUnableToLocateComponent method will return correct response
 		->and("Unable to locate component by path: {$component}")
 		->toEqual($output->getMessage());
 });
+
+test('Checks if throwUnableToLocatePartial method will return correct response.', function () {
+
+	$path = 'nonexistent';
+	$output = ComponentException::throwUnableToLocatePartial($path);
+
+	expect($output)->toBeObject()
+		->toBeInstanceOf(ComponentException::class)
+		->toHaveProperty('message')
+		->and("Unable to locate partial on this path: {$path}")
+		->toEqual($output->getMessage());
+});
+
+test('Checks if throwPrivatePath method will return correct response.', function () {
+
+	$output = ComponentException::throwPrivatePath();
+
+	expect($output)->toBeObject()
+		->toBeInstanceOf(ComponentException::class)
+		->toHaveProperty('message')
+		->and('You are not allowed to access paths outside of themes or plugins folder!')
+		->toEqual($output->getMessage());
+});

@@ -136,7 +136,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	 */
 	protected function getIcon(): string
 	{
-		return 'data:image/svg+xml;base64,' . base64_encode(self::ADMIN_ICON); // phpcs:ignore;
+		return self::ADMIN_ICON;
 	}
 
 	/**

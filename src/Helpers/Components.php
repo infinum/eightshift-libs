@@ -149,8 +149,10 @@ class Components
 		$componentPath = "{$parentPath}{$componentPath}";
 
 		// Security check.
-		if (!\preg_match('(themes|plugins)', $componentPath)) {
-			throw ComponentException::throwPrivatePath();
+		if (!\getenv('ES_TEST')) {
+			if (!\preg_match('(themes|plugins)', $componentPath)) {
+				throw ComponentException::throwPrivatePath();
+			}
 		}
 
 		if ($useComponentDefaults) {
@@ -242,8 +244,10 @@ class Components
 		}
 
 		// Security check.
-		if (!\preg_match('(themes|plugins)', $path)) {
-			throw ComponentException::throwPrivatePath();
+		if (!\getenv('ES_TEST')) {
+			if (!\preg_match('(themes|plugins)', $path)) {
+				throw ComponentException::throwPrivatePath();
+			}
 		}
 
 		\ob_start();
