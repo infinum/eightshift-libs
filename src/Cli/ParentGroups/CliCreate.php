@@ -21,13 +21,13 @@ use WP_CLI_Command;
  *    $ wp boilerplate create media
  *
  *    # Create custom post type service class.
- *    $ wp boilerplate create post_type --url='project.test' --label="Jobs" --slug="jobs" --rewrite_url="jobs" --rest_endpoint_slug="jobs"
+ *    $ wp boilerplate create post-type --url='project.test' --label="Jobs" --slug="jobs" --rewrite_url="jobs" --rest_endpoint_slug="jobs"
  *
  *    # Create custom taxonomy service class.
- *    $ wp boilerplate create_taxonomy --label='Job Positions' --slug='job-position' --rest_endpoint_slug='job-positions' --post_type_slug='user'
+ *    $ wp boilerplate create taxonomy --label='Job Positions' --slug='job-position' --rest_endpoint_slug='job-positions' --post_type_slug='user'
  *
  *    # Create create custom admin appearance service class.
- *    $ wp boilerplate create_modify_admin_appearance
+ *    $ wp boilerplate create modify-admin-appearance
  */
 class CliCreate extends WP_CLI_Command
 {
