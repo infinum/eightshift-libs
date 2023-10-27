@@ -9,6 +9,7 @@ use Exception;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use WP_Theme;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 class BaseTest extends TestCase
@@ -191,6 +192,12 @@ class BaseTest extends TestCase
 		Functions\when('is_wp_version_compatible')->justReturn(true);
 
 		Functions\when('wp_nonce_field')->justReturn('nonce');
+
+		Functions\when('wp_get_theme')->justReturn(new class {
+			public function get( $header ) {
+				return 'test';
+			}
+		});
 
 		// Mock https://developer.wordpress.org/reference/functions/wp_is_json_media_type/ function
 		Functions\when('wp_is_json_media_type')->alias(function ($mediaType) {

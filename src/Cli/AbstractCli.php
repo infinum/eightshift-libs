@@ -58,6 +58,27 @@ abstract class AbstractCli implements CliInterface
 	public const TEMPLATE = '';
 
 	/**
+	 * Output project name arg.
+	 *
+	 * @var string
+	 */
+	public const PROJECT_NAME_ARG = 'project_name';
+
+	/**
+	 * Output theme name arg.
+	 *
+	 * @var string
+	 */
+	public const THEME_NAME_ARG = 'theme_name';
+
+	/**
+	 * Output plugin name arg.
+	 *
+	 * @var string
+	 */
+	public const PLUGIN_NAME_ARG = 'plugin_name';
+
+	/**
 	 * Construct Method.
 	 *
 	 * @param string $commandParentName Define top level commands name.

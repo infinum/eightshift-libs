@@ -47,8 +47,6 @@ class ConfigCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'name' => 'Boilerplate',
-			'version' => '1',
 			'routes_version' => '1',
 		];
 	}
@@ -63,20 +61,6 @@ class ConfigCli extends AbstractCli
 		return [
 			'shortdesc' => 'Create project config service class.',
 			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'name',
-					'description' => 'Define project name.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('name'),
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'version',
-					'description' => 'Define project version.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('version'),
-				],
 				[
 					'type' => 'assoc',
 					'name' => 'routes_version',
@@ -109,8 +93,6 @@ class ConfigCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
-		$name = $this->getArg($assocArgs, 'name');
-		$version = $this->getArg($assocArgs, 'version');
 		$routesVersion = $this->getArg($assocArgs, 'routes_version');
 
 		$className = $this->getClassShortName();
@@ -120,14 +102,6 @@ class ConfigCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs);
-
-		if (!empty($name)) {
-			$class->searchReplaceString($this->getArgTemplate('name'), $name);
-		}
-
-		if (!empty($version)) {
-			$class->searchReplaceString($this->getArgTemplate('version'), $version);
-		}
 
 		if (!empty($routesVersion)) {
 			$class->searchReplaceString($this->getArgTemplate('routes_version'), $routesVersion);

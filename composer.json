@@ -28,7 +28,7 @@
 		"ext-dom": "*",
 		"ext-json": "*",
 		"ext-libxml": "*",
-		"php-di/invoker": "^2.3",
+		"php-di/invoker": "^2.3.4",
 		"php-di/php-di": "^7"
 	},
 	"require-dev": {
