@@ -232,17 +232,34 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		if ($dependencies) {
 			$componentsCommandName = UseComponentCli::COMMAND_NAME;
-			$allDependencies = \array_map(static fn ($item) => Components::camelToKebabCase($item), $dependencies);
-			$allDependencies = \implode(', ', \array_unique(\array_values($allDependencies)));
+			$blocksCommandName = UseBlockCli::COMMAND_NAME;
 
-			$this->cliLogAlert(\implode("\n", [
-				"This {$type} may need some dependencies to work correctly.",
-				'',
-				'To add them to your project, run:',
-				"%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'%n",
-				'',
-				'If a dependency already exists in your project, you can skip it.',
-			]), 'info', 'Dependencies found');
+			$outputComand = [];
+
+			if ($componentsDependencies) {
+				$componentsDependenciesAll = \array_map(static fn ($item) => Components::camelToKebabCase($item), $componentsDependencies);
+				$componentsDependenciesAll = \implode(', ', \array_unique(\array_values($componentsDependenciesAll)));
+
+				$outputComand[] = "%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$componentsDependenciesAll}'%n";
+			}
+
+			if ($innerBlocksDependency) {
+				$innerBlocksDependencyAll = \array_map(static fn ($item) => Components::camelToKebabCase($item), $innerBlocksDependency);
+				$innerBlocksDependencyAll = \implode(', ', \array_unique(\array_values($innerBlocksDependencyAll)));
+
+				$outputComand[] = "%Uwp boilerplate {$this->getCommandParentName()} {$blocksCommandName} --name='{$innerBlocksDependencyAll}'%n";
+			}
+
+			if ($outputComand) {
+				$this->cliLogAlert(\implode("\n", [
+					"This {$type} may need some dependencies to work correctly.",
+					'',
+					'To add them to your project, run:',
+					...$outputComand,
+					'',
+					'If a dependency already exists in your project, you can skip it.',
+				]), 'info', 'Dependencies found');
+			}
 		}
 	}
 

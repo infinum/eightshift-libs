@@ -19,6 +19,13 @@ use EightshiftLibs\Helpers\Components;
 class UseBlockCli extends AbstractBlocksCli
 {
 	/**
+	 * Command name.
+	 *
+	 * @var string
+	 */
+	public const COMMAND_NAME = 'use-block';
+
+	/**
 	 * Get WPCLI command parent name
 	 *
 	 * @return string
@@ -35,7 +42,7 @@ class UseBlockCli extends AbstractBlocksCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'use-block';
+		return self::COMMAND_NAME;
 	}
 
 	/**
