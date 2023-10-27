@@ -76,7 +76,6 @@ class Components
 
 		'blocksGlobalAssetsSource',
 		'blocksAssetsSource',
-		'blocksStorybookSource',
 		'blocksSource',
 		'blocksSourceCustom',
 		'blocksSourceComponents',
@@ -85,7 +84,6 @@ class Components
 
 		'blocksGlobalAssetsDestination',
 		'blocksAssetsDestination',
-		'blocksStorybookDestination',
 		'blocksDestination',
 		'blocksDestinationCustom',
 		'blocksDestinationComponents',
@@ -361,7 +359,6 @@ class Components
 		$testsDataPath = ["tests", "data"];
 		$srcPath = "src";
 		$blocksPath = [$srcPath, "Blocks"];
-		$storybookPath = "storybook";
 		$assetsPath = "assets";
 		$cliOutputPath = "cliOutput";
 
@@ -426,13 +423,6 @@ class Components
 					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $assetsPath]);
 				}
 				break;
-			case 'blocksStorybookSource':
-				$path = self::joinPaths([...$flibsPath, $storybookPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, $storybookPath]);
-				}
-				break;
 			case 'blocksSource':
 				$path = self::joinPaths([...$flibsPath, ...$blocksPath]);
 
@@ -479,13 +469,6 @@ class Components
 
 				if (\getenv('ES_TEST')) {
 					$path = self::joinPaths([$cliOutputPath, ...$blocksPath, $assetsPath]);
-				}
-				break;
-			case 'blocksStorybookDestination':
-				$path = self::joinPaths([".{$storybookPath}"]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([$cliOutputPath, ".{$storybookPath}"]);
 				}
 				break;
 			case 'blocksDestination':

@@ -815,7 +815,6 @@ abstract class AbstractCli implements CliInterface
 			"{$name}-hooks.js",
 			"{$name}-transforms.js",
 			"{$name}.js",
-			"docs{$ds}story.js",
 			"components{$ds}{$name}-editor.js",
 			"components{$ds}{$name}-toolbar.js",
 			"components{$ds}{$name}-options.js",

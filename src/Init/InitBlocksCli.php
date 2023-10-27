@@ -16,7 +16,6 @@ use EightshiftLibs\Blocks\UseBlockCli;
 use EightshiftLibs\Blocks\UseComponentCli;
 use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Blocks\UseManifestCli;
-use EightshiftLibs\Blocks\UseStorybookCli;
 use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
@@ -35,7 +34,6 @@ class InitBlocksCli extends AbstractCli
 	public const COMMANDS = [
 		BlocksCli::class => [],
 		UseAssetsCli::class => [],
-		UseStorybookCli::class => [],
 		UseGlobalAssetsCli::class => [],
 		UseWrapperCli::class => [],
 		UseManifestCli::class => [],

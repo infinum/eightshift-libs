@@ -22,7 +22,6 @@ use EightshiftLibs\Blocks\UseBlockCli;
 use EightshiftLibs\Blocks\UseAssetsCli;
 use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Blocks\UseManifestCli;
-use EightshiftLibs\Blocks\UseStorybookCli;
 use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
@@ -156,7 +155,6 @@ class Cli
 		UseComponentCli::class,
 		UseGlobalAssetsCli::class,
 		UseManifestCli::class,
-		UseStorybookCli::class,
 		UseVariationCli::class,
 		UseWrapperCli::class,
 	];
