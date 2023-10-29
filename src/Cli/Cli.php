@@ -63,6 +63,7 @@ use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
+use EightshiftLibs\Misc\VersionCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
@@ -139,6 +140,7 @@ class Cli
 		ImportCli::class,
 		RegenerateWebPMediaCli::class,
 		UseWebPMediaCli::class,
+		VersionCli::class,
 		PluginManageCli::class,
 	];
 

@@ -26,7 +26,7 @@ test('Cli getCommandsClasses return correct class list', function () {
 		->not->toHaveKey(CliShowAll::class)
 		->and(\count($publicClasses))
 		->toBeInt()
-		->toBe(52);
+		->toBe(53);
 	// Public classes count.
 });
 
