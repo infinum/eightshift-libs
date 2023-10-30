@@ -101,7 +101,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 				}
 			}
 
-
 			if (!$itemExists) {
 				self::cliError(
 					\sprintf(

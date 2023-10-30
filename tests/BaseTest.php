@@ -9,7 +9,6 @@ use Exception;
 use Mockery\MockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use WP_Theme;
 use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 class BaseTest extends TestCase
