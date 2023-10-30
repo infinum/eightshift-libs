@@ -48,9 +48,10 @@ test('getDoc will return correct array', function () {
 	expect($docs)
 		->toBeArray()
 		->toHaveKeys(['shortdesc', 'synopsis', 'longdesc'])
-		->and(count($docs['synopsis']))->toEqual(2)
+		->and(count($docs['synopsis']))->toEqual(3)
 		->and($docs['synopsis'][0]['name'])->toEqual('from')
-		->and($docs['synopsis'][1]['name'])->toEqual('to');
+		->and($docs['synopsis'][1]['name'])->toEqual('to')
+		->and($docs['synopsis'][2]['name'])->toEqual('setup_file');
 });
 
 //---------------------------------------------------------------------------------//
@@ -123,6 +124,7 @@ test('__invoke will fail if setup.json is missing url keys', function () {
 test('__invoke will fail if setup.json is missing url "from" key', function () {
 	(new SetupCli('boilerplate'))->__invoke([], [
 		'path' => Components::getProjectPaths('cliOutput', 'setup'),
+		'file_name' => 'setup-missing-urls-from.json',
 		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
 
@@ -130,6 +132,7 @@ test('__invoke will fail if setup.json is missing url "from" key', function () {
 	$mock([], [
 		'from' => 'test',
 		'to' => 'develop',
+		'setup_file' => Components::getProjectPaths('cliOutput', 'setup' . \DIRECTORY_SEPARATOR . 'setup-missing-urls-from.json'),
 	]);
 
 })->throws(Exception::class, 'test key is missing or empty in urls.');
@@ -137,13 +140,15 @@ test('__invoke will fail if setup.json is missing url "from" key', function () {
 test('__invoke will fail if setup.json is missing url "to" key', function () {
 	(new SetupCli('boilerplate'))->__invoke([], [
 		'path' => Components::getProjectPaths('cliOutput', 'setup'),
+		'file_name' => 'setup-missing-urls-to.json',
 		'source_path' => Components::getProjectPaths('testsData', 'setup'),
 	]);
 
 	$mock = $this->mock;
 	$mock([], [
-		'from' => 'production',
-		'to' => 'test',
+		'from' => 'test',
+		'to' => 'develop',
+		'setup_file' => Components::getProjectPaths('cliOutput', 'setup' . \DIRECTORY_SEPARATOR . 'setup-missing-urls-to.json'),
 	]);
 
 })->throws(Exception::class, 'test key is missing or empty in urls.');

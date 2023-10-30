@@ -110,7 +110,7 @@ if (!function_exists('dbImport')) {
 			WP_CLI::log('--------------------------------------------------');
 
 			// Execute db export.
-			WP_CLI::runcommand('db export');
+			WP_CLI::runcommand('db export --set-gtid-purged=OFF');
 			WP_CLI::log('Db exported successfully.');
 			WP_CLI::log('--------------------------------------------------');
 
