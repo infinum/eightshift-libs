@@ -49,12 +49,30 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 	}
 
 	/**
+	 * Method that returns assets hook used to determine hook usage.
+	 *
+	 * @param string $hook Hook name.
+	 *
+	 * @return boolean
+	 */
+	public function isEnqueueStylesUsed(string $hook): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Register the Stylesheets for the front end of the theme.
+	 *
+	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueStyles(): void
+	public function enqueueStyles(string $hook): void
 	{
+		if (!$this->isEnqueueStylesUsed($hook)) {
+			return;
+		}
+
 		$handle = $this->getThemeStyleHandle();
 
 		\wp_register_style(

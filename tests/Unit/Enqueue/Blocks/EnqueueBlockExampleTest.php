@@ -80,6 +80,8 @@ beforeEach(function() {
 	$manifest->setAssetsManifestRaw();
 
 	$this->blockEnqueue = new EnqueueBlockExampleTest($manifest);
+
+	$this->hookSuffix = 'test';
 });
 
 /**
@@ -90,6 +92,7 @@ afterEach(function() {
 		$this->projectName,
 		$this->projectVersion,
 		$this->blockEnqueue,
+		$this->hookSuffix
 	);
 
 	putenv('REGISTER_STYLE');
@@ -131,7 +134,7 @@ test('Enqueue Blocks will get assets version.', function () {
 });
 
 test('enqueueBlockEditorScript method will enqueue scripts for block editor', function () {
-	$this->blockEnqueue->enqueueBlockEditorScript();
+	$this->blockEnqueue->enqueueBlockEditorScript($this->hookSuffix);
 
 	$this->assertSame(\getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-editor-scripts", 'Method enqueueStyles() failed to register style');
 	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-editor-scripts", 'Method enqueueScripts() failed to enqueue style');
@@ -139,21 +142,21 @@ test('enqueueBlockEditorScript method will enqueue scripts for block editor', fu
 });
 
 test('enqueueBlockEditorStyle method will enqueue styles for block editor', function () {
-	$this->blockEnqueue->enqueueBlockEditorStyle();
+	$this->blockEnqueue->enqueueBlockEditorStyle($this->hookSuffix);
 
 	$this->assertSame(\getenv('REGISTER_STYLE'), "{$this->projectName}-block-editor-style", 'Method enqueueStyles() failed to register style');
 	$this->assertSame(\getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-editor-style", 'Method enqueueStyles() failed to enqueue style');
 });
 
 test('enqueueBlockStyle method will enqueue styles for a block', function () {
-	$this->blockEnqueue->enqueueBlockStyle();
+	$this->blockEnqueue->enqueueBlockStyle($this->hookSuffix);
 
 	$this->assertSame(\getenv('REGISTER_STYLE'), "{$this->projectName}-block-style", 'Method enqueueStyles() failed to register style');
 	$this->assertSame(\getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-style", 'Method enqueueStyles() failed to enqueue style');
 });
 
 test('enqueueBlockFrontendScript method will enqueue scripts for a block', function () {
-	$this->blockEnqueue->enqueueBlockFrontendScript();
+	$this->blockEnqueue->enqueueBlockFrontendScript($this->hookSuffix);
 
 	$this->assertSame(\getenv('REGISTER_SCRIPT'), "{$this->projectName}-block-frontend-scripts", 'Method enqueueStyles() failed to register style');
 	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), "{$this->projectName}-block-frontend-scripts", 'Method enqueueScripts() failed to enqueue style');
@@ -161,7 +164,7 @@ test('enqueueBlockFrontendScript method will enqueue scripts for a block', funct
 });
 
 test('enqueueBlockFrontendStyle method will enqueue styles for a block', function () {
-	$this->blockEnqueue->enqueueBlockFrontendStyle();
+	$this->blockEnqueue->enqueueBlockFrontendStyle($this->hookSuffix);
 
 	$this->assertSame(\getenv('REGISTER_STYLE'), "{$this->projectName}-block-frontend-style", 'Method enqueueStyles() failed to register style');
 	$this->assertSame(\getenv('ENQUEUE_STYLE'), "{$this->projectName}-block-frontend-style", 'Method enqueueScripts() failed to enqueue style');

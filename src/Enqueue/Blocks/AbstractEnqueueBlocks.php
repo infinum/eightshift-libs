@@ -44,52 +44,30 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
-	 * Get block editor Stylesheet handle.
+	 * Method that returns assets hook used to determine hook usage.
 	 *
-	 * @return string
-	 */
-	public function getBlockEditorStyleHandle(): string
-	{
-		return "{$this->getAssetsPrefix()}-block-editor-style";
-	}
-
-	/**
-	 * Get block Stylesheet handle.
+	 * @param string $hook Hook name.
 	 *
-	 * @return string
+	 * @return boolean
 	 */
-	public function getBlockStyleHandle(): string
+	public function isEnqueueBlockEditorScriptUsed(string $hook): bool
 	{
-		return "{$this->getAssetsPrefix()}-block-style";
-	}
-
-	/**
-	 * Get block frontend JavaScript handle.
-	 *
-	 * @return string
-	 */
-	public function getBlockFrontentScriptHandle(): string
-	{
-		return "{$this->getAssetsPrefix()}-block-frontend-scripts";
-	}
-
-	/**
-	 * Get block frontend Stylesheet handle.
-	 *
-	 * @return string
-	 */
-	public function getBlockFrontentStyleHandle(): string
-	{
-		return "{$this->getAssetsPrefix()}-block-frontend-style";
+		return true;
 	}
 
 	/**
 	 * Enqueue blocks script for editor only.
 	 *
+	 * @param string $hook Hook name.
+	 *
 	 * @return void
 	 */
-	public function enqueueBlockEditorScript(): void
+	public function enqueueBlockEditorScript(string $hook): void
 	{
+		if (!$this->isEnqueueBlockEditorScriptUsed($hook)) {
+			return;
+		}
+
 		$handle = $this->getBlockEditorScriptsHandle();
 
 		\wp_register_script(
@@ -108,12 +86,40 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
+	 * Get block editor Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockEditorStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-editor-style";
+	}
+
+	/**
+	 * Method that returns assets hook used to determine hook usage.
+	 *
+	 * @param string $hook Hook name.
+	 *
+	 * @return boolean
+	 */
+	public function isEnqueueBlockEditorStyleUsed(string $hook): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Enqueue blocks style for editor only.
+	 *
+	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueBlockEditorStyle(): void
+	public function enqueueBlockEditorStyle(string $hook): void
 	{
+		if (!$this->isEnqueueBlockEditorStyleUsed($hook)) {
+			return;
+		}
+
 		$handle = $this->getBlockEditorStyleHandle();
 
 		\wp_register_style(
@@ -128,12 +134,40 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
+	 * Get block Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-style";
+	}
+
+	/**
+	 * Method that returns assets hook used to determine hook usage.
+	 *
+	 * @param string $hook Hook name.
+	 *
+	 * @return boolean
+	 */
+	public function isEnqueueBlockStyleUsed(string $hook): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Enqueue blocks style for editor and frontend.
+	 *
+	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueBlockStyle(): void
+	public function enqueueBlockStyle(string $hook): void
 	{
+		if (!$this->isEnqueueBlockStyleUsed($hook)) {
+			return;
+		}
+
 		$handle = $this->getBlockStyleHandle();
 
 		\wp_register_style(
@@ -148,12 +182,40 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
+	 * Get block frontend JavaScript handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockFrontentScriptHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-frontend-scripts";
+	}
+
+	/**
+	 * Method that returns assets hook used to determine hook usage.
+	 *
+	 * @param string $hook Hook name.
+	 *
+	 * @return boolean
+	 */
+	public function isEnqueueBlockFrontendScriptUsed(string $hook): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Enqueue blocks script for frontend only.
+	 *
+	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendScript(): void
+	public function enqueueBlockFrontendScript(string $hook): void
 	{
+		if (!$this->isEnqueueBlockFrontendScriptUsed($hook)) {
+			return;
+		}
+
 		$handle = $this->getBlockFrontentScriptHandle();
 
 		\wp_register_script(
@@ -173,12 +235,40 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
+	 * Get block frontend Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockFrontentStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-frontend-style";
+	}
+
+	/**
+	 * Method that returns assets hook used to determine hook usage.
+	 *
+	 * @param string $hook Hook name.
+	 *
+	 * @return boolean
+	 */
+	public function isEnqueueBlockFrontendStyleUsed(string $hook): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Enqueue blocks style for frontend only.
+	 *
+	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendStyle(): void
+	public function enqueueBlockFrontendStyle(string $hook): void
 	{
+		if (!$this->isEnqueueBlockFrontendStyleUsed($hook)) {
+			return;
+		}
+
 		$handle = $this->getBlockFrontentStyleHandle();
 
 		\wp_register_style(

@@ -30,7 +30,6 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 */
 	protected ManifestInterface $manifest;
 
-
 	/**
 	 * Get admin Stylesheet handle.
 	 *
@@ -42,22 +41,30 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	}
 
 	/**
-	 * Get admin JavaScript handle.
+	 * Method that returns assets hook used to determine hook usage.
 	 *
-	 * @return string
+	 * @param string $hook Hook name.
+	 *
+	 * @return boolean
 	 */
-	public function getAdminScriptHandle(): string
+	public function isEnqueueStylesUsed(string $hook): bool
 	{
-		return "{$this->getAssetsPrefix()}-scripts";
+		return true;
 	}
 
 	/**
 	 * Register the Stylesheets for the admin area.
 	 *
+	 * @param string $hook Hook name.
+	 *
 	 * @return void
 	 */
-	public function enqueueStyles(): void
+	public function enqueueStyles(string $hook): void
 	{
+		if (!$this->isEnqueueStylesUsed($hook)) {
+			return;
+		}
+
 		if (!$this->getConditionUse()) {
 			$handle = $this->getAdminStyleHandle();
 
@@ -74,12 +81,40 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	}
 
 	/**
+	 * Get admin JavaScript handle.
+	 *
+	 * @return string
+	 */
+	public function getAdminScriptHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-scripts";
+	}
+
+	/**
+	 * Method that returns assets hook used to determine hook usage.
+	 *
+	 * @param string $hook Hook name.
+	 *
+	 * @return boolean
+	 */
+	public function isEnqueueScriptsUsed(string $hook): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Register the JavaScript for the admin area.
+	 *
+	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueScripts(): void
+	public function enqueueScripts(string $hook): void
 	{
+		if (!$this->isEnqueueScriptsUsed($hook)) {
+			return;
+		}
+
 		if (!$this->getConditionUse()) {
 			$handle = $this->getAdminScriptHandle();
 
