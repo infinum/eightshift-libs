@@ -64,7 +64,7 @@ class VersionCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'version',
-					'description' => 'Set new verion number.',
+					'description' => 'Set new version number.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('version'),
 				],
