@@ -43,11 +43,17 @@ trait AttributesTrait
 
 		$manifestKey = $manifest['attributes'][$key] ?? null;
 
+		$tipOutput = '';
+
+		if (isset($manifest['components'])) {
+			$tipOutput = ' If you are using additional components, check if you used the correct block/component prefix in your attribute name.';
+		}
+
 		if ($manifestKey === null) {
 			if (isset($manifest['blockName']) || \array_key_exists('blockName', $manifest)) {
-				throw new Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation.");
+				throw new Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest.{$tipOutput} Please check your implementation.");
 			} else {
-				throw new Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation.");
+				throw new Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest.{$tipOutput} Please check your implementation.");
 			}
 		}
 
