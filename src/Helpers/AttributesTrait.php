@@ -51,9 +51,9 @@ trait AttributesTrait
 
 		if ($manifestKey === null) {
 			if (isset($manifest['blockName']) || \array_key_exists('blockName', $manifest)) {
-				throw new Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest.{$tipOutput} Please check your implementation.");
+				throw new Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation.{$tipOutput} ");
 			} else {
-				throw new Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest.{$tipOutput} Please check your implementation.");
+				throw new Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation.{$tipOutput} ");
 			}
 		}
 

@@ -33,7 +33,7 @@ test('checkAttr will throw an exception in the case that the block name is missi
 	$attributes['buttonText'] = 'left';
 
 	Components::checkAttr('buttonAlign', $attributes, $manifest);
-})->throws(Exception::class, 'buttonAlign key does not exist in the button block manifest. If you are using additional components, check if you used the correct block/component prefix in your attribute name. Please check your implementation.');
+})->throws(Exception::class, 'buttonAlign key does not exist in the button block manifest. Please check your implementation. If you are using additional components, check if you used the correct block/component prefix in your attribute name.');
 
 
 test('Asserts that checkAttr works in case attribute is boolean', function () {
