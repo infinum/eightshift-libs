@@ -3,6 +3,29 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [7.0.0] - 2023-11-06
+
+This is a major release that includes PHP8+ support. We tested it on the PHP 8.2.12 version.
+
+### Changed
+- Config definition of version and name.
+
+### Updated
+- Composer packages.
+- Composer command names.
+
+### Fixed
+- Stan and Lint issues.
+- Broken `db import` command with the wrong setup.json path.
+
+### Added
+- Missing type hinting.
+- New command to change version number.
+- Better copy for `checkAttr`` helper if key is missing.
+- Every enqueue script now has `is<>Used` method that is by default true. 
+
+### Removed
+- Blocks "old" version functions.
 
 ## [6.5.7] - 2023-10-24
 
@@ -446,53 +469,54 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
-[6.5.6]: https://github.com/infinum/eightshift-libs/compare/6.5.6...v6.5.7
-[6.5.6]: https://github.com/infinum/eightshift-libs/compare/6.5.5...v6.5.6
-[6.5.5]: https://github.com/infinum/eightshift-libs/compare/6.5.4...v6.5.5
-[6.5.4]: https://github.com/infinum/eightshift-libs/compare/6.5.3...v6.5.4
-[6.5.3]: https://github.com/infinum/eightshift-libs/compare/6.5.2...v6.5.3
-[6.5.2]: https://github.com/infinum/eightshift-libs/compare/6.5.1...v6.5.2
-[6.5.1]: https://github.com/infinum/eightshift-libs/compare/6.5.0...v6.5.1
-[6.5.0]: https://github.com/infinum/eightshift-libs/compare/6.4.0...v6.5.0
-[6.4.0]: https://github.com/infinum/eightshift-libs/compare/6.3.2...v6.4.0
-[6.3.2]: https://github.com/infinum/eightshift-libs/compare/6.3.1...v6.3.2
-[6.3.1]: https://github.com/infinum/eightshift-libs/compare/6.3.0...v6.3.1
-[6.3.0]: https://github.com/infinum/eightshift-libs/compare/6.2.0...v6.3.0
-[6.2.0]: https://github.com/infinum/eightshift-libs/compare/6.1.0...v6.2.0
-[6.1.0]: https://github.com/infinum/eightshift-libs/compare/6.0.0...v6.1.0
-[6.0.0]: https://github.com/infinum/eightshift-libs/compare/5.1.0...v6.0.0
-[5.1.0]: https://github.com/infinum/eightshift-libs/compare/5.0.2...v5.1.0
-[5.0.2]: https://github.com/infinum/eightshift-libs/compare/5.0.1...v5.0.2
-[5.0.1]: https://github.com/infinum/eightshift-libs/compare/5.0.0...v5.0.1
-[5.0.0]: https://github.com/infinum/eightshift-libs/compare/4.1.0...v5.0.0
-[4.1.0]: https://github.com/infinum/eightshift-libs/compare/4.0.0...v4.1.0
-[4.0.0]: https://github.com/infinum/eightshift-libs/compare/3.1.0...v4.0.0
-[3.1.0]: https://github.com/infinum/eightshift-libs/compare/3.0.8...v3.1.0
-[3.0.8]: https://github.com/infinum/eightshift-libs/compare/3.0.7...v3.0.8
-[3.0.7]: https://github.com/infinum/eightshift-libs/compare/3.0.6...v3.0.7
-[3.0.6]: https://github.com/infinum/eightshift-libs/compare/3.0.5...v3.0.6
-[3.0.5]: https://github.com/infinum/eightshift-libs/compare/3.0.4...v3.0.5
-[3.0.4]: https://github.com/infinum/eightshift-libs/compare/3.0.3...v3.0.4
-[3.0.3]: https://github.com/infinum/eightshift-libs/compare/3.0.2...v3.0.3
-[3.0.2]: https://github.com/infinum/eightshift-libs/compare/3.0.1...v3.0.2
-[3.0.1]: https://github.com/infinum/eightshift-libs/compare/3.0.0...v3.0.1
-[3.0.0]: https://github.com/infinum/eightshift-libs/compare/2.5.0...v3.0.0
-[2.5.0]: https://github.com/infinum/eightshift-libs/compare/2.4.1...v2.5.0
-[2.4.1]: https://github.com/infinum/eightshift-libs/compare/2.4.0...v2.4.1
-[2.4.0]: https://github.com/infinum/eightshift-libs/compare/2.3.0...v2.4.0
-[2.3.0]: https://github.com/infinum/eightshift-libs/compare/2.2.2...v2.3.0
-[2.2.2]: https://github.com/infinum/eightshift-libs/compare/2.2.1...v2.2.2
-[2.2.1]: https://github.com/infinum/eightshift-libs/compare/2.2.0...v2.2.1
-[2.2.0]: https://github.com/infinum/eightshift-libs/compare/2.1.1...v2.2.0
-[2.1.1]: https://github.com/infinum/eightshift-libs/compare/2.1.0...v2.1.1
-[2.1.0]: https://github.com/infinum/eightshift-libs/compare/2.0.7...v2.1.0
-[2.0.7]: https://github.com/infinum/eightshift-libs/compare/2.0.6...v2.0.7
-[2.0.6]: https://github.com/infinum/eightshift-libs/compare/2.0.5...v2.0.6
-[2.0.5]: https://github.com/infinum/eightshift-libs/compare/2.0.4...v2.0.5
-[2.0.4]: https://github.com/infinum/eightshift-libs/compare/2.0.3...v2.0.4
-[2.0.3]: https://github.com/infinum/eightshift-libs/compare/2.0.2...v2.0.3
-[2.0.2]: https://github.com/infinum/eightshift-libs/compare/2.0.1...v2.0.2
-[2.0.1]: https://github.com/infinum/eightshift-libs/compare/2.0.0...v2.0.1
+[7.0.0]: https://github.com/infinum/eightshift-libs/compare/6.5.7...7.0.0
+[6.5.7]: https://github.com/infinum/eightshift-libs/compare/6.5.6...6.5.7
+[6.5.6]: https://github.com/infinum/eightshift-libs/compare/6.5.5...6.5.6
+[6.5.5]: https://github.com/infinum/eightshift-libs/compare/6.5.4...6.5.5
+[6.5.4]: https://github.com/infinum/eightshift-libs/compare/6.5.3...6.5.4
+[6.5.3]: https://github.com/infinum/eightshift-libs/compare/6.5.2...6.5.3
+[6.5.2]: https://github.com/infinum/eightshift-libs/compare/6.5.1...6.5.2
+[6.5.1]: https://github.com/infinum/eightshift-libs/compare/6.5.0...6.5.1
+[6.5.0]: https://github.com/infinum/eightshift-libs/compare/6.4.0...6.5.0
+[6.4.0]: https://github.com/infinum/eightshift-libs/compare/6.3.2...6.4.0
+[6.3.2]: https://github.com/infinum/eightshift-libs/compare/6.3.1...6.3.2
+[6.3.1]: https://github.com/infinum/eightshift-libs/compare/6.3.0...6.3.1
+[6.3.0]: https://github.com/infinum/eightshift-libs/compare/6.2.0...6.3.0
+[6.2.0]: https://github.com/infinum/eightshift-libs/compare/6.1.0...6.2.0
+[6.1.0]: https://github.com/infinum/eightshift-libs/compare/6.0.0...6.1.0
+[6.0.0]: https://github.com/infinum/eightshift-libs/compare/5.1.0...6.0.0
+[5.1.0]: https://github.com/infinum/eightshift-libs/compare/5.0.2...5.1.0
+[5.0.2]: https://github.com/infinum/eightshift-libs/compare/5.0.1...5.0.2
+[5.0.1]: https://github.com/infinum/eightshift-libs/compare/5.0.0...5.0.1
+[5.0.0]: https://github.com/infinum/eightshift-libs/compare/4.1.0...5.0.0
+[4.1.0]: https://github.com/infinum/eightshift-libs/compare/4.0.0...4.1.0
+[4.0.0]: https://github.com/infinum/eightshift-libs/compare/3.1.0...4.0.0
+[3.1.0]: https://github.com/infinum/eightshift-libs/compare/3.0.8...3.1.0
+[3.0.8]: https://github.com/infinum/eightshift-libs/compare/3.0.7...3.0.8
+[3.0.7]: https://github.com/infinum/eightshift-libs/compare/3.0.6...3.0.7
+[3.0.6]: https://github.com/infinum/eightshift-libs/compare/3.0.5...3.0.6
+[3.0.5]: https://github.com/infinum/eightshift-libs/compare/3.0.4...3.0.5
+[3.0.4]: https://github.com/infinum/eightshift-libs/compare/3.0.3...3.0.4
+[3.0.3]: https://github.com/infinum/eightshift-libs/compare/3.0.2...3.0.3
+[3.0.2]: https://github.com/infinum/eightshift-libs/compare/3.0.1...3.0.2
+[3.0.1]: https://github.com/infinum/eightshift-libs/compare/3.0.0...3.0.1
+[3.0.0]: https://github.com/infinum/eightshift-libs/compare/2.5.0...3.0.0
+[2.5.0]: https://github.com/infinum/eightshift-libs/compare/v2.4.1...v2.5.0
+[2.4.1]: https://github.com/infinum/eightshift-libs/compare/v2.4.0...v2.4.1
+[2.4.0]: https://github.com/infinum/eightshift-libs/compare/v2.3.0...v2.4.0
+[2.3.0]: https://github.com/infinum/eightshift-libs/compare/v2.2.2...v2.3.0
+[2.2.2]: https://github.com/infinum/eightshift-libs/compare/v2.2.1...v2.2.2
+[2.2.1]: https://github.com/infinum/eightshift-libs/compare/v2.2.0...v2.2.1
+[2.2.0]: https://github.com/infinum/eightshift-libs/compare/v2.1.1...v2.2.0
+[2.1.1]: https://github.com/infinum/eightshift-libs/compare/v2.1.0...v2.1.1
+[2.1.0]: https://github.com/infinum/eightshift-libs/compare/v2.0.7...v2.1.0
+[2.0.7]: https://github.com/infinum/eightshift-libs/compare/v2.0.6...v2.0.7
+[2.0.6]: https://github.com/infinum/eightshift-libs/compare/v2.0.5...v2.0.6
+[2.0.5]: https://github.com/infinum/eightshift-libs/compare/v2.0.4...v2.0.5
+[2.0.4]: https://github.com/infinum/eightshift-libs/compare/v2.0.3...v2.0.4
+[2.0.3]: https://github.com/infinum/eightshift-libs/compare/v2.0.2...v2.0.3
+[2.0.2]: https://github.com/infinum/eightshift-libs/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/infinum/eightshift-libs/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/infinum/eightshift-libs/compare/0.9.0...v2.0.0
 [0.9.0]: https://github.com/infinum/eightshift-libs/compare/0.8.0...0.9.0
 [0.8.0]: https://github.com/infinum/eightshift-libs/compare/0.7.1...0.8.0
