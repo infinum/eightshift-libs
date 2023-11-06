@@ -47,12 +47,10 @@ class ImportCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-
 		return [
 			'from' => '',
 			'to' => '',
-			'setup_file' => Components::getProjectPaths('cliOutput', "setup{$sep}setup.json"),
+			'setup_file' => Components::getProjectPaths('projectRoot', 'setup.json'),
 		];
 	}
 
@@ -78,6 +76,13 @@ class ImportCli extends AbstractCli
 					'description' => 'Set to what environment you want to import the data.',
 					'optional' => false,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'setup_file',
+					'description' => 'Set custom absolute path to your setup.json file.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('setup_file'),
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -88,6 +93,9 @@ class ImportCli extends AbstractCli
 
 				# Run db import command:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --from='production' --to='develop'
+
+				# Run db import command with custom setup.json file path:
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --from='production' --to='develop' --setup_file='new/setup.json'
 
 				## RESOURCES
 
@@ -107,10 +115,13 @@ class ImportCli extends AbstractCli
 		try {
 			dbImport( // phpcs:ignore
 				$this->getArg($assocArgs, 'setup_file'),
-				[
-					'from' => $this->getArg($assocArgs, 'from'),
-					'to' => $this->getArg($assocArgs, 'to'),
-				]
+				\array_merge(
+					[
+						'from' => $this->getArg($assocArgs, 'from'),
+						'to' => $this->getArg($assocArgs, 'to'),
+					],
+					$assocArgs
+				)
 			);
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

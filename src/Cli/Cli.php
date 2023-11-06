@@ -13,6 +13,7 @@ namespace EightshiftLibs\Cli;
 use EightshiftLibs\AdminMenus\AdminMenuCli;
 use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
+use EightshiftLibs\AdminMenus\ReusableBlocksHeaderFooterCli;
 use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
@@ -21,7 +22,6 @@ use EightshiftLibs\Blocks\UseBlockCli;
 use EightshiftLibs\Blocks\UseAssetsCli;
 use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Blocks\UseManifestCli;
-use EightshiftLibs\Blocks\UseStorybookCli;
 use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
@@ -63,6 +63,7 @@ use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
+use EightshiftLibs\Misc\VersionCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
@@ -98,15 +99,19 @@ class Cli
 		AdminMenuCli::class,
 		AdminReusableBlocksMenuCli::class,
 		AdminSubMenuCli::class,
-		AcfMetaCli::class,
+		ReusableBlocksHeaderFooterCli::class,
 		AnalyticsGdprCli::class,
+		WebPMediaColumnCli::class,
+		ConfigCli::class,
+		ConfigProjectCli::class,
+		AcfMetaCli::class,
+		PostTypeCli::class,
+		TaxonomyCli::class,
 		EnqueueAdminCli::class,
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
-		EscapedViewCli::class,
-		ConfigCli::class,
-		PostTypeCli::class,
-		TaxonomyCli::class,
+		GeolocationCli::class,
+		GitIgnoreCli::class,
 		I18nCli::class,
 		LoginCli::class,
 		MainCli::class,
@@ -114,18 +119,15 @@ class Cli
 		MediaCli::class,
 		MenuCli::class,
 		ModifyAdminAppearanceCli::class,
+		ReadmeCli::class,
 		FieldCli::class,
 		RouteCli::class,
-		ServiceExampleCli::class,
-		ThemeOptionsCli::class,
-		ConfigProjectCli::class,
-		GitIgnoreCli::class,
-		WebPMediaColumnCli::class,
-		ReadmeCli::class,
-		SetupCli::class,
-		WpCli::class,
-		GeolocationCli::class,
 		LoadMoreRouteCli::class,
+		ServiceExampleCli::class,
+		SetupCli::class,
+		ThemeOptionsCli::class,
+		EscapedViewCli::class,
+		WpCli::class,
 	];
 
 	/**
@@ -134,10 +136,11 @@ class Cli
 	 * @var class-string[]
 	 */
 	public const RUN_COMMANDS = [
-		RegenerateWebPMediaCli::class,
-		UseWebPMediaCli::class,
 		ExportCli::class,
 		ImportCli::class,
+		RegenerateWebPMediaCli::class,
+		UseWebPMediaCli::class,
+		VersionCli::class,
 		PluginManageCli::class,
 	];
 
@@ -147,14 +150,13 @@ class Cli
 	 * @var class-string[]
 	 */
 	public const BLOCKS_COMMANDS = [
-		BlocksCli::class,
 		BlockPatternCli::class,
-		UseStorybookCli::class,
-		UseManifestCli::class,
+		BlocksCli::class,
 		UseAssetsCli::class,
-		UseGlobalAssetsCli::class,
 		UseBlockCli::class,
 		UseComponentCli::class,
+		UseGlobalAssetsCli::class,
+		UseManifestCli::class,
 		UseVariationCli::class,
 		UseWrapperCli::class,
 	];
@@ -165,12 +167,12 @@ class Cli
 	 * @var class-string[]
 	 */
 	public const INIT_COMMANDS = [
-		InitThemeCli::class,
+		InitAllCli::class,
+		InitBlocksCli::class,
+		InitHeaderFooter::class,
 		InitPluginCli::class,
 		InitProjectCli::class,
-		InitBlocksCli::class,
-		InitAllCli::class,
-		InitHeaderFooter::class,
+		InitThemeCli::class,
 	];
 
 	/**

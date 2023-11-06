@@ -13,7 +13,7 @@ test('Register method will call correct hooks', function () {
 	$this->geolocation->register();
 
 	expect(\method_exists($this->geolocation, 'register'))->toBeTrue();
-	expect(\has_filter('init', [$this->geolocation, 'setLocationCookie']))->toBe(10);
+	expect(\has_action('init', [$this->geolocation, 'setLocationCookie']))->toBe(10);
 });
 
 test('getGeolocationCookieName will return correct cookie name', function () {

@@ -130,7 +130,6 @@ test('Block full file list helper works', function() {
 	$this->assertTrue(\array_key_exists('button-hooks.js', \array_flip($output)), 'button-hooks.js is missing.');
 	$this->assertTrue(\array_key_exists('button-transforms.js', \array_flip($output)), 'button-transforms.js is missing.');
 	$this->assertTrue(\array_key_exists('button.js', \array_flip($output)), 'button.js is missing.');
-	$this->assertTrue(\array_key_exists('docs/story.js', \array_flip($output)), 'docs/story.js is missing.');
 	$this->assertTrue(\array_key_exists('components/button-editor.js', \array_flip($output)), 'components/button-editor.js is missing.');
 	$this->assertTrue(\array_key_exists('components/button-toolbar.js', \array_flip($output)), 'components/button-toolbar.js is missing.');
 	$this->assertTrue(\array_key_exists('components/button-options.js', \array_flip($output)), 'components/button-options.js is missing.');

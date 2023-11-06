@@ -40,6 +40,12 @@ test('callback will load correct method', function () {
 //---------------------------------------------------------------------------------//
 
 test('processAdminMenu will echo component view', function () {
+	$mock = new class extends AdminMenuExample {
+		protected function getViewComponent(): string
+		{
+			return 'themes/missing';
+		}
+	};
 
 	buildTestBlocks();
 

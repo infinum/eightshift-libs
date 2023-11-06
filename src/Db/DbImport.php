@@ -26,17 +26,21 @@ if (!function_exists('dbImport')) {
 		$from = $args['from'] ?? '';
 		$to = $args['to'] ?? '';
 
+		$errorClass = new class () {
+			use CliHelpers;
+		};
+
 		if (empty($from)) {
-			CliHelpers::cliError("--from parameter is mandatory. Please provide one url key from setup.json file.");
+			$errorClass::cliError("--from parameter is mandatory. Please provide one url key from setup.json file.");
 		}
 
 		if (empty($to)) {
-			CliHelpers::cliError("--to parameter is mandatory. Please provide one url key from setup.json file.");
+			$errorClass::cliError("--to parameter is mandatory. Please provide one url key from setup.json file.");
 		}
 
 		// Check if file exists.
 		if (is_dir($setupFile) && !file_exists($setupFile)) {
-			CliHelpers::cliError("Setup file doesn't exist on this path: {$setupFile}.");
+			$errorClass::cliError("Setup file doesn't exist on this path: {$setupFile}.");
 		}
 
 		// Parse json file to array.
@@ -44,14 +48,14 @@ if (!function_exists('dbImport')) {
 
 		// Check if $data is empty.
 		if (empty($data)) {
-			CliHelpers::cliError("Setup file is empty on this path: {$setupFile}.");
+			$errorClass::cliError("Setup file is empty on this path: {$setupFile}.");
 		}
 
 		// Check if urls key exists.
 		$urls = $data['urls'] ?? [];
 
 		if (empty($urls)) {
-			CliHelpers::cliError('Urls key is missing or empty.');
+			$errorClass::cliError('Urls key is missing or empty.');
 		}
 
 		$fromHost = '';
@@ -59,7 +63,7 @@ if (!function_exists('dbImport')) {
 
 		// Die if from key is missing and not valid.
 		if (!isset($urls[$from]) || empty($urls[$from])) {
-			CliHelpers::cliError("{$from} key is missing or empty in urls.");
+			$errorClass::cliError("{$from} key is missing or empty in urls.");
 		} else {
 			$from = wp_parse_url($urls[$from]);
 			$fromHost = $from['host'];
@@ -71,7 +75,7 @@ if (!function_exists('dbImport')) {
 
 		// Die if to key is missing and not valid.
 		if (!isset($urls[$to]) || empty($urls[$to])) {
-			CliHelpers::cliError("{$to} key is missing or empty in urls.");
+			$errorClass::cliError("{$to} key is missing or empty in urls.");
 		} else {
 			$to = wp_parse_url($urls[$to]);
 			$toHost = $to['host'];
@@ -106,7 +110,7 @@ if (!function_exists('dbImport')) {
 			WP_CLI::log('--------------------------------------------------');
 
 			// Execute db export.
-			WP_CLI::runcommand('db export');
+			WP_CLI::runcommand('db export --set-gtid-purged=OFF');
 			WP_CLI::log('Db exported successfully.');
 			WP_CLI::log('--------------------------------------------------');
 

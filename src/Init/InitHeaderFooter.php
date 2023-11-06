@@ -58,6 +58,9 @@ class InitHeaderFooter extends AbstractCli
 
 				# Setup theme:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+
+				Command details can be found here:
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Init/InitHeaderFooter.php
 			"),
 		];
 	}

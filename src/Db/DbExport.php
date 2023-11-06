@@ -27,7 +27,11 @@ if (!function_exists('dbExport')) {
 
 		// Change execution folder.
 		if (!is_dir($projectRootPath)) {
-			CliHelpers::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
+			$errorClass = new class () {
+				use CliHelpers;
+			};
+
+			$errorClass::cliError("Folder doesn't exist on this path: {$projectRootPath}.");
 		}
 
 		chdir($projectRootPath);
@@ -48,7 +52,7 @@ if (!function_exists('dbExport')) {
 
 		// Execute db export.
 		if (!$skipDb) {
-			WP_CLI::runcommand("db export {$dbFileName}");
+			WP_CLI::runcommand("db export {$dbFileName} --set-gtid-purged=OFF");
 			WP_CLI::log("Exported db to {$projectRootPath} folder.");
 
 			WP_CLI::log('--------------------------------------------------');

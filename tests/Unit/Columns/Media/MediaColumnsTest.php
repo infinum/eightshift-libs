@@ -27,10 +27,10 @@ test('Hooks are registered for the custom user columns', function() {
 
 	$mockUserColumn->register();
 
-	$this->assertNotFalse(has_filter('manage_media_columns', 'Tests\Unit\Columns\MediaColumnMock->addColumnName()'), 'manage_media_columns filter wasn\'t registered');
+	$this->assertNotFalse(has_filter('manage_upload_columns', 'Tests\Unit\Columns\MediaColumnMock->addColumnName()'), 'manage_upload_columns filter wasn\'t registered');
 	$this->assertNotFalse(has_filter('manage_media_custom_column', 'Tests\Unit\Columns\MediaColumnMock->renderColumnContent()'), 'manage_media_custom_column filter wasn\'t registered');
-	$this->assertNotFalse(has_filter('manage_media_sortable_columns', 'Tests\Unit\Columns\MediaColumnMock->sortAddedColumns()'), 'manage_media_sortable_columns filter wasn\'t registered');
-	$this->assertSame(10, has_filter('manage_media_columns', 'Tests\Unit\Columns\MediaColumnMock->addColumnName()'), 'manage_media_columns filter priority was not correct');
+	$this->assertNotFalse(has_filter('manage_upload_sortable_columns', 'Tests\Unit\Columns\MediaColumnMock->sortAddedColumns()'), 'manage_upload_sortable_columns filter wasn\'t registered');
+	$this->assertSame(10, has_filter('manage_upload_columns', 'Tests\Unit\Columns\MediaColumnMock->addColumnName()'), 'manage_upload_columns filter priority was not correct');
 	$this->assertSame(10, has_filter('manage_media_custom_column', 'Tests\Unit\Columns\MediaColumnMock->renderColumnContent()'), 'manage_media_custom_column filter priority was not correct');
-	$this->assertSame(10, has_filter('manage_media_sortable_columns', 'Tests\Unit\Columns\MediaColumnMock->sortAddedColumns()'), 'manage_media_sortable_columns filter priority was not correct');
+	$this->assertSame(10, has_filter('manage_upload_sortable_columns', 'Tests\Unit\Columns\MediaColumnMock->sortAddedColumns()'), 'manage_upload_sortable_columns filter priority was not correct');
 });

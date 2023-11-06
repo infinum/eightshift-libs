@@ -13,6 +13,47 @@ use Yoast\WPTestUtils\BrainMonkey\TestCase;
 
 class BaseTest extends TestCase
 {
+	// Preventing dynamic properties deprecation notices in tests.
+	protected $adminEnqueue;
+	protected $blocksEnqueue;
+	protected $blocksExample;
+	protected $cli;
+	protected $example;
+	protected $field;
+	protected $geolocation;
+	protected $geolocationCli;
+	protected $germanIp;
+	protected $hookSuffix;
+	protected $i18n;
+	protected $login;
+	protected $main;
+	protected $manualDepsNoPrimitive;
+	protected $manuallyDefinedDependencies;
+	protected $media;
+	protected $mediaCli;
+	protected $mock;
+	protected $mockFileName;
+	protected $mockHelper;
+	protected $mockLogger;
+	protected $mockMedia;
+	protected $mockPath;
+	protected $mockRequestKey;
+	protected $modifyAdminAppearance;
+	protected $pluginManage;
+	protected $post;
+	protected $projectName;
+	protected $projectNamespace;
+	protected $projectVersion;
+	protected $regenerateWebPMediaCli;
+	protected $route;
+	protected $service;
+	protected $shortcode;
+	protected $themeEnqueue;
+	protected $webPMediaColumnCliMock;
+	protected $webPMediaColumnExampleMock;
+	protected $webPMediaColumnExampleMockColumns;
+	protected $wpRestServer;
+
 	protected MockInterface $wpCliMock;
 
 	protected function set_up()
@@ -150,6 +191,36 @@ class BaseTest extends TestCase
 		Functions\when('is_wp_version_compatible')->justReturn(true);
 
 		Functions\when('wp_nonce_field')->justReturn('nonce');
+
+		Functions\when('wp_get_theme')->justReturn(new class {
+			public function get( $header ) {
+				return 'test';
+			}
+		});
+
+		// Mock https://developer.wordpress.org/reference/functions/wp_is_json_media_type/ function
+		Functions\when('wp_is_json_media_type')->alias(function ($mediaType) {
+			static $cache = array();
+
+			if ( ! isset( $cache[ $mediaType ] ) ) {
+				$cache[ $mediaType ] = (bool) preg_match( '/(^|\s|,)application\/([\w!#\$&-\^\.\+]+\+)?json(\+oembed)?($|\s|;|,)/i', $mediaType );
+			}
+
+			return $cache[ $mediaType ];
+		});
+
+		// Mock https://developer.wordpress.org/reference/functions/wp_is_json_request/ function
+		Functions\when('wp_is_json_request')->alias(function () {
+			if ( isset( $_SERVER['HTTP_ACCEPT'] ) && wp_is_json_media_type( $_SERVER['HTTP_ACCEPT'] ) ) {
+				return true;
+			}
+
+			if ( isset( $_SERVER['CONTENT_TYPE'] ) && wp_is_json_media_type( $_SERVER['CONTENT_TYPE'] ) ) {
+				return true;
+			}
+
+			return false;
+		});
 	}
 
 	protected function tear_down()

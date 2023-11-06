@@ -9,32 +9,60 @@ test('Checks if the throwNotStringOrArray method functions correctly.',
 	function ($argument) {
 		$exceptionObject = ComponentException::throwNotStringOrArray($argument);
 		$type = \gettype($argument);
+		$message = "{$argument} variable is not a string or array but rather {$type}";
 
-		$this->assertIsObject($exceptionObject, "The {$exceptionObject} should be an instance of ComponentException class");
-		$this->assertObjectHasAttribute('message', $exceptionObject, "Object doesn't contain message attribute");
-		$this->assertSame("{$argument} variable is not a string or array but rather {$type}", $exceptionObject->getMessage(), "Strings for message if item is {$type} do not match!");
+		expect($exceptionObject)->toBeObject()
+			->toBeInstanceOf(ComponentException::class)
+			->toHaveProperty('message')
+			->and($message)
+			->toEqual($exceptionObject->getMessage());
+})
+->with('exceptionArguments');
 
-	})
-	->with('exceptionArguments');
+test('Checks if the throwNotStringOrArray method functions correctly with objects.',
+function () {
 
-	test('Checks if the throwNotStringOrArray method functions correctly with objects.',
-	function () {
+	$object = new stdClass();
+	$exceptionObject = ComponentException::throwNotStringOrArray($object);
 
-		$object = new stdClass();
-		$exceptionObject = ComponentException::throwNotStringOrArray($object);
-
-		$this->assertIsObject($exceptionObject, "The object should be an instance of ComponentException class");
-		$this->assertObjectHasAttribute('message', $exceptionObject, "Object doesn't contain message attribute");
-		$this->assertSame('Object couldn\'t be converted to string. Please provide only string or array.', $exceptionObject->getMessage(), "Strings for 'Object couldn't be converted to string' message do not match!");
-
-	});
+	expect($exceptionObject)->toBeObject()
+		->toBeInstanceOf(ComponentException::class)
+		->toHaveProperty('message')
+		->and('Object couldn\'t be converted to string. Please provide only string or array.')
+		->toEqual($exceptionObject->getMessage());
+});
 
 test('Checks if throwUnableToLocateComponent method will return correct response.', function () {
 
 	$component = 'nonexistent';
 	$output = ComponentException::throwUnableToLocateComponent($component);
 
-	$this->assertIsObject($output, "The {$output} should be an instance of ComponentException class");
-	$this->assertObjectHasAttribute('message', $output, "Object doesn't contain message attribute");
-	$this->assertSame("Unable to locate component by path: {$component}", $output->getMessage(), "Strings for 'Unable to locate component by path' message do not match!");
+	expect($output)->toBeObject()
+		->toBeInstanceOf(ComponentException::class)
+		->toHaveProperty('message')
+		->and("Unable to locate component by path: {$component}")
+		->toEqual($output->getMessage());
+});
+
+test('Checks if throwUnableToLocatePartial method will return correct response.', function () {
+
+	$path = 'nonexistent';
+	$output = ComponentException::throwUnableToLocatePartial($path);
+
+	expect($output)->toBeObject()
+		->toBeInstanceOf(ComponentException::class)
+		->toHaveProperty('message')
+		->and("Unable to locate partial on this path: {$path}")
+		->toEqual($output->getMessage());
+});
+
+test('Checks if throwPrivatePath method will return correct response.', function () {
+
+	$output = ComponentException::throwPrivatePath();
+
+	expect($output)->toBeObject()
+		->toBeInstanceOf(ComponentException::class)
+		->toHaveProperty('message')
+		->and('You are not allowed to access paths outside of themes or plugins folder!')
+		->toEqual($output->getMessage());
 });

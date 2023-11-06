@@ -58,7 +58,7 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 					$this->getMenuTitle(),
 					$this->getCapability(),
 					$this->getMenuSlug(),
-					'',
+					'', // @phpstan-ignore-line
 					$this->getIcon(),
 					$this->getPosition()
 				);

@@ -27,7 +27,7 @@ class ConfigExample extends AbstractConfigData
 	 */
 	public static function getProjectName(): string
 	{
-		return '%name%';
+		return \wp_get_theme('', \dirname(__DIR__, 3))->get('TextDomain');
 	}
 
 	/**
@@ -37,7 +37,7 @@ class ConfigExample extends AbstractConfigData
 	 */
 	public static function getProjectVersion(): string
 	{
-		return '%version%';
+		return \wp_get_theme('', \dirname(__DIR__, 3))->get('Version');
 	}
 
 	/**

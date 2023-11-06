@@ -22,7 +22,7 @@ class ModifyAdminAppearanceExample implements ServiceInterface
 	/**
 	 * List of admin color schemes.
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public const COLOR_SCHEMES = [
 		'development' => 'fresh',

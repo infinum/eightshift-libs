@@ -72,7 +72,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 		$element,
 		&$children_elements,
 		$max_depth, // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
-		$depth = 0,
+		$depth,
 		$args, // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
 		&$output
 	) {

@@ -58,6 +58,27 @@ abstract class AbstractCli implements CliInterface
 	public const TEMPLATE = '';
 
 	/**
+	 * Output project name arg.
+	 *
+	 * @var string
+	 */
+	public const PROJECT_NAME_ARG = 'project_name';
+
+	/**
+	 * Output theme name arg.
+	 *
+	 * @var string
+	 */
+	public const THEME_NAME_ARG = 'theme_name';
+
+	/**
+	 * Output plugin name arg.
+	 *
+	 * @var string
+	 */
+	public const PLUGIN_NAME_ARG = 'plugin_name';
+
+	/**
 	 * Construct Method.
 	 *
 	 * @param string $commandParentName Define top level commands name.
@@ -277,6 +298,7 @@ abstract class AbstractCli implements CliInterface
 	public function getExampleTemplate(string $currentDir, string $fileName, bool $skipMissing = false): self
 	{
 		$ds = \DIRECTORY_SEPARATOR;
+		$currentDir = \rtrim($currentDir, $ds);
 		$path = "{$currentDir}{$ds}{$this->getExampleFileName($fileName)}.php";
 
 		// If you pass file name with extension the version will be used.
@@ -326,7 +348,8 @@ abstract class AbstractCli implements CliInterface
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
 		$groupOutput = $args['groupOutput'] ?? false;
-		$typeOutput = $args['typeOutput'] ?? 'Service class';
+		$typeOutput = $args['typeOutput'] ?? \__('Service class', 'eightshift-libs');
+		$actionOutput = $args['actionOutput'] ?? null;
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
@@ -369,9 +392,11 @@ abstract class AbstractCli implements CliInterface
 			$path = $this->getShortenCliPathOutput($destinationFile);
 
 			if ($skipExisting) {
-				$this->cliLogAlert($path, 'success', "'{$fileName}' renamed");
+				$action = $actionOutput ?? 'renamed';
+				$this->cliLogAlert($path, 'success', "'{$fileName}' {$action}");
 			} else {
-				$this->cliLogAlert($path, 'success', "'{$fileName}' created");
+				$action = $actionOutput ?? 'created';
+				$this->cliLogAlert($path, 'success', "'{$fileName}' {$action}");
 			}
 		}
 
@@ -646,6 +671,22 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
+	 * Change version number as a string.
+	 *
+	 * @param string $version New version.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameVersionString(string $version): self
+	{
+		$this->fileContents = \preg_replace('/Version: .*/', "Version: {$version}", $this->fileContents);
+		$this->fileContents = \preg_replace('/"version": ".*"/', "\"version\": \"{$version}\"", $this->fileContents);
+
+		return $this;
+	}
+
+
+	/**
 	 * Search and replace wrapper
 	 *
 	 * This method will do a search and replace in the fileContents member variable and
@@ -794,7 +835,6 @@ abstract class AbstractCli implements CliInterface
 			"{$name}-hooks.js",
 			"{$name}-transforms.js",
 			"{$name}.js",
-			"docs{$ds}story.js",
 			"components{$ds}{$name}-editor.js",
 			"components{$ds}{$name}-toolbar.js",
 			"components{$ds}{$name}-options.js",

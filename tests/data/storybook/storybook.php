@@ -1,2 +1,0 @@
-<?php
-// Storybook example file.

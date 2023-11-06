@@ -56,7 +56,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			self::cliError(
 				\sprintf(
 					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
+					"%s file doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
 					$type,
 					$this->getShortenCliPathOutput($source)
 				)
@@ -67,32 +67,41 @@ abstract class AbstractBlocksCli extends AbstractCli
 		$sourceItems = \array_fill_keys(\array_values($sourceItems), $source);
 		$sourceItemsPrivate = [];
 
-		if ($sourcePrivate) {
+		if (\is_dir($sourcePrivate)) {
 			$sourceItemsPrivate = \array_diff(\scandir($sourcePrivate) ?: [], ['..', '.']); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			$sourceItemsPrivate = \array_fill_keys(\array_values($sourceItemsPrivate), $sourcePrivate);
 		}
 
 		$sourceItems = \array_merge($sourceItems, $sourceItemsPrivate);
 
-		if (($isSingleFolder || $isFile) && isset($sourceItems[$name])) {
-			$sourceItems = [
-				$name => $sourceItems[$name],
-			];
-		}
-
 		if (!$sourceItems) {
 			self::cliError(
 				\sprintf(
-					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%s files doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
+					// translators: %1$s will be replaced with type of item, %2$s the type and %3$s and shorten cli path.
+					'%1$s %2$s doesn\'t exist on this path: `%3$s`. Please check if you have eightshift-frontend-libs installed.',
 					$type,
+					$isFile ? 'file' : 'folder',
 					$this->getShortenCliPathOutput($source)
 				)
 			);
 		}
 
+		$itemExists = false;
 		foreach ($itemsList as $item) {
-			if (!isset($sourceItems[$item])) {
+			foreach ($sourceItems as $sourceItem => $sourceFolder) {
+				if (\strpos($sourceItem, $item) !== false) {
+					$itemExists = true;
+					break;
+				}
+
+				// in the case of folders, we should also check the source folders.
+				if (\strpos($sourceFolder, $item) !== false) {
+					$itemExists = true;
+					break;
+				}
+			}
+
+			if (!$itemExists) {
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, item name and shorten cli path.
@@ -103,8 +112,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 					)
 				);
 			}
-
-			$source = $sourceItems[$item];
 
 			$fullSource = Components::joinPaths([$source, $item]);
 			$fullDestination = Components::joinPaths([$destination, $item]);
@@ -224,17 +231,34 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		if ($dependencies) {
 			$componentsCommandName = UseComponentCli::COMMAND_NAME;
-			$allDependencies = \array_map(static fn ($item) => Components::camelToKebabCase($item), $dependencies);
-			$allDependencies = \implode(', ', \array_unique(\array_values($allDependencies)));
+			$blocksCommandName = UseBlockCli::COMMAND_NAME;
 
-			$this->cliLogAlert(\implode("\n", [
-				"This {$type} may need some dependencies to work correctly.",
-				'',
-				'To add them to your project, run:',
-				"%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$allDependencies}'%n",
-				'',
-				'If a dependency already exists in your project, you can skip it.',
-			]), 'info', 'Dependencies found');
+			$outputComand = [];
+
+			if ($componentsDependencies) {
+				$componentsDependenciesAll = \array_map(static fn ($item) => Components::camelToKebabCase($item), $componentsDependencies);
+				$componentsDependenciesAll = \implode(', ', \array_unique(\array_values($componentsDependenciesAll)));
+
+				$outputComand[] = "%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$componentsDependenciesAll}'%n";
+			}
+
+			if ($innerBlocksDependency) {
+				$innerBlocksDependencyAll = \array_map(static fn ($item) => Components::camelToKebabCase($item), $innerBlocksDependency);
+				$innerBlocksDependencyAll = \implode(', ', \array_unique(\array_values($innerBlocksDependencyAll)));
+
+				$outputComand[] = "%Uwp boilerplate {$this->getCommandParentName()} {$blocksCommandName} --name='{$innerBlocksDependencyAll}'%n";
+			}
+
+			if ($outputComand) {
+				$this->cliLogAlert(\implode("\n", [
+					"This {$type} may need some dependencies to work correctly.",
+					'',
+					'To add them to your project, run:',
+					...$outputComand,
+					'',
+					'If a dependency already exists in your project, you can skip it.',
+				]), 'info', 'Dependencies found');
+			}
 		}
 	}
 
