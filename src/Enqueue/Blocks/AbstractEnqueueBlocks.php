@@ -313,6 +313,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			'wp-viewport',
 			'wp-blob',
 			'wp-url',
+			'lodash',
 		];
 	}
 }
