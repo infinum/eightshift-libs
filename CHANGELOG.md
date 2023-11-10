@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [7.0.1] - 2023-11-10
+
+### Fixed
+- Re-enqueues lodash for WP 6.4 version.
+
 ## [7.0.0] - 2023-11-06
 
 This is a major release that includes PHP8+ support. We tested it on the PHP 8.2.12 version.
@@ -469,6 +474,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[7.0.1]: https://github.com/infinum/eightshift-libs/compare/7.0.0...7.0.1
 [7.0.0]: https://github.com/infinum/eightshift-libs/compare/6.5.7...7.0.0
 [6.5.7]: https://github.com/infinum/eightshift-libs/compare/6.5.6...6.5.7
 [6.5.6]: https://github.com/infinum/eightshift-libs/compare/6.5.5...6.5.6
