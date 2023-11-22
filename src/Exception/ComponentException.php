@@ -75,16 +75,4 @@ final class ComponentException extends InvalidArgumentException implements Gener
 			)
 		);
 	}
-
-	/**
-	 * Throws exception if path is private.
-	 *
-	 * @return static
-	 */
-	public static function throwPrivatePath(): ComponentException
-	{
-		return new ComponentException(
-			\esc_html__('You are not allowed to access paths outside of themes or plugins folder!', 'eightshift-libs'),
-		);
-	}
 }

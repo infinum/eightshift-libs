@@ -146,13 +146,6 @@ class Components
 
 		$componentPath = "{$parentPath}{$componentPath}";
 
-		// Security check.
-		if (!\getenv('ES_TEST')) {
-			if (!\preg_match('(themes|plugins)', $componentPath)) {
-				throw ComponentException::throwPrivatePath();
-			}
-		}
-
 		if ($useComponentDefaults) {
 			$manifest = Components::getManifest($componentPath);
 		}
@@ -239,13 +232,6 @@ class Components
 		// Bailout if file is missing.
 		if (!\file_exists($path)) {
 			throw ComponentException::throwUnableToLocatePartial($path);
-		}
-
-		// Security check.
-		if (!\getenv('ES_TEST')) {
-			if (!\preg_match('(themes|plugins)', $path)) {
-				throw ComponentException::throwPrivatePath();
-			}
 		}
 
 		\ob_start();
