@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [7.1.1] - 2024-01-15
+
+### Removed
+- Removed enqueuing dependency for block editor only styles.
+
 ## [7.1.0] - 2023-11-22
 
 ### Removed
@@ -479,6 +484,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[7.1.1]: https://github.com/infinum/eightshift-libs/compare/7.1.0...7.1.1
 [7.1.0]: https://github.com/infinum/eightshift-libs/compare/7.0.1...7.1.0
 [7.0.1]: https://github.com/infinum/eightshift-libs/compare/7.0.0...7.0.1
 [7.0.0]: https://github.com/infinum/eightshift-libs/compare/6.5.7...7.0.0

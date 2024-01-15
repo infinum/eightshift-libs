@@ -283,18 +283,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
-	 * Get style dependencies
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
-	 *
-	 * @return string[] List of all the style dependencies.
-	 */
-	protected function getAdminStyleDependencies(): array
-	{
-		return ["{$this->getAssetsPrefix()}-block-style"];
-	}
-
-	/**
 	 * List of admin script dependencies
 	 *
 	 * @return string[] List of all the admin dependencies.
