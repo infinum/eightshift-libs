@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
+use EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
@@ -22,6 +23,20 @@ use WP_Post;
  */
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
+	/**
+	 * Instance variable for manifest cache.
+	 */
+	protected $manifestCache;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 */
+	public function __construct(ManifestCacheInterface $manifestCache) {
+		$this->manifestCache = $manifestCache;
+	}
+
 	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
@@ -330,34 +345,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getBlocksManifests(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationCustom');
+		$item = $this->manifestCache->getManifestCacheTopItem('blocks');
+
+		$data = $item['data'] ?? [];
 
 		return \array_map(
-			function (string $blockPath) {
-				$block = \implode(' ', (array)\file(($blockPath)));
-
-				$block = Components::parseManifest($block);
-
-				if (!isset($block['blockName'])) {
-					throw InvalidBlock::missingNameException($blockPath);
+			static function (array $item, string $key) {
+				if (!isset($item['blockName'])) {
+					throw InvalidBlock::missingNameException($key);
 				}
 
-				if (!isset($block['classes'])) {
-					$block['classes'] = [];
-				}
-
-				if (!isset($block['attributes'])) {
-					$block['attributes'] = [];
-				}
-
-				if (!isset($block['hasInnerBlocks'])) {
-					$block['hasInnerBlocks'] = false;
-				}
-
-				return $block;
+				return $item;
 			},
-			(array)\glob("{$path}*{$sep}manifest.json")
+			$data,
+			array_keys($data)
 		);
 	}
 
@@ -370,22 +371,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getComponentsManifests(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationComponents');
+		$item = $this->manifestCache->getManifestCacheTopItem('components');
+
+		$data = $item['data'] ?? [];
 
 		return \array_map(
-			function (string $componentPath) {
-				$component = \implode(' ', (array)\file(($componentPath)));
-
-				$component = Components::parseManifest($component);
-
-				if (!isset($component['componentName'])) {
-					throw InvalidBlock::missingComponentNameException($componentPath);
+			static function (array $item, string $key) {
+				if (!isset($item['componentName'])) {
+					throw InvalidBlock::missingComponentNameException($key);
 				}
 
-				return $component;
+				return $item;
 			},
-			(array)\glob("{$path}*{$sep}manifest.json")
+			$data,
+			array_keys($data)
 		);
 	}
 
@@ -398,22 +397,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getVariationsManifests(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationVariations');
+		$item = $this->manifestCache->getManifestCacheTopItem('variations');
+
+		$data = $item['data'] ?? [];
 
 		return \array_map(
-			function (string $variationPath) {
-				$variation = \implode(' ', (array)\file(($variationPath)));
-
-				$variation = Components::parseManifest($variation);
-
-				if (!isset($variation['name'])) {
-					throw InvalidBlock::missingVariationNameException($variationPath);
+			static function (array $item, string $key) {
+				if (!isset($item['name'])) {
+					throw InvalidBlock::missingVariationNameException($key);
 				}
 
-				return $variation;
+				return $item;
 			},
-			(array)\glob("{$path}*{$sep}manifest.json")
+			$data,
+			array_keys($data)
 		);
 	}
 
@@ -426,16 +423,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getWrapperManifest(): array
 	{
-		$path = Components::getProjectPaths('blocksDestinationWrapper', "manifest.json");
+		$item = $this->manifestCache->getManifestCacheTopItem('wrapper');
 
-		if (!\file_exists($path)) {
+		$data = $item['data'] ?? [];
+		$path = $item['path'] ?? [];
+
+		if (!$data) {
 			throw InvalidBlock::missingWrapperManifestException($path);
 		}
 
-		$manifest = \implode(' ', (array)\file($path));
-		$manifest = Components::parseManifest($manifest);
-
-		return $manifest;
+		return $data;
 	}
 
 	/**
@@ -448,20 +445,20 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getSettingsManifest(): array
 	{
-		$path = Components::getProjectPaths('blocksDestination', 'manifest.json');
+		$item = $this->manifestCache->getManifestCacheTopItem('settings');
 
-		if (!\file_exists($path)) {
+		$data = $item['data'] ?? [];
+		$path = $item['path'] ?? [];
+
+		if (!$data) {
 			throw InvalidBlock::missingSettingsManifestException($path);
 		}
 
-		$manifest = \implode(' ', (array)\file(($path)));
-		$manifest = Components::parseManifest($manifest);
-
-		if (!isset($manifest['namespace'])) {
+		if (!isset($data['namespace'])) {
 			throw InvalidBlock::missingNamespaceException();
 		}
 
-		return $manifest;
+		return $data;
 	}
 
 	/**
