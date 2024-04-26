@@ -24,13 +24,15 @@ use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Blocks\UseManifestCli;
 use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
+use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
-use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Config\ConfigThemeCli;
+use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\Setup\PluginManageCli;
 use EightshiftLibs\View\EscapedViewCli;
@@ -45,7 +47,6 @@ use EightshiftLibs\Services\ServiceExampleCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Login\LoginCli;
 use EightshiftLibs\Main\MainCli;
-use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Media\MediaCli;
 use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
@@ -102,7 +103,8 @@ class Cli
 		ReusableBlocksHeaderFooterCli::class,
 		AnalyticsGdprCli::class,
 		WebPMediaColumnCli::class,
-		ConfigCli::class,
+		ConfigThemeCli::class,
+		ConfigPluginCli::class,
 		ConfigProjectCli::class,
 		AcfMetaCli::class,
 		PostTypeCli::class,
@@ -115,7 +117,6 @@ class Cli
 		I18nCli::class,
 		LoginCli::class,
 		MainCli::class,
-		ManifestCli::class,
 		MediaCli::class,
 		MenuCli::class,
 		ModifyAdminAppearanceCli::class,
@@ -128,6 +129,7 @@ class Cli
 		ThemeOptionsCli::class,
 		EscapedViewCli::class,
 		WpCli::class,
+		ManifestCacheCli::class,
 	];
 
 	/**

@@ -221,7 +221,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 */
 	private function outputDependencyItems(string $source, string $type): void
 	{
-		$manifest = Components::getManifestDirect($source);
+		$manifest = $this->getManifestDirect($source);
 
 		// Component dependency.
 		$componentsDependencies = $manifest['components'] ?? [];
@@ -272,7 +272,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 */
 	private function outputNodeModuleDependencyItems(string $source, string $type): void
 	{
-		$manifest = Components::getManifestDirect($source);
+		$manifest = $this->getManifestDirect($source);
 
 		// Node_module dependency.
 		$nodeDependencies = $manifest['nodeDependency'] ?? [];

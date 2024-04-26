@@ -11,22 +11,25 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Theme;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
-use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class Enqueue
  */
 abstract class AbstractEnqueueTheme extends AbstractAssets
 {
+	/**
+	 * Get the theme script handle.
+	 *
+	 * @return array<string, mixed>
+	 */
 	public const THEME_SCRIPT_URI = 'application.js';
-	public const THEME_STYLE_URI = 'application.css';
 
 	/**
-	 * Instance variable of manifest data.
+	 * Get the theme style handle.
 	 *
-	 * @var ManifestInterface
+	 * @return array<string, mixed>
 	 */
-	protected ManifestInterface $manifest;
+	public const THEME_STYLE_URI = 'application.css';
 
 	/**
 	 * Get theme Stylesheet handle.
@@ -77,7 +80,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 
 		\wp_register_style(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::THEME_STYLE_URI),
+			$this->setAssetsItem(static::THEME_STYLE_URI),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
@@ -97,10 +100,10 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 
 		\wp_register_script(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::THEME_SCRIPT_URI),
+			$this->setAssetsItem(static::THEME_SCRIPT_URI),
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
-			$this->scriptInFooter()
+			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
 
 		\wp_enqueue_script($handle);

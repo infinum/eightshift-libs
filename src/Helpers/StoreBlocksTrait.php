@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Helpers for store.
+ * Helpers for blocks store.
  *
  * @package EightshiftLibs\Helpers
  */
@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
+use EightshiftLibs\Cache\AbstractManifestCache;
+
 /**
  * Class StoreTrait Helper
  */
-trait StoreTrait
+trait StoreBlocksTrait
 {
 	/**
 	 * Store default state
@@ -21,20 +23,22 @@ trait StoreTrait
 	 * @var array<mixed>
 	 */
 	public static $defaultState = [
-		'blocks' => [],
-		'components' => [],
-		'config' => [
+		AbstractManifestCache::BLOCKS_KEY => [],
+		AbstractManifestCache::COMPONENTS_KEY => [],
+		AbstractManifestCache::CONFIG_KEY => [
 			'outputCssGlobally' => false,
 			'outputCssOptimize' => false,
 			'outputCssSelectorName' => 'esCssVariables',
 			'outputCssGloballyAdditionalStyles' => [],
 			'useWrapper' => true,
+			'useComponents' => true,
+			'useBlock' => true,
+			'useVariations' => true,
 		],
-		'wrapper' => [],
-		'variations' => [],
-		'settings' => [],
-		'styles' => [],
-		'paths' => [],
+		AbstractManifestCache::WRAPPER_KEY => [],
+		AbstractManifestCache::VARIATIONS_KEY => [],
+		AbstractManifestCache::SETTINGS_KEY => [],
+		AbstractManifestCache::STYLES_KEY => [],
 	];
 
 	/**
@@ -44,7 +48,7 @@ trait StoreTrait
 	 */
 	public static function getStoreName(): string
 	{
-		return \basename(Components::getProjectPaths('root'));
+		return \basename(Helpers::getProjectPaths('root'));
 	}
 
 	/**
@@ -87,7 +91,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['blocks'] = $blocks;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::BLOCKS_KEY] = $blocks;
 		}
 	}
 
@@ -98,7 +102,7 @@ trait StoreTrait
 	 */
 	public static function getBlocks(): array
 	{
-		return self::getStore()['blocks'] ?? [];
+		return self::getStore()[AbstractManifestCache::BLOCKS_KEY] ?? [];
 	}
 
 	/**
@@ -132,7 +136,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['components'] = $components;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::COMPONENTS_KEY] = $components;
 		}
 	}
 
@@ -143,7 +147,7 @@ trait StoreTrait
 	 */
 	public static function getComponents(): array
 	{
-		return self::getStore()['components'] ?? [];
+		return self::getStore()[AbstractManifestCache::COMPONENTS_KEY] ?? [];
 	}
 
 	/**
@@ -176,7 +180,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['variations'] = $variations;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::VARIATIONS_KEY] = $variations;
 		}
 	}
 
@@ -187,7 +191,7 @@ trait StoreTrait
 	 */
 	public static function getVariations(): array
 	{
-		return self::getStore()['variations'] ?? [];
+		return self::getStore()[AbstractManifestCache::VARIATIONS_KEY] ?? [];
 	}
 
 	/**
@@ -215,32 +219,47 @@ trait StoreTrait
 	 */
 	public static function setConfigFlags(): void
 	{
-		$config = self::getSettings()['config'] ?? [];
+		$config = self::getSettings()[AbstractManifestCache::CONFIG_KEY] ?? [];
 
 		if ($config) {
 			// outputCssGlobally.
 			if (isset($config['outputCssGlobally']) && \gettype($config['outputCssGlobally']) === 'boolean') {
-				Components::setConfigOutputCssGlobally($config['outputCssGlobally']);
+				Helpers::setConfigOutputCssGlobally($config['outputCssGlobally']);
 			}
 
 			// outputCssOptimize.
 			if (isset($config['outputCssOptimize']) && \gettype($config['outputCssOptimize']) === 'boolean') {
-				Components::setConfigOutputCssOptimize($config['outputCssOptimize']);
+				Helpers::setConfigOutputCssOptimize($config['outputCssOptimize']);
 			}
 
 			// outputCssSelectorName.
 			if (isset($config['outputCssSelectorName']) && \gettype($config['outputCssSelectorName']) === 'string') {
-				Components::setConfigOutputCssSelectorName($config['outputCssSelectorName']);
+				Helpers::setConfigOutputCssSelectorName($config['outputCssSelectorName']);
 			}
 
 			// outputCssGloballyAdditionalStyles.
 			if (isset($config['outputCssGloballyAdditionalStyles']) && \gettype($config['outputCssGloballyAdditionalStyles']) === 'array') {
-				Components::setConfigOutputCssGloballyAdditionalStyles($config['outputCssGloballyAdditionalStyles']);
+				Helpers::setConfigOutputCssGloballyAdditionalStyles($config['outputCssGloballyAdditionalStyles']);
 			}
 
 			// useWrapper.
 			if (isset($config['useWrapper']) && \gettype($config['useWrapper']) === 'boolean') {
-				Components::setConfigUseWrapper($config['useWrapper']);
+				Helpers::setConfigUseWrapper($config['useWrapper']);
+			}
+
+			// useComponents.
+			if (isset($config['useComponents']) && \gettype($config['useComponents']) === 'boolean') {
+				Helpers::setConfigUseComponents($config['useComponents']);
+			}
+
+			// useBlocks.
+			if (isset($config['useBlocks']) && \gettype($config['useBlocks']) === 'boolean') {
+				Helpers::setConfigUseBlocks($config['useBlocks']);
+			}
+
+			// useVariations.
+			if (isset($config['useVariations']) && \gettype($config['useVariations']) === 'boolean') {
+				Helpers::setConfigUseVariations($config['useVariations']);
 			}
 		}
 	}
@@ -252,7 +271,7 @@ trait StoreTrait
 	 */
 	public static function getConfig(): array
 	{
-		return self::getStore()['config'] ?? [];
+		return self::getStore()[AbstractManifestCache::CONFIG_KEY] ?? [];
 	}
 
 	/**
@@ -267,7 +286,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['outputCssGlobally'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['outputCssGlobally'] = $config;
 		}
 	}
 
@@ -278,7 +297,7 @@ trait StoreTrait
 	 */
 	public static function getConfigOutputCssGlobally(): bool
 	{
-		return self::getConfig()['outputCssGlobally'] ?? self::$defaultState['config']['outputCssGlobally'];
+		return self::getConfig()['outputCssGlobally'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['outputCssGlobally'];
 	}
 
 	/**
@@ -293,7 +312,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['outputCssOptimize'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['outputCssOptimize'] = $config;
 		}
 	}
 
@@ -304,7 +323,7 @@ trait StoreTrait
 	 */
 	public static function getConfigOutputCssOptimize(): bool
 	{
-		return self::getConfig()['outputCssOptimize'] ?? self::$defaultState['config']['outputCssOptimize'];
+		return self::getConfig()['outputCssOptimize'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['outputCssOptimize'];
 	}
 
 	/**
@@ -319,7 +338,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['outputCssSelectorName'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['outputCssSelectorName'] = $config;
 		}
 	}
 
@@ -330,7 +349,7 @@ trait StoreTrait
 	 */
 	public static function getConfigOutputCssSelectorName(): string
 	{
-		return self::getConfig()['outputCssSelectorName'] ?? self::$defaultState['config']['outputCssSelectorName'];
+		return self::getConfig()['outputCssSelectorName'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['outputCssSelectorName'];
 	}
 
 	/**
@@ -345,7 +364,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['outputCssGloballyAdditionalStyles'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['outputCssGloballyAdditionalStyles'] = $config;
 		}
 	}
 
@@ -356,7 +375,7 @@ trait StoreTrait
 	 */
 	public static function getConfigOutputCssGloballyAdditionalStyles(): array
 	{
-		return self::getConfig()['outputCssGloballyAdditionalStyles'] ?? self::$defaultState['config']['outputCssGloballyAdditionalStyles'];
+		return self::getConfig()['outputCssGloballyAdditionalStyles'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['outputCssGloballyAdditionalStyles'];
 	}
 
 	/**
@@ -371,7 +390,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['useWrapper'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useWrapper'] = $config;
 		}
 	}
 
@@ -382,7 +401,85 @@ trait StoreTrait
 	 */
 	public static function getConfigUseWrapper(): bool
 	{
-		return self::getConfig()['useWrapper'] ?? self::$defaultState['config']['useWrapper'];
+		return self::getConfig()['useWrapper'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useWrapper'];
+	}
+
+	/**
+	 * Set global config value for use components.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseComponents(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useComponents'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use components.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseComponents(): bool
+	{
+		return self::getConfig()['useComponents'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useComponents'];
+	}
+
+	/**
+	 * Set global config value for use blocks.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseBlocks(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useBlocks'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use blocks.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseBlocks(): bool
+	{
+		return self::getConfig()['useBlocks'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useBlocks'];
+	}
+
+	/**
+	 * Set global config value for use variations.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseVariations(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useVariations'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use variations.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseVariations(): bool
+	{
+		return self::getConfig()['useVariations'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useVariations'];
 	}
 
 	/**
@@ -397,7 +494,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['wrapper'] = $wrapper;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::WRAPPER_KEY] = $wrapper;
 		}
 	}
 
@@ -408,7 +505,7 @@ trait StoreTrait
 	 */
 	public static function getWrapper(): array
 	{
-		return self::getStore()['wrapper'] ?? [];
+		return self::getStore()[AbstractManifestCache::WRAPPER_KEY] ?? [];
 	}
 
 	/**
@@ -433,7 +530,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['settings'] = $settings;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::SETTINGS_KEY] = $settings;
 		}
 	}
 
@@ -444,7 +541,7 @@ trait StoreTrait
 	 */
 	public static function getSettings(): array
 	{
-		return self::getStore()['settings'] ?? [];
+		return self::getStore()[AbstractManifestCache::SETTINGS_KEY] ?? [];
 	}
 
 	/**
@@ -509,7 +606,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['settings']['globalVariables']['breakpoints'] = $breakpoints;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::SETTINGS_KEY]['globalVariables']['breakpoints'] = $breakpoints;
 		}
 	}
 
@@ -545,7 +642,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['styles'] = $styles;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::STYLES_KEY] = $styles;
 		}
 	}
 
@@ -561,7 +658,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['styles'][] = $style;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::STYLES_KEY][] = $style;
 		}
 	}
 
@@ -572,32 +669,6 @@ trait StoreTrait
 	 */
 	public static function getStyles(): array
 	{
-		return self::getStore()['styles'] ?? [];
-	}
-
-	/**
-	 * Set paths details.
-	 *
-	 * @return void
-	 */
-	public static function setPaths(): void
-	{
-		global $esBlocks;
-
-		if (self::getStore()) {
-			foreach (Components::PROJECT_PATHS as $value) {
-				$esBlocks[self::getStoreName()]['paths'][$value] = Components::getProjectPaths($value);
-			}
-		}
-	}
-
-	/**
-	 * Get paths details.
-	 *
-	 * @return array<mixed>
-	 */
-	public static function getPaths(): array
-	{
-		return self::getStore()['paths'] ?? [];
+		return self::getStore()[AbstractManifestCache::STYLES_KEY] ?? [];
 	}
 }

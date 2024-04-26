@@ -20,6 +20,69 @@ use WP_REST_Server;
 abstract class AbstractRoute implements RouteInterface, ServiceInterface
 {
 	/**
+	 * Status error const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_ERROR = 'error';
+
+	/**
+	 * Status success const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_SUCCESS = 'success';
+
+	/**
+	 * Status warning const.
+	 *
+	 * @var string
+	 */
+	public const STATUS_WARNING = 'warning';
+
+	/**
+	 * API response code success const.
+	 *
+	 * @var int
+	 */
+	public const API_RESPONSE_CODE_SUCCESS = 200;
+
+	/**
+	 * API response code success range const.
+	 *
+	 * @var int
+	 */
+	public const API_RESPONSE_CODE_SUCCESS_RANGE = 299;
+
+	/**
+	 * API response code error const.
+	 *
+	 * @var int
+	 */
+	public const API_RESPONSE_CODE_ERROR = 400;
+
+	/**
+	 * API response code error missing const.
+	 *
+	 * @var int
+	 */
+	public const API_RESPONSE_CODE_ERROR_MISSING = 404;
+
+	/**
+	 * API response code error server const.
+	 *
+	 * @var int
+	 */
+	public const API_RESPONSE_CODE_ERROR_SERVER = 500;
+
+	/**
+	 * API response code error forbidden const.
+	 *
+	 * @var int
+	 */
+	public const API_RESPONSE_CODE_ERROR_FORBIDDEN = 403;
+
+	/**
 	 * A register method holds register_rest_route function to register api route
 	 *
 	 * @return void

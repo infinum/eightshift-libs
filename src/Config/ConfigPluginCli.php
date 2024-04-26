@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Manifest.
+ * Class that registers WPCLI command for Config Plugin.
  *
- * @package EightshiftLibs\Manifest
+ * @package EightshiftLibs\Config
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Manifest;
+namespace EightshiftLibs\Config;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 
 /**
- * Class ManifestCli
+ * Class ConfigPluginCli
  */
-class ManifestCli extends AbstractCli
+class ConfigPluginCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,17 @@ class ManifestCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'manifest';
+		return 'config-plugin';
+	}
+
+	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [];
 	}
 
 	/**
@@ -47,11 +57,11 @@ class ManifestCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create manifest service class.',
+			'shortdesc' => 'Create plugin config service class.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create manifest service class to register assets manifest functionality like getting fonts from your project.
+				Used to create plugin config class with settings like project name, version, REST-API name/version, etc.
 
 				## EXAMPLES
 
@@ -61,7 +71,7 @@ class ManifestCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/Manifest/ManifestExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Config/ConfigPluginExample.php
 			"),
 		];
 	}
@@ -74,10 +84,12 @@ class ManifestCli extends AbstractCli
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, $className)
+		$class = $this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'Manifest'), "{$className}.php", $assocArgs);
+			->renameUse($assocArgs);
+
+		// Output final class to new file/folder and finish.
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$className}.php", $assocArgs);
 	}
 }

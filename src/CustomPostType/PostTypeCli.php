@@ -168,9 +168,7 @@ class PostTypeCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('rewrite_url'), $rewriteUrl)
 			->searchReplaceString($this->getArgTemplate('rest_endpoint_slug'), $restEndpointSlug)
 			->searchReplaceString($this->getArgTemplate('label'), $label)
-			->searchReplaceString($this->getArgTemplate('label_lowercaps'), \strtolower($label))
-			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
-			->searchReplaceString($this->getArgTemplate('plural_label_lowecaps'), \strtolower($pluralLabel));
+			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel);
 
 		if (!empty($capability)) {
 			$class->searchReplaceString($this->getArgTemplate('capability'), $capability);

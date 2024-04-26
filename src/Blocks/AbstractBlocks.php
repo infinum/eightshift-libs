@@ -11,7 +11,11 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
 use WP_Block_Editor_Context;
@@ -23,6 +27,81 @@ use WP_Post;
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
+	 * Blocks builder array.
+	 *
+	 * @var array<string, array<string, mixed>>
+	 */
+	private const BLOCKS_BUILDER = [
+		AbstractManifestCache::BLOCKS_KEY => [
+			'multiple' => true,
+			'validation' => [
+				'blockName',
+				'namespace',
+				'blockFullName',
+				'keywords',
+				'icon',
+				'category',
+				'description',
+				'title',
+				'$schema',
+			],
+		],
+		AbstractManifestCache::COMPONENTS_KEY => [
+			'multiple' => true,
+			'validation' => [
+				'componentName',
+				'$schema',
+				'title',
+			],
+		],
+		AbstractManifestCache::VARIATIONS_KEY => [
+			'multiple' => true,
+			'validation' => [
+				'name',
+				'$schema',
+				'parentName',
+				'title',
+				'icon',
+				'description',
+			],
+		],
+		AbstractManifestCache::WRAPPER_KEY => [
+			'multiple' => false,
+			'validation' => [
+				'$schema',
+				'title'
+			],
+		],
+		AbstractManifestCache::SETTINGS_KEY => [
+			'multiple' => false,
+			'validation' => [
+				'$schema',
+				'namespace',
+				'background',
+				'foreground',
+				'blockClassPrefix',
+			],
+		],
+	];
+
+	/**
+	 * Instance variable for manifest cache.
+	 *
+	 * @var ManifestCacheInterface
+	 */
+	protected $manifestCache;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 */
+	public function __construct(ManifestCacheInterface $manifestCache)
+	{
+		$this->manifestCache = $manifestCache;
+	}
+
+	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
 	 *
@@ -31,7 +110,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public function changeEditorColorPalette(): void
 	{
 		// Unable to use state due to this method is used in JS and store is not registered there.
-		$colors = $this->getSettingsManifest()['globalVariables']['colors'] ?? [];
+		$colors = $this->getManifest(AbstractManifestCache::SETTINGS_KEY)['globalVariables']['colors'] ?? [];
 
 		if ($colors) {
 			\add_theme_support('editor-color-palette', $colors);
@@ -57,33 +136,25 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getBlocksDataFullRaw(): void
 	{
-		// Get global settings direct from file.
-		$settings = $this->getSettingsManifest();
-
-		$namespace = $settings['namespace'];
-
-		$blocks = \array_map(
-			static function ($block) use ($namespace) {
-				// Check if blocks-namespace is defined in block or in global manifest settings.
-				$block['namespace'] = $namespace;
-				$block['blockFullName'] = "{$namespace}/{$block['blockName']}";
-
-				return $block;
-			},
-			$this->getBlocksManifests()
-		);
-
 		// Register store and set all the data.
 		Components::setStore();
-		Components::setSettings($settings);
-		Components::setBlocks($blocks);
-		Components::setComponents($this->getComponentsManifests());
-		Components::setVariations($this->getVariationsManifests());
+		Components::setSettings($this->getManifest(AbstractManifestCache::SETTINGS_KEY));
 		Components::setConfigFlags();
-		Components::setPaths();
+
+		if (Components::getConfigUseBlocks()) {
+			Components::setBlocks($this->getManifest(AbstractManifestCache::BLOCKS_KEY));
+		}
+
+		if (Components::getConfigUseComponents()) {
+			Components::setComponents($this->getManifest(AbstractManifestCache::COMPONENTS_KEY));
+		}
+
+		if (Components::getConfigUseVariations()) {
+			Components::setVariations($this->getManifest(AbstractManifestCache::VARIATIONS_KEY));
+		}
 
 		if (Components::getConfigUseWrapper()) {
-			Components::setWrapper($this->getWrapperManifest());
+			Components::setWrapper($this->getManifest(AbstractManifestCache::WRAPPER_KEY));
 		}
 	}
 
@@ -116,15 +187,17 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return $allowedBlockTypes;
 		}
 
-		$allowedBlockTypes = \array_merge(
-			\array_map(
-				function ($block) {
-					return $block['blockFullName'];
-				},
-				Components::getBlocks(),
-			),
-			$allowedBlockTypes,
-		);
+		if (Components::getConfigUseBlocks()) {
+			$allowedBlockTypes = \array_merge(
+				\array_map(
+					function ($block) {
+						return $block['blockFullName'];
+					},
+					$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)
+				),
+				$allowedBlockTypes,
+			);
+		}
 
 		// Allow reusable block.
 		$allowedBlockTypes[] = 'eightshift-forms/forms';
@@ -156,13 +229,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Method used to register all custom blocks with data fetched from blocks manifest.json.
 	 *
-	 * @throws InvalidBlock Throws error if blocks are missing.
-	 *
 	 * @return void
 	 */
 	public function registerBlocks(): void
 	{
-		foreach (Components::getBlocks() as $block) {
+		if (!Components::getConfigUseBlocks()) {
+			return;
+		}
+
+		foreach ($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY) as $block) {
 			$this->registerBlock($block);
 		}
 	}
@@ -173,7 +248,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
-	 * @throws InvalidBlock Throws error if block view is missing.
+	 * @throws InvalidPath Throws error if file doesn't exist.
 	 *
 	 * @return string Html template for block.
 	 */
@@ -192,12 +267,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// Check if wrapper component exists.
 			if (!\file_exists($wrapperPath)) {
-				throw InvalidBlock::missingWrapperViewException($wrapperPath);
+				throw InvalidPath::missingFileWithExampleException($wrapperPath, 'wrapper.php');
 			}
 
 			// Check if actual block exists.
 			if (!\file_exists($templatePath)) {
-				throw InvalidBlock::missingViewException($blockName, $templatePath);
+				throw InvalidPath::missingFileWithExampleException($templatePath, "{$blockName}.php");
 			}
 
 			// If everything is ok, return the contents of the template (return, NOT echo).
@@ -250,14 +325,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param array<string, mixed> $attributes Attributes array to pass in template.
 	 * @param string|null $innerBlockContent If using inner blocks content pass the data.
 	 *
-	 * @throws InvalidBlock Throws an error if wrapper file doesn't exist.
+	 * @throws InvalidPath Throws error if file doesn't exist.
 	 *
 	 * @return void Includes an HTML view, or throws an error if the view is missing.
 	 */
 	public function renderWrapperView(string $src, array $attributes, ?string $innerBlockContent = null): void
 	{
 		if (!\file_exists($src)) {
-			throw InvalidBlock::missingWrapperViewException($src);
+			throw InvalidPath::missingFileWithExampleException($src, 'wrapper.php');
 		}
 
 		include $src;
@@ -322,146 +397,61 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Retrieve block data from manifest.json combined with some additional stuff.
+	 * Get manifest data for the provided type.
 	 *
-	 * @throws InvalidBlock Throws error if block name is missing.
+	 * @param string $type Type of the manifest.
 	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getBlocksManifests(): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationCustom');
-
-		return \array_map(
-			function (string $blockPath) {
-				$block = \implode(' ', (array)\file(($blockPath)));
-
-				$block = Components::parseManifest($block);
-
-				if (!isset($block['blockName'])) {
-					throw InvalidBlock::missingNameException($blockPath);
-				}
-
-				if (!isset($block['classes'])) {
-					$block['classes'] = [];
-				}
-
-				if (!isset($block['attributes'])) {
-					$block['attributes'] = [];
-				}
-
-				if (!isset($block['hasInnerBlocks'])) {
-					$block['hasInnerBlocks'] = false;
-				}
-
-				return $block;
-			},
-			(array)\glob("{$path}*{$sep}manifest.json")
-		);
-	}
-
-	/**
-	 * Retrieve components data from manifest.json.
-	 *
-	 * @throws InvalidBlock Throws error if component name is missing.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getComponentsManifests(): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationComponents');
-
-		return \array_map(
-			function (string $componentPath) {
-				$component = \implode(' ', (array)\file(($componentPath)));
-
-				$component = Components::parseManifest($component);
-
-				if (!isset($component['componentName'])) {
-					throw InvalidBlock::missingComponentNameException($componentPath);
-				}
-
-				return $component;
-			},
-			(array)\glob("{$path}*{$sep}manifest.json")
-		);
-	}
-
-	/**
-	 * Retrieve variations data from manifest.json.
-	 *
-	 * @throws InvalidBlock Throws error if variation name is missing.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getVariationsManifests(): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationVariations');
-
-		return \array_map(
-			function (string $variationPath) {
-				$variation = \implode(' ', (array)\file(($variationPath)));
-
-				$variation = Components::parseManifest($variation);
-
-				if (!isset($variation['name'])) {
-					throw InvalidBlock::missingVariationNameException($variationPath);
-				}
-
-				return $variation;
-			},
-			(array)\glob("{$path}*{$sep}manifest.json")
-		);
-	}
-
-	/**
-	 * Retrieve wrapper data from manifest.json.
-	 *
-	 * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
+	 * @throws InvalidManifest If the manifest is missing or has an error.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getWrapperManifest(): array
+	private function getManifest(string $type): array
 	{
-		$path = Components::getProjectPaths('blocksDestinationWrapper', "manifest.json");
+		$multiple = self::BLOCKS_BUILDER[$type]['multiple'] ?? false;
 
-		if (!\file_exists($path)) {
-			throw InvalidBlock::missingWrapperManifestException($path);
-		}
-
-		$manifest = \implode(' ', (array)\file($path));
-		$manifest = Components::parseManifest($manifest);
-
-		return $manifest;
+		return $multiple ? $this->getManifestItems($type) : $this->getManifestItem($type);
 	}
 
 	/**
-	 * Get blocks global settings manifest data from settings manifest.json file.
+	 * Get multiple items from the manifest.
 	 *
-	 * @throws InvalidBlock Throws error if global manifest settings key block-namespace is missing.
-	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
+	 * @param string $type Type of the manifest.
+	 *
+	 * @throws InvalidManifest If the manifest is missing or has an error.
+	 *
+	 * @return array<array<string, mixed>>
+	 */
+	private function getManifestItems(string $type): array
+	{
+		$data = $this->manifestCache->getManifestCacheTopItem($type);
+
+		foreach ($data as $path => $item) {
+			$validation = self::BLOCKS_BUILDER[$type]['validation'] ?? [];
+
+			if (!$validation) {
+				continue;
+			}
+
+			foreach ($validation as $key) {
+				if (!isset($item[$key])) {
+					throw InvalidManifest::missingManifestKeyException($key, $path);
+				}
+			}
+		}
+
+		return \array_values($data);
+	}
+
+	/**
+	 * Get single item from the manifest.
+	 *
+	 * @param string $type Type of the manifest.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getSettingsManifest(): array
+	private function getManifestItem(string $type): array
 	{
-		$path = Components::getProjectPaths('blocksDestination', 'manifest.json');
-
-		if (!\file_exists($path)) {
-			throw InvalidBlock::missingSettingsManifestException($path);
-		}
-
-		$manifest = \implode(' ', (array)\file(($path)));
-		$manifest = Components::parseManifest($manifest);
-
-		if (!isset($manifest['namespace'])) {
-			throw InvalidBlock::missingNamespaceException();
-		}
-
-		return $manifest;
+		return $this->manifestCache->getManifestCacheTopItem($type);
 	}
 
 	/**

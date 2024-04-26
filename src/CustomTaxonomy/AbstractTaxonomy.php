@@ -11,18 +11,12 @@ declare(strict_types=1);
 namespace EightshiftLibs\CustomTaxonomy;
 
 use EightshiftLibs\Services\ServiceInterface;
-use EightshiftLibs\Helpers\LabelGeneratorTrait;
 
 /**
  * Abstract class AbstractBaseTaxonomy class.
  */
 abstract class AbstractTaxonomy implements ServiceInterface
 {
-	/**
-	 * Label Generator Helper.
-	 */
-	use LabelGeneratorTrait;
-
 	/**
 	 * Register custom taxonomy.
 	 *

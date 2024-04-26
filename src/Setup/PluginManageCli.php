@@ -12,7 +12,7 @@ namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
-use EightshiftLibs\Exception\FileMissing;
+use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
@@ -146,7 +146,7 @@ class PluginManageCli extends AbstractCli
 
 		try {
 			$setup = $this->getSetupFile();
-		} catch (FileMissing $exception) {
+		} catch (InvalidPath $exception) {
 			self::cliError($exception->getMessage());
 		}
 
@@ -278,7 +278,7 @@ class PluginManageCli extends AbstractCli
 
 				try {
 					$this->installPaidPlugin($pluginToAdd, $version);
-				} catch (FileMissing $exception) {
+				} catch (InvalidPath $exception) {
 					self::cliError($exception->getMessage());
 				}
 			}
@@ -335,7 +335,7 @@ class PluginManageCli extends AbstractCli
 	 *
 	 * @return void
 	 *
-	 * @throws FileMissing Exception in case the env.json file is missing.
+	 * @throws InvalidPath Exception in case the env.json file is missing.
 	 */
 	private function installPaidPlugin(string $name, string $version): void
 	{
@@ -348,7 +348,7 @@ class PluginManageCli extends AbstractCli
 		}
 
 		if (!\file_exists($envFile)) {
-			throw FileMissing::missingFileOnPath($envFile);
+			throw InvalidPath::missingFileException($envFile);
 		}
 
 		$envData = \json_decode((string)\file_get_contents($envFile), true);
@@ -370,7 +370,7 @@ class PluginManageCli extends AbstractCli
 	 *
 	 * @return array<string, mixed> setup.json file in array form.
 	 *
-	 * @throws FileMissing Throws exception in case the setup.json file is missing.
+	 * @throws InvalidPath Throws exception in case the setup.json file is missing.
 	 */
 	private function getSetupFile(): array
 	{
@@ -382,7 +382,7 @@ class PluginManageCli extends AbstractCli
 		}
 
 		if (!\file_exists($setupFile)) {
-			throw FileMissing::missingFileOnPath($setupFile);
+			throw InvalidPath::missingFileException($setupFile);
 		}
 
 		return (array)\json_decode((string)\file_get_contents($setupFile), true);
@@ -513,7 +513,7 @@ class PluginManageCli extends AbstractCli
 			} elseif (isset($paidSetupPlugins[$pluginName])) {
 				try {
 					$this->installPaidPlugin($pluginName, $setupPluginVersion);
-				} catch (FileMissing $exception) {
+				} catch (InvalidPath $exception) {
 					self::cliError($exception->getMessage());
 				}
 			} else {

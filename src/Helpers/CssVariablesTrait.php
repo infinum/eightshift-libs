@@ -18,16 +18,14 @@ trait CssVariablesTrait
 	/**
 	 * Get Global Manifest.json and return globalVariables as CSS variables.
 	 *
-	 * @param array<string, mixed> $globalManifest Global manifest array. - Deprecated.
-	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobal(array $globalManifest = []): string
+	public static function outputCssVariablesGlobal(): string
 	{
 		$output = '';
 
-		foreach (Components::getSettingsGlobalVariables() as $itemKey => $itemValue) {
-			$itemKey = Components::camelToKebabCase($itemKey);
+		foreach (Helpers::getSettingsGlobalVariables() as $itemKey => $itemValue) {
+			$itemKey = Helpers::camelToKebabCase($itemKey);
 
 			if (\gettype($itemValue) === 'array') {
 				$output .= self::globalInner($itemValue, $itemKey);
@@ -36,11 +34,11 @@ trait CssVariablesTrait
 			}
 		}
 
-		$id = Components::getConfigOutputCssSelectorName();
+		$id = Helpers::getConfigOutputCssSelectorName();
 
 		$output = "<style id='{$id}-global'>:root {{$output}}</style>";
 
-		if (Components::getConfigOutputCssOptimize()) {
+		if (Helpers::getConfigOutputCssOptimize()) {
 			$output = \str_replace(["\n", "\r"], '', $output);
 		}
 
@@ -53,12 +51,11 @@ trait CssVariablesTrait
 	 * @param array<string, mixed> $attributes Built attributes.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
-	 * @param array<string, mixed> $globalManifest Global manifest array.
 	 * @param string $customSelector Output custom selector to use as a style prefix.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest = [], string $customSelector = ''): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = ''): string
 	{
 		// Bailout if manifest is missing variables key.
 		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
@@ -66,7 +63,7 @@ trait CssVariablesTrait
 		}
 
 		// Define variables from globalManifest.
-		$breakpoints = Components::getSettingsGlobalVariablesBreakpoints();
+		$breakpoints = Helpers::getSettingsGlobalVariablesBreakpoints();
 
 		// Sort breakpoints in ascending order.
 		\asort($breakpoints);
@@ -129,12 +126,12 @@ trait CssVariablesTrait
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
-		if (!Components::getConfigOutputCssGlobally() || (\wp_is_json_request() && $context === 'edit')) {
+		if (!Helpers::getConfigOutputCssGlobally() || (\wp_is_json_request() && $context === 'edit')) {
 			return self::getCssVariablesTypeDefault($name, $data, $manifest, $unique);
 		}
 
 		// Set inline styles.
-		Components::setStyle(self::getCssVariablesTypeInline($name, $data, $manifest, $unique));
+		Helpers::setStyle(self::getCssVariablesTypeInline($name, $data, $manifest, $unique));
 
 		return '';
 	}
@@ -150,14 +147,14 @@ trait CssVariablesTrait
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
-		if (!Components::getConfigOutputCssGlobally() || (\wp_is_json_request() && $context === 'edit')) {
+		if (!Helpers::getConfigOutputCssGlobally() || (\wp_is_json_request() && $context === 'edit')) {
 			return '';
 		}
 
 		// Prepare final output.
 		$output = '';
 
-		$styles = Components::getStyles();
+		$styles = Helpers::getStyles();
 
 		// Bailout if styles are missing.
 		if ($styles) {
@@ -254,15 +251,15 @@ trait CssVariablesTrait
 		}
 
 		// Remove newlines is config is set.
-		if (Components::getConfigOutputCssOptimize()) {
+		if (Helpers::getConfigOutputCssOptimize()) {
 			$output = \str_replace(["\n", "\r"], '', $output);
 		}
 
 		// Add additional style from config settings.
-		$additionalStyles = Components::getConfigOutputCssGloballyAdditionalStyles();
+		$additionalStyles = Helpers::getConfigOutputCssGloballyAdditionalStyles();
 		$additionalStylesOutput = $additionalStyles ? \esc_html(\implode(";\n", $additionalStyles)) : '';
 
-		$selector = Components::getConfigOutputCssSelectorName();
+		$selector = Helpers::getConfigOutputCssSelectorName();
 
 		return "<style id='{$selector}'>{$output} {$additionalStylesOutput}</style>";
 	}
@@ -368,7 +365,7 @@ trait CssVariablesTrait
 		// Prepare output for manual variables.
 		$finalManualOutput = $manual ? "\n .{$name}{$uniqueSelector}{\n{$manual}\n}" : '';
 
-		if (Components::getConfigOutputCssOptimize()) {
+		if (Helpers::getConfigOutputCssOptimize()) {
 			$output = \str_replace(["\n", "\r"], '', $output);
 			$finalManualOutput = \str_replace(["\n", "\r"], '', $finalManualOutput);
 		}
@@ -452,8 +449,8 @@ trait CssVariablesTrait
 		$output = '';
 
 		foreach ($itemValues as $key => $value) {
-			$key = Components::camelToKebabCase((string)$key);
-			$itemKey = Components::camelToKebabCase((string)$itemKey);
+			$key = Helpers::camelToKebabCase((string)$key);
+			$itemKey = Helpers::camelToKebabCase((string)$itemKey);
 
 			switch ($itemKey) {
 				case 'colors':
@@ -609,7 +606,7 @@ trait CssVariablesTrait
 	{
 		foreach ($variables as $variableName => $variableValue) {
 			// Constant for attributes set value (in db or default).
-			$attributeValue = $attributes[Components::getAttrKey($variableName, $attributes, $manifest)] ?? '';
+			$attributeValue = $attributes[Helpers::getAttrKey($variableName, $attributes, $manifest)] ?? '';
 
 			// Make sure this works correctly for attributes which are toggles (booleans).
 			if (\is_bool($attributeValue)) {
@@ -617,7 +614,7 @@ trait CssVariablesTrait
 			}
 
 			// If type default or value.
-			if (!Components::arrayIsList($variableValue)) {
+			if (!Helpers::arrayIsList($variableValue)) {
 				$variableValue = $variableValue[$attributeValue] ?? [];
 			}
 
@@ -760,14 +757,14 @@ trait CssVariablesTrait
 		$output = [];
 
 		// Bailout if provided list is not an object.
-		if (Components::arrayIsList($variables)) {
+		if (Helpers::arrayIsList($variables)) {
 			return $output;
 		}
 
 		// Iterate each attribute and make corrections.
 		foreach ($variables as $variableKey => $variableValue) {
 			// Convert to correct case.
-			$internalKey = Components::camelToKebabCase($variableKey);
+			$internalKey = Helpers::camelToKebabCase($variableKey);
 
 			// If value contains magic variable swap that variable with original attribute value.
 			if (\strpos($variableValue, '%value%') !== false) {

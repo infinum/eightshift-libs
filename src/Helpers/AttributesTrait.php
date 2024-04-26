@@ -144,7 +144,7 @@ trait AttributesTrait
 
 		// No need to test if this is block or component because on top level block there is no prefix.
 		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
-		return (string)\str_replace(Components::kebabToCamelCase($manifest['componentName']), $attributes['prefix'], $key);
+		return (string)\str_replace(Helpers::kebabToCamelCase($manifest['componentName']), $attributes['prefix'], $key);
 	}
 
 	/**
@@ -181,13 +181,13 @@ trait AttributesTrait
 		$blockName = $attributes['blockName'] ?? '';
 
 		// Populate prefix key for recursive checks of attribute names.
-		$prefix = (!isset($attributes['prefix'])) ? Components::kebabToCamelCase($blockName) : $attributes['prefix'];
+		$prefix = (!isset($attributes['prefix'])) ? Helpers::kebabToCamelCase($blockName) : $attributes['prefix'];
 
 		// Set component prefix.
 		if (empty($prefix)) {
-			$output['prefix'] = Components::kebabToCamelCase($newName);
+			$output['prefix'] = Helpers::kebabToCamelCase($newName);
 		} else {
-			$output['prefix'] = $prefix . \ucfirst(Components::kebabToCamelCase($newName));
+			$output['prefix'] = $prefix . \ucfirst(Helpers::kebabToCamelCase($newName));
 		}
 
 		// Iterate over the attributes.
@@ -215,7 +215,7 @@ trait AttributesTrait
 				}
 
 				// Remove the current component name from the attribute name.
-				$newKey = \str_replace(\lcfirst(Components::kebabToCamelCase($newName)), '', $key);
+				$newKey = \str_replace(\lcfirst(Helpers::kebabToCamelCase($newName)), '', $key);
 
 				// Remove the old key.
 				unset($manual[$key]);

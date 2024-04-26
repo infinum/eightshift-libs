@@ -76,34 +76,21 @@ class PostTypeExample extends AbstractPostType
 	 */
 	protected function getPostTypeArguments(): array
 	{
-		$nouns = [
-			\esc_html_x(
-				'%label%',
-				'post type upper case singular name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%label_lowercaps%',
-				'post type lower case singular name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%plural_label%',
-				'post type upper case plural name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%plural_label_lowecaps%',
-				'post type lower case plural name',
-				'eightshift-libs'
-			),
-		];
-
-		$labels = $this->getGeneratedLabels($nouns);
-
 		return [
-			'label' => $nouns[0],
-			'labels' => $labels,
+			// phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified
+			'labels' => [
+				'name' => esc_html_x(
+					'%label%',
+					'post type plural name',
+					'infobip'
+				),
+				'singular_name' => esc_html_x(
+					'%plural_label%',
+					'post type singular name',
+					'infobip'
+				),
+			],
+			// phpcs:enable
 			'public' => true,
 			'publicly_queryable' => true,
 			'show_ui' => true,

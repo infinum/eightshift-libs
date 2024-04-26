@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue;
 
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Cache\ManifestCacheInterface;
+use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -22,6 +25,23 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractAssets implements ServiceInterface
 {
+	/**
+	 * Instance variable for manifest cache.
+	 *
+	 * @var ManifestCacheInterface
+	 */
+	protected $manifestCache;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 */
+	public function __construct(ManifestCacheInterface $manifestCache)
+	{
+		$this->manifestCache = $manifestCache;
+	}
+
 	/**
 	 * Media style const
 	 */
@@ -127,6 +147,54 @@ abstract class AbstractAssets implements ServiceInterface
 	protected function scriptInFooter(): bool
 	{
 		return static::IN_FOOTER;
+	}
+
+	/**
+	 * Load script 'defer' or 'async'.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return string Whether to enqueue the script normally, with defer or async.
+	 * Default value: normal
+	 */
+	protected function scriptStrategy(): string
+	{
+		return '';
+	}
+
+	/**
+	 * Additional script args.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return array<string, string|bool> Additional script args.
+	 */
+	protected function scriptArgs(): array
+	{
+		return [
+			'strategy' => $this->scriptStrategy(),
+			'in_footer' => $this->scriptInFooter(),
+		];
+	}
+
+	/**
+	 * Get the manifest data.
+	 *
+	 * @param string $key The key from the manifest.json file.
+	 *
+	 * @throws InvalidManifest If manifest key is missing.
+	 *
+	 * @return string The value from the manifest.json file.
+	 */
+	public function setAssetsItem(string $key): string
+	{
+		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
+
+		if (!isset($data[$key])) {
+			throw InvalidManifest::missingManifestKeyException($key, 'public');
+		}
+
+		return $data[$key] ?? '';
 	}
 
 	/**
