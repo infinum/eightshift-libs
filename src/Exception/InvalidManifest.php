@@ -21,37 +21,39 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 * Throws error if manifest key is missing
 	 *
 	 * @param string $key Missing manifest key.
+	 * @param string $path Missing manifest path.
 	 *
 	 * @return static
 	 */
-	public static function missingManifestItemException(string $key): InvalidManifest
+	public static function missingManifestKeyException(string $key, string $path): InvalidManifest
 	{
 		return new InvalidManifest(
 			\sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
-					'%s key does not exist in manifest.json. Please check if provided key is correct.',
+					'%1$s key does not exist in manifest.json on this %2$s path. Please check if provided key is correct.',
 					'eightshift-libs'
 				),
-				$key
+				$key,
+				$path
 			)
 		);
 	}
 
 	/**
-	 * Throws error if manifest.json file is missing
+	 * Throws error if manifest is empty or has errors.
 	 *
-	 * @param string $path Missing manifest.json path.
+	 * @param string $path Missing manifest path.
 	 *
 	 * @return static
 	 */
-	public static function missingManifestException(string $path): InvalidManifest
+	public static function emptyOrErrorManifestException(string $path): InvalidManifest
 	{
 		return new InvalidManifest(
 			\sprintf(
-			/* translators: %s is replaced by the path where the manifest.json should be */
+			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
-					'manifest.json is missing at this path: %s. Bundle the theme before using it. Or your bundling process is returning an error.',
+					'Manifest.json in this %s is empty or has errors. Please check your data.',
 					'eightshift-libs'
 				),
 				$path

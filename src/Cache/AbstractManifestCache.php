@@ -16,6 +16,12 @@ use EightshiftLibs\Helpers\Components;
 
 abstract class AbstractManifestCache implements ManifestCacheInterface
 {
+	public const BLOCKS_KEY = 'blocks';
+	public const COMPONENTS_KEY = 'components';
+	public const VARIATIONS_KEY = 'variations';
+	public const WRAPPER_KEY = 'wrapper';
+	public const SETTINGS_KEY = 'settings';
+
 	/**
 	 * Get cache name.
 	 *
@@ -135,7 +141,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	protected function getCacheBuilder(): array
 	{
 		return [
-			'blocks' => [
+			self::BLOCKS_KEY => [
 				'path' => 'blocksDestinationCustom',
 				'fileName' => 'manifest.json',
 				'multiple' => true,
@@ -145,22 +151,22 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					'hasInnerBlocks' => 'boolean',
 				],
 			],
-			'components' => [
+			self::COMPONENTS_KEY => [
 				'path' => 'blocksDestinationComponents',
 				'fileName' => 'manifest.json',
 				'multiple' => true,
 			],
-			'variations' => [
+			self::VARIATIONS_KEY => [
 				'path' => 'blocksDestinationVariations',
 				'fileName' => 'manifest.json',
 				'multiple' => true,
 			],
-			'wrapper' => [
+			self::WRAPPER_KEY => [
 				'path' => 'blocksDestinationWrapper',
 				'fileName' => 'manifest.json',
 				'multiple' => false,
 			],
-			'settings' => [
+			self::SETTINGS_KEY => [
 				'path' => 'blocksDestination',
 				'fileName' => 'manifest.json',
 				'multiple' => false,

@@ -44,7 +44,7 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 		$path = $this->getManifestFilePath();
 
 		if (!\file_exists($path)) {
-			throw InvalidManifest::missingManifestException($path);
+			throw InvalidManifest::emptyOrErrorManifestException($path);
 		}
 
 		$data = \json_decode(\implode(' ', (array)\file($path)), true);
