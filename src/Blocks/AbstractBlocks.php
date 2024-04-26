@@ -15,6 +15,7 @@ use EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
 use WP_Block_Editor_Context;
@@ -247,12 +248,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// Check if wrapper component exists.
 			if (!\file_exists($wrapperPath)) {
-				throw InvalidBlock::missingWrapperViewException($wrapperPath);
+				throw InvalidPath::missingFileWithExampleException($wrapperPath, 'wrapper.php');
 			}
 
 			// Check if actual block exists.
 			if (!\file_exists($templatePath)) {
-				throw InvalidBlock::missingViewException($blockName, $templatePath);
+				throw InvalidPath::missingFileWithExampleException($templatePath, "{$blockName}.php");
 			}
 
 			// If everything is ok, return the contents of the template (return, NOT echo).
@@ -312,7 +313,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public function renderWrapperView(string $src, array $attributes, ?string $innerBlockContent = null): void
 	{
 		if (!\file_exists($src)) {
-			throw InvalidBlock::missingWrapperViewException($src);
+			throw InvalidPath::missingFileWithExampleException($src, 'wrapper.php');
 		}
 
 		include $src;

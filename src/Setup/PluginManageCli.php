@@ -13,6 +13,7 @@ namespace EightshiftLibs\Setup;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Exception\FileMissing;
+use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Components;
 use WP_CLI;
 
@@ -348,7 +349,7 @@ class PluginManageCli extends AbstractCli
 		}
 
 		if (!\file_exists($envFile)) {
-			throw FileMissing::missingFileOnPath($envFile);
+			throw InvalidPath::missingFileException($envFile);
 		}
 
 		$envData = \json_decode((string)\file_get_contents($envFile), true);
@@ -382,7 +383,7 @@ class PluginManageCli extends AbstractCli
 		}
 
 		if (!\file_exists($setupFile)) {
-			throw FileMissing::missingFileOnPath($setupFile);
+			throw InvalidPath::missingFileException($setupFile);
 		}
 
 		return (array)\json_decode((string)\file_get_contents($setupFile), true);

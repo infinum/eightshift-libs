@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Components;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
@@ -940,7 +941,7 @@ abstract class AbstractCli implements CliInterface
 				RecursiveIteratorIterator::SELF_FIRST
 			);
 		} catch (UnexpectedValueException $exception) {
-			throw InvalidBlock::missingFileException($source);
+			throw InvalidPath::missingFileException($source);
 		}
 
 		$ds = \DIRECTORY_SEPARATOR;

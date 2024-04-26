@@ -62,6 +62,27 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	}
 
 	/**
+	 * Throws error if manifest is missing.
+	 *
+	 * @param string $path Missing manifest path.
+	 *
+	 * @return static
+	 */
+	public static function missingManifestException(string $path): InvalidManifest
+	{
+		return new InvalidManifest(
+			\sprintf(
+			/* translators: %s is replaced by the missing key in the manifest.json */
+				\esc_html__(
+					'Manifest.json in missing in this %s path. Please check your data.',
+					'eightshift-libs'
+				),
+				$path
+			)
+		);
+	}
+
+	/**
 	 * Throws error if manifest.json file has errors
 	 *
 	 * Errors like trailing commas or malformed json file.

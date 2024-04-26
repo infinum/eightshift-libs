@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
+use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Exception\InvalidPath;
 
 /**
  * Helpers for components
@@ -51,11 +53,6 @@ class Components
 	 * Post trait.
 	 */
 	use PostTrait;
-
-	/**
-	 * Label Generator trait.
-	 */
-	use LabelGeneratorTrait;
 
 	/**
 	 * Media trait.
@@ -151,7 +148,7 @@ class Components
 		}
 
 		if (!\file_exists($componentPath)) {
-			throw ComponentException::throwUnableToLocateComponent($componentPath);
+			throw InvalidManifest::missingManifestException($componentPath);
 		}
 
 		// Merge default attributes with the component attributes.
@@ -231,7 +228,7 @@ class Components
 
 		// Bailout if file is missing.
 		if (!\file_exists($path)) {
-			throw ComponentException::throwUnableToLocatePartial($path);
+			throw InvalidPath::missingFileException($path);
 		}
 
 		\ob_start();
@@ -313,7 +310,7 @@ class Components
 		$manifest = "{$path}{$sep}manifest.json";
 
 		if (!\file_exists($manifest)) {
-			throw ComponentException::throwUnableToLocateComponent($manifest);
+			throw InvalidManifest::missingManifestException($manifest);
 		}
 
 		return \json_decode(\implode(' ', (array)\file($manifest)), true);

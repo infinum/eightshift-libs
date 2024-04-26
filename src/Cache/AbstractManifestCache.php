@@ -196,9 +196,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			$path = Components::getProjectPaths($path) ?? $path;
 
 			if ($multiple) {
-				$output[$parent] = $this->getMultipleItems($path, $data);
+				$output[$parent] = $this->getItems($path, $data);
 			} else {
-				$output[$parent] = $this->getSingleItem(\rtrim($path, $sep) . "{$sep}{$fileName}", $data);
+				$output[$parent] = $this->getItem(\rtrim($path, $sep) . "{$sep}{$fileName}", $data);
 			}
 		}
 
@@ -213,7 +213,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @return array<string, mixed> Item.
 	 */
-	private function getSingleItem(string $path, array $data): array
+	private function getItem(string $path, array $data): array
 	{
 		if (!\file_exists($path)) {
 			return [];
@@ -264,7 +264,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @return array<string, array> Array of items.
 	 */
-	private function getMultipleItems(string $path, array $data): array
+	private function getItems(string $path, array $data): array
 	{
 		$output = [];
 
@@ -274,7 +274,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		$path = \rtrim($path, $sep) . "{$sep}*{$sep}{$fileName}";
 
 		foreach ((array)\glob($path) as $itemPath) {
-			$output[$itemPath] = $this->getSingleItem($itemPath, $data);
+			$output[$itemPath] = $this->getItem($itemPath, $data);
 		}
 
 		return $output;
