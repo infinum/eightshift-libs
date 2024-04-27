@@ -25,7 +25,7 @@ abstract class AbstractConfig
 	 */
 	public static function getPluginVersion(): string
 	{
-		return static::getPluginDetails()['Version'] ?? esc_html('1.0.0');
+		return static::getPluginDetails()['Version'] ?? \esc_html('1.0.0');
 	}
 
 	/**
@@ -35,7 +35,7 @@ abstract class AbstractConfig
 	 */
 	public static function getPluginName(): string
 	{
-		return static::getPluginDetails()['Name'] ?? esc_html('Plugin');
+		return static::getPluginDetails()['Name'] ?? \esc_html('Plugin');
 	}
 
 	/**
@@ -45,7 +45,7 @@ abstract class AbstractConfig
 	 */
 	public static function getPluginTextDomain(): string
 	{
-		return static::getPluginDetails()['TextDomain'] ?? esc_html('PluginTextDomain');
+		return static::getPluginDetails()['TextDomain'] ?? \esc_html('PluginTextDomain');
 	}
 
 	/**
@@ -89,7 +89,7 @@ abstract class AbstractConfig
 	 */
 	public static function getProjectPath(string $path = ''): string
 	{
-		$fullPath = Components::getProjectPaths('themeRoot') . ltrim($path, \DIRECTORY_SEPARATOR);
+		$fullPath = Components::getProjectPaths('themeRoot') . \ltrim($path, \DIRECTORY_SEPARATOR);
 
 		if (!\is_readable($fullPath)) {
 			throw InvalidPath::missingDirectoryException($fullPath);
@@ -103,7 +103,7 @@ abstract class AbstractConfig
 	 *
 	 * @return array<string, string>
 	 */
-	private static function getPluginDetails(): array
+	protected static function getPluginDetails(): array
 	{
 		if (!\function_exists('get_plugin_data')) {
 			require_once(\ABSPATH . 'wp-admin/includes/plugin.php');

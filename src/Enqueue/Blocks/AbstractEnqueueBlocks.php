@@ -11,27 +11,47 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Blocks;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
-use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Helpers\Components;
 
 /**
  * Enqueue_Blocks class.
  */
 abstract class AbstractEnqueueBlocks extends AbstractAssets
 {
+	/**
+	 * Block editor script handle.
+	 *
+	 * @return string
+	 */
 	public const BLOCKS_EDITOR_SCRIPT_URI = 'applicationBlocksEditor.js';
-	public const BLOCKS_EDITOR_STYLE_URI = 'applicationBlocksEditor.css';
-
-	public const BLOCKS_STYLE_URI = 'applicationBlocks.css';
-
-	public const BLOCKS_FRONTEND_STYLE_URI = 'applicationBlocksFrontend.css';
-	public const BLOCKS_FRONTEND_SCRIPT_URI = 'applicationBlocksFrontend.js';
 
 	/**
-	 * Instance variable of manifest data.
+	 * Block editor style handle.
 	 *
-	 * @var ManifestInterface
+	 * @return string
 	 */
-	protected ManifestInterface $manifest;
+	public const BLOCKS_EDITOR_STYLE_URI = 'applicationBlocksEditor.css';
+
+	/**
+	 * Block style handle.
+	 *
+	 * @return string
+	 */
+	public const BLOCKS_STYLE_URI = 'applicationBlocks.css';
+
+	/**
+	 * Block frontend style handle.
+	 *
+	 * @return string
+	 */
+	public const BLOCKS_FRONTEND_STYLE_URI = 'applicationBlocksFrontend.css';
+
+	/**
+	 * Block frontend script handle.
+	 *
+	 * @return string
+	 */
+	public const BLOCKS_FRONTEND_SCRIPT_URI = 'applicationBlocksFrontend.js';
 
 	/**
 	 * Get block editor JavaScript handle.
@@ -72,7 +92,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_script(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::BLOCKS_EDITOR_SCRIPT_URI),
+			Components::getAsset(static::BLOCKS_EDITOR_SCRIPT_URI),
 			$this->getAdminScriptDependencies(),
 			$this->getAssetsVersion(),
 			$this->scriptInFooter()
@@ -124,7 +144,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_style(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::BLOCKS_EDITOR_STYLE_URI),
+			Components::getAsset(static::BLOCKS_EDITOR_STYLE_URI),
 			$this->getAdminStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
@@ -172,7 +192,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_style(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::BLOCKS_STYLE_URI),
+			Components::getAsset(static::BLOCKS_STYLE_URI),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
@@ -220,7 +240,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_script(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::BLOCKS_FRONTEND_SCRIPT_URI),
+			Components::getAsset(static::BLOCKS_FRONTEND_SCRIPT_URI),
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			$this->scriptInFooter()
@@ -273,7 +293,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_style(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::BLOCKS_FRONTEND_STYLE_URI),
+			Components::getAsset(static::BLOCKS_FRONTEND_STYLE_URI),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()

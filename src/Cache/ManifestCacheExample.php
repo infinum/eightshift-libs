@@ -6,25 +6,25 @@
  * @package EightshiftBoilerplate\Cache
  */
 
- declare(strict_types=1);
+declare(strict_types=1);
 
- namespace EightshiftBoilerplate\Cache;
- 
- use EightshiftLibs\Cache\AbstractManifestCache;
- 
- /**
-	* The project config class.
-	*/
- class ManifestCache extends AbstractManifestCache
- {
+namespace EightshiftBoilerplate\Cache;
+
+use EightshiftBoilerplate\Config\Config;
+use EightshiftLibs\Cache\AbstractManifestCache;
+
+/**
+ * The project config class.
+ */
+class ManifestCache extends AbstractManifestCache
+{
 	/**
 	 * Get cache name.
 	 *
 	 * @return string Cache name.
 	 */
-	 public function getCacheName(): string
-	 {
-		 return 'es_forms'; // TODO: Change this
-	 }
- }
- 
+	public function getCacheName(): string
+	{
+		return Config::getProjectTextDomain();
+	}
+}

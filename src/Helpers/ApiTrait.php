@@ -158,7 +158,7 @@ trait ApiTrait
 	 */
 	public static function getApiRouteUrlData(string $namespace, string $version, string $path): array
 	{
-		$prefix = rtrim(\get_rest_url(\get_current_blog_id()), '/');
+		$prefix = \rtrim(\get_rest_url(\get_current_blog_id()), '/');
 
 		return [
 			'prefix' => $prefix,

@@ -41,6 +41,16 @@ class ConfigPluginExample extends AbstractConfig
 	}
 
 	/**
+	 * Method that returns project text domain.
+	 *
+	 * Generally used for caching and translations.
+	 */
+	public static function getProjectTextDomain(): string
+	{
+		return self::getPluginTextDomain();
+	}
+
+	/**
 	 * Method that returns project REST-API namespace.
 	 *
 	 * Used for namespacing projects REST-API routes and fields.

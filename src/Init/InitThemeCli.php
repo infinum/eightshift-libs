@@ -14,7 +14,7 @@ use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
 use EightshiftLibs\AdminMenus\ReusableBlocksHeaderFooterCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
@@ -37,7 +37,7 @@ class InitThemeCli extends AbstractCli
 			'type' => 'sc',
 			'label' => 'Setting service classes:',
 			'items' => [
-				ConfigCli::class,
+				ConfigThemeCli::class,
 				MainCli::class,
 				ManifestCli::class,
 				EnqueueAdminCli::class,

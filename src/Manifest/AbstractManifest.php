@@ -21,10 +21,12 @@ use EightshiftLibs\Services\ServiceInterface;
 /**
  * Abstract class Manifest class.
  */
-abstract class AbstractManifest implements ServiceInterface, ManifestInterface
+abstract class AbstractManifest implements ServiceInterface
 {
 	/**
 	 * Instance variable for manifest cache.
+	 *
+	 * @var ManifestCacheInterface
 	 */
 	protected $manifestCache;
 
@@ -33,7 +35,8 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 *
 	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 */
-	public function __construct(ManifestCacheInterface $manifestCache) {
+	public function __construct(ManifestCacheInterface $manifestCache)
+	{
 		$this->manifestCache = $manifestCache;
 	}
 
@@ -59,8 +62,8 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 		$output = \array_map(
 			function ($item) {
 				$sep = \DIRECTORY_SEPARATOR;
-				$path = rtrim($this->getAssetsManifestOutputPrefix(), $sep);
-				$item = ltrim($item, $sep);
+				$path = \rtrim($this->getAssetsManifestOutputPrefix(), $sep);
+				$item = \ltrim($item, $sep);
 
 				return "{$path}{$sep}{$item}";
 			},
@@ -69,33 +72,6 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 
 		Components::setStore();
 		Components::setAssets($output);
-	}
-
-	/**
-	 * Get the manifest data.
-	 *
-	 * @param string $key The key from the manifest.json file.
-	 *
-	 * @throws InvalidManifest Throws error if manifest.json file is missing.
-	 *
-	 * @return string The value from the manifest.json file.
-	 */
-	public function getAssetsManifestItem(string $key): string
-	{
-		$items = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
-
-		$path = $items['path'] ?? '';
-		$data = $items['data'] ?? '';
-
-		if (!$data) {
-			throw InvalidManifest::emptyOrErrorManifestException($path);
-		}
-
-		if (!isset($data[$key])) {
-			throw InvalidManifest::missingManifestKeyException($key, $path);
-		}
-
-		return $data[$key] ?? '';
 	}
 
 	/**

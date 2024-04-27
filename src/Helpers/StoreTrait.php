@@ -634,6 +634,8 @@ trait StoreTrait
 	/**
 	 * Get asset one asset by key.
 	 *
+	 * @param string $key Key of the asset.
+	 *
 	 * @return string
 	 */
 	public static function getAsset(string $key): string

@@ -31,7 +31,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @var array<string, array<string, mixed>>
 	 */
-	const BLOCKS_BUILDER = [
+	private const BLOCKS_BUILDER = [
 		AbstractManifestCache::BLOCKS_KEY => [
 			'multiple' => true,
 			'validation' => [
@@ -86,6 +86,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Instance variable for manifest cache.
+	 *
+	 * @var ManifestCacheInterface
 	 */
 	protected $manifestCache;
 
@@ -94,7 +96,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 */
-	public function __construct(ManifestCacheInterface $manifestCache) {
+	public function __construct(ManifestCacheInterface $manifestCache)
+	{
 		$this->manifestCache = $manifestCache;
 	}
 
@@ -233,7 +236,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
-	 * @throws InvalidBlock Throws error if block view is missing.
+	 * @throws InvalidPath Throws error if file doesn't exist.
 	 *
 	 * @return string Html template for block.
 	 */
@@ -310,7 +313,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param array<string, mixed> $attributes Attributes array to pass in template.
 	 * @param string|null $innerBlockContent If using inner blocks content pass the data.
 	 *
-	 * @throws InvalidBlock Throws an error if wrapper file doesn't exist.
+	 * @throws InvalidPath Throws error if file doesn't exist.
 	 *
 	 * @return void Includes an HTML view, or throws an error if the view is missing.
 	 */
@@ -402,6 +405,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param string $type Type of the manifest.
 	 *
+	 * @throws InvalidManifest If the manifest is missing or has an error.
+	 *
 	 * @return array<array<string, mixed>>
 	 */
 	private function getManifestItems(string $type): array
@@ -424,13 +429,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			}
 		}
 
-		return array_values($data) ?? [];
+		return \array_values($data);
 	}
 
 	/**
 	 * Get single item from the manifest.
 	 *
 	 * @param string $type Type of the manifest.
+	 *
+	 * @throws InvalidManifest If the manifest is missing or has an error.
 	 *
 	 * @return array<string, mixed>
 	 */

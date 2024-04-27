@@ -21,19 +21,88 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 {
 	private const TRANSIENT_NAME = 'eightshift_manifest_cache_';
 
+	/**
+	 * Key for blocks.
+	 *
+	 * @var string
+	 */
 	public const BLOCKS_KEY = 'blocks';
+
+	/**
+	 * Key for components.
+	 *
+	 * @var string
+	 */
 	public const COMPONENTS_KEY = 'components';
+
+	/**
+	 * Key for variations.
+	 *
+	 * @var string
+	 */
 	public const VARIATIONS_KEY = 'variations';
+
+	/**
+	 * Key for wrapper.
+	 *
+	 * @var string
+	 */
 	public const WRAPPER_KEY = 'wrapper';
+
+	/**
+	 * Key for settings.
+	 *
+	 * @var string
+	 */
 	public const SETTINGS_KEY = 'settings';
+
+	/**
+	 * Key for assets.
+	 *
+	 * @var string
+	 */
 	public const ASSETS_KEY = 'assets';
+
+	/**
+	 * Key for config.
+	 *
+	 * @var string
+	 */
 	public const CONFIG_KEY = 'config';
+
+	/**
+	 * Key for styles.
+	 *
+	 * @var string
+	 */
 	public const STYLES_KEY = 'styles';
+
+	/**
+	 * Key for paths.
+	 *
+	 * @var string
+	 */
 	public const PATHS_KEY = 'paths';
 
+	/**
+	 * Key for cache type blocks.
+	 *
+	 * @var string
+	 */
 	public const TYPE_BLOCKS = 'blocks';
+
+	/**
+	 * Key for cache type assets.
+	 *
+	 * @var string
+	 */
 	public const TYPE_ASSETS = 'assets';
 
+	/**
+	 * Blocks namespace.
+	 *
+	 * @var string
+	 */
 	private $blocksNamespace = '';
 
 	/**
@@ -41,7 +110,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @return string Cache name.
 	 */
-	public abstract function getCacheName(): string;
+	abstract public function getCacheName(): string;
 
 	/**
 	 * Get cache duration.
@@ -118,9 +187,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	}
 
 	/**
-	 * Set cache.
-	 *
-	 * @param string $type Type of the cache.
+	 * Set all cache.
 	 *
 	 * @return void
 	 */
@@ -153,7 +220,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @param string $type Type of the cache.
 	 *
-	 * @return array<string, array> Array of cache.
+	 * @return array<string, array<mixed>> Array of cache.
 	 */
 	protected function getCache(string $type = self::TYPE_BLOCKS): array
 	{
@@ -169,7 +236,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	/**
 	 * Unset cache.
 	 *
-	 * @return array<string, array> Array of cache.
+	 * @param string $type Type of the cache.
 	 *
 	 * @return void
 	 */
@@ -181,7 +248,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	/**
 	 * Get cache builder.
 	 *
-	 * @return array<string, array> Array of cache builder.
+	 * @return array<string, array<string, mixed>> Array of cache builder.
 	 */
 	protected function getCacheBuilder(): array
 	{
@@ -232,7 +299,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	/**
 	 * Get all manifests from the paths.
 	 *
-	 * @return array<string, array> Array of manifests.
+	 * @return array<string, array<mixed>> Array of manifests.
 	 */
 	private function getAllManifests(): array
 	{
@@ -266,7 +333,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			return [];
 		}
 
-		$file = \file_get_contents($path);
+		$file = \file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
 		if (!$file) {
 			return [];
@@ -285,7 +352,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 				if (isset($fileDecoded[$key])) {
 					continue;
 				}
-	
+
 				switch ($type) {
 					case 'array':
 						$fileDecoded[$key] = [];
@@ -302,7 +369,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 		switch ($parent) {
 			case self::BLOCKS_KEY:
-				$namespace = $this->blocksNamespace ?? '';
+				$namespace = $this->blocksNamespace;
 
 				if ($namespace) {
 					$fileDecoded['namespace'] = $namespace;
@@ -324,7 +391,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 * @param array<mixed> $data Data array.
 	 * @param string $parent Parent key.
 	 *
-	 * @return array<string, array> Array of items.
+	 * @return array<string, array<mixed>> Array of items.
 	 */
 	private function geItems(string $path, array $data, string $parent): array
 	{
@@ -367,7 +434,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		$path = $data['path'] ?? '';
 		$fileName = $data['fileName'] ?? '';
 
-		$path = Components::getProjectPaths($path) ?? $path;
+		$path = Components::getProjectPaths($path);
 
 		if (!$name) {
 			return \rtrim($path, $sep) . "{$sep}{$fileName}";

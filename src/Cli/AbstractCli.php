@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Components;
 use FilesystemIterator;
@@ -925,7 +924,7 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $source Source path.
 	 * @param string $destination Destination path.
 	 *
-	 * @throws InvalidBlock If block file is missing.
+	 * @throws InvalidPath Exception in case the source path is missing.
 	 *
 	 * @return void
 	 */

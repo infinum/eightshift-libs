@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
-use EightshiftLibs\Exception\ComponentException;
 use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Exception\InvalidPath;
 
@@ -106,7 +105,7 @@ class Components
 	 *                           If not get_template_directory_uri() will be used as a default parent path.
 	 * @param bool $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
 	 *
-	 * @throws ComponentException When we're unable to find the component by $component.
+	 * @throws InvalidManifest When we're unable to find the manifest for the component.
 	 *
 	 * @return string
 	 */
@@ -188,7 +187,7 @@ class Components
 	 * @param array<string, mixed> $attributes Attributes that will be passed to partial.
 	 * @param string $partialFolderName Partial folder name.
 	 *
-	 * @throws ComponentException When we're unable to find the partial.
+	 * @throws InvalidPath When we're unable to find the partial.
 	 *
 	 * @return string Partial html.
 	 */
@@ -249,7 +248,7 @@ class Components
 	 * @param string $path Absolute path to manifest folder.
 	 * @param string $name Block/Component name.
 	 *
-	 * @throws ComponentException When we're unable to find the component by $component.
+	 * @throws InvalidPath When we're unable to find the component by $component.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -303,7 +302,7 @@ class Components
 	 *
 	 * @param string $path Absolute path to manifest folder.
 	 *
-	 * @throws ComponentException When we're unable to find the component by $component.
+	 * @throws InvalidManifest Throws error if manifest.json file is missing.
 	 *
 	 * @return array<string, mixed>
 	 */
