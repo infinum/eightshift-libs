@@ -10,9 +10,12 @@
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Manifest;
+namespace EightshiftFormsVendor\EightshiftLibs\Manifest;
 
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -21,11 +24,18 @@ use EightshiftLibs\Services\ServiceInterface;
 abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 {
 	/**
-	 * Full data of manifest items.
-	 *
-	 * @var array<string, mixed>
+	 * Instance variable for manifest cache.
 	 */
-	protected $manifest = [];
+	protected $manifestCache;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 */
+	public function __construct(ManifestCacheInterface $manifestCache) {
+		$this->manifestCache = $manifestCache;
+	}
 
 	/**
 	 * Set the manifest data with site url prefix.
@@ -33,65 +43,60 @@ abstract class AbstractManifest implements ServiceInterface, ManifestInterface
 	 *
 	 * @throws InvalidManifest Throws error if manifest.json file is missing.
 	 *
-	 * @return void Sets the manifest variable.
+	 * @return void Sets the manifest variable to cache.
 	 */
-	public function setAssetsManifestRaw(): void
+	public function setAssetsManifest(): void
 	{
-		if (\defined('WP_CLI')) {
-			return;
-		}
+		$items = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
 
-		$path = $this->getManifestFilePath();
+		$path = $items['path'] ?? '';
+		$data = $items['data'] ?? [];
 
-		if (!\file_exists($path)) {
+		if (!$data) {
 			throw InvalidManifest::emptyOrErrorManifestException($path);
 		}
 
-		$data = \json_decode(\implode(' ', (array)\file($path)), true);
+		$output = \array_map(
+			function ($item) {
+				$sep = \DIRECTORY_SEPARATOR;
+				$path = rtrim($this->getAssetsManifestOutputPrefix(), $sep);
+				$item = ltrim($item, $sep);
 
-		if (empty($data)) {
-			return;
-		}
-
-		$this->manifest = \array_map(
-			function ($manifestItem) {
-				return "{$this->getAssetsManifestOutputPrefix()}{$manifestItem}";
+				return "{$path}{$sep}{$item}";
 			},
 			$data
 		);
+
+		Components::setStore();
+		Components::setAssets($output);
 	}
 
 	/**
-	 * Return full path for specific asset from manifest.json.
+	 * Get the manifest data.
 	 *
-	 * @param string $key File name key you want to get from manifest.
+	 * @param string $key The key from the manifest.json file.
 	 *
-	 * @throws InvalidManifest Throws error if manifest key is missing.
-	 *                         Returns data from manifest and not global variable.
+	 * @throws InvalidManifest Throws error if manifest.json file is missing.
 	 *
-	 * @return string Full path to asset.
+	 * @return string The value from the manifest.json file.
 	 */
 	public function getAssetsManifestItem(string $key): string
 	{
-		if (\defined('WP_CLI') || \getenv('ES_TEST')) {
-			return '';
+		$items = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
+
+		$path = $items['path'] ?? '';
+		$data = $items['data'] ?? '';
+
+		if (!$data) {
+			throw InvalidManifest::emptyOrErrorManifestException($path);
 		}
 
-		$manifest = $this->manifest;
-
-		if (!isset($manifest[$key])) {
-			throw InvalidManifest::missingManifestItemException($key);
+		if (!isset($data[$key])) {
+			throw InvalidManifest::missingManifestKeyException($key, $path);
 		}
 
-		return $manifest[$key];
+		return $data[$key] ?? '';
 	}
-
-	/**
-	 * Manifest file path getter.
-	 *
-	 * @return string
-	 */
-	abstract protected function getManifestFilePath(): string;
 
 	/**
 	 * This method appends full site url to the relative manifest data item.

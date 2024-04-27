@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Manifest;
 
-use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Manifest\AbstractManifest;
 
 /**
@@ -21,30 +20,12 @@ use EightshiftLibs\Manifest\AbstractManifest;
 class ManifestExample extends AbstractManifest
 {
 	/**
-	 * Manifest item filter name constant.
-	 *
-	 * @var string
-	 */
-	public const MANIFEST_ITEM = 'manifest-item';
-
-	/**
 	 * Register all hooks. Changed filter name to manifest.
 	 *
 	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'setAssetsManifestRaw']);
-		\add_filter(static::MANIFEST_ITEM, [$this, 'getAssetsManifestItem']);
-	}
-
-	/**
-	 * Manifest file path getter.
-	 *
-	 * @return string
-	 */
-	public function getManifestFilePath(): string
-	{
-		return Config::getProjectPath() . '/public/manifest.json';
+		\add_action('init', [$this, 'setAssetsManifest']);
 	}
 }

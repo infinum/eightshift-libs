@@ -24,10 +24,6 @@ use WP_Post;
 /**
  * Class Blocks
  */
-
-/**
- * Class Blocks
- */
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
@@ -39,31 +35,55 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		AbstractManifestCache::BLOCKS_KEY => [
 			'multiple' => true,
 			'validation' => [
-				'blockName'
+				'blockName',
+				'namespace',
+				'blockFullName',
+				'keywords',
+				'icon',
+				'category',
+				'description',
+				'title',
+				'$schema',
 			],
 		],
 		AbstractManifestCache::COMPONENTS_KEY => [
 			'multiple' => true,
 			'validation' => [
-				'componentName'
+				'componentName',
+				'$schema',
+				'title',
 			],
 		],
 		AbstractManifestCache::VARIATIONS_KEY => [
 			'multiple' => true,
 			'validation' => [
-				'name'
+				'name',
+				'$schema',
+				'parentName',
+				'title',
+				'icon',
+				'description',
 			],
 		],
 		AbstractManifestCache::WRAPPER_KEY => [
 			'multiple' => false,
+			'validation' => [
+				'$schema',
+				'title'
+			],
 		],
 		AbstractManifestCache::SETTINGS_KEY => [
 			'multiple' => false,
 			'validation' => [
+				'$schema',
 				'namespace',
+				'background',
+				'foreground',
+				'blockClassPrefix',
 			],
 		],
 	];
+
 	/**
 	 * Instance variable for manifest cache.
 	 */
@@ -113,26 +133,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getBlocksDataFullRaw(): void
 	{
-		// Get global settings direct from file.
-		$settings = $this->getManifest(AbstractManifestCache::SETTINGS_KEY);
-
-		$namespace = $settings['namespace'];
-
-		$blocks = \array_map(
-			static function ($block) use ($namespace) {
-				// Check if blocks-namespace is defined in block or in global manifest settings.
-				$block['namespace'] = $namespace;
-				$block['blockFullName'] = "{$namespace}/{$block['blockName']}";
-
-				return $block;
-			},
-			$this->getManifest(AbstractManifestCache::BLOCKS_KEY)
-		);
-
 		// Register store and set all the data.
 		Components::setStore();
-		Components::setSettings($settings);
-		Components::setBlocks($blocks);
+		Components::setSettings($this->getManifest(AbstractManifestCache::SETTINGS_KEY));
+		Components::setBlocks($this->getManifest(AbstractManifestCache::BLOCKS_KEY));
 		Components::setComponents($this->getManifest(AbstractManifestCache::COMPONENTS_KEY));
 		Components::setVariations($this->getManifest(AbstractManifestCache::VARIATIONS_KEY));
 		Components::setConfigFlags();
@@ -177,7 +181,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				function ($block) {
 					return $block['blockFullName'];
 				},
-				Components::getBlocks(),
+				$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)['data']
 			),
 			$allowedBlockTypes,
 		);
@@ -218,7 +222,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function registerBlocks(): void
 	{
-		foreach (Components::getBlocks() as $block) {
+		foreach ($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)['data'] as $block) {
 			$this->registerBlock($block);
 		}
 	}

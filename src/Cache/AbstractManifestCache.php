@@ -1,9 +1,9 @@
 <?php
 
 /**
- * The file that defines a manifest cache.
+ * File containing an abstract class for holding Manifest Cache functionality.
  *
- * This file is used to define the methods that are used in the manifest cache class.
+ * It is used to provide manifest.json file location stored in the transient cache.
  *
  * @package EightshiftLibs\Cache
  */
@@ -14,13 +14,27 @@ namespace EightshiftLibs\Cache;
 
 use EightshiftLibs\Helpers\Components;
 
+/**
+ * Abstract class AbstractManifestCache class.
+ */
 abstract class AbstractManifestCache implements ManifestCacheInterface
 {
+	private const TRANSIENT_NAME = 'eightshift_manifest_cache_';
+
 	public const BLOCKS_KEY = 'blocks';
 	public const COMPONENTS_KEY = 'components';
 	public const VARIATIONS_KEY = 'variations';
 	public const WRAPPER_KEY = 'wrapper';
 	public const SETTINGS_KEY = 'settings';
+	public const ASSETS_KEY = 'assets';
+	public const CONFIG_KEY = 'config';
+	public const STYLES_KEY = 'styles';
+	public const PATHS_KEY = 'paths';
+
+	public const TYPE_BLOCKS = 'blocks';
+	public const TYPE_ASSETS = 'assets';
+
+	private $blocksNamespace = '';
 
 	/**
 	 * Get cache name.
@@ -41,53 +55,14 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	}
 
 	/**
-	 * Set cache.
-	 *
-	 * @return void
-	 */
-	public function setCache(): void
-	{
-		$cache = \get_transient('eightshift_manifest_cache_' . $this->getCacheName());
-
-		if (!$cache) {
-			\set_transient('eightshift_manifest_cache_' . $this->getCacheName(), \wp_json_encode($this->getAllManifests()), $this->getDuration());
-		}
-	}
-
-	/**
-	 * Get cache.
-	 *
-	 * @return array<string, array> Array of cache.
-	 */
-	public function getCache(): array
-	{
-		$cache = \get_transient('eightshift_manifest_cache_' . $this->getCacheName());
-
-		if (!$cache) {
-			$this->setCache();
-		}
-
-		return \json_decode($cache, true) ?? [];
-	}
-
-	/**
-	 * Unset cache.
-	 *
-	 * @return void
-	 */
-	public function deleteCache(): void
-	{
-		\delete_transient('eightshift_manifest_cache_' . $this->getCacheName());
-	}
-
-	/**
 	 * Get manifest cache top item.
 	 *
 	 * @param string $key Key of the cache.
+	 * @param string $cacheType Type of the cache.
 	 *
 	 * @return array<string, mixed> Array of cache item.
 	 */
-	public function getManifestCacheTopItem(string $key): array
+	public function getManifestCacheTopItem(string $key, string $cacheType = self::TYPE_BLOCKS): array
 	{
 		$output = [
 			'data' => [],
@@ -95,7 +70,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			'key' => $key,
 		];
 
-		$data = $this->getCache()[$key] ?? [];
+		$data = $this->getCache($cacheType)[$key] ?? [];
 
 		if (!$data) {
 			return $output;
@@ -111,10 +86,11 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @param string $key Key of the cache.
 	 * @param string $path Path of the cache.
+	 * @param string $cacheType Type of the cache.
 	 *
 	 * @return array<string, mixed> Array of cache item.
 	 */
-	public function getManifestCacheSubItem(string $key, string $path): array
+	public function getManifestCacheSubItem(string $key, string $path, string $cacheType = self::TYPE_BLOCKS): array
 	{
 		$output = [
 			'data' => [],
@@ -122,7 +98,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			'key' => $key,
 		];
 
-		$data = $this->getManifestCacheTopItem($key)[$path] ?? [];
+		$data = $this->getManifestCacheTopItem($key, $cacheType)[$path] ?? [];
 
 		if (!$data) {
 			return $output;
@@ -134,13 +110,81 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	}
 
 	/**
+	 * Set cache.
+	 *
+	 * @param string $type Type of the cache.
+	 *
+	 * @return void
+	 */
+	public function setAllCache(): void
+	{
+		$this->setCache(self::TYPE_BLOCKS);
+		$this->setCache(self::TYPE_ASSETS);
+	}
+
+	/**
+	 * Set cache.
+	 *
+	 * @param string $type Type of the cache.
+	 *
+	 * @return void
+	 */
+	protected function setCache(string $type = self::TYPE_BLOCKS): void
+	{
+		$name = self::TRANSIENT_NAME . $this->getCacheName() . "_{$type}";
+
+		$cache = \get_transient($name);
+
+		if (!$cache) {
+			\set_transient($name, \wp_json_encode($this->getAllManifests()), $this->getDuration());
+		}
+	}
+
+	/**
+	 * Get cache.
+	 *
+	 * @param string $type Type of the cache.
+	 *
+	 * @return array<string, array> Array of cache.
+	 */
+	protected function getCache(string $type = self::TYPE_BLOCKS): array
+	{
+		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$type}");
+
+		if (!$cache) {
+			$this->setCache();
+		}
+
+		return \json_decode($cache, true) ?? [];
+	}
+
+	/**
+	 * Unset cache.
+	 *
+	 * @return array<string, array> Array of cache.
+	 *
+	 * @return void
+	 */
+	protected function deleteCache(string $type = self::TYPE_BLOCKS): void
+	{
+		\delete_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$type}");
+	}
+
+	/**
 	 * Get cache builder.
 	 *
 	 * @return array<string, array> Array of cache builder.
 	 */
 	protected function getCacheBuilder(): array
 	{
+		$sep = \DIRECTORY_SEPARATOR;
+
 		return [
+			self::SETTINGS_KEY => [
+				'path' => 'blocksDestination',
+				'fileName' => 'manifest.json',
+				'multiple' => false,
+			],
 			self::BLOCKS_KEY => [
 				'path' => 'blocksDestinationCustom',
 				'fileName' => 'manifest.json',
@@ -166,9 +210,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 				'fileName' => 'manifest.json',
 				'multiple' => false,
 			],
-			self::SETTINGS_KEY => [
-				'path' => 'blocksDestination',
-				'fileName' => 'manifest.json',
+			self::ASSETS_KEY => [
+				'path' => 'themePath',
+				'fileName' => "public{$sep}manifest.json",
 				'multiple' => false,
 			],
 		];
@@ -196,9 +240,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			$path = Components::getProjectPaths($path) ?? $path;
 
 			if ($multiple) {
-				$output[$parent] = $this->getItems($path, $data);
+				$output[$parent] = $this->geItems($path, $data, $parent);
 			} else {
-				$output[$parent] = $this->getItem(\rtrim($path, $sep) . "{$sep}{$fileName}", $data);
+				$output[$parent] = $this->getItem(\rtrim($path, $sep) . "{$sep}{$fileName}", $data, $parent);
 			}
 		}
 
@@ -210,10 +254,11 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @param string $path Path to the item.
 	 * @param array<mixed> $data Data array.
+	 * @param string $parent Parent key.
 	 *
 	 * @return array<string, mixed> Item.
 	 */
-	private function getItem(string $path, array $data): array
+	private function getItem(string $path, array $data, string $parent): array
 	{
 		if (!\file_exists($path)) {
 			return [];
@@ -253,6 +298,20 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			}
 		}
 
+		switch ($parent) {
+			case self::BLOCKS_KEY:
+				$namespace = $this->blocksNamespace ?? '';
+
+				if ($namespace) {
+					$fileDecoded['namespace'] = $namespace;
+					$fileDecoded['blockFullName'] = "{$namespace}/{$fileDecoded['blockName']}";
+				}
+				break;
+			case self::SETTINGS_KEY:
+				$this->blocksNamespace = $fileDecoded['namespace'] ?? '';
+				break;
+		}
+
 		return $fileDecoded;
 	}
 
@@ -261,10 +320,11 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @param string $path Path to the items.
 	 * @param array<mixed> $data Data array.
+	 * @param string $parent Parent key.
 	 *
 	 * @return array<string, array> Array of items.
 	 */
-	private function getItems(string $path, array $data): array
+	private function geItems(string $path, array $data, string $parent): array
 	{
 		$output = [];
 
@@ -274,7 +334,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		$path = \rtrim($path, $sep) . "{$sep}*{$sep}{$fileName}";
 
 		foreach ((array)\glob($path) as $itemPath) {
-			$output[$itemPath] = $this->getItem($itemPath, $data);
+			$output[$itemPath] = $this->getItem($itemPath, $data, $parent);
 		}
 
 		return $output;

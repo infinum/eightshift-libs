@@ -372,6 +372,8 @@ class Components
 
 				break;
 			case 'cliOutput':
+			case 'themePath':
+			case 'pluginPath':
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
 					$path = $cliOutputPath;
