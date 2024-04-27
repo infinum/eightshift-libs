@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Config.
+ * Class that registers WPCLI command for Config Theme.
  *
  * @package EightshiftLibs\Config
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 
 /**
- * Class ConfigCli
+ * Class ConfigThemeCli
  */
-class ConfigCli extends AbstractCli
+class ConfigThemeCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class ConfigCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'config';
+		return 'config-theme';
 	}
 
 	/**
@@ -59,7 +59,7 @@ class ConfigCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create project config service class.',
+			'shortdesc' => 'Create theme config service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -72,7 +72,7 @@ class ConfigCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create project config class with settings like project name, version, REST-API name/version, etc.
+				Used to create theme config class with settings like project name, version, REST-API name/version, etc.
 
 				## EXAMPLES
 
@@ -82,7 +82,7 @@ class ConfigCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/Config/ConfigExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Config/ConfigThemeExample.php
 			"),
 		];
 	}

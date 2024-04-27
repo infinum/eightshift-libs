@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Config;
 
-use EightshiftLibs\Config\AbstractConfigData;
+use EightshiftLibs\Config\AbstractConfig;
 
 /**
  * The project config class.
  */
-class ConfigExample extends AbstractConfigData
+class ConfigThemeExample extends AbstractConfig
 {
 	/**
 	 * Method that returns project name.
@@ -27,7 +27,7 @@ class ConfigExample extends AbstractConfigData
 	 */
 	public static function getProjectName(): string
 	{
-		return \wp_get_theme('', \dirname(__DIR__, 3))->get('TextDomain');
+		return self::getThemeName();
 	}
 
 	/**
@@ -37,7 +37,7 @@ class ConfigExample extends AbstractConfigData
 	 */
 	public static function getProjectVersion(): string
 	{
-		return \wp_get_theme('', \dirname(__DIR__, 3))->get('Version');
+		return self::getThemeVersion();
 	}
 
 	/**

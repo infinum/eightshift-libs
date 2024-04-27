@@ -16,37 +16,103 @@ use EightshiftLibs\Helpers\Components;
 /**
  * The project config class.
  */
-abstract class AbstractConfigData implements ConfigDataInterface
+abstract class AbstractConfig
 {
 	/**
-	 * Return project absolute path.
+	 * Get the plugin version.
 	 *
-	 * If used in a theme use get_template_directory() and in case it's used in a plugin use __DIR__.
+	 * @return string
+	 */
+	public static function getPluginVersion(): string
+	{
+		return static::getPluginDetails()['Version'] ?? esc_html('1.0.0');
+	}
+
+	/**
+	 * Get the plugin version.
+	 *
+	 * @return string
+	 */
+	public static function getPluginName(): string
+	{
+		return static::getPluginDetails()['Name'] ?? esc_html('Plugin');
+	}
+
+	/**
+	 * Get the plugin text domain.
+	 *
+	 * @return string
+	 */
+	public static function getPluginTextDomain(): string
+	{
+		return static::getPluginDetails()['TextDomain'] ?? esc_html('PluginTextDomain');
+	}
+
+	/**
+	 * Get the theme version.
+	 *
+	 * @return string
+	 */
+	public static function getThemeVersion(): string
+	{
+		return \wp_get_theme()->get('Version');
+	}
+
+	/**
+	 * Get the theme name.
+	 *
+	 * @return string
+	 */
+	public static function getThemeName(): string
+	{
+		return \wp_get_theme()->get('Name');
+	}
+
+	/**
+	 * Get the theme text domain.
+	 *
+	 * @return string
+	 */
+	public static function getThemeTextDomain(): string
+	{
+		return \wp_get_theme()->get('TextDomain');
+	}
+
+	/**
+	 * Return projects absolute path.
 	 *
 	 * @param string $path Additional path to add to project path.
 	 *
-	 * @throws InvalidPath If an invalid URI was passed.
+	 * @throws InvalidPath If the path is not readable.
 	 *
-	 * @return string Valid URI.
+	 * @return string
 	 */
 	public static function getProjectPath(string $path = ''): string
 	{
-		$locations = [
-			Components::getProjectPaths('root', $path),
-			\trailingslashit(\get_stylesheet_directory()) . $path,
-			\trailingslashit(\get_template_directory()) . $path,
-		];
+		$fullPath = Components::getProjectPaths('themeRoot') . ltrim($path, \DIRECTORY_SEPARATOR);
 
-		foreach ($locations as $location) {
-			if (\is_readable($location)) {
-				return $location;
-			}
+		if (!\is_readable($fullPath)) {
+			throw InvalidPath::missingDirectoryException($fullPath);
 		}
 
-		if (!\is_readable($path)) {
-			throw InvalidPath::fromUri($path);
+		return $fullPath;
+	}
+
+	/**
+	 * Get the plugin details.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function getPluginDetails(): array
+	{
+		if (!\function_exists('get_plugin_data')) {
+			require_once(\ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 
-		return $path;
+		$path = Components::getProjectPaths('pluginRoot');
+
+		$name = \basename($path);
+
+		return \get_plugin_data("{$path}{$name}.php");
 	}
 }

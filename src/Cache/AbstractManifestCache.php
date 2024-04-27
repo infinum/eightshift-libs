@@ -70,10 +70,14 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			'key' => $key,
 		];
 
-		if (\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE === 'development') {
-			$data = $this->getAllManifests()[$key] ?? [];
-		} else {
+		$data = [];
+
+		if (\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') {
 			$data = $this->getCache($cacheType)[$key] ?? [];
+		}
+
+		if (!$data) {
+			$data = $this->getAllManifests()[$key] ?? [];
 		}
 
 		if (!$data) {
@@ -218,7 +222,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 				'multiple' => false,
 			],
 			self::ASSETS_KEY => [
-				'path' => 'themePath',
+				'path' => 'themeRoot',
 				'fileName' => "public{$sep}manifest.json",
 				'multiple' => false,
 			],

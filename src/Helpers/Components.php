@@ -60,6 +60,11 @@ class Components
 	use MediaTrait;
 
 	/**
+	 * API trait.
+	 */
+	use ApiTrait;
+
+	/**
 	 * Get all project paths for store.
 	 *
 	 * @var array<int, string>
@@ -372,8 +377,8 @@ class Components
 
 				break;
 			case 'cliOutput':
-			case 'themePath':
-			case 'pluginPath':
+			case 'themeRoot':
+			case 'pluginRoot':
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
 					$path = $cliOutputPath;
