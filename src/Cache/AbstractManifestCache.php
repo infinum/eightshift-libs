@@ -66,11 +66,15 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	{
 		$output = [
 			'data' => [],
-			'path' => $this->getCacheBuilder()[$key]['path'] ?? '',
+			'path' => $this->getFullPath($key),
 			'key' => $key,
 		];
 
-		$data = $this->getCache($cacheType)[$key] ?? [];
+		if (\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE === 'development') {
+			$data = $this->getAllManifests()[$key] ?? [];
+		} else {
+			$data = $this->getCache($cacheType)[$key] ?? [];
+		}
 
 		if (!$data) {
 			return $output;
@@ -85,20 +89,20 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 * Get manifest cache subitem.
 	 *
 	 * @param string $key Key of the cache.
-	 * @param string $path Path of the cache.
+	 * @param string $name Name of the subitem.
 	 * @param string $cacheType Type of the cache.
 	 *
 	 * @return array<string, mixed> Array of cache item.
 	 */
-	public function getManifestCacheSubItem(string $key, string $path, string $cacheType = self::TYPE_BLOCKS): array
+	public function getManifestCacheSubItem(string $key, string $name, string $cacheType = self::TYPE_BLOCKS): array
 	{
 		$output = [
 			'data' => [],
-			'path' => $path,
+			'path' => $this->getFullPath($key, $name),
 			'key' => $key,
 		];
 
-		$data = $this->getManifestCacheTopItem($key, $cacheType)[$path] ?? [];
+		$data = $this->getManifestCacheTopItem($key, $cacheType)[$name] ?? [];
 
 		if (!$data) {
 			return $output;
@@ -188,6 +192,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			self::BLOCKS_KEY => [
 				'path' => 'blocksDestinationCustom',
 				'fileName' => 'manifest.json',
+				'id' => 'blockName',
 				'multiple' => true,
 				'autoset' => [
 					'classes' => 'array',
@@ -198,10 +203,12 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			self::COMPONENTS_KEY => [
 				'path' => 'blocksDestinationComponents',
 				'fileName' => 'manifest.json',
+				'id' => 'componentName',
 				'multiple' => true,
 			],
 			self::VARIATIONS_KEY => [
 				'path' => 'blocksDestinationVariations',
+				'id' => 'name',
 				'fileName' => 'manifest.json',
 				'multiple' => true,
 			],
@@ -226,23 +233,14 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	private function getAllManifests(): array
 	{
 		$output = [];
-		$sep = \DIRECTORY_SEPARATOR;
 
 		foreach ($this->getCacheBuilder() as $parent => $data) {
-			$path = $data['path'] ?? '';
 			$multiple = $data['multiple'] ?? false;
-			$fileName = $data['fileName'] ?? '';
-
-			if (!$path) {
-				continue;
-			}
-
-			$path = Components::getProjectPaths($path) ?? $path;
 
 			if ($multiple) {
-				$output[$parent] = $this->geItems($path, $data, $parent);
+				$output[$parent] = $this->geItems($this->getFullPath($parent, '*'), $data, $parent);
 			} else {
-				$output[$parent] = $this->getItem(\rtrim($path, $sep) . "{$sep}{$fileName}", $data, $parent);
+				$output[$parent] = $this->getItem($this->getFullPath($parent), $data, $parent);
 			}
 		}
 
@@ -328,15 +326,49 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	{
 		$output = [];
 
-		$sep = \DIRECTORY_SEPARATOR;
-		$fileName = $data['fileName'] ?? '';
-
-		$path = \rtrim($path, $sep) . "{$sep}*{$sep}{$fileName}";
+		$id = $data['id'] ?? '';
 
 		foreach ((array)\glob($path) as $itemPath) {
-			$output[$itemPath] = $this->getItem($itemPath, $data, $parent);
+			$item = $this->getItem($itemPath, $data, $parent);
+
+			$idName = $item[$id] ?? '';
+
+			if (!$idName) {
+				continue;
+			}
+
+			$output[$idName] = $item;
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Get full path.
+	 *
+	 * @param string $type Type of the item.
+	 * @param string $name Name of the item.
+	 *
+	 * @return string Full path.
+	 */
+	private function getFullPath($type, $name = ''): string
+	{
+		$data = $this->getCacheBuilder()[$type] ?? [];
+		$sep = \DIRECTORY_SEPARATOR;
+
+		if (!$data) {
+			return '';
+		}
+
+		$path = $data['path'] ?? '';
+		$fileName = $data['fileName'] ?? '';
+
+		$path = Components::getProjectPaths($path) ?? $path;
+
+		if (!$name) {
+			return \rtrim($path, $sep) . "{$sep}{$fileName}";
+		}
+
+		return \rtrim($path, $sep) . "{$sep}{$name}{$sep}{$fileName}";
 	}
 }
