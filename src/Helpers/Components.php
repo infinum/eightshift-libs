@@ -343,6 +343,7 @@ class Components
 		$flibsPath = ["node_modules", "@eightshift", "frontend-libs", "blocks", "init"];
 		$fPLibsPath = ["node_modules", "@eightshift", "frontend-libs-private", "blocks", "init"];
 		$libsPath = ["vendor", "infinum", "eightshift-libs"];
+		$libsPrefixedPath = ["vendor-prefixed", "infinum", "eightshift-libs"];
 		$testsDataPath = ["tests", "data"];
 		$srcPath = "src";
 		$blocksPath = [$srcPath, "Blocks"];
@@ -393,6 +394,13 @@ class Components
 				break;
 			case 'libs':
 				$path = self::joinPaths($libsPath);
+
+				if (\getenv('ES_TEST')) {
+					$path = '';
+				}
+				break;
+			case 'libsPrefixed':
+				$path = self::joinPaths($libsPrefixedPath);
 
 				if (\getenv('ES_TEST')) {
 					$path = '';
