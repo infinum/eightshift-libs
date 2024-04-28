@@ -206,7 +206,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 *
 	 * @return string
 	 */
-	public function getBlockFrontentScriptHandle(): string
+	public function getBlockFrontendScriptHandle(): string
 	{
 		return "{$this->getAssetsPrefix()}-block-frontend-scripts";
 	}
@@ -236,7 +236,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			return;
 		}
 
-		$handle = $this->getBlockFrontentScriptHandle();
+		$handle = $this->getBlockFrontendScriptHandle();
 
 		\wp_register_script(
 			$handle,
@@ -250,7 +250,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 
 		foreach ($this->getLocalizations() as $objectName => $dataArray) {
-			\wp_localize_script($this->getBlockFrontentScriptHandle(), $objectName, $dataArray);
+			\wp_localize_script($this->getBlockFrontendScriptHandle(), $objectName, $dataArray);
 		}
 	}
 
@@ -259,7 +259,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 *
 	 * @return string
 	 */
-	public function getBlockFrontentStyleHandle(): string
+	public function getBlockFrontendStyleHandle(): string
 	{
 		return "{$this->getAssetsPrefix()}-block-frontend-style";
 	}
@@ -289,7 +289,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			return;
 		}
 
-		$handle = $this->getBlockFrontentStyleHandle();
+		$handle = $this->getBlockFrontendStyleHandle();
 
 		\wp_register_style(
 			$handle,
