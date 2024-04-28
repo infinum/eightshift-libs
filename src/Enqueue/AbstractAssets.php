@@ -130,6 +130,34 @@ abstract class AbstractAssets implements ServiceInterface
 	}
 
 	/**
+	 * Load script 'defer' or 'async'.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return string Whether to enqueue the script normally, with defer or async.
+	 * Default value: normal
+	 */
+	protected function scriptStrategy(): string
+	{
+		return '';
+	}
+
+	/**
+	 * Additional script args.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return array<string, string|bool> Additional script args.
+	 */
+	protected function scriptArgs(): array
+	{
+		return [
+			'strategy' => $this->scriptStrategy(),
+			'in_footer' => $this->scriptInFooter(),
+		];
+	}
+
+	/**
 	 * Method that returns assets name used to prefix asset handlers.
 	 *
 	 * @return string

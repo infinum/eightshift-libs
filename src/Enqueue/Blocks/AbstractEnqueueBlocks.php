@@ -95,7 +95,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			Components::getAsset(static::BLOCKS_EDITOR_SCRIPT_URI),
 			$this->getAdminScriptDependencies(),
 			$this->getAssetsVersion(),
-			$this->scriptInFooter()
+			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
 
 		\wp_enqueue_script($handle);
@@ -243,7 +243,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			Components::getAsset(static::BLOCKS_FRONTEND_SCRIPT_URI),
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
-			$this->scriptInFooter()
+			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
 
 		\wp_enqueue_script($handle);

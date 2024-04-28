@@ -127,7 +127,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 				Components::getAsset(static::ADMIN_SCRIPT_URI),
 				$this->getAdminScriptDependencies(),
 				$this->getAssetsVersion(),
-				$this->scriptInFooter()
+				\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 			);
 
 			\wp_enqueue_script($handle);
