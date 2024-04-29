@@ -158,7 +158,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		}
 
 		if (!$data) {
-			$data = $this->getAllManifests()[$key] ?? [];
+			$data = $this->getAllManifests($cacheType)[$key] ?? [];
 		}
 
 		if (!$data) {
