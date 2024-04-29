@@ -10,74 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
+use EightshiftLibs\Rest\Routes\AbstractRoute;
+
 /**
  * Class ApiTrait Helper.
  */
 trait ApiTrait
 {
-	/**
-	 * Status error const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_ERROR = 'error';
-
-	/**
-	 * Status success const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_SUCCESS = 'success';
-
-	/**
-	 * Status warning const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_WARNING = 'warning';
-
-	/**
-	 * API response code success const.
-	 *
-	 * @var int
-	 */
-	public const API_RESPONSE_CODE_SUCCESS = 200;
-
-	/**
-	 * API response code success range const.
-	 *
-	 * @var int
-	 */
-	public const API_RESPONSE_CODE_SUCCESS_RANGE = 299;
-
-	/**
-	 * API response code error const.
-	 *
-	 * @var int
-	 */
-	public const API_RESPONSE_CODE_ERROR = 400;
-
-	/**
-	 * API response code error missing const.
-	 *
-	 * @var int
-	 */
-	public const API_RESPONSE_CODE_ERROR_MISSING = 404;
-
-	/**
-	 * API response code error server const.
-	 *
-	 * @var int
-	 */
-	public const API_RESPONSE_CODE_ERROR_SERVER = 500;
-
-	/**
-	 * API response code error forbidden const.
-	 *
-	 * @var int
-	 */
-	public const API_RESPONSE_CODE_ERROR_FORBIDDEN = 403;
-
 	/**
 	 * Return API success response array.
 	 *
@@ -89,8 +28,8 @@ trait ApiTrait
 	public static function getApiSuccessPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
-			'status' => self::STATUS_SUCCESS,
-			'code' => self::API_RESPONSE_CODE_SUCCESS,
+			'status' => AbstractRoute::STATUS_SUCCESS,
+			'code' => AbstractRoute::API_RESPONSE_CODE_SUCCESS,
 			'message' => $msg,
 		];
 
@@ -112,8 +51,8 @@ trait ApiTrait
 	public static function getApiWarningPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
-			'status' => self::STATUS_WARNING,
-			'code' => self::API_RESPONSE_CODE_SUCCESS,
+			'status' => AbstractRoute::STATUS_WARNING,
+			'code' => AbstractRoute::API_RESPONSE_CODE_SUCCESS,
 			'message' => $msg,
 		];
 
@@ -135,8 +74,8 @@ trait ApiTrait
 	public static function getApiErrorPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
-			'status' => self::STATUS_ERROR,
-			'code' => self::API_RESPONSE_CODE_ERROR,
+			'status' => AbstractRoute::STATUS_ERROR,
+			'code' => AbstractRoute::API_RESPONSE_CODE_ERROR,
 			'message' => $msg,
 		];
 
