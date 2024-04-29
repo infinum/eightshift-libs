@@ -49,28 +49,4 @@ class ConfigThemeExample extends AbstractConfig
 	{
 		return self::getThemeTextDomain();
 	}
-
-	/**
-	 * Method that returns project REST-API namespace.
-	 *
-	 * Used for namespacing projects REST-API routes and fields.
-	 *
-	 * @return string Project name.
-	 */
-	public static function getProjectRoutesNamespace(): string
-	{
-		return static::getProjectName();
-	}
-
-	/**
-	 * Method that returns project REST-API version.
-	 *
-	 * Used for versioning projects REST-API routes and fields.
-	 *
-	 * @return string Project route version.
-	 */
-	public static function getProjectRoutesVersion(): string
-	{
-		return 'v%routes_version%';
-	}
 }

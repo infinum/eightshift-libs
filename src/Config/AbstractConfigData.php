@@ -19,6 +19,51 @@ use EightshiftLibs\Helpers\Components;
 abstract class AbstractConfig
 {
 	/**
+	 * Method that returns project name.
+	 *
+	 * Generally used for naming assets handlers, languages, etc.
+	 */
+	abstract public static function getProjectName(): string;
+
+	/**
+	 * Method that returns project version.
+	 *
+	 * Generally used for versioning asset handlers while enqueueing them.
+	 */
+	abstract public static function getProjectVersion(): string;
+
+	/**
+	 * Method that returns project text domain.
+	 *
+	 * Generally used for caching and translations.
+	 */
+	abstract public static function getProjectTextDomain(): string;
+
+	/**
+	 * Method that returns project REST-API namespace.
+	 *
+	 * Used for namespacing projects REST-API routes and fields.
+	 *
+	 * @return string Project name.
+	 */
+	public static function getProjectRoutesNamespace(): string
+	{
+		return static::getProjectName();
+	}
+
+	/**
+	 * Method that returns project REST-API version.
+	 *
+	 * Used for versioning projects REST-API routes and fields.
+	 *
+	 * @return string Project route version.
+	 */
+	public static function getProjectRoutesVersion(): string
+	{
+		return 'v1';
+	}
+
+	/**
 	 * Get the plugin version.
 	 *
 	 * @return string

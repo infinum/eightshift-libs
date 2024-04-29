@@ -46,9 +46,7 @@ class ConfigThemeCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
-		return [
-			'routes_version' => '1',
-		];
+		return [];
 	}
 
 	/**
@@ -60,15 +58,6 @@ class ConfigThemeCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Create theme config service class.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'routes_version',
-					'description' => 'Define project REST version.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('routes_version'),
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -92,9 +81,6 @@ class ConfigThemeCli extends AbstractCli
 	{
 		$this->getIntroText($assocArgs);
 
-		// Get Props.
-		$routesVersion = $this->getArg($assocArgs, 'routes_version');
-
 		$className = $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -102,10 +88,6 @@ class ConfigThemeCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs);
-
-		if (!empty($routesVersion)) {
-			$class->searchReplaceString($this->getArgTemplate('routes_version'), $routesVersion);
-		}
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$className}.php", $assocArgs);
