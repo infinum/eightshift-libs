@@ -74,7 +74,7 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	}
 
 	/**
-	 * Throws error if using wrong or now allowed parent path.
+	 * Throws error if using wrong or not allowed parent path.
 	 *
 	 * @param string $pathName Missing file path name.
 	 * @param string $allowed Allowed path name.
@@ -89,6 +89,24 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 				\esc_html__('You are using wrong or not allowed parent path. You are using %1$s but we only allow %2$s. Please review your implementation.', 'eightshift-libs'),
 				$pathName,
 				$allowed
+			)
+		);
+	}
+
+	/**
+	 * Throws error if mandatory name is missing.
+	 *
+	 * @param string $name Mandatory name.
+	 *
+	 * @return static
+	 */
+	public static function missingMandatoryNameException(string $name): InvalidPath
+	{
+		return new InvalidPath(
+			\sprintf(
+				/* translators: %s is going to be replaced with the empty name. */
+				\esc_html__('You have provided empty name under the variable %s. Please review your implementation.', 'eightshift-libs'),
+				$name
 			)
 		);
 	}

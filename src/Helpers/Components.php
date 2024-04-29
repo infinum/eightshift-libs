@@ -69,46 +69,13 @@ class Components
 	use DeprecatedTrait;
 
 	/**
-	 * Get all project paths for store.
-	 *
-	 * @var array<int, string>
-	 */
-	public const PROJECT_PATHS = [
-		'projectRoot',
-		'srcDestination',
-		'cliOutput',
-		'wpContent',
-		'libs',
-
-		'blocksGlobalAssetsSource',
-		'blocksAssetsSource',
-		'blocksSource',
-		'blocksSourceCustom',
-		'blocksSourceComponents',
-		'blocksSourceVariations',
-		'blocksSourceWrapper',
-
-		'blocksGlobalAssetsDestination',
-		'blocksAssetsDestination',
-		'blocksDestination',
-		'blocksDestinationCustom',
-		'blocksDestinationComponents',
-		'blocksDestinationVariations',
-		'blocksDestinationWrapper',
-	];
-
-	/**
 	 * Get all project paths allowed to be used in the different render methods.
 	 *
 	 * @var array<int, string>
 	 */
 	private const PROJECT_RENDER_ALLOWED_NAMES = [
-		'block',
 		'blocks',
-		'custom',
-		'component',
 		'components',
-		'variation',
 		'variations',
 		'wrapper',
 		'root',
