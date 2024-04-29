@@ -92,22 +92,4 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 			)
 		);
 	}
-
-	/**
-	 * Throws error if mandatory name is missing.
-	 *
-	 * @param string $name Mandatory name.
-	 *
-	 * @return static
-	 */
-	public static function missingMandatoryNameException(string $name): InvalidPath
-	{
-		return new InvalidPath(
-			\sprintf(
-				/* translators: %s is going to be replaced with the empty name. */
-				\esc_html__('You have provided empty name under the variable %s. Please review your implementation.', 'eightshift-libs'),
-				$name
-			)
-		);
-	}
 }
