@@ -1,68 +1,22 @@
 <?php
 
 /**
- * The file that defines a project config details like prefix, absolute path and etc.
+ * Helpers for Project informaton.
  *
- * @package EightshiftLibs\Config
+ * @package EightshiftLibs\Helpers
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Config;
+namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Exception\InvalidPath;
-use EightshiftLibs\Helpers\Components;
 
 /**
- * The project config class.
+ * Class ProjectInfoTrait Helper.
  */
-abstract class AbstractConfig
+trait ProjectInfoTrait
 {
-	/**
-	 * Method that returns project name.
-	 *
-	 * Generally used for naming assets handlers, languages, etc.
-	 */
-	abstract public static function getProjectName(): string;
-
-	/**
-	 * Method that returns project version.
-	 *
-	 * Generally used for versioning asset handlers while enqueueing them.
-	 */
-	abstract public static function getProjectVersion(): string;
-
-	/**
-	 * Method that returns project text domain.
-	 *
-	 * Generally used for caching and translations.
-	 */
-	abstract public static function getProjectTextDomain(): string;
-
-	/**
-	 * Method that returns project REST-API namespace.
-	 *
-	 * Used for namespacing projects REST-API routes and fields.
-	 *
-	 * @return string Project name.
-	 */
-	public static function getProjectRoutesNamespace(): string
-	{
-		return static::getProjectName();
-	}
-
-	/**
-	 * Method that returns project REST-API version.
-	 *
-	 * Used for versioning projects REST-API routes and fields.
-	 *
-	 * @return string Project route version.
-	 */
-	public static function getProjectRoutesVersion(): string
-	{
-		return 'v1';
-	}
-
 	/**
 	 * Get the plugin version.
 	 *
@@ -134,7 +88,7 @@ abstract class AbstractConfig
 	 */
 	public static function getProjectPath(string $path = ''): string
 	{
-		$fullPath = Components::getProjectPaths('root') . \ltrim($path, \DIRECTORY_SEPARATOR);
+		$fullPath = self::getProjectPaths('root') . \ltrim($path, \DIRECTORY_SEPARATOR);
 
 		if (!\is_readable($fullPath)) {
 			throw InvalidPath::missingDirectoryException($fullPath);
@@ -154,7 +108,7 @@ abstract class AbstractConfig
 			require_once(\ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 
-		$path = Components::getProjectPaths('pluginRoot');
+		$path = self::getProjectPaths('pluginRoot');
 
 		$name = \basename($path);
 

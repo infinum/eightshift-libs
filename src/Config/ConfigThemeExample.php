@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Config;
 
-use EightshiftLibs\Config\AbstractConfig;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * The project config class.
  */
-class ConfigThemeExample extends AbstractConfig
+class ConfigThemeExample
 {
 	/**
 	 * Method that returns project name.
@@ -27,7 +27,7 @@ class ConfigThemeExample extends AbstractConfig
 	 */
 	public static function getProjectName(): string
 	{
-		return self::getThemeName();
+		return Helpers::getThemeName();
 	}
 
 	/**
@@ -37,7 +37,7 @@ class ConfigThemeExample extends AbstractConfig
 	 */
 	public static function getProjectVersion(): string
 	{
-		return self::getThemeVersion();
+		return Helpers::getThemeVersion();
 	}
 
 	/**
@@ -47,6 +47,6 @@ class ConfigThemeExample extends AbstractConfig
 	 */
 	public static function getProjectTextDomain(): string
 	{
-		return self::getThemeTextDomain();
+		return Helpers::getThemeTextDomain();
 	}
 }

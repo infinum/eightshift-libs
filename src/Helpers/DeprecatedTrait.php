@@ -28,7 +28,7 @@ trait DeprecatedTrait
 	 *
 	 * @throws InvalidPath If the file is missing.
 	 *
-	 * @deprecated version 8.0.0 Use Components::render() instead.
+	 * @deprecated 8.0.0 Use Components::render() instead. This function will be removed in the next major release.
 	 *
 	 * @return string Partial html.
 	 */
@@ -88,7 +88,7 @@ trait DeprecatedTrait
 	 *
 	 * @param string $path Absolute path.
 	 *
-	 * @deprecated 8.0.0 Use Components::getManifestByDir() instead.
+	 * @deprecated 8.0.0 Use Components::getManifestByDir() instead. This function will be removed in the next major release.
 	 *
 	 * @return array<string, mixed>
 	 */

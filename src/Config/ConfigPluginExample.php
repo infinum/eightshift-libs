@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Config;
 
-use EightshiftLibs\Config\AbstractConfig;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * The project config class.
  */
-class ConfigPluginExample extends AbstractConfig
+class ConfigPluginExample
 {
 	/**
 	 * Method that returns project name.
@@ -27,7 +27,7 @@ class ConfigPluginExample extends AbstractConfig
 	 */
 	public static function getProjectName(): string
 	{
-		return self::getPluginName();
+		return Helpers::getPluginName();
 	}
 
 	/**
@@ -37,7 +37,7 @@ class ConfigPluginExample extends AbstractConfig
 	 */
 	public static function getProjectVersion(): string
 	{
-		return self::getPluginVersion();
+		return Helpers::getPluginVersion();
 	}
 
 	/**
@@ -47,6 +47,6 @@ class ConfigPluginExample extends AbstractConfig
 	 */
 	public static function getProjectTextDomain(): string
 	{
-		return self::getPluginTextDomain();
+		return Helpers::getPluginTextDomain();
 	}
 }
