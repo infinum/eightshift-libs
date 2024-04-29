@@ -12,7 +12,6 @@ namespace EightshiftLibs\Geolocation;
 
 use EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftLibs\Cache\ManifestCacheInterface;
-use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Services\ServiceInterface;
 use Exception;
 use Throwable;
@@ -146,8 +145,6 @@ abstract class AbstractGeolocation implements ServiceInterface
 	/**
 	 * Gets the list of all countries from the manifest.
 	 *
-	 * @throws InvalidManifest If the manifest is missing or empty.
-	 *
 	 * @return array<mixed>
 	 */
 	public function getCountries(): array
@@ -182,14 +179,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 			],
 		];
 
-		$items = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
-
-		$path = $items['path'] ?? '';
-		$data = $items['data'] ?? [];
-
-		if (!$data) {
-			throw InvalidManifest::emptyOrErrorManifestException($path);
-		}
+		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
 
 		foreach ($data as $country) {
 			$code = $country['Code'] ?? '';
