@@ -201,13 +201,25 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	/**
 	 * Set all cache.
 	 *
+	 * @param array<string> $ignoreCache Array of cache to ignore.
+	 *
 	 * @return void
 	 */
-	public function setAllCache(): void
+	public function setAllCache($ignoreCache = []): void
 	{
-		$this->setCache(self::TYPE_BLOCKS);
-		$this->setCache(self::TYPE_ASSETS);
-		$this->setCache(self::TYPE_GEOLOCATION);
+		$ignoreCache = \array_flip($ignoreCache);
+
+		if (!isset($ignoreCache[self::TYPE_BLOCKS])) {
+			$this->setCache(self::TYPE_BLOCKS);
+		}
+
+		if (!isset($ignoreCache[self::TYPE_ASSETS])) {
+			$this->setCache(self::TYPE_ASSETS);
+		}
+
+		if (!isset($ignoreCache[self::TYPE_GEOLOCATION])) {
+			$this->setCache(self::TYPE_GEOLOCATION);
+		}
 	}
 
 	/**
