@@ -24,6 +24,7 @@ use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Blocks\UseManifestCli;
 use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
+use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
@@ -46,7 +47,6 @@ use EightshiftLibs\Services\ServiceExampleCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Login\LoginCli;
 use EightshiftLibs\Main\MainCli;
-use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Media\MediaCli;
 use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
@@ -117,7 +117,6 @@ class Cli
 		I18nCli::class,
 		LoginCli::class,
 		MainCli::class,
-		ManifestCli::class,
 		MediaCli::class,
 		MenuCli::class,
 		ModifyAdminAppearanceCli::class,
@@ -130,6 +129,7 @@ class Cli
 		ThemeOptionsCli::class,
 		EscapedViewCli::class,
 		WpCli::class,
+		ManifestCacheCli::class,
 	];
 
 	/**

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
-use EightshiftLibs\Helpers\Components;
 
 /**
  * Class EnqueueAdmin
@@ -74,7 +73,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 			\wp_register_style(
 				$handle,
-				Components::getAsset(static::ADMIN_STYLE_URI),
+				$this->setAssetsItem(static::ADMIN_STYLE_URI),
 				$this->getAdminStyleDependencies(),
 				$this->getAssetsVersion(),
 				$this->getMedia()
@@ -124,7 +123,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 			\wp_register_script(
 				$handle,
-				Components::getAsset(static::ADMIN_SCRIPT_URI),
+				$this->setAssetsItem(static::ADMIN_SCRIPT_URI),
 				$this->getAdminScriptDependencies(),
 				$this->getAssetsVersion(),
 				\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()

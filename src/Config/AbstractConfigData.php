@@ -89,7 +89,7 @@ abstract class AbstractConfig
 	 */
 	public static function getProjectPath(string $path = ''): string
 	{
-		$fullPath = Components::getProjectPaths('themeRoot') . \ltrim($path, \DIRECTORY_SEPARATOR);
+		$fullPath = Components::getProjectPaths('root') . \ltrim($path, \DIRECTORY_SEPARATOR);
 
 		if (!\is_readable($fullPath)) {
 			throw InvalidPath::missingDirectoryException($fullPath);

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Blocks;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
-use EightshiftLibs\Helpers\Components;
 
 /**
  * Enqueue_Blocks class.
@@ -92,7 +91,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_script(
 			$handle,
-			Components::getAsset(static::BLOCKS_EDITOR_SCRIPT_URI),
+			$this->setAssetsItem(static::BLOCKS_EDITOR_SCRIPT_URI),
 			$this->getAdminScriptDependencies(),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
@@ -144,7 +143,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_style(
 			$handle,
-			Components::getAsset(static::BLOCKS_EDITOR_STYLE_URI),
+			$this->setAssetsItem(static::BLOCKS_EDITOR_STYLE_URI),
 			$this->getAdminStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
@@ -192,7 +191,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_style(
 			$handle,
-			Components::getAsset(static::BLOCKS_STYLE_URI),
+			$this->setAssetsItem(static::BLOCKS_STYLE_URI),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
@@ -240,7 +239,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_script(
 			$handle,
-			Components::getAsset(static::BLOCKS_FRONTEND_SCRIPT_URI),
+			$this->setAssetsItem(static::BLOCKS_FRONTEND_SCRIPT_URI),
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
@@ -293,7 +292,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		\wp_register_style(
 			$handle,
-			Components::getAsset(static::BLOCKS_FRONTEND_STYLE_URI),
+			$this->setAssetsItem(static::BLOCKS_FRONTEND_STYLE_URI),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()

@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue;
 
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Cache\ManifestCacheInterface;
+use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -22,6 +25,23 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractAssets implements ServiceInterface
 {
+	/**
+	 * Instance variable for manifest cache.
+	 *
+	 * @var ManifestCacheInterface
+	 */
+	protected $manifestCache;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 */
+	public function __construct(ManifestCacheInterface $manifestCache)
+	{
+		$this->manifestCache = $manifestCache;
+	}
+
 	/**
 	 * Media style const
 	 */
@@ -155,6 +175,33 @@ abstract class AbstractAssets implements ServiceInterface
 			'strategy' => $this->scriptStrategy(),
 			'in_footer' => $this->scriptInFooter(),
 		];
+	}
+
+	/**
+	 * Get the manifest data.
+	 *
+	 * @param string $key The key from the manifest.json file.
+	 *
+	 * @throws InvalidManifest Throws error if manifest.json file is missing.
+	 *
+	 * @return string The value from the manifest.json file.
+	 */
+	public function setAssetsItem(string $key): string
+	{
+		$items = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
+
+		$path = $items['path'] ?? '';
+		$data = $items['data'] ?? '';
+
+		if (!$data) {
+			throw InvalidManifest::emptyOrErrorManifestException($path);
+		}
+
+		if (!isset($data[$key])) {
+			throw InvalidManifest::missingManifestKeyException($key, $path);
+		}
+
+		return $data[$key] ?? '';
 	}
 
 	/**

@@ -5,7 +5,7 @@
  *
  * It is used to provide manifest.json file location stored in the transient cache.
  *
- * @package EightshiftLibs\Cache
+ * @package EightshiftFormsVendor\EightshiftLibs\Cache
  */
 
 declare(strict_types=1);
@@ -19,87 +19,99 @@ use EightshiftLibs\Helpers\Components;
  */
 abstract class AbstractManifestCache implements ManifestCacheInterface
 {
+	/**
+	 * Transient name prefix.
+	 *
+	 * @var string
+	 */
 	private const TRANSIENT_NAME = 'eightshift_manifest_cache_';
 
 	/**
-	 * Key for blocks.
+	 * Cache key - blocks.
 	 *
 	 * @var string
 	 */
 	public const BLOCKS_KEY = 'blocks';
 
 	/**
-	 * Key for components.
+	 * Cache key - components.
 	 *
 	 * @var string
 	 */
 	public const COMPONENTS_KEY = 'components';
 
 	/**
-	 * Key for variations.
+	 * Cache key - variations.
 	 *
 	 * @var string
 	 */
 	public const VARIATIONS_KEY = 'variations';
 
 	/**
-	 * Key for wrapper.
+	 * Cache key - wrapper.
 	 *
 	 * @var string
 	 */
 	public const WRAPPER_KEY = 'wrapper';
 
 	/**
-	 * Key for settings.
+	 * Cache key - settings.
 	 *
 	 * @var string
 	 */
 	public const SETTINGS_KEY = 'settings';
 
 	/**
-	 * Key for assets.
+	 * Cache key - assets.
 	 *
 	 * @var string
 	 */
 	public const ASSETS_KEY = 'assets';
 
 	/**
-	 * Key for config.
+	 * Cache key - config.
 	 *
 	 * @var string
 	 */
 	public const CONFIG_KEY = 'config';
 
 	/**
-	 * Key for styles.
+	 * Cache key - styles.
 	 *
 	 * @var string
 	 */
 	public const STYLES_KEY = 'styles';
 
 	/**
-	 * Key for paths.
+	 * Cache key - countries.
 	 *
 	 * @var string
 	 */
-	public const PATHS_KEY = 'paths';
+	public const COUNTRIES_KEY = 'countries';
 
 	/**
-	 * Key for cache type blocks.
+	 * Cache key for blocks.
 	 *
 	 * @var string
 	 */
 	public const TYPE_BLOCKS = 'blocks';
 
 	/**
-	 * Key for cache type assets.
+	 * Cache key for assets.
 	 *
 	 * @var string
 	 */
 	public const TYPE_ASSETS = 'assets';
 
 	/**
-	 * Blocks namespace.
+	 * Cache key for geolocation.
+	 *
+	 * @var string
+	 */
+	public const TYPE_GEOLOCATION = 'geolocation';
+
+	/**
+	 * Namespace for blocks.
 	 *
 	 * @var string
 	 */
@@ -135,7 +147,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	{
 		$output = [
 			'data' => [],
-			'path' => $this->getFullPath($key),
+			'path' => $this->getFullPath($key, $cacheType),
 			'key' => $key,
 		];
 
@@ -171,7 +183,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	{
 		$output = [
 			'data' => [],
-			'path' => $this->getFullPath($key, $name),
+			'path' => $this->getFullPath($key, $cacheType, $name),
 			'key' => $key,
 		];
 
@@ -195,36 +207,37 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	{
 		$this->setCache(self::TYPE_BLOCKS);
 		$this->setCache(self::TYPE_ASSETS);
+		$this->setCache(self::TYPE_GEOLOCATION);
 	}
 
 	/**
 	 * Set cache.
 	 *
-	 * @param string $type Type of the cache.
+	 * @param string $cacheType Type of the cache.
 	 *
 	 * @return void
 	 */
-	protected function setCache(string $type = self::TYPE_BLOCKS): void
+	protected function setCache(string $cacheType = self::TYPE_BLOCKS): void
 	{
-		$name = self::TRANSIENT_NAME . $this->getCacheName() . "_{$type}";
+		$name = self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}";
 
 		$cache = \get_transient($name);
 
 		if (!$cache) {
-			\set_transient($name, \wp_json_encode($this->getAllManifests()), $this->getDuration());
+			\set_transient($name, \wp_json_encode($this->getAllManifests($cacheType)), $this->getDuration());
 		}
 	}
 
 	/**
 	 * Get cache.
 	 *
-	 * @param string $type Type of the cache.
+	 * @param string $cacheType Type of the cache.
 	 *
 	 * @return array<string, array<mixed>> Array of cache.
 	 */
-	protected function getCache(string $type = self::TYPE_BLOCKS): array
+	protected function getCache(string $cacheType = self::TYPE_BLOCKS): array
 	{
-		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$type}");
+		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}");
 
 		if (!$cache) {
 			$this->setCache();
@@ -236,62 +249,74 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	/**
 	 * Unset cache.
 	 *
-	 * @param string $type Type of the cache.
+	 * @param string $cacheType Type of the cache.
 	 *
 	 * @return void
 	 */
-	protected function deleteCache(string $type = self::TYPE_BLOCKS): void
+	protected function deleteCache(string $cacheType = self::TYPE_BLOCKS): void
 	{
-		\delete_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$type}");
+		\delete_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}");
 	}
 
 	/**
 	 * Get cache builder.
 	 *
-	 * @return array<string, array<string, mixed>> Array of cache builder.
+	 * @return array<string, array<mixed>> Array of cache builder.
 	 */
 	protected function getCacheBuilder(): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
 		return [
-			self::SETTINGS_KEY => [
-				'path' => 'blocksDestination',
-				'fileName' => 'manifest.json',
-				'multiple' => false,
-			],
-			self::BLOCKS_KEY => [
-				'path' => 'blocksDestinationCustom',
-				'fileName' => 'manifest.json',
-				'id' => 'blockName',
-				'multiple' => true,
-				'autoset' => [
-					'classes' => 'array',
-					'attributes' => 'array',
-					'hasInnerBlocks' => 'boolean',
+			self::TYPE_BLOCKS => [
+				self::SETTINGS_KEY => [
+					'path' => 'blocksDestination',
+					'fileName' => 'manifest.json',
+					'multiple' => false,
+				],
+				self::BLOCKS_KEY => [
+					'path' => 'blocksDestinationCustom',
+					'fileName' => 'manifest.json',
+					'id' => 'blockName',
+					'multiple' => true,
+					'autoset' => [
+						'classes' => 'array',
+						'attributes' => 'array',
+						'hasInnerBlocks' => 'boolean',
+					],
+				],
+				self::COMPONENTS_KEY => [
+					'path' => 'blocksDestinationComponents',
+					'fileName' => 'manifest.json',
+					'id' => 'componentName',
+					'multiple' => true,
+				],
+				self::VARIATIONS_KEY => [
+					'path' => 'blocksDestinationVariations',
+					'id' => 'name',
+					'fileName' => 'manifest.json',
+					'multiple' => true,
+				],
+				self::WRAPPER_KEY => [
+					'path' => 'blocksDestinationWrapper',
+					'fileName' => 'manifest.json',
+					'multiple' => false,
 				],
 			],
-			self::COMPONENTS_KEY => [
-				'path' => 'blocksDestinationComponents',
-				'fileName' => 'manifest.json',
-				'id' => 'componentName',
-				'multiple' => true,
+			self::TYPE_ASSETS => [
+				self::ASSETS_KEY => [
+					'path' => 'themeRoot',
+					'fileName' => "public{$sep}manifest.json",
+					'multiple' => false,
+				],
 			],
-			self::VARIATIONS_KEY => [
-				'path' => 'blocksDestinationVariations',
-				'id' => 'name',
-				'fileName' => 'manifest.json',
-				'multiple' => true,
-			],
-			self::WRAPPER_KEY => [
-				'path' => 'blocksDestinationWrapper',
-				'fileName' => 'manifest.json',
-				'multiple' => false,
-			],
-			self::ASSETS_KEY => [
-				'path' => 'themeRoot',
-				'fileName' => "public{$sep}manifest.json",
-				'multiple' => false,
+			self::TYPE_GEOLOCATION => [
+				self::COUNTRIES_KEY => [
+					'path' => 'libs',
+					'pathAlternative' => 'libsPrefixed',
+					'fileName' => "src{$sep}Geolocation{$sep}manifest.json",
+					'multiple' => false,
+				],
 			],
 		];
 	}
@@ -299,19 +324,21 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	/**
 	 * Get all manifests from the paths.
 	 *
+	 * @param string $cacheType Type of the cache.
+	 *
 	 * @return array<string, array<mixed>> Array of manifests.
 	 */
-	private function getAllManifests(): array
+	private function getAllManifests(string $cacheType = self::TYPE_BLOCKS): array
 	{
 		$output = [];
 
-		foreach ($this->getCacheBuilder() as $parent => $data) {
+		foreach ($this->getCacheBuilder()[$cacheType] ?? [] as $parent => $data) {
 			$multiple = $data['multiple'] ?? false;
 
 			if ($multiple) {
-				$output[$parent] = $this->geItems($this->getFullPath($parent, '*'), $data, $parent);
+				$output[$parent] = $this->geItems($this->getFullPath($parent, $cacheType, '*'), $data, $parent);
 			} else {
-				$output[$parent] = $this->getItem($this->getFullPath($parent), $data, $parent);
+				$output[$parent] = $this->getItem($this->getFullPath($parent, $cacheType), $data, $parent);
 			}
 		}
 
@@ -369,11 +396,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 		switch ($parent) {
 			case self::BLOCKS_KEY:
-				$namespace = $this->blocksNamespace;
-
-				if ($namespace) {
-					$fileDecoded['namespace'] = $namespace;
-					$fileDecoded['blockFullName'] = "{$namespace}/{$fileDecoded['blockName']}";
+				if ($this->blocksNamespace) {
+					$fileDecoded['namespace'] = $this->blocksNamespace;
+					$fileDecoded['blockFullName'] = "{$this->blocksNamespace}/{$fileDecoded['blockName']}";
 				}
 				break;
 			case self::SETTINGS_KEY:
@@ -418,28 +443,33 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 * Get full path.
 	 *
 	 * @param string $type Type of the item.
+	 * @param string $cacheType Type of the cache.
 	 * @param string $name Name of the item.
 	 *
 	 * @return string Full path.
 	 */
-	private function getFullPath($type, $name = ''): string
+	private function getFullPath($type, string $cacheType = self::TYPE_BLOCKS, $name = ''): string
 	{
-		$data = $this->getCacheBuilder()[$type] ?? [];
-		$sep = \DIRECTORY_SEPARATOR;
+		$data = $this->getCacheBuilder()[$cacheType][$type] ?? [];
 
 		if (!$data) {
 			return '';
 		}
 
 		$path = $data['path'] ?? '';
+		$pathAlternative = $data['pathAlternative'] ?? '';
 		$fileName = $data['fileName'] ?? '';
 
-		$path = Components::getProjectPaths($path);
+		$realPath = Components::getProjectPaths($path);
 
-		if (!$name) {
-			return \rtrim($path, $sep) . "{$sep}{$fileName}";
+		if (!\is_dir($realPath)) {
+			$realPath = Components::getProjectPaths($pathAlternative);
 		}
 
-		return \rtrim($path, $sep) . "{$sep}{$name}{$sep}{$fileName}";
+		if (!$name) {
+			return Components::joinPaths([$realPath, $fileName]);
+		}
+
+		return Components::joinPaths([$realPath, $name, $fileName]);
 	}
 }

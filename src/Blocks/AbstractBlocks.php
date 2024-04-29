@@ -143,7 +143,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		Components::setComponents($this->getManifest(AbstractManifestCache::COMPONENTS_KEY));
 		Components::setVariations($this->getManifest(AbstractManifestCache::VARIATIONS_KEY));
 		Components::setConfigFlags();
-		Components::setPaths();
 
 		if (Components::getConfigUseWrapper()) {
 			Components::setWrapper($this->getManifest(AbstractManifestCache::WRAPPER_KEY));

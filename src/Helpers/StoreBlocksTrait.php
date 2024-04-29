@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Helpers for store.
+ * Helpers for blocks store.
  *
  * @package EightshiftLibs\Helpers
  */
@@ -15,7 +15,7 @@ use EightshiftLibs\Cache\AbstractManifestCache;
 /**
  * Class StoreTrait Helper
  */
-trait StoreTrait
+trait StoreBlocksTrait
 {
 	/**
 	 * Store default state
@@ -36,7 +36,6 @@ trait StoreTrait
 		AbstractManifestCache::VARIATIONS_KEY => [],
 		AbstractManifestCache::SETTINGS_KEY => [],
 		AbstractManifestCache::STYLES_KEY => [],
-		AbstractManifestCache::PATHS_KEY => [],
 	];
 
 	/**
@@ -575,71 +574,5 @@ trait StoreTrait
 	public static function getStyles(): array
 	{
 		return self::getStore()[AbstractManifestCache::STYLES_KEY] ?? [];
-	}
-
-	/**
-	 * Set paths details.
-	 *
-	 * @return void
-	 */
-	public static function setPaths(): void
-	{
-		global $esBlocks;
-
-		if (self::getStore()) {
-			foreach (Components::PROJECT_PATHS as $value) {
-				$esBlocks[self::getStoreName()][AbstractManifestCache::PATHS_KEY][$value] = Components::getProjectPaths($value);
-			}
-		}
-	}
-
-	/**
-	 * Get paths details.
-	 *
-	 * @return array<mixed>
-	 */
-	public static function getPaths(): array
-	{
-		return self::getStore()[AbstractManifestCache::PATHS_KEY] ?? [];
-	}
-
-	/**
-	 * Set assets details.
-	 *
-	 * @param array<mixed> $assets Assets list to store.
-	 *
-	 * @return void
-	 */
-	public static function setAssets(array $assets): void
-	{
-		global $esBlocks;
-
-		if (self::getStore()) {
-			foreach (Components::PROJECT_PATHS as $value) {
-				$esBlocks[self::getStoreName()][AbstractManifestCache::ASSETS_KEY][$value] = $assets;
-			}
-		}
-	}
-
-	/**
-	 * Get assets details.
-	 *
-	 * @return array<mixed>
-	 */
-	public static function getAssets(): array
-	{
-		return self::getStore()[AbstractManifestCache::ASSETS_KEY] ?? [];
-	}
-
-	/**
-	 * Get asset one asset by key.
-	 *
-	 * @param string $key Key of the asset.
-	 *
-	 * @return string
-	 */
-	public static function getAsset(string $key): string
-	{
-		return self::getAssets()[$key] ?? '';
 	}
 }

@@ -1004,4 +1004,28 @@ abstract class AbstractCli implements CliInterface
 		╰──────────────────────────────────────────────────────────╯%n
 		"), 'mixed');
 	}
+
+	/**
+	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
+	 * Used in combination with getManifest helper.
+	 *
+	 * @param string $path Absolute path to manifest folder.
+	 *
+	 * @throws InvalidPath Exception in case the manifest file is missing.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getManifestDirect(string $path): array
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = \rtrim($path, $sep);
+
+		$manifest = "{$path}{$sep}manifest.json";
+
+		if (!\file_exists($manifest)) {
+			throw InvalidPath::missingFileException($manifest);
+		}
+
+		return \json_decode(\implode(' ', (array)\file($manifest)), true);
+	}
 }

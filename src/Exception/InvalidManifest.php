@@ -83,6 +83,54 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	}
 
 	/**
+	 * Throws error if manifest try to access on none allowed path.
+	 *
+	 * @param string $path Missing manifest path.
+	 *
+	 * @return static
+	 */
+	public static function notAllowedManifestPathException(string $path): InvalidManifest
+	{
+		return new InvalidManifest(
+			\sprintf(
+				/* translators: %s is replaced by the path privided */
+				\esc_html__(
+					'You are trying to get manifest.json outside of the Blocks folder. Please review your implementation. Path you are providing is: $s',
+					'eightshift-libs'
+				),
+				$path
+			)
+		);
+	}
+
+	/**
+	 * Throws error if manifest try to access on none allowed path item.
+	 *
+	 * @param string $path Missing manifest path.
+	 *
+	 * @return static
+	 */
+	public static function notAllowedManifestPathItemException(string $path): InvalidManifest
+	{
+		return new InvalidManifest(
+			\sprintf(
+				/* translators: %s is replaced by the path privided */
+				\esc_html__(
+					'You are tryng to get manifest.json from outside of the Blocks items folder. Allowed folders are: %1$s. Path you are providing is: %2$s',
+					'eightshift-libs'
+				),
+				\implode(', ', [
+					'custom',
+					'components',
+					'variations',
+					'wrapper'
+				]),
+				$path
+			)
+		);
+	}
+
+	/**
 	 * Throws error if manifest.json file has errors
 	 *
 	 * Errors like trailing commas or malformed json file.

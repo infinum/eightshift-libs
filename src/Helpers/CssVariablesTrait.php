@@ -18,11 +18,9 @@ trait CssVariablesTrait
 	/**
 	 * Get Global Manifest.json and return globalVariables as CSS variables.
 	 *
-	 * @param array<string, mixed> $globalManifest Global manifest array. - Deprecated.
-	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobal(array $globalManifest = []): string
+	public static function outputCssVariablesGlobal(): string
 	{
 		$output = '';
 
@@ -53,12 +51,11 @@ trait CssVariablesTrait
 	 * @param array<string, mixed> $attributes Built attributes.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
-	 * @param array<string, mixed> $globalManifest Global manifest array.
 	 * @param string $customSelector Output custom selector to use as a style prefix.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, array $globalManifest = [], string $customSelector = ''): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = ''): string
 	{
 		// Bailout if manifest is missing variables key.
 		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {

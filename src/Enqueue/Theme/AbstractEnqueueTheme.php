@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Theme;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
-use EightshiftLibs\Helpers\Components;
 
 /**
  * Class Enqueue
@@ -81,7 +80,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 
 		\wp_register_style(
 			$handle,
-			Components::getAsset(static::THEME_STYLE_URI),
+			$this->setAssetsItem(static::THEME_STYLE_URI),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
@@ -101,7 +100,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 
 		\wp_register_script(
 			$handle,
-			Components::getAsset(static::THEME_SCRIPT_URI),
+			$this->setAssetsItem(static::THEME_SCRIPT_URI),
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()

@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Geolocation;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Cache\ManifestCacheInterface;
+use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Services\ServiceInterface;
 use Exception;
 use Throwable;
@@ -21,11 +23,21 @@ use Throwable;
 abstract class AbstractGeolocation implements ServiceInterface
 {
 	/**
-	 * Internal countries list stored in a variable for caching.
+	 * Instance variable for manifest cache.
 	 *
-	 * @var array<string>
+	 * @var ManifestCacheInterface
 	 */
-	private $countries = [];
+	protected $manifestCache;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 */
+	public function __construct(ManifestCacheInterface $manifestCache)
+	{
+		$this->manifestCache = $manifestCache;
+	}
 
 	/**
 	 * Get geolocation cookie name.
@@ -134,6 +146,8 @@ abstract class AbstractGeolocation implements ServiceInterface
 	/**
 	 * Gets the list of all countries from the manifest.
 	 *
+	 * @throws InvalidManifest If the manifest is missing or empty.
+	 *
 	 * @return array<mixed>
 	 */
 	public function getCountries(): array
@@ -168,16 +182,24 @@ abstract class AbstractGeolocation implements ServiceInterface
 			],
 		];
 
-		// Save to internal cache so we don't read manifest all the time.
-		if (!$this->countries) {
-			$this->countries = Components::getManifestDirect(__DIR__);
+		$items = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
+
+		$path = $items['path'] ?? '';
+		$data = $items['data'] ?? [];
+
+		if (!$data) {
+			throw InvalidManifest::emptyOrErrorManifestException($path);
 		}
 
-		foreach ($this->countries as $country) {
-			$code = $country['Code'];
+		foreach ($data as $country) {
+			$code = $country['Code'] ?? '';
+
+			if (!$code) {
+				continue;
+			}
 
 			$output[] = [
-				'label' => $country['Name'],
+				'label' => $country['Name'] ?? '',
 				'value' => $code,
 				'group' => [
 					\strtoupper($code),

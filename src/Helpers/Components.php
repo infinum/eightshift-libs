@@ -21,7 +21,7 @@ class Components
 	/**
 	 * Store trait.
 	 */
-	use StoreTrait;
+	use StoreBlocksTrait;
 
 	/**
 	 * Css Variables trait.
@@ -64,6 +64,11 @@ class Components
 	use ApiTrait;
 
 	/**
+	 * Deprecated trait.
+	 */
+	use DeprecatedTrait;
+
+	/**
 	 * Get all project paths for store.
 	 *
 	 * @var array<int, string>
@@ -93,66 +98,67 @@ class Components
 	];
 
 	/**
+	 * Get all project paths allowed to be used in the different render methods.
+	 *
+	 * @var array<int, string>
+	 */
+	private const PROJECT_RENDER_ALLOWED_NAMES = [
+		'block',
+		'blocks',
+		'custom',
+		'component',
+		'components',
+		'variation',
+		'variations',
+		'wrapper',
+		'root',
+		'srcDestination',
+		'themeRoot',
+		'pluginRoot',
+	];
+
+	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
 	 * Note about "parentClass" attribute: If provided, the component will be wrapped with a
 	 * parent BEM selector. For example, if $attributes['parentClass'] === 'header' and $component === 'logo'
 	 * are set, the component will be wrapped with a <div class="header__logo"></div>.
 	 *
-	 * @param string $component Component's name or full path (ending with .php).
+	 * @param string $name Name of the component to render.
 	 * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
-	 * @param string $parentPath If parent path is provides it will be appended to the file location.
-	 *                           If not get_template_directory_uri() will be used as a default parent path.
+	 * @param string $pathName Path to the components directory.
 	 * @param bool $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
+	 * @param string $alternativeName Alternative name for the component.
 	 *
-	 * @throws InvalidManifest When we're unable to find the manifest for the component.
+	 * @throws InvalidPath If the file is missing.
 	 *
 	 * @return string
 	 */
-	public static function render(string $component, array $attributes = [], string $parentPath = '', bool $useComponentDefaults = false): string
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-
-		// If parent path is missing provide project root.
-		if (!$parentPath) {
-			$parentPath = Components::getProjectPaths('root');
-		} else {
-			// Remove slash.
-			$parentPath = \trim($parentPath, $sep);
-			$parentPath = "{$sep}{$parentPath}{$sep}";
+	public static function render(
+		string $name,
+		array $attributes = [],
+		string $pathName = 'components',
+		bool $useComponentDefaults = false,
+		string $alternativeName = ''
+	): string {
+		if (!isset(\array_flip(self::PROJECT_RENDER_ALLOWED_NAMES)[$pathName])) {
+			throw InvalidPath::wrongOrNotAllowedParentPathException($pathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
 		}
 
-		/**
-		 * Detect if user passed component name or path.
-		 *
-		 * If the path was passed, we need to get the component name, in case the
-		 * parentClass attribute was added, because the class of the wrapper need to look like
-		 *
-		 * parentClass__componentName
-		 *
-		 * not
-		 *
-		 * parentClass__componentName.php
-		 */
-		if (\strpos($component, '.php') !== false) {
-			$component = \ltrim($component, $sep);
-			$componentPath = $component;
-		} else {
-			if ($component === 'wrapper') {
-				$componentPath = Components::getProjectPaths('blocksDestinationWrapper', "{$component}.php", $sep);
-			} else {
-				$componentPath = Components::getProjectPaths('blocksDestinationComponents', "{$component}{$sep}{$component}.php", $sep);
-			}
+		$fileName = "{$name}.php";
+
+		if (!empty($alternativeName)) {
+			$fileName = "{$alternativeName}.php";
 		}
 
-		$componentPath = "{$parentPath}{$componentPath}";
+		$path = self::joinPaths([Components::getProjectPaths($pathName), $name, $fileName]);
+
+		if (!\file_exists($path)) {
+			throw InvalidPath::missingFileException($path);
+		}
 
 		if ($useComponentDefaults) {
-			$manifest = Components::getManifest($componentPath);
-		}
-
-		if (!\file_exists($componentPath)) {
-			throw InvalidManifest::missingManifestException($componentPath);
+			$manifest = Components::getComponent($name);
 		}
 
 		// Merge default attributes with the component attributes.
@@ -162,162 +168,45 @@ class Components
 
 		\ob_start();
 
-		// Wrap component with parent BEM selector if parent's class is provided. Used
-		// for setting specific styles for components rendered inside other components.
-		if (isset($attributes['parentClass'])) {
-			$component = \str_replace('.php', '', $component);
-			\printf('<div class="%s">', \esc_attr("{$attributes['parentClass']}__{$component}")); // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
-		}
-
-		require $componentPath;
-
-		if (isset($attributes['parentClass'])) {
-			echo '</div>'; // phpcs:ignore Eightshift.Security.CustomEscapeOutput.OutputNotEscaped
-		}
+		include $path;
 
 		return \trim((string) \ob_get_clean());
 	}
 
 	/**
-	 * Render component/block partial.
+	 * Get manifest json by path and name.
 	 *
-	 * @param string $type Type of content block, component, variable, etc.
-	 * @param string $parent Parent block/component name.
-	 * @param string $name Name of the partial. It can be without extension so .php is used.
-	 * @param array<string, mixed> $attributes Attributes that will be passed to partial.
-	 * @param string $partialFolderName Partial folder name.
+	 * @param string $path Absolute path to .
 	 *
-	 * @throws InvalidPath When we're unable to find the partial.
+	 * @throws InvalidManifest If the manifest is not allowed.
 	 *
-	 * @return string Partial html.
+	 * @return array<string, mixed>
 	 */
-	public static function renderPartial(
-		string $type,
-		string $parent,
-		string $name,
-		array $attributes = [],
-		string $partialFolderName = 'partials'
-	): string {
+	public static function getManifestByDir(string $path): array
+	{
 		$sep = \DIRECTORY_SEPARATOR;
+		$root = Components::getProjectPaths('srcDestination');
+		$newPath = \str_replace($root, '', $path);
+		$newPath = \explode($sep, $newPath);
 
-		// If no extension is provided use php.
-		if (\strpos($name, '.php') === false) {
-			$name = "{$name}.php";
+		if (!isset($newPath[0]) && $newPath[0] !== 'Blocks') {
+			throw InvalidManifest::notAllowedManifestPathException($path);
 		}
 
-		$partialPath = "{$parent}{$sep}{$partialFolderName}{$sep}{$name}";
+		if (!isset($newPath[1])) {
+			throw InvalidManifest::notAllowedManifestPathException($path);
+		}
 
-		// Detect folder based on the name.
-		switch ($type) {
-			case 'block':
-			case 'blocks':
-			case 'custom':
-				$path = Components::getProjectPaths('blocksDestinationCustom', $partialPath);
-				break;
-			case 'component':
-			case 'components':
-				$path = Components::getProjectPaths('blocksDestinationComponents', $partialPath);
-				break;
-			case 'variation':
-			case 'variations':
-				$path = Components::getProjectPaths('blocksDestinationVariations', $partialPath);
-				break;
+		switch ($newPath[1]) {
 			case 'wrapper':
-				$path = Components::getProjectPaths('blocksDestinationWrapper', $partialPath);
-				break;
+				return Components::getWrapper();
+			case 'components':
+				return Components::getComponent(\end($newPath));
+			case 'custom':
+				return Components::getBlock(\end($newPath));
 			default:
-				$path = Components::getProjectPaths('root', $partialPath);
-				break;
+				throw InvalidManifest::missingManifestException($path);
 		}
-
-		// Bailout if file is missing.
-		if (!\file_exists($path)) {
-			throw InvalidPath::missingFileException($path);
-		}
-
-		\ob_start();
-
-		require $path;
-
-		return \trim((string) \ob_get_clean());
-	}
-
-	/**
-	 * Get manifest json. Generally used for getting block/components manifest.
-	 *
-	 * @param string $path Absolute path to manifest folder.
-	 * @param string $name Block/Component name.
-	 *
-	 * @throws InvalidPath When we're unable to find the component by $component.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getManifest(string $path, string $name = ''): array
-	{
-		$pathNew = \trim($path, \DIRECTORY_SEPARATOR);
-
-		$pathNew = \explode(\DIRECTORY_SEPARATOR, $pathNew);
-
-		// If user provides url with .php at the end.
-		if (\strpos(\end($pathNew), '.php') !== false) {
-			\array_pop($pathNew);
-		}
-
-		// Find last item to get name.
-		$item = $pathNew[\count($pathNew) - 1] ?? '';
-
-		// Settings details.
-		if ($item === 'Blocks' || $path === 'settings') {
-			return Components::getSettings();
-		}
-
-		// Wrapper details.
-		if ($item === 'wrapper' || $path === 'wrapper') {
-			return Components::getWrapper();
-		}
-
-		$type = $pathNew[\count($pathNew) - 2] ?? '';
-		$itemName = $item;
-
-		if ($name) {
-			$itemName = $name;
-		}
-
-		// Components settings.
-		if ($type === 'components' || $path === 'component') {
-			return Components::getComponent($itemName);
-		}
-
-		// Blocks settings.
-		if ($type === 'custom' || $path === 'block') {
-			return Components::getBlock($itemName);
-		}
-
-		return [];
-	}
-
-	/**
-	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
-	 * Used in combination with getManifest helper.
-	 *
-	 * @param string $path Absolute path to manifest folder.
-	 *
-	 * @throws InvalidManifest Throws error if manifest.json file is missing.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getManifestDirect(string $path): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = \rtrim($path, $sep);
-
-		$manifest = "{$path}{$sep}manifest.json";
-
-		if (!\file_exists($manifest)) {
-			throw InvalidManifest::missingManifestException($manifest);
-		}
-
-		return \json_decode(\implode(' ', (array)\file($manifest)), true);
 	}
 
 	/**
@@ -331,8 +220,6 @@ class Components
 	 */
 	public static function getProjectPaths(string $type = '', string $suffix = '', string $prefix = ''): string
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-
 		$path = '';
 		$internalPrefix = \dirname(__FILE__, 6);
 
@@ -377,6 +264,7 @@ class Components
 
 				break;
 			case 'cliOutput':
+			case 'root':
 			case 'themeRoot':
 			case 'pluginRoot':
 				if (\getenv('ES_TEST')) {
@@ -434,21 +322,29 @@ class Components
 					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
 				}
 				break;
+			case 'block':
+			case 'blocks':
+			case 'custom':
 			case 'blocksDestinationCustom':
 			case 'blocksSourceCustom':
 			case 'blocksPrivateSourceCustom':
 				$name = 'custom';
 				break;
+			case 'component':
+			case 'components':
 			case 'blocksDestinationComponents':
 			case 'blocksSourceComponents':
 			case 'blocksPrivateSourceComponents':
 				$name = 'components';
 				break;
+			case 'variation':
+			case 'variations':
 			case 'blocksDestinationVariations':
 			case 'blocksSourceVariations':
 			case 'blocksPrivateSourceVariations':
 				$name = 'variations';
 				break;
+			case 'wrapper':
 			case 'blocksDestinationWrapper':
 			case 'blocksSourceWrapper':
 				$name = 'wrapper';
@@ -499,6 +395,14 @@ class Components
 				}
 				break;
 
+			case 'block':
+			case 'blocks':
+			case 'custom':
+			case 'component':
+			case 'components':
+			case 'variation':
+			case 'variations':
+			case 'wrapper':
 			case 'blocksDestinationCustom':
 			case 'blocksDestinationComponents':
 			case 'blocksDestinationVariations':
@@ -517,8 +421,9 @@ class Components
 
 		$path = self::joinPaths([$prefix, $path, $suffix]);
 
-		return \str_replace("{$sep}{$sep}", $sep, $path);
+		return $path;
 	}
+
 	/**
 	 * Paths join
 	 *
@@ -529,8 +434,23 @@ class Components
 	public static function joinPaths(array $paths): string
 	{
 		$sep = \DIRECTORY_SEPARATOR;
-		$path = \implode($sep, $paths);
 
-		return \str_replace("{$sep}{$sep}", $sep, $path);
+		$paths = \array_filter(
+			\array_map(
+				static function ($path) use ($sep) {
+					return \trim($path, $sep);
+				},
+				$paths
+			)
+		);
+
+		$path = \implode($sep, $paths);
+		$path = "{$sep}{$path}";
+
+		if (!\pathinfo($path, \PATHINFO_EXTENSION)) {
+			$path = "{$path}{$sep}";
+		}
+
+		return $path;
 	}
 }

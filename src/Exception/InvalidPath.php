@@ -72,4 +72,24 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 			)
 		);
 	}
+
+	/**
+	 * Throws error if using wrong or now allowed parent path.
+	 *
+	 * @param string $pathName Missing file path name.
+	 * @param string $allowed Allowed path name.
+	 *
+	 * @return static
+	 */
+	public static function wrongOrNotAllowedParentPathException(string $pathName, string $allowed): InvalidPath
+	{
+		return new InvalidPath(
+			\sprintf(
+				/* translators: %1$s is going to be replaced with the missing file path name. %2$s is going to be replaced with the allowed path names. */
+				\esc_html__('You are using wrong or not allowed parent path. You are using %1$s but we only allow %2$s. Please review your implementation.', 'eightshift-libs'),
+				$pathName,
+				$allowed
+			)
+		);
+	}
 }
