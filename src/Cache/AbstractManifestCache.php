@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cache;
 
+use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Helpers\Components;
 
 /**
@@ -141,31 +142,25 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 * @param string $key Key of the cache.
 	 * @param string $cacheType Type of the cache.
 	 *
+	 * @throws InvalidManifest If cache item is missing.
+	 *
 	 * @return array<string, mixed> Array of cache item.
 	 */
 	public function getManifestCacheTopItem(string $key, string $cacheType = self::TYPE_BLOCKS): array
 	{
-		$output = [
-			'data' => [],
-			'path' => $this->getFullPath($key, $cacheType),
-			'key' => $key,
-		];
-
-		$data = [];
+		$output = [];
 
 		if (\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') {
-			$data = $this->getCache($cacheType)[$key] ?? [];
+			$output = $this->getCache($cacheType)[$key] ?? [];
 		}
 
-		if (!$data) {
-			$data = $this->getAllManifests($cacheType)[$key] ?? [];
+		if (!$output) {
+			$output = $this->getAllManifests($cacheType)[$key] ?? [];
 		}
 
-		if (!$data) {
-			return $output;
+		if (!$output) {
+			throw InvalidManifest::missingCacheTopItemException($key, $this->getFullPath($key, $cacheType));
 		}
-
-		$output['data'] = $data;
 
 		return $output;
 	}
@@ -177,23 +172,17 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 * @param string $name Name of the subitem.
 	 * @param string $cacheType Type of the cache.
 	 *
+	 * @throws InvalidManifest If cache subitem is missing.
+	 *
 	 * @return array<string, mixed> Array of cache item.
 	 */
 	public function getManifestCacheSubItem(string $key, string $name, string $cacheType = self::TYPE_BLOCKS): array
 	{
-		$output = [
-			'data' => [],
-			'path' => $this->getFullPath($key, $cacheType, $name),
-			'key' => $key,
-		];
+		$output = $this->getManifestCacheTopItem($key, $cacheType)[$name] ?? [];
 
-		$data = $this->getManifestCacheTopItem($key, $cacheType)[$name] ?? [];
-
-		if (!$data) {
-			return $output;
+		if (!$output) {
+			throw InvalidManifest::missingCacheSubItemException($key, $name, $this->getFullPath($key, $cacheType, $name));
 		}
-
-		$output['data'] = $data;
 
 		return $output;
 	}
@@ -283,12 +272,10 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			self::TYPE_BLOCKS => [
 				self::SETTINGS_KEY => [
 					'path' => 'blocksDestination',
-					'fileName' => 'manifest.json',
 					'multiple' => false,
 				],
 				self::BLOCKS_KEY => [
 					'path' => 'blocksDestinationCustom',
-					'fileName' => 'manifest.json',
 					'id' => 'blockName',
 					'multiple' => true,
 					'autoset' => [
@@ -299,27 +286,22 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 				],
 				self::COMPONENTS_KEY => [
 					'path' => 'blocksDestinationComponents',
-					'fileName' => 'manifest.json',
-					'id' => 'componentName',
 					'multiple' => true,
+					'id' => 'componentName',
 				],
 				self::VARIATIONS_KEY => [
 					'path' => 'blocksDestinationVariations',
 					'id' => 'name',
-					'fileName' => 'manifest.json',
 					'multiple' => true,
 				],
 				self::WRAPPER_KEY => [
 					'path' => 'blocksDestinationWrapper',
-					'fileName' => 'manifest.json',
-					'multiple' => false,
 				],
 			],
 			self::TYPE_ASSETS => [
 				self::ASSETS_KEY => [
 					'path' => 'themeRoot',
 					'fileName' => "public{$sep}manifest.json",
-					'multiple' => false,
 				],
 			],
 			self::TYPE_GEOLOCATION => [
@@ -327,7 +309,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					'path' => 'libs',
 					'pathAlternative' => 'libsPrefixed',
 					'fileName' => "src{$sep}Geolocation{$sep}manifest.json",
-					'multiple' => false,
 				],
 			],
 		];
@@ -470,12 +451,17 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 		$path = $data['path'] ?? '';
 		$pathAlternative = $data['pathAlternative'] ?? '';
-		$fileName = $data['fileName'] ?? '';
+		$pathCustom = $data['pathCustom'] ?? '';
+		$fileName = $data['fileName'] ?? 'manifest.json';
 
 		$realPath = Components::getProjectPaths($path);
 
 		if (!\is_dir($realPath)) {
 			$realPath = Components::getProjectPaths($pathAlternative);
+		}
+
+		if ($pathCustom) {
+			$realPath = $pathCustom;
 		}
 
 		if (!$name) {

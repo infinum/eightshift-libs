@@ -182,23 +182,16 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @param string $key The key from the manifest.json file.
 	 *
-	 * @throws InvalidManifest Throws error if manifest.json file is missing.
+	 * @throws InvalidManifest If manifest key is missing.
 	 *
 	 * @return string The value from the manifest.json file.
 	 */
 	public function setAssetsItem(string $key): string
 	{
-		$items = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
-
-		$path = $items['path'] ?? '';
-		$data = $items['data'] ?? '';
-
-		if (!$data) {
-			throw InvalidManifest::emptyOrErrorManifestException($path);
-		}
+		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
 
 		if (!isset($data[$key])) {
-			throw InvalidManifest::missingManifestKeyException($key, $path);
+			throw InvalidManifest::missingManifestKeyException($key, 'public');
 		}
 
 		return $data[$key] ?? '';

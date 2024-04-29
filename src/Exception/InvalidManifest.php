@@ -131,6 +131,55 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	}
 
 	/**
+	 * Throws error if manifest key is missing in cache.
+	 *
+	 * @param string $key Missing manifest key.
+	 * @param string $cacheType Missing cache type.
+	 *
+	 * @return static
+	 */
+	public static function missingCacheTopItemException(string $key, string $cacheType): InvalidManifest
+	{
+		return new InvalidManifest(
+			\sprintf(
+				/* translators: %s is replaced by the path privided */
+				\esc_html__(
+					'Unable to get %1$s from manifest data or cache. Please check if provided key is correct or cache type is correct. Cache type provided is: %2$s.',
+					'eightshift-libs'
+				),
+				$key,
+				$cacheType
+			)
+		);
+	}
+
+	/**
+	 * Throws error if manifest sub item key is missing in cache.
+	 *
+	 * @param string $key Missing manifest key.
+	 * @param string $name Name of the subitem.
+	 * @param string $cacheType Missing cache type.
+	 *
+	 * @return static
+	 */
+	public static function missingCacheSubItemException(string $key, string $name, string $cacheType): InvalidManifest
+	{
+		return new InvalidManifest(
+			\sprintf(
+				/* translators: %s is replaced by the path privided */
+				\esc_html__(
+					'Unable to get %1$s from manifest data or cache with subitem %2$s.
+					Please check if provided key is correct or cache type is correct. Cache type provided is: %3$s.',
+					'eightshift-libs'
+				),
+				$key,
+				$name,
+				$cacheType
+			)
+		);
+	}
+
+	/**
 	 * Throws error if manifest.json file has errors
 	 *
 	 * Errors like trailing commas or malformed json file.

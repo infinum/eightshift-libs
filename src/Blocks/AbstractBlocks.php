@@ -183,7 +183,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				function ($block) {
 					return $block['blockFullName'];
 				},
-				$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)['data']
+				$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)
 			),
 			$allowedBlockTypes,
 		);
@@ -218,13 +218,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Method used to register all custom blocks with data fetched from blocks manifest.json.
 	 *
-	 * @throws InvalidBlock Throws error if blocks are missing.
-	 *
 	 * @return void
 	 */
 	public function registerBlocks(): void
 	{
-		foreach ($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)['data'] as $block) {
+		foreach ($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY) as $block) {
 			$this->registerBlock($block);
 		}
 	}
@@ -410,9 +408,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function getManifestItems(string $type): array
 	{
-		$items = $this->manifestCache->getManifestCacheTopItem($type);
-
-		$data = $items['data'] ?? [];
+		$data = $this->manifestCache->getManifestCacheTopItem($type);
 
 		foreach ($data as $path => $item) {
 			$validation = self::BLOCKS_BUILDER[$type]['validation'] ?? [];
@@ -436,22 +432,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param string $type Type of the manifest.
 	 *
-	 * @throws InvalidManifest If the manifest is missing or has an error.
-	 *
 	 * @return array<string, mixed>
 	 */
 	private function getManifestItem(string $type): array
 	{
-		$item = $this->manifestCache->getManifestCacheTopItem($type);
-
-		$data = $item['data'] ?? [];
-		$path = $item['path'] ?? [];
-
-		if (!$data) {
-			throw InvalidManifest::emptyOrErrorManifestException($path);
-		}
-
-		return $data;
+		return $this->manifestCache->getManifestCacheTopItem($type);
 	}
 
 	/**
