@@ -31,8 +31,6 @@ use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
-use EightshiftLibs\Config\ConfigThemeCli;
-use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\Setup\PluginManageCli;
 use EightshiftLibs\View\EscapedViewCli;
@@ -103,8 +101,6 @@ class Cli
 		ReusableBlocksHeaderFooterCli::class,
 		AnalyticsGdprCli::class,
 		WebPMediaColumnCli::class,
-		ConfigThemeCli::class,
-		ConfigPluginCli::class,
 		ConfigProjectCli::class,
 		AcfMetaCli::class,
 		PostTypeCli::class,

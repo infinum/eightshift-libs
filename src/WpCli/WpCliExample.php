@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\WpCli;
 
-use EightshiftBoilerplate\Config\Config;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceCliInterface;
 use WP_CLI;
 
@@ -44,7 +44,7 @@ class WpCliExample implements ServiceCliInterface
 	public function registerCommand(): void
 	{
 		WP_CLI::add_command(
-			Config::getProjectName() . ' ' . self::COMMAND_NAME,
+			Helpers::getThemeName() . ' ' . self::COMMAND_NAME,
 			\get_class($this),
 			$this->getDocs()
 		);

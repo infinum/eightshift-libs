@@ -88,7 +88,7 @@ trait ProjectInfoTrait
 	 */
 	public static function getProjectPath(string $path = ''): string
 	{
-		$fullPath = self::getProjectPaths('root') . \ltrim($path, \DIRECTORY_SEPARATOR);
+		$fullPath = Helpers::joinPaths([self::getProjectPaths('root'), $path]);
 
 		if (!\is_readable($fullPath)) {
 			throw InvalidPath::missingDirectoryException($fullPath);

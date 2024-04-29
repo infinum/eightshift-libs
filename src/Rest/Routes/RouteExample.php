@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Rest\Routes;
 
-use EightshiftBoilerplate\Config\Config;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftLibs\Rest\CallableRouteInterface;
 use WP_REST_Request;
@@ -27,7 +27,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface
 	 */
 	protected function getNamespace(): string
 	{
-		return Config::getProjectRoutesNamespace();
+		return Helpers::getPluginTextDomain();
 	}
 
 	/**
@@ -37,7 +37,7 @@ class RouteExample extends AbstractRoute implements CallableRouteInterface
 	 */
 	protected function getVersion(): string
 	{
-		return Config::getProjectRoutesVersion();
+		return 'v1';
 	}
 
 	/**

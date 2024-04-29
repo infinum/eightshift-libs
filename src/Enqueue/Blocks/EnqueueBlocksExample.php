@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Enqueue\Blocks;
 
-use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Enqueue_Blocks class.
@@ -46,7 +46,7 @@ class EnqueueBlocksExample extends AbstractEnqueueBlocks
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return Helpers::getThemeName();
 	}
 
 	/**
@@ -56,6 +56,6 @@ class EnqueueBlocksExample extends AbstractEnqueueBlocks
 	 */
 	public function getAssetsVersion(): string
 	{
-		return Config::getProjectVersion();
+		return Helpers::getThemeVersion();
 	}
 }

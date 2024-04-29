@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Enqueue\Theme;
 
-use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class EnqueueThemeExample
@@ -36,7 +36,7 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return Helpers::getThemeName();
 	}
 
 	/**
@@ -46,6 +46,6 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 	 */
 	public function getAssetsVersion(): string
 	{
-		return Config::getProjectVersion();
+		return Helpers::getThemeVersion();
 	}
 }

@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Enqueue\Admin;
 
-use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class EnqueueAdminExample
@@ -39,7 +39,7 @@ class EnqueueAdminExample extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return Helpers::getThemeName();
 	}
 
 	/**
@@ -49,6 +49,6 @@ class EnqueueAdminExample extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsVersion(): string
 	{
-		return Config::getProjectVersion();
+		return Helpers::getThemeVersion();
 	}
 }

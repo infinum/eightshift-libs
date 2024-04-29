@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Cache;
 
-use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * The project config class.
@@ -25,6 +25,6 @@ class ManifestCache extends AbstractManifestCache
 	 */
 	public function getCacheName(): string
 	{
-		return Config::getProjectTextDomain();
+		return Helpers::getThemeTextDomain();
 	}
 }

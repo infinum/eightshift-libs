@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftBoilerplate\Rest\Routes\LoadMore;
 
-use EightshiftBoilerplate\Config\Config;
 use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_Error;
@@ -37,7 +37,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	 */
 	protected function getNamespace(): string
 	{
-		return Config::getProjectRoutesNamespace();
+		return Helpers::getPluginTextDomain();
 	}
 
 	/**
@@ -47,7 +47,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	 */
 	protected function getVersion(): string
 	{
-		return Config::getProjectRoutesVersion();
+		return 'v1';
 	}
 
 	/**
