@@ -139,10 +139,19 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		// Register store and set all the data.
 		Components::setStore();
 		Components::setSettings($this->getManifest(AbstractManifestCache::SETTINGS_KEY));
-		Components::setBlocks($this->getManifest(AbstractManifestCache::BLOCKS_KEY));
-		Components::setComponents($this->getManifest(AbstractManifestCache::COMPONENTS_KEY));
-		Components::setVariations($this->getManifest(AbstractManifestCache::VARIATIONS_KEY));
 		Components::setConfigFlags();
+
+		if (Components::getConfigUseBlocks()) {
+			Components::setBlocks($this->getManifest(AbstractManifestCache::BLOCKS_KEY));
+		}
+
+		if (Components::getConfigUseComponents()) {
+			Components::setComponents($this->getManifest(AbstractManifestCache::COMPONENTS_KEY));
+		}
+
+		if (Components::getConfigUseVariations()) {
+			Components::setVariations($this->getManifest(AbstractManifestCache::VARIATIONS_KEY));
+		}
 
 		if (Components::getConfigUseWrapper()) {
 			Components::setWrapper($this->getManifest(AbstractManifestCache::WRAPPER_KEY));
@@ -178,15 +187,17 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return $allowedBlockTypes;
 		}
 
-		$allowedBlockTypes = \array_merge(
-			\array_map(
-				function ($block) {
-					return $block['blockFullName'];
-				},
-				$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)
-			),
-			$allowedBlockTypes,
-		);
+		if (Components::getConfigUseBlocks()) {
+			$allowedBlockTypes = \array_merge(
+				\array_map(
+					function ($block) {
+						return $block['blockFullName'];
+					},
+					$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)
+				),
+				$allowedBlockTypes,
+			);
+		}
 
 		// Allow reusable block.
 		$allowedBlockTypes[] = 'eightshift-forms/forms';
@@ -222,6 +233,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function registerBlocks(): void
 	{
+		if (!Components::getConfigUseBlocks()) {
+			return;
+		}
+
 		foreach ($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY) as $block) {
 			$this->registerBlock($block);
 		}

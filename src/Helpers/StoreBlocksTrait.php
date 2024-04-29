@@ -31,6 +31,9 @@ trait StoreBlocksTrait
 			'outputCssSelectorName' => 'esCssVariables',
 			'outputCssGloballyAdditionalStyles' => [],
 			'useWrapper' => true,
+			'useComponents' => true,
+			'useBlock' => true,
+			'useVariations' => true,
 		],
 		AbstractManifestCache::WRAPPER_KEY => [],
 		AbstractManifestCache::VARIATIONS_KEY => [],
@@ -243,6 +246,21 @@ trait StoreBlocksTrait
 			if (isset($config['useWrapper']) && \gettype($config['useWrapper']) === 'boolean') {
 				Components::setConfigUseWrapper($config['useWrapper']);
 			}
+
+			// useComponents.
+			if (isset($config['useComponents']) && \gettype($config['useComponents']) === 'boolean') {
+				Components::setConfigUseComponents($config['useComponents']);
+			}
+
+			// useBlocks.
+			if (isset($config['useBlocks']) && \gettype($config['useBlocks']) === 'boolean') {
+				Components::setConfigUseBlocks($config['useBlocks']);
+			}
+
+			// useVariations.
+			if (isset($config['useVariations']) && \gettype($config['useVariations']) === 'boolean') {
+				Components::setConfigUseVariations($config['useVariations']);
+			}
 		}
 	}
 
@@ -384,6 +402,84 @@ trait StoreBlocksTrait
 	public static function getConfigUseWrapper(): bool
 	{
 		return self::getConfig()['useWrapper'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useWrapper'];
+	}
+
+	/**
+	 * Set global config value for use components.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseComponents(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useComponents'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use components.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseComponents(): bool
+	{
+		return self::getConfig()['useComponents'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useComponents'];
+	}
+
+	/**
+	 * Set global config value for use blocks.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseBlocks(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useBlocks'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use blocks.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseBlocks(): bool
+	{
+		return self::getConfig()['useBlocks'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useBlocks'];
+	}
+
+	/**
+	 * Set global config value for use variations.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseVariations(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useVariations'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use variations.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseVariations(): bool
+	{
+		return self::getConfig()['useVariations'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useVariations'];
 	}
 
 	/**
