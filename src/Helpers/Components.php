@@ -87,15 +87,11 @@ class Components
 	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
-	 * Note about "parentClass" attribute: If provided, the component will be wrapped with a
-	 * parent BEM selector. For example, if $attributes['parentClass'] === 'header' and $component === 'logo'
-	 * are set, the component will be wrapped with a <div class="header__logo"></div>.
-	 *
-	 * @param string $name Name of the component to render.
+	 * @param string $name Name of the component/template to render.
 	 * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
-	 * @param string $pathName Path to the components directory.
+	 * @param string $pathName getProjectPaths key name used as relative folder path.
 	 * @param bool $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
-	 * @param string $alternativeName Alternative name for the component.
+	 * @param string $prefixPath Prefix path relative to the $pathName.
 	 *
 	 * @throws InvalidPath If the file is missing.
 	 *
@@ -106,19 +102,23 @@ class Components
 		array $attributes = [],
 		string $pathName = 'components',
 		bool $useComponentDefaults = false,
-		string $alternativeName = ''
+		string $prefixPath = ''
 	): string {
+		if (empty($pathName)) {
+			$pathName = 'components';
+		}
+
 		if (!isset(\array_flip(self::PROJECT_RENDER_ALLOWED_NAMES)[$pathName])) {
 			throw InvalidPath::wrongOrNotAllowedParentPathException($pathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
 		}
 
-		$fileName = "{$name}.php";
+		$prefix = $name;
 
-		if (!empty($alternativeName)) {
-			$fileName = "{$alternativeName}.php";
+		if (!empty($prefixPath)) {
+			$prefix = $prefixPath;
 		}
 
-		$path = self::joinPaths([Components::getProjectPaths($pathName), $name, $fileName]);
+		$path = self::joinPaths([Components::getProjectPaths($pathName), $prefix, "{$name}.php"]);
 
 		if (!\file_exists($path)) {
 			throw InvalidPath::missingFileException($path);
