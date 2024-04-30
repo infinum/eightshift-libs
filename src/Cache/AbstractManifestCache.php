@@ -14,6 +14,7 @@ namespace EightshiftLibs\Cache;
 
 use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Abstract class AbstractManifestCache class.
@@ -204,11 +205,23 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 		if (!isset($ignoreCache[self::TYPE_ASSETS])) {
 			$this->setCache(self::TYPE_ASSETS);
+			$this->setAssetsStaticCache();
 		}
 
 		if (!isset($ignoreCache[self::TYPE_GEOLOCATION])) {
 			$this->setCache(self::TYPE_GEOLOCATION);
 		}
+	}
+
+	/**
+	 * Set assets static cache to the store helpers used in view files.
+	 *
+	 * @return void
+	 */
+	protected function setAssetsStaticCache(): void
+	{
+		Helpers::setStore();
+		Helpers::setAssets($this->getManifestCacheTopItem(self::ASSETS_KEY, self::TYPE_ASSETS));
 	}
 
 	/**

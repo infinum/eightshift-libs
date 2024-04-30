@@ -95,7 +95,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 			\sprintf(
 				/* translators: %s is replaced by the path privided */
 				\esc_html__(
-					'You are trying to get manifest.json outside of the Blocks folder. Please review your implementation. Path you are providing is: $s',
+					'You are trying to get manifest.json outside of the Blocks folder. Please review your implementation. Path you are providing is: %s',
 					'eightshift-libs'
 				),
 				$path

@@ -39,6 +39,7 @@ trait StoreBlocksTrait
 		AbstractManifestCache::VARIATIONS_KEY => [],
 		AbstractManifestCache::SETTINGS_KEY => [],
 		AbstractManifestCache::STYLES_KEY => [],
+		AbstractManifestCache::ASSETS_KEY => [],
 	];
 
 	/**
@@ -453,7 +454,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getConfigUseBlocks(): bool
 	{
-		return self::getConfig()['useBlocks'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useBlocks'];
+		return self::getConfig()['useBlocks'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useBlocks'] ?? false;
 	}
 
 	/**
@@ -670,5 +671,43 @@ trait StoreBlocksTrait
 	public static function getStyles(): array
 	{
 		return self::getStore()[AbstractManifestCache::STYLES_KEY] ?? [];
+	}
+
+	/**
+	 * Set assets details.
+	 *
+	 * @param array<mixed> $assets Assets to store.
+	 *
+	 * @return void
+	 */
+	public static function setAssets(array $assets): void
+	{
+		global $esBlocks;
+
+		if (self::getStore()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::ASSETS_KEY][] = $assets;
+		}
+	}
+
+	/**
+	 * Get assets details.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getAssets(): array
+	{
+		return self::getStore()[AbstractManifestCache::ASSETS_KEY] ?? [];
+	}
+
+	/**
+	 * Get asset details.
+	 *
+	 * @param string $asset Asset name to get.
+	 *
+	 * @return string
+	 */
+	public static function getAsset(string $asset): string
+	{
+		return self::getStore()[AbstractManifestCache::ASSETS_KEY][$asset] ?? '';
 	}
 }
