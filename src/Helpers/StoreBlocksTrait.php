@@ -33,7 +33,7 @@ trait StoreBlocksTrait
 			'outputCssGloballyAdditionalStyles' => [],
 			'useWrapper' => true,
 			'useComponents' => true,
-			'useBlock' => true,
+			'useBlocks' => true,
 			'useVariations' => true,
 		],
 		AbstractManifestCache::WRAPPER_KEY => [],
