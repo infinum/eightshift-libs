@@ -12,7 +12,7 @@ namespace EightshiftLibs\Cache;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class ManifestCacheCli
@@ -78,6 +78,6 @@ class ManifestCacheCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'Cache'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Cache'), "{$className}.php", $assocArgs);
 	}
 }

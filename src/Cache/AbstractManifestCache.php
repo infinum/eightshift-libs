@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cache;
 
 use EightshiftLibs\Exception\InvalidManifest;
-use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -286,6 +285,12 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 				self::SETTINGS_KEY => [
 					'path' => 'blocksDestination',
 					'multiple' => false,
+					'validation' => [
+						'$schema',
+						'namespace',
+						'background',
+						'foreground',
+					],
 				],
 				self::BLOCKS_KEY => [
 					'path' => 'blocksDestinationCustom',
@@ -296,19 +301,47 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 						'attributes' => 'array',
 						'hasInnerBlocks' => 'boolean',
 					],
+					'validation' => [
+						'blockName',
+						'namespace',
+						'blockFullName',
+						'keywords',
+						'icon',
+						'category',
+						'description',
+						'title',
+						'$schema',
+					],
 				],
 				self::COMPONENTS_KEY => [
 					'path' => 'blocksDestinationComponents',
 					'multiple' => true,
 					'id' => 'componentName',
+					'validation' => [
+						'componentName',
+						'$schema',
+						'title',
+					],
 				],
 				self::VARIATIONS_KEY => [
 					'path' => 'blocksDestinationVariations',
 					'id' => 'name',
 					'multiple' => true,
+					'validation' => [
+						'name',
+						'$schema',
+						'parentName',
+						'title',
+						'icon',
+						'description',
+					],
 				],
 				self::WRAPPER_KEY => [
 					'path' => 'blocksDestinationWrapper',
+					'validation' => [
+						'$schema',
+						'title'
+					],
 				],
 			],
 			self::TYPE_ASSETS => [
@@ -357,6 +390,8 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 * @param string $path Path to the item.
 	 * @param array<mixed> $data Data array.
 	 * @param string $parent Parent key.
+	 *
+	 * @throws InvalidManifest If manifest key is missing.
 	 *
 	 * @return array<string, mixed> Item.
 	 */
@@ -410,6 +445,16 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			case self::SETTINGS_KEY:
 				$this->blocksNamespace = $fileDecoded['namespace'] ?? '';
 				break;
+		}
+
+		$validation = $data['validation'] ?? [];
+
+		if ($validation) {
+			foreach ($validation as $key) {
+				if (!isset($fileDecoded[$key])) {
+					throw InvalidManifest::missingManifestKeyException($key, $path);
+				}
+			}
 		}
 
 		return $fileDecoded;
@@ -467,10 +512,10 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		$pathCustom = $data['pathCustom'] ?? '';
 		$fileName = $data['fileName'] ?? 'manifest.json';
 
-		$realPath = Components::getProjectPaths($path);
+		$realPath = Helpers::getProjectPaths($path);
 
 		if (!\is_dir($realPath)) {
-			$realPath = Components::getProjectPaths($pathAlternative);
+			$realPath = Helpers::getProjectPaths($pathAlternative);
 		}
 
 		if ($pathCustom) {
@@ -478,9 +523,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		}
 
 		if (!$name) {
-			return Components::joinPaths([$realPath, $fileName]);
+			return Helpers::joinPaths([$realPath, $fileName]);
 		}
 
-		return Components::joinPaths([$realPath, $name, $fileName]);
+		return Helpers::joinPaths([$realPath, $name, $fileName]);
 	}
 }

@@ -115,14 +115,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getBlock(string $block): array
 	{
-		$blocks = \array_filter(
-			self::getBlocks(),
-			static function ($item) use ($block) {
-				return $item['blockName'] === $block;
-			}
-		);
-
-		return \reset($blocks) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		return self::getBlocks()[$block] ?? [];
 	}
 
 	/**
@@ -155,18 +148,12 @@ trait StoreBlocksTrait
 	 * Get component details.
 	 *
 	 * @param string $component Componennt name to get.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getComponent(string $component): array
 	{
-		$components = \array_filter(
-			self::getComponents(),
-			static function ($item) use ($component) {
-				return $item['componentName'] === $component;
-			}
-		);
-
-		return \reset($components) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		return self::getComponents()[$component] ?? [];
 	}
 
 	/**
@@ -199,18 +186,12 @@ trait StoreBlocksTrait
 	 * Get variation details.
 	 *
 	 * @param string $variation Variation name to get.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getVariation(string $variation): array
 	{
-		$variations = \array_filter(
-			self::getVariations(),
-			static function ($item) use ($variation) {
-				return $item['name'] === $variation;
-			}
-		);
-
-		return \reset($variations) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		return self::getVariations()[$variation] ?? [];
 	}
 
 	/**
@@ -708,6 +689,6 @@ trait StoreBlocksTrait
 	 */
 	public static function getAsset(string $asset): string
 	{
-		return self::getStore()[AbstractManifestCache::ASSETS_KEY][$asset] ?? '';
+		return self::getAssets()[$asset] ?? '';
 	}
 }
