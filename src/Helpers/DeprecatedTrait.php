@@ -78,7 +78,7 @@ trait DeprecatedTrait
 
 		\ob_start();
 
-		require $path;
+		include $path;
 
 		return \trim((string) \ob_get_clean());
 	}

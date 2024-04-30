@@ -87,60 +87,81 @@ class Helpers
 		'srcDestination',
 		'themeRoot',
 		'pluginRoot',
+		'blocksDestination',
 	];
 
 	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
-	 * @param string $name Name of the component/template to render.
-	 * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
-	 * @param string $pathName getProjectPaths key name used as relative folder path.
-	 * @param bool $useComponentDefaults If true the helper will fetch component manifest and merge default attributes in the original attributes list.
-	 * @param string $prefixPath Prefix path relative to the $pathName.
+	 * @param string $renderName The name of the component to render.
+	 * @param array<string, mixed> $renderAttributes The attributes to pass to the component.
+	 * @param string $renderPathName The path name where the component is located.
+	 * @param bool $renderUseComponentDefaults Should we use the default attributes from the component.
+	 * @param string $renderPrefixPath The prefix path to the component.
+	 * @param string $renderContent The content to pass to the component.
 	 *
 	 * @throws InvalidPath If the file is missing.
 	 *
 	 * @return string
 	 */
 	public static function render(
-		string $name,
-		array $attributes = [],
-		string $pathName = 'components',
-		bool $useComponentDefaults = false,
-		string $prefixPath = ''
+		string $renderName,
+		array $renderAttributes = [],
+		string $renderPathName = 'components',
+		bool $renderUseComponentDefaults = false,
+		string $renderPrefixPath = '',
+		string $renderContent = ''
 	): string {
-		if (empty($pathName)) {
-			$pathName = 'components';
+		if (empty($renderPathName)) {
+			$renderPathName = 'components';
 		}
 
-		if (!isset(\array_flip(self::PROJECT_RENDER_ALLOWED_NAMES)[$pathName])) {
-			throw InvalidPath::wrongOrNotAllowedParentPathException($pathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
+		if ($renderName === 'wrapper') {
+			$renderPathName = 'blocksDestination';
 		}
 
-		$prefix = $name;
-
-		if (!empty($prefixPath)) {
-			$prefix = $prefixPath;
+		if (!isset(\array_flip(self::PROJECT_RENDER_ALLOWED_NAMES)[$renderPathName])) {
+			throw InvalidPath::wrongOrNotAllowedParentPathException($renderPathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
 		}
 
-		$path = self::joinPaths([Helpers::getProjectPaths($pathName), $prefix, "{$name}.php"]);
+		$renderPrefix = $renderName;
 
-		if (!\file_exists($path)) {
-			throw InvalidPath::missingFileException($path);
+		if (!empty($renderPrefixPath)) {
+			$renderPrefix = $renderPrefixPath;
 		}
 
-		if ($useComponentDefaults) {
-			$manifest = Helpers::getComponent($name);
+		$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefix, "{$renderName}.php"]);
+
+		if (!\file_exists($renderPath)) {
+			throw InvalidPath::missingFileException($renderPath);
 		}
 
 		// Merge default attributes with the component attributes.
-		if ($useComponentDefaults && isset($manifest['attributes'])) {
-			$attributes = Helpers::getDefaultRenderAttributes($manifest, $attributes);
+		if ($renderUseComponentDefaults) {
+			$renderAttributes = Helpers::getDefaultRenderAttributes(Helpers::getComponent($renderName), $renderAttributes);
 		}
 
 		\ob_start();
 
-		include $path;
+		// Allowed variables are $attributes, $renderAttributes, $renderContent, $renderPath.
+		$attributes = $renderAttributes;
+
+		unset(
+			$renderName,
+			$renderPathName,
+			$renderUseComponentDefaults,
+			$renderPrefixPath,
+			$renderPrefix
+		);
+
+		include $renderPath;
+
+		unset(
+			$renderAttributes,
+			$attributes,
+			$renderContent,
+			$renderPath
+		);
 
 		return \trim((string) \ob_get_clean());
 	}

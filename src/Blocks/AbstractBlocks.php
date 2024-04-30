@@ -14,7 +14,6 @@ namespace EightshiftLibs\Blocks;
 use EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftLibs\Exception\InvalidBlock;
-use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use WP_Block_Editor_Context;
@@ -189,46 +188,35 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
-	 * @throws InvalidPath Throws error if file doesn't exist.
-	 *
 	 * @return string Html template for block.
 	 */
 	public function render(array $attributes, string $innerBlockContent): string
 	{
-		// Block details is unavailable in this method so we are fetching block name via attributes.
-		$blockName = $attributes['blockName'] ?? '';
-
 		// Get block view path.
-		$sep = \DIRECTORY_SEPARATOR;
-		$templatePath = Helpers::getProjectPaths('blocksDestinationCustom', "{$blockName}{$sep}{$blockName}.php");
+		$blockOutpout = Helpers::render(
+			$attributes['blockName'] ?? '',
+			$attributes,
+			'blocks',
+			false,
+			'',
+			$innerBlockContent
+		);
 
 		// Get block wrapper view path.
 		if (Helpers::getConfigUseWrapper()) {
-			$wrapperPath = Helpers::getProjectPaths('blocksDestinationWrapper', 'wrapper.php');
-
-			// Check if wrapper component exists.
-			if (!\file_exists($wrapperPath)) {
-				throw InvalidPath::missingFileWithExampleException($wrapperPath, 'wrapper.php');
-			}
-
-			// Check if actual block exists.
-			if (!\file_exists($templatePath)) {
-				throw InvalidPath::missingFileWithExampleException($templatePath, "{$blockName}.php");
-			}
-
-			// If everything is ok, return the contents of the template (return, NOT echo).
-			\ob_start();
-			include $wrapperPath;
-			$output = \ob_get_clean();
+			echo Helpers::render( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				'wrapper',
+				$attributes,
+				'wrapper',
+				false,
+				'',
+				$blockOutpout
+			);
 		} else {
-			\ob_start();
-			include $templatePath;
-			$output = \ob_get_clean();
+			echo $blockOutpout; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		}
 
-		unset($blockName, $templatePath, $wrapperPath, $attributes, $innerBlockContent);
-
-		return (string)$output;
+		return '';
 	}
 
 	/**
@@ -255,30 +243,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				],
 			]
 		);
-	}
-
-	/**
-	 * Locate and return template part with passed attributes for wrapper.
-	 *
-	 * Used to render php block wrapper view.
-	 *
-	 * @param string $src String with URL path to template.
-	 * @param array<string, mixed> $attributes Attributes array to pass in template.
-	 * @param string|null $innerBlockContent If using inner blocks content pass the data.
-	 *
-	 * @throws InvalidPath Throws error if file doesn't exist.
-	 *
-	 * @return void Includes an HTML view, or throws an error if the view is missing.
-	 */
-	public function renderWrapperView(string $src, array $attributes, ?string $innerBlockContent = null): void
-	{
-		if (!\file_exists($src)) {
-			throw InvalidPath::missingFileWithExampleException($src, 'wrapper.php');
-		}
-
-		include $src;
-
-		unset($src, $attributes, $innerBlockContent);
 	}
 
 	/**
