@@ -37,4 +37,24 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 			)
 		);
 	}
+
+	/**
+	 * Throws error if missing item.
+	 *
+	 * @param string $name Block/component name.
+	 * @param string $type Type of the item.
+	 *
+	 * @return static
+	 */
+	public static function missingItemException(string $name, string $type): InvalidBlock
+	{
+		return new InvalidBlock(
+			\sprintf(
+				/* translators: %1$s is going to be replaced with the component/block name, %2$s with type. */
+				\esc_html__('You are trying to get %1$s %2$s. Please check if you have it in your project.', 'eightshift-libs'),
+				$name,
+				$type
+			)
+		);
+	}
 }

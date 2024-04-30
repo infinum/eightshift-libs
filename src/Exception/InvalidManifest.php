@@ -53,7 +53,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 			\sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
-					'Manifest.json in this %s is empty or has errors. Please check your data.',
+					'Manifest.json in %s path is empty or has errors. Please check your data.',
 					'eightshift-libs'
 				),
 				$path
@@ -74,7 +74,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 			\sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
-					'Manifest.json in missing in this %s path. Please check your data.',
+					'Manifest.json in missing in %s path. Please check your data.',
 					'eightshift-libs'
 				),
 				$path

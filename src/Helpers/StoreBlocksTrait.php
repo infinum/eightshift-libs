@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Exception\InvalidBlock;
 
 /**
  * Class StoreTrait Helper
@@ -99,15 +100,19 @@ trait StoreBlocksTrait
 	/**
 	 * Get blocks details.
 	 *
+	 * @throws InvalidBlock If blocks are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getBlocks(): array
 	{
-		return self::getStore()[AbstractManifestCache::BLOCKS_KEY] ?? [];
+		return self::getStore()[AbstractManifestCache::BLOCKS_KEY] ?? throw InvalidBlock::missingItemException('project', 'blocks');
 	}
 
 	/**
 	 * Get block details.
+	 *
+	 * @throws InvalidBlock If block is missing.
 	 *
 	 * @param string $block Block name to get.
 	 *
@@ -115,7 +120,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getBlock(string $block): array
 	{
-		return self::getBlocks()[$block] ?? [];
+		return self::getBlocks()[$block] ?? throw InvalidBlock::missingItemException($block, 'block');
 	}
 
 	/**
@@ -137,11 +142,13 @@ trait StoreBlocksTrait
 	/**
 	 * Get components details.
 	 *
+	 * @throws InvalidBlock If components are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getComponents(): array
 	{
-		return self::getStore()[AbstractManifestCache::COMPONENTS_KEY] ?? [];
+		return self::getStore()[AbstractManifestCache::COMPONENTS_KEY] ?? throw InvalidBlock::missingItemException('blocks', 'components');
 	}
 
 	/**
@@ -149,11 +156,13 @@ trait StoreBlocksTrait
 	 *
 	 * @param string $component Componennt name to get.
 	 *
+	 * @throws InvalidBlock If component is missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getComponent(string $component): array
 	{
-		return self::getComponents()[$component] ?? [];
+		return self::getComponents()[$component] ?? throw InvalidBlock::missingItemException($component, 'component');
 	}
 
 	/**
@@ -175,11 +184,13 @@ trait StoreBlocksTrait
 	/**
 	 * Get variations details.
 	 *
+	 * @throws InvalidBlock If variations are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getVariations(): array
 	{
-		return self::getStore()[AbstractManifestCache::VARIATIONS_KEY] ?? [];
+		return self::getStore()[AbstractManifestCache::VARIATIONS_KEY] ?? throw InvalidBlock::missingItemException('blocks', 'variations');
 	}
 
 	/**
@@ -187,11 +198,13 @@ trait StoreBlocksTrait
 	 *
 	 * @param string $variation Variation name to get.
 	 *
+	 * @throws InvalidBlock If variation is missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getVariation(string $variation): array
 	{
-		return self::getVariations()[$variation] ?? [];
+		return self::getVariations()[$variation] ?? throw InvalidBlock::missingItemException($variation, 'variation');
 	}
 
 	/**
@@ -483,11 +496,13 @@ trait StoreBlocksTrait
 	/**
 	 * Get wrapper details.
 	 *
+	 * @throws InvalidBlock If wrapper is missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getWrapper(): array
 	{
-		return self::getStore()[AbstractManifestCache::WRAPPER_KEY] ?? [];
+		return self::getStore()[AbstractManifestCache::WRAPPER_KEY] ?? throw InvalidBlock::missingItemException('blocks wrapper', 'component');
 	}
 
 	/**
@@ -519,11 +534,13 @@ trait StoreBlocksTrait
 	/**
 	 * Get global settings details.
 	 *
+	 * @throws InvalidBlock If settings are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getSettings(): array
 	{
-		return self::getStore()[AbstractManifestCache::SETTINGS_KEY] ?? [];
+		return self::getStore()[AbstractManifestCache::SETTINGS_KEY] ?? throw InvalidBlock::missingItemException('block', 'global settings');
 	}
 
 	/**
@@ -666,18 +683,20 @@ trait StoreBlocksTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()][AbstractManifestCache::ASSETS_KEY][] = $assets;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::ASSETS_KEY] = $assets;
 		}
 	}
 
 	/**
 	 * Get assets details.
 	 *
+	 * @throws InvalidBlock If assets are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getAssets(): array
 	{
-		return self::getStore()[AbstractManifestCache::ASSETS_KEY] ?? [];
+		return self::getStore()[AbstractManifestCache::ASSETS_KEY] ?? throw InvalidBlock::missingItemException('public', 'assets');
 	}
 
 	/**
@@ -685,10 +704,12 @@ trait StoreBlocksTrait
 	 *
 	 * @param string $asset Asset name to get.
 	 *
+	 * @throws InvalidBlock If asset is missing.
+	 *
 	 * @return string
 	 */
 	public static function getAsset(string $asset): string
 	{
-		return self::getAssets()[$asset] ?? '';
+		return self::getAssets()[$asset] ?? throw InvalidBlock::missingItemException($asset, 'public asset');
 	}
 }
