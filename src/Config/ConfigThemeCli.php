@@ -82,14 +82,15 @@ class ConfigThemeCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
+		$newName = 'Config';
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $className)
-			->renameClassName($className)
+			->renameClassName($newName)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs);
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$className}.php", $assocArgs);
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$newName}.php", $assocArgs);
 	}
 }
