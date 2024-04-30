@@ -514,7 +514,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 		$realPath = Helpers::getProjectPaths($path);
 
-		if (!\is_dir($realPath)) {
+		if (!\is_dir($realPath) && $pathAlternative) {
 			$realPath = Helpers::getProjectPaths($pathAlternative);
 		}
 
