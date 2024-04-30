@@ -106,7 +106,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getBlocks(): array
 	{
-		return self::getStore()[AbstractManifestCache::BLOCKS_KEY] ?? throw InvalidBlock::missingItemException('project', 'blocks');
+		$output = self::getStore()[AbstractManifestCache::BLOCKS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('project', 'blocks');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -120,7 +126,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getBlock(string $block): array
 	{
-		return self::getBlocks()[$block] ?? throw InvalidBlock::missingItemException($block, 'block');
+		$output = self::getBlocks()[$block] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException($block, 'block');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -148,7 +160,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getComponents(): array
 	{
-		return self::getStore()[AbstractManifestCache::COMPONENTS_KEY] ?? throw InvalidBlock::missingItemException('blocks', 'components');
+		$output = self::getStore()[AbstractManifestCache::COMPONENTS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('project', 'components');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -162,7 +180,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getComponent(string $component): array
 	{
-		return self::getComponents()[$component] ?? throw InvalidBlock::missingItemException($component, 'component');
+		$output = self::getComponents()[$component] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException($component, 'component');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -190,7 +214,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getVariations(): array
 	{
-		return self::getStore()[AbstractManifestCache::VARIATIONS_KEY] ?? throw InvalidBlock::missingItemException('blocks', 'variations');
+		$output = self::getStore()[AbstractManifestCache::VARIATIONS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('project', 'variations');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -204,7 +234,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getVariation(string $variation): array
 	{
-		return self::getVariations()[$variation] ?? throw InvalidBlock::missingItemException($variation, 'variation');
+		$output = self::getVariations()[$variation] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException($variation, 'variation');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -502,7 +538,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getWrapper(): array
 	{
-		return self::getStore()[AbstractManifestCache::WRAPPER_KEY] ?? throw InvalidBlock::missingItemException('blocks wrapper', 'component');
+		$output = self::getStore()[AbstractManifestCache::WRAPPER_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('blocks wrapper', 'component');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -540,7 +582,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getSettings(): array
 	{
-		return self::getStore()[AbstractManifestCache::SETTINGS_KEY] ?? throw InvalidBlock::missingItemException('block', 'global settings');
+		$output = self::getStore()[AbstractManifestCache::SETTINGS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('project', 'global settings');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -696,7 +744,13 @@ trait StoreBlocksTrait
 	 */
 	public static function getAssets(): array
 	{
-		return self::getStore()[AbstractManifestCache::ASSETS_KEY] ?? throw InvalidBlock::missingItemException('public', 'assets');
+		$output = self::getStore()[AbstractManifestCache::ASSETS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('public', 'assets');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -710,6 +764,12 @@ trait StoreBlocksTrait
 	 */
 	public static function getAsset(string $asset): string
 	{
-		return self::getAssets()[$asset] ?? throw InvalidBlock::missingItemException($asset, 'public asset');
+		$output = self::getAssets()[$asset] ?? '';
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException($asset, 'public asset');
+		}
+
+		return $output;
 	}
 }
