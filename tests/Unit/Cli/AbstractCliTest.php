@@ -166,8 +166,6 @@ test('Getting vendor prefix works correctly if set', function() {
 test('Replacing use in frontend libs views works', function() {
 	$abstractMock = new AbstractTest('test');
 
-	$abstractMock->renameUseFrontendLibs([]);
-
 	$reflection = new ReflectionClass($abstractMock);
 	$property = $reflection->getProperty('fileContents');
 	$property->setAccessible(true);

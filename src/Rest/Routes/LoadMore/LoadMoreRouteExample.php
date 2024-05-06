@@ -3,17 +3,17 @@
 /**
  * The class register load more route.
  *
- * @package EightshiftBoilerplate\Rest\Routes\LoadMore
+ * @package %namespace%\Rest\Routes\LoadMore
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Rest\Routes\LoadMore;
+namespace %namespace%\Rest\Routes\LoadMore;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Helpers\Components;
-use EightshiftLibs\Rest\CallableRouteInterface;
-use EightshiftLibs\Rest\Routes\AbstractRoute;
+use %namespace%\Config\Config;
+use %useLibs%\Helpers\Components;
+use %useLibs%\Rest\CallableRouteInterface;
+use %useLibs%\Rest\Routes\AbstractRoute;
 use WP_Error;
 use WP_Query;
 use WP_REST_Request;

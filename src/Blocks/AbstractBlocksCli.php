@@ -168,7 +168,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 					$class->renameProjectName($args)
 						->renameNamespace($args)
 						->renameTextDomainFrontendLibs($args)
-						->renameUseFrontendLibs($args)
 						->outputWrite($fullDestination, $innerItem, [
 							'skip_existing' => true,
 							'groupOutput' => true,

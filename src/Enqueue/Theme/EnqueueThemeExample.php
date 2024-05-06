@@ -3,15 +3,15 @@
 /**
  * The Theme/Frontend Enqueue specific functionality.
  *
- * @package EightshiftBoilerplate\Enqueue\Theme
+ * @package %namespace%\Enqueue\Theme
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Enqueue\Theme;
+namespace %namespace%\Enqueue\Theme;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
+use %namespace%\Config\Config;
+use %useLibs%\Enqueue\Theme\AbstractEnqueueTheme;
 
 /**
  * Class EnqueueThemeExample

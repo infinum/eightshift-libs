@@ -3,14 +3,14 @@
 /**
  * The Blog_Taxonomy specific functionality.
  *
- * @package EightshiftBoilerplate\CustomTaxonomy
+ * @package %namespace%\CustomTaxonomy
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\CustomTaxonomy;
+namespace %namespace%\CustomTaxonomy;
 
-use EightshiftLibs\CustomTaxonomy\AbstractTaxonomy;
+use %useLibs%\CustomTaxonomy\AbstractTaxonomy;
 
 /**
  * Class TaxonomyExample

@@ -3,13 +3,13 @@
 /**
  * The EscapedViewExample specific functionality.
  *
- * @package EightshiftBoilerplate\View
+ * @package %namespace%\View
  */
 
-namespace EightshiftBoilerplate\View;
+namespace %namespace%\View;
 
-use EightshiftLibs\Services\ServiceInterface;
-use EightshiftLibs\View\AbstractEscapedView;
+use %useLibs%\Services\ServiceInterface;
+use %useLibs%\View\AbstractEscapedView;
 
 /**
  * Class EscapedViewExample

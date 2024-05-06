@@ -3,14 +3,14 @@
 /**
  * File that holds class for PostTypeExample custom post type registration.
  *
- * @package EightshiftBoilerplate\CustomPostType
+ * @package %namespace%\CustomPostType
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\CustomPostType;
+namespace %namespace%\CustomPostType;
 
-use EightshiftLibs\CustomPostType\AbstractPostType;
+use %useLibs%\CustomPostType\AbstractPostType;
 
 /**
  * Class PostTypeExample.

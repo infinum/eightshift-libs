@@ -3,14 +3,14 @@
 /**
  * Class that adds Analytics and GDPR capability.
  *
- * @package EightshiftBoilerplate\AnalyticsGdpr
+ * @package %namespace%\AnalyticsGdpr
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\AnalyticsGdpr;
+namespace %namespace%\AnalyticsGdpr;
 
-use EightshiftLibs\Services\ServiceInterface;
+use %useLibs%\Services\ServiceInterface;
 
 /**
  * Class AnalyticsGdprExample

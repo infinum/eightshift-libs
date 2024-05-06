@@ -3,15 +3,15 @@
 /**
  * The file that defines a project config details like prefix, absolute path and etc.
  *
- * @package EightshiftBoilerplate\Cache
+ * @package %namespace%\Cache
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Cache;
+namespace %namespace%\Cache;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Cache\AbstractManifestCache;
+use %namespace%\Config\Config;
+use %useLibs%\Cache\AbstractManifestCache;
 
 /**
  * The project config class.

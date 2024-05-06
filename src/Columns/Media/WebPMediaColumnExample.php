@@ -3,15 +3,15 @@
 /**
  * File that holds class for WebP Media Column registration.
  *
- * @package EightshiftBoilerplate\CustomMeta
+ * @package %namespace%\CustomMeta
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Columns\Media;
+namespace %namespace%\Columns\Media;
 
-use EightshiftLibs\Columns\Media\AbstractMediaColumns;
-use EightshiftLibs\Helpers\Components;
+use %useLibs%\Columns\Media\AbstractMediaColumns;
+use %useLibs%\Helpers\Components;
 
 /**
  * Class WebP Media Column.

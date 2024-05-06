@@ -3,14 +3,14 @@
 /**
  * File that holds class for admin menu example.
  *
- * @package EightshiftBoilerplate\AdminMenus
+ * @package %namespace%\AdminMenus
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\AdminMenus;
+namespace %namespace%\AdminMenus;
 
-use EightshiftLibs\AdminMenus\AbstractAdminMenu;
+use %useLibs%\AdminMenus\AbstractAdminMenu;
 
 /**
  * AdminMenuExample class.

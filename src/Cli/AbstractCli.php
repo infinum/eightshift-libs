@@ -432,25 +432,11 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameNamespace(array $args = []): self
 	{
-		$output = $this->fileContents;
-		$namespace = $this->getNamespace($args);
-		$vendorPrefix = $this->getVendorPrefix($args);
-
-		if (\getenv('ES_TEST')) {
-			$output = \str_replace(
-				'namespace EightshiftBoilerplate\\',
-				"namespace {$namespace}\\",
-				$output
-			);
-		} else {
-			$output = \str_replace(
-				"namespace {$vendorPrefix}\EightshiftBoilerplate\\",
-				"namespace {$namespace}\\",
-				$output
-			);
-		}
-
-		$this->fileContents = $output;
+		$this->fileContents = \str_replace(
+			'%namespace%',
+			$this->getNamespace($args),
+			$this->fileContents
+		);
 
 		return $this;
 	}
@@ -464,81 +450,11 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameUse(array $args = []): self
 	{
-		$output = $this->fileContents;
-
-		$vendorPrefix = $this->getVendorPrefix($args);
-		$namespace = $this->getNamespace($args);
-
-		$prefixUse = 'use';
-		$prefixPackage = '@package';
-
-		if (\getenv('ES_TEST')) {
-			$output = \str_replace(
-				"{$prefixUse} EightshiftBoilerplate\\",
-				"{$prefixUse} {$namespace}\\",
-				$output
-			);
-		} else {
-			$output = \str_replace(
-				"{$prefixUse} EightshiftBoilerplateVendor\\",
-				"{$prefixUse} {$vendorPrefix}\\",
-				$output
-			);
-
-			$output = \str_replace(
-				"{$prefixUse} {$vendorPrefix}\EightshiftBoilerplate\\",
-				"{$prefixUse} {$namespace}\\",
-				$output
-			);
-		}
-
-		$output = \str_replace(
-			"{$prefixPackage} EightshiftBoilerplate",
-			"{$prefixPackage} {$namespace}",
-			$output
+		$this->fileContents = \str_replace(
+			'%useLibs%',
+			"{$this->getVendorPrefix($args)}\EightshiftLibs",
+			$this->fileContents
 		);
-
-		$this->fileContents = $output;
-
-		return $this;
-	}
-
-	/**
-	 * Replace use in frontend libs views.
-	 *
-	 * @param array<string, mixed> $args CLI args array.
-	 *
-	 * @return AbstractCli Current CLI class.
-	 */
-	public function renameUseFrontendLibs(array $args = []): self
-	{
-		$output = $this->fileContents;
-
-		$vendorPrefix = $this->getVendorPrefix($args);
-		$namespace = $this->getNamespace($args);
-
-		$prefixUse = 'use';
-		$prefixPackage = '@package';
-
-		$output = \str_replace(
-			"{$prefixUse} EightshiftBoilerplateVendor\\",
-			"{$prefixUse} {$vendorPrefix}\\",
-			$output
-		);
-
-		$output = \str_replace(
-			"{$prefixUse} EightshiftBoilerplate\\",
-			"{$prefixUse} {$namespace}\\",
-			$output
-		);
-
-		$output = \str_replace(
-			"{$prefixPackage} EightshiftBoilerplate",
-			"{$prefixPackage} {$namespace}",
-			$output
-		);
-
-		$this->fileContents = $output;
 
 		return $this;
 	}
@@ -552,11 +468,9 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameTextDomain(array $args = []): self
 	{
-		$namespace = Components::camelToKebabCase($this->getNamespace($args));
-
 		$this->fileContents = \str_replace(
-			'eightshift-libs',
-			$namespace,
+			'%textdomain%',
+			Components::camelToKebabCase($this->getNamespace($args)),
 			$this->fileContents
 		);
 
@@ -606,35 +520,6 @@ abstract class AbstractCli implements CliInterface
 		$this->fileContents = \str_replace(
 			'eightshift-boilerplate',
 			$projectName,
-			$this->fileContents
-		);
-
-		return $this;
-	}
-
-	/**
-	 * Replace project file type
-	 *
-	 * @param array<string, mixed> $args CLI args array.
-	 *
-	 * @return AbstractCli Current CLI class.
-	 */
-	public function renameProjectType(array $args = []): self
-	{
-		$projectType = 'themes';
-
-		// Don't use this option on the tests.
-		if (!\getenv('ES_TEST')) {
-			$projectType = \basename(Components::getProjectPaths('wpContent'));
-		}
-
-		if (isset($args['project_type'])) {
-			$projectType = $args['project_type'];
-		}
-
-		$this->fileContents = \str_replace(
-			'themes',
-			$projectType,
 			$this->fileContents
 		);
 
@@ -715,10 +600,10 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getComposer(array $args = []): array
 	{
-		if (!isset($args['config_path'])) {
-			$composerPath = Components::getProjectPaths('root', 'composer.json');
-		} else {
-			$composerPath = $args['config_path'];
+		$composerPath = $args['config_path'] ?? '';
+
+		if (!$composerPath) {
+			$composerPath = Components::getProjectPaths(\getenv('ES_TEST') ? 'testsData' : 'root', 'composer.json');
 		}
 
 		$composerFile = \file_get_contents($composerPath);
@@ -739,13 +624,9 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getNamespace(array $args = []): string
 	{
-		$namespace = '';
+		$namespace = $args['namespace'] ?? '';
 
-		if (isset($args['namespace'])) {
-			$namespace = $args['namespace'];
-		}
-
-		if (empty($namespace)) {
+		if (!$namespace) {
 			$composer = $this->getComposer($args);
 
 			$namespace = \rtrim(\array_key_first($composer['autoload']['psr-4']), '\\');
@@ -763,16 +644,12 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getVendorPrefix(array $args = []): string
 	{
-		$vendorPrefix = '';
+		$vendorPrefix = $args['vendor_prefix'] ?? '';
 
-		if (isset($args['vendor_prefix'])) {
-			$vendorPrefix = $args['vendor_prefix'];
-		}
-
-		if (empty($vendorPrefix)) {
+		if (!$vendorPrefix) {
 			$composer = $this->getComposer($args);
 
-			$vendorPrefix = $composer['extra']['imposter']['namespace'] ?? 'EightshiftLibs';
+			$vendorPrefix = $composer['extra']['strauss']['namespace_prefix'] ?? '';
 		}
 
 		return $vendorPrefix;

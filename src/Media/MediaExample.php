@@ -3,14 +3,14 @@
 /**
  * The Media specific functionality.
  *
- * @package EightshiftBoilerplate\Media
+ * @package %namespace%\Media
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Media;
+namespace %namespace%\Media;
 
-use EightshiftLibs\Media\AbstractMedia;
+use %useLibs%\Media\AbstractMedia;
 
 /**
  * Class MediaExample

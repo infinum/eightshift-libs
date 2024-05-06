@@ -4,14 +4,14 @@
  * Class Blocks is the base class for Gutenberg blocks registration.
  * It provides the ability to register custom blocks using manifest.json.
  *
- * @package EightshiftBoilerplate\Blocks
+ * @package %namespace%\Blocks
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Blocks;
+namespace %namespace%\Blocks;
 
-use EightshiftLibs\Blocks\AbstractBlocks;
+use %useLibs%\Blocks\AbstractBlocks;
 
 /**
  * Class Blocks

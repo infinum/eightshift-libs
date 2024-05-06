@@ -3,14 +3,14 @@
 /**
  * Modify WordPress admin behavior
  *
- * @package EightshiftBoilerplate\ModifyAdminAppearance
+ * @package %namespace%\ModifyAdminAppearance
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\ModifyAdminAppearance;
+namespace %namespace%\ModifyAdminAppearance;
 
-use EightshiftLibs\Services\ServiceInterface;
+use %useLibs%\Services\ServiceInterface;
 
 /**
  * Class that modifies some administrator appearance

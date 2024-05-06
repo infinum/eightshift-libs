@@ -6,14 +6,14 @@
  * A class definition that includes attributes and functions used across both the
  * public side of the site and the admin area.
  *
- * @package EightshiftBoilerplate\Config
+ * @package %namespace%\Config
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Config;
+namespace %namespace%\Config;
 
-use EightshiftLibs\Helpers\Helpers;
+use %useLibs%\Helpers\Helpers;
 
 /**
  * The project config class.

@@ -3,15 +3,15 @@
 /**
  * File that holds class for reusable blocks header/footer example.
  *
- * @package EightshiftBoilerplate\AdminMenus
+ * @package %namespace%\AdminMenus
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\AdminMenus;
+namespace %namespace%\AdminMenus;
 
-use EightshiftLibs\AdminMenus\AbstractAdminMenu;
-use EightshiftLibs\Helpers\Components;
+use %useLibs%\AdminMenus\AbstractAdminMenu;
+use %useLibs%\Helpers\Components;
 use WP_Query;
 
 /**
