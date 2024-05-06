@@ -3,14 +3,14 @@
 /**
  * The Blog_Taxonomy specific functionality.
  *
- * @package EightshiftBoilerplate\CustomTaxonomy
+ * @package %g_namespace%\CustomTaxonomy
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\CustomTaxonomy;
+namespace %g_namespace%\CustomTaxonomy;
 
-use EightshiftLibs\CustomTaxonomy\AbstractTaxonomy;
+use %g_use_libs%\CustomTaxonomy\AbstractTaxonomy;
 
 /**
  * Class TaxonomyExample
@@ -71,12 +71,12 @@ class TaxonomyExample extends AbstractTaxonomy
 				'name' => esc_html_x(
 					'%label%',
 					'taxonomy plural name',
-					'eightshift-libs'
+					'%g_textdomain%'
 				),
 				'singular_name' => esc_html_x(
 					'%plural_label%',
 					'taxonomy singular name',
-					'eightshift-libs'
+					'%g_textdomain%'
 				),
 			],
 			// phpcs:enable

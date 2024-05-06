@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Abstract class used for Blocks and Components
@@ -113,8 +113,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 				);
 			}
 
-			$fullSource = Components::joinPaths([$source, $item]);
-			$fullDestination = Components::joinPaths([$destination, $item]);
+			$fullSource = Helpers::joinPaths([$source, $item]);
+			$fullDestination = Helpers::joinPaths([$destination, $item]);
 
 			if ($isSingleFolder) {
 				$fullSource = $source;
@@ -125,9 +125,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, and shorten cli path.
-						"%s files exist on this path: `%s`. If you want to override the destination folder please use --skip_existing='true' argument.",
+						"%s files exist on this path: `%s`. If you want to override the destination folder please use --%s='true' argument.",
 						$type,
-						$this->getShortenCliPathOutput($fullDestination)
+						$this->getShortenCliPathOutput($fullDestination),
+						AbstractCli::ARG_SKIP_EXISTING
 					)
 				);
 			}
@@ -139,25 +140,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$this->copyRecursively($fullSource, $fullDestination);
 			}
 
-			$partialsOutput = [];
-			$partialsPath = Components::joinPaths([$fullDestination, 'partials']);
-
-			// Check if we have partials folder. If so output that folder with items in it.
-			if (\is_dir($partialsPath)) {
-				$partials = \array_diff(\scandir($partialsPath), ['..', '.']);
-				$partials = \array_values($partials);
-
-				$partialsOutput = \array_map(
-					static function ($item) use ($sep) {
-						return "partials{$sep}{$item}";
-					},
-					$partials
-				);
-			}
-
 			$innerItems = \array_merge(
-				$this->getFullBlocksFiles($item),
-				$partialsOutput
+				$this->getFullDirFiles($fullDestination),
+				$this->getFullDirFiles($fullDestination, 'components'),
+				$this->getFullDirFiles($fullDestination, 'partials'),
 			);
 
 			foreach ($innerItems as $innerItem) {
@@ -165,12 +151,9 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$class = $this->getExampleTemplate($fullDestination, $innerItem, true);
 
 				if (!empty($class->fileContents)) {
-					$class->renameProjectName($args)
-						->renameNamespace($args)
-						->renameTextDomainFrontendLibs($args)
-						->renameUseFrontendLibs($args)
+					$class->renameGlobals($args)
 						->outputWrite($fullDestination, $innerItem, [
-							'skip_existing' => true,
+							self::ARG_SKIP_EXISTING => true,
 							'groupOutput' => true,
 						]);
 				}
@@ -236,14 +219,14 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$outputComand = [];
 
 			if ($componentsDependencies) {
-				$componentsDependenciesAll = \array_map(static fn ($item) => Components::camelToKebabCase($item), $componentsDependencies);
+				$componentsDependenciesAll = \array_map(static fn ($item) => Helpers::camelToKebabCase($item), $componentsDependencies);
 				$componentsDependenciesAll = \implode(', ', \array_unique(\array_values($componentsDependenciesAll)));
 
 				$outputComand[] = "%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$componentsDependenciesAll}'%n";
 			}
 
 			if ($innerBlocksDependency) {
-				$innerBlocksDependencyAll = \array_map(static fn ($item) => Components::camelToKebabCase($item), $innerBlocksDependency);
+				$innerBlocksDependencyAll = \array_map(static fn ($item) => Helpers::camelToKebabCase($item), $innerBlocksDependency);
 				$innerBlocksDependencyAll = \implode(', ', \array_unique(\array_values($innerBlocksDependencyAll)));
 
 				$outputComand[] = "%Uwp boilerplate {$this->getCommandParentName()} {$blocksCommandName} --name='{$innerBlocksDependencyAll}'%n";

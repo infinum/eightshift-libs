@@ -3,14 +3,14 @@
 /**
  * The Menu specific functionality.
  *
- * @package EightshiftBoilerplate\Menu
+ * @package %g_namespace%\Menu
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Menu;
+namespace %g_namespace%\Menu;
 
-use EightshiftLibs\Menu\AbstractMenu;
+use %g_use_libs%\Menu\AbstractMenu;
 
 /**
  * Class MenuExample
@@ -35,7 +35,7 @@ class MenuExample extends AbstractMenu
 	public function getMenuPositions(): array
 	{
 		return [
-			'header_main_nav' => \esc_html__('Main Menu', 'eightshift-libs'),
+			'header_main_nav' => \esc_html__('Main Menu', '%g_textdomain%'),
 		];
 	}
 }

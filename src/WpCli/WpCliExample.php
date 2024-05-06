@@ -8,10 +8,10 @@
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\WpCli;
+namespace %g_namespace%\WpCli;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Services\ServiceCliInterface;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Services\ServiceCliInterface;
 use WP_CLI;
 
 /**

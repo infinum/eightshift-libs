@@ -21,6 +21,7 @@ use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
 use ReflectionClass;
+use WP_CLI;
 
 /**
  * Class InitThemeCli
@@ -83,9 +84,7 @@ class InitThemeCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
-		return [
-			AbstractCli::THEME_NAME_ARG => 'Boilerplate',
-		];
+		return [];
 	}
 
 	/**
@@ -97,15 +96,6 @@ class InitThemeCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Kickstart your WordPress theme with this simple command.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => AbstractCli::THEME_NAME_ARG,
-					'description' => 'Define theme name.',
-					'optional' => true,
-					'default' => $this->getDefaultArg(AbstractCli::THEME_NAME_ARG),
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -113,7 +103,7 @@ class InitThemeCli extends AbstractCli
 
 				## EXAMPLES
 
-				# Setup theme:
+				# Setup theme files:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 			"),
 		];
@@ -124,13 +114,10 @@ class InitThemeCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		if (!$groupOutput) {
 			$this->getIntroText();
-		}
-
-		$themeName = $this->getArg($assocArgs, AbstractCli::THEME_NAME_ARG);
-		if ($themeName) {
-			unset($assocArgs[AbstractCli::THEME_NAME_ARG]);
 		}
 
 		foreach (static::COMMANDS as $item) {
@@ -152,7 +139,6 @@ class InitThemeCli extends AbstractCli
 						[
 							'groupOutput' => $type === 'blocks',
 							'introOutput' => false,
-							AbstractCli::PROJECT_NAME_ARG => $themeName,
 						]
 					));
 				}
@@ -162,8 +148,9 @@ class InitThemeCli extends AbstractCli
 		}
 
 		if (!$groupOutput) {
-			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!\n\nRun `npm start` to build all the assets.', 'success', \__('Ready to go!', 'eightshift-libs'));
-			$this->cliLogAlert('If you want to set up the default header and footer, run `wp boilerplate init header-footer` after building assets.', 'info', \__('Note', 'eightshift-libs'));
+			WP_CLI::runcommand("eval 'shell_exec(\"npm run build\");'");
+
+			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!', 'success', \__('Ready to go!', 'eightshift-libs'));
 		}
 	}
 }

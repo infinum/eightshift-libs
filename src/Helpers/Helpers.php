@@ -180,7 +180,7 @@ class Helpers
 		$sep = \DIRECTORY_SEPARATOR;
 		$root = Helpers::getProjectPaths('srcDestination');
 		$newPath = \str_replace($root, '', $path);
-		$newPath = \explode($sep, $newPath);
+		$newPath = \array_filter(\explode($sep, $newPath));
 
 		if (!isset($newPath[0]) && $newPath[0] !== 'Blocks') {
 			throw InvalidManifest::notAllowedManifestPathException($path);
@@ -225,6 +225,7 @@ class Helpers
 		$libsPath = ["vendor", "infinum", "eightshift-libs"];
 		$libsPrefixedPath = ["vendor-prefixed", "infinum", "eightshift-libs"];
 		$testsDataPath = ["tests", "data"];
+		$testsDatasetsPath = ["tests", "Datasets"];
 		$srcPath = "src";
 		$blocksPath = [$srcPath, "Blocks"];
 		$assetsPath = "assets";
@@ -238,6 +239,12 @@ class Helpers
 
 				if (\getenv('ES_TEST')) {
 					$internalPrefix = \dirname(__FILE__, 3);
+				}
+				break;
+			case 'testsDatasetsPath':
+				if (\getenv('ES_TEST')) {
+					$internalPrefix = \dirname(__FILE__, 3);
+					$path = self::joinPaths([...$testsDatasetsPath]);
 				}
 				break;
 			case 'testsData':

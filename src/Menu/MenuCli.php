@@ -12,7 +12,7 @@ namespace EightshiftLibs\Menu;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class MenuCli
@@ -69,6 +69,8 @@ class MenuCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
@@ -76,9 +78,7 @@ class MenuCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'Menu'), "{$className}.php", $assocArgs);
+			->renameGlobals($assocArgs)
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Menu'), "{$className}.php", $assocArgs);
 	}
 }

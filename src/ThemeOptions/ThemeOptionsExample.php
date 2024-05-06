@@ -3,14 +3,14 @@
 /**
  * Class that adds ThemeOptionsExample capability.
  *
- * @package EightshiftBoilerplate\ThemeOptions
+ * @package %g_namespace%\ThemeOptions
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\ThemeOptions;
+namespace %g_namespace%\ThemeOptions;
 
-use EightshiftLibs\Services\ServiceInterface;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class ThemeOptionsExample
@@ -53,8 +53,8 @@ class ThemeOptionsExample implements ServiceInterface
 		if (\function_exists('acf_add_options_page')) {
 			\acf_add_options_page(
 				[
-					'page_title' => \esc_html__('General Settings', 'eightshift-libs'),
-					'menu_title' => \esc_html__('Theme Options', 'eightshift-libs'),
+					'page_title' => \esc_html__('General Settings', '%g_textdomain%'),
+					'menu_title' => \esc_html__('Theme Options', '%g_textdomain%'),
 					'menu_slug'  => static::THEME_OPTIONS_SLUG,
 					'capability' => static::THEME_OPTIONS_CAPABILITY,
 					'redirect'   => false,
@@ -76,7 +76,7 @@ class ThemeOptionsExample implements ServiceInterface
 			\acf_add_local_field_group(
 				[
 					'key' => 'group_5fcab51c7138c',
-					'title' => \esc_html__('Theme Options', 'eightshift-libs'),
+					'title' => \esc_html__('Theme Options', '%g_textdomain%'),
 					'fields' => [],
 					'location' => [
 						[

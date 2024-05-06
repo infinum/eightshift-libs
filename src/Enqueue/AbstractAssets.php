@@ -190,7 +190,7 @@ abstract class AbstractAssets implements ServiceInterface
 	{
 		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
 
-		if (!isset($data[$key])) {
+		if (!isset($data[$key]) && !\defined('WP_CLI')) {
 			throw InvalidManifest::missingManifestKeyException($key, 'public');
 		}
 

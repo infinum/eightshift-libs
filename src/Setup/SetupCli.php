@@ -12,7 +12,7 @@ namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class SetupCli
@@ -47,7 +47,7 @@ class SetupCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'path' => Components::getProjectPaths('projectRoot'),
+			'path' => Helpers::getProjectPaths('projectRoot'),
 			'file_name' => 'setup.json',
 			'source_path' => __DIR__,
 		];
@@ -101,6 +101,8 @@ class SetupCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -110,6 +112,7 @@ class SetupCli extends AbstractCli
 
 		// Get setup.json example file, and create the one in the project.
 		$this->getExampleTemplate($sourcePath, $fileName)
+			->renameGlobals($assocArgs)
 			->outputWrite($path, $fileName, $assocArgs);
 	}
 }

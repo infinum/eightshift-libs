@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use WP_CLI;
 
 /**
@@ -65,9 +65,11 @@ class UseWrapperCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$this->getIntroText($assocArgs);
-
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
+
+		$assocArgs = $this->prepareArgs($assocArgs);
+
+		$this->getIntroText($assocArgs);
 
 		$this->moveItems(
 			\array_merge(
@@ -76,8 +78,8 @@ class UseWrapperCli extends AbstractBlocksCli
 					'name' => 'wrapper',
 				],
 			),
-			Components::getProjectPaths('blocksSourceWrapper'),
-			Components::getProjectPaths('blocksDestinationWrapper'),
+			Helpers::getProjectPaths('blocksSourceWrapper'),
+			Helpers::getProjectPaths('blocksDestinationWrapper'),
 			'wrapper',
 			true
 		);

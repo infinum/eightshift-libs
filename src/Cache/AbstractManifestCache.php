@@ -150,7 +150,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	{
 		$output = [];
 
-		if (\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') {
+		if ((\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') || !\defined('WP_CLI')) {
 			$output = $this->getCache($cacheType)[$key] ?? [];
 		}
 
@@ -158,7 +158,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			$output = $this->getAllManifests($cacheType)[$key] ?? [];
 		}
 
-		if (!$output) {
+		if (!$output && !\defined('WP_CLI')) {
 			throw InvalidManifest::missingCacheTopItemException($key, $this->getFullPath($key, $cacheType));
 		}
 

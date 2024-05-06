@@ -34,7 +34,6 @@ use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
-use EightshiftLibs\Setup\PluginManageCli;
 use EightshiftLibs\View\EscapedViewCli;
 use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
@@ -62,6 +61,7 @@ use EightshiftLibs\Init\InitHeaderFooter;
 use EightshiftLibs\Init\InitPluginCli;
 use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
+use EightshiftLibs\Init\InitThemeSetupCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Misc\VersionCli;
@@ -103,8 +103,8 @@ class Cli
 		ReusableBlocksHeaderFooterCli::class,
 		AnalyticsGdprCli::class,
 		WebPMediaColumnCli::class,
-		ConfigThemeCli::class,
 		ConfigPluginCli::class,
+		ConfigThemeCli::class,
 		ConfigProjectCli::class,
 		AcfMetaCli::class,
 		PostTypeCli::class,
@@ -143,7 +143,6 @@ class Cli
 		RegenerateWebPMediaCli::class,
 		UseWebPMediaCli::class,
 		VersionCli::class,
-		PluginManageCli::class,
 	];
 
 	/**
@@ -175,6 +174,7 @@ class Cli
 		InitPluginCli::class,
 		InitProjectCli::class,
 		InitThemeCli::class,
+		InitThemeSetupCli::class,
 	];
 
 	/**
@@ -188,7 +188,7 @@ class Cli
 			...static::CREATE_COMMANDS,
 			...static::BLOCKS_COMMANDS,
 			...static::INIT_COMMANDS,
-			...static::RUN_COMMANDS
+			...static::RUN_COMMANDS,
 		];
 	}
 

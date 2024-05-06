@@ -3,14 +3,14 @@
 /**
  * The file that is an ServiceExample class.
  *
- * @package EightshiftBoilerplate\Services;
+ * @package %g_namespace%\Services;
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Services;
+namespace %g_namespace%\Services;
 
-use EightshiftLibs\Services\ServiceInterface;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * ServiceExample class.
