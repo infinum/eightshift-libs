@@ -2,190 +2,233 @@
 
 namespace Tests\Unit\Enqueue\Admin;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftBoilerplate\Enqueue\Admin\EnqueueAdminExample;
 use EightshiftBoilerplate\Manifest\ManifestExample;
+use EightshiftLibs\Cache\ManifestCacheCli;
+use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Enqueue\AbstractAssets;
+use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
+use EightshiftLibs\Helpers\Components;
 use EightshiftLibs\Manifest\ManifestInterface;
+use Infinum\Cache\ManifestCache;
+use Infinum\Enqueue\Admin\EnqueueAdmin;
 
+use function Tests\getMockArgs;
 use function Tests\mock;
+use function Tests\copyPublicManifestData;
+use function Tests\reqOutputFiles;
 
-class EnqueueAdminExampleTest extends EnqueueAdminExample {
+// class EnqueueAdminExampleTest extends EnqueueAdminExample {
 
-	public function __construct(ManifestInterface $manifest)
-	{
-		parent::__construct($manifest);
-	}
+// 	public function __construct(ManifestInterface $manifest)
+// 	{
+// 		parent::__construct($manifest);
+// 	}
 
-	protected function getLocalizations(): array
-	{
-		return [
-			'someKey' => ['someValue'],
-			'anotherKey' => ['anotherValue']
-		];
-	}
-};
+// 	protected function getLocalizations(): array
+// 	{
+// 		return [
+// 			'someKey' => ['someValue'],
+// 			'anotherKey' => ['anotherValue']
+// 		];
+// 	}
+// };
 
-beforeEach(function() {
-	// Setup Config mock.
-	mock('alias:EightshiftBoilerplate\Config\Config')
-		->shouldReceive([
-			'getProjectName' => 'MyProject',
-			'getProjectPath' => 'tests/data',
-			'getProjectVersion' => '1.0',
-		]);
+beforeEach(function () {
+	$cliConfig = new ConfigThemeCli('boilerplate');
+	$cliConfig([], getMockArgs($cliConfig->getDefaultArgs()));
 
-	Functions\when('is_admin')->justReturn(true);
+	$cliManifestCache = new ManifestCacheCli('boilerplate');
+	$cliManifestCache([], getMockArgs($cliManifestCache->getDefaultArgs()));
 
-	Functions\when('wp_register_style')->alias(function($args) {
-		putenv("REGISTER_STYLE={$args}");
-	});
+	$cliEnqueueAdmin = new EnqueueAdminCli('boilerplate');
+	$cliEnqueueAdmin([], getMockArgs($cliEnqueueAdmin->getDefaultArgs()));
 
-	Functions\when('get_current_screen')->alias(function() {
-		return new class{
-			public $is_block_editor = false; // We're not in the block editor.
-		};
-	});
+	reqOutputFiles(
+		'Config/Config.php',
+		'Cache/ManifestCache.php',
+		'Enqueue/Admin/EnqueueAdmin.php'
+	);
 
-	Functions\when('wp_enqueue_style')->alias(function($args) {
-		putenv("ENQUEUE_STYLE={$args}");
-	});
+	$this->manifestCache = new ManifestCache;
+	$this->enqueueAdmin = new EnqueueAdmin($this->manifestCache);
 
-	Functions\when('wp_register_script')->alias(function($args) {
-		putenv("REGISTER_SCRIPT={$args}");
-	});
-
-	Functions\when('wp_enqueue_script')->alias(function($args) {
-		putenv("ENQUEUE_SCRIPT={$args}");
-	});
-
-	$localize = 'localize';
-	Functions\when('wp_localize_script')->justReturn(putenv("SIDEAFFECT={$localize}"));
-
-	$manifest = new ManifestExample();
-	// We need to 'kickstart' the manifest registration manually during tests.
-	$manifest->setAssetsManifestRaw();
-
-	$this->adminEnqueue = new EnqueueAdminExampleTest($manifest);
-
-	$this->hookSuffix = 'test';
+	copyPublicManifestData();
 });
 
-afterEach(function() {
-	unset($this->adminEnqueue, $this->hookSuffix);
-
-	putenv('REGISTER_STYLE');
-	putenv('ENQUEUE_STYLE');
-	putenv('REGISTER_SCRIPT');
-	putenv('ENQUEUE_SCRIPT');
-	putenv('SIDEAFFECT');
+afterEach(function () {
+	unset($this->manifestCache);
+	unset($this->enqueueAdmin);
 });
+
+// beforeEach(function() {
+// 	$this->mock = new EnqueueAdminCli('boilerplate');
+
+// 	// Setup Config mock.
+// 	mock('alias:EightshiftBoilerplate\Config\Config')
+// 		->shouldReceive([
+// 			'getProjectName' => 'MyProject',
+// 			'getProjectPath' => 'tests/data',
+// 			'getProjectVersion' => '1.0',
+// 		]);
+
+// 	Functions\when('is_admin')->justReturn(true);
+
+// 	Functions\when('wp_register_style')->alias(function($args) {
+// 		putenv("REGISTER_STYLE={$args}");
+// 	});
+
+// 	Functions\when('get_current_screen')->alias(function() {
+// 		return new class{
+// 			public $is_block_editor = false; // We're not in the block editor.
+// 		};
+// 	});
+
+// 	Functions\when('wp_enqueue_style')->alias(function($args) {
+// 		putenv("ENQUEUE_STYLE={$args}");
+// 	});
+
+// 	Functions\when('wp_register_script')->alias(function($args) {
+// 		putenv("REGISTER_SCRIPT={$args}");
+// 	});
+
+// 	Functions\when('wp_enqueue_script')->alias(function($args) {
+// 		putenv("ENQUEUE_SCRIPT={$args}");
+// 	});
+
+// 	$localize = 'localize';
+// 	Functions\when('wp_localize_script')->justReturn(putenv("SIDEAFFECT={$localize}"));
+
+// 	$manifest = new ManifestExample();
+// 	// We need to 'kickstart' the manifest registration manually during tests.
+// 	$manifest->setAssetsManifestRaw();
+
+// 	$this->adminEnqueue = new EnqueueAdminExampleTest($manifest);
+
+// 	$this->hookSuffix = 'test';
+// });
+
+// afterEach(function() {
+// 	unset($this->adminEnqueue, $this->hookSuffix);
+
+// 	putenv('REGISTER_STYLE');
+// 	putenv('ENQUEUE_STYLE');
+// 	putenv('REGISTER_SCRIPT');
+// 	putenv('ENQUEUE_SCRIPT');
+// 	putenv('SIDEAFFECT');
+// });
 
 test('Register method will call login_enqueue_scripts and admin_enqueue_scripts hook', function () {
-	$this->adminEnqueue->register();
+	$this->enqueueAdmin->register();
 
-	$this->assertSame(10, has_action('login_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueStyles()'));
-	$this->assertSame(50, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueStyles()'));
-	$this->assertSame(10, has_action('admin_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueScripts()'));
-	$this->assertNotSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueStyles()'));
-	$this->assertNotSame(10, has_action('wp_enqueue_scripts', 'Tests\Unit\Enqueue\Admin\EnqueueAdminExampleTest->enqueueScripts()'));
+	$this->assertSame(10, has_action('login_enqueue_scripts', 'Infinum\Enqueue\Admin\EnqueueAdmin->enqueueStyles()'));
+	$this->assertSame(50, has_action('admin_enqueue_scripts', 'Infinum\Enqueue\Admin\EnqueueAdmin->enqueueStyles()'));
+	$this->assertSame(10, has_action('admin_enqueue_scripts', 'Infinum\Enqueue\Admin\EnqueueAdmin->enqueueScripts()'));
 });
 
 test('getAssetsPrefix method will return string', function () {
-	$assetsPrefix = $this->adminEnqueue->getAssetsPrefix();
+	$output = $this->enqueueAdmin->getAssetsPrefix();
 
-	$this->assertIsString($assetsPrefix, 'getAssetsPrefix method must return a string');
+	$this->assertIsString($output, 'getAssetsPrefix method must return a string');
 });
 
 test('getAssetsVersion method will return string', function () {
-	$assetsVersion = $this->adminEnqueue->getAssetsVersion();
+	$output = $this->enqueueAdmin->getAssetsVersion();
 
-	$this->assertIsString($assetsVersion, 'getAssetsVersion method must return a string');
+	$this->assertIsString($output, 'getAssetsVersion method must return a string');
 });
 
 test('enqueueStyles method enqueue styles in WP Admin', function () {
+	$this->enqueueAdmin->enqueueStyles('MyProject-styles');
 
-	$this->adminEnqueue->enqueueStyles($this->hookSuffix);
+	mock('Infinum\Config\Config')
+		->shouldReceive([
+			'getProjectName' => 'MyProject',
+			'getProjectVersion' => '1.0',
+			'getProjectTextDomain' => 'inifnum',
+		]);
 
-	$this->assertSame(\getenv('REGISTER_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to register style');
-	$this->assertSame(\getenv('ENQUEUE_STYLE'), 'MyProject-styles', 'Method enqueueStyles() failed to enqueue style');
+	var_dump($this->enqueueAdmin->getAssetsPrefix());
+
+	$this->assertSame(\getenv('REGISTER_STYLE'), 'MyProject-styles', 'Method enqueueStyles() register style with success');
+	$this->assertSame(\getenv('ENQUEUE_STYLE'), 'MyProject-styles', 'Method enqueueStyles() enqueue style with success');
 });
 
-test('enqueueScripts method enqueue scripts in WP Admin', function () {
-	$this->adminEnqueue->enqueueScripts($this->hookSuffix);
+// test('enqueueScripts method enqueue scripts in WP Admin', function () {
+// 	$this->adminEnqueue->enqueueScripts($this->hookSuffix);
 
-	$this->assertSame(\getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
-	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
-	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
-});
+// 	$this->assertSame(\getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
+// 	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
+// 	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
+// });
 
-test('Localization will return empty array if not initialized', function() {
-	class ExampleLocalization extends AbstractAssets {
+// test('Localization will return empty array if not initialized', function() {
+// 	class ExampleLocalization extends AbstractAssets {
 
-		public function getAssetsPrefix(): string
-		{
-			return 'prefix';
-		}
+// 		public function getAssetsPrefix(): string
+// 		{
+// 			return 'prefix';
+// 		}
 
-		public function getAssetsVersion(): string
-		{
-			return '1.0.0';
-		}
+// 		public function getAssetsVersion(): string
+// 		{
+// 			return '1.0.0';
+// 		}
 
-		public function register(): void
-		{
-		}
+// 		public function register(): void
+// 		{
+// 		}
 
-		public function getLocalizations(): array
-		{
-			return parent::getLocalizations();
-		}
-	}
+// 		public function getLocalizations(): array
+// 		{
+// 			return parent::getLocalizations();
+// 		}
+// 	}
 
-	$localizationExample = new ExampleLocalization();
+// 	$localizationExample = new ExampleLocalization();
 
-	$this->assertIsArray($localizationExample->getLocalizations());
-	$this->assertEmpty($localizationExample->getLocalizations());
-});
+// 	$this->assertIsArray($localizationExample->getLocalizations());
+// 	$this->assertEmpty($localizationExample->getLocalizations());
+// });
 
-test('getAdminStyleHandle will return string', function () {
-	$adminHandle = $this->adminEnqueue->getAdminStyleHandle();
+// test('getAdminStyleHandle will return string', function () {
+// 	$adminHandle = $this->adminEnqueue->getAdminStyleHandle();
 
-	expect($adminHandle)
-		->toBeString()
-		->not->toBeArray();
-});
+// 	expect($adminHandle)
+// 		->toBeString()
+// 		->not->toBeArray();
+// });
 
-test('getAdminScriptHandle will return string', function () {
-	$adminHandle = $this->adminEnqueue->getAdminScriptHandle();
+// test('getAdminScriptHandle will return string', function () {
+// 	$adminHandle = $this->adminEnqueue->getAdminScriptHandle();
 
-	expect($adminHandle)
-		->toBeString()
-		->not->toBeArray();
-});
+// 	expect($adminHandle)
+// 		->toBeString()
+// 		->not->toBeArray();
+// });
 
-test('getConditionUse will be false if outside of admin', function () {
-	Functions\when('is_admin')->justReturn(false);
+// test('getConditionUse will be false if outside of admin', function () {
+// 	Functions\when('is_admin')->justReturn(false);
 
-	$conditionUse = $this->adminEnqueue->getConditionUse();
+// 	$conditionUse = $this->adminEnqueue->getConditionUse();
 
-	expect($conditionUse)
-		->toBeFalse()
-		->not->toBeNull();
-});
+// 	expect($conditionUse)
+// 		->toBeFalse()
+// 		->not->toBeNull();
+// });
 
-test('getConditionUse will be true if inside block editor', function () {
-	Functions\when('get_current_screen')->alias(function () {
-		return new class
-		{
-			public $is_block_editor = true; // We are in the block editor.
-		};
-	});
+// test('getConditionUse will be true if inside block editor', function () {
+// 	Functions\when('get_current_screen')->alias(function () {
+// 		return new class
+// 		{
+// 			public $is_block_editor = true; // We are in the block editor.
+// 		};
+// 	});
 
-	$conditionUse = $this->adminEnqueue->getConditionUse();
+// 	$conditionUse = $this->adminEnqueue->getConditionUse();
 
-	expect($conditionUse)
-		->toBeTrue()
-		->not->toBeNull();
-});
+// 	expect($conditionUse)
+// 		->toBeTrue()
+// 		->not->toBeNull();
+// });

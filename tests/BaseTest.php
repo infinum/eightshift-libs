@@ -221,13 +221,29 @@ class BaseTest extends TestCase
 
 			return false;
 		});
+
+		Functions\when('wp_register_style')->alias(function($args) {
+			putenv("REGISTER_STYLE={$args}");
+		});
+
+		Functions\when('wp_enqueue_style')->alias(function($args) {
+			putenv("ENQUEUE_STYLE={$args}");
+		});
+
+		Functions\when('wp_register_script')->alias(function($args) {
+			putenv("REGISTER_SCRIPT={$args}");
+		});
+
+		Functions\when('wp_enqueue_script')->alias(function($args) {
+			putenv("ENQUEUE_SCRIPT={$args}");
+		});
 	}
 
 	protected function tear_down()
 	{
 		parent::tear_down();
 
-		$this->deleteCliOutput();
+		// $this->deleteCliOutput();
 
 		for ($i = 1; $i <= 10; $i++) {
 			putenv("ES_SIDEAFFECT_{$i}");

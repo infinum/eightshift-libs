@@ -450,9 +450,11 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameUse(array $args = []): self
 	{
+		$vendorPrefix = $this->getVendorPrefix($args);
+
 		$this->fileContents = \str_replace(
 			'%useLibs%',
-			"{$this->getVendorPrefix($args)}\EightshiftLibs",
+			$vendorPrefix ? "{$vendorPrefix}\EightshiftLibs" : 'EightshiftLibs',
 			$this->fileContents
 		);
 
@@ -603,7 +605,7 @@ abstract class AbstractCli implements CliInterface
 		$composerPath = $args['config_path'] ?? '';
 
 		if (!$composerPath) {
-			$composerPath = Components::getProjectPaths(\getenv('ES_TEST') ? 'testsData' : 'root', 'composer.json');
+			$composerPath = Components::getProjectPaths('root', 'composer.json');
 		}
 
 		$composerFile = \file_get_contents($composerPath);

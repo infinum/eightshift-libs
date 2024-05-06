@@ -5,6 +5,8 @@ namespace Tests\Unit\Enqueue\Admin;
 use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Helpers\Components;
 
+use function Tests\getMockArgs;
+
 beforeEach(function () {
 	$this->mock = new EnqueueAdminCli('boilerplate');
 });
@@ -15,7 +17,7 @@ afterEach(function () {
 
 test('Custom Enqueue Admin CLI command will correctly copy the Enqueue Admin class', function () {
 	$admin = $this->mock;
-	$admin([], $admin->getDefaultArgs());
+	$admin([], getMockArgs());
 
 	// Check the output dir if the generated method is correctly generated.
 	$generatedAdmin = \file_get_contents(Components::getProjectPaths('srcDestination', 'Enqueue/Admin/EnqueueAdmin.php'));

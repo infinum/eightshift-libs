@@ -1,0 +1,12 @@
+{
+	"autoload": {
+		"psr-4": {
+			"Infinum\\": "src/"
+		}
+	},
+	"extra": {
+		"strauss": {
+			"namespace_prefix": ""
+		}
+	}
+}
