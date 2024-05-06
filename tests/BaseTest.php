@@ -237,13 +237,16 @@ class BaseTest extends TestCase
 		Functions\when('wp_enqueue_script')->alias(function($args) {
 			putenv("ENQUEUE_SCRIPT={$args}");
 		});
+		Functions\when('wp_localize_script')->alias(function($args) {
+			putenv("LOCALIZE_SCRIPT={$args}");
+		});
 	}
 
 	protected function tear_down()
 	{
 		parent::tear_down();
 
-		// $this->deleteCliOutput();
+		$this->deleteCliOutput();
 
 		for ($i = 1; $i <= 10; $i++) {
 			putenv("ES_SIDEAFFECT_{$i}");

@@ -140,28 +140,31 @@ test('getAssetsVersion method will return string', function () {
 });
 
 test('enqueueStyles method enqueue styles in WP Admin', function () {
+	Functions\when('wp_get_theme')->justReturn(new class {
+		public function get( $header ) {
+			return 'MyProject';
+		}
+	});
+
 	$this->enqueueAdmin->enqueueStyles('MyProject-styles');
-
-	mock('alias:Infinum\Config\Config')
-		->shouldReceive([
-			'getProjectName' => 'MyProject',
-			'getProjectVersion' => '1.0',
-			'getProjectTextDomain' => 'inifnum',
-		]);
-
-	var_dump($this->enqueueAdmin->getAssetsPrefix());
 
 	$this->assertSame(\getenv('REGISTER_STYLE'), 'MyProject-styles', 'Method enqueueStyles() register style with success');
 	$this->assertSame(\getenv('ENQUEUE_STYLE'), 'MyProject-styles', 'Method enqueueStyles() enqueue style with success');
 });
 
-// test('enqueueScripts method enqueue scripts in WP Admin', function () {
-// 	$this->adminEnqueue->enqueueScripts($this->hookSuffix);
+test('enqueueScripts method enqueue scripts in WP Admin', function () {
+	Functions\when('wp_get_theme')->justReturn(new class {
+		public function get( $header ) {
+			return 'MyProject';
+		}
+	});
 
-// 	$this->assertSame(\getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() failed to register style');
-// 	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() failed to enqueue style');
-// 	$this->assertSame(\getenv('SIDEAFFECT'), 'localize', 'Method wp_localize_script() failed');
-// });
+	$this->enqueueAdmin->enqueueScripts('MyProject-scripts');
+
+	$this->assertSame(\getenv('REGISTER_SCRIPT'), 'MyProject-scripts', 'Method enqueueStyles() register script with success');
+	$this->assertSame(\getenv('ENQUEUE_SCRIPT'), 'MyProject-scripts', 'Method enqueueScripts() enqueue script with success');
+	$this->assertSame(\getenv('LOCALIZE_SCRIPT'), 'localize', 'Method wp_localize_script() failed');
+});
 
 // test('Localization will return empty array if not initialized', function() {
 // 	class ExampleLocalization extends AbstractAssets {
