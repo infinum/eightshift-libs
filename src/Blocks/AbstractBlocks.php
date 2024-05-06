@@ -130,9 +130,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		if (Helpers::getConfigUseBlocks()) {
 			$allowedBlockTypes = \array_merge(
 				\array_map(
-					function ($block) {
-						return $block['blockFullName'];
-					},
+					fn ($block) => $block['blockFullName'],
 					$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)
 				),
 				$allowedBlockTypes,
