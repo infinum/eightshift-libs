@@ -772,7 +772,7 @@ abstract class AbstractCli implements CliInterface
 		if (empty($vendorPrefix)) {
 			$composer = $this->getComposer($args);
 
-			$vendorPrefix = $composer['extra']['imposter']['namespace'] ?? 'EightshiftLibs';
+			$vendorPrefix = $composer['extra']['strauss']['namespace_prefix'] ?? 'EightshiftLibs';
 		}
 
 		return $vendorPrefix;
