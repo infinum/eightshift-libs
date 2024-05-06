@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftLibs\Exception\InvalidBlock;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use WP_Block_Editor_Context;
 use WP_Post;
@@ -23,6 +25,23 @@ use WP_Post;
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
+	 * Instance variable for manifest cache.
+	 *
+	 * @var ManifestCacheInterface
+	 */
+	protected $manifestCache;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 */
+	public function __construct(ManifestCacheInterface $manifestCache)
+	{
+		$this->manifestCache = $manifestCache;
+	}
+
+	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
 	 *
@@ -31,7 +50,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public function changeEditorColorPalette(): void
 	{
 		// Unable to use state due to this method is used in JS and store is not registered there.
-		$colors = $this->getSettingsManifest()['globalVariables']['colors'] ?? [];
+		$colors = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::SETTINGS_KEY)['globalVariables']['colors'] ?? [];
 
 		if ($colors) {
 			\add_theme_support('editor-color-palette', $colors);
@@ -57,33 +76,25 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getBlocksDataFullRaw(): void
 	{
-		// Get global settings direct from file.
-		$settings = $this->getSettingsManifest();
-
-		$namespace = $settings['namespace'];
-
-		$blocks = \array_map(
-			static function ($block) use ($namespace) {
-				// Check if blocks-namespace is defined in block or in global manifest settings.
-				$block['namespace'] = $namespace;
-				$block['blockFullName'] = "{$namespace}/{$block['blockName']}";
-
-				return $block;
-			},
-			$this->getBlocksManifests()
-		);
-
 		// Register store and set all the data.
-		Components::setStore();
-		Components::setSettings($settings);
-		Components::setBlocks($blocks);
-		Components::setComponents($this->getComponentsManifests());
-		Components::setVariations($this->getVariationsManifests());
-		Components::setConfigFlags();
-		Components::setPaths();
+		Helpers::setStore();
+		Helpers::setSettings($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::SETTINGS_KEY));
+		Helpers::setConfigFlags();
 
-		if (Components::getConfigUseWrapper()) {
-			Components::setWrapper($this->getWrapperManifest());
+		if (Helpers::getConfigUseBlocks()) {
+			Helpers::setBlocks($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY));
+		}
+
+		if (Helpers::getConfigUseComponents()) {
+			Helpers::setComponents($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::COMPONENTS_KEY));
+		}
+
+		if (Helpers::getConfigUseVariations()) {
+			Helpers::setVariations($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::VARIATIONS_KEY));
+		}
+
+		if (Helpers::getConfigUseWrapper()) {
+			Helpers::setWrapper($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::WRAPPER_KEY));
 		}
 	}
 
@@ -116,15 +127,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return $allowedBlockTypes;
 		}
 
-		$allowedBlockTypes = \array_merge(
-			\array_map(
-				function ($block) {
-					return $block['blockFullName'];
-				},
-				Components::getBlocks(),
-			),
-			$allowedBlockTypes,
-		);
+		if (Helpers::getConfigUseBlocks()) {
+			$allowedBlockTypes = \array_merge(
+				\array_map(
+					fn ($block) => $block['blockFullName'],
+					$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)
+				),
+				$allowedBlockTypes,
+			);
+		}
 
 		// Allow reusable block.
 		$allowedBlockTypes[] = 'eightshift-forms/forms';
@@ -156,13 +167,15 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Method used to register all custom blocks with data fetched from blocks manifest.json.
 	 *
-	 * @throws InvalidBlock Throws error if blocks are missing.
-	 *
 	 * @return void
 	 */
 	public function registerBlocks(): void
 	{
-		foreach (Components::getBlocks() as $block) {
+		if (!Helpers::getConfigUseBlocks()) {
+			return;
+		}
+
+		foreach ($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY) as $block) {
 			$this->registerBlock($block);
 		}
 	}
@@ -173,46 +186,35 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
-	 * @throws InvalidBlock Throws error if block view is missing.
-	 *
 	 * @return string Html template for block.
 	 */
 	public function render(array $attributes, string $innerBlockContent): string
 	{
-		// Block details is unavailable in this method so we are fetching block name via attributes.
-		$blockName = $attributes['blockName'] ?? '';
-
 		// Get block view path.
-		$sep = \DIRECTORY_SEPARATOR;
-		$templatePath = Components::getProjectPaths('blocksDestinationCustom', "{$blockName}{$sep}{$blockName}.php");
+		$blockOutpout = Helpers::render(
+			$attributes['blockName'] ?? '',
+			$attributes,
+			'blocks',
+			false,
+			'',
+			$innerBlockContent
+		);
 
 		// Get block wrapper view path.
-		if (Components::getConfigUseWrapper()) {
-			$wrapperPath = Components::getProjectPaths('blocksDestinationWrapper', 'wrapper.php');
-
-			// Check if wrapper component exists.
-			if (!\file_exists($wrapperPath)) {
-				throw InvalidBlock::missingWrapperViewException($wrapperPath);
-			}
-
-			// Check if actual block exists.
-			if (!\file_exists($templatePath)) {
-				throw InvalidBlock::missingViewException($blockName, $templatePath);
-			}
-
-			// If everything is ok, return the contents of the template (return, NOT echo).
-			\ob_start();
-			include $wrapperPath;
-			$output = \ob_get_clean();
+		if (Helpers::getConfigUseWrapper()) {
+			echo Helpers::render( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				'wrapper',
+				$attributes,
+				'wrapper',
+				false,
+				'',
+				$blockOutpout
+			);
 		} else {
-			\ob_start();
-			include $templatePath;
-			$output = \ob_get_clean();
+			echo $blockOutpout; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		}
 
-		unset($blockName, $templatePath, $wrapperPath, $attributes, $innerBlockContent);
-
-		return (string)$output;
+		return '';
 	}
 
 	/**
@@ -242,30 +244,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Locate and return template part with passed attributes for wrapper.
-	 *
-	 * Used to render php block wrapper view.
-	 *
-	 * @param string $src String with URL path to template.
-	 * @param array<string, mixed> $attributes Attributes array to pass in template.
-	 * @param string|null $innerBlockContent If using inner blocks content pass the data.
-	 *
-	 * @throws InvalidBlock Throws an error if wrapper file doesn't exist.
-	 *
-	 * @return void Includes an HTML view, or throws an error if the view is missing.
-	 */
-	public function renderWrapperView(string $src, array $attributes, ?string $innerBlockContent = null): void
-	{
-		if (!\file_exists($src)) {
-			throw InvalidBlock::missingWrapperViewException($src);
-		}
-
-		include $src;
-
-		unset($src, $attributes, $innerBlockContent);
-	}
-
-	/**
 	 * Removes paragraph block from the php part if the content is empty.
 	 *
 	 * Useful when setting the default paragraph block.
@@ -277,7 +255,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function filterBlocksContent(array $parsedBlock, array $sourceBlock): array
 	{
-		$namespace = Components::getSettingsNamespace();
+		$namespace = Helpers::getSettingsNamespace();
 
 		if ($parsedBlock['blockName'] === "{$namespace}/paragraph") {
 			$content = $parsedBlock['attrs']['paragraphParagraphContent'] ?? '';
@@ -298,7 +276,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function outputCssVariablesInline(): void
 	{
-		echo Components::outputCssVariablesInline(); // phpcs:ignore
+		echo Helpers::outputCssVariablesInline(); // phpcs:ignore
 	}
 
 	/**
@@ -322,149 +300,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
-	 * Retrieve block data from manifest.json combined with some additional stuff.
-	 *
-	 * @throws InvalidBlock Throws error if block name is missing.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getBlocksManifests(): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationCustom');
-
-		return \array_map(
-			function (string $blockPath) {
-				$block = \implode(' ', (array)\file(($blockPath)));
-
-				$block = Components::parseManifest($block);
-
-				if (!isset($block['blockName'])) {
-					throw InvalidBlock::missingNameException($blockPath);
-				}
-
-				if (!isset($block['classes'])) {
-					$block['classes'] = [];
-				}
-
-				if (!isset($block['attributes'])) {
-					$block['attributes'] = [];
-				}
-
-				if (!isset($block['hasInnerBlocks'])) {
-					$block['hasInnerBlocks'] = false;
-				}
-
-				return $block;
-			},
-			(array)\glob("{$path}*{$sep}manifest.json")
-		);
-	}
-
-	/**
-	 * Retrieve components data from manifest.json.
-	 *
-	 * @throws InvalidBlock Throws error if component name is missing.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getComponentsManifests(): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationComponents');
-
-		return \array_map(
-			function (string $componentPath) {
-				$component = \implode(' ', (array)\file(($componentPath)));
-
-				$component = Components::parseManifest($component);
-
-				if (!isset($component['componentName'])) {
-					throw InvalidBlock::missingComponentNameException($componentPath);
-				}
-
-				return $component;
-			},
-			(array)\glob("{$path}*{$sep}manifest.json")
-		);
-	}
-
-	/**
-	 * Retrieve variations data from manifest.json.
-	 *
-	 * @throws InvalidBlock Throws error if variation name is missing.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getVariationsManifests(): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = Components::getProjectPaths('blocksDestinationVariations');
-
-		return \array_map(
-			function (string $variationPath) {
-				$variation = \implode(' ', (array)\file(($variationPath)));
-
-				$variation = Components::parseManifest($variation);
-
-				if (!isset($variation['name'])) {
-					throw InvalidBlock::missingVariationNameException($variationPath);
-				}
-
-				return $variation;
-			},
-			(array)\glob("{$path}*{$sep}manifest.json")
-		);
-	}
-
-	/**
-	 * Retrieve wrapper data from manifest.json.
-	 *
-	 * @throws InvalidBlock Throws error if wrapper settings manifest.json is missing.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getWrapperManifest(): array
-	{
-		$path = Components::getProjectPaths('blocksDestinationWrapper', "manifest.json");
-
-		if (!\file_exists($path)) {
-			throw InvalidBlock::missingWrapperManifestException($path);
-		}
-
-		$manifest = \implode(' ', (array)\file($path));
-		$manifest = Components::parseManifest($manifest);
-
-		return $manifest;
-	}
-
-	/**
-	 * Get blocks global settings manifest data from settings manifest.json file.
-	 *
-	 * @throws InvalidBlock Throws error if global manifest settings key block-namespace is missing.
-	 * @throws InvalidBlock Throws error if global settings manifest.json is missing.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getSettingsManifest(): array
-	{
-		$path = Components::getProjectPaths('blocksDestination', 'manifest.json');
-
-		if (!\file_exists($path)) {
-			throw InvalidBlock::missingSettingsManifestException($path);
-		}
-
-		$manifest = \implode(' ', (array)\file(($path)));
-		$manifest = Components::parseManifest($manifest);
-
-		if (!isset($manifest['namespace'])) {
-			throw InvalidBlock::missingNamespaceException();
-		}
-
-		return $manifest;
-	}
-
-	/**
 	 * Prepare all blocks attributes.
 	 *
 	 * This method combines default, block and wrapper attributes.
@@ -479,12 +314,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	private function getAttributes(array $blockDetails): array
 	{
 		$blockName = $blockDetails['blockName'];
-		$blockClassPrefix = Components::getSettingsBlockClassPrefix();
+		$blockClassPrefix = Helpers::getSettingsBlockClassPrefix();
 
 		$wrapperAttributes = [];
 
-		if (Components::getConfigUseWrapper()) {
-			$wrapperAttributes = Components::getWrapperAttributes();
+		if (Helpers::getConfigUseWrapper()) {
+			$wrapperAttributes = Helpers::getWrapperAttributes();
 		}
 
 		return \array_merge(
@@ -499,7 +334,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				],
 				'blockTopLevelId' => [
 					'type' => 'string',
-					'default' => Components::getUnique(),
+					'default' => Helpers::getUnique(),
 				],
 				'blockFullName' => [
 					'type' => 'string',
@@ -518,7 +353,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					'default' => false,
 				],
 			],
-			Components::getSettingsAttributes(),
+			Helpers::getSettingsAttributes(),
 			$wrapperAttributes,
 			$this->prepareComponentAttributes($blockDetails)
 		);
@@ -548,7 +383,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		// Make sure the case is always correct for parent.
-		$newParent = Components::kebabToCamelCase($parent);
+		$newParent = Helpers::kebabToCamelCase($parent);
 
 		// Iterate each attribute and attach parent prefixes.
 		$componentAttributeKeys = \array_keys($componentAttributes);
@@ -562,7 +397,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// Check if current attribute is used strip component prefix from attribute and replace it with parent prefix.
 			if ($currentAttributes) {
-				$attribute = \str_replace(\lcfirst(Components::kebabToCamelCase($realName)), '', (string) $componentAttribute);
+				$attribute = \str_replace(\lcfirst(Helpers::kebabToCamelCase($realName)), '', (string) $componentAttribute);
 			}
 
 			// Determine if parent is empty and if parent name is the same as component/block name and skip wrapper attributes.
@@ -604,7 +439,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		// Iterate over components key in manifest recursively and check component names.
 		foreach ($components as $newComponentName => $realComponentName) {
 			// Filter components real name.
-			$component = Components::getComponent(Components::camelToKebabCase($realComponentName));
+			$component = Helpers::getComponent(Helpers::camelToKebabCase($realComponentName));
 
 			// Bailout if component doesn't exist.
 			if (!$component) {
@@ -613,7 +448,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 			// If component has more components do recursive loop.
 			if (isset($component['components'])) {
-				$outputAttributes = $this->prepareComponentAttributes($component, $newParent . \ucfirst(Components::camelToKebabCase($newComponentName)));
+				$outputAttributes = $this->prepareComponentAttributes($component, $newParent . \ucfirst(Helpers::camelToKebabCase($newComponentName)));
 			} else {
 				// Output the component attributes if there is no nesting left, and append the parent prefixes.
 				$outputAttributes = $this->prepareComponentAttribute($component, $newComponentName, $realComponentName, $newParent);

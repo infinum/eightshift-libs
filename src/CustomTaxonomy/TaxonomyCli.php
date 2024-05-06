@@ -140,9 +140,7 @@ class TaxonomyCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('rest_endpoint_slug'), $restEndpointSlug)
 			->searchReplaceString($this->getArgTemplate('post_type_slug'), $postTypeSlug)
 			->searchReplaceString($this->getArgTemplate('label'), $label)
-			->searchReplaceString($this->getArgTemplate('label_lowercaps'), \strtolower($label))
 			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
-			->searchReplaceString($this->getArgTemplate('plural_label_lowecaps'), \strtolower($pluralLabel))
 			->outputWrite(Components::getProjectPaths('srcDestination', 'CustomTaxonomy'), "{$className}.php", $assocArgs);
 	}
 }

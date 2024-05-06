@@ -10,7 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Geolocation;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftLibs\Services\ServiceInterface;
 use Exception;
 use Throwable;
@@ -21,11 +22,21 @@ use Throwable;
 abstract class AbstractGeolocation implements ServiceInterface
 {
 	/**
-	 * Internal countries list stored in a variable for caching.
+	 * Instance variable for manifest cache.
 	 *
-	 * @var array<string>
+	 * @var ManifestCacheInterface
 	 */
-	private $countries = [];
+	protected $manifestCache;
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 */
+	public function __construct(ManifestCacheInterface $manifestCache)
+	{
+		$this->manifestCache = $manifestCache;
+	}
 
 	/**
 	 * Get geolocation cookie name.
@@ -168,16 +179,17 @@ abstract class AbstractGeolocation implements ServiceInterface
 			],
 		];
 
-		// Save to internal cache so we don't read manifest all the time.
-		if (!$this->countries) {
-			$this->countries = Components::getManifestDirect(__DIR__);
-		}
+		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
 
-		foreach ($this->countries as $country) {
-			$code = $country['Code'];
+		foreach ($data as $country) {
+			$code = $country['Code'] ?? '';
+
+			if (!$code) {
+				continue;
+			}
 
 			$output[] = [
-				'label' => $country['Name'],
+				'label' => $country['Name'] ?? '',
 				'value' => $code,
 				'group' => [
 					\strtoupper($code),

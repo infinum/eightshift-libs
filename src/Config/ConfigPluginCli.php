@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Config.
+ * Class that registers WPCLI command for Config Plugin.
  *
  * @package EightshiftLibs\Config
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Components;
 
 /**
- * Class ConfigCli
+ * Class ConfigPluginCli
  */
-class ConfigCli extends AbstractCli
+class ConfigPluginCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class ConfigCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'config';
+		return 'config-plugin';
 	}
 
 	/**
@@ -46,9 +46,7 @@ class ConfigCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
-		return [
-			'routes_version' => '1',
-		];
+		return [];
 	}
 
 	/**
@@ -59,20 +57,11 @@ class ConfigCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create project config service class.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'routes_version',
-					'description' => 'Define project REST version.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('routes_version'),
-				],
-			],
+			'shortdesc' => 'Create plugin config service class.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create project config class with settings like project name, version, REST-API name/version, etc.
+				Used to create plugin config class with settings like project name, version, REST-API name/version, etc.
 
 				## EXAMPLES
 
@@ -82,7 +71,7 @@ class ConfigCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/Config/ConfigExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Config/ConfigPluginExample.php
 			"),
 		];
 	}
@@ -92,22 +81,16 @@ class ConfigCli extends AbstractCli
 	{
 		$this->getIntroText($assocArgs);
 
-		// Get Props.
-		$routesVersion = $this->getArg($assocArgs, 'routes_version');
-
 		$className = $this->getClassShortName();
+		$newName = 'Config';
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $className)
-			->renameClassName($className)
+			->renameClassNameWithPrefix($className, $newName)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs);
 
-		if (!empty($routesVersion)) {
-			$class->searchReplaceString($this->getArgTemplate('routes_version'), $routesVersion);
-		}
-
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$className}.php", $assocArgs);
+		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$newName}.php", $assocArgs);
 	}
 }

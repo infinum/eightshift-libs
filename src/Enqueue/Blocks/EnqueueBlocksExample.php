@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftBoilerplate\Enqueue\Blocks;
 
 use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 
 /**
@@ -19,16 +18,6 @@ use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
  */
 class EnqueueBlocksExample extends AbstractEnqueueBlocks
 {
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-	 */
-	public function __construct(ManifestInterface $manifest)
-	{
-		$this->manifest = $manifest;
-	}
-
 	/**
 	 * Register all the hooks
 	 */

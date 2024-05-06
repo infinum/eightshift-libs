@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftBoilerplate\I18n;
 
 use EightshiftBoilerplate\Config\Config;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -38,9 +39,10 @@ class I18nExample implements ServiceInterface
 	 */
 	public function loadThemeTextdomain(): void
 	{
+		$sep = \DIRECTORY_SEPARATOR;
 		\load_theme_textdomain(
 			Config::getProjectName(),
-			Config::getProjectPath('src/I18n/languages')
+			Helpers::getProjectPaths('srcDestination', "I18n{$sep}languages")
 		);
 	}
 
@@ -60,7 +62,7 @@ class I18nExample implements ServiceInterface
 		\wp_set_script_translations(
 			$handle,
 			Config::getProjectName(),
-			Config::getProjectPath('src/I18n/languages')
+			Helpers::getProjectPaths('srcDestination', "I18n{$sep}languages")
 		);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Helpers for store.
+ * Helpers for blocks store.
  *
  * @package EightshiftLibs\Helpers
  */
@@ -10,10 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Exception\InvalidBlock;
+
 /**
  * Class StoreTrait Helper
  */
-trait StoreTrait
+trait StoreBlocksTrait
 {
 	/**
 	 * Store default state
@@ -21,20 +24,23 @@ trait StoreTrait
 	 * @var array<mixed>
 	 */
 	public static $defaultState = [
-		'blocks' => [],
-		'components' => [],
-		'config' => [
+		AbstractManifestCache::BLOCKS_KEY => [],
+		AbstractManifestCache::COMPONENTS_KEY => [],
+		AbstractManifestCache::CONFIG_KEY => [
 			'outputCssGlobally' => false,
 			'outputCssOptimize' => false,
 			'outputCssSelectorName' => 'esCssVariables',
 			'outputCssGloballyAdditionalStyles' => [],
 			'useWrapper' => true,
+			'useComponents' => true,
+			'useBlocks' => true,
+			'useVariations' => true,
 		],
-		'wrapper' => [],
-		'variations' => [],
-		'settings' => [],
-		'styles' => [],
-		'paths' => [],
+		AbstractManifestCache::WRAPPER_KEY => [],
+		AbstractManifestCache::VARIATIONS_KEY => [],
+		AbstractManifestCache::SETTINGS_KEY => [],
+		AbstractManifestCache::STYLES_KEY => [],
+		AbstractManifestCache::ASSETS_KEY => [],
 	];
 
 	/**
@@ -44,7 +50,7 @@ trait StoreTrait
 	 */
 	public static function getStoreName(): string
 	{
-		return \basename(Components::getProjectPaths('root'));
+		return \basename(Helpers::getProjectPaths('root'));
 	}
 
 	/**
@@ -87,22 +93,32 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['blocks'] = $blocks;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::BLOCKS_KEY] = $blocks;
 		}
 	}
 
 	/**
 	 * Get blocks details.
 	 *
+	 * @throws InvalidBlock If blocks are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getBlocks(): array
 	{
-		return self::getStore()['blocks'] ?? [];
+		$output = self::getStore()[AbstractManifestCache::BLOCKS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('project', 'blocks');
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Get block details.
+	 *
+	 * @throws InvalidBlock If block is missing.
 	 *
 	 * @param string $block Block name to get.
 	 *
@@ -110,14 +126,13 @@ trait StoreTrait
 	 */
 	public static function getBlock(string $block): array
 	{
-		$blocks = \array_filter(
-			self::getBlocks(),
-			static function ($item) use ($block) {
-				return $item['blockName'] === $block;
-			}
-		);
+		$output = self::getBlocks()[$block] ?? [];
 
-		return \reset($blocks) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		if (!$output) {
+			throw InvalidBlock::missingItemException($block, 'block');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -132,36 +147,46 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['components'] = $components;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::COMPONENTS_KEY] = $components;
 		}
 	}
 
 	/**
 	 * Get components details.
 	 *
+	 * @throws InvalidBlock If components are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getComponents(): array
 	{
-		return self::getStore()['components'] ?? [];
+		$output = self::getStore()[AbstractManifestCache::COMPONENTS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('project', 'components');
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Get component details.
 	 *
 	 * @param string $component Componennt name to get.
+	 *
+	 * @throws InvalidBlock If component is missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getComponent(string $component): array
 	{
-		$components = \array_filter(
-			self::getComponents(),
-			static function ($item) use ($component) {
-				return $item['componentName'] === $component;
-			}
-		);
+		$output = self::getComponents()[$component] ?? [];
 
-		return \reset($components) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		if (!$output) {
+			throw InvalidBlock::missingItemException($component, 'component');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -176,36 +201,46 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['variations'] = $variations;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::VARIATIONS_KEY] = $variations;
 		}
 	}
 
 	/**
 	 * Get variations details.
 	 *
+	 * @throws InvalidBlock If variations are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getVariations(): array
 	{
-		return self::getStore()['variations'] ?? [];
+		$output = self::getStore()[AbstractManifestCache::VARIATIONS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('project', 'variations');
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Get variation details.
 	 *
 	 * @param string $variation Variation name to get.
+	 *
+	 * @throws InvalidBlock If variation is missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getVariation(string $variation): array
 	{
-		$variations = \array_filter(
-			self::getVariations(),
-			static function ($item) use ($variation) {
-				return $item['name'] === $variation;
-			}
-		);
+		$output = self::getVariations()[$variation] ?? [];
 
-		return \reset($variations) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		if (!$output) {
+			throw InvalidBlock::missingItemException($variation, 'variation');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -215,32 +250,47 @@ trait StoreTrait
 	 */
 	public static function setConfigFlags(): void
 	{
-		$config = self::getSettings()['config'] ?? [];
+		$config = self::getSettings()[AbstractManifestCache::CONFIG_KEY] ?? [];
 
 		if ($config) {
 			// outputCssGlobally.
 			if (isset($config['outputCssGlobally']) && \gettype($config['outputCssGlobally']) === 'boolean') {
-				Components::setConfigOutputCssGlobally($config['outputCssGlobally']);
+				Helpers::setConfigOutputCssGlobally($config['outputCssGlobally']);
 			}
 
 			// outputCssOptimize.
 			if (isset($config['outputCssOptimize']) && \gettype($config['outputCssOptimize']) === 'boolean') {
-				Components::setConfigOutputCssOptimize($config['outputCssOptimize']);
+				Helpers::setConfigOutputCssOptimize($config['outputCssOptimize']);
 			}
 
 			// outputCssSelectorName.
 			if (isset($config['outputCssSelectorName']) && \gettype($config['outputCssSelectorName']) === 'string') {
-				Components::setConfigOutputCssSelectorName($config['outputCssSelectorName']);
+				Helpers::setConfigOutputCssSelectorName($config['outputCssSelectorName']);
 			}
 
 			// outputCssGloballyAdditionalStyles.
 			if (isset($config['outputCssGloballyAdditionalStyles']) && \gettype($config['outputCssGloballyAdditionalStyles']) === 'array') {
-				Components::setConfigOutputCssGloballyAdditionalStyles($config['outputCssGloballyAdditionalStyles']);
+				Helpers::setConfigOutputCssGloballyAdditionalStyles($config['outputCssGloballyAdditionalStyles']);
 			}
 
 			// useWrapper.
 			if (isset($config['useWrapper']) && \gettype($config['useWrapper']) === 'boolean') {
-				Components::setConfigUseWrapper($config['useWrapper']);
+				Helpers::setConfigUseWrapper($config['useWrapper']);
+			}
+
+			// useComponents.
+			if (isset($config['useComponents']) && \gettype($config['useComponents']) === 'boolean') {
+				Helpers::setConfigUseComponents($config['useComponents']);
+			}
+
+			// useBlocks.
+			if (isset($config['useBlocks']) && \gettype($config['useBlocks']) === 'boolean') {
+				Helpers::setConfigUseBlocks($config['useBlocks']);
+			}
+
+			// useVariations.
+			if (isset($config['useVariations']) && \gettype($config['useVariations']) === 'boolean') {
+				Helpers::setConfigUseVariations($config['useVariations']);
 			}
 		}
 	}
@@ -252,7 +302,7 @@ trait StoreTrait
 	 */
 	public static function getConfig(): array
 	{
-		return self::getStore()['config'] ?? [];
+		return self::getStore()[AbstractManifestCache::CONFIG_KEY] ?? [];
 	}
 
 	/**
@@ -267,7 +317,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['outputCssGlobally'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['outputCssGlobally'] = $config;
 		}
 	}
 
@@ -278,7 +328,7 @@ trait StoreTrait
 	 */
 	public static function getConfigOutputCssGlobally(): bool
 	{
-		return self::getConfig()['outputCssGlobally'] ?? self::$defaultState['config']['outputCssGlobally'];
+		return self::getConfig()['outputCssGlobally'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['outputCssGlobally'];
 	}
 
 	/**
@@ -293,7 +343,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['outputCssOptimize'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['outputCssOptimize'] = $config;
 		}
 	}
 
@@ -304,7 +354,7 @@ trait StoreTrait
 	 */
 	public static function getConfigOutputCssOptimize(): bool
 	{
-		return self::getConfig()['outputCssOptimize'] ?? self::$defaultState['config']['outputCssOptimize'];
+		return self::getConfig()['outputCssOptimize'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['outputCssOptimize'];
 	}
 
 	/**
@@ -319,7 +369,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['outputCssSelectorName'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['outputCssSelectorName'] = $config;
 		}
 	}
 
@@ -330,7 +380,7 @@ trait StoreTrait
 	 */
 	public static function getConfigOutputCssSelectorName(): string
 	{
-		return self::getConfig()['outputCssSelectorName'] ?? self::$defaultState['config']['outputCssSelectorName'];
+		return self::getConfig()['outputCssSelectorName'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['outputCssSelectorName'];
 	}
 
 	/**
@@ -345,7 +395,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['outputCssGloballyAdditionalStyles'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['outputCssGloballyAdditionalStyles'] = $config;
 		}
 	}
 
@@ -356,7 +406,7 @@ trait StoreTrait
 	 */
 	public static function getConfigOutputCssGloballyAdditionalStyles(): array
 	{
-		return self::getConfig()['outputCssGloballyAdditionalStyles'] ?? self::$defaultState['config']['outputCssGloballyAdditionalStyles'];
+		return self::getConfig()['outputCssGloballyAdditionalStyles'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['outputCssGloballyAdditionalStyles'];
 	}
 
 	/**
@@ -371,7 +421,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore() && self::getConfig()) {
-			$esBlocks[self::getStoreName()]['config']['useWrapper'] = $config;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useWrapper'] = $config;
 		}
 	}
 
@@ -382,7 +432,85 @@ trait StoreTrait
 	 */
 	public static function getConfigUseWrapper(): bool
 	{
-		return self::getConfig()['useWrapper'] ?? self::$defaultState['config']['useWrapper'];
+		return self::getConfig()['useWrapper'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useWrapper'];
+	}
+
+	/**
+	 * Set global config value for use components.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseComponents(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useComponents'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use components.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseComponents(): bool
+	{
+		return self::getConfig()['useComponents'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useComponents'];
+	}
+
+	/**
+	 * Set global config value for use blocks.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseBlocks(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useBlocks'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use blocks.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseBlocks(): bool
+	{
+		return self::getConfig()['useBlocks'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useBlocks'] ?? false;
+	}
+
+	/**
+	 * Set global config value for use variations.
+	 *
+	 * @param bool $config Config value.
+	 *
+	 * @return void
+	 */
+	public static function setConfigUseVariations(bool $config): void
+	{
+		global $esBlocks;
+
+		if (self::getStore() && self::getConfig()) {
+			$esBlocks[self::getStoreName()][AbstractManifestCache::CONFIG_KEY]['useVariations'] = $config;
+		}
+	}
+
+	/**
+	 * Get global config value for use variations.
+	 *
+	 * @return bool
+	 */
+	public static function getConfigUseVariations(): bool
+	{
+		return self::getConfig()['useVariations'] ?? self::$defaultState[AbstractManifestCache::CONFIG_KEY]['useVariations'];
 	}
 
 	/**
@@ -397,18 +525,26 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['wrapper'] = $wrapper;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::WRAPPER_KEY] = $wrapper;
 		}
 	}
 
 	/**
 	 * Get wrapper details.
 	 *
+	 * @throws InvalidBlock If wrapper is missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getWrapper(): array
 	{
-		return self::getStore()['wrapper'] ?? [];
+		$output = self::getStore()[AbstractManifestCache::WRAPPER_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('blocks wrapper', 'component');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -433,18 +569,26 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['settings'] = $settings;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::SETTINGS_KEY] = $settings;
 		}
 	}
 
 	/**
 	 * Get global settings details.
 	 *
+	 * @throws InvalidBlock If settings are missing.
+	 *
 	 * @return array<mixed>
 	 */
 	public static function getSettings(): array
 	{
-		return self::getStore()['settings'] ?? [];
+		$output = self::getStore()[AbstractManifestCache::SETTINGS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('project', 'global settings');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -509,7 +653,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['settings']['globalVariables']['breakpoints'] = $breakpoints;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::SETTINGS_KEY]['globalVariables']['breakpoints'] = $breakpoints;
 		}
 	}
 
@@ -545,7 +689,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['styles'] = $styles;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::STYLES_KEY] = $styles;
 		}
 	}
 
@@ -561,7 +705,7 @@ trait StoreTrait
 		global $esBlocks;
 
 		if (self::getStore()) {
-			$esBlocks[self::getStoreName()]['styles'][] = $style;
+			$esBlocks[self::getStoreName()][AbstractManifestCache::STYLES_KEY][] = $style;
 		}
 	}
 
@@ -572,32 +716,60 @@ trait StoreTrait
 	 */
 	public static function getStyles(): array
 	{
-		return self::getStore()['styles'] ?? [];
+		return self::getStore()[AbstractManifestCache::STYLES_KEY] ?? [];
 	}
 
 	/**
-	 * Set paths details.
+	 * Set assets details.
+	 *
+	 * @param array<mixed> $assets Assets to store.
 	 *
 	 * @return void
 	 */
-	public static function setPaths(): void
+	public static function setAssets(array $assets): void
 	{
 		global $esBlocks;
 
 		if (self::getStore()) {
-			foreach (Components::PROJECT_PATHS as $value) {
-				$esBlocks[self::getStoreName()]['paths'][$value] = Components::getProjectPaths($value);
-			}
+			$esBlocks[self::getStoreName()][AbstractManifestCache::ASSETS_KEY] = $assets;
 		}
 	}
 
 	/**
-	 * Get paths details.
+	 * Get assets details.
+	 *
+	 * @throws InvalidBlock If assets are missing.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function getPaths(): array
+	public static function getAssets(): array
 	{
-		return self::getStore()['paths'] ?? [];
+		$output = self::getStore()[AbstractManifestCache::ASSETS_KEY] ?? [];
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException('public', 'assets');
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get asset details.
+	 *
+	 * @param string $asset Asset name to get.
+	 *
+	 * @throws InvalidBlock If asset is missing.
+	 *
+	 * @return string
+	 */
+	public static function getAsset(string $asset): string
+	{
+		$output = self::getAssets()[$asset] ?? '';
+
+		if (!$output) {
+			throw InvalidBlock::missingItemException($asset, 'public asset');
+		}
+
+		return $output;
 	}
 }

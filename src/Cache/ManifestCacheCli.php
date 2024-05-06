@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Manifest.
+ * Class that registers WPCLI command for Manifest Cache.
  *
- * @package EightshiftLibs\Manifest
+ * @package EightshiftLibs\Cache
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Manifest;
+namespace EightshiftLibs\Cache;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class ManifestCli
+ * Class ManifestCacheCli
  */
-class ManifestCli extends AbstractCli
+class ManifestCacheCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class ManifestCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'manifest';
+		return 'manifest-cache';
 	}
 
 	/**
@@ -47,11 +47,11 @@ class ManifestCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create manifest service class.',
+			'shortdesc' => 'Create manifest cache service class.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create manifest service class to register assets manifest functionality like getting fonts from your project.
+				Used to create manifest cache service class to optimize the loading of assets in your theme or plugin.
 
 				## EXAMPLES
 
@@ -61,7 +61,7 @@ class ManifestCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/Manifest/ManifestExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/Cache/ManifestCacheExample.php
 			"),
 		];
 	}
@@ -78,6 +78,6 @@ class ManifestCli extends AbstractCli
 			->renameClassName($className)
 			->renameNamespace($assocArgs)
 			->renameUse($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'Manifest'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Cache'), "{$className}.php", $assocArgs);
 	}
 }

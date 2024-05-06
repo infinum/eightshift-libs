@@ -65,35 +65,22 @@ class TaxonomyExample extends AbstractTaxonomy
 	 */
 	protected function getTaxonomyArguments(): array
 	{
-		$nouns = [
-			\esc_html_x(
-				'%label%',
-				'taxonomy upper case singular name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%label_lowercaps%',
-				'taxonomy lower case singular name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%plural_label%',
-				'taxonomy upper case plural name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%plural_label_lowecaps%',
-				'taxonomy lower case plural name',
-				'eightshift-libs'
-			),
-		];
-
-		$labels = $this->getGeneratedLabels($nouns);
-
 		return [
+			// phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified
+			'labels' => [
+				'name' => esc_html_x(
+					'%label%',
+					'taxonomy plural name',
+					'eightshift-libs'
+				),
+				'singular_name' => esc_html_x(
+					'%plural_label%',
+					'taxonomy singular name',
+					'eightshift-libs'
+				),
+			],
+			// phpcs:enable
 			'hierarchical' => true,
-			'label' => $nouns[0],
-			'labels' => $labels,
 			'show_ui' => true,
 			'show_admin_column' => true,
 			'show_in_nav_menus' => false,

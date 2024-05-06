@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Components;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
@@ -924,7 +924,7 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $source Source path.
 	 * @param string $destination Destination path.
 	 *
-	 * @throws InvalidBlock If block file is missing.
+	 * @throws InvalidPath Exception in case the source path is missing.
 	 *
 	 * @return void
 	 */
@@ -940,7 +940,7 @@ abstract class AbstractCli implements CliInterface
 				RecursiveIteratorIterator::SELF_FIRST
 			);
 		} catch (UnexpectedValueException $exception) {
-			throw InvalidBlock::missingFileException($source);
+			throw InvalidPath::missingFileException($source);
 		}
 
 		$ds = \DIRECTORY_SEPARATOR;
@@ -1003,5 +1003,29 @@ abstract class AbstractCli implements CliInterface
 		│                                                          │
 		╰──────────────────────────────────────────────────────────╯%n
 		"), 'mixed');
+	}
+
+	/**
+	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
+	 * Used in combination with getManifest helper.
+	 *
+	 * @param string $path Absolute path to manifest folder.
+	 *
+	 * @throws InvalidPath Exception in case the manifest file is missing.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getManifestDirect(string $path): array
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = \rtrim($path, $sep);
+
+		$manifest = "{$path}{$sep}manifest.json";
+
+		if (!\file_exists($manifest)) {
+			throw InvalidPath::missingFileException($manifest);
+		}
+
+		return \json_decode(\implode(' ', (array)\file($manifest)), true);
 	}
 }

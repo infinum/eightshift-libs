@@ -52,7 +52,7 @@ trait SelectorsTrait
 	 * Create responsive selectors used for responsive attributes.
 	 *
 	 * Example:
-	 * Components::responsiveSelectors($attributes['width'], 'width', $block_class);
+	 * Helpers::responsiveSelectors($attributes['width'], 'width', $block_class);
 	 *
 	 * Output:
 	 * block-column__width-large--4

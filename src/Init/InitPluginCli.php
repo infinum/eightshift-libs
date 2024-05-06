@@ -10,9 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Init;
 
+use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\Main\MainCli;
 use ReflectionClass;
 
@@ -31,7 +32,8 @@ class InitPluginCli extends AbstractCli
 			'type' => 'sc',
 			'label' => 'Setting service classes:',
 			'items' => [
-				ConfigCli::class,
+				ManifestCacheCli::class,
+				ConfigPluginCli::class,
 				MainCli::class,
 			],
 		],

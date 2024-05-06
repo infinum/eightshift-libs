@@ -11,18 +11,12 @@ declare(strict_types=1);
 namespace EightshiftLibs\CustomPostType;
 
 use EightshiftLibs\Services\ServiceInterface;
-use EightshiftLibs\Helpers\LabelGeneratorTrait;
 
 /**
  * Abstract class AbstractPostType class.
  */
 abstract class AbstractPostType implements ServiceInterface
 {
-	/**
-	 * Label Generator Helper.
-	 */
-	use LabelGeneratorTrait;
-
 	/**
 	 * Register custom post type.
 	 *
