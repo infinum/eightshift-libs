@@ -4,7 +4,9 @@ namespace Tests\Unit\GitIgnore;
 
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
+
+use function Tests\getMockArgs;
 
 beforeEach(function () {
 	$this->mock = new GitIgnoreCli('boilerplate');
@@ -54,11 +56,11 @@ test('getDoc will return correct array', function () {
 
 test('__invoke will will correctly copy example class with default args', function () {
 	$mock = $this->mock;
-	$mock([], [
-		'path' => Components::getProjectPaths('cliOutput'),
-	]);
+	$mock([], getMockArgs([
+		'path' => Helpers::getProjectPaths('cliOutput'),
+	]));
 
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', '.gitignore'));
+	$output = \file_get_contents(Helpers::getProjectPaths('cliOutput', '.gitignore'));
 
 	expect($output)
 		->toContain(

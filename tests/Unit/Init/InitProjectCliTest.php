@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Init;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Init\InitProjectCli;
+
+use function Tests\getMockArgs;
 
 beforeEach(function () {
 	$this->mock = new InitProjectCli('boilerplate');
@@ -26,12 +28,9 @@ test('InitProjectCli CLI documentation is correct', function () {
 
 test('InitProject CLI command will correctly copy the project classes', function () {
 	$mock = $this->mock;
-	$mock([], \array_merge(
-		$mock->getDefaultArgs(),
-		[
-			'path' => Components::getProjectPaths('cliOutput'),
-		]
-	));
+	$mock([], getMockArgs([
+		'path' => Helpers::getProjectPaths('cliOutput'),
+	]));
 
 	expect(\getenv('ES_CLI_LOG_HAPPENED'))
 	->toContain('Happy developing!');

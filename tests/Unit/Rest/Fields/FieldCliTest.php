@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\CustomPostType;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Rest\Fields\FieldCli;
+
+use function Tests\getMockArgs;
 
 beforeEach(function () {
 	$this->mock = new FieldCli('boilerplate');
@@ -15,10 +17,10 @@ afterEach(function () {
 
 test('REST field CLI command will correctly copy the field class with defaults', function () {
 	$mock = $this->mock;
-	$mock([], $mock->getDefaultArgs());
+	$mock([], getMockArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}TitleCustomField.php"));
+	$output = \file_get_contents(Helpers::getProjectPaths('srcDestination', "Rest{$sep}Fields{$sep}TitleCustomField.php"));
 
 	$this->assertStringContainsString('class TitleCustomField extends AbstractField implements CallableFieldInterface', $output);
 	$this->assertStringContainsString('return \'title-custom\';', $output);
@@ -30,13 +32,13 @@ test('REST field CLI command will correctly copy the field class with defaults',
 
 test('REST field CLI command will correctly copy the field class with arguments', function ($mockNameArguments) {
 	$mock = $this->mock;
-	$mock([], $mockNameArguments);
+	$mock([], getMockArgs($mockNameArguments));
 
 	$fullFieldName = "{$this->mock->getFileName($mockNameArguments['field_name'])}Field";
 	$objectType = $mockNameArguments['object_type'];
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Rest{$sep}Fields{$sep}{$fullFieldName}.php"));
+	$output = \file_get_contents(Helpers::getProjectPaths('srcDestination', "Rest{$sep}Fields{$sep}{$fullFieldName}.php"));
 
 	$this->assertStringContainsString("class {$fullFieldName} extends AbstractField implements CallableFieldInterface", $output);
 	$this->assertStringContainsString("return ['{$objectType}'];", $output);

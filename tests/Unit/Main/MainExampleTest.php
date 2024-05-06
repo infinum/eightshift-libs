@@ -2,18 +2,23 @@
 
 namespace Tests\Unit\Login;
 
-use EightshiftBoilerplate\Main\MainExample;
+use EightshiftLibs\Main\MainCli;
+use Infinum\Main\Main;
+
+use function Tests\getMockArgs;
+use function Tests\reqOutputFiles;
 
 beforeEach(function() {
-	$this->main = new MainExample([], '');
-});
+	$mainCliMock = new MainCli('boilerplate');
+	$mainCliMock([], getMockArgs($mainCliMock->getDefaultArgs()));
 
-afterEach(function () {
-	unset($this->main);
+	reqOutputFiles(
+		'Main/Main.php',
+	);
 });
 
 test('Register method will call init hook', function () {
-	$this->main->register();
+	(new Main([], ''))->register();
 
-	$this->assertSame(10, has_action('after_setup_theme', 'EightshiftBoilerplate\Main\MainExample->registerServices()'));
+	$this->assertSame(10, has_action('after_setup_theme', 'Infinum\Main\Main->registerServices()'));
 });

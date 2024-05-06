@@ -3,8 +3,10 @@
 namespace Tests\Unit\Readme;
 
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Readme\ReadmeCli;
+
+use function Tests\getMockArgs;
 
 beforeEach(function () {
 	$this->mock = new ReadmeCli('boilerplate');
@@ -54,11 +56,11 @@ test('getDoc will return correct array', function () {
 
 test('__invoke will will correctly copy example class with default args', function () {
 	$mock = $this->mock;
-	$mock([], [
-		'path' => Components::getProjectPaths('cliOutput'),
-	]);
+	$mock([], getMockArgs([
+		'path' => Helpers::getProjectPaths('srcDestination'),
+	]));
 
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', 'README.md'));
+	$output = \file_get_contents(Helpers::getProjectPaths('srcDestination', 'README.md'));
 
 	expect($output)
 		->toContain(

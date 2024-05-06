@@ -4,6 +4,8 @@ namespace Tests\Unit\Init;
 
 use EightshiftLibs\Init\InitThemeCli;
 
+use function Tests\getMockArgs;
+
 beforeEach(function () {
 	$this->mock = new InitThemeCli('boilerplate');
 });
@@ -26,7 +28,7 @@ test('InitThemeCli CLI documentation is correct', function () {
 
 test('InitTheme CLI command will correctly copy the project classes', function () {
 	$mock = $this->mock;
-	$mock([], $mock->getDefaultArgs());
+	$mock([], getMockArgs());
 
 	expect(\getenv('ES_CLI_LOG_HAPPENED'))
 		->toContain('wp boilerplate init header-footer');

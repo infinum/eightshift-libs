@@ -19,7 +19,6 @@
 		</include>
 		<exclude>
 			<file>./src/Build/BuildExample.php</file>
-			<file>./src/Menu/BemMenuWalker.php</file>
 			<file>./src/ConfigProject/ConfigProjectExample.php</file>
 		</exclude>
 		<report>

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\I18n;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\I18n\I18nCli;
 
 use function Tests\getMockArgs;
@@ -20,7 +20,7 @@ test('I18n CLI command will correctly copy the I18n class with defaults', functi
 	$mock([], getMockArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}I18n{$sep}I18n.php"));
+	$output = \file_get_contents(Helpers::getProjectPaths('srcDestination', "I18n{$sep}I18n.php"));
 
 	$this->assertStringContainsString('class I18n implements ServiceInterface', $output);
 	$this->assertStringContainsString('@package Infinum\I18n', $output);

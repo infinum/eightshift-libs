@@ -3,27 +3,32 @@
 namespace Tests\Unit\Login;
 
 use Brain\Monkey\Functions;
-use EightshiftBoilerplate\ModifyAdminAppearance\ModifyAdminAppearanceExample;
+use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
+use Infinum\ModifyAdminAppearance\ModifyAdminAppearance;
+
+use function Tests\getMockArgs;
+use function Tests\reqOutputFiles;
 
 beforeEach(function() {
-	$this->modifyAdminAppearance = new ModifyAdminAppearanceExample();
-});
+	$modifyAdminAppearanceCliMock = new ModifyAdminAppearanceCli('boilerplate');
+	$modifyAdminAppearanceCliMock([], getMockArgs($modifyAdminAppearanceCliMock->getDefaultArgs()));
 
-afterEach(function () {
-	unset($this->modifyAdminAppearance);
+	reqOutputFiles(
+		'ModifyAdminAppearance/ModifyAdminAppearance.php',
+	);
 });
 
 test('Register method will call init hook', function () {
-	$this->modifyAdminAppearance->register();
+	(new ModifyAdminAppearance())->register();
 
-	$this->assertSame(10, has_filter('get_user_option_admin_color', 'EightshiftBoilerplate\ModifyAdminAppearance\ModifyAdminAppearanceExample->adminColor()'));
+	$this->assertSame(10, has_filter('get_user_option_admin_color', 'Infinum\ModifyAdminAppearance\ModifyAdminAppearance->adminColor()'));
 });
 
 test('Asserts if adminColor returns string', function () {
 
 	Functions\when('wp_get_environment_type')->justReturn('staging');
 
-	$output = $this->modifyAdminAppearance->adminColor();
+	$output = (new ModifyAdminAppearance())->adminColor();
 
 	$this->assertStringContainsString('blue', $output);
 });
@@ -32,7 +37,7 @@ test('Asserts if wp_get_environment_type is empty', function () {
 
 	Functions\when('wp_get_environment_type')->justReturn(null);
 
-	$output = $this->modifyAdminAppearance->adminColor();
+	$output = (new ModifyAdminAppearance())->adminColor();
 
 	$this->assertStringContainsString('fresh', $output);
 	$this->assertStringNotContainsString('sunrise', $output);

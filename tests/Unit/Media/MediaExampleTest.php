@@ -3,23 +3,28 @@
 namespace Tests\Unit\Media;
 
 use Brain\Monkey\Functions;
-use EightshiftBoilerplate\Media\MediaExample;
+use EightshiftLibs\Media\MediaCli;
+use Infinum\Media\Media;
+
+use function Tests\getMockArgs;
+use function Tests\reqOutputFiles;
 
 beforeEach(function() {
-	$this->media = new MediaExample();
-});
+	$mediaCliMock = new MediaCli('boilerplate');
+	$mediaCliMock([], getMockArgs($mediaCliMock->getDefaultArgs()));
 
-afterEach(function () {
-	unset($this->media);
+	reqOutputFiles(
+		'Media/Media.php',
+	);
 });
 
 test('Register method will call init hook', function () {
-	$this->media->register();
+	(new Media())->register();
 
-	$this->assertSame(20, has_action('after_setup_theme', 'EightshiftBoilerplate\Media\MediaExample->addThemeSupport()'));
-	$this->assertSame(10, has_filter('wp_generate_attachment_metadata', 'EightshiftBoilerplate\Media\MediaExample->generateWebPMedia()'), 2);
-	$this->assertSame(10, has_filter('wp_update_attachment_metadata', 'EightshiftBoilerplate\Media\MediaExample->generateWebPMedia()'), 2);
-	$this->assertSame(10, has_action('delete_attachment', 'EightshiftBoilerplate\Media\MediaExample->deleteWebPMedia()'));
+	$this->assertSame(20, has_action('after_setup_theme', 'Infinum\Media\Media->addThemeSupport()'));
+	$this->assertSame(10, has_filter('wp_generate_attachment_metadata', 'Infinum\Media\Media->generateWebPMedia()'), 2);
+	$this->assertSame(10, has_filter('wp_update_attachment_metadata', 'Infinum\Media\Media->generateWebPMedia()'), 2);
+	$this->assertSame(10, has_action('delete_attachment', 'Infinum\Media\Media->deleteWebPMedia()'));
 });
 
 test('addThemeSupport method will call add_theme_support() function with different arguments', function () {
@@ -29,7 +34,7 @@ test('addThemeSupport method will call add_theme_support() function with differe
 		putenv("{$envName}=true");
 	});
 
-	$this->media->addThemeSupport();
+	(new Media())->addThemeSupport();
 
 	$this->assertSame(\getenv('TITLE_TAG'), 'true', "Method addThemeSupport() didn't add theme support for title-tag");
 	$this->assertSame(\getenv('HTML5'), 'true', "Method addThemeSupport() didn't add theme support for html5");

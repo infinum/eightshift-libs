@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Menu;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Menu\MenuCli;
+
+use function Tests\getMockArgs;
 
 beforeEach(function () {
 	$this->mock = new MenuCli('boilerplate');
@@ -15,10 +17,10 @@ afterEach(function () {
 
 test('Menu CLI command will correctly copy the Menu class with defaults', function () {
 	$mock = $this->mock;
-	$mock([], []);
+	$mock([], getMockArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Menu{$sep}Menu.php"));
+	$output = \file_get_contents(Helpers::getProjectPaths('srcDestination', "Menu{$sep}Menu.php"));
 
 	$this->assertStringContainsString('class Menu extends AbstractMenu', $output);
 	$this->assertStringContainsString('header_main_nav', $output);
@@ -27,12 +29,12 @@ test('Menu CLI command will correctly copy the Menu class with defaults', functi
 
 test('Menu CLI command will correctly copy the Menu class with set arguments', function () {
 	$mock = $this->mock;
-	$mock([], [
+	$mock([], getMockArgs([
 		'namespace' => 'CoolTheme',
-	]);
+	]));
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}Menu{$sep}Menu.php"));
+	$output = \file_get_contents(Helpers::getProjectPaths('srcDestination', "Menu{$sep}Menu.php"));
 
 	$this->assertStringContainsString('class Menu extends AbstractMenu', $output);
 	$this->assertStringContainsString('namespace CoolTheme\Menu;', $output);

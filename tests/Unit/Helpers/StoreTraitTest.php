@@ -3,7 +3,8 @@
 namespace Tests\Unit\Helpers;
 
 use EightshiftBoilerplate\Blocks\BlocksExample;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Helpers\Helpers;
 
 use function Tests\buildTestBlocks;
 
@@ -19,15 +20,11 @@ test('Asserts that "getBlocks" will return empty array if blocks are missing.', 
 	global $esBlocks;
 	$esBlocks = null;
 
-	$result = Components::getBlocks();
-
-	expect($result)
-		->toBeArray()
-		->toBe([]);
-});
+	Helpers::getBlocks();
+})->throws(InvalidBlock::class, 'Trying to get missing-block block. Please check if it exists in the project.');
 
 test('Asserts that "getBlocks" will return blocks list.', function () {
-	$result = Components::getBlocks();
+	$result = Helpers::getBlocks();
 
 	expect($result)
 		->toBeArray()
@@ -39,7 +36,7 @@ test('Asserts that "getBlocks" will return blocks list.', function () {
 // ------------------------------------------
 
 test('Asserts that "getBlock" will return empty array if block is missing or wrong.', function () {
-	$result = Components::getBlock('missing-block');
+	$result = Helpers::getBlock('missing-block');
 
 	expect($result)
 		->toBeArray()
@@ -47,7 +44,7 @@ test('Asserts that "getBlock" will return empty array if block is missing or wro
 });
 
 test('Asserts that "getBlock" will return block manifest if name is correct.', function () {
-	$result = Components::getBlock('button');
+	$result = Helpers::getBlock('button');
 
 	expect($result)
 		->toBeArray()
@@ -62,7 +59,7 @@ test('Asserts that "getComponents" will return empty array if components are mis
 	global $esBlocks;
 	$esBlocks = null;
 
-	$result = Components::getComponents();
+	$result = Helpers::getComponents();
 
 	expect($result)
 		->toBeArray()
@@ -70,7 +67,7 @@ test('Asserts that "getComponents" will return empty array if components are mis
 });
 
 test('Asserts that "getComponents" will return components list.', function () {
-	$result = Components::getComponents();
+	$result = Helpers::getComponents();
 
 	expect($result)
 		->toBeArray()
@@ -82,7 +79,7 @@ test('Asserts that "getComponents" will return components list.', function () {
 // ------------------------------------------
 
 test('Asserts that "getComponent" will return empty array if component is missing or wrong.', function () {
-	$result = Components::getComponent('missing-component');
+	$result = Helpers::getComponent('missing-component');
 
 	expect($result)
 		->toBeArray()
@@ -90,7 +87,7 @@ test('Asserts that "getComponent" will return empty array if component is missin
 });
 
 test('Asserts that "getComponent" will return component manifest if name is correct.', function () {
-	$result = Components::getComponent('button');
+	$result = Helpers::getComponent('button');
 
 	expect($result)
 		->toBeArray()
@@ -102,7 +99,7 @@ test('Asserts that "getComponent" will return component manifest if name is corr
 // ------------------------------------------
 
 test('Asserts that "getConfig" will return config array.', function () {
-	$result = Components::getConfig();
+	$result = Helpers::getConfig();
 
 	expect($result)
 		->toBeArray()
@@ -123,9 +120,9 @@ test('Asserts that "setConfigFlags" will change config if set in manifest.json.'
 	global $esBlocks;
 	$esBlocks = null;
 
-	$outputCssGlobally = Components::getConfigOutputCssGlobally();
-	$outputCssOptimize = Components::getConfigOutputCssOptimize();
-	$outputCssSelectorName = Components::getConfigOutputCssSelectorName();
+	$outputCssGlobally = Helpers::getConfigOutputCssGlobally();
+	$outputCssOptimize = Helpers::getConfigOutputCssOptimize();
+	$outputCssSelectorName = Helpers::getConfigOutputCssSelectorName();
 
 	expect($outputCssGlobally)->toBeBool()->toBeFalse();
 	expect($outputCssOptimize)->toBeBool()->toBeFalse();
@@ -133,11 +130,11 @@ test('Asserts that "setConfigFlags" will change config if set in manifest.json.'
 
 	(new BlocksExample())->getBlocksDataFullRaw();
 
-	Components::setConfigFlags();
+	Helpers::setConfigFlags();
 
-	$outputCssGlobally = Components::getConfigOutputCssGlobally();
-	$outputCssOptimize = Components::getConfigOutputCssOptimize();
-	$outputCssSelectorName = Components::getConfigOutputCssSelectorName();
+	$outputCssGlobally = Helpers::getConfigOutputCssGlobally();
+	$outputCssOptimize = Helpers::getConfigOutputCssOptimize();
+	$outputCssSelectorName = Helpers::getConfigOutputCssSelectorName();
 
 	expect($outputCssGlobally)->toBeBool()->toBeTrue();
 	expect($outputCssOptimize)->toBeBool()->toBeTrue();
@@ -149,7 +146,7 @@ test('Asserts that "setConfigFlags" will change config if set in manifest.json.'
 // ------------------------------------------
 
 test('Asserts that "getSettingsGlobalVariablesColors" will return global setting variables color as array.', function () {
-	$result = Components::getSettingsGlobalVariablesColors();
+	$result = Helpers::getSettingsGlobalVariablesColors();
 
 	expect($result)->toBeArray();
 });
@@ -159,7 +156,7 @@ test('Asserts that "getSettingsGlobalVariablesColors" will return global setting
 // ------------------------------------------
 
 test('Asserts that "getSettingsGlobalVariablesCustomBlockName" will return global setting variables custom block name.', function () {
-	$result = Components::getSettingsGlobalVariablesCustomBlockName();
+	$result = Helpers::getSettingsGlobalVariablesCustomBlockName();
 
 	expect($result)->toBeString()->toEqual('eightshift-block');
 });
@@ -169,13 +166,13 @@ test('Asserts that "getSettingsGlobalVariablesCustomBlockName" will return globa
 // ------------------------------------------
 
 test('Asserts that "setStyle" will add style array to global store.', function () {
-	$result = Components::getStyles();
+	$result = Helpers::getStyles();
 
 	expect($result)->toBeArray()->toEqual([]);
 
-	Components::setStyle(['test']);
+	Helpers::setStyle(['test']);
 
-	$result = Components::getStyles();
+	$result = Helpers::getStyles();
 
 	expect($result)->toBeArray()->toEqual([['test']]);
 });

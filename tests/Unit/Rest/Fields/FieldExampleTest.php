@@ -3,28 +3,40 @@
 namespace Tests\Unit\CustomPostType;
 
 use Brain\Monkey\Functions;
-use EightshiftBoilerplate\Rest\Fields\FieldExample;
+use EightshiftLibs\Rest\Fields\FieldCli;
+use Infinum\Rest\Fields\TitleCustomField;
 
+use function Tests\getMockArgs;
 use function Tests\mock;
+use function Tests\reqOutputFiles;
 
 beforeEach(function() {
-	$this->field = new FieldExample();
+	$fieldCliMock = new FieldCli('boilerplate');
+	$fieldCliMock([], getMockArgs($fieldCliMock->getDefaultArgs()));
+
+	reqOutputFiles(
+		'Config/Config.php',
+		'Rest/Fields/TitleCustomField.php',
+	);
 
 	$this->wpRestServer = mock('alias:WP_REST_Server');
 });
 
 afterEach(function () {
-	unset($this->field, $this->wpRestServer);
+	unset(
+		$this->field,
+		$this->wpRestServer
+	);
 });
 
 test('Register method will call init hook', function () {
-	$this->field->register();
+	(new TitleCustomField())->register();
 
-	$this->assertSame(10, has_action('rest_api_init', 'EightshiftBoilerplate\Rest\Fields\FieldExample->fieldRegisterCallback()'));
+	$this->assertSame(10, has_action('rest_api_init', 'Infinum\Rest\Fields\TitleCustomField->fieldRegisterCallback()'));
 });
 
 test('Field has a valid callback', function () {
-	$output = $this->field->fieldCallback(new class{}, 'attr', new class{}, 'post');
+	$output = (new TitleCustomField())->fieldCallback(new class{}, 'attr', new class{}, 'post');
 
 	$this->assertStringContainsString($output, 'output data');
 });
@@ -33,7 +45,7 @@ test('Field registers the callback properly', function () {
 	$action = 'field_registered';
 	Functions\when('register_rest_field')->justReturn(putenv("SIDEAFFECT={$action}"));
 
-	$this->field->fieldRegisterCallback($this->wpRestServer, 'attr', new class{}, 'post');
+	(new TitleCustomField())->fieldRegisterCallback($this->wpRestServer, 'attr', new class{}, 'post');
 
 	$this->assertSame(\getenv('SIDEAFFECT'), $action);
 

@@ -4,8 +4,13 @@ namespace Tests;
 
 use Mockery;
 use EightshiftBoilerplate\Blocks\BlocksExample;
+use EightshiftLibs\Blocks\BlocksCli;
+use EightshiftLibs\Cache\ManifestCacheCli;
+use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Init\InitBlocksCli;
+use Infinum\Blocks\Blocks;
+use Infinum\Cache\ManifestCache;
 use Mockery\MockInterface;
 
 /**
@@ -15,9 +20,22 @@ use Mockery\MockInterface;
  */
 function buildTestBlocks()
 {
-	(new InitBlocksCli('boilerplate'))->__invoke([], []);
+	$configThemeCliMock = new ConfigThemeCli('boilerplate');
+	$configThemeCliMock([], getMockArgs($configThemeCliMock->getDefaultArgs()));
 
-	(new BlocksExample())->getBlocksDataFullRaw();
+	$manifestCacheCliMock = new ManifestCacheCli('boilerplate');
+	$manifestCacheCliMock([], getMockArgs($manifestCacheCliMock->getDefaultArgs()));
+
+	$initBlocksCliMock = new InitBlocksCli('boilerplate');
+	$initBlocksCliMock([], getMockArgs($initBlocksCliMock->getDefaultArgs()));
+
+	reqOutputFiles(
+		'Config/Config.php',
+		'Cache/ManifestCache.php',
+		'Blocks/Blocks.php',
+	);
+
+	(new Blocks(new ManifestCache()))->getBlocksDataFullRaw();
 }
 
 /**

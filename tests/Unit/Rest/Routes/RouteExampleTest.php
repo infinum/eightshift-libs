@@ -3,31 +3,31 @@
 namespace Tests\Unit\Rest\Routes;
 
 use Brain\Monkey\Functions;
+use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
+use Infinum\Rest\Routes\TestRoute;
 
+use function Tests\getMockArgs;
 use function Tests\mock;
+use function Tests\reqOutputFiles;
 
-beforeEach(function() {
-	$this->route = new RouteCli('boilerplate');
-	$this->projectNamespace = 'LibsTests';
-	$this->projectVersion = '1.0';
-	$this->mockRequestKey = 'some-key';
-	$this->mockRequestValue = 'here is the value';
+beforeEach(function () {
+	$configThemeCliMock = new ConfigThemeCli('boilerplate');
+	$configThemeCliMock([], getMockArgs($configThemeCliMock->getDefaultArgs()));
 
-	// Setting up Eightshift Boilerplate Config class mock.
-	$config = mock('alias:EightshiftBoilerplate\Config\Config');
+	$routeCliMock = new RouteCli('boilerplate');
+	$routeCliMock([], getMockArgs($routeCliMock->getDefaultArgs()));
 
-	// Mocking functions from EB Config.
-	$config
-		->shouldReceive('getProjectRoutesNamespace')
-		->andReturn($this->projectNamespace);
-
-	$config
-		->shouldReceive('getProjectRoutesVersion')
-		->andReturn($this->projectVersion);
+	reqOutputFiles(
+		'Config/Config.php',
+		'Rest/Routes/TestRoute.php',
+	);
 
 	$this->wpRestServer = mock('alias:WP_REST_Server');
 	$this->wpRestRequest = mock('alias:WP_REST_Request');
+
+	$this->mockRequestKey = 'some-key';
+	$this->mockRequestValue = 'here is the value';
 
 	$this->wpRestRequest
 		->shouldReceive('get_body')
@@ -36,9 +36,6 @@ beforeEach(function() {
 
 afterEach(function () {
 	unset(
-		$this->route,
-		$this->projectNamespace,
-		$this->projectVersion,
 		$this->mockRequestKey,
 		$this->mockRequestValue,
 		$this->wpRestServer,
@@ -46,28 +43,25 @@ afterEach(function () {
 	);
 });
 
-
 test('Register method will call init hook', function () {
-	$this->route->register();
+	(new TestRoute())->register();
 
-	$this->assertSame(10, has_action('rest_api_init', 'EightshiftBoilerplate\Rest\Routes\RouteExample->routeRegisterCallback()'));
+	$this->assertSame(10, has_action('rest_api_init', 'Infinum\Rest\Routes\TestRoute->routeRegisterCallback()'));
 });
 
-
 test('Route has a valid callback', function () {
-	$output = $this->route->routeCallback($this->wpRestRequest);
+	$output = (new TestRoute())->routeCallback($this->wpRestRequest);
 
 	$this->assertIsArray($output);
 	$this->assertArrayHasKey($this->mockRequestKey, $output);
 	$this->assertSame($output[$this->mockRequestKey], $this->mockRequestValue);
 });
 
-
 test('Route registers the callback properly', function () {
 	$action = 'route_registered';
 	Functions\when('register_rest_route')->justReturn(putenv("SIDEAFFECT={$action}"));
 
-	$this->route->routeRegisterCallback($this->wpRestServer);
+	(new TestRoute())->routeRegisterCallback($this->wpRestServer);
 
 	$this->assertSame(\getenv('SIDEAFFECT'), $action);
 

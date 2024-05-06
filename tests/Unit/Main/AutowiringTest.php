@@ -2,9 +2,10 @@
 
 namespace Tests\Unit\Autowiring;
 
-use EightshiftBoilerplate\Main\MainExample;
 use EightshiftLibs\Exception\{InvalidAutowireDependency, NonPsr4CompliantClass};
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
+use EightshiftLibs\Main\MainCli;
+use Infinum\Main\Main;
 use Tests\Datasets\Autowiring\Dependencies\{
 	ClassDepWithNoDependencies,
 	ClassImplementingInterfaceDependency,
@@ -31,10 +32,20 @@ use Tests\Datasets\Autowiring\Services\{
 	ServiceWithPrimitiveDepHasDefault
 };
 
+use function Tests\getMockArgs;
+use function Tests\reqOutputFiles;
+
 beforeEach(function() {
-	$this->main = new MainExample([
+	$mainCliMock = new MainCli('boilerplate');
+	$mainCliMock([], getMockArgs($mainCliMock->getDefaultArgs()));
+
+	reqOutputFiles(
+		'Main/Main.php',
+	);
+
+	$this->main = new Main([
 		'Tests\\Datasets\\Autowiring\\' => [
-			Components::getProjectPaths('projectRoot', 'tests/Datasets/Autowiring')
+			Helpers::getProjectPaths('testsDatasetsPath', 'Autowiring')
 		],
 	], 'Tests\Datasets\Autowiring');
 
