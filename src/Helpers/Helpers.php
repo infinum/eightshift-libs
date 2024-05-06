@@ -169,7 +169,7 @@ class Helpers
 	/**
 	 * Get manifest json by path and name.
 	 *
-	 * @param string $path Absolute path to .
+	 * @param string $path Absolute path to.
 	 *
 	 * @throws InvalidManifest If the manifest is not allowed.
 	 *
