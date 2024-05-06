@@ -2,20 +2,20 @@
 
 namespace Tests\Unit\Login;
 
-use EightshiftBoilerplate\Services\ServiceExample;
+use EightshiftLibs\Services\ServiceExampleCli;
 
 beforeEach(function() {
-	$this->service = new ServiceExample();
+	$this->mock = new ServiceExampleCli('boilerplate');
 });
 
 afterEach(function () {
-	unset($this->service);
+	unset($this->mock);
 });
 
 test('Service Example test register method', function () {
-	$this->assertNull($this->service->register());
+	$this->assertNull($this->mock->register());
 });
 
 test('Service Example contains register method', function () {
-	$this->assertTrue(\method_exists($this->service, 'register'));
+	$this->assertTrue(\method_exists($this->mock, 'register'));
 });

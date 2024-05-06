@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\ThemeOptions;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
+
+use function Tests\getMockArgs;
 
 beforeEach(function () {
 	$this->mock = new ThemeOptionsCli('boilerplate');
@@ -13,13 +15,12 @@ afterEach(function () {
 	unset($this->mock);
 });
 
-
 test('Custom theme options CLI command will correctly copy the theme options class with defaults', function () {
 	$mock = $this->mock;
-	$mock([], []);
+	$mock([], getMockArgs());
 
 	$sep = \DIRECTORY_SEPARATOR;
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "src{$sep}ThemeOptions{$sep}ThemeOptions.php"));
+	$output = \file_get_contents(Helpers::getProjectPaths('srcDestination', "ThemeOptions{$sep}ThemeOptions.php"));
 
 		expect($output)
 			->toBeString()

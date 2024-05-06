@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Setup;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Setup\SetupCli;
+
+use function Tests\getMockArgs;
 
 beforeEach(function () {
 	$this->mock = new SetupCli('boilerplate');
@@ -17,12 +19,12 @@ test('Setup CLI command will correctly copy the Setup class with defaults', func
 	$sep = \DIRECTORY_SEPARATOR;
 
 	$mock = $this->mock;
-	$mock([], [
-		'path' => Components::getProjectPaths('cliOutput', 'setup'),
-		'source_path' => Components::getProjectPaths('testsData', 'setup'),
-	]);
+	$mock([], getMockArgs([
+		'path' => Helpers::getProjectPaths('srcDestination', 'setup'),
+		'source_path' => Helpers::getProjectPaths('testsData', 'setup'),
+	]));
 
-	$output = \file_get_contents(Components::getProjectPaths('cliOutput', "setup{$sep}setup.json"));
+	$output = \file_get_contents(Helpers::getProjectPaths('srcDestination', "setup{$sep}setup.json"));
 
 	expect($output)->toContain('staging');
 });

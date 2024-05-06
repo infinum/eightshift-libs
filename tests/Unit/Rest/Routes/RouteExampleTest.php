@@ -3,12 +3,12 @@
 namespace Tests\Unit\Rest\Routes;
 
 use Brain\Monkey\Functions;
-use EightshiftBoilerplate\Rest\Routes\RouteExample;
+use EightshiftLibs\Rest\Routes\RouteCli;
 
 use function Tests\mock;
 
 beforeEach(function() {
-	$this->route = new RouteExample();
+	$this->route = new RouteCli('boilerplate');
 	$this->projectNamespace = 'LibsTests';
 	$this->projectVersion = '1.0';
 	$this->mockRequestKey = 'some-key';

@@ -6,16 +6,10 @@ use EightshiftLibs\Setup\PluginManageCli;
 
 use function Brain\Monkey\Functions\when;
 
-/**
- * Mock before tests.
- */
 beforeEach(function () {
 	$this->pluginManage = new PluginManageCli('boilerplate');
 });
 
-/**
- * Cleanup after tests.
- */
 afterEach(function () {
 	unset($this->pluginManage);
 });

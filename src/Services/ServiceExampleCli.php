@@ -54,7 +54,7 @@ class ServiceExampleCli extends AbstractCli
 		$sep = \DIRECTORY_SEPARATOR;
 
 		return [
-			'folder' => "TestFolder{$sep}TMP",
+			'folder' => "TestFolder{$sep}Tmp",
 			'file_name' => 'TestTest',
 		];
 	}

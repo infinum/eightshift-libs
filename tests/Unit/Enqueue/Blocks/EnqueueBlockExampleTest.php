@@ -2,105 +2,40 @@
 
 namespace Tests\Unit\Enqueue\Blocks;
 
-use Brain\Monkey;
-use Brain\Monkey\Functions;
-use EightshiftBoilerplate\Enqueue\Blocks\EnqueueBlocksExample;
-use EightshiftBoilerplate\Manifest\ManifestExample;
-use EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 
-use function Tests\mock;
-
-class EnqueueBlockExampleTest extends EnqueueBlocksExample {
-
-	public function __construct(ManifestInterface $manifest)
+class EnqueueBlockExampleTest extends AbstractEnqueueBlocks
+{
+	public function register(): void
 	{
-		parent::__construct($manifest);
+		\add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
-
-	protected function getLocalizations(): array
+	public function getAssetsPrefix(): string
+	{
+		return 'MyProject';
+	}
+	public function getAssetsVersion(): string
+	{
+		return '1.0.0';
+	}
+	public function getLocalizations(): array
 	{
 		return [
-			'someKey' => ['someValue'],
-			'anotherKey' => ['anotherValue']
+			'example' => 'example',
 		];
 	}
-};
+}
 
-/**
- * Setup before each test.
- */
-beforeEach(function() {
-	// Setting imaginary values for mock and testing.
-	$this->projectName = 'NewProject';
-	$this->projectVersion = '3.1.23';
-
-	// Setting WPCLI mock.
-	mock('alias:WP_CLI')
-		->shouldReceive('success', 'error')
-		->andReturnArg(0);
-
-	// Setting up Eightshift Boilerplate Config class mock.
-	$config = mock('alias:EightshiftBoilerplate\Config\Config');
-
-	// Mocking functions from EB Config.
-	$config
-		->shouldReceive('getProjectName')
-		->andReturn($this->projectName);
-
-	$config
-		->shouldReceive('getProjectVersion')
-		->andReturn($this->projectVersion);
-
-	$config
-		->shouldReceive('getProjectPath')
-		->andReturn('tests/data');
-
-	Functions\when('wp_register_style')->alias(function($args) {
-		putenv("REGISTER_STYLE={$args}");
-	});
-
-	Functions\when('wp_enqueue_style')->alias(function($args) {
-		putenv("ENQUEUE_STYLE={$args}");
-	});
-
-	Functions\when('wp_register_script')->alias(function($args) {
-		putenv("REGISTER_SCRIPT={$args}");
-	});
-
-	Functions\when('wp_enqueue_script')->alias(function($args) {
-		putenv("ENQUEUE_SCRIPT={$args}");
-	});
-
-	$localize = 'localize';
-	Functions\when('wp_localize_script')->justReturn(putenv("SIDEAFFECT={$localize}"));
-
-	// Creating manifest from manifest data.
-	$manifest = new ManifestExample();
-	// We need to 'kickstart' the manifest registration manually during tests.
-	$manifest->setAssetsManifestRaw();
-
-	$this->blockEnqueue = new EnqueueBlockExampleTest($manifest);
-
-	$this->hookSuffix = 'test';
-});
-
-/**
- * Cleanup after each test.
- */
-afterEach(function() {
-	unset(
-		$this->projectName,
-		$this->projectVersion,
-		$this->blockEnqueue,
-		$this->hookSuffix
-	);
-
-	putenv('REGISTER_STYLE');
-	putenv('ENQUEUE_STYLE');
-	putenv('REGISTER_SCRIPT');
-	putenv('ENQUEUE_SCRIPT');
-	putenv('SIDEAFFECT');
-});
+class ManifestCache extends AbstractManifestCache
+{
+	public function getCacheName(): string
+	{
+		return 'my-project';
+	}
+}
 
 /**
  * Checking if register method will register the actions.

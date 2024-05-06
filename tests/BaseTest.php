@@ -246,7 +246,7 @@ class BaseTest extends TestCase
 	{
 		parent::tear_down();
 
-		$this->deleteCliOutput();
+		// $this->deleteCliOutput();
 
 		for ($i = 1; $i <= 10; $i++) {
 			putenv("ES_SIDEAFFECT_{$i}");

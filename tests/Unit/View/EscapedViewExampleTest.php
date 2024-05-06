@@ -2,17 +2,24 @@
 
 namespace Tests\Unit\View;
 
-use EightshiftBoilerplate\View\EscapedViewExample;
+use EightshiftLibs\View\EscapedViewCli;
+use Infinum\View\EscapedView;
 
-beforeEach(function() {
-	$this->example = new EscapedViewExample();
-});
+use function Tests\getMockArgs;
+use function Tests\reqOutputFiles;
 
-afterEach(function () {
-	unset($this->example);
+beforeEach(function () {
+	$escapedViewCliMock = new EscapedViewCli('boilerplate');
+	$escapedViewCliMock([], getMockArgs($escapedViewCliMock->getDefaultArgs()));
+
+	reqOutputFiles(
+		'View/EscapedView.php',
+	);
 });
 
 test('Escaped view class has register method', function () {
-	$this->assertTrue(\method_exists($this->example, 'register'));
-	$this->assertEmpty($this->example->register());
+	$mock = (new EscapedView());
+
+	$this->assertTrue(\method_exists($mock, 'register'));
+	$this->assertEmpty($mock->register());
 });

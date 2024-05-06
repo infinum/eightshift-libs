@@ -2,37 +2,43 @@
 
 namespace Tests\Unit\WpCli;
 
-use EightshiftBoilerplate\WpCli\WpCliExample;
+use EightshiftLibs\Config\ConfigThemeCli;
+use EightshiftLibs\WpCli\WpCli;
+use Infinum\WpCli\TestWpCli;
+
+use function Tests\getMockArgs;
+use function Tests\reqOutputFiles;
 
 beforeEach(function () {
-	$this->mock = new WpCliExample('boilerplate');
-});
+	$configThemeCliMock = new ConfigThemeCli('boilerplate');
+	$configThemeCliMock([], getMockArgs($configThemeCliMock->getDefaultArgs()));
 
-afterEach(function () {
-	unset($this->mock);
+	$wpCliMock = new WpCli('boilerplate');
+	$wpCliMock([], getMockArgs($wpCliMock->getDefaultArgs()));
+
+	reqOutputFiles(
+		'WpCli/TestWpCli.php',
+	);
 });
 
 test('Register method will call init hook', function () {
-	$this->mock->register();
+	(new TestWpCli())->register();
 
-	expect(has_action('cli_init', 'EightshiftBoilerplate\WpCli\WpCliExample->registerCommand()'))
+	expect(has_action('cli_init', 'Infinum\WpCli\TestWpCli->registerCommand()'))
 		->toEqual(10);
 });
 
 test('Prepare command docs returns correct doc', function() {
-	$mock = $this->mock->getDocs();
+	$mock = (new TestWpCli())->getDocs();
 
 	expect($mock)
 		->toHaveKeys(['shortdesc']);
 });
 
 test('Custom command class is callable', function() {
-	$customCommand = $this->mock;
-
-	expect($customCommand)->toBeCallable();
+	expect((new TestWpCli()))->toBeCallable();
 });
 
-
 test('Custom command example documentation is correct', function () {
-	expect($this->mock->getDocs())->toBeArray();
+	expect((new TestWpCli())->getDocs())->toBeArray();
 });
