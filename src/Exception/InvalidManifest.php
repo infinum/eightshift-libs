@@ -29,7 +29,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	{
 		return new InvalidManifest(
 			\sprintf(
-			/* translators: %s is replaced by the missing key in the manifest.json */
+				/* translators: %1$s is replaced by the missing key in the manifest.json, %2$s is replaced by the path privided */
 				\esc_html__(
 					'%1$s key does not exist in manifest.json at %2$s. Please check if the provided key is correct.',
 					'eightshift-libs'
@@ -53,7 +53,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 			\sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
-					'Manifest.json in %s path is empty or has errors. Please check your data.',
+					'Manifest.json at %s is empty or has errors. Please check it and try again.',
 					'eightshift-libs'
 				),
 				$path
@@ -74,7 +74,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 			\sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
-					'Manifest.json in missing in %s path. Please check your data.',
+					'Manifest.json missing at %s. Please verify it exists and try again.',
 					'eightshift-libs'
 				),
 				$path
@@ -114,7 +114,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	{
 		return new InvalidManifest(
 			\sprintf(
-				/* translators: %s is replaced by the path privided */
+				/* translators: %1$s is replaced by the allowed folders, %2$s is replaced by the path privided */
 				\esc_html__(
 					'Trying to load manifest.json from outside of allowed folders. Manifest can only be loaded from: %1$s. Provided path: %2$s',
 					'eightshift-libs'
@@ -142,7 +142,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	{
 		return new InvalidManifest(
 			\sprintf(
-				/* translators: %s is replaced by the path privided */
+				/* translators: %1$s is replaced by the missing key in the manifest.json, %2$s is replaced by the cache type */
 				\esc_html__(
 					'Unable to get %1$s from manifest data or cache. Please check if provided key is correct or cache type is correct. Cache type provided is: %2$s.',
 					'eightshift-libs'
@@ -166,7 +166,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	{
 		return new InvalidManifest(
 			\sprintf(
-				/* translators: %s is replaced by the path privided */
+				/* translators: %1$s is replaced by the missing key in the manifest.json, %2$s is replaced by the name of the subitem, %3$s is replaced by the cache type */
 				\esc_html__(
 					'Unable to get %1$s from manifest data or cache with subitem %2$s.
 					Please check if provided key is correct or cache type is correct. Cache type provided is: %3$s.',
