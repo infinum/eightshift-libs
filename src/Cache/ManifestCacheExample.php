@@ -16,7 +16,7 @@ use %useLibs%\Cache\AbstractManifestCache;
 /**
  * The project config class.
  */
-class ManifestCache extends AbstractManifestCache
+class ManifestCacheExample extends AbstractManifestCache
 {
 	/**
 	 * Get cache name.
