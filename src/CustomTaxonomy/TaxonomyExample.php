@@ -71,12 +71,12 @@ class TaxonomyExample extends AbstractTaxonomy
 				'name' => esc_html_x(
 					'%label%',
 					'taxonomy plural name',
-					'infobip'
+					'eightshift-libs'
 				),
 				'singular_name' => esc_html_x(
 					'%plural_label%',
 					'taxonomy singular name',
-					'infobip'
+					'eightshift-libs'
 				),
 			],
 			// phpcs:enable

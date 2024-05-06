@@ -28,7 +28,7 @@ trait DeprecatedTrait
 	 *
 	 * @throws InvalidPath If the file is missing.
 	 *
-	 * @deprecated 8.0.0 Use Components::render() instead. This method will be removed in the next major release.
+	 * @deprecated 8.0.0 Use Helpers::render() instead. This method will be removed in the next major release.
 	 *
 	 * @return string Partial html.
 	 */

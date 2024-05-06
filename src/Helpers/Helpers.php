@@ -245,7 +245,6 @@ class Helpers
 					$internalPrefix = \dirname(__FILE__, 3);
 					$path = self::joinPaths([...$testsDataPath]);
 				}
-
 				break;
 			case 'srcDestination':
 				$path = $srcPath;
@@ -254,7 +253,6 @@ class Helpers
 					$internalPrefix = \dirname(__FILE__, 3);
 					$path = self::joinPaths([$cliOutputPath, $srcPath]);
 				}
-
 				break;
 			case 'cliOutput':
 			case 'root':
@@ -264,7 +262,6 @@ class Helpers
 					$internalPrefix = \dirname(__FILE__, 3);
 					$path = $cliOutputPath;
 				}
-
 				break;
 			case 'wpContent':
 				$internalPrefix = \dirname(__FILE__, 8);
@@ -342,7 +339,6 @@ class Helpers
 			case 'blocksSourceWrapper':
 				$name = 'wrapper';
 				break;
-
 			case 'blocksGlobalAssetsDestination':
 				$path = self::joinPaths([$assetsPath]);
 

@@ -51,7 +51,7 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 		return new InvalidBlock(
 			\sprintf(
 				/* translators: %1$s is going to be replaced with the component/block name, %2$s with type. */
-				\esc_html__('You are trying to get %1$s %2$s. Please check if you have it in your project.', 'eightshift-libs'),
+				\esc_html__('Trying to get %1$s %2$s. Please check if it exists in the project.', 'eightshift-libs'),
 				$name,
 				$type
 			)

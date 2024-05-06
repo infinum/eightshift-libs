@@ -31,7 +31,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 			\sprintf(
 			/* translators: %s is replaced by the missing key in the manifest.json */
 				\esc_html__(
-					'%1$s key does not exist in manifest.json on this %2$s path. Please check if provided key is correct.',
+					'%1$s key does not exist in manifest.json at %2$s. Please check if the provided key is correct.',
 					'eightshift-libs'
 				),
 				$key,
@@ -83,7 +83,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	}
 
 	/**
-	 * Throws error if manifest try to access on none allowed path.
+	 * Throws error if trying to access manifest on non allowed path.
 	 *
 	 * @param string $path Missing manifest path.
 	 *
@@ -95,7 +95,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 			\sprintf(
 				/* translators: %s is replaced by the path privided */
 				\esc_html__(
-					'You are trying to get manifest.json outside of the Blocks folder. Please review your implementation. Path you are providing is: %s',
+					'Trying to get manifest.json from outside of the Blocks folder. Please check your implementation. Path provided: %s',
 					'eightshift-libs'
 				),
 				$path
@@ -104,7 +104,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	}
 
 	/**
-	 * Throws error if manifest try to access on none allowed path item.
+	 * Throws error if trying to access manifest on non allowed path item.
 	 *
 	 * @param string $path Missing manifest path.
 	 *
@@ -116,7 +116,7 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 			\sprintf(
 				/* translators: %s is replaced by the path privided */
 				\esc_html__(
-					'You are tryng to get manifest.json from outside of the Blocks items folder. Allowed folders are: %1$s. Path you are providing is: %2$s',
+					'Trying to load manifest.json from outside of allowed folders. Manifest can only be loaded from: %1$s. Provided path: %2$s',
 					'eightshift-libs'
 				),
 				\implode(', ', [

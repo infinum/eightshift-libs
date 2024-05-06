@@ -270,7 +270,7 @@ trait ObjectHelperTrait
 	}
 
 	/**
-	 * Get current url with params.
+	 * Get current URL with params.
 	 *
 	 * @return string
 	 */
@@ -286,7 +286,7 @@ trait ObjectHelperTrait
 	/**
 	 * Clean url from query params.
 	 *
-	 * @param string $url Url to clean.
+	 * @param string $url URL to clean.
 	 *
 	 * @return string
 	 */

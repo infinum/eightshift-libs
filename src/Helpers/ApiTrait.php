@@ -20,7 +20,7 @@ trait ApiTrait
 	/**
 	 * Return API success response array.
 	 *
-	 * @param string $msg Msg for the user.
+	 * @param string $msg Message for the user.
 	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
 	 *
 	 * @return array<string, array<mixed>|int|string>
@@ -66,7 +66,7 @@ trait ApiTrait
 	/**
 	 * Return API error response array.
 	 *
-	 * @param string $msg Msg for the user.
+	 * @param string $msg Message for the user.
 	 * @param array<string, mixed> $additional Additonal data to attach to response.
 	 *
 	 * @return array<string, array<mixed>|int|string>

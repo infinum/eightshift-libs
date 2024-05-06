@@ -302,15 +302,15 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 						'hasInnerBlocks' => 'boolean',
 					],
 					'validation' => [
-						'blockName',
+						'$schema',
+						'title',
+						'description',
 						'namespace',
+						'blockName',
 						'blockFullName',
 						'keywords',
 						'icon',
 						'category',
-						'description',
-						'title',
-						'$schema',
 					],
 				],
 				self::COMPONENTS_KEY => [
@@ -318,9 +318,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					'multiple' => true,
 					'id' => 'componentName',
 					'validation' => [
-						'componentName',
 						'$schema',
 						'title',
+						'componentName',
 					],
 				],
 				self::VARIATIONS_KEY => [
@@ -328,19 +328,19 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					'id' => 'name',
 					'multiple' => true,
 					'validation' => [
-						'name',
 						'$schema',
-						'parentName',
 						'title',
-						'icon',
 						'description',
+						'icon',
+						'name',
+						'parentName',
 					],
 				],
 				self::WRAPPER_KEY => [
 					'path' => 'blocksDestinationWrapper',
 					'validation' => [
 						'$schema',
-						'title'
+						'title',
 					],
 				],
 			],

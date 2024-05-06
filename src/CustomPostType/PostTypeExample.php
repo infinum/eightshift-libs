@@ -82,12 +82,12 @@ class PostTypeExample extends AbstractPostType
 				'name' => esc_html_x(
 					'%label%',
 					'post type plural name',
-					'infobip'
+					'eightshift-libs'
 				),
 				'singular_name' => esc_html_x(
 					'%plural_label%',
 					'post type singular name',
-					'infobip'
+					'eightshift-libs'
 				),
 			],
 			// phpcs:enable
