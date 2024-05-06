@@ -142,7 +142,7 @@ test('getAssetsVersion method will return string', function () {
 test('enqueueStyles method enqueue styles in WP Admin', function () {
 	$this->enqueueAdmin->enqueueStyles('MyProject-styles');
 
-	mock('Infinum\Config\Config')
+	mock('alias:Infinum\Config\Config')
 		->shouldReceive([
 			'getProjectName' => 'MyProject',
 			'getProjectVersion' => '1.0',
