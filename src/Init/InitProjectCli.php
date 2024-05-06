@@ -16,7 +16,6 @@ use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
-use ReflectionClass;
 
 /**
  * Class InitProjectCli
@@ -29,23 +28,11 @@ class InitProjectCli extends AbstractCli
 	 * @var array<int, mixed>
 	 */
 	public const COMMANDS = [
-		[
-			'type' => 'theme',
-			'label' => '',
-			'items' => [
-				InitThemeCli::class,
-			],
-		],
-		[
-			'type' => 'files',
-			'label' => 'Setting project specific files:',
-			'items' => [
-				GitIgnoreCli::class,
-				SetupCli::class,
-				ReadmeCli::class,
-				ConfigProjectCli::class,
-			],
-		],
+		InitThemeCli::class,
+		GitIgnoreCli::class,
+		SetupCli::class,
+		ReadmeCli::class,
+		ConfigProjectCli::class,
 	];
 
 	/**
@@ -94,41 +81,30 @@ class InitProjectCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$assocArgs = $this->prepareArgs($assocArgs);
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
+		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
-			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? [];
-			$type = $item['type'] ?? '';
-
-			if ($label) {
-				$this->cliLog($label, 'C');
-			}
-
-			if ($items) {
-				foreach ($items as $className) {
-					$reflectionClass = new ReflectionClass($className);
-					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-					$class->__invoke([], \array_merge(
-						$assocArgs,
-						[
-							'groupOutput' => $type === 'theme',
-							'introOutput' => false,
-						]
-					));
-				}
-			}
+			$this->runCliCommand(
+				$item,
+				$this->commandParentName,
+				\array_merge(
+					$assocArgs,
+					[
+						self::ARG_GROUP_OUTPUT => true,
+					]
+				)
+			);
 		}
 
-		if (!$groupOutput) {
-			$this->cliLog('--------------------------------------------------');
-			$this->cliLog('We have moved everything you need to start creating your awesome WordPress project. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
-			$this->cliLog('Happy developing!', "M");
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the files have been created, you can start working on your awesome project!',
+				'success',
+				\__('Ready to go!', 'eightshift-libs')
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

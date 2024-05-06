@@ -3,15 +3,15 @@
 /**
  * File that holds class for WebP Media Column registration.
  *
- * @package EightshiftBoilerplate\CustomMeta
+ * @package %g_namespace%\CustomMeta
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Columns\Media;
+namespace %g_namespace%\Columns\Media;
 
-use EightshiftLibs\Columns\Media\AbstractMediaColumns;
-use EightshiftLibs\Helpers\Components;
+use %g_use_libs%\Columns\Media\AbstractMediaColumns;
+use %g_use_libs%\Helpers\Helpers;
 
 /**
  * Class WebP Media Column.
@@ -34,7 +34,7 @@ class WebPMediaColumnExample extends AbstractMediaColumns
 	 */
 	public function addColumnName(array $columns): array
 	{
-		$columns[self::COLUMN_KEY] = \esc_html__('WebP', 'eightshift-libs');
+		$columns[self::COLUMN_KEY] = \esc_html__('WebP', '%g_textdomain%');
 		return $columns;
 	}
 
@@ -49,7 +49,7 @@ class WebPMediaColumnExample extends AbstractMediaColumns
 	public function renderColumnContent(string $columnName, int $postId): string
 	{
 		if ($columnName === self::COLUMN_KEY) {
-			$icon = Components::existsWebPMedia($postId) ? 'yes' : 'no';
+			$icon = Helpers::existsWebPMedia($postId) ? 'yes' : 'no';
 			echo '<span class="dashicons dashicons-' . $icon . '"></span>'; // phpcs:ignore
 		}
 
@@ -65,7 +65,7 @@ class WebPMediaColumnExample extends AbstractMediaColumns
 	 */
 	public function sortAddedColumns(array $columns): array
 	{
-		$columns[self::COLUMN_KEY] = \esc_html__('WebP', 'eightshift-libs');
+		$columns[self::COLUMN_KEY] = \esc_html__('WebP', '%g_textdomain%');
 
 		return $columns;
 	}

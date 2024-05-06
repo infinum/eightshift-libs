@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Abstract class used for Blocks and Components
@@ -32,8 +32,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 */
 	protected function moveItems(array $args, string $source, string $destination, string $type, bool $isSingleFolder = false, string $sourcePrivate = ''): void
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-
 		// Get Props.
 		$skipExisting = $this->getSkipExisting($args);
 
@@ -50,15 +48,15 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$itemsList = \explode(',', $name);
 		}
 
-		$groupOutput = $args['groupOutput'] ?? false;
+		$groupOutput = $args[self::ARG_GROUP_OUTPUT];
 
 		if (!\is_dir($source)) {
 			self::cliError(
 				\sprintf(
 					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%s file doesn't exist on this path: `%s`. Please check if you have eightshift-frontend-libs installed.",
-					$type,
-					$this->getShortenCliPathOutput($source)
+					"%s doesn't exist on this path: '%s'. Please check if you have eightshift-frontend-libs installed.",
+					\ucfirst($type),
+					$source
 				)
 			);
 		}
@@ -78,10 +76,9 @@ abstract class AbstractBlocksCli extends AbstractCli
 			self::cliError(
 				\sprintf(
 					// translators: %1$s will be replaced with type of item, %2$s the type and %3$s and shorten cli path.
-					'%1$s %2$s doesn\'t exist on this path: `%3$s`. Please check if you have eightshift-frontend-libs installed.',
+					"%s doesn't exist on this path: '%s'. Please check if you have eightshift-frontend-libs installed.",
 					$type,
-					$isFile ? 'file' : 'folder',
-					$this->getShortenCliPathOutput($source)
+					$source
 				)
 			);
 		}
@@ -105,7 +102,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, item name and shorten cli path.
-						"Requested %s with the name `%s` doesn't exist in our library. Please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://eightshift.com/storybook/",
+						"Requested %s with the name '%s' doesn't exist in our library. Please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://eightshift.com/storybook/",
 						$type,
 						$item,
 						\implode(\PHP_EOL, \array_keys($sourceItems))
@@ -113,8 +110,8 @@ abstract class AbstractBlocksCli extends AbstractCli
 				);
 			}
 
-			$fullSource = Components::joinPaths([$source, $item]);
-			$fullDestination = Components::joinPaths([$destination, $item]);
+			$fullSource = Helpers::joinPaths([$source, $item]);
+			$fullDestination = Helpers::joinPaths([$destination, $item]);
 
 			if ($isSingleFolder) {
 				$fullSource = $source;
@@ -125,9 +122,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, and shorten cli path.
-						"%s files exist on this path: `%s`. If you want to override the destination folder please use --skip_existing='true' argument.",
-						$type,
-						$this->getShortenCliPathOutput($fullDestination)
+						"%s %s is already present in your project.\n\nIf you want to override the destination folder, use --%s='true' argument.",
+						\ucfirst($type),
+						$fullDestination,
+						AbstractCli::ARG_SKIP_EXISTING
 					)
 				);
 			}
@@ -139,25 +137,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$this->copyRecursively($fullSource, $fullDestination);
 			}
 
-			$partialsOutput = [];
-			$partialsPath = Components::joinPaths([$fullDestination, 'partials']);
-
-			// Check if we have partials folder. If so output that folder with items in it.
-			if (\is_dir($partialsPath)) {
-				$partials = \array_diff(\scandir($partialsPath), ['..', '.']);
-				$partials = \array_values($partials);
-
-				$partialsOutput = \array_map(
-					static function ($item) use ($sep) {
-						return "partials{$sep}{$item}";
-					},
-					$partials
-				);
-			}
-
 			$innerItems = \array_merge(
-				$this->getFullBlocksFiles($item),
-				$partialsOutput
+				$this->getFullDirFiles($fullDestination),
+				$this->getFullDirFiles($fullDestination, 'components'),
+				$this->getFullDirFiles($fullDestination, 'partials'),
 			);
 
 			foreach ($innerItems as $innerItem) {
@@ -165,31 +148,26 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$class = $this->getExampleTemplate($fullDestination, $innerItem, true);
 
 				if (!empty($class->fileContents)) {
-					$class->renameProjectName($args)
-						->renameNamespace($args)
-						->renameTextDomainFrontendLibs($args)
-						->renameUseFrontendLibs($args)
+					$class->renameGlobals($args)
 						->outputWrite($fullDestination, $innerItem, [
-							'skip_existing' => true,
-							'groupOutput' => true,
+							self::ARG_SKIP_EXISTING => true,
+							self::ARG_GROUP_OUTPUT => true,
 						]);
 				}
 			}
 
 			if ($type === 'component' || $type === 'block') {
-				$path = $this->getShortenCliPathOutput($destination);
-				$itemName = \ucfirst($item);
-
-				$msgTitle = "{$itemName} {$type} added";
-
-				if ($groupOutput) {
-					$this->cliLog("%g│ %n{$msgTitle} %w({$path})%n", 'mixed');
-				} else {
-					$this->cliLogAlert(\implode("\n", [
-						$path,
-						'',
-						'Run %Unpm start%n to make sure everything works correctly.'
-					]), 'success', "{$itemName} {$type} added");
+				if (!$groupOutput) {
+					$this->cliLogAlert(
+						\sprintf(
+							// translators: %s will be replaced with type of item, and shorten cli path.
+							"%s %s has been created in your project.",
+							\ucfirst($type),
+							$fullDestination
+						),
+						'success',
+						"Success"
+					);
 				}
 
 				$checkDependency = $args['checkDependency'] ?? true;
@@ -200,12 +178,17 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 				$this->outputNodeModuleDependencyItems($fullSource, $type);
 			} else {
-				$path = $this->getShortenCliPathOutput($destination);
-
-				if ($groupOutput) {
-					$this->cliLog("%g│ %n{$type} created %w({$path})%n", 'mixed');
-				} else {
-					$this->cliLogAlert($path, 'success', "{$type} added");
+				if (!$groupOutput) {
+					$this->cliLogAlert(
+						\sprintf(
+							// translators: %s will be replaced with type of item, and shorten cli path.
+							"%s %s has been created in your project.",
+							\ucfirst($type),
+							$destination
+						),
+						'success',
+						"Success"
+					);
 				}
 			}
 		}
@@ -236,14 +219,14 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$outputComand = [];
 
 			if ($componentsDependencies) {
-				$componentsDependenciesAll = \array_map(static fn ($item) => Components::camelToKebabCase($item), $componentsDependencies);
+				$componentsDependenciesAll = \array_map(static fn ($item) => Helpers::camelToKebabCase($item), $componentsDependencies);
 				$componentsDependenciesAll = \implode(', ', \array_unique(\array_values($componentsDependenciesAll)));
 
 				$outputComand[] = "%Uwp boilerplate {$this->getCommandParentName()} {$componentsCommandName} --name='{$componentsDependenciesAll}'%n";
 			}
 
 			if ($innerBlocksDependency) {
-				$innerBlocksDependencyAll = \array_map(static fn ($item) => Components::camelToKebabCase($item), $innerBlocksDependency);
+				$innerBlocksDependencyAll = \array_map(static fn ($item) => Helpers::camelToKebabCase($item), $innerBlocksDependency);
 				$innerBlocksDependencyAll = \implode(', ', \array_unique(\array_values($innerBlocksDependencyAll)));
 
 				$outputComand[] = "%Uwp boilerplate {$this->getCommandParentName()} {$blocksCommandName} --name='{$innerBlocksDependencyAll}'%n";

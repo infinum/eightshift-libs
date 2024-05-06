@@ -12,7 +12,7 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class BlocksCli
@@ -68,6 +68,7 @@ class BlocksCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
@@ -76,9 +77,7 @@ class BlocksCli extends AbstractCli
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameTextDomainFrontendLibs($assocArgs)
-			->renameUse($assocArgs)
-			->outputWrite(Components::getProjectPaths('blocksDestination'), "{$className}.php", $assocArgs);
+			->renameGlobals($assocArgs)
+			->outputWrite(Helpers::getProjectPaths('blocksDestination'), "{$className}.php", $assocArgs);
 	}
 }

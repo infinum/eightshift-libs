@@ -8,9 +8,9 @@
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\BlockPatterns;
+namespace %g_namespace%\BlockPatterns;
 
-use EightshiftLibs\BlockPatterns\AbstractBlockPattern;
+use %g_use_libs%\BlockPatterns\AbstractBlockPattern;
 
 /**
  * BlockPatternExample class.

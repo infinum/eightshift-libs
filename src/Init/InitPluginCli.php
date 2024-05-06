@@ -15,7 +15,7 @@ use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\Main\MainCli;
-use ReflectionClass;
+use EightshiftLibs\Plugin\PluginCli;
 
 /**
  * Class InitPluginCli
@@ -28,15 +28,10 @@ class InitPluginCli extends AbstractCli
 	 * @var array<int, mixed>
 	 */
 	public const COMMANDS = [
-		[
-			'type' => 'sc',
-			'label' => 'Setting service classes:',
-			'items' => [
-				ManifestCacheCli::class,
-				ConfigPluginCli::class,
-				MainCli::class,
-			],
-		],
+		ManifestCacheCli::class,
+		ConfigPluginCli::class,
+		MainCli::class,
+		PluginCli::class,
 	];
 
 	/**
@@ -84,42 +79,29 @@ class InitPluginCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$assocArgs = $this->prepareArgs($assocArgs);
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
+		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
-			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? [];
-			$type = $item['type'] ?? '';
-
-			if ($label) {
-				$this->cliLog($label, 'C');
-			}
-
-			if ($items) {
-				foreach ($items as $className) {
-					$reflectionClass = new ReflectionClass($className);
-					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-					$class->__invoke([], \array_merge(
-						$assocArgs,
-						[
-							'groupOutput' => $type === 'blocks',
-							'introOutput' => false,
-						]
-					));
-				}
-			}
-
-			$this->cliLog('--------------------------------------------------');
+			$this->runCliCommand(
+				$item,
+				$this->commandParentName,
+				\array_merge(
+					$assocArgs,
+					[
+						self::ARG_GROUP_OUTPUT => true,
+					]
+				)
+			);
 		}
-
-		if (!$groupOutput) {
-			$this->cliLog('We have moved everything you need to start creating your awesome WordPress plugin.', "M");
-			$this->cliLog('Happy developing!', "M");
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the files have been created, you can start working on your awesome plugin!',
+				'success',
+				\__('Ready to go!', 'eightshift-libs')
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

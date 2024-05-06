@@ -12,7 +12,7 @@ namespace EightshiftLibs\Db;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use WP_CLI\ExitException;
 
 /**
@@ -50,7 +50,8 @@ class ImportCli extends AbstractCli
 		return [
 			'from' => '',
 			'to' => '',
-			'setup_file' => Components::getProjectPaths('projectRoot', 'setup.json'),
+			'file_name' => '',
+			'setup_file' => Helpers::getProjectPaths('projectRoot', 'setup.json'),
 		];
 	}
 
@@ -74,6 +75,12 @@ class ImportCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'to',
 					'description' => 'Set to what environment you want to import the data.',
+					'optional' => false,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'file_name',
+					'description' => 'File path for the database dump.',
 					'optional' => false,
 				],
 				[
@@ -108,9 +115,11 @@ class ImportCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
-		require Components::getProjectPaths('libs', 'src/Db/DbImport.php');
+		require Helpers::getProjectPaths('libsPrefixed', 'src/Db/DbImport.php');
 
 		try {
 			dbImport( // phpcs:ignore
@@ -119,6 +128,7 @@ class ImportCli extends AbstractCli
 					[
 						'from' => $this->getArg($assocArgs, 'from'),
 						'to' => $this->getArg($assocArgs, 'to'),
+						'file_name' => $this->getArg($assocArgs, 'file_name'),
 					],
 					$assocArgs
 				)

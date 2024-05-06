@@ -12,7 +12,7 @@ namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class ServiceExampleCli
@@ -54,7 +54,7 @@ class ServiceExampleCli extends AbstractCli
 		$sep = \DIRECTORY_SEPARATOR;
 
 		return [
-			'folder' => "TestFolder{$sep}TMP",
+			'folder' => "TestFolder{$sep}Tmp",
 			'file_name' => 'TestTest',
 		];
 	}
@@ -103,6 +103,8 @@ class ServiceExampleCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -127,9 +129,8 @@ class ServiceExampleCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, static::TEMPLATE)
 			->searchReplaceString($className, $classNameNew)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString('\\Services;', "{$newNamespace};")
-			->outputWrite(Components::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
 	}
 }

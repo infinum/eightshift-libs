@@ -12,7 +12,7 @@ namespace EightshiftLibs\Rest\Routes\LoadMore;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class LoadMoreRouteCli
@@ -69,6 +69,8 @@ class LoadMoreRouteCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$sep = \DIRECTORY_SEPARATOR;
 		$this->getIntroText($assocArgs);
 
@@ -77,9 +79,7 @@ class LoadMoreRouteCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', "Rest{$sep}Routes{$sep}LoadMore"), "{$className}.php", $assocArgs);
+			->renameGlobals($assocArgs)
+			->outputWrite(Helpers::getProjectPaths('srcDestination', "Rest{$sep}Routes{$sep}LoadMore"), "{$className}.php", $assocArgs);
 	}
 }

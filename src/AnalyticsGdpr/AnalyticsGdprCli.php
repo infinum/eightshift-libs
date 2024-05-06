@@ -12,7 +12,7 @@ namespace EightshiftLibs\AnalyticsGdpr;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class AnalyticsGdprCli
@@ -73,15 +73,14 @@ class AnalyticsGdprCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
 
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'AnalyticsGdpr'), "{$className}.php", $assocArgs);
+			->renameGlobals($assocArgs)
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'AnalyticsGdpr'), "{$className}.php", $assocArgs);
 	}
 }
