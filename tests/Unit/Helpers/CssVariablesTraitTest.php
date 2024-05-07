@@ -3,7 +3,7 @@
 namespace Tests\Unit\Helpers;
 
 use Brain\Monkey\Functions;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 use function Tests\buildTestBlocks;
 
@@ -16,7 +16,7 @@ beforeEach(function () {
 // ------------------------------------------
 
 test('Asserts that outputCssVariablesGlobal returns the correct CSS variables from global manifest', function () {
-	$output = Components::outputCssVariablesGlobal();
+	$output = Helpers::outputCssVariablesGlobal();
 
 	expect($output)
 		->toBeString()
@@ -28,7 +28,7 @@ test('Asserts that outputCssVariablesGlobal returns the correct CSS variables fr
 });
 
 test('Asserts that outputCssVariablesGlobal returns empty string if global manifest data is not provided', function () {
-	$output = Components::outputCssVariablesGlobal();
+	$output = Helpers::outputCssVariablesGlobal();
 
 	expect($output)
 		->toBeString()
@@ -40,11 +40,10 @@ test('Asserts that outputCssVariablesGlobal returns empty string if global manif
 // ------------------------------------------
 
 test('outputCssVariables returns empty string if global breakpoints are missing', function () {
-	$output = Components::outputCssVariables(
+	$output = Helpers::outputCssVariables(
 		[],
 		[],
-		'uniqueString',
-		['namespace' => 'eightshift']
+		'uniqueString'
 	);
 
 	expect($output)
@@ -53,7 +52,7 @@ test('outputCssVariables returns empty string if global breakpoints are missing'
 });
 
 test('outputCssVariables returns empty string if global attributes or manifest are missing', function () {
-	$output = Components::outputCssVariables(
+	$output = Helpers::outputCssVariables(
 		['attribute'],
 		[],
 		'uniqueString'
@@ -63,7 +62,7 @@ test('outputCssVariables returns empty string if global attributes or manifest a
 		->toBeString()
 		->toBeEmpty();
 
-	$outputSecond = Components::outputCssVariables(
+	$outputSecond = Helpers::outputCssVariables(
 		[],
 		['manifest'],
 		'uniqueString'
@@ -75,7 +74,7 @@ test('outputCssVariables returns empty string if global attributes or manifest a
 });
 
 test('outputCssVariables returns empty string if variable keys are missing in manifest', function () {
-	$output = Components::outputCssVariables(
+	$output = Helpers::outputCssVariables(
 		['attribute'],
 		['manifest'],
 		'uniqueString',
@@ -87,16 +86,16 @@ test('outputCssVariables returns empty string if variable keys are missing in ma
 });
 
 test('outputCssVariables works when correct attributes are passed to it', function () {
-	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
+	$manifest = Helpers::getManifestByDir(Helpers::getProjectPaths('blocksDestinationComponents', 'variables'));
 
-	Components::setConfigOutputCssGlobally(false);
-	Components::setConfigOutputCssOptimize(false);
+	Helpers::setConfigOutputCssGlobally(false);
+	Helpers::setConfigOutputCssOptimize(false);
 
 	$attributes = [
 		'variableValue' => 'value3',
 	];
 
-	$output = Components::outputCssVariables(
+	$output = Helpers::outputCssVariables(
 		$attributes,
 		$manifest,
 		'uniqueString'
@@ -108,20 +107,19 @@ test('outputCssVariables works when correct attributes are passed to it', functi
 });
 
 test('outputCssVariables works when correct attributes are passed to it and has a unique name', function () {
-	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
+	$manifest = Helpers::getManifestByDir(Helpers::getProjectPaths('blocksDestinationComponents', 'variables'));
 
-	Components::setConfigOutputCssGlobally(false);
-	Components::setConfigOutputCssOptimize(false);
+	Helpers::setConfigOutputCssGlobally(false);
+	Helpers::setConfigOutputCssOptimize(false);
 
 	$attributes = [
 		'variableValue' => 'value3',
 	];
 
-	$output = Components::outputCssVariables(
+	$output = Helpers::outputCssVariables(
 		$attributes,
 		$manifest,
 		'uniqueString',
-		[],
 		'customNameAttribute'
 	);
 
@@ -131,20 +129,19 @@ test('outputCssVariables works when correct attributes are passed to it and has 
 });
 
 test('outputCssVariables outputs the style tag in default way if the outputCssGlobally is set to false', function () {
-	Components::setConfigOutputCssGlobally(false);
-	Components::setConfigOutputCssOptimize(false);
+	Helpers::setConfigOutputCssGlobally(false);
+	Helpers::setConfigOutputCssOptimize(false);
 
-	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
+	$manifest = Helpers::getManifestByDir(Helpers::getProjectPaths('blocksDestinationComponents', 'variables'));
 
 	$attributes = [
 		'variableValue' => 'value3',
 	];
 
-	$output = Components::outputCssVariables(
+	$output = Helpers::outputCssVariables(
 		$attributes,
 		$manifest,
 		'uniqueString',
-		[],
 		'customNameAttribute'
 	);
 
@@ -154,21 +151,20 @@ test('outputCssVariables outputs the style tag in default way if the outputCssGl
 });
 
 test('outputCssVariables outputs the style tag in inline way if the outputCssGlobally is set to true', function () {
-	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
+	$manifest = Helpers::getManifestByDir(Helpers::getProjectPaths('blocksDestinationComponents', 'variables'));
 
 	$attributes = [
 		'variableValue' => 'value3',
 	];
 
-	$output = Components::outputCssVariables(
+	$output = Helpers::outputCssVariables(
 		$attributes,
 		$manifest,
 		'uniqueString',
-		[],
 		'customNameAttribute'
 	);
 
-	$styles = Components::getStyles();
+	$styles = Helpers::getStyles();
 
 	expect($styles)
 	->toBeArray()
@@ -201,43 +197,43 @@ test('outputCssVariables outputs the style tag in inline way if the outputCssGlo
 // ------------------------------------------
 
 test('Asserts that "outputCssVariablesInline" will return empty string if config flags are set to false.', function () {
-	Components::setConfigOutputCssGlobally(false);
-	Components::setConfigOutputCssOptimize(false);
+	Helpers::setConfigOutputCssGlobally(false);
+	Helpers::setConfigOutputCssOptimize(false);
 
-	$result = Components::outputCssVariablesInline();
+	$result = Helpers::outputCssVariablesInline();
 
 	expect($result)->toBeString()->toEqual('');
 });
 
 test('Asserts that "outputCssVariablesInline" will return empty style but output aditional styles.', function () {
-	Components::setStyles([]);
+	Helpers::setStyles([]);
 
-	$result = Components::outputCssVariablesInline();
+	$result = Helpers::outputCssVariablesInline();
 
 	expect($result)->toBeString()->toEqual("<style id='esCssVariablesTest'> :root {--es-loader-opacity: 1;}</style>");
 });
 
 test('Asserts that "outputCssVariablesInline" will return empty style tag if styles are empty.', function () {
-	Components::setConfigOutputCssGloballyAdditionalStyles([]);
-	Components::setStyles([]);
+	Helpers::setConfigOutputCssGloballyAdditionalStyles([]);
+	Helpers::setStyles([]);
 
-	$result = Components::outputCssVariablesInline();
+	$result = Helpers::outputCssVariablesInline();
 
 	expect($result)->toBeString()->toEqual("<style id='esCssVariablesTest'> </style>");
 });
 
 test('Asserts that "outputCssVariablesInline" will return style tag with the correct styles.', function () {
-	Components::setConfigOutputCssOptimize(false);
+	Helpers::setConfigOutputCssOptimize(false);
 
 	;
-	$manifest = Components::getManifest(Components::getProjectPaths('blocksDestinationComponents', 'variables'));
+	$manifest = Helpers::getManifestByDir(Helpers::getProjectPaths('blocksDestinationComponents', 'variables'));
 	$attributes = [
 		'variableValue' => 'value3',
 	];
 
-	Components::outputCssVariables($attributes, $manifest, 'unique');
+	Helpers::outputCssVariables($attributes, $manifest, 'unique');
 
-	$result = Components::outputCssVariablesInline();
+	$result = Helpers::outputCssVariablesInline();
 
 	expect($result)->toBeString()->toContain(
 		"<style id='esCssVariablesTest'>",
@@ -251,14 +247,14 @@ test('Asserts that "outputCssVariablesInline" will return style tag with the cor
 // ------------------------------------------
 
 test('Check that hexToRgb returns the correct output for a valid hex code', function ($input, $output) {
-	$converted = Components::hexToRgb($input);
+	$converted = Helpers::hexToRgb($input);
 
 	$this->assertIsString($converted);
 	$this->assertSame($converted, $output);
 })->with('hexToRgbValid');
 
 test('Check that hexToRgb returns the fallback for an invalid hex code', function ($input, $output) {
-	$converted = Components::hexToRgb($input);
+	$converted = Helpers::hexToRgb($input);
 
 	$this->assertIsString($converted);
 	$this->assertSame($converted, $output);
@@ -272,7 +268,7 @@ test('Check that hexToRgb returns the fallback for an invalid hex code', functio
 test('Asserts that getUnique function will return some random string', function () {
 
 	Functions\when('wp_rand')->justReturn(mt_rand());
-	$unique = Components::getUnique();
+	$unique = Helpers::getUnique();
 
 	expect($unique)
 		->toBeString();

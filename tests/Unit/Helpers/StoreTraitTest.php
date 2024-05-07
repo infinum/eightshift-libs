@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
-use EightshiftBoilerplate\Blocks\BlocksExample;
+use Infinum\Blocks\BlocksExample;
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Helpers;
 
@@ -16,17 +16,15 @@ beforeEach(function () {
 // getBlocks
 // ------------------------------------------
 
-test('Asserts that "getBlocks" will return empty array if blocks are missing.', function () {
+test('Asserts that "getBlocks" will throw and error if blocks are missing.', function () {
 	global $esBlocks;
 	$esBlocks = null;
 
 	Helpers::getBlocks();
-})->throws(InvalidBlock::class, 'Trying to get missing-block block. Please check if it exists in the project.');
+})->throws(InvalidBlock::class, 'Trying to get project blocks. Please check if it exists in the project.');
 
 test('Asserts that "getBlocks" will return blocks list.', function () {
-	$result = Helpers::getBlocks();
-
-	expect($result)
+	expect(Helpers::getBlocks())
 		->toBeArray()
 		->not->toBe([]);
 });
@@ -35,18 +33,12 @@ test('Asserts that "getBlocks" will return blocks list.', function () {
 // getBlock
 // ------------------------------------------
 
-test('Asserts that "getBlock" will return empty array if block is missing or wrong.', function () {
-	$result = Helpers::getBlock('missing-block');
-
-	expect($result)
-		->toBeArray()
-		->toBe([]);
-});
+test('Asserts that "getBlock" will throw and error if block is missing or wrong.', function () {
+	Helpers::getBlock('missing-block');
+})->throws(InvalidBlock::class, 'Trying to get missing-block block. Please check if it exists in the project.');
 
 test('Asserts that "getBlock" will return block manifest if name is correct.', function () {
-	$result = Helpers::getBlock('button');
-
-	expect($result)
+	expect(Helpers::getBlock('button'))
 		->toBeArray()
 		->toHaveKey('blockName', 'button');
 });
@@ -55,21 +47,16 @@ test('Asserts that "getBlock" will return block manifest if name is correct.', f
 // getComponents
 // ------------------------------------------
 
-test('Asserts that "getComponents" will return empty array if components are missing.', function () {
+test('Asserts that "getComponents" will throw and error if components are missing.', function () {
 	global $esBlocks;
 	$esBlocks = null;
 
-	$result = Helpers::getComponents();
+	Helpers::getComponents();
 
-	expect($result)
-		->toBeArray()
-		->toBe([]);
-});
+})->throws(InvalidBlock::class, 'Trying to get project components. Please check if it exists in the project.');
 
 test('Asserts that "getComponents" will return components list.', function () {
-	$result = Helpers::getComponents();
-
-	expect($result)
+	expect(Helpers::getComponents())
 		->toBeArray()
 		->not->toBe([]);
 });
@@ -78,18 +65,13 @@ test('Asserts that "getComponents" will return components list.', function () {
 // getComponent
 // ------------------------------------------
 
-test('Asserts that "getComponent" will return empty array if component is missing or wrong.', function () {
-	$result = Helpers::getComponent('missing-component');
+test('Asserts that "getComponent" will throw an error if component is missing or wrong.', function () {
+	Helpers::getComponent('missing-component');
 
-	expect($result)
-		->toBeArray()
-		->toBe([]);
-});
+})->throws(InvalidBlock::class, 'Trying to get missing-component component. Please check if it exists in the project.');
 
 test('Asserts that "getComponent" will return component manifest if name is correct.', function () {
-	$result = Helpers::getComponent('button');
-
-	expect($result)
+	expect(Helpers::getComponent('button'))
 		->toBeArray()
 		->toHaveKey('componentName', 'button');
 });
@@ -128,7 +110,7 @@ test('Asserts that "setConfigFlags" will change config if set in manifest.json.'
 	expect($outputCssOptimize)->toBeBool()->toBeFalse();
 	expect($outputCssSelectorName)->toBeString()->toEqual('esCssVariables');
 
-	(new BlocksExample())->getBlocksDataFullRaw();
+	buildTestBlocks();
 
 	Helpers::setConfigFlags();
 

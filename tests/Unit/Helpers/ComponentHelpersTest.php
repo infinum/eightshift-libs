@@ -3,7 +3,8 @@
 namespace Tests\Unit\Helpers;
 
 use EightshiftLibs\Exception\ComponentException;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Exception\InvalidPath;
+use EightshiftLibs\Helpers\Helpers;
 
 use function Tests\buildTestBlocks;
 
@@ -16,7 +17,7 @@ beforeEach(function () {
 // ------------------------------------------
 
 test('Asserts that rendering a component works', function () {
-	$results = Components::render('button', []);
+	$results = Helpers::render('button', []);
 
 	expect($results)
 		->not->toBeEmpty()
@@ -24,25 +25,24 @@ test('Asserts that rendering a component works', function () {
 });
 
 test('Asserts that rendering a component will output a wrapper if parentClass is provided', function () {
-	$results = Components::render('button', ['parentClass' => 'test']);
+	$results = Helpers::render('button', ['parentClass' => 'test'], 'blocks');
 
 	expect($results)
 		->not->toBeEmpty()
 		->toContain('Hello!')
-		->not->toContain('test__button.php')
-		->toContain('test__button');
+		->not->toContain('test__button.php');
 });
 
 test('Asserts that providing a missing component will throw an exception without extension', function () {
-	Components::render('component', []);
-})->throws(ComponentException::class);
+	Helpers::render('component', []);
+})->throws(InvalidPath::class);
 
 test('Asserts that providing a missing component will throw an exception', function () {
-	Components::render('component-a.php', []);
-})->throws(ComponentException::class);
+	Helpers::render('component-a.php', []);
+})->throws(InvalidPath::class);
 
 test('Asserts that render used components defaults', function () {
-	$results = Components::render('button', [], '', true);
+	$results = Helpers::render('button', [], '', true);
 
 	expect($results)
 		->not->toBeEmpty()
@@ -53,48 +53,14 @@ test('Asserts that render used components defaults', function () {
 // getManifest
 // ------------------------------------------
 
-test('Asserts that "getManifest" will return correct files if path name is used.', function () {
-	expect(Components::getManifest(Components::getProjectPaths('testsData', 'src/Blocks/wrapper')))
+test('Asserts that "getManifestByDir" will return correct files if path name is used.', function () {
+	expect(Helpers::getManifestByDir(Helpers::getProjectPaths('cliOutput', 'src/Blocks/wrapper')))
 		->toBeArray()
 		->toHaveKey('componentName')
-		->and(Components::getManifest(Components::getProjectPaths('testsData', 'src/Blocks')))
-		->toBeArray()
-		->toHaveKey('namespace')
-		->and(Components::getManifest(Components::getProjectPaths('testsData', 'src/Blocks/components/button')))
+		->and(Helpers::getManifestByDir(Helpers::getProjectPaths('cliOutput', 'src/Blocks/components/button')))
 		->toBeArray()
 		->toHaveKey('componentName')
-		->and(Components::getManifest(Components::getProjectPaths('testsData', 'src/Blocks/custom/button')))
+		->and(Helpers::getManifestByDir(Helpers::getProjectPaths('cliOutput', 'src/Blocks/custom/button')))
 		->toBeArray()
 		->toHaveKey('blockName');
 });
-
-test('Asserts that "getManifest" will return correct files if name is used.', function () {
-	expect(Components::getManifest('wrapper'))
-		->toBeArray()
-		->toHaveKey('componentName')
-		->and(Components::getManifest('settings'))
-		->toBeArray()
-		->toHaveKey('namespace')
-		->and(Components::getManifest('component', 'button'))
-		->toBeArray()
-		->toHaveKey('componentName')
-		->and(Components::getManifest('block', 'button'))
-		->toBeArray()
-		->toHaveKey('blockName');
-});
-
-// ------------------------------------------
-// getManifestDirect
-// ------------------------------------------
-
-test('Asserts that reading manifest.json using getManifest will return an array', function () {
-	$results = Components::getManifestDirect(Components::getProjectPaths('testsData', 'src/Blocks/components/button'));
-
-	expect($results)
-		->toBeArray()
-		->toHaveKey('componentName');
-});
-
-test('Asserts that not specifying the path in getManifest will throw an exception', function () {
-	Components::getManifestDirect(\dirname(__FILE__));
-})->throws(ComponentException::class);

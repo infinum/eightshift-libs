@@ -180,7 +180,7 @@ class Helpers
 		$sep = \DIRECTORY_SEPARATOR;
 		$root = Helpers::getProjectPaths('srcDestination');
 		$newPath = \str_replace($root, '', $path);
-		$newPath = \explode($sep, $newPath);
+		$newPath = \array_filter(\explode($sep, $newPath));
 
 		if (!isset($newPath[0]) && $newPath[0] !== 'Blocks') {
 			throw InvalidManifest::notAllowedManifestPathException($path);

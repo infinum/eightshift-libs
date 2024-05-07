@@ -3,30 +3,46 @@
 namespace Tests\Unit\Geolocation;
 
 use EightshiftBoilerplate\Geolocation\GeolocationExample;
+use EightshiftLibs\Cache\ManifestCacheCli;
+use EightshiftLibs\Geolocation\GeolocationCli;
 use Exception;
+use Infinum\Cache\ManifestCache;
+use Infinum\Geolocation\Geolocation;
 
-beforeEach(function () {
-	$this->geolocation = new GeolocationExample();
+use function Tests\getMockArgs;
+use function Tests\reqOutputFiles;
+
+beforeEach(function() {
+	$manifestCacheCliMock = new ManifestCacheCli('boilerplate');
+	$manifestCacheCliMock([], getMockArgs($manifestCacheCliMock->getDefaultArgs()));
+
+	$geolocationCliMock = new GeolocationCli('boilerplate');
+	$geolocationCliMock([], getMockArgs($geolocationCliMock->getDefaultArgs()));
+
+	reqOutputFiles(
+		'Cache/ManifestCache.php',
+		'Geolocation/Geolocation.php',
+	);
 });
 
 test('Register method will call correct hooks', function () {
-	$this->geolocation->register();
+	(new Geolocation(new ManifestCache()))->register();
 
 	expect(\method_exists($this->geolocation, 'register'))->toBeTrue();
 	expect(\has_action('init', [$this->geolocation, 'setLocationCookie']))->toBe(10);
 });
 
 test('getGeolocationCookieName will return correct cookie name', function () {
-	$this->geolocation->getGeolocationCookieName();
-
-	expect($this->geolocation->getGeolocationCookieName())->toEqual('%cookie_name%');
+	expect((new Geolocation(new ManifestCache()))->getGeolocationCookieName())->toEqual('es-geolocation');
 });
 
 test('getGeolocationPharLocation will return the location of the geiop2.phar file', function () {
+	var_dump((new Geolocation(new ManifestCache()))->getGeolocationPharLocation());
 	$reflection = new \ReflectionClass(GeolocationExample::class);
 	$path = dirname($reflection->getFileName());
 
-	expect($this->geolocation->getGeolocationPharLocation())->toEqual($path . \DIRECTORY_SEPARATOR . 'geoip2.phar');
+
+	expect((new Geolocation(new ManifestCache()))->getGeolocationPharLocation())->toEqual($path . \DIRECTORY_SEPARATOR . 'geoip2.phar');
 });
 
 test('getGeolocationDbLocation will return the location of the Geolite2-Country.mmdb file', function () {
