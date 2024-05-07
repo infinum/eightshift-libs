@@ -52,7 +52,7 @@ trait ProjectInfoTrait
 	 */
 	public static function getThemeVersion(): string
 	{
-		return \wp_get_theme()->get('Version');
+		return \wp_get_theme()->get('Version') ?? '';;
 	}
 
 	/**
@@ -62,7 +62,7 @@ trait ProjectInfoTrait
 	 */
 	public static function getThemeName(): string
 	{
-		return \wp_get_theme()->get('Name');
+		return \wp_get_theme()->get('Name') ?? '';;
 	}
 
 	/**
@@ -72,7 +72,7 @@ trait ProjectInfoTrait
 	 */
 	public static function getThemeTextDomain(): string
 	{
-		return \wp_get_theme()->get('TextDomain');
+		return \wp_get_theme()->get('TextDomain') ?? '';
 	}
 
 	/**
