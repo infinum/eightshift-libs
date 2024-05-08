@@ -59,13 +59,6 @@ class InitThemeSetupCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Setup theme project with initial boilerplate used with npx command. This command should never be run manually.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_PROJECT_NAME,
-					'description' => 'Define your projects name.',
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
