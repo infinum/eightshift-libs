@@ -52,7 +52,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('%title%', 'eightshift-libs');
+		return \esc_html__('%title%', '%g_textdomain%');
 	}
 
 	/**
@@ -62,7 +62,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('%menu_title%', 'eightshift-libs');
+		return \esc_html__('%menu_title%', '%g_textdomain%');
 	}
 
 	/**
@@ -148,7 +148,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		return [
-			'pageTitle' => \esc_html__('%title%', 'eightshift-libs'),
+			'pageTitle' => \esc_html__('%title%', '%g_textdomain%'),
 		];
 	}
 }

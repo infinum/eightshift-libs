@@ -71,12 +71,12 @@ class TaxonomyExample extends AbstractTaxonomy
 				'name' => esc_html_x(
 					'%label%',
 					'taxonomy plural name',
-					'eightshift-libs'
+					'%g_textdomain%'
 				),
 				'singular_name' => esc_html_x(
 					'%plural_label%',
 					'taxonomy singular name',
-					'eightshift-libs'
+					'%g_textdomain%'
 				),
 			],
 			// phpcs:enable

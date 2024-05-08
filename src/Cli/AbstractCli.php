@@ -23,6 +23,8 @@ use WP_CLI;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
 
+use function cli\confirm;
+
 /**
  * Class AbstractCli
  */
@@ -142,6 +144,13 @@ abstract class AbstractCli implements CliInterface
 	public const ARG_IS_SETUP = 'g_is_setup';
 
 	/**
+	 * Output use libs arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_USE_LIBS = 'g_use_libs';
+
+	/**
 	 * Construct Method.
 	 *
 	 * @param string $commandParentName Define top level commands name.
@@ -172,54 +181,6 @@ abstract class AbstractCli implements CliInterface
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => self::ARG_NAMESPACE,
-					'description' => 'Define your project namespace. Default is read from composer autoload psr-4 key.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_NAMESPACE_VENDOR_PREFIX,
-					'description' => 'Define your project vendor_prefix. Default is read from composer extra > strauss > namespace_prefix key.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_PROJECT_NAME,
-					'description' => 'Define your projects name.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_PROJECT_DESCRIPTION,
-					'description' => 'Define your projects description.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_PROJECT_AUTHOR,
-					'description' => 'Define your projects author.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_PROJECT_AUTHOR_URL,
-					'description' => 'Define your projects author url.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_PROJECT_VERSION,
-					'description' => 'Define your projects version.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_TEXTDOMAIN,
-					'description' => 'Define your projects version.',
-					'optional' => true,
-				],
-				[
-					'type' => 'assoc',
 					'name' => self::ARG_COMPOSER_CONFIG_PATH,
 					'description' => 'Define your project composer.json absolute path.',
 					'optional' => true,
@@ -228,16 +189,6 @@ abstract class AbstractCli implements CliInterface
 					'type' => 'assoc',
 					'name' => self::ARG_SKIP_EXISTING,
 					'description' => 'If this value is set to true CLI commands will not fail it they find an existing files in your project',
-					'optional' => true,
-					'options' => [
-						'true',
-						'false',
-					]
-				],
-				[
-					'type' => 'assoc',
-					'name' => self::ARG_IS_SETUP,
-					'description' => 'If this value is set to true you must provide a project name that will be used for namespace and textdomain.',
 					'optional' => true,
 					'options' => [
 						'true',
@@ -257,40 +208,44 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function prepareArgs(array $args = []): array
 	{
-		$output = [];
-
-		if (isset($args[self::ARG_IS_SETUP]) && !isset($args[self::ARG_PROJECT_NAME])) {
-			self::cliError('Project name is missing.');
-		}
-
 		$configPath = $args[self::ARG_COMPOSER_CONFIG_PATH] ?? Helpers::getProjectPaths('root', 'composer.json');
 		$composerFile = $this->getComposer($configPath);
 
-		if (isset($args[self::ARG_IS_SETUP])) {
-			$output[self::ARG_NAMESPACE] = $this->convertToNamespace($args[self::ARG_PROJECT_NAME]);
-		} else {
-			$output[self::ARG_NAMESPACE] = $composerFile ? \rtrim(\array_key_first($composerFile['autoload']['psr-4']), '\\') : 'EightshiftBoilerplate';
-		}
-
-		if (isset($args[self::ARG_IS_SETUP])) {
-			$output[self::ARG_NAMESPACE_VENDOR_PREFIX] = $output[self::ARG_NAMESPACE] . "Vendor";
-		} else {
-			$output[self::ARG_NAMESPACE_VENDOR_PREFIX] = $composerFile ? $composerFile['extra']['strauss']['namespace_prefix'] : 'EightshiftBoilerplateVendor';
-		}
-
-		$output[self::ARG_TEXTDOMAIN] = Helpers::camelToKebabCase($output[self::ARG_NAMESPACE]);
-
-		$output[self::ARG_PROJECT_NAME] = $args[self::ARG_PROJECT_NAME] ?? 'Eightshift Boilerplate';
-		$output[self::ARG_PROJECT_DESCRIPTION] = $args[self::ARG_PROJECT_DESCRIPTION] ?? 'Eightshift Boilerplate is a WordPress starter theme that helps you build better and faster using the modern development tools.';
-		$output[self::ARG_PROJECT_AUTHOR] = $args[self::ARG_PROJECT_AUTHOR] ?? 'Team Eightshift';
-		$output[self::ARG_PROJECT_AUTHOR_URL] = $args[self::ARG_PROJECT_AUTHOR_URL] ?? 'https://eightshift.com/';
-		$output[self::ARG_PROJECT_VERSION] = $args[self::ARG_PROJECT_VERSION] ?? '1.0.0';
-		$output[self::ARG_SITE_URL] = $args[self::ARG_SITE_URL] ?? site_url();
+		$namespace = $composerFile ? \rtrim(\array_key_first($composerFile['autoload']['psr-4']), '\\') : 'EightshiftBoilerplate';
 
 		return \array_merge(
-			$args,
-			$output
+			[
+				self::ARG_NAMESPACE => $namespace,
+				self::ARG_NAMESPACE_VENDOR_PREFIX => $composerFile ? $composerFile['extra']['strauss']['namespace_prefix'] : "{$namespace}Vendor",
+				self::ARG_TEXTDOMAIN => Helpers::camelToKebabCase($namespace),
+			],
+			$args
 		);
+	}
+
+	/**
+	 * Prepare arguments for setup commands.
+	 *
+	 * @param array<string, mixed> $args Arguments array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function prepareSetupArgs(array $args = []): array
+	{
+		$namespace = $this->convertToNamespace($args[self::ARG_PROJECT_NAME]);
+
+		return [
+			self::ARG_NAMESPACE => $namespace,
+			self::ARG_NAMESPACE_VENDOR_PREFIX => "{$namespace}Vendor",
+			self::ARG_PROJECT_NAME => $args[self::ARG_PROJECT_NAME] ?? 'Eightshift Boilerplate',
+			self::ARG_PROJECT_DESCRIPTION => $args[self::ARG_PROJECT_DESCRIPTION] ?? 'Eightshift Boilerplate is a WordPress starter theme that helps you build better and faster using the modern development tools.',
+			self::ARG_PROJECT_AUTHOR => $args[self::ARG_PROJECT_AUTHOR] ?? 'Team Eightshift',
+			self::ARG_PROJECT_AUTHOR_URL => $args[self::ARG_PROJECT_AUTHOR_URL] ?? 'https://eightshift.com/',
+			self::ARG_PROJECT_VERSION => $args[self::ARG_PROJECT_VERSION] ?? '1.0.0',
+			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? site_url(),
+			self::ARG_IS_SETUP => 'true',
+			self::ARG_SKIP_EXISTING => 'true',
+		];
 	}
 
 	/**
@@ -594,7 +549,7 @@ abstract class AbstractCli implements CliInterface
 	public function renameUse(array $args = []): self
 	{
 		$this->fileContents = \str_replace(
-			$this->getArgTemplate('g_use_libs'),
+			$this->getArgTemplate(self::ARG_USE_LIBS),
 			!\getenv('ES_TEST') ? $args[self::ARG_NAMESPACE_VENDOR_PREFIX] . "\EightshiftLibs" : 'EightshiftLibs',
 			$this->fileContents
 		);
@@ -644,6 +599,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function cleanUpInitialBoilerplate(): void
 	{
+		$this->cliLog('Removing initial boilerplate setup files', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"rm -rf .github\");'");
 		WP_CLI::runcommand("eval 'shell_exec(\"rm CODE_OF_CONDUCT.md\");'");
 		WP_CLI::runcommand("eval 'shell_exec(\"rm CHANGELOG.md\");'");
@@ -657,12 +613,15 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function initMandatoryAfter(): void
 	{
+		$this->cliLog('Removing old compeser.lock', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
-		WP_CLI::log('--------------------------------------------------', 'C');
+		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog('Running composer install', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"composer install\");'");
-		WP_CLI::log('--------------------------------------------------', 'C');
+		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog('Running npm install', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
-		WP_CLI::log('--------------------------------------------------', 'C');
+		$this->cliLog('--------------------------------------------------', 'C');
 	}
 
 	/**

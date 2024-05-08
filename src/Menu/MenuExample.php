@@ -35,7 +35,7 @@ class MenuExample extends AbstractMenu
 	public function getMenuPositions(): array
 	{
 		return [
-			'header_main_nav' => \esc_html__('Main Menu', 'eightshift-libs'),
+			'header_main_nav' => \esc_html__('Main Menu', '%g_textdomain%'),
 		];
 	}
 }

@@ -89,7 +89,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('%title%', 'eightshift-libs');
+		return \esc_html__('%title%', '%g_textdomain%');
 	}
 
 	/**
@@ -99,7 +99,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('%menu_title%', 'eightshift-libs');
+		return \esc_html__('%menu_title%', '%g_textdomain%');
 	}
 
 	/**
@@ -203,7 +203,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 
 		\add_settings_field(
 			self::HEADER_PARTIAL,
-			\__('Header partial', 'eightshift-libs'),
+			\__('Header partial', '%g_textdomain%'),
 			[$this, 'renderPartialSelector'],
 			self::ADMIN_MENU_SLUG,
 			self::SETTINGS_SECTION_NAME,
@@ -215,7 +215,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 
 		\add_settings_field(
 			self::FOOTER_PARTIAL,
-			\__('Footer partial', 'eightshift-libs'),
+			\__('Footer partial', '%g_textdomain%'),
 			[$this, 'renderPartialSelector'],
 			self::ADMIN_MENU_SLUG,
 			self::SETTINGS_SECTION_NAME,
@@ -249,7 +249,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 			?>
 			<select id="<?php echo \esc_attr($args['label_for']); ?>" name="<?php echo \esc_attr($type); ?>">
 				<option value="">
-					&mdash; <?php \esc_html_e('None', 'eightshift-libs'); ?> &mdash;
+					&mdash; <?php \esc_html_e('None', '%g_textdomain%'); ?> &mdash;
 				</option>
 
 				<?php
@@ -270,7 +270,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 				?>
 			</select>
 		<?php } else { ?>
-			<i><?php echo \esc_html__('No reusable blocks found.', 'eightshift-libs'); ?></i>
+			<i><?php echo \esc_html__('No reusable blocks found.', '%g_textdomain%'); ?></i>
 			<?php
 		}
 	}

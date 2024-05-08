@@ -228,8 +228,8 @@ class AnalyticsGdprExample implements ServiceInterface
 		if (\function_exists('acf_add_options_page')) {
 			\acf_add_options_page(
 				[
-					'page_title' => \esc_html__('Analytics and GDPR settings', 'eightshift-libs'),
-					'menu_title' => \esc_html__('Analytics', 'eightshift-libs'),
+					'page_title' => \esc_html__('Analytics and GDPR settings', '%g_textdomain%'),
+					'menu_title' => \esc_html__('Analytics', '%g_textdomain%'),
 					'menu_slug'  => static::ANALYTICS_SLUG,
 					'capability' => static::ANALYTICS_CAPABILITY,
 					'redirect'   => false,
@@ -251,11 +251,11 @@ class AnalyticsGdprExample implements ServiceInterface
 			\acf_add_local_field_group(
 				[
 					'key' => 'group_5fc829103758c',
-					'title' => \esc_html__('Analytics', 'eightshift-libs'),
+					'title' => \esc_html__('Analytics', '%g_textdomain%'),
 					'fields' => [
 						[
 							'key' => 'field_0927122830152',
-							'label' => \esc_html__('Google Optimize on pages', 'eightshift-libs'),
+							'label' => \esc_html__('Google Optimize on pages', '%g_textdomain%'),
 							'name' => static::GOOGLE_OPTIMIZE_PAGES,
 							'type' => 'post_object',
 							'instructions' => '',
@@ -275,7 +275,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5810891023701',
-							'label' => \esc_html__('Google Tag Manager Container ID', 'eightshift-libs'),
+							'label' => \esc_html__('Google Tag Manager Container ID', '%g_textdomain%'),
 							'name' => static::GOOGLE_TAG_MANAGER_CONTAINER_ID,
 							'type' => 'text',
 							'instructions' => '',
@@ -325,8 +325,8 @@ class AnalyticsGdprExample implements ServiceInterface
 		if (\function_exists('acf_add_options_sub_page') && \current_user_can(self::ANALYTICS_CAPABILITY)) {
 			\acf_add_options_sub_page(
 				[
-					'page_title' => \esc_html__('GDPR Modal', 'eightshift-libs'),
-					'menu_title' => \esc_html__('GDPR', 'eightshift-libs'),
+					'page_title' => \esc_html__('GDPR Modal', '%g_textdomain%'),
+					'menu_title' => \esc_html__('GDPR', '%g_textdomain%'),
 					'menu_slug' => self::GDPR_MODAL_SLUG,
 					'parent_slug' => self::ANALYTICS_SLUG,
 				]
@@ -345,11 +345,11 @@ class AnalyticsGdprExample implements ServiceInterface
 			\acf_add_local_field_group(
 				[
 					'key' => 'group_5f09139247eb0',
-					'title' => \esc_html__('GDPR', 'eightshift-libs'),
+					'title' => \esc_html__('GDPR', '%g_textdomain%'),
 					'fields' => [
 						[
 							'key' => 'field_5f5f29103542a8',
-							'label' => \esc_html__('Basic modal open advanced link', 'eightshift-libs'),
+							'label' => \esc_html__('Basic modal open advanced link', '%g_textdomain%'),
 							'name' => static::BASIC_MODAL_OPEN_ADVANCED,
 							'type' => 'text',
 							'instructions' => '',
@@ -360,7 +360,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Manage cookies', 'eightshift-libs'),
+							'default_value' => \esc_html__('Manage cookies', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -368,7 +368,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5f102929842a8',
-							'label' => \esc_html__('Basic modal intro', 'eightshift-libs'),
+							'label' => \esc_html__('Basic modal intro', '%g_textdomain%'),
 							'name' => static::BASIC_MODAL_INTRO,
 							'type' => 'text',
 							'instructions' => '',
@@ -380,7 +380,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'id' => '',
 							],
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'default_value' => \esc_html__('By clicking "I agree", you accept storing of all cookies on your device to enhance user experience, analyze site usage, and assist in our marketing efforts.', 'eightshift-libs'),
+							'default_value' => \esc_html__('By clicking "I agree", you accept storing of all cookies on your device to enhance user experience, analyze site usage, and assist in our marketing efforts.', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -388,7 +388,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5f902a4657483',
-							'label' => \esc_html__('Basic modal accept button', 'eightshift-libs'),
+							'label' => \esc_html__('Basic modal accept button', '%g_textdomain%'),
 							'name' => static::BASIC_MODAL_ACCEPT_BUTTON,
 							'type' => 'text',
 							'instructions' => '',
@@ -399,7 +399,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Accept all', 'eightshift-libs'),
+							'default_value' => \esc_html__('Accept all', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -407,7 +407,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5f812934842a8',
-							'label' => \esc_html__('Advanced modal title', 'eightshift-libs'),
+							'label' => \esc_html__('Advanced modal title', '%g_textdomain%'),
 							'name' => static::ADVANCED_MODAL_TITLE,
 							'type' => 'text',
 							'instructions' => '',
@@ -418,7 +418,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('We need your consent to continue', 'eightshift-libs'),
+							'default_value' => \esc_html__('We need your consent to continue', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -426,7 +426,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5f473829842a8',
-							'label' => \esc_html__('Advanced modal accept all button', 'eightshift-libs'),
+							'label' => \esc_html__('Advanced modal accept all button', '%g_textdomain%'),
 							'name' => static::ADVANCED_MODAL_ACCEPT_ALL_BUTTON,
 							'type' => 'text',
 							'instructions' => '',
@@ -437,7 +437,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Accept all', 'eightshift-libs'),
+							'default_value' => \esc_html__('Accept all', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -445,7 +445,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5f473921022a8',
-							'label' => \esc_html__('Advanced modal reject all button', 'eightshift-libs'),
+							'label' => \esc_html__('Advanced modal reject all button', '%g_textdomain%'),
 							'name' => static::ADVANCED_MODAL_REJECT_ALL_BUTTON,
 							'type' => 'text',
 							'instructions' => '',
@@ -456,7 +456,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Reject all', 'eightshift-libs'),
+							'default_value' => \esc_html__('Reject all', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -464,7 +464,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_50001229842a8',
-							'label' => \esc_html__('Advanced modal confirm choices button', 'eightshift-libs'),
+							'label' => \esc_html__('Advanced modal confirm choices button', '%g_textdomain%'),
 							'name' => static::ADVANCED_MODAL_CHOICE_BUTTON,
 							'type' => 'text',
 							'instructions' => '',
@@ -475,7 +475,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Confirm choices', 'eightshift-libs'),
+							'default_value' => \esc_html__('Confirm choices', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -483,11 +483,11 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_61910287b1a5d',
-							'label' => \esc_html__('Privacy policy page link', 'eightshift-libs'),
+							'label' => \esc_html__('Privacy policy page link', '%g_textdomain%'),
 							'name' => static::ADVANCED_MODAL_PRIVACY_POLICY_LINK,
 							'type' => 'page_link',
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'instructions' => \esc_html__('Select the page which serves as privacy policy, it will be linked in advanced cookie modal.', 'eightshift-libs'),
+							'instructions' => \esc_html__('Select the page which serves as privacy policy, it will be linked in advanced cookie modal.', '%g_textdomain%'),
 							'required' => 0,
 							'conditional_logic' => 0,
 							'wrapper' => [
@@ -505,11 +505,11 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_621c12e21e5f8',
-							'label' => \esc_html__('Date of publishing privacy policy', 'eightshift-libs'),
+							'label' => \esc_html__('Date of publishing privacy policy', '%g_textdomain%'),
 							'name' => static::PRIVACY_POLICY_PUBLISH_DATE,
 							'type' => 'date_time_picker',
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'instructions' =>  \esc_html__('Date when you\'ve changed the privacy policy. If user accepted the privacy policy before new date is set. GDPR modal will appear to that user.', 'eightshift-libs'),
+							'instructions' =>  \esc_html__('Date when you\'ve changed the privacy policy. If user accepted the privacy policy before new date is set. GDPR modal will appear to that user.', '%g_textdomain%'),
 							'required' => 0,
 							'conditional_logic' => 0,
 							'default_value' => \gmdate('d m Y H:i:s'),
@@ -524,7 +524,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_50009184844a9',
-							'label' => \esc_html__('Required Cookies', 'eightshift-libs'),
+							'label' => \esc_html__('Required Cookies', '%g_textdomain%'),
 							'name' => '',
 							'type' => 'tab',
 							'instructions' => '',
@@ -540,7 +540,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_621cb755cb8e4',
-							'label' => \esc_html__('Required Cookies Activated', 'eightshift-libs'),
+							'label' => \esc_html__('Required Cookies Activated', '%g_textdomain%'),
 							'name' => static::REQUIRED_COOKIES_ACTIVATED,
 							'type' => 'true_false',
 							'instructions' => '',
@@ -551,13 +551,13 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'message' => \esc_html__('Activate Required cookie level', 'eightshift-libs'),
+							'message' => \esc_html__('Activate Required cookie level', '%g_textdomain%'),
 							'default_value' => 1,
 							'ui' => 0,
 						],
 						[
 							'key' => 'field_5f8f7939844ac',
-							'label' => \esc_html__('Required Title', 'eightshift-libs'),
+							'label' => \esc_html__('Required Title', '%g_textdomain%'),
 							'name' => static::REQUIRED_COOKIES_TITLE,
 							'type' => 'text',
 							'instructions' => '',
@@ -568,7 +568,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Required cookies', 'eightshift-libs'),
+							'default_value' => \esc_html__('Required cookies', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -576,7 +576,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5f5f66482910f',
-							'label' => \esc_html__('Required Summary', 'eightshift-libs'),
+							'label' => \esc_html__('Required Summary', '%g_textdomain%'),
 							'name' => static::REQUIRED_COOKIES_SUMMARY,
 							'type' => 'text',
 							'instructions' => '',
@@ -588,7 +588,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'id' => '',
 							],
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'default_value' => \esc_html__('Cookies for the basic functionality of the website.', 'eightshift-libs'),
+							'default_value' => \esc_html__('Cookies for the basic functionality of the website.', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -596,7 +596,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_f83912e4844a9',
-							'label' => \esc_html__('Functional Cookies', 'eightshift-libs'),
+							'label' => \esc_html__('Functional Cookies', '%g_textdomain%'),
 							'name' => '',
 							'type' => 'tab',
 							'instructions' => '',
@@ -612,7 +612,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_621c9182668e4',
-							'label' => \esc_html__('Functional Cookies Activated', 'eightshift-libs'),
+							'label' => \esc_html__('Functional Cookies Activated', '%g_textdomain%'),
 							'name' => static::FUNCTIONAL_COOKIES_ACTIVATED,
 							'type' => 'true_false',
 							'instructions' => '',
@@ -623,13 +623,13 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'message' => \esc_html__('Activate Functional cookie level', 'eightshift-libs'),
+							'message' => \esc_html__('Activate Functional cookie level', '%g_textdomain%'),
 							'default_value' => 1,
 							'ui' => 0,
 						],
 						[
 							'key' => 'field_5f5f1589164ac',
-							'label' => \esc_html__('Functional Title', 'eightshift-libs'),
+							'label' => \esc_html__('Functional Title', '%g_textdomain%'),
 							'name' => static::FUNCTIONAL_COOKIES_TITLE,
 							'type' => 'text',
 							'instructions' => '',
@@ -640,7 +640,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Functional cookies', 'eightshift-libs'),
+							'default_value' => \esc_html__('Functional cookies', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -648,7 +648,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5091024ff452d',
-							'label' => \esc_html__('Functional Summary', 'eightshift-libs'),
+							'label' => \esc_html__('Functional Summary', '%g_textdomain%'),
 							'name' => static::FUNCTIONAL_COOKIES_SUMMARY,
 							'type' => 'text',
 							'instructions' => '',
@@ -660,7 +660,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'id' => '',
 							],
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'default_value' => \esc_html__('Cookies for additional functionality and increased website security.', 'eightshift-libs'),
+							'default_value' => \esc_html__('Cookies for additional functionality and increased website security.', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -668,7 +668,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_0910234520139',
-							'label' => \esc_html__('Performance Cookies', 'eightshift-libs'),
+							'label' => \esc_html__('Performance Cookies', '%g_textdomain%'),
 							'name' => '',
 							'type' => 'tab',
 							'instructions' => '',
@@ -684,7 +684,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_62110242168e4',
-							'label' => \esc_html__('Performance Cookies Activated', 'eightshift-libs'),
+							'label' => \esc_html__('Performance Cookies Activated', '%g_textdomain%'),
 							'name' => static::PERFORMANCE_COOKIES_ACTIVATED,
 							'type' => 'true_false',
 							'instructions' => '',
@@ -695,13 +695,13 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'message' => \esc_html__('Activate Performance cookie level', 'eightshift-libs'),
+							'message' => \esc_html__('Activate Performance cookie level', '%g_textdomain%'),
 							'default_value' => 1,
 							'ui' => 0,
 						],
 						[
 							'key' => 'field_5f5f1082914ac',
-							'label' => \esc_html__('Performance Title', 'eightshift-libs'),
+							'label' => \esc_html__('Performance Title', '%g_textdomain%'),
 							'name' => static::PERFORMANCE_COOKIES_TITLE,
 							'type' => 'text',
 							'instructions' => '',
@@ -712,7 +712,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Performance cookies', 'eightshift-libs'),
+							'default_value' => \esc_html__('Performance cookies', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -720,7 +720,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_509191024a52d',
-							'label' => \esc_html__('Performance Summary', 'eightshift-libs'),
+							'label' => \esc_html__('Performance Summary', '%g_textdomain%'),
 							'name' => static::PERFORMANCE_COOKIES_SUMMARY,
 							'type' => 'text',
 							'instructions' => '',
@@ -732,7 +732,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'id' => '',
 							],
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'default_value' => \esc_html__('Performance cookies monitor only the performance of the site as the user interacts with it. These cookies don\'t collect identifiable information on visitor. Data is anonymous.', 'eightshift-libs'),
+							'default_value' => \esc_html__('Performance cookies monitor only the performance of the site as the user interacts with it. These cookies don\'t collect identifiable information on visitor. Data is anonymous.', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -740,7 +740,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_0897712920139',
-							'label' => \esc_html__('Marketing Cookies', 'eightshift-libs'),
+							'label' => \esc_html__('Marketing Cookies', '%g_textdomain%'),
 							'name' => '',
 							'type' => 'tab',
 							'instructions' => '',
@@ -756,7 +756,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_62110192468e4',
-							'label' => \esc_html__('Marketing Cookies Activated', 'eightshift-libs'),
+							'label' => \esc_html__('Marketing Cookies Activated', '%g_textdomain%'),
 							'name' => static::MARKETING_COOKIES_ACTIVATED,
 							'type' => 'true_false',
 							'instructions' => '',
@@ -767,13 +767,13 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'message' => \esc_html__('Activate Marketing cookie level', 'eightshift-libs'),
+							'message' => \esc_html__('Activate Marketing cookie level', '%g_textdomain%'),
 							'default_value' => 1,
 							'ui' => 0,
 						],
 						[
 							'key' => 'field_5f7ff654164ac',
-							'label' => \esc_html__('Marketing Title', 'eightshift-libs'),
+							'label' => \esc_html__('Marketing Title', '%g_textdomain%'),
 							'name' => static::MARKETING_COOKIES_TITLE,
 							'type' => 'text',
 							'instructions' => '',
@@ -784,7 +784,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'class' => '',
 								'id' => '',
 							],
-							'default_value' => \esc_html__('Marketing cookies', 'eightshift-libs'),
+							'default_value' => \esc_html__('Marketing cookies', '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -792,7 +792,7 @@ class AnalyticsGdprExample implements ServiceInterface
 						],
 						[
 							'key' => 'field_5ff922112684d',
-							'label' => \esc_html__('Marketing Summary', 'eightshift-libs'),
+							'label' => \esc_html__('Marketing Summary', '%g_textdomain%'),
 							'name' => static::MARKETING_COOKIES_SUMMARY,
 							'type' => 'text',
 							'instructions' => '',
@@ -804,7 +804,7 @@ class AnalyticsGdprExample implements ServiceInterface
 								'id' => '',
 							],
 							// phpcs:ignore Generic.Files.LineLength.TooLong
-							'default_value' => \esc_html__("Advertising and analytics service cookies that create day-to-day statistics and show ads on their site and on the advertiser's partners websites.", 'eightshift-libs'),
+							'default_value' => \esc_html__("Advertising and analytics service cookies that create day-to-day statistics and show ads on their site and on the advertiser's partners websites.", '%g_textdomain%'),
 							'placeholder' => '',
 							'prepend' => '',
 							'append' => '',
@@ -847,40 +847,40 @@ class AnalyticsGdprExample implements ServiceInterface
 		return [
 			'basic' => [
 				// phpcs:ignore Generic.Files.LineLength.TooLong
-				'intro' => \get_field(static::BASIC_MODAL_INTRO, 'option') ?? \esc_html__('By clicking "I agree", you accept storing of all cookies on your device to enhance user experience, analyze site usage, and assist in our marketing efforts.', 'eightshift-libs'),
-				'acceptButton' => \get_field(static::BASIC_MODAL_ACCEPT_BUTTON, 'option') ?? \esc_html__('Accept all', 'eightshift-libs'),
-				'openAdvanced' => \get_field(static::BASIC_MODAL_OPEN_ADVANCED, 'option') ?? \esc_html__('Manage cookies', 'eightshift-libs'),
+				'intro' => \get_field(static::BASIC_MODAL_INTRO, 'option') ?? \esc_html__('By clicking "I agree", you accept storing of all cookies on your device to enhance user experience, analyze site usage, and assist in our marketing efforts.', '%g_textdomain%'),
+				'acceptButton' => \get_field(static::BASIC_MODAL_ACCEPT_BUTTON, 'option') ?? \esc_html__('Accept all', '%g_textdomain%'),
+				'openAdvanced' => \get_field(static::BASIC_MODAL_OPEN_ADVANCED, 'option') ?? \esc_html__('Manage cookies', '%g_textdomain%'),
 			],
 			'advanced' => [
-				'title' => \get_field(static::ADVANCED_MODAL_TITLE, 'option') ?? \esc_html__('We need your consent to continue', 'eightshift-libs'),
-				'acceptAllButton' => \get_field(static::ADVANCED_MODAL_ACCEPT_ALL_BUTTON, 'option') ?? \esc_html__('Accept all', 'eightshift-libs'),
-				'rejectAllButton' => \get_field(static::ADVANCED_MODAL_REJECT_ALL_BUTTON, 'option') ??  \esc_html__('Reject all', 'eightshift-libs'),
-				'choiceButton' => \get_field(static::ADVANCED_MODAL_CHOICE_BUTTON, 'option') ?? \esc_html__('Confirm choices', 'eightshift-libs'),
+				'title' => \get_field(static::ADVANCED_MODAL_TITLE, 'option') ?? \esc_html__('We need your consent to continue', '%g_textdomain%'),
+				'acceptAllButton' => \get_field(static::ADVANCED_MODAL_ACCEPT_ALL_BUTTON, 'option') ?? \esc_html__('Accept all', '%g_textdomain%'),
+				'rejectAllButton' => \get_field(static::ADVANCED_MODAL_REJECT_ALL_BUTTON, 'option') ??  \esc_html__('Reject all', '%g_textdomain%'),
+				'choiceButton' => \get_field(static::ADVANCED_MODAL_CHOICE_BUTTON, 'option') ?? \esc_html__('Confirm choices', '%g_textdomain%'),
 				'privacyPolicyLink' => \get_field(static::ADVANCED_MODAL_PRIVACY_POLICY_LINK, 'option') ?? '',
 			],
 			'publishDate' => \get_field(static::PRIVACY_POLICY_PUBLISH_DATE, 'option') ?? \gmdate('F j, Y g:i ZZZ'),
 			'levels' => [
 				'required' => [
-					'title' => \get_field(static::REQUIRED_COOKIES_TITLE, 'option') ?? \esc_html__('Required cookies', 'eightshift-libs'),
-					'summary' => \get_field(static::REQUIRED_COOKIES_SUMMARY, 'option') ?? \esc_html__('Cookies for the basic functionality of the website.', 'eightshift-libs'),
+					'title' => \get_field(static::REQUIRED_COOKIES_TITLE, 'option') ?? \esc_html__('Required cookies', '%g_textdomain%'),
+					'summary' => \get_field(static::REQUIRED_COOKIES_SUMMARY, 'option') ?? \esc_html__('Cookies for the basic functionality of the website.', '%g_textdomain%'),
 					'activated' => \get_field(static::REQUIRED_COOKIES_ACTIVATED, 'option') ?? true,
 				],
 				'functional' => [
-					'title' => \get_field(static::FUNCTIONAL_COOKIES_TITLE, 'option') ?? \esc_html__('Functional cookies', 'eightshift-libs'),
+					'title' => \get_field(static::FUNCTIONAL_COOKIES_TITLE, 'option') ?? \esc_html__('Functional cookies', '%g_textdomain%'),
 					// phpcs:ignore Generic.Files.LineLength.TooLong
-					'summary' => \get_field(static::FUNCTIONAL_COOKIES_SUMMARY, 'option') ?? \esc_html__('Cookies for additional functionality and increased website security.', 'eightshift-libs'),
+					'summary' => \get_field(static::FUNCTIONAL_COOKIES_SUMMARY, 'option') ?? \esc_html__('Cookies for additional functionality and increased website security.', '%g_textdomain%'),
 					'activated' => \get_field(static::FUNCTIONAL_COOKIES_ACTIVATED, 'option') ?? true,
 				],
 				'performance' => [
-					'title' => \get_field(static::PERFORMANCE_COOKIES_TITLE, 'option') ?? \esc_html__('Performance cookies', 'eightshift-libs'),
+					'title' => \get_field(static::PERFORMANCE_COOKIES_TITLE, 'option') ?? \esc_html__('Performance cookies', '%g_textdomain%'),
 					// phpcs:ignore Generic.Files.LineLength.TooLong
-					'summary' => \get_field(static::PERFORMANCE_COOKIES_SUMMARY, 'option') ?? \esc_html__('Performance cookies monitor only the performance of the site as the user interacts with it. These cookies don\'t collect identifiable information on visitor. Data is anonymous.', 'eightshift-libs'),
+					'summary' => \get_field(static::PERFORMANCE_COOKIES_SUMMARY, 'option') ?? \esc_html__('Performance cookies monitor only the performance of the site as the user interacts with it. These cookies don\'t collect identifiable information on visitor. Data is anonymous.', '%g_textdomain%'),
 					'activated' => \get_field(static::PERFORMANCE_COOKIES_ACTIVATED, 'option') ?? true,
 				],
 				'marketing' => [
-					'title' => \get_field(static::MARKETING_COOKIES_TITLE, 'option') ?? \esc_html__('Marketing cookies', 'eightshift-libs'),
+					'title' => \get_field(static::MARKETING_COOKIES_TITLE, 'option') ?? \esc_html__('Marketing cookies', '%g_textdomain%'),
 					// phpcs:ignore Generic.Files.LineLength.TooLong
-					'summary' => \get_field(static::MARKETING_COOKIES_SUMMARY, 'option') ?? \esc_html__("Advertising and analytics service cookies that create day-to-day statistics and show ads on their site and on the advertiser's partners websites.", 'eightshift-libs'),
+					'summary' => \get_field(static::MARKETING_COOKIES_SUMMARY, 'option') ?? \esc_html__("Advertising and analytics service cookies that create day-to-day statistics and show ads on their site and on the advertiser's partners websites.", '%g_textdomain%'),
 					'activated' => \get_field(static::REQUIRED_COOKIES_ACTIVATED, 'option') ?? true,
 				],
 			],

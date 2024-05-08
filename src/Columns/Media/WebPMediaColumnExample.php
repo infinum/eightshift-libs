@@ -34,7 +34,7 @@ class WebPMediaColumnExample extends AbstractMediaColumns
 	 */
 	public function addColumnName(array $columns): array
 	{
-		$columns[self::COLUMN_KEY] = \esc_html__('WebP', 'eightshift-libs');
+		$columns[self::COLUMN_KEY] = \esc_html__('WebP', '%g_textdomain%');
 		return $columns;
 	}
 
@@ -65,7 +65,7 @@ class WebPMediaColumnExample extends AbstractMediaColumns
 	 */
 	public function sortAddedColumns(array $columns): array
 	{
-		$columns[self::COLUMN_KEY] = \esc_html__('WebP', 'eightshift-libs');
+		$columns[self::COLUMN_KEY] = \esc_html__('WebP', '%g_textdomain%');
 
 		return $columns;
 	}

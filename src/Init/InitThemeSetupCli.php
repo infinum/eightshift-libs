@@ -59,6 +59,43 @@ class InitThemeSetupCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Setup theme project with initial boilerplate used with npx command. This command should never be run manually.',
+			'synopsis' => [
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_PROJECT_NAME,
+					'description' => 'Define your projects name.',
+				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_PROJECT_DESCRIPTION,
+					'description' => 'Define your projects description.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_PROJECT_AUTHOR,
+					'description' => 'Define your projects author.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_PROJECT_AUTHOR_URL,
+					'description' => 'Define your projects author url.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_PROJECT_VERSION,
+					'description' => 'Define your projects version.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_SITE_URL,
+					'description' => 'Define your projects url for webpack build.',
+					'optional' => true,
+				],
+			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -77,10 +114,9 @@ class InitThemeSetupCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		$assocArgs['actionOutput'] = 'file created';
-		$assocArgs[self::ARG_IS_SETUP] = 'true';
-		$assocArgs[self::ARG_SKIP_EXISTING] = 'true';
 
-		$assocArgs = $this->prepareArgs($assocArgs);
+		$assocArgs = $this->prepareArgs($this->prepareSetupArgs($assocArgs));
+
 		$this->getIntroText($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
