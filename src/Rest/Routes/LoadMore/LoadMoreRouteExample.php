@@ -86,13 +86,14 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	{
 		switch ($type) {
 			case 'featured-content':
-				return Helpers::renderPartial(
-					'block',
-					$type,
+				return Helpers::render(
 					'cards',
 					[
 						'items' => $response,
-					]
+					],
+					'blocks',
+					false,
+					"{$type}/partials"
 				);
 			default:
 				return '';
