@@ -62,21 +62,70 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @var string
 	 */
-	public const PROJECT_NAME_ARG = 'project_name';
+	public const ARG_PROJECT_NAME = 'project_name';
 
 	/**
-	 * Output theme name arg.
+	 * Output project description arg.
 	 *
 	 * @var string
 	 */
-	public const THEME_NAME_ARG = 'theme_name';
+	public const ARG_PROJECT_DESCRIPTION = 'project_description';
 
 	/**
-	 * Output plugin name arg.
+	 * Output project author arg.
 	 *
 	 * @var string
 	 */
-	public const PLUGIN_NAME_ARG = 'plugin_name';
+	public const ARG_PROJECT_AUTHOR = 'project_author';
+
+	/**
+	 * Output project author url arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_PROJECT_AUTHOR_URL = 'project_author_url';
+
+	/**
+	 * Output project version arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_PROJECT_VERSION = 'project_version';
+
+	/**
+	 * Output textdomain arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_TEXTDOMAIN = 'textdomain';
+
+	/**
+	 * Output config path arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_CONFIG_PATH = 'config_path';
+
+	/**
+	 * Output skip existing arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_SKIP_EXISTING = 'skip_existing';
+
+	/**
+	 * Output namespace arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_NAMESPACE = 'namespace';
+
+	/**
+	 * Output vendor_prefix arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_VENDOR_PREFIX = 'vendor_prefix';
 
 	/**
 	 * Construct Method.
@@ -109,61 +158,61 @@ abstract class AbstractCli implements CliInterface
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'namespace',
+					'name' => self::ARG_NAMESPACE,
 					'description' => 'Define your project namespace. Default is read from composer autoload psr-4 key.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'vendor_prefix',
+					'name' => self::ARG_VENDOR_PREFIX,
 					'description' => 'Define your project vendor_prefix. Default is read from composer extra > strauss > namespace_prefix key.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'project_name',
+					'name' => self::ARG_PROJECT_NAME,
 					'description' => 'Define your projects name.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'project_description',
+					'name' => self::ARG_PROJECT_DESCRIPTION,
 					'description' => 'Define your projects description.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'project_author',
+					'name' => self::ARG_PROJECT_AUTHOR,
 					'description' => 'Define your projects author.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'project_author_url',
+					'name' => self::ARG_PROJECT_AUTHOR_URL,
 					'description' => 'Define your projects author url.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'project_version',
+					'name' => self::ARG_PROJECT_VERSION,
 					'description' => 'Define your projects version.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'textdomain',
+					'name' => self::ARG_TEXTDOMAIN,
 					'description' => 'Define your projects version.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'config_path',
+					'name' => self::ARG_CONFIG_PATH,
 					'description' => 'Define your project composer absolute path.',
 					'optional' => true,
 				],
 				[
 					'type' => 'assoc',
-					'name' => 'skip_existing',
+					'name' => self::ARG_SKIP_EXISTING,
 					'description' => 'If this value is set to true CLI commands will not fail it they find an existing files in your project',
 					'optional' => true,
 					'options' => [

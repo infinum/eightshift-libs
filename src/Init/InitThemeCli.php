@@ -83,9 +83,7 @@ class InitThemeCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
-		return [
-			AbstractCli::THEME_NAME_ARG => 'Boilerplate',
-		];
+		return [];
 	}
 
 	/**
@@ -97,15 +95,6 @@ class InitThemeCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Kickstart your WordPress theme with this simple command.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => AbstractCli::THEME_NAME_ARG,
-					'description' => 'Define theme name.',
-					'optional' => true,
-					'default' => $this->getDefaultArg(AbstractCli::THEME_NAME_ARG),
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -128,11 +117,6 @@ class InitThemeCli extends AbstractCli
 			$this->getIntroText();
 		}
 
-		$themeName = $this->getArg($assocArgs, AbstractCli::THEME_NAME_ARG);
-		if ($themeName) {
-			unset($assocArgs[AbstractCli::THEME_NAME_ARG]);
-		}
-
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
 			$items = $item['items'] ?? [];
@@ -152,7 +136,6 @@ class InitThemeCli extends AbstractCli
 						[
 							'groupOutput' => $type === 'blocks',
 							'introOutput' => false,
-							AbstractCli::PROJECT_NAME_ARG => $themeName,
 						]
 					));
 				}

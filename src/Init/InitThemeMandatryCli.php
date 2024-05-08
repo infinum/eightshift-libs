@@ -108,6 +108,8 @@ class InitThemeMandatryCli extends AbstractCli
 		$fileName = $this->getArg($assocArgs, 'file_name');
 		$sourcePath = $this->getArg($assocArgs, 'source_path');
 
+		$assocArgs['actionOutput'] = 'created';
+
 		$sep = \DIRECTORY_SEPARATOR;
 		$dir = __DIR__ . "{$sep}theme";
 		$files = \array_diff(\scandir($dir), ['..', '.']);
