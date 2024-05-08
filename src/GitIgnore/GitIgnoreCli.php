@@ -13,8 +13,6 @@ namespace EightshiftLibs\GitIgnore;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
-use WP;
-use WP_CLI;
 
 /**
  * Class GitIgnoreCli
@@ -104,12 +102,5 @@ class GitIgnoreCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->outputWrite($path, '.gitignore', $assocArgs);
-
-		if (!\defined('WP_DEBUG')) {
-			WP_CLI::runcommand('config delete WP_DEBUG');
-		}
-
-		WP_CLI::runcommand('config set WP_ENVIRONMENT_TYPE development');
-		WP_CLI::runcommand("config set \"configProject\" \"require_once(ABSPATH . 'wp-config-project.php')\" --raw --type='variable'");
 	}
 }

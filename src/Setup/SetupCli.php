@@ -12,7 +12,7 @@ namespace EightshiftLibs\Setup;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class SetupCli
@@ -47,7 +47,7 @@ class SetupCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'path' => Components::getProjectPaths('projectRoot'),
+			'path' => Helpers::getProjectPaths('projectRoot'),
 			'file_name' => 'setup.json',
 			'source_path' => __DIR__,
 		];
