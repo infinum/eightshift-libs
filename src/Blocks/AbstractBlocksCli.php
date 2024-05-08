@@ -125,9 +125,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				self::cliError(
 					\sprintf(
 						// translators: %s will be replaced with type of item, and shorten cli path.
-						"%s files exist on this path: `%s`. If you want to override the destination folder please use --skip_existing='true' argument.",
+						"%s files exist on this path: `%s`. If you want to override the destination folder please use --%s='true' argument.",
 						$type,
-						$this->getShortenCliPathOutput($fullDestination)
+						$this->getShortenCliPathOutput($fullDestination),
+						AbstractCli::ARG_SKIP_EXISTING
 					)
 				);
 			}
