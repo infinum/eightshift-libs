@@ -13,6 +13,7 @@ namespace EightshiftLibs\Init;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Helpers\Helpers;
+use WP_CLI;
 
 /**
  * Class InitThemeMandatryCli
@@ -46,11 +47,7 @@ class InitThemeMandatryCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
-		return [
-			'path' => Helpers::getProjectPaths('projectRoot'),
-			'file_name' => 'setup.json',
-			'source_path' => __DIR__,
-		];
+		return [];
 	}
 
 	/**
@@ -62,22 +59,6 @@ class InitThemeMandatryCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Copy all mandatory theme files to the project.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'path',
-					'description' => 'Define absolute folder path where setup file will be created.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('path'),
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'file_name',
-					'description' => 'Define file that will be created in the path location.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('file_name'),
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -103,11 +84,6 @@ class InitThemeMandatryCli extends AbstractCli
 	{
 		$this->getIntroText($assocArgs);
 
-		// Get Props.
-		$path = $this->getArg($assocArgs, 'path');
-		$fileName = $this->getArg($assocArgs, 'file_name');
-		$sourcePath = $this->getArg($assocArgs, 'source_path');
-
 		$assocArgs['actionOutput'] = 'created';
 
 		$sep = \DIRECTORY_SEPARATOR;
@@ -126,5 +102,9 @@ class InitThemeMandatryCli extends AbstractCli
 				->renameUse($assocArgs)
 				->outputWrite($destionation, $file, $assocArgs);
 		}
+
+		WP_CLI::runcommand("wp eval 'shell_exec(\"rm composer.lock\");'");
+		WP_CLI::runcommand("wp eval 'shell_exec(\"composer install -n --no-cache\");'");
+		WP_CLI::runcommand("wp eval 'shell_exec(\"npm install\");'");
 	}
 }
