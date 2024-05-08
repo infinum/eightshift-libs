@@ -12,7 +12,7 @@ namespace EightshiftLibs\ModifyAdminAppearance;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class ModifyAdminAppearanceCli
@@ -69,6 +69,8 @@ class ModifyAdminAppearanceCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
@@ -77,6 +79,6 @@ class ModifyAdminAppearanceCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'ModifyAdminAppearance'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'ModifyAdminAppearance'), "{$className}.php", $assocArgs);
 	}
 }

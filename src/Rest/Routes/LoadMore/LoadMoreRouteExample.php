@@ -33,7 +33,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	/**
 	 * Method that returns project Route namespace.
 	 *
-	 * @return string Project namespace EightshiftBoilerplateVendor\for REST route.
+	 * @return string Project namespace for REST route.
 	 */
 	protected function getNamespace(): string
 	{
@@ -86,7 +86,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	{
 		switch ($type) {
 			case 'featured-content':
-				return Components::renderPartial(
+				return Helpers::renderPartial(
 					'block',
 					$type,
 					'cards',

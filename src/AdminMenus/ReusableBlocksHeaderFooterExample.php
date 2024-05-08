@@ -306,6 +306,6 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 			$blocksToRenderFiltered // phpcs:ignore
 		);
 
-		echo Components::ensureString($blocksToRenderRendered); // phpcs:ignore
+		echo Helpers::ensureString($blocksToRenderRendered); // phpcs:ignore
 	}
 }

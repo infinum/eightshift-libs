@@ -86,6 +86,8 @@ class InitPluginCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		if (!$groupOutput) {
 			$this->getIntroText();
 		}

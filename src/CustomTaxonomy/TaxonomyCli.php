@@ -12,7 +12,7 @@ namespace EightshiftLibs\CustomTaxonomy;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class TaxonomyCli
@@ -117,6 +117,8 @@ class TaxonomyCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -139,6 +141,6 @@ class TaxonomyCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('post_type_slug'), $postTypeSlug)
 			->searchReplaceString($this->getArgTemplate('label'), $label)
 			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'CustomTaxonomy'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'CustomTaxonomy'), "{$className}.php", $assocArgs);
 	}
 }

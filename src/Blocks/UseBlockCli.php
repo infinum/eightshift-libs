@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class UseBlockCli
@@ -98,15 +98,17 @@ class UseBlockCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		$this->moveItems(
 			$assocArgs,
-			Components::getProjectPaths('blocksSourceCustom'),
-			Components::getProjectPaths('blocksDestinationCustom'),
+			Helpers::getProjectPaths('blocksSourceCustom'),
+			Helpers::getProjectPaths('blocksDestinationCustom'),
 			'block',
 			false,
-			Components::getProjectPaths('blocksPrivateSourceCustom')
+			Helpers::getProjectPaths('blocksPrivateSourceCustom')
 		);
 	}
 }

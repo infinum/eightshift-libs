@@ -12,7 +12,7 @@ namespace EightshiftLibs\AdminMenus;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class AdminSubMenuCli
@@ -117,6 +117,7 @@ class AdminSubMenuCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
 
 		// Get Arguments.
@@ -139,6 +140,6 @@ class AdminSubMenuCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle)
 			->searchReplaceString($this->getArgTemplate('capability'), $capability)
 			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
 	}
 }

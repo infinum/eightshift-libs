@@ -6,7 +6,7 @@
  * Define global environment variable, and define certain
  * settings based on it.
  *
- * @package EightshiftBoilerplate
+ * @package %g_namespace%
  */
 
 // phpcs:disable

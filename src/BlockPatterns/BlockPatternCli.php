@@ -12,7 +12,7 @@ namespace EightshiftLibs\BlockPatterns;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class BlockPatternCli
@@ -113,6 +113,7 @@ class BlockPatternCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -136,7 +137,7 @@ class BlockPatternCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('name'), $name)
 			->searchReplaceString($this->getArgTemplate('content'), $content)
 			->searchReplaceString($this->getArgTemplate('description'), $description)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'BlockPatterns'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'BlockPatterns'), "{$className}.php", $assocArgs);
 	}
 
 	/**
@@ -147,6 +148,6 @@ class BlockPatternCli extends AbstractCli
 	 */
 	private function generateName(string $title): string
 	{
-		return 'eightshift-boilerplate/' . Components::camelToKebabCase($title);
+		return 'eightshift-boilerplate/' . Helpers::camelToKebabCase($title);
 	}
 }

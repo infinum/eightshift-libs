@@ -12,7 +12,7 @@ namespace EightshiftLibs\Columns\Media;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class WebPMediaColumnCli.
@@ -69,6 +69,8 @@ class WebPMediaColumnCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
@@ -76,6 +78,6 @@ class WebPMediaColumnCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'Columns' . \DIRECTORY_SEPARATOR . 'Media'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Columns' . \DIRECTORY_SEPARATOR . 'Media'), "{$className}.php", $assocArgs);
 	}
 }

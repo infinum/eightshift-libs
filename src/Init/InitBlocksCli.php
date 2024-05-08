@@ -20,7 +20,7 @@ use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use ReflectionClass;
 
 /**
@@ -148,6 +148,8 @@ class InitBlocksCli extends AbstractCli
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 		$all = $assocArgs['use_all'] ?? false;
 
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		if (!$groupOutput) {
 			$this->getIntroText();
 		}
@@ -163,13 +165,13 @@ class InitBlocksCli extends AbstractCli
 			foreach (\array_keys(static::COMMANDS) as $command) {
 				switch ($command) {
 					case UseBlockCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceCustom'));
+						$commands[$command][$type] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceCustom'));
 						break;
 					case UseComponentCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceComponents'));
+						$commands[$command][$type] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceComponents'));
 						break;
 					case UseVariationCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceVariations'));
+						$commands[$command][$type] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceVariations'));
 						break;
 					default:
 						$commands[$command] = [];

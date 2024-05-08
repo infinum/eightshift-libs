@@ -12,7 +12,7 @@ namespace EightshiftLibs\Rest\Fields;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class FieldCli
@@ -97,6 +97,8 @@ class FieldCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -113,6 +115,6 @@ class FieldCli extends AbstractCli
 			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('object_type'), $objectType)
 			->searchReplaceString($this->getArgTemplate('field_name'), $fieldName)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Fields'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Fields'), "{$className}.php", $assocArgs);
 	}
 }

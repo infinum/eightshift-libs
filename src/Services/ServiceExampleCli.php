@@ -12,7 +12,7 @@ namespace EightshiftLibs\Services;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class ServiceExampleCli
@@ -103,6 +103,8 @@ class ServiceExampleCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -129,6 +131,6 @@ class ServiceExampleCli extends AbstractCli
 			->searchReplaceString($className, $classNameNew)
 			->renameGlobals($assocArgs)
 			->searchReplaceString('\\Services;', "{$newNamespace};")
-			->outputWrite(Components::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
 	}
 }

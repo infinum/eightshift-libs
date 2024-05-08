@@ -12,7 +12,7 @@ namespace EightshiftLibs\Readme;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class ReadmeCli
@@ -47,7 +47,7 @@ class ReadmeCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'path' => Components::getProjectPaths('projectRoot'),
+			'path' => Helpers::getProjectPaths('projectRoot'),
 		];
 	}
 
@@ -91,6 +91,8 @@ class ReadmeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.

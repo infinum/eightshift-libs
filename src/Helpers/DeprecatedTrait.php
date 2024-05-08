@@ -88,7 +88,7 @@ trait DeprecatedTrait
 	 *
 	 * @param string $path Absolute path.
 	 *
-	 * @deprecated 8.0.0 Use Components::getManifestByDir() instead. This method will be removed in the next major release.
+	 * @deprecated 8.0.0 Use Helpers::getManifestByDir() instead. This method will be removed in the next major release.
 	 *
 	 * @return array<string, mixed>
 	 */

@@ -12,7 +12,7 @@ namespace EightshiftLibs\Config;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class ConfigPluginCli
@@ -79,6 +79,8 @@ class ConfigPluginCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
@@ -90,6 +92,6 @@ class ConfigPluginCli extends AbstractCli
 			->renameGlobals($assocArgs);
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$newName}.php", $assocArgs);
+		$class->outputWrite(Helpers::getProjectPaths('srcDestination', 'Config'), "{$newName}.php", $assocArgs);
 	}
 }

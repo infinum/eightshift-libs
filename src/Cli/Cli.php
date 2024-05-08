@@ -34,7 +34,6 @@ use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
-use EightshiftLibs\Setup\PluginManageCli;
 use EightshiftLibs\View\EscapedViewCli;
 use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
@@ -144,7 +143,6 @@ class Cli
 		RegenerateWebPMediaCli::class,
 		UseWebPMediaCli::class,
 		VersionCli::class,
-		PluginManageCli::class,
 	];
 
 	/**

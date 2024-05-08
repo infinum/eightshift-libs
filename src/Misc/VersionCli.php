@@ -12,7 +12,7 @@ namespace EightshiftLibs\Misc;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class VersionCli
@@ -90,6 +90,8 @@ class VersionCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -99,7 +101,7 @@ class VersionCli extends AbstractCli
 		// translators: %s is replaced with the new version number.
 		$assocArgs['actionOutput'] = \sprintf(\__("version number changed to %s.", 'eightshift-libs'), $version);
 
-		$path = Components::getProjectPaths('cliOutput');
+		$path = Helpers::getProjectPaths('cliOutput');
 
 		$sep = \DIRECTORY_SEPARATOR;
 		$pluginName = \explode($sep, \rtrim($path, $sep));
@@ -111,10 +113,10 @@ class VersionCli extends AbstractCli
 		];
 
 		foreach ($files as $file) {
-			if (\file_exists(Components::getProjectPaths('cliOutput', $file))) {
+			if (\file_exists(Helpers::getProjectPaths('cliOutput', $file))) {
 				$this->getExampleTemplate($path, $file, true)
 				->renameVersionString($version)
-				->outputWrite(Components::getProjectPaths('cliOutput'), $file, $assocArgs);
+				->outputWrite(Helpers::getProjectPaths('cliOutput'), $file, $assocArgs);
 			}
 		}
 	}

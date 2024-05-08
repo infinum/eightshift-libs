@@ -12,7 +12,7 @@ namespace EightshiftLibs\WpCli;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class WpCli
@@ -92,6 +92,8 @@ class WpCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -106,6 +108,6 @@ class WpCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(true), $className)
 			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('command_name'), $commandName)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'WpCli'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'WpCli'), "{$className}.php", $assocArgs);
 	}
 }

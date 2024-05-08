@@ -12,7 +12,7 @@ namespace EightshiftLibs\AdminMenus;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class AdminReusableBlocksMenuCli
@@ -122,6 +122,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
 
 		// Get Arguments.
@@ -152,6 +153,6 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 		}
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(Components::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
+		$class->outputWrite(Helpers::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
 	}
 }
