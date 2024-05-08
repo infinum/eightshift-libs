@@ -128,9 +128,7 @@ class ReusableBlocksHeaderFooterCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('title'), $title)
 			->searchReplaceString($this->getArgTemplate('capability'), $capability)
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle);

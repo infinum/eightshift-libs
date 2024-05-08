@@ -131,8 +131,7 @@ class BlockPatternCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('title'), $title)
 			->searchReplaceString($this->getArgTemplate('name'), $name)
 			->searchReplaceString($this->getArgTemplate('content'), $content)

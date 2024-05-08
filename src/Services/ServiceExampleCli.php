@@ -127,8 +127,7 @@ class ServiceExampleCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, static::TEMPLATE)
 			->searchReplaceString($className, $classNameNew)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString('\\Services;', "{$newNamespace};")
 			->outputWrite(Components::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
 	}

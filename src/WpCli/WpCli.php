@@ -104,8 +104,7 @@ class WpCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName(true))
 			->renameClassNameWithPrefix($this->getClassShortName(true), $className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('command_name'), $commandName)
 			->outputWrite(Components::getProjectPaths('srcDestination', 'WpCli'), "{$className}.php", $assocArgs);
 	}

@@ -76,8 +76,7 @@ class EscapedViewCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
+			->renameGlobals($assocArgs)
 			->outputWrite(Components::getProjectPaths('srcDestination', 'View'), "{$className}.php", $assocArgs);
 	}
 }

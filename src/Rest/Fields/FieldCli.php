@@ -110,8 +110,7 @@ class FieldCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('object_type'), $objectType)
 			->searchReplaceString($this->getArgTemplate('field_name'), $fieldName)
 			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Fields'), "{$className}.php", $assocArgs);

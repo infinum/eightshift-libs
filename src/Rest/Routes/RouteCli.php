@@ -138,8 +138,7 @@ class RouteCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('endpoint_slug'), $endpointSlug)
 			->searchReplaceString("'{$this->getArgTemplate('method')}'", static::VERB_ENUM[$method])
 			->outputWrite(Components::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Routes'), "{$className}.php", $assocArgs);

@@ -133,9 +133,7 @@ class TaxonomyCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('slug'), $slug)
 			->searchReplaceString($this->getArgTemplate('rest_endpoint_slug'), $restEndpointSlug)
 			->searchReplaceString($this->getArgTemplate('post_type_slug'), $postTypeSlug)

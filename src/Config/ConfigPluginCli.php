@@ -87,8 +87,7 @@ class ConfigPluginCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $className)
 			->renameClassNameWithPrefix($className, $newName)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs);
+			->renameGlobals($assocArgs);
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Config'), "{$newName}.php", $assocArgs);

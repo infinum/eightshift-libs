@@ -99,8 +99,7 @@ class InitThemeMandatryCli extends AbstractCli
 			}
 
 			$this->getExampleTemplate($dir, $file)
-				->renameNamespace($assocArgs)
-				->renameUse($assocArgs)
+				->renameGlobals($assocArgs)
 				->outputWrite($destionation, $file, $assocArgs);
 		}
 

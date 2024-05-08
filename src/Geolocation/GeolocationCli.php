@@ -107,9 +107,7 @@ class GeolocationCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('cookie_name'), $cookieName);
 
 		// Output final class to new file/folder and finish.

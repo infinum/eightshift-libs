@@ -76,9 +76,6 @@ class WebPMediaColumnCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
 			->outputWrite(Components::getProjectPaths('srcDestination', 'Columns' . \DIRECTORY_SEPARATOR . 'Media'), "{$className}.php", $assocArgs);
 	}
 }

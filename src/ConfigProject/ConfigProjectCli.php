@@ -97,8 +97,7 @@ class ConfigProjectCli extends AbstractCli
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs);
+			->renameGlobals($assocArgs);
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite($path, 'wp-config-project.php', $assocArgs);

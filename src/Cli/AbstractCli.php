@@ -578,24 +578,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Replace namespace EightshiftBoilerplateVendor\ in class
-	 *
-	 * @param array<string, mixed> $args CLI args array.
-	 *
-	 * @return AbstractCli Current CLI class.
-	 */
-	public function renameNamespace(array $args = []): self
-	{
-		$this->fileContents = \str_replace(
-			$this->getArgTemplate(self::ARG_NAMESPACE),
-			$args[self::ARG_NAMESPACE],
-			$this->fileContents
-		);
-
-		return $this;
-	}
-
-	/**
 	 * Replace use in class
 	 *
 	 * @param array<string, mixed> $args CLI args array.
@@ -614,19 +596,36 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Replace text domain in class
+	 * Replace generic key in class.
 	 *
+	 * @param string $keyName Key name to replace.
 	 * @param array<string, mixed> $args CLI args array.
 	 *
 	 * @return AbstractCli Current CLI class.
 	 */
-	public function renameTextDomain(array $args = []): self
+	public function renameGeneric(string $keyName, array $args): self
 	{
 		$this->fileContents = \str_replace(
-			$this->getArgTemplate(self::ARG_TEXTDOMAIN),
-			$args[self::ARG_TEXTDOMAIN],
+			$this->getArgTemplate($keyName),
+			$args[$keyName],
 			$this->fileContents
 		);
+
+		return $this;
+	}
+
+	public function renameGlobals(array $args = []) : self
+	{
+		$this->renameGeneric(self::ARG_NAMESPACE, $args)
+			->renameGeneric(self::ARG_TEXTDOMAIN, $args)
+			->renameUse($args)
+			->renameGeneric(self::ARG_PROJECT_NAME, $args)
+			->renameGeneric(self::ARG_PROJECT_DESCRIPTION, $args)
+			->renameGeneric(self::ARG_PROJECT_AUTHOR, $args)
+			->renameGeneric(self::ARG_PROJECT_AUTHOR_URL, $args)
+			->renameGeneric(self::ARG_PROJECT_VERSION, $args)
+			->renameGeneric(self::ARG_SITE_URL, $args)
+			->renameGeneric(self::ARG_NAMESPACE_VENDOR_PREFIX, $args);
 
 		return $this;
 	}

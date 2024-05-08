@@ -84,8 +84,7 @@ class I18nCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
+			->renameGlobals($assocArgs)
 			->outputWrite(Components::getProjectPaths('srcDestination', 'I18n'), "{$className}.php", $assocArgs);
 	}
 }

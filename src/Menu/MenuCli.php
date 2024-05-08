@@ -76,9 +76,7 @@ class MenuCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
+			->renameGlobals($assocArgs)
 			->outputWrite(Components::getProjectPaths('srcDestination', 'Menu'), "{$className}.php", $assocArgs);
 	}
 }
