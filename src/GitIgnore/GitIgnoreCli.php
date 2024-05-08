@@ -12,7 +12,7 @@ namespace EightshiftLibs\GitIgnore;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class GitIgnoreCli
@@ -47,7 +47,7 @@ class GitIgnoreCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'path' => Components::getProjectPaths('projectRoot'),
+			'path' => Helpers::getProjectPaths('projectRoot'),
 		];
 	}
 
@@ -83,7 +83,7 @@ class GitIgnoreCli extends AbstractCli
 				## RESOURCES
 
 				File will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/GitIgnore/.gitignore
+				https://github.com/infinum/eightshift-libs/blob/develop/src/GitIgnore/GitIgnoreExample.php
 			"),
 		];
 	}
