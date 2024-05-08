@@ -105,7 +105,10 @@ class GitIgnoreCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->outputWrite($path, '.gitignore', $assocArgs);
 
-		WP_CLI::runcommand('config delete WP_DEBUG');
+		if (!\defined('WP_DEBUG')) {
+			WP_CLI::runcommand('config delete WP_DEBUG');
+		}
+
 		WP_CLI::runcommand('config set WP_ENVIRONMENT_TYPE development');
 		WP_CLI::runcommand("config set \"configProject\" \"require_once(ABSPATH . 'wp-config-project.php')\" --raw --type='variable'");
 	}
