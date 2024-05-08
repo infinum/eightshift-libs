@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace %g_namespace%\Rest\Routes\LoadMore;
 
 use %g_namespace%\Config\Config;
-use %g_use_libs%\Helpers\Components;
+use %g_use_libs%\Helpers\Helpers;
 use %g_use_libs%\Rest\CallableRouteInterface;
 use %g_use_libs%\Rest\Routes\AbstractRoute;
 use WP_Error;

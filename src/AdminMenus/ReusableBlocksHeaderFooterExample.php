@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace %g_namespace%\AdminMenus;
 
 use %g_use_libs%\AdminMenus\AbstractAdminMenu;
-use %g_use_libs%\Helpers\Components;
+use %g_use_libs%\Helpers\Helpers;
 use WP_Query;
 
 /**

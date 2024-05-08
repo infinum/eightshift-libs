@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace %g_namespace%\Columns\Media;
 
 use %g_use_libs%\Columns\Media\AbstractMediaColumns;
-use %g_use_libs%\Helpers\Components;
+use %g_use_libs%\Helpers\Helpers;
 
 /**
  * Class WebP Media Column.
