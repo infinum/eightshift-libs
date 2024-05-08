@@ -93,11 +93,14 @@ class GitIgnoreCli extends AbstractCli
 	{
 		$this->getIntroText($assocArgs);
 
+		// Get full class name.
+		$className = $this->getClassShortName();
+
 		// Get Props.
 		$path = $this->getArg($assocArgs, 'path');
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, '.gitignore')
+		$this->getExampleTemplate(__DIR__, $className)
 			->outputWrite($path, '.gitignore', $assocArgs);
 	}
 }
