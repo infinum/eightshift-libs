@@ -84,6 +84,8 @@ class InitThemeMandatryCli extends AbstractCli
 	{
 		$this->getIntroText($assocArgs);
 
+		WP_CLI::confirm( "Are you sure you want to drop the database?", $assocArgs );
+
 		$assocArgs['actionOutput'] = 'created';
 
 		$sep = \DIRECTORY_SEPARATOR;
@@ -104,7 +106,7 @@ class InitThemeMandatryCli extends AbstractCli
 		}
 
 		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
-		WP_CLI::runcommand("eval 'shell_exec(\"composer install -n --no-cache\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"composer install\");'");
 		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
 	}
 }
