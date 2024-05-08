@@ -103,6 +103,7 @@ class GitIgnoreCli extends AbstractCli
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
+			->renameGlobals($assocArgs)
 			->outputWrite($path, '.gitignore', $assocArgs);
 	}
 }

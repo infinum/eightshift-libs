@@ -112,6 +112,7 @@ class SetupCli extends AbstractCli
 
 		// Get setup.json example file, and create the one in the project.
 		$this->getExampleTemplate($sourcePath, $fileName)
+			->renameGlobals($assocArgs)
 			->outputWrite($path, $fileName, $assocArgs);
 	}
 }

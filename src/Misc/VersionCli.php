@@ -116,6 +116,7 @@ class VersionCli extends AbstractCli
 			if (\file_exists(Helpers::getProjectPaths('cliOutput', $file))) {
 				$this->getExampleTemplate($path, $file, true)
 				->renameVersionString($version)
+				->renameGlobals($assocArgs)
 				->outputWrite(Helpers::getProjectPaths('cliOutput'), $file, $assocArgs);
 			}
 		}

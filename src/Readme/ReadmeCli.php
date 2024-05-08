@@ -100,6 +100,7 @@ class ReadmeCli extends AbstractCli
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, 'README.md')
+			->renameGlobals($assocArgs)
 			->outputWrite($path, 'README.md', $assocArgs);
 	}
 }
