@@ -14,7 +14,7 @@ namespace EightshiftLibs\Geolocation;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class GeolocationCli
@@ -111,6 +111,7 @@ class GeolocationCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('cookie_name'), $cookieName);
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(Components::getProjectPaths('srcDestination', 'Geolocation'), "{$className}.php", $assocArgs);
+		$class->outputWrite(
+			Helpers::getProjectPaths('srcDestination', 'Geolocation'), "{$className}.php", $assocArgs);
 	}
 }
