@@ -637,7 +637,8 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function cleanUpInitialBoilerplate(): void
 	{
-		WP_CLI::runcommand("eval 'shell_exec(\"rm .github\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"rm -rf .github\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"rm CODE_OF_CONDUCT.md\");'");
 		WP_CLI::runcommand("eval 'shell_exec(\"rm CHANGELOG.md\");'");
 		WP_CLI::runcommand("eval 'shell_exec(\"rm LICENSE.md\");'");
 	}
@@ -650,8 +651,11 @@ abstract class AbstractCli implements CliInterface
 	public function initMandatoryAfter(): void
 	{
 		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
+		WP_CLI::log('--------------------------------------------------', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"composer install\");'");
+		WP_CLI::log('--------------------------------------------------', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
+		WP_CLI::log('--------------------------------------------------', 'C');
 	}
 
 	/**

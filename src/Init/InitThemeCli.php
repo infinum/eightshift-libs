@@ -21,6 +21,7 @@ use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
 use ReflectionClass;
+use WP_CLI;
 
 /**
  * Class InitThemeCli
@@ -102,7 +103,7 @@ class InitThemeCli extends AbstractCli
 
 				## EXAMPLES
 
-				# Setup theme:
+				# Setup theme files:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 			"),
 		];
@@ -145,8 +146,11 @@ class InitThemeCli extends AbstractCli
 		}
 
 		if (!$groupOutput) {
-			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!\n\nRun `npm start` to build all the assets.', 'success', \__('Ready to go!', 'eightshift-libs'));
-			$this->cliLogAlert('If you want to set up the default header and footer, run `wp boilerplate init header-footer` after building assets.', 'info', \__('Note', 'eightshift-libs'));
+			WP_CLI::runcommand("eval 'shell_exec(\"npm run build\");'");
+
+			WP_CLI::log('--------------------------------------------------', 'C');
+
+			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!\n\n', 'success', \__('Ready to go!', 'eightshift-libs'));
 		}
 	}
 }

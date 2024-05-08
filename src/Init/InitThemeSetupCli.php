@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WP-CLI command initial setup of theme project only mandatory files.
+ * Class that registers WP-CLI command initial setup of theme project using npx command.
  *
  * @package EightshiftLibs\Init
  */
@@ -16,9 +16,9 @@ use EightshiftLibs\Helpers\Helpers;
 use WP_CLI;
 
 /**
- * Class InitThemeMandatryCli
+ * Class InitThemeSetupCli
  */
-class InitThemeMandatryCli extends AbstractCli
+class InitThemeSetupCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -37,7 +37,7 @@ class InitThemeMandatryCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'theme-mandatory';
+		return 'theme-setup';
 	}
 
 	/**
@@ -58,23 +58,17 @@ class InitThemeMandatryCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Copy all mandatory theme files to the project.',
+			'shortdesc' => 'Setup theme project with initial boilerplate used with npx command. This command should never be run manually.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to list all your project configuration like themes and their versions,
-				plugins (wp.org, paid, added to repo or from github release), core version, environments, etc.
-				This file will be copied to your project root folder.
+				Used to setup theme from the initial boilerplate.
+				This command should never be run manually as it will break your project.
 
 				## EXAMPLES
 
-				# Copy file:
+				# Setup theme project with initial boilerplate:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
-
-				## RESOURCES
-
-				File will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/Setup/setup.json
 			"),
 		];
 	}
@@ -85,7 +79,9 @@ class InitThemeMandatryCli extends AbstractCli
 		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
 
-		$assocArgs['actionOutput'] = 'created';
+		$assocArgs['actionOutput'] = 'file created';
+		$assocArgs[self::ARG_IS_SETUP] = 'true';
+		$assocArgs[self::ARG_SKIP_EXISTING] = 'true';
 
 		$sep = \DIRECTORY_SEPARATOR;
 		$dir = __DIR__ . "{$sep}theme";
