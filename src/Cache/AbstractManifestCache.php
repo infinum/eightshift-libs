@@ -158,7 +158,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			$output = $this->getAllManifests($cacheType)[$key] ?? [];
 		}
 
-		if (!$output) {
+		if (!$output && !\defined('WP_CLI')) {
 			throw InvalidManifest::missingCacheTopItemException($key, $this->getFullPath($key, $cacheType));
 		}
 

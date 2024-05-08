@@ -518,7 +518,7 @@ abstract class AbstractCli implements CliInterface
 			self::cliError(
 				\sprintf(
 					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%s '%s' is already present at\n'%s'\n\nIf you want to override the destination folder, use %c--%s='true'%n",
+					"%1\$s '%2\$s' is already present at\n'%3\$s'\n\nIf you want to override the destination folder, use --%4\$s='true'",
 					$typeOutput,
 					$fileName,
 					$path,
