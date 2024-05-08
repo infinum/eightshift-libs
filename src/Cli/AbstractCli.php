@@ -568,11 +568,13 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameGeneric(string $keyName, array $args): self
 	{
-		$this->fileContents = \str_replace(
-			$this->getArgTemplate($keyName),
-			$args[$keyName],
-			$this->fileContents
-		);
+		if (isset($args[$keyName])) {
+			$this->fileContents = \str_replace(
+				$this->getArgTemplate($keyName),
+				$args[$keyName],
+				$this->fileContents
+			);
+		}
 
 		return $this;
 	}
@@ -966,5 +968,19 @@ abstract class AbstractCli implements CliInterface
 		$namespace = \str_replace(' ', '', $namespace);
 
 		return $namespace;
+	}
+
+	/**
+	 * Get setup new folder name.
+	 *
+	 * @param string $currentPath Current path.
+	 * @param string $newName New name.
+	 *
+	 * @return string
+	 */
+	public function getSetupNewFolderName(string $currentPath, string $newName): string
+	{
+		$dir = dirname($currentPath);
+		return Helpers::joinPaths([$dir, $newName]);
 	}
 }

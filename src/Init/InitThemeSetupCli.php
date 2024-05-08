@@ -139,5 +139,7 @@ class InitThemeSetupCli extends AbstractCli
 		}
 
 		$this->initMandatoryAfter();
+
+		\rename($destionation, $this->getSetupNewFolderName($destionation, $assocArgs[self::ARG_TEXTDOMAIN]));
 	}
 }
