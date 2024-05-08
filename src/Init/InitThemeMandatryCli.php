@@ -103,8 +103,8 @@ class InitThemeMandatryCli extends AbstractCli
 				->outputWrite($destionation, $file, $assocArgs);
 		}
 
-		WP_CLI::runcommand("wp eval 'shell_exec(\"rm composer.lock\");'");
-		WP_CLI::runcommand("wp eval 'shell_exec(\"composer install -n --no-cache\");'");
-		WP_CLI::runcommand("wp eval 'shell_exec(\"npm install\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"composer install -n --no-cache\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
 	}
 }
