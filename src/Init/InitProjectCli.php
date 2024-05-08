@@ -17,6 +17,7 @@ use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
 use ReflectionClass;
+use WP_CLI;
 
 /**
  * Class InitProjectCli
@@ -96,6 +97,8 @@ class InitProjectCli extends AbstractCli
 	{
 		$groupOutput = $assocArgs['groupOutput'] ?? false;
 
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		if (!$groupOutput) {
 			$this->getIntroText();
 		}
@@ -126,8 +129,8 @@ class InitProjectCli extends AbstractCli
 		}
 
 		if (!$groupOutput) {
-			$this->cliLog('--------------------------------------------------');
-			$this->cliLog('We have moved everything you need to start creating your awesome WordPress project. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
+			WP_CLI::runcommand("eval 'shell_exec(\"npm run build\");'");
+			$this->cliLog('We have moved everything you need to start creating your awesome WordPress project.', "M");
 			$this->cliLog('Happy developing!', "M");
 		}
 	}
