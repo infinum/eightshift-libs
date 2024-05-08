@@ -234,6 +234,16 @@ abstract class AbstractCli implements CliInterface
 						'false',
 					]
 				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_IS_SETUP,
+					'description' => 'If this value is set to true you must provide a project name that will be used for namespace and textdomain.',
+					'optional' => true,
+					'options' => [
+						'true',
+						'false',
+					]
+				],
 			],
 		];
 	}
