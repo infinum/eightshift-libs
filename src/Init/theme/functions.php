@@ -32,7 +32,9 @@ if (! \defined('WPINC')) {
  * Include the autoloader so we can dynamically include the rest of the classes.
  */
 $loader = require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/vendor-prefixed/autoload.php';
+if (\file_exists( __DIR__ . '/vendor-prefixed/autoload.php')) {
+	require  __DIR__ . '/vendor-prefixed/autoload.php';
+}
 
 /**
  * Set all the cache for the theme.
