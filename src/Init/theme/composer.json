@@ -42,7 +42,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"EightshiftBoilerplate\\": "src/"
+			"%namespace%\\": "src/"
 		}
 	},
 	"minimum-stability": "dev",
@@ -77,7 +77,7 @@
 	},
 	"extra": {
 		"strauss": {
-			"namespace_prefix": "EightshiftBoilerplateVendor",
+			"namespace_prefix": "%namespaceVendor%",
 			"exclude_from_prefix": {
 				"file_patterns": ["/Example.php$/"]
 			}

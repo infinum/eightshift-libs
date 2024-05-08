@@ -165,11 +165,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$class = $this->getExampleTemplate($fullDestination, $innerItem, true);
 
 				if (!empty($class->fileContents)) {
-					$class->renameProjectName($args)
-						->renameNamespace($args)
-						->renameTextDomainFrontendLibs($args)
+					$class->renameNamespace($args)
+						->renameTextDomain($args)
 						->outputWrite($fullDestination, $innerItem, [
-							'skip_existing' => true,
+							self::ARG_SKIP_EXISTING => true,
 							'groupOutput' => true,
 						]);
 				}

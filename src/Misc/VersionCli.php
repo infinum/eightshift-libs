@@ -95,7 +95,7 @@ class VersionCli extends AbstractCli
 		// Get Props.
 		$version = $this->getArg($assocArgs, 'version');
 
-		$assocArgs['skip_existing'] = 'true';
+		$assocArgs[AbstractCli::ARG_SKIP_EXISTING] = 'true';
 		// translators: %s is replaced with the new version number.
 		$assocArgs['actionOutput'] = \sprintf(\__("version number changed to %s.", 'eightshift-libs'), $version);
 
@@ -105,7 +105,6 @@ class VersionCli extends AbstractCli
 		$pluginName = \explode($sep, \rtrim($path, $sep));
 
 		$files = [
-			'package.json',
 			'style.css',
 			'functions.php',
 			\end($pluginName) . '.php',

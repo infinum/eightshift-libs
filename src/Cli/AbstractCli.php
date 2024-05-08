@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\Exception\InvalidPath;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -100,11 +100,11 @@ abstract class AbstractCli implements CliInterface
 	public const ARG_TEXTDOMAIN = 'textdomain';
 
 	/**
-	 * Output config path arg.
+	 * Output composer_config_path arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_CONFIG_PATH = 'config_path';
+	public const ARG_COMPOSER_CONFIG_PATH = 'composer_config_path';
 
 	/**
 	 * Output skip existing arg.
@@ -114,6 +114,13 @@ abstract class AbstractCli implements CliInterface
 	public const ARG_SKIP_EXISTING = 'skip_existing';
 
 	/**
+	 * Output site_url arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_SITE_URL = 'site_url';
+
+	/**
 	 * Output namespace arg.
 	 *
 	 * @var string
@@ -121,11 +128,18 @@ abstract class AbstractCli implements CliInterface
 	public const ARG_NAMESPACE = 'namespace';
 
 	/**
-	 * Output vendor_prefix arg.
+	 * Output namespace_vendor_prefix arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_VENDOR_PREFIX = 'vendor_prefix';
+	public const ARG_NAMESPACE_VENDOR_PREFIX = 'namespace_vendor_prefix';
+
+	/**
+	 * Output is setup arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_IS_SETUP = 'is_setup';
 
 	/**
 	 * Construct Method.
@@ -164,7 +178,7 @@ abstract class AbstractCli implements CliInterface
 				],
 				[
 					'type' => 'assoc',
-					'name' => self::ARG_VENDOR_PREFIX,
+					'name' => self::ARG_NAMESPACE_VENDOR_PREFIX,
 					'description' => 'Define your project vendor_prefix. Default is read from composer extra > strauss > namespace_prefix key.',
 					'optional' => true,
 				],
@@ -206,8 +220,8 @@ abstract class AbstractCli implements CliInterface
 				],
 				[
 					'type' => 'assoc',
-					'name' => self::ARG_CONFIG_PATH,
-					'description' => 'Define your project composer absolute path.',
+					'name' => self::ARG_COMPOSER_CONFIG_PATH,
+					'description' => 'Define your project composer.json absolute path.',
 					'optional' => true,
 				],
 				[
@@ -222,6 +236,51 @@ abstract class AbstractCli implements CliInterface
 				],
 			],
 		];
+	}
+
+	/**
+	 * Prepare arguments for all the commands.
+	 *
+	 * @param array<string, mixed> $args Arguments array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function prepareArgs(array $args = []): array
+	{
+		$output = [];
+
+		if (isset($args[self::ARG_IS_SETUP]) && !isset($args[self::ARG_PROJECT_NAME])) {
+			self::cliError('Project name is missing.');
+		}
+
+		$configPath = $args[self::ARG_COMPOSER_CONFIG_PATH] ?? Helpers::getProjectPaths('root', 'composer.json');
+		$composerFile = $this->getComposer($configPath);
+
+		if (isset($args[self::ARG_IS_SETUP])) {
+			$output[self::ARG_NAMESPACE] = $this->convertToNamespace($args[self::ARG_PROJECT_NAME]);
+		} else {
+			$output[self::ARG_NAMESPACE] = $composerFile ? \rtrim(\array_key_first($composerFile['autoload']['psr-4']), '\\') : 'EightshiftBoilerplate';
+		}
+
+		if (isset($args[self::ARG_IS_SETUP])) {
+			$output[self::ARG_NAMESPACE_VENDOR_PREFIX] = $output[self::ARG_NAMESPACE] . "Vendor";
+		} else {
+			$output[self::ARG_NAMESPACE_VENDOR_PREFIX] = $composerFile ? $composerFile['extra']['strauss']['namespace_prefix'] : 'EightshiftBoilerplateVendor';
+		}
+
+		$output[self::ARG_TEXTDOMAIN] = Helpers::camelToKebabCase($output[self::ARG_NAMESPACE]);
+
+		$output[self::ARG_PROJECT_NAME] = $args[self::ARG_PROJECT_NAME] ?? 'Eightshift Boilerplate';
+		$output[self::ARG_PROJECT_DESCRIPTION] = $args[self::ARG_PROJECT_DESCRIPTION] ?? 'Eightshift Boilerplate is a WordPress starter theme that helps you build better and faster using the modern development tools.';
+		$output[self::ARG_PROJECT_AUTHOR] = $args[self::ARG_PROJECT_AUTHOR] ?? 'Team Eightshift';
+		$output[self::ARG_PROJECT_AUTHOR_URL] = $args[self::ARG_PROJECT_AUTHOR_URL] ?? 'https://eightshift.com/';
+		$output[self::ARG_PROJECT_VERSION] = $args[self::ARG_PROJECT_VERSION] ?? '1.0.0';
+		$output[self::ARG_SITE_URL] = $args[self::ARG_SITE_URL] ?? site_url();
+
+		return \array_merge(
+			$args,
+			$output
+		);
 	}
 
 	/**
@@ -440,7 +499,7 @@ abstract class AbstractCli implements CliInterface
 		$skipExisting = $this->getSkipExisting($args);
 
 		// Set output file path.
-		$destinationFile = Components::joinPaths([$destination, $fileName]);
+		$destinationFile = Helpers::joinPaths([$destination, $fileName]);
 
 		// Bailout if file already exists.
 		if (\file_exists($destinationFile) && $skipExisting === false) {
@@ -518,8 +577,8 @@ abstract class AbstractCli implements CliInterface
 	public function renameNamespace(array $args = []): self
 	{
 		$this->fileContents = \str_replace(
-			'%namespace%',
-			$this->getNamespace($args),
+			$this->getArgTemplate(self::ARG_NAMESPACE),
+			$args[self::ARG_NAMESPACE],
 			$this->fileContents
 		);
 
@@ -535,11 +594,9 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function renameUse(array $args = []): self
 	{
-		$vendorPrefix = $this->getVendorPrefix($args);
-
 		$this->fileContents = \str_replace(
 			'%useLibs%',
-			$vendorPrefix ? "{$vendorPrefix}\EightshiftLibs" : 'EightshiftLibs',
+			!\getenv('ES_TEST') ? $args[self::ARG_NAMESPACE_VENDOR_PREFIX] . "\EightshiftLibs" : 'EightshiftLibs',
 			$this->fileContents
 		);
 
@@ -556,57 +613,8 @@ abstract class AbstractCli implements CliInterface
 	public function renameTextDomain(array $args = []): self
 	{
 		$this->fileContents = \str_replace(
-			'%textdomain%',
-			Components::camelToKebabCase($this->getNamespace($args)),
-			$this->fileContents
-		);
-
-		return $this;
-	}
-
-	/**
-	 * Replace text domain in class for frontend libs
-	 *
-	 * @param array<string, mixed> $args CLI args array.
-	 *
-	 * @return AbstractCli Current CLI class.
-	 */
-	public function renameTextDomainFrontendLibs(array $args = []): self
-	{
-		$namespace = Components::camelToKebabCase($this->getNamespace($args));
-
-		$this->fileContents = \str_replace(
-			'eightshift-frontend-libs',
-			$namespace,
-			$this->fileContents
-		);
-
-		return $this;
-	}
-
-	/**
-	 * Replace project file name
-	 *
-	 * @param array<string, mixed> $args CLI args array.
-	 *
-	 * @return AbstractCli Current CLI class.
-	 */
-	public function renameProjectName(array $args = []): self
-	{
-		$projectName = 'eightshift-boilerplate';
-
-		// Don't use this option on the tests.
-		if (!\getenv('ES_TEST')) {
-			$projectName = \basename(Components::getProjectPaths('root'));
-		}
-
-		if (isset($args['project_name'])) {
-			$projectName = $args['project_name'];
-		}
-
-		$this->fileContents = \str_replace(
-			'eightshift-boilerplate',
-			$projectName,
+			$this->getArgTemplate(self::ARG_TEXTDOMAIN),
+			$args[self::ARG_TEXTDOMAIN],
 			$this->fileContents
 		);
 
@@ -681,65 +689,19 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Get composer from project or lib
 	 *
-	 * @param array<string, mixed> $args CLI args array.
+	 * @param string $path Path to composer file.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getComposer(array $args = []): array
+	public function getComposer(string $path): array
 	{
-		$composerPath = $args['config_path'] ?? '';
+		$composerFile = \file_get_contents($path);
 
-		if (!$composerPath) {
-			$composerPath = Components::getProjectPaths('root', 'composer.json');
-		}
-
-		$composerFile = \file_get_contents($composerPath);
-
-		if ($composerFile === false) {
-			self::cliError("Composer was not found at\n{$composerPath}");
+		if (!$composerFile) {
+			self::cliError("Composer was not found at\n{$path}");
 		}
 
 		return \json_decode((string)$composerFile, true);
-	}
-
-	/**
-	 * Get composers defined namespace
-	 *
-	 * @param array<string, mixed> $args CLI args array.
-	 *
-	 * @return string
-	 */
-	public function getNamespace(array $args = []): string
-	{
-		$namespace = $args['namespace'] ?? '';
-
-		if (!$namespace) {
-			$composer = $this->getComposer($args);
-
-			$namespace = \rtrim(\array_key_first($composer['autoload']['psr-4']), '\\');
-		}
-
-		return $namespace;
-	}
-
-	/**
-	 * Get composers defined vendor prefix
-	 *
-	 * @param array<string, mixed> $args CLI args array.
-	 *
-	 * @return string
-	 */
-	public function getVendorPrefix(array $args = []): string
-	{
-		$vendorPrefix = $args['vendor_prefix'] ?? '';
-
-		if (!$vendorPrefix) {
-			$composer = $this->getComposer($args);
-
-			$vendorPrefix = $composer['extra']['strauss']['namespace_prefix'] ?? '';
-		}
-
-		return $vendorPrefix;
 	}
 
 	/**
@@ -759,28 +721,6 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		return \str_replace('_', '-', \str_replace(' ', '-', $stringToConvert));
-	}
-
-	/**
-	 * Loop array of classes and output the commands
-	 *
-	 * @param class-string[] $items Array of classes.
-	 * @param array<string, mixed> $args CLI command args.
-	 *
-	 * @return void
-	 * @throws ReflectionException Reflection exception.
-	 */
-	public function getEvalLoop(array $items = [], array $args = []): void
-	{
-		foreach ($items as $item) {
-			$reflectionClass = new ReflectionClass($item);
-
-			$class = $reflectionClass->newInstanceArgs(['null']);
-
-			if (\method_exists($class, 'getCommandName') && \method_exists($class, 'getCommandParentName')) {
-				WP_CLI::runcommand("{$this->commandParentName} {$class->getCommandParentName()} {$class->getCommandName()} {$this->prepareArgsManual($args)}");
-			}
-		}
 	}
 
 	/**
@@ -814,7 +754,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function getSkipExisting(array $args): bool
 	{
-		return isset($args['skip_existing']) && $args['skip_existing'];
+		return isset($args[self::ARG_SKIP_EXISTING]) && $args[self::ARG_SKIP_EXISTING];
 	}
 
 	/**
@@ -991,5 +931,36 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		return \json_decode(\implode(' ', (array)\file($manifest)), true);
+	}
+
+	/**
+	 * Convert string to valid namespace.
+	 *
+	 * @param string $name Name to convert.
+	 *
+	 * @return string
+	 */
+	public function convertToNamespace(string $name): string
+	{
+		// Replace all non-alphanumeric characters with underscores
+		$namespace = \preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
+
+		// Replace multiple underscores with a single underscore
+		$namespace = \preg_replace('/_+/', '_', $namespace);
+
+		// Trim underscores from the start and end of the namespace
+		$namespace = \trim($namespace, '_');
+
+		// Ensure the namespace does not start with a digit
+		if (\ctype_digit($namespace[0])) {
+				$namespace = 'N' . $namespace;
+		}
+
+		// Convert to PascalCase as an optional style
+		$namespace = \str_replace('_', ' ', $namespace);
+		$namespace = \ucwords($namespace);
+		$namespace = \str_replace(' ', '', $namespace);
+
+		return $namespace;
 	}
 }

@@ -77,7 +77,7 @@ class BlocksCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class->renameClassName($className)
 			->renameNamespace($assocArgs)
-			->renameTextDomainFrontendLibs($assocArgs)
+			->renameTextDomain($assocArgs)
 			->renameUse($assocArgs)
 			->outputWrite(Components::getProjectPaths('blocksDestination'), "{$className}.php", $assocArgs);
 	}

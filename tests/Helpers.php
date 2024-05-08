@@ -4,6 +4,7 @@ namespace Tests;
 
 use Mockery;
 use EightshiftLibs\Cache\ManifestCacheCli;
+use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Init\InitBlocksCli;
@@ -53,7 +54,7 @@ function getMockArgs($args = [], bool $isCli = false): array
 		$args,
 		[
 			'config_path' => Helpers::getProjectPaths('testsData', "composer{$sep}{$out}"),
-			'skip_existing' => true,
+			AbstractCli::ARG_SKIP_EXISTING => true,
 		]
 	);
 }
