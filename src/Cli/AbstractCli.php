@@ -237,6 +237,7 @@ abstract class AbstractCli implements CliInterface
 		return [
 			self::ARG_NAMESPACE => $namespace,
 			self::ARG_NAMESPACE_VENDOR_PREFIX => "{$namespace}Vendor",
+			self::ARG_TEXTDOMAIN => Helpers::camelToKebabCase($namespace),
 			self::ARG_PROJECT_NAME => $args[self::ARG_PROJECT_NAME] ?? 'Eightshift Boilerplate',
 			self::ARG_PROJECT_DESCRIPTION => $args[self::ARG_PROJECT_DESCRIPTION] ?? 'Eightshift Boilerplate is a WordPress starter theme that helps you build better and faster using the modern development tools.',
 			self::ARG_PROJECT_AUTHOR => $args[self::ARG_PROJECT_AUTHOR] ?? 'Team Eightshift',

@@ -64,6 +64,7 @@ class InitThemeSetupCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => self::ARG_PROJECT_NAME,
 					'description' => 'Define your projects name.',
+					'optional' => false,
 				],
 				[
 					'type' => 'assoc',
@@ -115,7 +116,7 @@ class InitThemeSetupCli extends AbstractCli
 	{
 		$assocArgs['actionOutput'] = 'file created';
 
-		$assocArgs = $this->prepareArgs($this->prepareSetupArgs($assocArgs));
+		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
 		$this->getIntroText($assocArgs);
 
