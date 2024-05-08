@@ -109,15 +109,20 @@ class InitThemeMandatryCli extends AbstractCli
 		$sourcePath = $this->getArg($assocArgs, 'source_path');
 
 		$sep = \DIRECTORY_SEPARATOR;
-		$files = \array_diff(\scandir("{$sep}files"), ['..', '.']);
+		$dir = __DIR__ . "{$sep}theme";
+		$files = \array_diff(\scandir($dir), ['..', '.']);
+
+		$destionation = Helpers::getProjectPaths('themeRoot');
 
 		foreach ($files as $file) {
 			if ($file === '.' || $file === '..') {
 				continue;
 			}
 
-			$this->getExampleTemplate($sourcePath, $fileName)
-			->outputWrite($path, $fileName, $assocArgs);
+			$this->getExampleTemplate($dir, $file)
+				->renameNamespace($assocArgs)
+				->renameUse($assocArgs)
+				->outputWrite($destionation, $file, $assocArgs);
 		}
 	}
 }

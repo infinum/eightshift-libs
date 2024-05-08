@@ -3,8 +3,6 @@
 namespace Tests;
 
 use Mockery;
-use EightshiftBoilerplate\Blocks\BlocksExample;
-use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Helpers\Helpers;

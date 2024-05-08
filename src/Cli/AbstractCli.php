@@ -116,7 +116,43 @@ abstract class AbstractCli implements CliInterface
 				[
 					'type' => 'assoc',
 					'name' => 'vendor_prefix',
-					'description' => 'Define your project vendor_prefix. Default is read from composer extra, imposter, namespace key.',
+					'description' => 'Define your project vendor_prefix. Default is read from composer extra > strauss > namespace_prefix key.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'project_name',
+					'description' => 'Define your projects name.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'project_description',
+					'description' => 'Define your projects description.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'project_author',
+					'description' => 'Define your projects author.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'project_author_url',
+					'description' => 'Define your projects author url.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'project_version',
+					'description' => 'Define your projects version.',
+					'optional' => true,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'textdomain',
+					'description' => 'Define your projects version.',
 					'optional' => true,
 				],
 				[
