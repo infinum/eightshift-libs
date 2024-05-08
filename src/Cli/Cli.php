@@ -62,6 +62,7 @@ use EightshiftLibs\Init\InitHeaderFooter;
 use EightshiftLibs\Init\InitPluginCli;
 use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
+use EightshiftLibs\Init\InitThemeMandatryCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Misc\VersionCli;
@@ -175,6 +176,7 @@ class Cli
 		InitPluginCli::class,
 		InitProjectCli::class,
 		InitThemeCli::class,
+		InitThemeMandatryCli::class,
 	];
 
 	/**
@@ -188,7 +190,7 @@ class Cli
 			...static::CREATE_COMMANDS,
 			...static::BLOCKS_COMMANDS,
 			...static::INIT_COMMANDS,
-			...static::RUN_COMMANDS
+			...static::RUN_COMMANDS,
 		];
 	}
 
