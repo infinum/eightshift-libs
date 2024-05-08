@@ -138,8 +138,11 @@ class InitThemeSetupCli extends AbstractCli
 				->outputWrite($destionation, $file, $assocArgs);
 		}
 
+		\rename($destionation, $this->getSetupNewFolderName($destionation, $assocArgs[self::ARG_TEXTDOMAIN]));
+
 		$this->initMandatoryAfter();
 
-		\rename($destionation, $this->getSetupNewFolderName($destionation, $assocArgs[self::ARG_TEXTDOMAIN]));
+		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
+		WP_CLI::runcommand('boilerplate init theme');
 	}
 }
