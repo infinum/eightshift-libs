@@ -631,6 +631,30 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
+	 * Clean up initial boilerplate files.
+	 *
+	 * @return void
+	 */
+	public function cleanUpInitialBoilerplate(): void
+	{
+		WP_CLI::runcommand("eval 'shell_exec(\"rm .github\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"rm CHANGELOG.md\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"rm LICENSE.md\");'");
+	}
+
+	/**
+	 * Run commands after initial setup.
+	 *
+	 * @return void
+	 */
+	public function initMandatoryAfter(): void
+	{
+		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"composer install\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
+	}
+
+	/**
 	 * Change Class full name
 	 *
 	 * @param string $className Class Name.

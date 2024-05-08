@@ -1,5 +1,5 @@
 {
-	"name": "%g_textdomain%",
+	"name": "%g_textdomain%/%g_textdomain%",
 	"description": "%g_project_description%",
 	"private": true,
 	"homepage": "%g_project_author_url%",

@@ -93,6 +93,8 @@ class InitThemeMandatryCli extends AbstractCli
 
 		$destionation = Helpers::getProjectPaths('themeRoot');
 
+		$this->cleanUpInitialBoilerplate();
+
 		foreach ($files as $file) {
 			if ($file === '.' || $file === '..') {
 				continue;
@@ -103,8 +105,6 @@ class InitThemeMandatryCli extends AbstractCli
 				->outputWrite($destionation, $file, $assocArgs);
 		}
 
-		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
-		WP_CLI::runcommand("eval 'shell_exec(\"composer install\");'");
-		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
+		$this->initMandatoryAfter();
 	}
 }
