@@ -3,11 +3,11 @@
 /**
  * 404 error page
  *
- * @package %namespace%
+ * @package %g_namespace%
  */
 
 get_header();
 
-esc_html_e('404 - not found', '%textdomain%');
+esc_html_e('404 - not found', '%g_textdomain%');
 
 get_footer();

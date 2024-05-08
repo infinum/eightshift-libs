@@ -3,14 +3,14 @@
 /**
  * The Menu specific functionality.
  *
- * @package %namespace%\Menu
+ * @package %g_namespace%\Menu
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Menu;
+namespace %g_namespace%\Menu;
 
-use %useLibs%\Menu\AbstractMenu;
+use %g_use_libs%\Menu\AbstractMenu;
 
 /**
  * Class MenuExample

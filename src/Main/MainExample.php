@@ -6,14 +6,14 @@
  * A class definition that includes attributes and functions used across both the
  * theme-facing side of the site and the admin area.
  *
- * @package %namespace%\Main
+ * @package %g_namespace%\Main
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Main;
+namespace %g_namespace%\Main;
 
-use %useLibs%\Main\AbstractMain;
+use %g_use_libs%\Main\AbstractMain;
 
 /**
  * The main start class.

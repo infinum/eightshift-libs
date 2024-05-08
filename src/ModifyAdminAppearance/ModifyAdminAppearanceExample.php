@@ -3,14 +3,14 @@
 /**
  * Modify WordPress admin behavior
  *
- * @package %namespace%\ModifyAdminAppearance
+ * @package %g_namespace%\ModifyAdminAppearance
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\ModifyAdminAppearance;
+namespace %g_namespace%\ModifyAdminAppearance;
 
-use %useLibs%\Services\ServiceInterface;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class that modifies some administrator appearance

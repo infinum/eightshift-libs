@@ -3,15 +3,15 @@
 /**
  * File that holds class for reusable blocks header/footer example.
  *
- * @package %namespace%\AdminMenus
+ * @package %g_namespace%\AdminMenus
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\AdminMenus;
+namespace %g_namespace%\AdminMenus;
 
-use %useLibs%\AdminMenus\AbstractAdminMenu;
-use %useLibs%\Helpers\Components;
+use %g_use_libs%\AdminMenus\AbstractAdminMenu;
+use %g_use_libs%\Helpers\Components;
 use WP_Query;
 
 /**

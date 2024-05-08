@@ -3,14 +3,14 @@
 /**
  * The login page specific functionality.
  *
- * @package %namespace%\Login
+ * @package %g_namespace%\Login
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Login;
+namespace %g_namespace%\Login;
 
-use %useLibs%\Services\ServiceInterface;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class Login

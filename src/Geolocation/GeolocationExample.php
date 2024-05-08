@@ -3,14 +3,14 @@
 /**
  * Class that adds Geolocation detection.
  *
- * @package %namespace%\Geolocation
+ * @package %g_namespace%\Geolocation
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Geolocation;
+namespace %g_namespace%\Geolocation;
 
-use %useLibs%\Geolocation\AbstractGeolocation;
+use %g_use_libs%\Geolocation\AbstractGeolocation;
 
 /**
  * Class Geolocation

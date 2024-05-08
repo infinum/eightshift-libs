@@ -1,24 +1,8 @@
 {
-	"name": "@eightshift/eightshift-boilerplate",
-	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
+	"name": "%g_textdomain%",
+	"description": "%g_project_description%",
 	"private": true,
-	"authors": [
-		{
-			"name": "Eightshift team",
-			"email": "team@eightshift.com",
-			"homepage": "https://eightshift.com/",
-			"role": "Developer / IT Manager"
-		}
-	],
 	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/infinum/eightshift-boilerplate.git"
-	},
-	"bugs": {
-		"url": "https://github.com/infinum/eightshift-boilerplate/issues"
-	},
-	"homepage": "https://github.com/infinum/eightshift-boilerplate#readme",
 	"scripts": {
 		"lintStyle": "stylelint **/*.scss",
 		"lintJs": "eslint src/ assets/",

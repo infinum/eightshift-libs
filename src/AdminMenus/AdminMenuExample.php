@@ -3,14 +3,14 @@
 /**
  * File that holds class for admin menu example.
  *
- * @package %namespace%\AdminMenus
+ * @package %g_namespace%\AdminMenus
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\AdminMenus;
+namespace %g_namespace%\AdminMenus;
 
-use %useLibs%\AdminMenus\AbstractAdminMenu;
+use %g_use_libs%\AdminMenus\AbstractAdminMenu;
 
 /**
  * AdminMenuExample class.

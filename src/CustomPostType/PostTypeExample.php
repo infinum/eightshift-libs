@@ -3,14 +3,14 @@
 /**
  * File that holds class for PostTypeExample custom post type registration.
  *
- * @package %namespace%\CustomPostType
+ * @package %g_namespace%\CustomPostType
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\CustomPostType;
+namespace %g_namespace%\CustomPostType;
 
-use %useLibs%\CustomPostType\AbstractPostType;
+use %g_use_libs%\CustomPostType\AbstractPostType;
 
 /**
  * Class PostTypeExample.

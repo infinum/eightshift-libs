@@ -3,14 +3,14 @@
 /**
  * Class that adds Analytics and GDPR capability.
  *
- * @package %namespace%\AnalyticsGdpr
+ * @package %g_namespace%\AnalyticsGdpr
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\AnalyticsGdpr;
+namespace %g_namespace%\AnalyticsGdpr;
 
-use %useLibs%\Services\ServiceInterface;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class AnalyticsGdprExample

@@ -3,17 +3,17 @@
 /**
  * The class register load more route.
  *
- * @package %namespace%\Rest\Routes\LoadMore
+ * @package %g_namespace%\Rest\Routes\LoadMore
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Rest\Routes\LoadMore;
+namespace %g_namespace%\Rest\Routes\LoadMore;
 
-use %namespace%\Config\Config;
-use %useLibs%\Helpers\Components;
-use %useLibs%\Rest\CallableRouteInterface;
-use %useLibs%\Rest\Routes\AbstractRoute;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Helpers\Components;
+use %g_use_libs%\Rest\CallableRouteInterface;
+use %g_use_libs%\Rest\Routes\AbstractRoute;
 use WP_Error;
 use WP_Query;
 use WP_REST_Request;

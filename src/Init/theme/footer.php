@@ -3,10 +3,10 @@
 /**
  * Display footer.
  *
- * @package %namespace%
+ * @package %g_namespace%
  */
 
-use %namespace%\AdminMenus\ReusableBlocksHeaderFooter;
+use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
 
 ?>
 

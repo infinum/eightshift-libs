@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Theme Name: %projectName%
- * Description: %projectDescription%
- * Author: %projectAuthor%
- * Author URI: %projectAuthorUrl%
- * Version: %projectVersion%
+ * Theme Name: %g_project_name%
+ * Description: %g_project_description%
+ * Author: %g_project_author%
+ * Author URI: %g_project_author_url%
+ * Version: %g_project_version%
  * License: MIT
  * License URI: http://www.gnu.org/licenses/gpl.html
- * Text Domain: %textdomain%
+ * Text Domain: %g_textdomain%
  *
- * @package %namespace%
+ * @package %g_namespace%
  */
 
 declare(strict_types=1);
 
-namespace %namespace%;
+namespace %g_namespace%;
 
-use %namespace%\Cache\ManifestCache;
-use %namespace%\Main\Main;
-use %useLibs%\Cli\Cli;
+use %g_namespace%\Cache\ManifestCache;
+use %g_namespace%\Main\Main;
+use %g_use_libs%\Cli\Cli;
 
 /**
  * If this file is called directly, abort.

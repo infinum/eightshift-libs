@@ -3,15 +3,15 @@
 /**
  * The Admin Enqueue specific functionality.
  *
- * @package %namespace%\Enqueue\Admin
+ * @package %g_namespace%\Enqueue\Admin
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Enqueue\Admin;
+namespace %g_namespace%\Enqueue\Admin;
 
-use %namespace%\Config\Config;
-use %useLibs%\Enqueue\Admin\AbstractEnqueueAdmin;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Enqueue\Admin\AbstractEnqueueAdmin;
 
 /**
  * Class EnqueueAdminExample

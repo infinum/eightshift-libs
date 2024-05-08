@@ -62,84 +62,84 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @var string
 	 */
-	public const ARG_PROJECT_NAME = 'project_name';
+	public const ARG_PROJECT_NAME = 'g_project_name';
 
 	/**
 	 * Output project description arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_PROJECT_DESCRIPTION = 'project_description';
+	public const ARG_PROJECT_DESCRIPTION = 'g_project_description';
 
 	/**
 	 * Output project author arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_PROJECT_AUTHOR = 'project_author';
+	public const ARG_PROJECT_AUTHOR = 'g_project_author';
 
 	/**
 	 * Output project author url arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_PROJECT_AUTHOR_URL = 'project_author_url';
+	public const ARG_PROJECT_AUTHOR_URL = 'g_project_author_url';
 
 	/**
 	 * Output project version arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_PROJECT_VERSION = 'project_version';
+	public const ARG_PROJECT_VERSION = 'g_project_version';
 
 	/**
 	 * Output textdomain arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_TEXTDOMAIN = 'textdomain';
+	public const ARG_TEXTDOMAIN = 'g_textdomain';
 
 	/**
 	 * Output composer_config_path arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_COMPOSER_CONFIG_PATH = 'composer_config_path';
+	public const ARG_COMPOSER_CONFIG_PATH = 'g_composer_config_path';
 
 	/**
 	 * Output skip existing arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_SKIP_EXISTING = 'skip_existing';
+	public const ARG_SKIP_EXISTING = 'g_skip_existing';
 
 	/**
 	 * Output site_url arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_SITE_URL = 'site_url';
+	public const ARG_SITE_URL = 'g_site_url';
 
 	/**
 	 * Output namespace arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_NAMESPACE = 'namespace';
+	public const ARG_NAMESPACE = 'g_namespace';
 
 	/**
 	 * Output namespace_vendor_prefix arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_NAMESPACE_VENDOR_PREFIX = 'namespace_vendor_prefix';
+	public const ARG_NAMESPACE_VENDOR_PREFIX = 'g_namespace_vendor_prefix';
 
 	/**
 	 * Output is setup arg.
 	 *
 	 * @var string
 	 */
-	public const ARG_IS_SETUP = 'is_setup';
+	public const ARG_IS_SETUP = 'g_is_setup';
 
 	/**
 	 * Construct Method.
@@ -605,7 +605,7 @@ abstract class AbstractCli implements CliInterface
 	public function renameUse(array $args = []): self
 	{
 		$this->fileContents = \str_replace(
-			'%useLibs%',
+			$this->getArgTemplate('g_use_libs'),
 			!\getenv('ES_TEST') ? $args[self::ARG_NAMESPACE_VENDOR_PREFIX] . "\EightshiftLibs" : 'EightshiftLibs',
 			$this->fileContents
 		);

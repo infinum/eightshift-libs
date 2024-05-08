@@ -3,14 +3,14 @@
 /**
  * The Media specific functionality.
  *
- * @package %namespace%\Media
+ * @package %g_namespace%\Media
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Media;
+namespace %g_namespace%\Media;
 
-use %useLibs%\Media\AbstractMedia;
+use %g_use_libs%\Media\AbstractMedia;
 
 /**
  * Class MediaExample

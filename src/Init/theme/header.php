@@ -3,11 +3,11 @@
 /**
  * Main header file
  *
- * @package %namespace%
+ * @package %g_namespace%
  */
 
-use %useLibs%\Helpers\Helpers;
-use %namespace%\AdminMenus\ReusableBlocksHeaderFooter;
+use %g_use_libs%\Helpers\Helpers;
+use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
 
 ?>
 <!DOCTYPE html>

@@ -8,10 +8,10 @@
 
 declare(strict_types=1);
 
-namespace %namespace%\WpCli;
+namespace %g_namespace%\WpCli;
 
-use %namespace%\Config\Config;
-use %useLibs%\Services\ServiceCliInterface;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Services\ServiceCliInterface;
 use WP_CLI;
 
 /**

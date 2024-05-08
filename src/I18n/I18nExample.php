@@ -3,16 +3,16 @@
 /**
  * The Language specific functionality.
  *
- * @package %namespace%\I18n
+ * @package %g_namespace%\I18n
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\I18n;
+namespace %g_namespace%\I18n;
 
-use %namespace%\Config\Config;
-use %useLibs%\Helpers\Helpers;
-use %useLibs%\Services\ServiceInterface;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Helpers\Helpers;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class i18n

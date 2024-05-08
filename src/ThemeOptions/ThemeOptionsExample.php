@@ -3,14 +3,14 @@
 /**
  * Class that adds ThemeOptionsExample capability.
  *
- * @package %namespace%\ThemeOptions
+ * @package %g_namespace%\ThemeOptions
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\ThemeOptions;
+namespace %g_namespace%\ThemeOptions;
 
-use %useLibs%\Services\ServiceInterface;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class ThemeOptionsExample

@@ -3,7 +3,7 @@
 /**
  * Single page for Posts
  *
- * @package %namespace%
+ * @package %g_namespace%
  */
 
 get_header();

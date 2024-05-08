@@ -3,15 +3,15 @@
 /**
  * The Theme/Frontend Enqueue specific functionality.
  *
- * @package %namespace%\Enqueue\Theme
+ * @package %g_namespace%\Enqueue\Theme
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Enqueue\Theme;
+namespace %g_namespace%\Enqueue\Theme;
 
-use %namespace%\Config\Config;
-use %useLibs%\Enqueue\Theme\AbstractEnqueueTheme;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Enqueue\Theme\AbstractEnqueueTheme;
 
 /**
  * Class EnqueueThemeExample

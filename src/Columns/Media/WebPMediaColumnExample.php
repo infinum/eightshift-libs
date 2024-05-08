@@ -3,15 +3,15 @@
 /**
  * File that holds class for WebP Media Column registration.
  *
- * @package %namespace%\CustomMeta
+ * @package %g_namespace%\CustomMeta
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Columns\Media;
+namespace %g_namespace%\Columns\Media;
 
-use %useLibs%\Columns\Media\AbstractMediaColumns;
-use %useLibs%\Helpers\Components;
+use %g_use_libs%\Columns\Media\AbstractMediaColumns;
+use %g_use_libs%\Helpers\Components;
 
 /**
  * Class WebP Media Column.

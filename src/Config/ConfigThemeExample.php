@@ -6,14 +6,14 @@
  * A class definition that includes attributes and functions used across both the
  * public side of the site and the admin area.
  *
- * @package %namespace%\Config
+ * @package %g_namespace%\Config
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Config;
+namespace %g_namespace%\Config;
 
-use %useLibs%\Helpers\Helpers;
+use %g_use_libs%\Helpers\Helpers;
 
 /**
  * The project config class.

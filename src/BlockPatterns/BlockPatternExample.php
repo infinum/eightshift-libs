@@ -8,9 +8,9 @@
 
 declare(strict_types=1);
 
-namespace %namespace%\BlockPatterns;
+namespace %g_namespace%\BlockPatterns;
 
-use %useLibs%\BlockPatterns\AbstractBlockPattern;
+use %g_use_libs%\BlockPatterns\AbstractBlockPattern;
 
 /**
  * BlockPatternExample class.

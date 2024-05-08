@@ -3,15 +3,15 @@
 /**
  * The file that defines a project config details like prefix, absolute path and etc.
  *
- * @package %namespace%\Cache
+ * @package %g_namespace%\Cache
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Cache;
+namespace %g_namespace%\Cache;
 
-use %namespace%\Config\Config;
-use %useLibs%\Cache\AbstractManifestCache;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Cache\AbstractManifestCache;
 
 /**
  * The project config class.

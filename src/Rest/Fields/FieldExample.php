@@ -3,15 +3,15 @@
 /**
  * The class register field for example endpoint
  *
- * @package %namespace%\Rest\Fields
+ * @package %g_namespace%\Rest\Fields
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\Rest\Fields;
+namespace %g_namespace%\Rest\Fields;
 
-use %useLibs%\Rest\Fields\AbstractField;
-use %useLibs%\Rest\CallableFieldInterface;
+use %g_use_libs%\Rest\Fields\AbstractField;
+use %g_use_libs%\Rest\CallableFieldInterface;
 
 /**
  * Class FieldExample

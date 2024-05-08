@@ -3,7 +3,7 @@
 /**
  * Display regular page
  *
- * @package %namespace%
+ * @package %g_namespace%
  */
 
 get_header();

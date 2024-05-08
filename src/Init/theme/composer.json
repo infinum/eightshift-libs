@@ -1,28 +1,9 @@
 {
-	"name": "eightshift/eightshift-boilerplate",
-	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
-	"keywords": [
-		"composer",
-		"installer",
-		"plugin",
-		"blocks",
-		"Gutenberg",
-		"WordPress"
-	],
-	"homepage": "https://eightshift.com/",
+	"name": "%g_textdomain%",
+	"description": "%g_project_description%",
+	"private": true,
+	"homepage": "%g_project_author_url%",
 	"license": "MIT",
-	"authors": [
-		{
-			"name": "Eightshift team",
-			"email": "team@eightshift.com",
-			"homepage": "https://eightshift.com/",
-			"role": "Developer / IT Manager"
-		}
-	],
-	"support": {
-		"issues": "https://github.com/infinum/eightshift-boilerplate/issues",
-		"source": "https://github.com/infinum/eightshift-boilerplate"
-	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
 		"infinum/eightshift-coding-standards": "2.0.0-beta",
@@ -42,7 +23,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"%namespace%\\": "src/"
+			"%g_namespace%\\": "src/"
 		}
 	},
 	"minimum-stability": "dev",
@@ -77,7 +58,7 @@
 	},
 	"extra": {
 		"strauss": {
-			"namespace_prefix": "%namespaceVendor%",
+			"namespace_prefix": "%g_namespace_vendor_prefix%",
 			"exclude_from_prefix": {
 				"file_patterns": ["/Example.php$/"]
 			}

@@ -3,13 +3,13 @@
 /**
  * The EscapedViewExample specific functionality.
  *
- * @package %namespace%\View
+ * @package %g_namespace%\View
  */
 
-namespace %namespace%\View;
+namespace %g_namespace%\View;
 
-use %useLibs%\Services\ServiceInterface;
-use %useLibs%\View\AbstractEscapedView;
+use %g_use_libs%\Services\ServiceInterface;
+use %g_use_libs%\View\AbstractEscapedView;
 
 /**
  * Class EscapedViewExample

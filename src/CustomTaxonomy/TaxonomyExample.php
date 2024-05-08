@@ -3,14 +3,14 @@
 /**
  * The Blog_Taxonomy specific functionality.
  *
- * @package %namespace%\CustomTaxonomy
+ * @package %g_namespace%\CustomTaxonomy
  */
 
 declare(strict_types=1);
 
-namespace %namespace%\CustomTaxonomy;
+namespace %g_namespace%\CustomTaxonomy;
 
-use %useLibs%\CustomTaxonomy\AbstractTaxonomy;
+use %g_use_libs%\CustomTaxonomy\AbstractTaxonomy;
 
 /**
  * Class TaxonomyExample
