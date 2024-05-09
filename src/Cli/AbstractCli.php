@@ -730,25 +730,35 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Full blocks files list used for renaming
+	 * Get full dir files.
 	 *
-	 * @param string $name Block name.
+	 * @param string $path Path to scan.
+	 * @param string $sufix Sufix to add to path.
 	 *
 	 * @return string[]
 	 */
-	public function getFullBlocksFiles(string $name): array
+	public function getFullDirFiles(string $path, string $sufix = ''): array
 	{
-		$ds = \DIRECTORY_SEPARATOR;
-		return [
-			"{$name}.php",
-			"{$name}-block.js",
-			"{$name}-hooks.js",
-			"{$name}-transforms.js",
-			"{$name}.js",
-			"components{$ds}{$name}-editor.js",
-			"components{$ds}{$name}-toolbar.js",
-			"components{$ds}{$name}-options.js",
-		];
+		$scanDir = Helpers::joinPaths([$path, $sufix]);
+
+		if (!\is_dir($scanDir)) {
+			return [$path];
+		}
+
+		$dir = \array_diff(\scandir($scanDir), ['..', '.']);
+
+		return \array_filter(array_map(
+			static function ($item) use ($path, $sufix) {
+				if (!\is_dir(Helpers::joinPaths([$path, $sufix, $item]))) {
+					if ($sufix) {
+						return "{$sufix}/{$item}";
+					} else {
+						return $item;
+					}
+				}
+			},
+			$dir
+		));
 	}
 
 	/**

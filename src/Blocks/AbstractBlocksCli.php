@@ -140,25 +140,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$this->copyRecursively($fullSource, $fullDestination);
 			}
 
-			$partialsOutput = [];
-			$partialsPath = Helpers::joinPaths([$fullDestination, 'partials']);
-
-			// Check if we have partials folder. If so output that folder with items in it.
-			if (\is_dir($partialsPath)) {
-				$partials = \array_diff(\scandir($partialsPath), ['..', '.']);
-				$partials = \array_values($partials);
-
-				$partialsOutput = \array_map(
-					static function ($item) use ($sep) {
-						return "partials{$sep}{$item}";
-					},
-					$partials
-				);
-			}
-
 			$innerItems = \array_merge(
-				$this->getFullBlocksFiles($item),
-				$partialsOutput
+				$this->getFullDirFiles($fullDestination),
+				$this->getFullDirFiles($fullDestination, 'components'),
+				$this->getFullDirFiles($fullDestination, 'partials'),
 			);
 
 			foreach ($innerItems as $innerItem) {
