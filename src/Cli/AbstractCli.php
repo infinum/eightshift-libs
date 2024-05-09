@@ -23,8 +23,6 @@ use WP_CLI;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
 
-use function cli\confirm;
-
 /**
  * Class AbstractCli
  */
@@ -243,7 +241,7 @@ abstract class AbstractCli implements CliInterface
 			self::ARG_PROJECT_AUTHOR => $args[self::ARG_PROJECT_AUTHOR] ?? 'Team Eightshift',
 			self::ARG_PROJECT_AUTHOR_URL => $args[self::ARG_PROJECT_AUTHOR_URL] ?? 'https://eightshift.com/',
 			self::ARG_PROJECT_VERSION => $args[self::ARG_PROJECT_VERSION] ?? '1.0.0',
-			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? site_url(),
+			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? \site_url(),
 			self::ARG_IS_SETUP => 'true',
 			self::ARG_SKIP_EXISTING => 'true',
 		];
@@ -579,7 +577,14 @@ abstract class AbstractCli implements CliInterface
 		return $this;
 	}
 
-	public function renameGlobals(array $args = []) : self
+	/**
+	 * Replace all generic keys in class.
+	 *
+	 * @param array<string, mixed> $args CLI args array.
+	 *
+	 * @return AbstractCli Current CLI class.
+	 */
+	public function renameGlobals(array $args = []): self
 	{
 		$this->renameGeneric(self::ARG_NAMESPACE, $args)
 			->renameGeneric(self::ARG_TEXTDOMAIN, $args)
@@ -747,7 +752,7 @@ abstract class AbstractCli implements CliInterface
 
 		$dir = \array_diff(\scandir($scanDir), ['..', '.']);
 
-		return \array_filter(array_map(
+		return \array_filter(\array_map(
 			static function ($item) use ($path, $sufix) {
 				if (!\is_dir(Helpers::joinPaths([$path, $sufix, $item]))) {
 					if ($sufix) {
@@ -958,39 +963,25 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function convertToNamespace(string $name): string
 	{
-		// Replace all non-alphanumeric characters with underscores
+		// Replace all non-alphanumeric characters with underscores.
 		$namespace = \preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
 
-		// Replace multiple underscores with a single underscore
+		// Replace multiple underscores with a single underscore.
 		$namespace = \preg_replace('/_+/', '_', $namespace);
 
-		// Trim underscores from the start and end of the namespace
+		// Trim underscores from the start and end of the namespace.
 		$namespace = \trim($namespace, '_');
 
-		// Ensure the namespace does not start with a digit
+		// Ensure the namespace does not start with a digit.
 		if (\ctype_digit($namespace[0])) {
 				$namespace = 'N' . $namespace;
 		}
 
-		// Convert to PascalCase as an optional style
+		// Convert to PascalCase as an optional style.
 		$namespace = \str_replace('_', ' ', $namespace);
 		$namespace = \ucwords($namespace);
 		$namespace = \str_replace(' ', '', $namespace);
 
 		return $namespace;
-	}
-
-	/**
-	 * Get setup new folder name.
-	 *
-	 * @param string $currentPath Current path.
-	 * @param string $newName New name.
-	 *
-	 * @return string
-	 */
-	public function getSetupNewFolderName(string $currentPath, string $newName): string
-	{
-		$dir = dirname($currentPath);
-		return Helpers::joinPaths([$dir, $newName]);
 	}
 }

@@ -1,4 +1,4 @@
-# Wordpress files
+# WordPress files
 wp-admin
 wp-includes
 /license.txt
