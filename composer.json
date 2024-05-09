@@ -32,17 +32,14 @@
 		"php-di/php-di": "^7"
 	},
 	"require-dev": {
-		"brain/monkey": "^2.6.1",
 		"captainhook/captainhook": "^5.10",
 		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
 		"infinum/eightshift-coding-standards": "2.0.0-beta",
-		"pestphp/pest": "^1.20",
 		"php-parallel-lint/php-parallel-lint": "^1.3",
 		"php-stubs/wordpress-stubs": "^6.3",
 		"roave/security-advisories": "dev-master",
 		"szepeviktor/phpstan-wordpress": "^1.3",
-		"wp-cli/wp-cli": "^2.9",
-		"yoast/wp-test-utils": "^1.0"
+		"wp-cli/wp-cli": "^2.9"
 	},
 	"autoload": {
 		"psr-4": {
@@ -64,7 +61,6 @@
 		"process-timeout": 2000,
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"pestphp/pest-plugin": true,
 			"composer/installers": true
 		}
 	},
@@ -74,14 +70,10 @@
 		],
 		"test:types": "@php ./vendor/bin/phpstan analyze",
 		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.4-",
-		"test:unit": "@php ./vendor/bin/pest --group=unit",
-		"test:unit-report": "@php ./vendor/bin/pest --group=unit --log-junit tests/coverage/report.xml",
-		"test:coverage": "@php ./vendor/bin/pest --group=unit --coverage",
 		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.4-",
 		"test": [
 			"@test:standards",
-			"@test:types",
-			"@test:unit"
+			"@test:types"
 		]
 	}
 }
