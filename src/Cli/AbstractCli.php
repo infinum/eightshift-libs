@@ -621,11 +621,13 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function initMandatoryAfter(): void
 	{
+		$this->cliLog('Removing old vendor folder', 'C');
+		WP_CLI::runcommand("eval 'shell_exec(\"rm -rf vendor\");'");
 		$this->cliLog('Removing old compeser.lock', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running composer install', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"composer install\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"composer install --ignore-platform-reqs\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running npm install', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
