@@ -120,13 +120,12 @@ class InitThemeSetupCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$assocArgs['group_output'] = true;
-
-		$assocArgs['actionOutput'] = 'file created';
-
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
-		$this->getIntroText($assocArgs);
+		$assocArgs['actionOutput'] = 'file created';
+		$assocArgs['group_output'] = true;
+
+		$this->getIntroText();
 
 		$sep = \DIRECTORY_SEPARATOR;
 		$dir = __DIR__ . "{$sep}theme";

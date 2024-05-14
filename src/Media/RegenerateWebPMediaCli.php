@@ -145,7 +145,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText($assocArgs);
+		$this->getIntroText();
 
 		$quality = $this->getArg($assocArgs, 'quality');
 		$action = $this->getArg($assocArgs, 'action');

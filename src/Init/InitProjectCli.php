@@ -129,7 +129,6 @@ class InitProjectCli extends AbstractCli
 						$assocArgs,
 						[
 							'group_output' => $type === 'theme',
-							'introOutput' => false,
 						]
 					));
 				}

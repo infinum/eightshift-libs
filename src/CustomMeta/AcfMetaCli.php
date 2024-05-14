@@ -95,7 +95,7 @@ class AcfMetaCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText($assocArgs);
+		$this->getIntroText();
 
 		// Get Props.
 		$fieldName = $this->prepareSlug($this->getArg($assocArgs, 'name'));

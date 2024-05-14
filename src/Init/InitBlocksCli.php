@@ -221,7 +221,6 @@ class InitBlocksCli extends AbstractCli
 					[
 						'name' => \implode(",", $innerItems),
 						'group_output' => true,
-						'introOutput' => false,
 						'checkDependency' => false,
 					]
 				));
@@ -230,7 +229,6 @@ class InitBlocksCli extends AbstractCli
 					$assocArgs,
 					[
 						'group_output' => true,
-						'introOutput' => false,
 						'checkDependency' => false,
 					]
 				));

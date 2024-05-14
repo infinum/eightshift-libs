@@ -146,7 +146,6 @@ class InitThemeCli extends AbstractCli
 						$assocArgs,
 						[
 							'group_output' => $type === 'blocks',
-							'introOutput' => false,
 						]
 					));
 				}

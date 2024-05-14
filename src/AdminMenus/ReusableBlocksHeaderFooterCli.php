@@ -114,7 +114,7 @@ class ReusableBlocksHeaderFooterCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
-		$this->getIntroText($assocArgs);
+		$this->getIntroText();
 
 		// Get Arguments.
 		$title = $this->getArg($assocArgs, 'title');

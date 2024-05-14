@@ -93,7 +93,7 @@ class ReadmeCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText($assocArgs);
+		$this->getIntroText();
 
 		// Get Props.
 		$path = $this->getArg($assocArgs, 'path');

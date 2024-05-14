@@ -71,7 +71,7 @@ class EscapedViewCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText($assocArgs);
+		$this->getIntroText();
 
 		$className = $this->getClassShortName();
 

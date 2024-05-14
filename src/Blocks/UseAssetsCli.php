@@ -81,7 +81,7 @@ class UseAssetsCli extends AbstractBlocksCli
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText($assocArgs);
+		$this->getIntroText();
 
 		$this->moveItems(
 			\array_merge(
