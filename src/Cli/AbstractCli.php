@@ -228,6 +228,10 @@ abstract class AbstractCli implements CliInterface
 
 		$namespace = $composerFile ? \rtrim(\array_key_first($composerFile['autoload']['psr-4']), '\\') : 'EightshiftBoilerplate';
 
+		if (isset($args[self::ARG_GROUP_OUTPUT])) {
+			$args[self::ARG_GROUP_OUTPUT] = filter_var($args[self::ARG_GROUP_OUTPUT], FILTER_VALIDATE_BOOLEAN);
+		}
+
 		return \array_merge(
 			[
 				self::ARG_NAMESPACE => $namespace,
