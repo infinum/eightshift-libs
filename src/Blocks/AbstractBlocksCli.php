@@ -158,7 +158,15 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 			if ($type === 'component' || $type === 'block') {
 				if (!$groupOutput) {
-					$this->cliLogAlert($destination, 'success', "{$item} {$type} added to");
+					$this->cliLogAlert(
+						\sprintf(
+							// translators: %s will be replaced with type of item, and shorten cli path.
+							"Folder %s has been created in your project.",
+							$fullDestination
+						),
+						'success',
+						"Success"
+					);
 				}
 
 				$checkDependency = $args['checkDependency'] ?? true;
@@ -170,7 +178,15 @@ abstract class AbstractBlocksCli extends AbstractCli
 				$this->outputNodeModuleDependencyItems($fullSource, $type);
 			} else {
 				if (!$groupOutput) {
-					$this->cliLogAlert($destination, 'success', "{$type} added");
+					$this->cliLogAlert(
+						\sprintf(
+							// translators: %s will be replaced with type of item, and shorten cli path.
+							"Folder %s has been created in your project.",
+							$destination
+						),
+						'success',
+						"Success"
+					);
 				}
 			}
 		}
