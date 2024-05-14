@@ -152,5 +152,26 @@ class InitThemeSetupCli extends AbstractCli
 		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
 
 		WP_CLI::runcommand('boilerplate init theme --group_output=true');
+
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$newDestionation} && npm run build\");'");
+
+		$this->cliLogAlert(
+			"
+			All the files have been copied and you can start working on your awesome theme!\n\n
+
+			Make sure you move to your terminal to new theme by running:\n
+
+			$ cd {$newDestionation}\n\n
+
+			To start the development run:\n
+
+			npm run start\n\n
+
+			To build the production run:\n
+			npm run build\n\n
+			",
+			'success',
+			\__('Ready to go!', 'eightshift-libs')
+		);
 	}
 }
