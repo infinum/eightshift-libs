@@ -122,7 +122,7 @@ class InitThemeCli extends AbstractCli
 			$label = $item['label'] ?? '';
 			$items = $item['items'] ?? [];
 
-			if ($label) {
+			if ($label && !$groupOutput) {
 				$this->cliLog($label, 'C');
 			}
 

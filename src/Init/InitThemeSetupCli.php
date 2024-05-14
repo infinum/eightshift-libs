@@ -122,8 +122,6 @@ class InitThemeSetupCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-
 		$this->getIntroText($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
