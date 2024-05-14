@@ -123,7 +123,6 @@ class InitThemeSetupCli extends AbstractCli
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
 		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-		$gro
 
 		$this->getIntroText();
 
