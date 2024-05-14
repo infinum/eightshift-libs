@@ -483,8 +483,6 @@ abstract class AbstractCli implements CliInterface
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
 		$groupOutput = $args[self::ARG_GROUP_OUTPUT];
-		$typeOutput = $args['typeOutput'] ?? \__('Service class', 'eightshift-libs');
-		$actionOutput = $args['actionOutput'] ?? null;
 
 		// Set optional arguments.
 		$skipExisting = $this->getSkipExisting($args);
@@ -494,15 +492,11 @@ abstract class AbstractCli implements CliInterface
 
 		// Bailout if file already exists.
 		if (\file_exists($destinationFile) && $skipExisting === false) {
-			$path = $this->getShortenCliPathOutput($destinationFile);
-
 			self::cliError(
 				\sprintf(
 					// translators: %s will be replaced with type of item, and shorten cli path.
-					"%1\$s '%2\$s' is already present at\n'%3\$s'\n\nIf you want to override the destination folder, use --%4\$s='true'",
-					$typeOutput,
-					$fileName,
-					$path,
+					"%s is already present in your project.\n\nIf you want to override the destination folder, use --%s='true' parameter.",
+					$destinationFile,
 					AbstractCli::ARG_SKIP_EXISTING
 				)
 			);
@@ -516,10 +510,11 @@ abstract class AbstractCli implements CliInterface
 		// Open a new file on output.
 		// If there is any error, bailout. For example, user permission.
 		if (\fopen($destinationFile, "wb") === false) {
-			$path = $this->getShortenCliPathOutput($destinationFile);
-
 			self::cliError(
-				"{$typeOutput} '{$fileName}' could not be created at\n'{$path}'\n\nAn unknown error ocurred."
+				\sprintf(
+					"%s could not be created.'\n\nAn unknown error ocurred."
+				),
+				$destinationFile
 			);
 		}
 
@@ -530,16 +525,14 @@ abstract class AbstractCli implements CliInterface
 		\fclose($fp);
 
 		if (!$groupOutput) {
-			// Return success.
-			$path = $this->getShortenCliPathOutput($destinationFile);
-
-			if ($skipExisting) {
-				$action = $actionOutput ?? 'renamed';
-				$this->cliLogAlert($path, 'success', "'{$fileName}' {$action}");
-			} else {
-				$action = $actionOutput ?? 'created';
-				$this->cliLogAlert($path, 'success', "'{$fileName}' {$action}");
-			}
+			$this->cliLogAlert(
+				sprintf(
+					'File %s has been created in your project.',
+					$destinationFile
+				),
+				'success',
+				'Success'
+			);
 		}
 
 		return;
