@@ -149,8 +149,13 @@ class InitThemeSetupCli extends AbstractCli
 		$this->cliLog("Changing the setup theme to the new theme name", 'C');
 		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf .github\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CODE_OF_CONDUCT.md\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CHANGELOG.md\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm LICENSE.md\");'");
+
 		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION], $newDestionation);
-		$this->cleanUpInitialBoilerplate($newDestionation);
+		// $this->cleanUpInitialBoilerplate($newDestionation);
 
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Activating new theme", 'C');

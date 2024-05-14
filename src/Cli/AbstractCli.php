@@ -631,10 +631,10 @@ abstract class AbstractCli implements CliInterface
 	{
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing initial boilerplate setup files', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf .github\");' --quiet");
-		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CODE_OF_CONDUCT.md\");' --quiet");
-		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CHANGELOG.md\");' --quiet");
-		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm LICENSE.md\");' --quiet");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf .github\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CODE_OF_CONDUCT.md\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CHANGELOG.md\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm LICENSE.md\");'");
 	}
 
 	/**
