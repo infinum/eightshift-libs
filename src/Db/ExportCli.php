@@ -47,10 +47,7 @@ class ExportCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
-		return [
-			'skip_db' => 'false',
-			'skip_uploads' => 'false',
-		];
+		return [];
 	}
 
 	/**
@@ -62,26 +59,6 @@ class ExportCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Run database export with uploads folder.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'skip_db',
-					'description' => 'If you want to skip exporting database.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('skip_db'),
-					'options' => [
-						'true',
-						'false',
-					],
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'skip_uploads',
-					'description' => 'If you want to skip exporting images.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('skip_uploads'),
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -111,15 +88,11 @@ class ExportCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		require Helpers::getProjectPaths('libs', 'src/Db/DbExport.php');
+		require Helpers::getProjectPaths('libsPrefixed', 'src/Db/DbExport.php');
 
 		try {
 			dbExport( // phpcs:ignore
-				Helpers::getProjectPaths('projectRoot'),
-				[
-					'skip_db' => $this->getArg($assocArgs, 'skip_db'),
-					'skip_uploads' => $this->getArg($assocArgs, 'skip_uploads'),
-				]
+				Helpers::getProjectPaths('projectRoot')
 			);
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

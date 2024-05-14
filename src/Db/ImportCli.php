@@ -50,6 +50,7 @@ class ImportCli extends AbstractCli
 		return [
 			'from' => '',
 			'to' => '',
+			'file_name' => '',
 			'setup_file' => Helpers::getProjectPaths('projectRoot', 'setup.json'),
 		];
 	}
@@ -74,6 +75,12 @@ class ImportCli extends AbstractCli
 					'type' => 'assoc',
 					'name' => 'to',
 					'description' => 'Set to what environment you want to import the data.',
+					'optional' => false,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'file_name',
+					'description' => 'File path for the database dump.',
 					'optional' => false,
 				],
 				[
@@ -112,7 +119,7 @@ class ImportCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		require Helpers::getProjectPaths('libs', 'src/Db/DbImport.php');
+		require Helpers::getProjectPaths('libsPrefixed', 'src/Db/DbImport.php');
 
 		try {
 			dbImport( // phpcs:ignore
@@ -121,6 +128,7 @@ class ImportCli extends AbstractCli
 					[
 						'from' => $this->getArg($assocArgs, 'from'),
 						'to' => $this->getArg($assocArgs, 'to'),
+						'file_name' => $this->getArg($assocArgs, 'file_name'),
 					],
 					$assocArgs
 				)
