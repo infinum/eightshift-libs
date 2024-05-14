@@ -48,14 +48,6 @@ class UseManifestCli extends AbstractBlocksCli
 	{
 		return [
 			'shortdesc' => 'Copy global settings manifest.json file from our library to your project.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'group_output',
-					'optional' => true,
-					'defaut' => false,
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				This file is a block editor's main setting file where you can find the color, options, and much more.
 
@@ -76,7 +68,7 @@ class UseManifestCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['group_output'] ?? false;
+		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 

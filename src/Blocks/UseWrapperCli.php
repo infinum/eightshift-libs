@@ -48,14 +48,6 @@ class UseWrapperCli extends AbstractBlocksCli
 	{
 		return [
 			'shortdesc' => 'Copy wrapper from our library to your project.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'group_output',
-					'optional' => true,
-					'defaut' => false,
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## EXAMPLES
 
@@ -73,7 +65,7 @@ class UseWrapperCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['group_output'] ?? false;
+		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 

@@ -123,7 +123,7 @@ class InitThemeSetupCli extends AbstractCli
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
 		$assocArgs['actionOutput'] = 'file created';
-		$assocArgs['group_output'] = true;
+		$assocArgs[self::ARG_GROUP_OUTPUT] = true;
 
 		$this->getIntroText();
 

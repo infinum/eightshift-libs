@@ -142,18 +142,18 @@ abstract class AbstractCli implements CliInterface
 	public const ARG_NAMESPACE_VENDOR_PREFIX = 'g_namespace_vendor_prefix';
 
 	/**
-	 * Output is setup arg.
-	 *
-	 * @var string
-	 */
-	public const ARG_IS_SETUP = 'g_is_setup';
-
-	/**
 	 * Output use libs arg.
 	 *
 	 * @var string
 	 */
 	public const ARG_USE_LIBS = 'g_use_libs';
+
+	/**
+	 * Output group output arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_GROUP_OUTPUT = 'g_group_output';
 
 	/**
 	 * Construct Method.
@@ -200,6 +200,16 @@ abstract class AbstractCli implements CliInterface
 						'false',
 					]
 				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_GROUP_OUTPUT,
+					'description' => 'Use this flag if you want to group output messages only used for internal purposes.',
+					'optional' => true,
+					'options' => [
+						'true',
+						'false',
+					]
+				],
 			],
 		];
 	}
@@ -223,6 +233,7 @@ abstract class AbstractCli implements CliInterface
 				self::ARG_NAMESPACE => $namespace,
 				self::ARG_NAMESPACE_VENDOR_PREFIX => $composerFile ? $composerFile['extra']['strauss']['namespace_prefix'] : "{$namespace}Vendor",
 				self::ARG_TEXTDOMAIN => Helpers::camelToKebabCase($namespace),
+				self::ARG_GROUP_OUTPUT => false,
 			],
 			$args
 		);
@@ -250,8 +261,8 @@ abstract class AbstractCli implements CliInterface
 			self::ARG_PROJECT_VERSION => $args[self::ARG_PROJECT_VERSION] ?? '1.0.0',
 			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? \site_url(),
 			self::ARG_LIBS_VERSION => $args[self::ARG_LIBS_VERSION] ?? '',
-			self::ARG_IS_SETUP => 'true',
 			self::ARG_SKIP_EXISTING => 'true',
+			self::ARG_GROUP_OUTPUT => true,
 		];
 	}
 
@@ -463,7 +474,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
-		$groupOutput = $args['group_output'] ?? false;
+		$groupOutput = $args[self::ARG_GROUP_OUTPUT];
 		$typeOutput = $args['typeOutput'] ?? \__('Service class', 'eightshift-libs');
 		$actionOutput = $args['actionOutput'] ?? null;
 

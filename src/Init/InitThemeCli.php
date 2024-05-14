@@ -96,14 +96,6 @@ class InitThemeCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Kickstart your WordPress theme with this simple command.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'group_output',
-					'optional' => true,
-					'defaut' => false,
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -120,9 +112,9 @@ class InitThemeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['group_output'] ?? false;
-
 		$assocArgs = $this->prepareArgs($assocArgs);
+
+		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		if (!$groupOutput) {
 			$this->getIntroText();
@@ -145,7 +137,7 @@ class InitThemeCli extends AbstractCli
 					$class->__invoke([], \array_merge(
 						$assocArgs,
 						[
-							'group_output' => $type === 'blocks',
+							self::ARG_GROUP_OUTPUT => $type === 'blocks',
 						]
 					));
 				}

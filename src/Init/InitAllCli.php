@@ -69,14 +69,6 @@ class InitAllCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Move everything to your project.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => 'group_output',
-					'optional' => true,
-					'defaut' => false,
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -93,7 +85,7 @@ class InitAllCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['group_output'] ?? false;
+		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 
@@ -122,7 +114,7 @@ class InitAllCli extends AbstractCli
 					$class->__invoke([], \array_merge(
 						$assocArgs,
 						[
-							'group_output' => $type === 'blocks',
+							self::ARG_GROUP_OUTPUT => $type === 'blocks',
 						]
 					));
 				}

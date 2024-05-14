@@ -74,12 +74,6 @@ class UseComponentCli extends AbstractBlocksCli
 					'description' => 'Specify component name. You can specify multiple components by separating them with a comma.',
 					'optional' => false,
 				],
-				[
-					'type' => 'assoc',
-					'name' => 'group_output',
-					'optional' => true,
-					'defaut' => false,
-				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -109,7 +103,7 @@ class UseComponentCli extends AbstractBlocksCli
 
 		$this->getIntroText();
 
-		$groupOutput = $assocArgs['group_output'] ?? false;
+		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		$this->moveItems(
 			$assocArgs,

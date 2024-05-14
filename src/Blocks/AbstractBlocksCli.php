@@ -50,7 +50,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			$itemsList = \explode(',', $name);
 		}
 
-		$groupOutput = $args['group_output'] ?? false;
+		$groupOutput = $args[self::ARG_GROUP_OUTPUT];
 
 		if (!\is_dir($source)) {
 			self::cliError(
@@ -154,7 +154,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 					$class->renameGlobals($args)
 						->outputWrite($fullDestination, $innerItem, [
 							self::ARG_SKIP_EXISTING => true,
-							'group_output' => true,
+							self::ARG_GROUP_OUTPUT => true,
 						]);
 				}
 			}
