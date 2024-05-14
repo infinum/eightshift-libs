@@ -611,15 +611,17 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Clean up initial boilerplate files.
 	 *
+	 * @param string $destination Destination path.
+	 *
 	 * @return void
 	 */
-	public function cleanUpInitialBoilerplate(): void
+	public function cleanUpInitialBoilerplate(string $destination): void
 	{
 		$this->cliLog('Removing initial boilerplate setup files', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"rm -rf .github\");'");
-		WP_CLI::runcommand("eval 'shell_exec(\"rm CODE_OF_CONDUCT.md\");'");
-		WP_CLI::runcommand("eval 'shell_exec(\"rm CHANGELOG.md\");'");
-		WP_CLI::runcommand("eval 'shell_exec(\"rm LICENSE.md\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf .github\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CODE_OF_CONDUCT.md\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CHANGELOG.md\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm LICENSE.md\");'");
 	}
 
 	/**
@@ -627,23 +629,23 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @return void
 	 */
-	public function initMandatoryAfter(string $libsVersion): void
+	public function initMandatoryAfter(string $libsVersion, string $destination): void
 	{
 		$this->cliLog('Removing old vendor folder', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"rm -rf vendor\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf vendor\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing old compeser.lock', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm composer.lock\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running composer install', 'C');
 		if ($libsVersion) {
-			WP_CLI::runcommand("eval 'shell_exec(\"composer require infinum/eightshift-libs:dev-{$libsVersion}\");'");
+			WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && composer require infinum/eightshift-libs:dev-{$libsVersion}\");'");
 		} else {
-			WP_CLI::runcommand("eval 'shell_exec(\"composer require infinum/eightshift-libs\");'");
+			WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && composer require infinum/eightshift-libs\");'");
 		}
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running npm install', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
+		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && npm install\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
 	}
 
