@@ -157,16 +157,7 @@ class InitThemeSetupCli extends AbstractCli
 		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Installing theme service classes and blocks", 'C');
-		$this->runCliCommand(
-			InitThemeCli::class,
-			$this->commandParentName,
-			array_merge(
-				$assocArgs,
-				[
-					self::ARG_GROUP_OUTPUT => true,
-				]
-			)
-		);
+		WP_CLI::runcommand(\sprintf("boilerplate init theme --%s=true", self::ARG_GROUP_OUTPUT));
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Building the new theme assets", 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$newDestionation} && npm run build\");'");
