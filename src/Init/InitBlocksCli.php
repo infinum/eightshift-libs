@@ -124,15 +124,6 @@ class InitBlocksCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Create all files for blocks to work.',
-			'synopsis' => [
-				[
-					'type' => 'flag',
-					'name' => 'use_all',
-					'description' => 'Output all items to your project.',
-					'optional' => true,
-					'default' => false,
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				This command will copy all initial blocks, components, manifests and service classes to you project in order to start using block editor.
 
@@ -145,46 +136,18 @@ class InitBlocksCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-		$all = $assocArgs['use_all'] ?? false;
-
 		$assocArgs = $this->prepareArgs($assocArgs);
+		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		if (!$groupOutput) {
 			$this->getIntroText();
+			$this->cliLog("%w╭\n│ %nCreating block editor files", 'mixed');
 		}
 
-		$this->cliLog("%w╭\n│ %nCreating block editor files", 'mixed');
-
-		$commands = static::COMMANDS;
-
-		if ($all) {
-			$commands = [];
-			$type = \getenv('ES_TEST') ? 'test' : 'default';
-
-			foreach (\array_keys(static::COMMANDS) as $command) {
-				switch ($command) {
-					case UseBlockCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceCustom'));
-						break;
-					case UseComponentCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceComponents'));
-						break;
-					case UseVariationCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceVariations'));
-						break;
-					default:
-						$commands[$command] = [];
-						break;
-				}
-			}
-		}
-
-		$this->getInitBlocks($assocArgs, $commands);
-
-		$this->cliLog('╰', 'w');
+		$this->getInitBlocks($assocArgs, static::COMMANDS);
 
 		if (!$groupOutput) {
+			$this->cliLog('╰', 'w');
 			$this->cliLogAlert('Files copied! Run `npm start` to build all the assets.\n\nHappy developing!', 'success', \__('Ready to go!', 'eightshift-libs'));
 		}
 	}
@@ -206,15 +169,10 @@ class InitBlocksCli extends AbstractCli
 			if ($items) {
 				$innerItems = $items['default'];
 
-				if (\getenv('ES_TEST')) {
-					$innerItems = $items['test'];
-				}
-
 				$class->__invoke([], \array_merge(
 					$assocArgs,
 					[
 						'name' => \implode(",", $innerItems),
-						self::ARG_GROUP_OUTPUT => true,
 						'checkDependency' => false,
 					]
 				));
@@ -222,7 +180,6 @@ class InitBlocksCli extends AbstractCli
 				$class->__invoke([], \array_merge(
 					$assocArgs,
 					[
-						self::ARG_GROUP_OUTPUT => true,
 						'checkDependency' => false,
 					]
 				));

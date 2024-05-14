@@ -123,7 +123,6 @@ class InitThemeCli extends AbstractCli
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
 			$items = $item['items'] ?? [];
-			$type = $item['type'] ?? '';
 
 			if ($label) {
 				$this->cliLog($label, 'C');
@@ -134,16 +133,9 @@ class InitThemeCli extends AbstractCli
 					$reflectionClass = new ReflectionClass($className);
 					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-					$class->__invoke([], \array_merge(
-						$assocArgs,
-						[
-							self::ARG_GROUP_OUTPUT => $type === 'blocks',
-						]
-					));
+					$class->__invoke([], $assocArgs);
 				}
 			}
-
-			$this->cliLog("\n");
 		}
 
 		if (!$groupOutput) {

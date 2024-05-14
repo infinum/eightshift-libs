@@ -85,9 +85,8 @@ class InitAllCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-
 		$assocArgs = $this->prepareArgs($assocArgs);
+		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		if (!$groupOutput) {
 			$this->getIntroText();

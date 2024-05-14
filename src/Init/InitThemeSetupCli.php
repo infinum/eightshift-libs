@@ -122,8 +122,7 @@ class InitThemeSetupCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
-		$assocArgs['actionOutput'] = 'file created';
-		$assocArgs[self::ARG_GROUP_OUTPUT] = true;
+		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		$this->getIntroText();
 
@@ -160,7 +159,7 @@ class InitThemeSetupCli extends AbstractCli
 		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Installing theme service classes", 'C');
-		WP_CLI::runcommand('boilerplate init theme --group_output=true');
+		WP_CLI::runcommand("boilerplate init theme --{$groupOutput}=true");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Building the new theme assets", 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$newDestionation} && npm run build\");'");
