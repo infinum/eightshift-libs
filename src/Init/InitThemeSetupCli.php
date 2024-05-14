@@ -96,6 +96,12 @@ class InitThemeSetupCli extends AbstractCli
 					'description' => 'Define your projects url for webpack build.',
 					'optional' => true,
 				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_LIBS_VERSION,
+					'description' => 'Define Eightshift libs version.',
+					'optional' => true,
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -140,7 +146,7 @@ class InitThemeSetupCli extends AbstractCli
 
 		\rename($destionation, Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
-		$this->initMandatoryAfter();
+		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION]);
 
 		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
 		WP_CLI::runcommand('boilerplate init theme');

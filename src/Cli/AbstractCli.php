@@ -121,6 +121,13 @@ abstract class AbstractCli implements CliInterface
 	public const ARG_SITE_URL = 'g_site_url';
 
 	/**
+	 * Output project libs version arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_LIBS_VERSION = 'g_libs_version';
+
+	/**
 	 * Output namespace arg.
 	 *
 	 * @var string
@@ -242,6 +249,7 @@ abstract class AbstractCli implements CliInterface
 			self::ARG_PROJECT_AUTHOR_URL => $args[self::ARG_PROJECT_AUTHOR_URL] ?? 'https://eightshift.com/',
 			self::ARG_PROJECT_VERSION => $args[self::ARG_PROJECT_VERSION] ?? '1.0.0',
 			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? \site_url(),
+			self::ARG_LIBS_VERSION => $args[self::ARG_LIBS_VERSION] ?? '',
 			self::ARG_IS_SETUP => 'true',
 			self::ARG_SKIP_EXISTING => 'true',
 		];
@@ -619,7 +627,7 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @return void
 	 */
-	public function initMandatoryAfter(): void
+	public function initMandatoryAfter(string $libsVersion): void
 	{
 		$this->cliLog('Removing old vendor folder', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"rm -rf vendor\");'");
@@ -628,7 +636,12 @@ abstract class AbstractCli implements CliInterface
 		WP_CLI::runcommand("eval 'shell_exec(\"rm composer.lock\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running composer install', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"composer install --ignore-platform-reqs\");'");
+		if ($libsVersion) {
+			WP_CLI::runcommand("eval 'shell_exec(\"composer require eightshift/libs:dev-{$libsVersion} --no-interaction --no-suggest\");'");
+		} else {
+			WP_CLI::runcommand("eval 'shell_exec(\"composer require eightshift/libs --no-interaction --no-suggest\");'");
+		}
+		WP_CLI::runcommand("eval 'shell_exec(\"composer reqire --ignore-platform-reqs\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running npm install', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"npm install\");'");
