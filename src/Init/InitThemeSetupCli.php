@@ -132,8 +132,6 @@ class InitThemeSetupCli extends AbstractCli
 
 		$destionation = Helpers::getProjectPaths('themeRoot');
 
-		$this->cleanUpInitialBoilerplate();
-
 		foreach ($files as $file) {
 			if ($file === '.' || $file === '..') {
 				continue;
@@ -147,6 +145,7 @@ class InitThemeSetupCli extends AbstractCli
 		\rename($destionation, Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
 		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION]);
+		$this->cleanUpInitialBoilerplate();
 
 		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
 		WP_CLI::runcommand('boilerplate init theme');
