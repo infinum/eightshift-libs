@@ -631,10 +631,10 @@ abstract class AbstractCli implements CliInterface
 	{
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing initial boilerplate setup files', 'C');
-		shell_exec('cd {$destination} && rm -rf .github")');
-		shell_exec('cd {$destination} && rm CODE_OF_CONDUCT.md")');
-		shell_exec('cd {$destination} && rm CHANGELOG.md")');
-		shell_exec('cd {$destination} && rm LICENSE.md")');
+		shell_exec("cd {$destination} && rm -rf .github");
+		shell_exec("cd {$destination} && rm CODE_OF_CONDUCT.md");
+		shell_exec("cd {$destination} && rm CHANGELOG.md");
+		shell_exec("cd {$destination} && rm LICENSE.md");
 	}
 
 	/**
@@ -646,20 +646,20 @@ abstract class AbstractCli implements CliInterface
 	{
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing setup vendor folder', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf vendor\");' --quiet");
+		shell_exec("cd {$destination} && rm -rf vendor");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing setup composer.lock', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm composer.lock\");' --quiet");
+		shell_exec("cd {$destination} && rm composer.lock");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running composer install', 'C');
 		if ($libsVersion) {
-			WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && composer require infinum/eightshift-libs:dev-{$libsVersion}\");'");
+			shell_exec("cd {$destination} && composer require infinum/eightshift-libs:dev-{$libsVersion}");
 		} else {
-			WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && composer require infinum/eightshift-libs\");'");
+			shell_exec("cd {$destination} && composer require infinum/eightshift-libs");
 		}
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running npm install', 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && npm install\");'");
+		shell_exec("cd {$destination} && npm install");
 	}
 
 	/**
