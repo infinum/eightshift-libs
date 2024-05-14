@@ -72,7 +72,7 @@ class LoadMoreRouteCli extends AbstractCli
 		$assocArgs = $this->prepareArgs($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
 

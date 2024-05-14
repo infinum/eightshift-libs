@@ -94,7 +94,7 @@ class WpCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Props.
 		$commandName = $this->getArg($assocArgs, 'command_name');

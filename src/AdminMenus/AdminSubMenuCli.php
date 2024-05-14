@@ -118,7 +118,7 @@ class AdminSubMenuCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Arguments.
 		$parentSlug = $this->getArg($assocArgs, 'parent_slug');

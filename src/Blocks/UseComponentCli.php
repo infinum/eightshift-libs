@@ -101,7 +101,7 @@ class UseComponentCli extends AbstractBlocksCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 

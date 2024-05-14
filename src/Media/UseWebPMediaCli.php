@@ -78,7 +78,7 @@ class UseWebPMediaCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		if (\get_option(self::USE_WEBP_MEDIA_OPTION_NAME)) {
 			\update_option(self::USE_WEBP_MEDIA_OPTION_NAME, false, true);

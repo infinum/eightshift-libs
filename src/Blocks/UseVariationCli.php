@@ -93,7 +93,7 @@ class UseVariationCli extends AbstractBlocksCli
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		$this->moveItems(
 			$assocArgs,

@@ -124,7 +124,7 @@ class InitThemeSetupCli extends AbstractCli
 
 		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
 		$dir = __DIR__ . "{$sep}theme";
@@ -164,25 +164,22 @@ class InitThemeSetupCli extends AbstractCli
 		$this->cliLog("Building the new theme assets", 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$newDestionation} && npm run build\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("Finished", 'C');
 		$this->cliLogAlert(
-			"
-			All the files have been copied and you can start working on your awesome theme!\n
+			"All the files have been copied and you can start working on your awesome theme!
 			Make sure you move to your terminal to new theme by running:\n
-			cd {$newDestionation}
-			",
+			cd {$newDestionation}",
 			'success',
-			\__('Ready to go!', 'eightshift-libs')
+			'Almost there!'
 		);
 		$this->cliLogAlert(
 			"To start the development run:\n
-			npm run start
-			",
+			npm run start",
 			'success',
 		);
 		$this->cliLogAlert(
 			"To build the production run:\n
-			npm run buildrm
-			",
+			npm run build",
 			'success',
 		);
 	}

@@ -92,7 +92,7 @@ class VersionCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Props.
 		$version = $this->getArg($assocArgs, 'version');

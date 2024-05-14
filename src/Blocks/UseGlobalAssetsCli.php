@@ -73,7 +73,7 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		$this->moveItems(
 			\array_merge(

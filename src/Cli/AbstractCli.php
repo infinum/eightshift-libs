@@ -935,12 +935,16 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Return cli intro.
 	 *
-	 * @param array<string, mixed> $arg $argument to pass.
+	 * @param array<string, mixed> $assocArgs $argument to pass.
 	 *
 	 * @return void
 	 */
-	protected function getIntroText(): void
+	protected function getIntroText(array $assocArgs): void
 	{
+		if ($assocArgs[self::ARG_GROUP_OUTPUT]) {
+			return;
+		}
+
 		$this->cliLog($this->prepareLongDesc("
 		%w╭──────────────────────────────────────────────────────────╮
 		│                                                          │

@@ -120,7 +120,7 @@ class RouteCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Props.
 		$endpointSlug = $this->prepareSlug($this->getArg($assocArgs, 'endpoint_slug'));

@@ -116,9 +116,7 @@ class InitThemeCli extends AbstractCli
 
 		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
+		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
@@ -140,7 +138,6 @@ class InitThemeCli extends AbstractCli
 
 		if (!$groupOutput) {
 			WP_CLI::runcommand("eval 'shell_exec(\"npm run build\");'");
-
 			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!', 'success', \__('Ready to go!', 'eightshift-libs'));
 		}
 	}

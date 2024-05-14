@@ -98,7 +98,7 @@ class GeolocationCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Arguments.
 		$cookieName = $this->getArg($assocArgs, 'cookie_name');

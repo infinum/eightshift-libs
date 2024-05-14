@@ -109,7 +109,7 @@ class ExportCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		require Helpers::getProjectPaths('libs', 'src/Db/DbExport.php');
 

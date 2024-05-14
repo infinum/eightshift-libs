@@ -93,7 +93,7 @@ class GitIgnoreCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get full class name.
 		$className = $this->getClassShortName();

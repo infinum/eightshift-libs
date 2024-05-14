@@ -81,7 +81,7 @@ class ConfigPluginCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
 		$newName = 'Config';

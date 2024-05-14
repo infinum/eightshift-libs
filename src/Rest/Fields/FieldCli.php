@@ -99,7 +99,7 @@ class FieldCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Props.
 		$fieldName = $this->getArg($assocArgs, 'field_name');

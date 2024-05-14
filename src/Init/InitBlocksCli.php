@@ -139,8 +139,9 @@ class InitBlocksCli extends AbstractCli
 		$assocArgs = $this->prepareArgs($assocArgs);
 		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
+		$this->getIntroText($assocArgs);
+
 		if (!$groupOutput) {
-			$this->getIntroText();
 			$this->cliLog("%w╭\n│ %nCreating block editor files", 'mixed');
 		}
 

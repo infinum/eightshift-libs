@@ -88,9 +88,7 @@ class InitAllCli extends AbstractCli
 		$assocArgs = $this->prepareArgs($assocArgs);
 		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
+		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';

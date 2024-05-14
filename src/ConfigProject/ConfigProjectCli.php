@@ -93,7 +93,7 @@ class ConfigProjectCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Props.
 		$path = $this->getArg($assocArgs, 'path');

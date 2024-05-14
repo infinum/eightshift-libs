@@ -72,7 +72,7 @@ class MainCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
 

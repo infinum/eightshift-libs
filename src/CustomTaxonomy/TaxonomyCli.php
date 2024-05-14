@@ -119,7 +119,7 @@ class TaxonomyCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Props.
 		$label = $this->getArg($assocArgs, 'label');

@@ -72,9 +72,7 @@ class InitHeaderFooter extends AbstractCli
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
+		$this->getIntroText($assocArgs);
 
 		// Add initial posts.
 		$createBlocksOptions = [

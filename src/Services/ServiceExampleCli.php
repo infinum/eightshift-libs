@@ -105,7 +105,7 @@ class ServiceExampleCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$this->getIntroText();
+		$this->getIntroText($assocArgs);
 
 		// Get Props.
 		$folder = $this->getArg($assocArgs, 'folder');

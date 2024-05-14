@@ -88,9 +88,7 @@ class InitPluginCli extends AbstractCli
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
+		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
 			$label = $item['label'] ?? '';
