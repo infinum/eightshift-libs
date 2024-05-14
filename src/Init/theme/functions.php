@@ -31,6 +31,10 @@ if (! \defined('WPINC')) {
 /**
  * Include the autoloader so we can dynamically include the rest of the classes.
  */
+if (!\file_exists(__DIR__ . '/vendor/autoload.php')) {
+	return;
+}
+
 $loader = require __DIR__ . '/vendor/autoload.php';
 if (\file_exists(__DIR__ . '/vendor-prefixed/autoload.php')) {
 	require __DIR__ . '/vendor-prefixed/autoload.php';
