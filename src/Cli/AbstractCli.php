@@ -463,7 +463,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
-		$groupOutput = $args['groupOutput'] ?? false;
+		$groupOutput = $args['group_output'] ?? false;
 		$typeOutput = $args['typeOutput'] ?? \__('Service class', 'eightshift-libs');
 		$actionOutput = $args['actionOutput'] ?? null;
 

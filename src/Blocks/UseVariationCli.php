@@ -67,6 +67,12 @@ class UseVariationCli extends AbstractBlocksCli
 					'description' => 'Specify variation name.',
 					'optional' => false,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'group_output',
+					'optional' => true,
+					'defaut' => false,
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -89,7 +95,7 @@ class UseVariationCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$groupOutput = $assocArgs['group_output'] ?? false;
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 

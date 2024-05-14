@@ -132,6 +132,12 @@ class InitBlocksCli extends AbstractCli
 					'optional' => true,
 					'default' => false,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'group_output',
+					'optional' => true,
+					'defaut' => false,
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				This command will copy all initial blocks, components, manifests and service classes to you project in order to start using block editor.
@@ -145,7 +151,7 @@ class InitBlocksCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$groupOutput = $assocArgs['group_output'] ?? false;
 		$all = $assocArgs['use_all'] ?? false;
 
 		$assocArgs = $this->prepareArgs($assocArgs);
@@ -214,7 +220,7 @@ class InitBlocksCli extends AbstractCli
 					$assocArgs,
 					[
 						'name' => \implode(",", $innerItems),
-						'groupOutput' => true,
+						'group_output' => true,
 						'introOutput' => false,
 						'checkDependency' => false,
 					]
@@ -223,7 +229,7 @@ class InitBlocksCli extends AbstractCli
 				$class->__invoke([], \array_merge(
 					$assocArgs,
 					[
-						'groupOutput' => true,
+						'group_output' => true,
 						'introOutput' => false,
 						'checkDependency' => false,
 					]

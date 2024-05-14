@@ -48,6 +48,14 @@ class UseAssetsCli extends AbstractBlocksCli
 	{
 		return [
 			'shortdesc' => 'Copy assets from our library to your project.',
+			'synopsis' => [
+				[
+					'type' => 'assoc',
+					'name' => 'group_output',
+					'optional' => true,
+					'defaut' => false,
+				],
+			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -69,7 +77,7 @@ class UseAssetsCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$groupOutput = $assocArgs['group_output'] ?? false;
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 

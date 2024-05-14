@@ -150,6 +150,7 @@ class InitThemeSetupCli extends AbstractCli
 		$this->cleanUpInitialBoilerplate($newDestionation);
 
 		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
-		WP_CLI::runcommand('boilerplate init theme');
+
+		WP_CLI::runcommand('boilerplate init theme --group_output=true');
 	}
 }

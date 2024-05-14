@@ -48,6 +48,20 @@ class InitHeaderFooter extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Add a default header/footer reusable block.',
+			'synopsis' => [
+				[
+					'type' => 'assoc',
+					'name' => 'group_output',
+					'optional' => true,
+					'defaut' => false,
+				],
+				[
+					'type' => 'assoc',
+					'name' => 'group_output',
+					'optional' => true,
+					'defaut' => false,
+				],
+			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -68,7 +82,7 @@ class InitHeaderFooter extends AbstractCli
 	// @phpstan-ignore-next-line
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$groupOutput = $assocArgs['group_output'] ?? false;
 
 		$assocArgs = $this->prepareArgs($assocArgs);
 
