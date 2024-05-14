@@ -135,7 +135,6 @@ class InitThemeSetupCli extends AbstractCli
 
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Moving theme mandatory files", 'C');
-		$this->cliLog("\n");
 
 		foreach ($files as $file) {
 			if ($file === '.' || $file === '..') {
@@ -158,24 +157,19 @@ class InitThemeSetupCli extends AbstractCli
 
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Activating new theme", 'C');
-		$this->cliLog("\n");
 		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Installing theme service classes", 'C');
-		$this->cliLog("\n");
 		WP_CLI::runcommand('boilerplate init theme --group_output=true');
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Building the new theme assets", 'C');
-		$this->cliLog("\n");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$newDestionation} && npm run build\");'");
-
-		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLogAlert(
 			"
 			All the files have been copied and you can start working on your awesome theme!\n
 			Make sure you move to your terminal to new theme by running:\n
-			$ cd {$newDestionation}
+			cd {$newDestionation}
 			",
 			'success',
 			\__('Ready to go!', 'eightshift-libs')
@@ -185,14 +179,12 @@ class InitThemeSetupCli extends AbstractCli
 			npm run start
 			",
 			'success',
-			\__('Ready to go!', 'eightshift-libs')
 		);
 		$this->cliLogAlert(
 			"To build the production run:\n
 			npm run buildrm
 			",
 			'success',
-			\__('Ready to go!', 'eightshift-libs')
 		);
 	}
 }
