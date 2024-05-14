@@ -138,7 +138,7 @@ class InitThemeSetupCli extends AbstractCli
 				->outputWrite($destionation, $file, $assocArgs);
 		}
 
-		// \rename($destionation, Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
+		\rename($destionation, Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
 		$this->initMandatoryAfter();
 
