@@ -28,15 +28,9 @@ class InitPluginCli extends AbstractCli
 	 * @var array<int, mixed>
 	 */
 	public const COMMANDS = [
-		[
-			'type' => 'sc',
-			'label' => 'Setting service classes:',
-			'items' => [
-				ManifestCacheCli::class,
-				ConfigPluginCli::class,
-				MainCli::class,
-			],
-		],
+		ManifestCacheCli::class,
+		ConfigPluginCli::class,
+		MainCli::class,
 	];
 
 	/**
@@ -91,29 +85,10 @@ class InitPluginCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
-			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? [];
-			$type = $item['type'] ?? '';
+			$reflectionClass = new ReflectionClass($item);
+			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if ($label) {
-				$this->cliLog($label, 'C');
-			}
-
-			if ($items) {
-				foreach ($items as $className) {
-					$reflectionClass = new ReflectionClass($className);
-					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-					$class->__invoke([], \array_merge(
-						$assocArgs,
-						[
-							self::ARG_GROUP_OUTPUT => $type === 'blocks',
-						]
-					));
-				}
-			}
-
-			$this->cliLog('--------------------------------------------------');
+			$class->__invoke([], $assocArgs);
 		}
 
 		if (!$groupOutput) {

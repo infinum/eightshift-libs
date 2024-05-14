@@ -38,60 +38,38 @@ class InitBlocksCli extends AbstractCli
 		UseWrapperCli::class => [],
 		UseManifestCli::class => [],
 		UseBlockCli::class => [
-			'default' => [
-				'button',
-				'card',
-				'group',
-				'heading',
-				'image',
-				'lists',
-				'paragraph',
-				'site-navigation',
-				'site-footer',
-			],
-			'test' => [
-				'button',
-				'heading',
-			],
+			'button',
+			'card',
+			'group',
+			'heading',
+			'image',
+			'lists',
+			'paragraph',
+			'site-navigation',
+			'site-footer',
 		],
 		UseComponentCli::class => [
-			'default' => [
-				'button',
-				'card',
-				'copyright',
-				'drawer',
-				'footer',
-				'hamburger',
-				'head',
-				'header',
-				'heading',
-				'icon',
-				'image',
-				'lists',
-				'logo',
-				'paragraph',
-				'tracking-before-body-end',
-				'tracking-head',
-				'social-networks',
-				'admin-header-footer-picker',
-			],
-			'test' => [
-				'button',
-				'button-false',
-				'heading',
-				'layout',
-				'responsiveVariables',
-				'typography',
-				'variables',
-			],
+			'button',
+			'card',
+			'copyright',
+			'drawer',
+			'footer',
+			'hamburger',
+			'head',
+			'header',
+			'heading',
+			'icon',
+			'image',
+			'lists',
+			'logo',
+			'paragraph',
+			'tracking-before-body-end',
+			'tracking-head',
+			'social-networks',
+			'admin-header-footer-picker',
 		],
 		UseVariationCli::class => [
-			'default' => [
-				'card-simple'
-			],
-			'test' => [
-				'card-simple'
-			]
+			'card-simple'
 		],
 	];
 
@@ -168,12 +146,10 @@ class InitBlocksCli extends AbstractCli
 			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 			if ($items) {
-				$innerItems = $items['default'];
-
 				$class->__invoke([], \array_merge(
 					$assocArgs,
 					[
-						'name' => \implode(",", $innerItems),
+						'name' => \implode(",", $items),
 						'checkDependency' => false,
 					]
 				));

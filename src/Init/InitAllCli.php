@@ -21,26 +21,6 @@ use ReflectionClass;
 class InitAllCli extends AbstractCli
 {
 	/**
-	 * All classes for initial theme setup for project.
-	 *
-	 * @var array<int, mixed>
-	 */
-	public const COMMANDS = [
-		[
-			'type' => 'classes',
-			'label' => 'Setting classes:',
-			'items' => Cli::CREATE_COMMANDS,
-		],
-		[
-			'type' => 'blocks',
-			'label' => '',
-			'items' => [
-				InitBlocksCli::class,
-			],
-		],
-	];
-
-	/**
 	 * Get WPCLI command parent name.
 	 *
 	 * @return string
@@ -90,34 +70,18 @@ class InitAllCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		foreach (static::COMMANDS as $item) {
-			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? [];
-			$type = $item['type'] ?? '';
+		$commands = array_merge(
+			Cli::CREATE_COMMANDS,
+			[
+				InitBlocksCli::class,
+			]
+			);
 
-			if ($label) {
-				$this->cliLog($label, 'C');
-			}
+		foreach ($commands as $item) {
+			$reflectionClass = new ReflectionClass($item);
+			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if ($type === 'blocks') {
-				$assocArgs['use_all'] = true;
-			}
-
-			if ($items) {
-				foreach ($items as $className) {
-					$reflectionClass = new ReflectionClass($className);
-					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-					$class->__invoke([], \array_merge(
-						$assocArgs,
-						[
-							self::ARG_GROUP_OUTPUT => $type === 'blocks',
-						]
-					));
-				}
-			}
-
-			$this->cliLog('--------------------------------------------------');
+			$class->__invoke([], $assocArgs);
 		}
 
 		if (!$groupOutput) {

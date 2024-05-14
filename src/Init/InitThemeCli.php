@@ -34,27 +34,15 @@ class InitThemeCli extends AbstractCli
 	 * @var array<int, mixed>
 	 */
 	public const COMMANDS = [
-		[
-			'type' => 'sc',
-			'label' => 'Setting service classes:',
-			'items' => [
-				ManifestCacheCli::class,
-				ConfigThemeCli::class,
-				MainCli::class,
-				EnqueueAdminCli::class,
-				EnqueueBlocksCli::class,
-				EnqueueThemeCli::class,
-				AdminReusableBlocksMenuCli::class,
-				ReusableBlocksHeaderFooterCli::class,
-			],
-		],
-		[
-			'type' => 'blocks',
-			'label' => '',
-			'items' => [
-				InitBlocksCli::class,
-			],
-		],
+		ManifestCacheCli::class,
+		ConfigThemeCli::class,
+		MainCli::class,
+		EnqueueAdminCli::class,
+		EnqueueBlocksCli::class,
+		EnqueueThemeCli::class,
+		AdminReusableBlocksMenuCli::class,
+		ReusableBlocksHeaderFooterCli::class,
+		InitBlocksCli::class,
 	];
 
 	/**
@@ -119,21 +107,10 @@ class InitThemeCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
-			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? [];
+			$reflectionClass = new ReflectionClass($item);
+			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
-			if ($label && !$groupOutput) {
-				$this->cliLog($label, 'C');
-			}
-
-			if ($items) {
-				foreach ($items as $className) {
-					$reflectionClass = new ReflectionClass($className);
-					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-					$class->__invoke([], $assocArgs);
-				}
-			}
+			$class->__invoke([], $assocArgs);
 		}
 
 		if (!$groupOutput) {
