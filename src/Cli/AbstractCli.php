@@ -959,6 +959,24 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
+	 * Return assets command text.
+	 *
+	 * @param array<string, mixed> $assocArgs $argument to pass.
+	 *
+	 * @return void
+	 */
+	protected function getAssetsCommandText(): void
+	{
+		$this->cliLogAlert(
+			"Please run the following command to make sure everything works correctly.\n
+			npm start
+			",
+			"info",
+			'Command requirement',
+		);
+	}
+
+	/**
 	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
 	 * Used in combination with getManifest helper.
 	 *

@@ -89,9 +89,7 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 		);
 
 		if (!$groupOutput) {
-			WP_CLI::log('--------------------------------------------------');
-
-			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "M");
+			$this->getAssetsCommandText();
 		}
 	}
 }
