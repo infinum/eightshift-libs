@@ -131,7 +131,6 @@ class InitThemeSetupCli extends AbstractCli
 		$files = \array_diff(\scandir($dir), ['..', '.']);
 
 		$destionation = Helpers::getProjectPaths('themeRoot');
-		var_dump($destionation);
 
 		foreach ($files as $file) {
 			if ($file === '.' || $file === '..') {
