@@ -120,6 +120,8 @@ class InitThemeSetupCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs['group_output'] = true;
+
 		$assocArgs['actionOutput'] = 'file created';
 
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
@@ -133,7 +135,7 @@ class InitThemeSetupCli extends AbstractCli
 		$destionation = Helpers::getProjectPaths('themeRoot');
 
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Moving mandatory files", 'C');
+		$this->cliLog("Moving theme mandatory files", 'C');
 		$this->cliLog("\n");
 
 		foreach ($files as $file) {
@@ -149,7 +151,7 @@ class InitThemeSetupCli extends AbstractCli
 		$newDestionation = Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]]);
 
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Changing the new setup theme to the new theme name", 'C');
+		$this->cliLog("Changing the setup theme to the new theme name", 'C');
 		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
 		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION], $newDestionation);
