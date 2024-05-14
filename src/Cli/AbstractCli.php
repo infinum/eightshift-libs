@@ -232,6 +232,10 @@ abstract class AbstractCli implements CliInterface
 			$args[self::ARG_GROUP_OUTPUT] = filter_var($args[self::ARG_GROUP_OUTPUT], FILTER_VALIDATE_BOOLEAN);
 		}
 
+		if (isset($args[self::ARG_SKIP_EXISTING])) {
+			$args[self::ARG_SKIP_EXISTING] = filter_var($args[self::ARG_SKIP_EXISTING], FILTER_VALIDATE_BOOLEAN);
+		}
+
 		return \array_merge(
 			[
 				self::ARG_NAMESPACE => $namespace,
@@ -265,7 +269,7 @@ abstract class AbstractCli implements CliInterface
 			self::ARG_PROJECT_VERSION => $args[self::ARG_PROJECT_VERSION] ?? '1.0.0',
 			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? \site_url(),
 			self::ARG_LIBS_VERSION => $args[self::ARG_LIBS_VERSION] ?? '',
-			self::ARG_SKIP_EXISTING => 'true',
+			self::ARG_SKIP_EXISTING => true,
 			self::ARG_GROUP_OUTPUT => true,
 		];
 	}
