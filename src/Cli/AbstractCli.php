@@ -234,8 +234,8 @@ abstract class AbstractCli implements CliInterface
 
 		if (isset($args[self::ARG_SKIP_EXISTING])) {
 			$args[self::ARG_SKIP_EXISTING] = filter_var($args[self::ARG_SKIP_EXISTING], FILTER_VALIDATE_BOOLEAN);
+			
 		}
-
 		return \array_merge(
 			[
 				self::ARG_NAMESPACE => $namespace,
@@ -1028,5 +1028,24 @@ abstract class AbstractCli implements CliInterface
 		$namespace = \str_replace(' ', '', $namespace);
 
 		return $namespace;
+	}
+
+	/**
+	 * Run CLI command.
+	 *
+	 * @param string $commandClass Command class to run.
+	 * @param string $commandParentName Parent name of the command.
+	 * @param array<string, mixed> $args Arguments to pass.
+	 *
+	 * @return void
+	 */
+	public function runCliCommand(string $commandClass, string $commandParentName, array $args): void
+	{
+		$reflectionClass = new ReflectionClass($commandClass);
+		$class = $reflectionClass->newInstanceArgs([$commandParentName]);
+
+		$class->__invoke([], array_merge(
+			$args,
+		));
 	}
 }

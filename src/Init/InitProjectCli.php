@@ -16,7 +16,6 @@ use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
-use ReflectionClass;
 use WP_CLI;
 
 /**
@@ -90,10 +89,11 @@ class InitProjectCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
-			$reflectionClass = new ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-			$class->__invoke([], $assocArgs);
+			$this->runCliCommand(
+				$item,
+				$this->commandParentName,
+				$assocArgs
+			);
 		}
 
 		if (!$groupOutput) {

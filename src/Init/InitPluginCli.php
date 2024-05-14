@@ -15,7 +15,6 @@ use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\Main\MainCli;
-use ReflectionClass;
 
 /**
  * Class InitPluginCli
@@ -85,10 +84,11 @@ class InitPluginCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
-			$reflectionClass = new ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-			$class->__invoke([], $assocArgs);
+			$this->runCliCommand(
+				$item,
+				$this->commandParentName,
+				$assocArgs
+			);
 		}
 
 		if (!$groupOutput) {

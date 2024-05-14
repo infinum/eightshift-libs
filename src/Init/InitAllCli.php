@@ -13,7 +13,6 @@ namespace EightshiftLibs\Init;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\Cli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use ReflectionClass;
 
 /**
  * Class InitAllCli
@@ -78,10 +77,11 @@ class InitAllCli extends AbstractCli
 			);
 
 		foreach ($commands as $item) {
-			$reflectionClass = new ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-			$class->__invoke([], $assocArgs);
+			$this->runCliCommand(
+				$item,
+				$this->commandParentName,
+				$assocArgs
+			);
 		}
 
 		if (!$groupOutput) {

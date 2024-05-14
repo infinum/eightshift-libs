@@ -20,8 +20,6 @@ use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use EightshiftLibs\Helpers\Helpers;
-use ReflectionClass;
 
 /**
  * Class InitBlocksCli
@@ -142,24 +140,29 @@ class InitBlocksCli extends AbstractCli
 	private function getInitBlocks(array $assocArgs, array $commands): void
 	{
 		foreach ($commands as $className => $items) {
-			$reflectionClass = new ReflectionClass($className);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
 			if ($items) {
-				$class->__invoke([], \array_merge(
-					$assocArgs,
-					[
-						'name' => \implode(",", $items),
-						'checkDependency' => false,
-					]
-				));
+				$this->runCliCommand(
+					$className,
+					$this->commandParentName,
+					\array_merge(
+						$assocArgs,
+						[
+							'name' => \implode(",", $items),
+							'checkDependency' => false,
+						]
+					)
+				);
 			} else {
-				$class->__invoke([], \array_merge(
-					$assocArgs,
-					[
-						'checkDependency' => false,
-					]
-				));
+				$this->runCliCommand(
+					$className,
+					$this->commandParentName,
+					\array_merge(
+						$assocArgs,
+						[
+							'checkDependency' => false,
+						]
+					)
+				);
 			}
 		}
 	}

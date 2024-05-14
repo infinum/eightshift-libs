@@ -20,8 +20,6 @@ use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
-use ReflectionClass;
-use WP_CLI;
 
 /**
  * Class InitThemeCli
@@ -102,19 +100,31 @@ class InitThemeCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
+		$assocArgs[self::ARG_GROUP_OUTPUT] = false;
+
 		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
-			$reflectionClass = new ReflectionClass($item);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-			$class->__invoke([], $assocArgs);
+			$this->runCliCommand(
+				$item,
+				$this->commandParentName,
+				array_merge(
+					$assocArgs,
+					[
+						self::ARG_GROUP_OUTPUT => true,
+					]
+				)
+			);
 		}
 
-		if ($groupOutput) {
-			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!', 'success', \__('Ready to go!', 'eightshift-libs'));
+		if (!$groupOutput) {
+			$this->cliLogAlert(
+				'All the files have been copied, you can start working on your awesome theme!',
+				'success',
+				\__('Ready to go!', 'eightshift-libs')
+			);
 		}
 	}
 }
