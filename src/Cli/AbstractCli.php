@@ -234,8 +234,8 @@ abstract class AbstractCli implements CliInterface
 
 		if (isset($args[self::ARG_SKIP_EXISTING])) {
 			$args[self::ARG_SKIP_EXISTING] = filter_var($args[self::ARG_SKIP_EXISTING], FILTER_VALIDATE_BOOLEAN);
-			
 		}
+
 		return \array_merge(
 			[
 				self::ARG_NAMESPACE => $namespace,

@@ -82,6 +82,7 @@ class InitAllCli extends AbstractCli
 				\array_merge(
 					$assocArgs,
 					[
+						'use_all' => true,
 						self::ARG_GROUP_OUTPUT => true,
 					]
 				)

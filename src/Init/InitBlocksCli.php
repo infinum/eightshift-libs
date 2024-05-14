@@ -20,6 +20,7 @@ use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class InitBlocksCli
@@ -100,6 +101,15 @@ class InitBlocksCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Create all files for blocks to work.',
+			'synopsis' => [
+				[
+					'type' => 'flag',
+					'name' => 'use_all',
+					'description' => 'Output all items to your project.',
+					'optional' => true,
+					'default' => false,
+				],
+			],
 			'longdesc' => $this->prepareLongDesc("
 				This command will copy all initial blocks, components, manifests and service classes to you project in order to start using block editor.
 
@@ -116,7 +126,31 @@ class InitBlocksCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		$this->getInitBlocks($assocArgs, static::COMMANDS);
+		$all = filter_var($assocArgs['use_all'], FILTER_VALIDATE_BOOLEAN);
+
+		$commands = static::COMMANDS;
+
+		if ($all) {
+			$commands = [];
+			foreach (\array_keys(static::COMMANDS) as $command) {
+				switch ($command) {
+					case UseBlockCli::class:
+						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceCustom'));
+						break;
+					case UseComponentCli::class:
+						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceComponents'));
+						break;
+					case UseVariationCli::class:
+						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceVariations'));
+						break;
+					default:
+						$commands[$command] = [];
+						break;
+				}
+			}
+		}
+
+		$this->getInitBlocks($assocArgs, $commands);
 
 		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
 			$this->cliLogAlert(
