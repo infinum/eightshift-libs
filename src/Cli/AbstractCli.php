@@ -617,6 +617,9 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function cleanUpInitialBoilerplate(string $destination): void
 	{
+		$this->cliLog("\n");
+		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("\n");
 		$this->cliLog('Removing initial boilerplate setup files', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf .github\");'");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CODE_OF_CONDUCT.md\");'");
@@ -631,22 +634,33 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function initMandatoryAfter(string $libsVersion, string $destination): void
 	{
+		$this->cliLog("\n");
+		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("\n");
 		$this->cliLog('Removing old vendor folder', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf vendor\");'");
+		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("\n");
 		$this->cliLog('Removing old composer.lock', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm composer.lock\");'");
+		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("\n");
 		$this->cliLog('Running composer install', 'C');
 		if ($libsVersion) {
 			WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && composer require infinum/eightshift-libs:dev-{$libsVersion}\");'");
 		} else {
 			WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && composer require infinum/eightshift-libs\");'");
 		}
+		$this->cliLog('\n');
 		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("\n");
 		$this->cliLog('Running npm install', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && npm install\");'");
+		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("\n");
 	}
 
 	/**
