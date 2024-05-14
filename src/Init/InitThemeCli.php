@@ -113,7 +113,7 @@ class InitThemeCli extends AbstractCli
 			$class->__invoke([], $assocArgs);
 		}
 
-		if (!$groupOutput) {
+		if ($groupOutput) {
 			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!', 'success', \__('Ready to go!', 'eightshift-libs'));
 		}
 	}
