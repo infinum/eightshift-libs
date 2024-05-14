@@ -73,6 +73,11 @@ class Helpers
 	 */
 	use DeprecatedTrait;
 
+		/**
+	 * Deprecated trait.
+	 */
+	use ReusableBlockTrait;
+
 	/**
 	 * Get all project paths allowed to be used in the different render methods.
 	 *
