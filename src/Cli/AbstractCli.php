@@ -969,8 +969,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$this->cliLogAlert(
 			"Please run the following command to make sure everything works correctly.\n
-			npm start
-			",
+			npm start",
 			"info",
 			'Command requirement',
 		);
