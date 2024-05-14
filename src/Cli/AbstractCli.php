@@ -644,10 +644,10 @@ abstract class AbstractCli implements CliInterface
 	public function initMandatoryAfter(string $libsVersion, string $destination): void
 	{
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog('Removing old vendor folder', 'C');
+		$this->cliLog('Removing setup vendor folder', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf vendor\");' --quiet");
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog('Removing old composer.lock', 'C');
+		$this->cliLog('Removing setup composer.lock', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm composer.lock\");' --quiet");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running composer install', 'C');
