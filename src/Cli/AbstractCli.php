@@ -637,9 +637,9 @@ abstract class AbstractCli implements CliInterface
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running composer install', 'C');
 		if ($libsVersion) {
-			WP_CLI::runcommand("eval 'shell_exec(\"composer require eightshift/libs:dev-{$libsVersion} --no-interaction --no-suggest\");'");
+			WP_CLI::runcommand("eval 'shell_exec(\"composer require eightshift/libs:dev-{$libsVersion} --no-interaction\");'");
 		} else {
-			WP_CLI::runcommand("eval 'shell_exec(\"composer require eightshift/libs --no-interaction --no-suggest\");'");
+			WP_CLI::runcommand("eval 'shell_exec(\"composer require eightshift/libs --no-interaction\");'");
 		}
 		WP_CLI::runcommand("eval 'shell_exec(\"composer reqire --ignore-platform-reqs\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
