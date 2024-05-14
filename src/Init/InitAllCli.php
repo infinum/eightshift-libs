@@ -68,12 +68,12 @@ class InitAllCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		$commands = array_merge(
+		$commands = \array_merge(
 			Cli::CREATE_COMMANDS,
 			[
 				InitBlocksCli::class,
 			]
-			);
+		);
 
 		foreach ($commands as $item) {
 			$this->runCliCommand(

@@ -55,7 +55,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				\sprintf(
 					// translators: %s will be replaced with type of item, and shorten cli path.
 					"%s doesn't exist on this path: '%s'. Please check if you have eightshift-frontend-libs installed.",
-					ucfirst($type),
+					\ucfirst($type),
 					$source
 				)
 			);
@@ -123,7 +123,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 					\sprintf(
 						// translators: %s will be replaced with type of item, and shorten cli path.
 						"%s %s is already present in your project.\n\nIf you want to override the destination folder, use --%s='true' argument.",
-						ucfirst($type),
+						\ucfirst($type),
 						$fullDestination,
 						AbstractCli::ARG_SKIP_EXISTING
 					)
@@ -162,7 +162,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 						\sprintf(
 							// translators: %s will be replaced with type of item, and shorten cli path.
 							"%s %s has been created in your project.",
-							ucfirst($type),
+							\ucfirst($type),
 							$fullDestination
 						),
 						'success',
@@ -183,7 +183,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 						\sprintf(
 							// translators: %s will be replaced with type of item, and shorten cli path.
 							"%s %s has been created in your project.",
-							ucfirst($type),
+							\ucfirst($type),
 							$destination
 						),
 						'success',

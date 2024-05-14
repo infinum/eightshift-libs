@@ -20,7 +20,6 @@ use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
-use WP_CLI;
 
 /**
  * Class InitThemeCli

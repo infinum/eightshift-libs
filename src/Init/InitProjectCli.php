@@ -16,7 +16,6 @@ use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Setup\SetupCli;
-use WP_CLI;
 
 /**
  * Class InitProjectCli

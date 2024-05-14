@@ -65,6 +65,11 @@
 		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
 	</rule>
 
+	<rule ref="Eightshift.Security.ComponentsEscape.OutputNotEscaped">
+		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
+		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+	</rule>
+
 	<rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
 		<exclude-pattern>*/src/Init/theme/</exclude-pattern>

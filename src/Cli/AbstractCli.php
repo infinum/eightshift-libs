@@ -229,11 +229,11 @@ abstract class AbstractCli implements CliInterface
 		$namespace = $composerFile ? \rtrim(\array_key_first($composerFile['autoload']['psr-4']), '\\') : 'EightshiftBoilerplate';
 
 		if (isset($args[self::ARG_GROUP_OUTPUT])) {
-			$args[self::ARG_GROUP_OUTPUT] = filter_var($args[self::ARG_GROUP_OUTPUT], FILTER_VALIDATE_BOOLEAN);
+			$args[self::ARG_GROUP_OUTPUT] = \filter_var($args[self::ARG_GROUP_OUTPUT], \FILTER_VALIDATE_BOOLEAN);
 		}
 
 		if (isset($args[self::ARG_SKIP_EXISTING])) {
-			$args[self::ARG_SKIP_EXISTING] = filter_var($args[self::ARG_SKIP_EXISTING], FILTER_VALIDATE_BOOLEAN);
+			$args[self::ARG_SKIP_EXISTING] = \filter_var($args[self::ARG_SKIP_EXISTING], \FILTER_VALIDATE_BOOLEAN);
 		}
 
 		return \array_merge(
@@ -512,9 +512,9 @@ abstract class AbstractCli implements CliInterface
 		if (\fopen($destinationFile, "wb") === false) {
 			self::cliError(
 				\sprintf(
-					"%s could not be created.'\n\nAn unknown error ocurred."
+					"%s could not be created.'\n\nAn unknown error ocurred.",
+					$destinationFile
 				),
-				$destinationFile
 			);
 		}
 
@@ -526,7 +526,7 @@ abstract class AbstractCli implements CliInterface
 
 		if (!$groupOutput) {
 			$this->cliLogAlert(
-				sprintf(
+				\sprintf(
 					'File %s has been created in your project.',
 					$destinationFile
 				),
@@ -631,14 +631,17 @@ abstract class AbstractCli implements CliInterface
 	{
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing initial boilerplate setup files', 'C');
-		shell_exec("cd {$destination} && rm -rf .github");
-		shell_exec("cd {$destination} && rm CODE_OF_CONDUCT.md");
-		shell_exec("cd {$destination} && rm CHANGELOG.md");
-		shell_exec("cd {$destination} && rm LICENSE.md");
+		\shell_exec("cd {$destination} && rm -rf .github"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+		\shell_exec("cd {$destination} && rm CODE_OF_CONDUCT.md"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+		\shell_exec("cd {$destination} && rm CHANGELOG.md"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+		\shell_exec("cd {$destination} && rm LICENSE.md"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 	}
 
 	/**
 	 * Run commands after initial setup.
+	 *
+	 * @param string $libsVersion Version of libs to install.
+	 * @param string $destination Destination path.
 	 *
 	 * @return void
 	 */
@@ -646,20 +649,20 @@ abstract class AbstractCli implements CliInterface
 	{
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing setup vendor folder', 'C');
-		shell_exec("cd {$destination} && rm -rf vendor");
+		\shell_exec("cd {$destination} && rm -rf vendor"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing setup composer.lock', 'C');
-		shell_exec("cd {$destination} && rm composer.lock");
+		\shell_exec("cd {$destination} && rm composer.lock"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running composer install', 'C');
 		if ($libsVersion) {
-			shell_exec("cd {$destination} && composer require infinum/eightshift-libs:dev-{$libsVersion}");
+			\shell_exec("cd {$destination} && composer require infinum/eightshift-libs:dev-{$libsVersion}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		} else {
-			shell_exec("cd {$destination} && composer require infinum/eightshift-libs");
+			\shell_exec("cd {$destination} && composer require infinum/eightshift-libs"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		}
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running npm install', 'C');
-		shell_exec("cd {$destination} && npm install");
+		\shell_exec("cd {$destination} && npm install"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 	}
 
 	/**
@@ -961,8 +964,6 @@ abstract class AbstractCli implements CliInterface
 	/**
 	 * Return assets command text.
 	 *
-	 * @param array<string, mixed> $assocArgs $argument to pass.
-	 *
 	 * @return void
 	 */
 	protected function getAssetsCommandText(): void
@@ -1044,7 +1045,7 @@ abstract class AbstractCli implements CliInterface
 		$reflectionClass = new ReflectionClass($commandClass);
 		$class = $reflectionClass->newInstanceArgs([$commandParentName]);
 
-		$class->__invoke([], array_merge(
+		$class->__invoke([], \array_merge(
 			$args,
 		));
 	}

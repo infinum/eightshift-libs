@@ -15,7 +15,6 @@ if (!function_exists('dbExport')) {
 	 * Exporting database.
 	 *
 	 * @param string $projectRootPath Root of the project where config is located.
-	 * @param array<string, mixed> $args Optional arguments.
 	 *
 	 * @return void
 	 */

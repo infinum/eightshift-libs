@@ -12,7 +12,6 @@ namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Helpers;
-use WP_CLI;
 
 /**
  * Class UseComponentCli
