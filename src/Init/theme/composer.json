@@ -2,7 +2,6 @@
 	"name": "%g_textdomain%/%g_textdomain%",
 	"description": "%g_project_description%",
 	"private": true,
-	"homepage": "%g_project_author_url%",
 	"license": "MIT",
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
