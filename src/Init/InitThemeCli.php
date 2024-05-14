@@ -100,10 +100,6 @@ class InitThemeCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$assocArgs[self::ARG_GROUP_OUTPUT] = false;
-
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-
 		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
@@ -119,7 +115,7 @@ class InitThemeCli extends AbstractCli
 			);
 		}
 
-		if (!$groupOutput) {
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
 			$this->cliLogAlert(
 				'All the files have been copied, you can start working on your awesome theme!',
 				'success',
