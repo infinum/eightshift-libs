@@ -617,10 +617,9 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function cleanUpInitialBoilerplate(string $destination): void
 	{
-		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("\n");
 		$this->cliLog('Removing initial boilerplate setup files', 'C');
+		$this->cliLog("\n");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf .github\");'");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CODE_OF_CONDUCT.md\");'");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm CHANGELOG.md\");'");
@@ -634,20 +633,19 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function initMandatoryAfter(string $libsVersion, string $destination): void
 	{
-		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("\n");
 		$this->cliLog('Removing old vendor folder', 'C');
+		$this->cliLog("\n");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf vendor\");'");
 		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("\n");
 		$this->cliLog('Removing old composer.lock', 'C');
+		$this->cliLog("\n");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm composer.lock\");'");
 		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("\n");
 		$this->cliLog('Running composer install', 'C');
+		$this->cliLog("\n");
 		if ($libsVersion) {
 			WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && composer require infinum/eightshift-libs:dev-{$libsVersion}\");'");
 		} else {
@@ -655,12 +653,9 @@ abstract class AbstractCli implements CliInterface
 		}
 		$this->cliLog('\n');
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("\n");
 		$this->cliLog('Running npm install', 'C');
+		$this->cliLog("\n");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && npm install\");'");
-		$this->cliLog("\n");
-		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("\n");
 	}
 
 	/**

@@ -132,10 +132,9 @@ class InitThemeSetupCli extends AbstractCli
 
 		$destionation = Helpers::getProjectPaths('themeRoot');
 
-		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("\n");
 		$this->cliLog("Moving mandatory files", 'C');
+		$this->cliLog("\n");
 
 		foreach ($files as $file) {
 			if ($file === '.' || $file === '..') {
@@ -149,7 +148,6 @@ class InitThemeSetupCli extends AbstractCli
 
 		$newDestionation = Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]]);
 
-		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Changing the new setup theme to the new theme name", 'C');
 		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
@@ -157,19 +155,17 @@ class InitThemeSetupCli extends AbstractCli
 		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION], $newDestionation);
 		$this->cleanUpInitialBoilerplate($newDestionation);
 
-		$this->cliLog("\n");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Activating new theme", 'C');
-		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
-
 		$this->cliLog("\n");
+		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Installing theme service classes", 'C');
-		WP_CLI::runcommand('boilerplate init theme --group_output=true');
-
 		$this->cliLog("\n");
+		WP_CLI::runcommand('boilerplate init theme --group_output=true');
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Building the new theme assets", 'C');
+		$this->cliLog("\n");
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$newDestionation} && npm run build\");'");
 
 		$this->cliLog("\n");
@@ -178,11 +174,21 @@ class InitThemeSetupCli extends AbstractCli
 			"
 			All the files have been copied and you can start working on your awesome theme!\n
 			Make sure you move to your terminal to new theme by running:\n
-			$ cd {$newDestionation}\n\n
-			To start the development run:\n
-			npm run start\n\n
-			To build the production run:\n
-			npm run build\n\n
+			$ cd {$newDestionation}
+			",
+			'success',
+			\__('Ready to go!', 'eightshift-libs')
+		);
+		$this->cliLogAlert(
+			"To start the development run:\n
+			npm run start
+			",
+			'success',
+			\__('Ready to go!', 'eightshift-libs')
+		);
+		$this->cliLogAlert(
+			"To build the production run:\n
+			npm run buildrm
 			",
 			'success',
 			\__('Ready to go!', 'eightshift-libs')
