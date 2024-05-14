@@ -82,8 +82,6 @@ class InitProjectCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-
 		$assocArgs = $this->prepareArgs($assocArgs);
 
 		$this->getIntroText($assocArgs);
@@ -92,14 +90,22 @@ class InitProjectCli extends AbstractCli
 			$this->runCliCommand(
 				$item,
 				$this->commandParentName,
-				$assocArgs
+				\array_merge(
+					$assocArgs,
+					[
+						self::ARG_GROUP_OUTPUT => true,
+					]
+				)
 			);
 		}
 
-		if (!$groupOutput) {
-			WP_CLI::runcommand("eval 'shell_exec(\"npm run build\");'");
-			$this->cliLog('We have moved everything you need to start creating your awesome WordPress project.', "M");
-			$this->cliLog('Happy developing!', "M");
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the files have been created, you can start working on your awesome project!',
+				'success',
+				\__('Ready to go!', 'eightshift-libs')
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

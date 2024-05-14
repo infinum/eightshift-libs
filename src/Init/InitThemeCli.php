@@ -20,6 +20,7 @@ use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
+use WP_CLI;
 
 /**
  * Class InitThemeCli
@@ -106,7 +107,7 @@ class InitThemeCli extends AbstractCli
 			$this->runCliCommand(
 				$item,
 				$this->commandParentName,
-				array_merge(
+				\array_merge(
 					$assocArgs,
 					[
 						self::ARG_GROUP_OUTPUT => true,
@@ -117,10 +118,11 @@ class InitThemeCli extends AbstractCli
 
 		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
 			$this->cliLogAlert(
-				'All the files have been copied, you can start working on your awesome theme!',
+				'All the files have been created, you can start working on your awesome theme!',
 				'success',
 				\__('Ready to go!', 'eightshift-libs')
 			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

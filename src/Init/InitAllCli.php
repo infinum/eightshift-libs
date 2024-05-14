@@ -65,7 +65,6 @@ class InitAllCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		$this->getIntroText($assocArgs);
 
@@ -80,13 +79,22 @@ class InitAllCli extends AbstractCli
 			$this->runCliCommand(
 				$item,
 				$this->commandParentName,
-				$assocArgs
+				\array_merge(
+					$assocArgs,
+					[
+						self::ARG_GROUP_OUTPUT => true,
+					]
+				)
 			);
 		}
 
-		if (!$groupOutput) {
-			$this->cliLog('We have moved everything we have to your project. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
-			$this->cliLog('Happy developing!', "M");
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the files have been created, you can start working on your awesome project!',
+				'success',
+				\__('Ready to go!', 'eightshift-libs')
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

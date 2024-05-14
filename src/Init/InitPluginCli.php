@@ -87,13 +87,21 @@ class InitPluginCli extends AbstractCli
 			$this->runCliCommand(
 				$item,
 				$this->commandParentName,
-				$assocArgs
+				\array_merge(
+					$assocArgs,
+					[
+						self::ARG_GROUP_OUTPUT => true,
+					]
+				)
 			);
 		}
-
-		if (!$groupOutput) {
-			$this->cliLog('We have moved everything you need to start creating your awesome WordPress plugin.', "M");
-			$this->cliLog('Happy developing!', "M");
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the files have been created, you can start working on your awesome plugin!',
+				'success',
+				\__('Ready to go!', 'eightshift-libs')
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

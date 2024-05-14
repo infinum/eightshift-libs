@@ -113,19 +113,18 @@ class InitBlocksCli extends AbstractCli
 	public function __invoke(array $args, array $assocArgs)
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
 
 		$this->getIntroText($assocArgs);
 
-		if (!$groupOutput) {
-			$this->cliLog("%w╭\n│ %nCreating block editor files", 'mixed');
-		}
-
 		$this->getInitBlocks($assocArgs, static::COMMANDS);
 
-		if (!$groupOutput) {
-			$this->cliLog('╰', 'w');
-			$this->cliLogAlert('Files copied! Run `npm start` to build all the assets.\n\nHappy developing!', 'success', \__('Ready to go!', 'eightshift-libs'));
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the blocks have been created, you can start working on your awesome project!',
+				'success',
+				\__('Ready to go!', 'eightshift-libs')
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 
@@ -149,6 +148,7 @@ class InitBlocksCli extends AbstractCli
 						[
 							'name' => \implode(",", $items),
 							'checkDependency' => false,
+							self::ARG_GROUP_OUTPUT => true,
 						]
 					)
 				);
@@ -160,6 +160,7 @@ class InitBlocksCli extends AbstractCli
 						$assocArgs,
 						[
 							'checkDependency' => false,
+							self::ARG_GROUP_OUTPUT => true,
 						]
 					)
 				);
