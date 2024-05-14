@@ -634,7 +634,7 @@ abstract class AbstractCli implements CliInterface
 		$this->cliLog('Removing old vendor folder', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm -rf vendor\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog('Removing old compeser.lock', 'C');
+		$this->cliLog('Removing old composer.lock', 'C');
 		WP_CLI::runcommand("eval 'shell_exec(\"cd {$destination} && rm composer.lock\");'");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running composer install', 'C');
