@@ -143,12 +143,14 @@ class InitThemeSetupCli extends AbstractCli
 				->outputWrite($destionation, $file, $assocArgs);
 		}
 
-		// \rename($destionation, Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
+		$newDestionation = Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]]);
 
-		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION], $destionation);
-		// $this->cleanUpInitialBoilerplate();
+		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
-		// WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
-		// WP_CLI::runcommand('boilerplate init theme');
+		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION], $newDestionation);
+		$this->cleanUpInitialBoilerplate($newDestionation);
+
+		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
+		WP_CLI::runcommand('boilerplate init theme');
 	}
 }

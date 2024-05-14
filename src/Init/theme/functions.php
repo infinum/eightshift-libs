@@ -29,13 +29,20 @@ if (! \defined('WPINC')) {
 }
 
 /**
- * Include the autoloader so we can dynamically include the rest of the classes.
+ * Bailout, if the theme is not loaded via Composer.
  */
 if (!\file_exists(__DIR__ . '/vendor/autoload.php')) {
 	return;
 }
 
+/**
+ * Require the Composer autoloader.
+ */
 $loader = require __DIR__ . '/vendor/autoload.php';
+
+/**
+ * Require the Composer autoloader for the prefixed libraries.
+ */
 if (\file_exists(__DIR__ . '/vendor-prefixed/autoload.php')) {
 	require __DIR__ . '/vendor-prefixed/autoload.php';
 }
