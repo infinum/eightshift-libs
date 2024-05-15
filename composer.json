@@ -24,7 +24,7 @@
 		"source": "https://github.com/infinum/eightshift-libs"
 	},
 	"require": {
-		"php": "^7.4 || >=8.0",
+		"php": ">=8.2",
 		"ext-dom": "*",
 		"ext-json": "*",
 		"ext-libxml": "*",
