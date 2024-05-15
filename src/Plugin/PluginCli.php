@@ -76,9 +76,9 @@ class PluginCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		$output = [
-			'PluginFactoryExample',
-			'ActivateExample',
-			'DeactivateExample',
+			'PluginFactory',
+			'Activate',
+			'Deactivate',
 		];
 
 		foreach ($output as $className) {

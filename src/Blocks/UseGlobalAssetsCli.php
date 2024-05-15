@@ -68,8 +68,6 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-
 		$assocArgs = $this->prepareArgs($assocArgs);
 
 		$this->getIntroText($assocArgs);
@@ -87,7 +85,7 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 			true
 		);
 
-		if (!$groupOutput) {
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
 			$this->getAssetsCommandText();
 		}
 	}

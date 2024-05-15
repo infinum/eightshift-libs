@@ -102,8 +102,6 @@ class UseComponentCli extends AbstractBlocksCli
 
 		$this->getIntroText($assocArgs);
 
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-
 		$this->moveItems(
 			$assocArgs,
 			Helpers::getProjectPaths('blocksSourceComponents'),
@@ -113,7 +111,7 @@ class UseComponentCli extends AbstractBlocksCli
 			Helpers::getProjectPaths('blocksPrivateSourceCustom')
 		);
 
-		if (!$groupOutput) {
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
 			$this->getAssetsCommandText();
 		}
 	}

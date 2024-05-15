@@ -79,8 +79,6 @@ class InitPluginCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs[self::ARG_GROUP_OUTPUT];
-
 		$assocArgs = $this->prepareArgs($assocArgs);
 
 		$this->getIntroText($assocArgs);
