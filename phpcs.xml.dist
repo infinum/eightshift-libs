@@ -85,6 +85,10 @@
 		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
 	</rule>
 
+	<rule ref="Internal.NoCodeFound">
+		<exclude-pattern>*/src/GitIgnore/GitIgnoreExample.php</exclude-pattern>
+	</rule>
+
 	<!-- Ignore unescaped exceptions. All Eightshift exceptions are escaped. -->
 	<rule ref="Eightshift.Security.ComponentsEscape.ExceptionNotEscaped">
 		<severity>0</severity>
