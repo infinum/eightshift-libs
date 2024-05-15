@@ -102,6 +102,12 @@ class InitPluginSetupCli extends AbstractCli
 					'description' => 'Define Eightshift libs version.',
 					'optional' => true,
 				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_FRONTEND_LIBS_VERSION,
+					'description' => 'Define Eightshift frontend libs version.',
+					'optional' => true,
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -151,7 +157,11 @@ class InitPluginSetupCli extends AbstractCli
 		$this->cliLog("Changing the setup plugin to the new plugin with name {$textdomain}", 'C');
 		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
-		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION], $newDestionation);
+		$this->initMandatoryAfter(
+			$assocArgs[self::ARG_LIBS_VERSION],
+			$assocArgs[self::ARG_FRONTEND_LIBS_VERSION],
+			$newDestionation
+		);
 		$this->cleanUpInitialBoilerplate($newDestionation);
 
 		$this->cliLog('--------------------------------------------------', 'C');

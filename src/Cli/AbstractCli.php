@@ -128,6 +128,13 @@ abstract class AbstractCli implements CliInterface
 	public const ARG_LIBS_VERSION = 'g_libs_version';
 
 	/**
+	 * Output project frontend libs version arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_FRONTEND_LIBS_VERSION = 'g_frontend_libs_version';
+
+	/**
 	 * Output namespace arg.
 	 *
 	 * @var string
@@ -269,6 +276,7 @@ abstract class AbstractCli implements CliInterface
 			self::ARG_PROJECT_VERSION => $args[self::ARG_PROJECT_VERSION] ?? '1.0.0',
 			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? \site_url(),
 			self::ARG_LIBS_VERSION => $args[self::ARG_LIBS_VERSION] ?? '',
+			self::ARG_FRONTEND_LIBS_VERSION => $args[self::ARG_FRONTEND_LIBS_VERSION] ?? '',
 			self::ARG_SKIP_EXISTING => true,
 			self::ARG_GROUP_OUTPUT => true,
 		];
@@ -645,8 +653,11 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @return void
 	 */
-	public function initMandatoryAfter(string $libsVersion, string $destination): void
-	{
+	public function initMandatoryAfter(
+		string $libsVersion,
+		string $frontendLibsVersion,
+		string $destination
+	): void {
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing setup vendor folder', 'C');
 		\shell_exec("cd {$destination} && rm -rf vendor"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
