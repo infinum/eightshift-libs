@@ -153,10 +153,14 @@ class InitPluginSetupCli extends AbstractCli
 
 		$newDestionation = Helpers::joinPaths([\dirname($destionation), $textdomain]);
 
+		var_dump($newDestionation);
+		die;
+
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Changing the setup plugin to the new plugin with name {$textdomain}", 'C');
 		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
+		return;
 		$this->initMandatoryAfter(
 			$assocArgs[self::ARG_LIBS_VERSION],
 			$assocArgs[self::ARG_FRONTEND_LIBS_VERSION],
