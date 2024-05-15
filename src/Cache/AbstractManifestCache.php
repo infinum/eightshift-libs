@@ -250,11 +250,13 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 */
 	protected function getCache(string $cacheType = self::TYPE_BLOCKS): array
 	{
-		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}");
+		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}") ?: ''; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		if (!$cache) {
 			$this->setCache();
 		}
+
+		var_dump($cache);
 
 		return \json_decode($cache, true) ?? [];
 	}

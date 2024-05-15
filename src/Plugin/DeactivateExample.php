@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace %g_namespace%;
 
-use %g_use_libs%\Plugin\Plugin\HasDeactivationInterface;
+use %g_use_libs%\Plugin\HasDeactivationInterface;
 
 /**
  * The plugin deactivation class.
