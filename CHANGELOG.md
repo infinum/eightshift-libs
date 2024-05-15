@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [8.0.0] - TBA
+## [8.0.0]
 
 ### Changed
 - Complete refactor of the block registration process for faster and more efficient block registration.
