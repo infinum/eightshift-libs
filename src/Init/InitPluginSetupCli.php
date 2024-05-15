@@ -176,7 +176,7 @@ class InitPluginSetupCli extends AbstractCli
 		WP_CLI::runcommand(\sprintf("boilerplate init plugin --%s=true", self::ARG_GROUP_OUTPUT));
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Building the new plugin assets", 'C');
-		\shell_exec("cd {$newDestionation} && npm run build");
+		\shell_exec("cd {$newDestionation} && npm run build"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Finished", 'C');
 		$this->cliLogAlert(

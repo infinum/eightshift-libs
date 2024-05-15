@@ -51,7 +51,7 @@ if (\class_exists(PluginFactory::class)) {
 	/**
 	 * The code that runs during plugin activation.
 	 */
-	register_activation_hook(
+	\register_activation_hook(
 		__FILE__,
 		function () {
 			PluginFactory::activate();
@@ -61,7 +61,7 @@ if (\class_exists(PluginFactory::class)) {
 	/**
 	 * The code that runs during plugin deactivation.
 	 */
-	register_deactivation_hook(
+	\register_deactivation_hook(
 		__FILE__,
 		function () {
 			PluginFactory::deactivate();
@@ -83,13 +83,13 @@ if (\class_exists(ManifestCache::class)) {
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  */
-if (class_exists(Main::class)) {
+if (\class_exists(Main::class)) {
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 }
 
 /**
  * Run all WPCLI commands.
  */
-if (class_exists(Cli::class)) {
+if (\class_exists(Cli::class)) {
 	(new Cli())->load('boilerplate');
 }

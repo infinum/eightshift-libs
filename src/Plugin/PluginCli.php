@@ -83,10 +83,10 @@ class PluginCli extends AbstractCli
 
 		foreach ($output as $className) {
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, $className)
-			->renameClassName($className)
-			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination'), "{$className}.php", $assocArgs);
+			$this->getExampleTemplate(__DIR__, $className)
+				->renameClassName($className)
+				->renameGlobals($assocArgs)
+				->outputWrite(Helpers::getProjectPaths('srcDestination'), "{$className}.php", $assocArgs);
 		}
 	}
 }

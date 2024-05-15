@@ -649,6 +649,7 @@ abstract class AbstractCli implements CliInterface
 	 * Run commands after initial setup.
 	 *
 	 * @param string $libsVersion Version of libs to install.
+	 * @param string $frontendLibsVersion Version of frontend libs to install.
 	 * @param string $destination Destination path.
 	 *
 	 * @return void

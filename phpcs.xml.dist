@@ -58,26 +58,31 @@
 	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceAfter">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
 		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceBefore">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
 		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="Eightshift.Security.ComponentsEscape.OutputNotEscaped">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
 		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
 		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
 		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
 	</rule>
 
 	<!-- Ignore unescaped exceptions. All Eightshift exceptions are escaped. -->

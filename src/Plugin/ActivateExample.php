@@ -17,7 +17,6 @@ use %g_use_libs%\Plugin\HasActivationInterface;
  */
 class ActivateExample implements HasActivationInterface
 {
-
 	/**
 	 * Activate the plugin.
 	 *
