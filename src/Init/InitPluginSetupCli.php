@@ -155,7 +155,7 @@ class InitPluginSetupCli extends AbstractCli
 
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Changing the setup plugin main PHP file to the new plugin name {$textdomain}.php", 'C');
-		\rename(Helpers::joinPaths([$destionation, 'eightshift-boilerplate-plugin.php']), Helpers::joinPaths([$newDestionation, "{$textdomain}.php"])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
+		\rename(Helpers::joinPaths([$destionation, 'eightshift-boilerplate-plugin.php']), Helpers::joinPaths([$destionation, "{$textdomain}.php"])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Changing the setup plugin to the new plugin with name {$textdomain}", 'C');
