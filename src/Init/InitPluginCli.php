@@ -15,6 +15,7 @@ use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\Main\MainCli;
+use EightshiftLibs\Plugin\PluginCli;
 
 /**
  * Class InitPluginCli
@@ -30,6 +31,7 @@ class InitPluginCli extends AbstractCli
 		ManifestCacheCli::class,
 		ConfigPluginCli::class,
 		MainCli::class,
+		PluginCli::class,
 	];
 
 	/**

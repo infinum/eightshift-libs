@@ -14,10 +14,8 @@ use %g_use_libs%\Plugin\HasActivationInterface;
 
 /**
  * The plugin activation class.
- *
- * @since 1.0.0
  */
-class Activate implements HasActivationInterface
+class ActivateExample implements HasActivationInterface
 {
 
 	/**

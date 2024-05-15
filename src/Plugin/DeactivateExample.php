@@ -15,7 +15,7 @@ use %g_use_libs%\Plugin\Plugin\HasDeactivationInterface;
 /**
  * The plugin deactivation class.
  */
-class Deactivate implements HasDeactivationInterface
+class DeactivateExample implements HasDeactivationInterface
 {
 
 	/**

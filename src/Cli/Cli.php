@@ -66,6 +66,7 @@ use EightshiftLibs\Init\InitThemeSetupCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Misc\VersionCli;
+use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
@@ -131,6 +132,7 @@ class Cli
 		EscapedViewCli::class,
 		WpCli::class,
 		ManifestCacheCli::class,
+		PluginCli::class,
 	];
 
 	/**

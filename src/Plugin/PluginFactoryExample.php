@@ -13,9 +13,8 @@ namespace %g_namespace%;
 /**
  * The plugin factory class.
  */
-class PluginFactory
+class PluginFactoryExample
 {
-
 	/**
 	 * Activate the plugin.
 	 */
