@@ -153,13 +153,20 @@ class InitPluginSetupCli extends AbstractCli
 
 		$newDestionation = Helpers::joinPaths([\dirname($destionation), $textdomain]);
 
-		return;
+		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("Changing the setup plugin to the new plugin with name {$textdomain}", 'C');
+		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
+
+		$this->cliLog('--------------------------------------------------', 'C');
+		$this->cliLog("Changing the setup plugin main PHP file to the new plugin name {$textdomain}.php", 'C');
+		\rename(Helpers::joinPaths([$newDestionation, 'eightshift-boilerplate-plugin.php']), Helpers::joinPaths([$newDestionation, "{$textdomain}.php"])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
+
 		$this->initMandatoryAfter(
 			$assocArgs[self::ARG_LIBS_VERSION],
 			$assocArgs[self::ARG_FRONTEND_LIBS_VERSION],
-			$destionation
+			$newDestionation
 		);
-		$this->cleanUpInitialBoilerplate($destionation);
+		$this->cleanUpInitialBoilerplate($newDestionation);
 
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Activating new plugin", 'C');
@@ -169,8 +176,7 @@ class InitPluginSetupCli extends AbstractCli
 		WP_CLI::runcommand(\sprintf("boilerplate init plugin --%s=true", self::ARG_GROUP_OUTPUT));
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Building the new plugin assets", 'C');
-		\shell_exec("cd {$destionation} && npm run build");
-		$this->cliLog('--------------------------------------------------', 'C');
+		\shell_exec("cd {$newDestionation} && npm run build");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Finished", 'C');
 		$this->cliLogAlert(
@@ -179,11 +185,6 @@ class InitPluginSetupCli extends AbstractCli
 			cd {$newDestionation}",
 			'success',
 			'Almost there!'
-		);
-		$this->cliLogAlert(
-			"To activate the plugin run:\n
-			wp plugin activate {$textdomain}",
-			'success',
 		);
 		$this->cliLogAlert(
 			"To start the development run:\n
@@ -195,8 +196,5 @@ class InitPluginSetupCli extends AbstractCli
 			npm run build",
 			'success',
 		);
-
-		\rename(Helpers::joinPaths([$newDestionation, 'eightshift-boilerplate-plugin.php']), Helpers::joinPaths([$newDestionation, "{$textdomain}.php"])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
-		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 	}
 }
