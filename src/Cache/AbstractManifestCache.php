@@ -256,8 +256,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			$this->setCache();
 		}
 
-		var_dump($cache);
-
 		return \json_decode($cache, true) ?? [];
 	}
 

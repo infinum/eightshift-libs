@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace %g_namespace%;
 
+use %g_namespace%\Cache\ManifestCache;
 use %g_namespace%\Main\Main;
 use %g_use_libs%\Cli\Cli;
 
