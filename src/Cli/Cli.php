@@ -59,6 +59,7 @@ use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Init\InitBlocksCli;
 use EightshiftLibs\Init\InitHeaderFooter;
 use EightshiftLibs\Init\InitPluginCli;
+use EightshiftLibs\Init\InitPluginSetupCli;
 use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
 use EightshiftLibs\Init\InitThemeSetupCli;
@@ -175,6 +176,7 @@ class Cli
 		InitProjectCli::class,
 		InitThemeCli::class,
 		InitThemeSetupCli::class,
+		InitPluginSetupCli::class,
 	];
 
 	/**

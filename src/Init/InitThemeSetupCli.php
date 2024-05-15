@@ -122,6 +122,8 @@ class InitThemeSetupCli extends AbstractCli
 	{
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
+		$textdomain = $assocArgs[self::ARG_TEXTDOMAIN];
+
 		$this->getIntroText($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
@@ -143,10 +145,10 @@ class InitThemeSetupCli extends AbstractCli
 				->outputWrite($destionation, $file, $assocArgs);
 		}
 
-		$newDestionation = Helpers::joinPaths([\dirname($destionation), $assocArgs[self::ARG_TEXTDOMAIN]]);
+		$newDestionation = Helpers::joinPaths([\dirname($destionation), $textdomain]);
 
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Changing the setup theme to the new theme name", 'C');
+		$this->cliLog("Changing the setup theme to the new theme with name {$textdomain}", 'C');
 		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
 		$this->initMandatoryAfter($assocArgs[self::ARG_LIBS_VERSION], $newDestionation);
@@ -154,13 +156,13 @@ class InitThemeSetupCli extends AbstractCli
 
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Activating new theme", 'C');
-		WP_CLI::runcommand('theme activate ' . $assocArgs[self::ARG_TEXTDOMAIN]);
+		WP_CLI::runcommand("theme activate {$textdomain}");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Installing theme service classes and blocks", 'C');
 		WP_CLI::runcommand(\sprintf("boilerplate init theme --%s=true", self::ARG_GROUP_OUTPUT));
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Building the new theme assets", 'C');
-		WP_CLI::runcommand("eval 'shell_exec(\"cd {$newDestionation} && npm run build\");'");
+		\shell_exec("cd {$newDestionation} && npm run build");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Finished", 'C');
 		$this->cliLogAlert(
