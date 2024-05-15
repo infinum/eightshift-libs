@@ -28,7 +28,7 @@ jobs:
         uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php-static@main
         with:
           PHP_VERSION: ${{ matrix.php }}
-          PROJECT_PATH: /
+          PROJECT_PATH: ''
 
   phpcs:
     name: PHP check coding standards using PHP - ${{ matrix.php }}
@@ -42,4 +42,4 @@ jobs:
         uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php@main
         with:
           PHP_VERSION: ${{ matrix.php }}
-          PROJECT_PATH: /
+          PROJECT_PATH: ''
