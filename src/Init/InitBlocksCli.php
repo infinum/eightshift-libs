@@ -126,7 +126,7 @@ class InitBlocksCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		$all = \filter_var($assocArgs['use_all'], \FILTER_VALIDATE_BOOLEAN);
+		$all = \filter_var($assocArgs['use_all'] ?? false, \FILTER_VALIDATE_BOOLEAN);
 
 		$commands = static::COMMANDS;
 
