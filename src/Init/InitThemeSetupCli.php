@@ -177,7 +177,7 @@ class InitThemeSetupCli extends AbstractCli
 		$this->cliLog("Finished", 'C');
 		$this->cliLogAlert(
 			"All the files have been created and you can start working on your awesome theme!
-			Make sure you move to your terminal to new theme by running:\n
+			Make sure to change directory in your terminal to the new theme directory by running:\n:\n
 			cd {$newDestionation}",
 			'success',
 			'Almost there!'
