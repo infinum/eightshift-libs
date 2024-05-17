@@ -95,7 +95,7 @@ class InitHeaderFooter extends AbstractCli
 			$this->cliLogAlert(
 				'Header and footer reusable blocks added.',
 				'success',
-				\__('Ready to go!', 'eightshift-libs')
+				'Ready to go!'
 			);
 			$this->getAssetsCommandText();
 		}

@@ -99,7 +99,7 @@ class VersionCli extends AbstractCli
 
 		$assocArgs[AbstractCli::ARG_SKIP_EXISTING] = 'true';
 		// translators: %s is replaced with the new version number.
-		$assocArgs['actionOutput'] = \sprintf(\__("version number changed to %s.", 'eightshift-libs'), $version);
+		$assocArgs['actionOutput'] = \sprintf('version number changed to %s.', $version);
 
 		$path = Helpers::getProjectPaths('cliOutput');
 

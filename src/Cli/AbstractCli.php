@@ -519,6 +519,7 @@ abstract class AbstractCli implements CliInterface
 		// If there is any error, bailout. For example, user permission.
 		if (\fopen($destinationFile, "wb") === false) {
 			self::cliError(
+				// translators: %s will be replaced with path.
 				\sprintf(
 					"%s could not be created.'\n\nAn unknown error ocurred.",
 					$destinationFile
@@ -534,6 +535,7 @@ abstract class AbstractCli implements CliInterface
 
 		if (!$groupOutput) {
 			$this->cliLogAlert(
+				// translators: %s will be replaced with path.
 				\sprintf(
 					'File %s has been created in your project.',
 					$destinationFile

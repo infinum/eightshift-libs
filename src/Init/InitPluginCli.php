@@ -99,7 +99,7 @@ class InitPluginCli extends AbstractCli
 			$this->cliLogAlert(
 				'All the files have been created, you can start working on your awesome plugin!',
 				'success',
-				\__('Ready to go!', 'eightshift-libs')
+				'Ready to go!'
 			);
 			$this->getAssetsCommandText();
 		}

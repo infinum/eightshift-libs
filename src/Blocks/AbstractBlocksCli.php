@@ -53,7 +53,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		if (!\is_dir($source)) {
 			self::cliError(
 				\sprintf(
-					// translators: %s will be replaced with type of item, and shorten cli path.
+					// translators: %s will be replaced with type of item and path.
 					"%s doesn't exist on this path: '%s'. Please check if you have eightshift-frontend-libs installed.",
 					\ucfirst($type),
 					$source
@@ -75,7 +75,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 		if (!$sourceItems) {
 			self::cliError(
 				\sprintf(
-					// translators: %1$s will be replaced with type of item, %2$s the type and %3$s and shorten cli path.
+					// translators: %s will be replaced with type of item and path.
 					"%s doesn't exist on this path: '%s'. Please check if you have eightshift-frontend-libs installed.",
 					$type,
 					$source
@@ -101,7 +101,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if (!$itemExists) {
 				self::cliError(
 					\sprintf(
-						// translators: %s will be replaced with type of item, item name and shorten cli path.
+						// translators: %s will be replaced with type of item, path and keys of sourceItems.
 						"Requested %s with the name '%s' doesn't exist in our library. Please review you search.\nYou can find all available items on this list: \n\n%s\n\nOr find them on this link: https://eightshift.com/storybook/",
 						$type,
 						$item,
@@ -121,7 +121,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 			if (\file_exists($fullDestination) && $skipExisting === false && !$isSingleFolder) {
 				self::cliError(
 					\sprintf(
-						// translators: %s will be replaced with type of item, and shorten cli path.
+						// translators: %s will be replaced with type of item, path and skip flag.
 						"%s %s is already present in your project.\n\nIf you want to override the destination folder, use --%s='true' argument.",
 						\ucfirst($type),
 						$fullDestination,
@@ -160,7 +160,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				if (!$groupOutput) {
 					$this->cliLogAlert(
 						\sprintf(
-							// translators: %s will be replaced with type of item, and shorten cli path.
+							// translators: %s will be replaced with type of item and path.
 							"%s %s has been created in your project.",
 							\ucfirst($type),
 							$fullDestination
@@ -181,7 +181,7 @@ abstract class AbstractBlocksCli extends AbstractCli
 				if (!$groupOutput) {
 					$this->cliLogAlert(
 						\sprintf(
-							// translators: %s will be replaced with type of item, and shorten cli path.
+							// translators: %s will be replaced with type of item and path.
 							"%s %s has been created in your project.",
 							\ucfirst($type),
 							$destination

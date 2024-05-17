@@ -156,7 +156,7 @@ class InitBlocksCli extends AbstractCli
 			$this->cliLogAlert(
 				'All the blocks have been created, you can start working on your awesome project!',
 				'success',
-				\__('Ready to go!', 'eightshift-libs')
+				'Ready to go!'
 			);
 			$this->getAssetsCommandText();
 		}
