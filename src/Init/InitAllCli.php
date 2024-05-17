@@ -13,33 +13,12 @@ namespace EightshiftLibs\Init;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\Cli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use ReflectionClass;
 
 /**
  * Class InitAllCli
  */
 class InitAllCli extends AbstractCli
 {
-	/**
-	 * All classes for initial theme setup for project.
-	 *
-	 * @var array<int, mixed>
-	 */
-	public const COMMANDS = [
-		[
-			'type' => 'classes',
-			'label' => 'Setting classes:',
-			'items' => Cli::CREATE_COMMANDS,
-		],
-		[
-			'type' => 'blocks',
-			'label' => '',
-			'items' => [
-				InitBlocksCli::class,
-			],
-		],
-	];
-
 	/**
 	 * Get WPCLI command parent name.
 	 *
@@ -85,46 +64,38 @@ class InitAllCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$assocArgs = $this->prepareArgs($assocArgs);
 
-		if (!$groupOutput) {
-			$this->getIntroText();
+		$this->getIntroText($assocArgs);
+
+		$commands = \array_merge(
+			Cli::CREATE_COMMANDS,
+			[
+				InitBlocksCli::class,
+			]
+		);
+
+		foreach ($commands as $item) {
+			$this->runCliCommand(
+				$item,
+				$this->commandParentName,
+				\array_merge(
+					$assocArgs,
+					[
+						'use_all' => true,
+						self::ARG_GROUP_OUTPUT => true,
+					]
+				)
+			);
 		}
 
-		foreach (static::COMMANDS as $item) {
-			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? [];
-			$type = $item['type'] ?? '';
-
-			if ($label) {
-				$this->cliLog($label, 'C');
-			}
-
-			if ($type === 'blocks') {
-				$assocArgs['use_all'] = true;
-			}
-
-			if ($items) {
-				foreach ($items as $className) {
-					$reflectionClass = new ReflectionClass($className);
-					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-					$class->__invoke([], \array_merge(
-						$assocArgs,
-						[
-							'groupOutput' => $type === 'blocks',
-							'introOutput' => false,
-						]
-					));
-				}
-			}
-
-			$this->cliLog('--------------------------------------------------');
-		}
-
-		if (!$groupOutput) {
-			$this->cliLog('We have moved everything we have to your project. Please type `npm start` in your terminal to kickstart your assets bundle process.', "M");
-			$this->cliLog('Happy developing!', "M");
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the files have been created, you can start working on your awesome project!',
+				'success',
+				'Ready to go!'
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

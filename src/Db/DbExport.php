@@ -15,16 +15,11 @@ if (!function_exists('dbExport')) {
 	 * Exporting database.
 	 *
 	 * @param string $projectRootPath Root of the project where config is located.
-	 * @param array<string, mixed> $args Optional arguments.
 	 *
 	 * @return void
 	 */
-	function dbExport(string $projectRootPath, array $args = [])
+	function dbExport(string $projectRootPath)
 	{
-		// Check if optional parameters exists.
-		$skipDb = $args['skip_db'] ?? false;
-		$skipUploads = $args['skip_uploads'] ?? false;
-
 		// Change execution folder.
 		if (!is_dir($projectRootPath)) {
 			$errorClass = new class () {
@@ -36,56 +31,10 @@ if (!function_exists('dbExport')) {
 
 		chdir($projectRootPath);
 
-		// Define db export file name.
-		$dbFileName = 'latest.sql';
-
-		// Define export file name.
-		$exportFileName = 'latest_dump.tar.gz';
-
-		// Define path to uploads folder.
-		$uploadsFolder = 'wp-content/uploads';
-
-		// Remove old export file if it exists.
-		if (file_exists($exportFileName)) {
-			unlink($exportFileName);
-		}
-
-		// Execute db export.
-		if (!$skipDb) {
-			WP_CLI::runcommand("db export {$dbFileName} --set-gtid-purged=OFF");
-			WP_CLI::log("Exported db to {$projectRootPath} folder.");
-
-			WP_CLI::log('--------------------------------------------------');
-		}
-
-		// Execute compress and export for db and uploads folder.
-		$exportFiles = "{$dbFileName} {$uploadsFolder}";
-
-		if ($skipDb) {
-			$exportFiles = "{$uploadsFolder}";
-
-			if (!file_exists($uploadsFolder)) {
-				$exportFiles = '';
-			}
-		}
-
-		if ($skipUploads) {
-			$exportFiles = "{$dbFileName}";
-		}
-
-		if (!empty($exportFiles)) {
-			WP_CLI::log((string)shell_exec("tar czf {$exportFileName} {$exportFiles}"));
-			WP_CLI::log('Compressing folders success.');
-			WP_CLI::log('--------------------------------------------------');
-		}
+		WP_CLI::runcommand("db export --set-gtid-purged=OFF");
 
 		// Finishing.
-		WP_CLI::success("Export complete! File `{$exportFileName}` is located in `{$projectRootPath}` folder.");
+		WP_CLI::success("Export complete! DB export file is located in `{$projectRootPath}` folder.");
 		WP_CLI::log('--------------------------------------------------');
-
-		// Remove old db export file if it exists.
-		if (file_exists($dbFileName)) {
-			unlink($dbFileName);
-		}
 	}
 }

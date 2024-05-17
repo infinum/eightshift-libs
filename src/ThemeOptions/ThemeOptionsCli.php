@@ -12,7 +12,7 @@ namespace EightshiftLibs\ThemeOptions;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class ThemeOptionsCli
@@ -73,6 +73,8 @@ class ThemeOptionsCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		$className = $this->getClassShortName();
@@ -80,9 +82,7 @@ class ThemeOptionsCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
-			->outputWrite(Components::getProjectPaths('srcDestination', 'ThemeOptions'), "{$className}.php", $assocArgs);
+			->renameGlobals($assocArgs)
+			->outputWrite(Helpers::getProjectPaths('srcDestination', 'ThemeOptions'), "{$className}.php", $assocArgs);
 	}
 }

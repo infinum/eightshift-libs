@@ -3,17 +3,17 @@
 /**
  * The class register load more route.
  *
- * @package EightshiftBoilerplate\Rest\Routes\LoadMore
+ * @package %g_namespace%\Rest\Routes\LoadMore
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Rest\Routes\LoadMore;
+namespace %g_namespace%\Rest\Routes\LoadMore;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Helpers\Components;
-use EightshiftLibs\Rest\CallableRouteInterface;
-use EightshiftLibs\Rest\Routes\AbstractRoute;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Helpers\Helpers;
+use %g_use_libs%\Rest\CallableRouteInterface;
+use %g_use_libs%\Rest\Routes\AbstractRoute;
 use WP_Error;
 use WP_Query;
 use WP_REST_Request;
@@ -33,7 +33,7 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	/**
 	 * Method that returns project Route namespace.
 	 *
-	 * @return string Project namespace EightshiftBoilerplateVendor\for REST route.
+	 * @return string Project namespace for REST route.
 	 */
 	protected function getNamespace(): string
 	{
@@ -86,13 +86,14 @@ final class LoadMoreRouteExample extends AbstractRoute implements CallableRouteI
 	{
 		switch ($type) {
 			case 'featured-content':
-				return Components::renderPartial(
-					'block',
-					$type,
+				return Helpers::render(
 					'cards',
 					[
 						'items' => $response,
-					]
+					],
+					'blocks',
+					false,
+					"{$type}/partials"
 				);
 			default:
 				return '';

@@ -12,6 +12,8 @@ parameters:
 		- src/
 	excludePaths:
 		- src/**/*Example.php
+		- src/Init/theme/
+		- src/Init/plugin/
 	ignoreErrors:
 		# Ignore errors about reflection class variable being undefined. Errors are caught.
 		- '/^Variable \$reflectionClass might not be defined\.$/'

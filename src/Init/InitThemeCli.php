@@ -20,7 +20,6 @@ use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
-use ReflectionClass;
 
 /**
  * Class InitThemeCli
@@ -33,27 +32,15 @@ class InitThemeCli extends AbstractCli
 	 * @var array<int, mixed>
 	 */
 	public const COMMANDS = [
-		[
-			'type' => 'sc',
-			'label' => 'Setting service classes:',
-			'items' => [
-				ManifestCacheCli::class,
-				ConfigThemeCli::class,
-				MainCli::class,
-				EnqueueAdminCli::class,
-				EnqueueBlocksCli::class,
-				EnqueueThemeCli::class,
-				AdminReusableBlocksMenuCli::class,
-				ReusableBlocksHeaderFooterCli::class,
-			],
-		],
-		[
-			'type' => 'blocks',
-			'label' => '',
-			'items' => [
-				InitBlocksCli::class,
-			],
-		],
+		ManifestCacheCli::class,
+		ConfigThemeCli::class,
+		MainCli::class,
+		EnqueueAdminCli::class,
+		EnqueueBlocksCli::class,
+		EnqueueThemeCli::class,
+		AdminReusableBlocksMenuCli::class,
+		ReusableBlocksHeaderFooterCli::class,
+		InitBlocksCli::class,
 	];
 
 	/**
@@ -83,9 +70,7 @@ class InitThemeCli extends AbstractCli
 	 */
 	public function getDefaultArgs(): array
 	{
-		return [
-			AbstractCli::THEME_NAME_ARG => 'Boilerplate',
-		];
+		return [];
 	}
 
 	/**
@@ -97,15 +82,6 @@ class InitThemeCli extends AbstractCli
 	{
 		return [
 			'shortdesc' => 'Kickstart your WordPress theme with this simple command.',
-			'synopsis' => [
-				[
-					'type' => 'assoc',
-					'name' => AbstractCli::THEME_NAME_ARG,
-					'description' => 'Define theme name.',
-					'optional' => true,
-					'default' => $this->getDefaultArg(AbstractCli::THEME_NAME_ARG),
-				],
-			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -113,7 +89,7 @@ class InitThemeCli extends AbstractCli
 
 				## EXAMPLES
 
-				# Setup theme:
+				# Setup theme files:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 			"),
 		];
@@ -122,48 +98,30 @@ class InitThemeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$assocArgs = $this->prepareArgs($assocArgs);
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
-
-		$themeName = $this->getArg($assocArgs, AbstractCli::THEME_NAME_ARG);
-		if ($themeName) {
-			unset($assocArgs[AbstractCli::THEME_NAME_ARG]);
-		}
+		$this->getIntroText($assocArgs);
 
 		foreach (static::COMMANDS as $item) {
-			$label = $item['label'] ?? '';
-			$items = $item['items'] ?? [];
-			$type = $item['type'] ?? '';
-
-			if ($label) {
-				$this->cliLog($label, 'C');
-			}
-
-			if ($items) {
-				foreach ($items as $className) {
-					$reflectionClass = new ReflectionClass($className);
-					$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
-					$class->__invoke([], \array_merge(
-						$assocArgs,
-						[
-							'groupOutput' => $type === 'blocks',
-							'introOutput' => false,
-							AbstractCli::PROJECT_NAME_ARG => $themeName,
-						]
-					));
-				}
-			}
-
-			$this->cliLog("\n");
+			$this->runCliCommand(
+				$item,
+				$this->commandParentName,
+				\array_merge(
+					$assocArgs,
+					[
+						self::ARG_GROUP_OUTPUT => true,
+					]
+				)
+			);
 		}
 
-		if (!$groupOutput) {
-			$this->cliLogAlert('All the files have been copied, you can start working on your awesome theme!\n\nRun `npm start` to build all the assets.', 'success', \__('Ready to go!', 'eightshift-libs'));
-			$this->cliLogAlert('If you want to set up the default header and footer, run `wp boilerplate init header-footer` after building assets.', 'info', \__('Note', 'eightshift-libs'));
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the files have been created, you can start working on your awesome theme!',
+				'success',
+				'Ready to go!'
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

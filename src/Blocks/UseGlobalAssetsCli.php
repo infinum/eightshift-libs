@@ -11,8 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Blocks;
 
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
-use EightshiftLibs\Helpers\Components;
-use WP_CLI;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class UseGlobalAssetsCli
@@ -69,9 +68,9 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$this->getIntroText($assocArgs);
+		$assocArgs = $this->prepareArgs($assocArgs);
 
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$this->getIntroText($assocArgs);
 
 		$this->moveItems(
 			\array_merge(
@@ -80,16 +79,14 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 					'name' => 'assets',
 				],
 			),
-			Components::getProjectPaths('blocksGlobalAssetsSource'),
-			Components::getProjectPaths('blocksGlobalAssetsDestination'),
+			Helpers::getProjectPaths('blocksGlobalAssetsSource'),
+			Helpers::getProjectPaths('blocksGlobalAssetsDestination'),
 			'assets folder',
 			true
 		);
 
-		if (!$groupOutput) {
-			WP_CLI::log('--------------------------------------------------');
-
-			$this->cliLog('Please run `npm start` again to make sure everything works correctly.', "M");
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->getAssetsCommandText();
 		}
 	}
 }

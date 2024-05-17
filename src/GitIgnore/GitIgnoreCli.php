@@ -12,7 +12,7 @@ namespace EightshiftLibs\GitIgnore;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class GitIgnoreCli
@@ -47,7 +47,7 @@ class GitIgnoreCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'path' => Components::getProjectPaths('projectRoot'),
+			'path' => Helpers::getProjectPaths('projectRoot'),
 		];
 	}
 
@@ -83,7 +83,7 @@ class GitIgnoreCli extends AbstractCli
 				## RESOURCES
 
 				File will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/GitIgnore/.gitignore
+				https://github.com/infinum/eightshift-libs/blob/develop/src/GitIgnore/GitIgnoreExample.php
 			"),
 		];
 	}
@@ -91,13 +91,19 @@ class GitIgnoreCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
+
+		// Get full class name.
+		$className = $this->getClassShortName();
 
 		// Get Props.
 		$path = $this->getArg($assocArgs, 'path');
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, '.gitignore')
+		$this->getExampleTemplate(__DIR__, $className)
+			->renameGlobals($assocArgs)
 			->outputWrite($path, '.gitignore', $assocArgs);
 	}
 }

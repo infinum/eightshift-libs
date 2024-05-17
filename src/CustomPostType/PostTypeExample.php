@@ -3,14 +3,14 @@
 /**
  * File that holds class for PostTypeExample custom post type registration.
  *
- * @package EightshiftBoilerplate\CustomPostType
+ * @package %g_namespace%\CustomPostType
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\CustomPostType;
+namespace %g_namespace%\CustomPostType;
 
-use EightshiftLibs\CustomPostType\AbstractPostType;
+use %g_use_libs%\CustomPostType\AbstractPostType;
 
 /**
  * Class PostTypeExample.
@@ -82,12 +82,12 @@ class PostTypeExample extends AbstractPostType
 				'name' => esc_html_x(
 					'%label%',
 					'post type plural name',
-					'eightshift-libs'
+					'%g_textdomain%'
 				),
 				'singular_name' => esc_html_x(
 					'%plural_label%',
 					'post type singular name',
-					'eightshift-libs'
+					'%g_textdomain%'
 				),
 			],
 			// phpcs:enable

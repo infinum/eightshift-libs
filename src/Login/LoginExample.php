@@ -3,14 +3,14 @@
 /**
  * The login page specific functionality.
  *
- * @package EightshiftBoilerplate\Login
+ * @package %g_namespace%\Login
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Login;
+namespace %g_namespace%\Login;
 
-use EightshiftLibs\Services\ServiceInterface;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class Login
