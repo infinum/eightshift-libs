@@ -181,7 +181,7 @@ class InitPluginSetupCli extends AbstractCli
 		$this->cliLog("Finished", 'C');
 		$this->cliLogAlert(
 			"All the files have been created and you can start working on your awesome plugin!
-			Make sure you move to your terminal to new plugin by running:\n
+			Make sure to change directory in your terminal to the new plugin directory by running:\n
 			cd {$newDestionation}",
 			'success',
 			'Almost there!'
