@@ -6,7 +6,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [8.0.0]
 
 ### Changed
-- Minimum PHP version is now 8.2+.
+- Minimum PHP version is now 8.2.
 - Complete refactor of the block registration process for faster and more efficient block registration.
 - Custom post type and taxonomy registration labels usage is now more consistent and simplified.
 - All enqueue methods now supports new scripts args introduced in WP 6.3.
