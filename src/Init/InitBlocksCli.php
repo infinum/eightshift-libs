@@ -48,6 +48,7 @@ class InitBlocksCli extends AbstractCli
 			'site-footer',
 		],
 		UseComponentCli::class => [
+			'admin-header-footer-picker',
 			'button',
 			'card',
 			'copyright',
@@ -65,7 +66,6 @@ class InitBlocksCli extends AbstractCli
 			'tracking-before-body-end',
 			'tracking-head',
 			'social-networks',
-			'admin-header-footer-picker',
 		],
 		UseVariationCli::class => [
 			'card-simple'
