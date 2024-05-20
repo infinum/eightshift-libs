@@ -202,7 +202,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		// Get block wrapper view path.
 		if (Helpers::getConfigUseWrapper()) {
-			echo Helpers::render( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			return Helpers::render( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 				'wrapper',
 				$attributes,
 				'wrapper',
@@ -210,11 +210,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				'',
 				$blockOutpout
 			);
-		} else {
-			echo $blockOutpout; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		}
 
-		return '';
+		return $blockOutpout; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 	}
 
 	/**
