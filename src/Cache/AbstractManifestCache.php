@@ -150,7 +150,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	{
 		$output = [];
 
-		if ((\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') || !\defined('WP_CLI')) {
+		if ((\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') && !\defined('WP_CLI')) {
 			$output = $this->getCache($cacheType)[$key] ?? [];
 		}
 
