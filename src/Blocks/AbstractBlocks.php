@@ -128,13 +128,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		if (Helpers::getConfigUseBlocks()) {
-			$allowedBlockTypes = \array_merge(
+			$allowedBlockTypes = \array_values(\array_merge(
 				\array_map(
 					fn ($block) => $block['blockFullName'],
 					$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)
 				),
 				$allowedBlockTypes,
-			);
+			));
 		}
 
 		// Allow reusable block.
