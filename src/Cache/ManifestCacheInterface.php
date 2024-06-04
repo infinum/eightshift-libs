@@ -37,4 +37,29 @@ interface ManifestCacheInterface
 	 * @return array<string, mixed> Array of cache item.
 	 */
 	public function getManifestCacheSubItem(string $key, string $path, string $cacheType = AbstractManifestCache::TYPE_BLOCKS): array;
+
+	/**
+	 * Set all cache.
+	 *
+	 * @param array<string> $ignoreCache Array of cache to ignore.
+	 *
+	 * @return void
+	 */
+	public function setAllCache($ignoreCache = []): void;
+
+	/**
+	 * Unset all manifest cache.
+	 *
+	 * @return void
+	 */
+	public function deleteAllCache(): void;
+
+	/**
+	 * Unset cache item by type.
+	 *
+	 * @param string $cacheType Type of the cache.
+	 *
+	 * @return void
+	 */
+	public function deleteCache(string $cacheType = AbstractManifestCache::TYPE_BLOCKS): void;
 }

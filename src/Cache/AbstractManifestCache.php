@@ -213,6 +213,32 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	}
 
 	/**
+	 * Unset all manifest cache.
+	 *
+	 * @return void
+	 */
+	public function deleteAllCache(): void
+	{
+		$data = \array_keys($this->getCacheBuilder());
+
+		foreach ($data as $cache) {
+			$this->deleteCache($cache);
+		}
+	}
+
+	/**
+	 * Unset cache item by type.
+	 *
+	 * @param string $cacheType Type of the cache.
+	 *
+	 * @return void
+	 */
+	public function deleteCache(string $cacheType = self::TYPE_BLOCKS): void
+	{
+		\delete_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}");
+	}
+
+	/**
 	 * Set assets static cache to the store helpers used in view files.
 	 *
 	 * @return void
@@ -257,18 +283,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		}
 
 		return \json_decode($cache, true) ?? [];
-	}
-
-	/**
-	 * Unset cache.
-	 *
-	 * @param string $cacheType Type of the cache.
-	 *
-	 * @return void
-	 */
-	protected function deleteCache(string $cacheType = self::TYPE_BLOCKS): void
-	{
-		\delete_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}");
 	}
 
 	/**
