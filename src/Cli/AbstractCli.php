@@ -679,7 +679,7 @@ abstract class AbstractCli implements CliInterface
 		if ($frontendLibsVersion) {
 			\shell_exec("cd {$destination} && npm install infinum/eightshift-frontend-libs#{$frontendLibsVersion}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		} else {
-			\shell_exec("cd {$destination} && npm install infinum/eightshift-frontend-libs"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+			\shell_exec("cd {$destination} && npm install @eightshift/frontend-libs"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		}
 	}
 
