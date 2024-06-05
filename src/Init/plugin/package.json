@@ -11,9 +11,9 @@
 		"build": "webpack --progress --mode production"
 	},
 	"devDependencies": {
-		"husky": "^8.0.3",
-		"webpack": "^5.75.0",
-		"webpack-cli": "^5.0.1"
+		"husky": "^9.0.11",
+		"webpack": "^5.91.0",
+		"webpack-cli": "^5.1.4"
 	},
 	"husky": {
 		"hooks": {

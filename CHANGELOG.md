@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.0.1]
+
+### Changed
+- Package and composer versions.
+
 ## [8.0.0]
 
 ### Changed
@@ -544,6 +549,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[8.0.1]: https://github.com/infinum/eightshift-libs/compare/8.0.0...8.0.1
 [8.0.0]: https://github.com/infinum/eightshift-libs/compare/7.1.2...8.0.0
 [7.1.2]: https://github.com/infinum/eightshift-libs/compare/7.1.1...7.1.2
 [7.1.1]: https://github.com/infinum/eightshift-libs/compare/7.1.0...7.1.1
