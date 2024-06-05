@@ -1,0 +1,45 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - "develop"
+      - "main"
+    paths-ignore:
+      - "**.md"
+  pull_request:
+    paths-ignore:
+      - "**.md"
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  phpstan:
+    name: PHP static code analysis using PHP - ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.2', '8.3' ]
+    steps:
+      - name: PHP Static code analysis
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php-static@main
+        with:
+          PHP_VERSION: ${{ matrix.php }}
+          PROJECT_PATH: ''
+
+  phpcs:
+    name: PHP check coding standards using PHP - ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.2', '8.3' ]
+    steps:
+      - name: PHP check coding standards
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php@main
+        with:
+          PHP_VERSION: ${{ matrix.php }}
+          PROJECT_PATH: ''

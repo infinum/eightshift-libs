@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\Enqueue\Admin;
 
 use EightshiftLibs\Enqueue\AbstractAssets;
-use EightshiftLibs\Manifest\ManifestInterface;
 
 /**
  * Class EnqueueAdmin
@@ -20,15 +19,19 @@ use EightshiftLibs\Manifest\ManifestInterface;
  */
 abstract class AbstractEnqueueAdmin extends AbstractAssets
 {
+	/**
+	 * Admin script handle.
+	 *
+	 * @return string
+	 */
 	public const ADMIN_SCRIPT_URI = 'applicationAdmin.js';
-	public const ADMIN_STYLE_URI = 'applicationAdmin.css';
 
 	/**
-	 * Instance variable of manifest data.
+	 * Admin style handle.
 	 *
-	 * @var ManifestInterface
+	 * @return string
 	 */
-	protected ManifestInterface $manifest;
+	public const ADMIN_STYLE_URI = 'applicationAdmin.css';
 
 	/**
 	 * Get admin Stylesheet handle.
@@ -70,7 +73,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 			\wp_register_style(
 				$handle,
-				$this->manifest->getAssetsManifestItem(static::ADMIN_STYLE_URI),
+				$this->setAssetsItem(static::ADMIN_STYLE_URI),
 				$this->getAdminStyleDependencies(),
 				$this->getAssetsVersion(),
 				$this->getMedia()
@@ -120,10 +123,10 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 			\wp_register_script(
 				$handle,
-				$this->manifest->getAssetsManifestItem(static::ADMIN_SCRIPT_URI),
+				$this->setAssetsItem(static::ADMIN_SCRIPT_URI),
 				$this->getAdminScriptDependencies(),
 				$this->getAssetsVersion(),
-				$this->scriptInFooter()
+				\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 			);
 
 			\wp_enqueue_script($handle);

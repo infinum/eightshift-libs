@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\AdminMenus;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Blocks\RenderableBlockInterface;
 use Exception;
@@ -93,7 +93,7 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
 		try {
-			return Components::render($this->getViewComponent(), $attributes);
+			return Helpers::render($this->getViewComponent(), $attributes);
 		} catch (Exception $exception) { // To do: once new libs are released, replace with ComponentException.
 			// Don't let exceptions bubble up. Just render the exception message into the admin menu.
 			return \sprintf(

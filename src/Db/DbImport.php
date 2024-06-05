@@ -25,6 +25,7 @@ if (!function_exists('dbImport')) {
 		// Check if mandatory parameters exists.
 		$from = $args['from'] ?? '';
 		$to = $args['to'] ?? '';
+		$fileName = $args['file_name'] ?? '';
 
 		$errorClass = new class () {
 			use CliHelpers;
@@ -86,39 +87,16 @@ if (!function_exists('dbImport')) {
 			// Define db export file name.
 			$dbFileName = 'latest.sql';
 
-			// Define export file name.
-			$exportFileName = 'latest_dump.tar.gz';
-
-			// Define export folder name.
-			$exportFolderName = 'latest_dump';
-
-			// Remove old db export folder if it exists.
-			if (file_exists($exportFolderName)) {
-				WP_CLI::log((string)shell_exec("rm -rf {$exportFolderName}"));
-				WP_CLI::log("Removed old temp {$exportFolderName} folder.");
-				WP_CLI::log('--------------------------------------------------');
-			}
-
-			// Create new temp folder.
-			mkdir($exportFolderName);
-			WP_CLI::log("Created temp {$exportFolderName} folder.");
-			WP_CLI::log('--------------------------------------------------');
-
-			// Export files to new temp folder.
-			WP_CLI::log((string)shell_exec("tar zxf {$exportFileName} -C {$exportFolderName}"));
-			WP_CLI::log("Exported {$exportFileName} to {$exportFolderName} folder.");
-			WP_CLI::log('--------------------------------------------------');
-
 			// Execute db export.
 			WP_CLI::runcommand('db export --set-gtid-purged=OFF');
-			WP_CLI::log('Db exported successfully.');
+			WP_CLI::log('Db backup exported successfully.');
 			WP_CLI::log('--------------------------------------------------');
 
 			WP_CLI::runcommand('db reset');
 			WP_CLI::log('--------------------------------------------------');
 
 			// Import new database.
-			WP_CLI::runcommand("db import {$exportFolderName}/{$dbFileName}");
+			WP_CLI::runcommand("db import {$fileName}");
 			WP_CLI::log('Database import done.');
 			WP_CLI::log('--------------------------------------------------');
 

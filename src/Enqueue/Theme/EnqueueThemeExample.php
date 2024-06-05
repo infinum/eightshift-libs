@@ -3,32 +3,21 @@
 /**
  * The Theme/Frontend Enqueue specific functionality.
  *
- * @package EightshiftBoilerplate\Enqueue\Theme
+ * @package %g_namespace%\Enqueue\Theme
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Enqueue\Theme;
+namespace %g_namespace%\Enqueue\Theme;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Enqueue\Theme\AbstractEnqueueTheme;
 
 /**
  * Class EnqueueThemeExample
  */
 class EnqueueThemeExample extends AbstractEnqueueTheme
 {
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-	 */
-	public function __construct(ManifestInterface $manifest)
-	{
-		$this->manifest = $manifest;
-	}
-
 	/**
 	 * Register all the hooks
 	 *

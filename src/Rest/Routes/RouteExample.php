@@ -3,16 +3,16 @@
 /**
  * The class register route for $className endpoint
  *
- * @package EightshiftBoilerplate\Rest\Routes
+ * @package %g_namespace%\Rest\Routes
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Rest\Routes;
+namespace %g_namespace%\Rest\Routes;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Rest\Routes\AbstractRoute;
-use EightshiftLibs\Rest\CallableRouteInterface;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Rest\Routes\AbstractRoute;
+use %g_use_libs%\Rest\CallableRouteInterface;
 use WP_REST_Request;
 
 /**

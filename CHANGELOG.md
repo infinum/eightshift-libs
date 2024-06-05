@@ -3,6 +3,61 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.0.0]
+
+### Changed
+- Minimum PHP version is now 8.2.
+- Complete refactor of the block registration process for faster and more efficient block registration.
+- Custom post type and taxonomy registration labels usage is now more consistent and simplified.
+- All enqueue methods now supports new scripts args introduced in WP 6.3.
+- All enqueue methods now implements `manifestCache`interface for fetching manifest data.
+- All AbstractGeolocation method now implements `manifestCache`interface for fetching manifest data.
+
+### Added
+- Internal caching in WordPress transients for faster manifest parsing and block registration.
+- Blocks render method now uses the Helpers::render method for better performance and code readability.
+- New ManifestCache CLI command with example.
+- New CLI commands for config theme and plugin.
+- - `Exception/InvalidBlock.php` method: `missingItemException`.
+- `src/Exception/InvalidManifest.php` methods: `missingManifestKeyException`, `emptyOrErrorManifestException`, `notAllowedManifestPathException`, `notAllowedManifestPathItemException`, `missingCacheTopItemException`, `missingCacheSubItemException`.
+- `src/Exception/InvalidPath.php` method: `missingDirectoryException`, `missingFileException`, `missingFileWithExampleException`, `wrongOrNotAllowedParentPathException`.
+- New `src/Helpers/ApiTrait.php` helper for better API handling.
+- New `recursiveArrayFind` helper for finding items in multidimensional arrays recursively.
+- New casing helpers `camelToSnakeCase`, `kebabToSnakeCase`.
+- New `getCurrentUrl` helper for getting the current URL with query parameters.
+- New `cleanUrlParams` helper for cleaning URL parameters.
+- New project info helpers: `getPluginVersion`, `getPluginName`, `getPluginTextDomain`, `getThemeVersion`, `getThemeName`, `getThemeTextDomain`, `getPluginDetails`.
+- New constants for API handing in the `src/Rest/Routes/AbstractRoute.php`.
+
+### Fixed
+- Typo in block enqueue method for `getBlockFrontentScriptHandle` to `getBlockFrontendScriptHandle` method.
+
+### Removed
+- `src/Blocks/AbstractBlocks.php` method `renderWrapperView` is removed.
+- `Config/AbstractConfigData.php` is removed as it is no longer needed. Use helpers instead.
+- `Config/ConfigDataInterface.php` is removed as it is no longer needed.
+- `LabelGeneratorTrait` is removed as it is no longer needed.
+- All Enqueue methods no longer use `manifest` interface.
+- `Exception/ComponentException.php` is removed as it is no longer needed.
+- `Exception/FailedToLoadView.php` is removed as it is no longer needed.
+- `Exception/FileMissing.php` is removed as it is no longer needed.
+- `src/Exception/InvalidCallback.php` is removed as it is no longer needed.
+- `src/Exception/InvalidNouns.php` is removed as it is no longer needed.
+- `src/Exception/InvalidService.php` is removed as it is no longer needed.
+- `src/Exception/PluginActivationFailure.php` is removed as it is no longer needed.
+- `Exception/InvalidBlock.php` methods: `missingBlocksException`, `missingComponentsException`, `missingNameException`, `missingComponentNameException`, `missingVariationNameException`, `missingViewException`, `missingRenderViewException`, `missingSettingsManifestException`, `missingWrapperManifestException`, `missingComponentManifestException`, `missingWrapperViewException`, `missingNamespaceException`, `missingSettingsKeyException`, `wrongFunctionUsedException`, `missingFileException`, is removed as it is no longer needed.
+- `src/Exception/InvalidManifest.php` method: `missingManifestItemException`.
+- `src/Exception/InvalidPath.php` method: `fromUri`.
+- `outputCssVariablesGlobal` method no longer requires parameters.
+- `outputCssVariables` method is not longer supporting `globalManifest` parameter.
+- all methods from `src/Helpers/ErrorLoggerTrait.php` trait are removed.
+- All manifest classes are removed, `src/Manifest/AbstractManifest.php`, `src/Manifest/ManifestExample.php`, `src/Manifest/ManifestInterface.php`.
+
+### Deprecated
+- `Helpers>Components` class is deprecated and will be removed in the next major release. Use `Helpers>Blocks` class instead.
+- `Helpers>Components>renderPartial` method is deprecated and will be removed in the next major release. Use `Helpers>Helpers>render` method instead.
+- `Helpers>Components>getManifest` method is deprecated and will be removed in the next major release. Use `Helpers>Helpers>getManifestByDir` method instead.
+
 ## [7.1.2] - 2024-01-15
 
 ### Changed
@@ -489,6 +544,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[8.0.0]: https://github.com/infinum/eightshift-libs/compare/7.1.2...8.0.0
 [7.1.2]: https://github.com/infinum/eightshift-libs/compare/7.1.1...7.1.2
 [7.1.1]: https://github.com/infinum/eightshift-libs/compare/7.1.0...7.1.1
 [7.1.0]: https://github.com/infinum/eightshift-libs/compare/7.0.1...7.1.0

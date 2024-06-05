@@ -13,6 +13,8 @@ namespace EightshiftLibs\Helpers;
 
 use DOMDocument;
 use EightshiftLibs\Exception\InvalidManifest;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Class Object Helper
@@ -69,6 +71,29 @@ trait ObjectHelperTrait
 		);
 
 		return $output;
+	}
+
+	/**
+	 * Find array value by key in recursive array.
+	 *
+	 * @param array<mixed> $array Array to find.
+	 * @param string $needle Key name to find.
+	 *
+	 * @return array<int, string>
+	 */
+	public static function recursiveArrayFind(array $array, string $needle): array
+	{
+		$iterator  = new RecursiveArrayIterator($array);
+		$recursive = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+		$aHitList = [];
+
+		foreach ($recursive as $key => $value) {
+			if ($key === $needle) {
+				\array_push($aHitList, $value);
+			}
+		}
+
+		return $aHitList;
 	}
 
 	/**
@@ -133,6 +158,18 @@ trait ObjectHelperTrait
 	}
 
 	/**
+	 * Convert camel to snake case
+	 *
+	 * @param string $input Name to change.
+	 *
+	 * @return string
+	 */
+	public static function camelToSnakeCase($input): string
+	{
+		return \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
+	}
+
+	/**
 	 * Convert string from kebab to camel case.
 	 *
 	 * @param string $stringToConvert    String to convert.
@@ -143,6 +180,18 @@ trait ObjectHelperTrait
 	public static function kebabToCamelCase(string $stringToConvert, string $separator = '-'): string
 	{
 		return \lcfirst(\str_replace($separator, '', \ucwords($stringToConvert, $separator)));
+	}
+
+	/**
+	 * Convert string from kebab to snake case.
+	 *
+	 * @param string $stringToConvert String to convert.
+	 *
+	 * @return string
+	 */
+	public static function kebabToSnakeCase(string $stringToConvert): string
+	{
+		return \str_replace('-', '_', $stringToConvert);
 	}
 
 	/**
@@ -218,5 +267,31 @@ trait ObjectHelperTrait
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Get current URL with params.
+	 *
+	 * @return string
+	 */
+	public static function getCurrentUrl(): string
+	{
+		$port = isset($_SERVER['HTTPS']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTPS'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$host = isset($_SERVER['HTTP_HOST']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_HOST'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		return ($port ? "https" : "http") . "://{$host}{$request}";
+	}
+
+	/**
+	 * Clean url from query params.
+	 *
+	 * @param string $url URL to clean.
+	 *
+	 * @return string
+	 */
+	public static function cleanUrlParams(string $url): string
+	{
+		return \preg_replace('/\\?.*/', '', $url);
 	}
 }

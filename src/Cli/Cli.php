@@ -24,15 +24,16 @@ use EightshiftLibs\Blocks\UseGlobalAssetsCli;
 use EightshiftLibs\Blocks\UseManifestCli;
 use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
+use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
-use EightshiftLibs\Config\ConfigCli;
+use EightshiftLibs\Config\ConfigThemeCli;
+use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\ConfigProject\ConfigProjectCli;
-use EightshiftLibs\Setup\PluginManageCli;
 use EightshiftLibs\View\EscapedViewCli;
 use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
@@ -45,7 +46,6 @@ use EightshiftLibs\Services\ServiceExampleCli;
 use EightshiftLibs\I18n\I18nCli;
 use EightshiftLibs\Login\LoginCli;
 use EightshiftLibs\Main\MainCli;
-use EightshiftLibs\Manifest\ManifestCli;
 use EightshiftLibs\Media\MediaCli;
 use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
@@ -59,11 +59,14 @@ use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Init\InitBlocksCli;
 use EightshiftLibs\Init\InitHeaderFooter;
 use EightshiftLibs\Init\InitPluginCli;
+use EightshiftLibs\Init\InitPluginSetupCli;
 use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
+use EightshiftLibs\Init\InitThemeSetupCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Misc\VersionCli;
+use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
@@ -102,7 +105,8 @@ class Cli
 		ReusableBlocksHeaderFooterCli::class,
 		AnalyticsGdprCli::class,
 		WebPMediaColumnCli::class,
-		ConfigCli::class,
+		ConfigPluginCli::class,
+		ConfigThemeCli::class,
 		ConfigProjectCli::class,
 		AcfMetaCli::class,
 		PostTypeCli::class,
@@ -115,7 +119,6 @@ class Cli
 		I18nCli::class,
 		LoginCli::class,
 		MainCli::class,
-		ManifestCli::class,
 		MediaCli::class,
 		MenuCli::class,
 		ModifyAdminAppearanceCli::class,
@@ -128,6 +131,8 @@ class Cli
 		ThemeOptionsCli::class,
 		EscapedViewCli::class,
 		WpCli::class,
+		ManifestCacheCli::class,
+		PluginCli::class,
 	];
 
 	/**
@@ -141,7 +146,6 @@ class Cli
 		RegenerateWebPMediaCli::class,
 		UseWebPMediaCli::class,
 		VersionCli::class,
-		PluginManageCli::class,
 	];
 
 	/**
@@ -173,6 +177,8 @@ class Cli
 		InitPluginCli::class,
 		InitProjectCli::class,
 		InitThemeCli::class,
+		InitThemeSetupCli::class,
+		InitPluginSetupCli::class,
 	];
 
 	/**
@@ -186,7 +192,7 @@ class Cli
 			...static::CREATE_COMMANDS,
 			...static::BLOCKS_COMMANDS,
 			...static::INIT_COMMANDS,
-			...static::RUN_COMMANDS
+			...static::RUN_COMMANDS,
 		];
 	}
 

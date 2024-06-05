@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 use WP_CLI;
 use WP_CLI\ExitException;
 
@@ -43,7 +43,7 @@ trait CliHelpers
 			// @codeCoverageIgnoreStart
 			// Cannot test the exit.
 		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			// @codeCoverageIgnoreEnd
 		}
 	}
@@ -145,7 +145,7 @@ trait CliHelpers
 	 */
 	protected function getShortenCliPathOutput(string $path, string $ref = 'projectRoot'): string
 	{
-		return \str_replace(Components::getProjectPaths($ref), '', $path);
+		return \str_replace(Helpers::getProjectPaths($ref), '', $path);
 	}
 
 	/**

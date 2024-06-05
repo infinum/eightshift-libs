@@ -41,38 +41,4 @@ final class ComponentException extends InvalidArgumentException implements Gener
 
 		return new ComponentException($output);
 	}
-
-	/**
-	 * Throws exception if unable to locate component.
-	 *
-	 * @param string $component Missing component name.
-	 * @return static
-	 */
-	public static function throwUnableToLocateComponent(string $component): ComponentException
-	{
-		return new ComponentException(
-			\sprintf(
-			/* translators: %s is replaced with the path of the component. */
-				\esc_html__('Unable to locate component by path: %s', 'eightshift-libs'),
-				$component
-			)
-		);
-	}
-
-	/**
-	 * Throws exception if unable to locate partial.
-	 *
-	 * @param string $path Path.
-	 * @return static
-	 */
-	public static function throwUnableToLocatePartial(string $path): ComponentException
-	{
-		return new ComponentException(
-			\sprintf(
-			/* translators: %s is replaced with the path of the partial. */
-				\esc_html__('Unable to locate partial on this path: %s', 'eightshift-libs'),
-				$path
-			)
-		);
-	}
 }

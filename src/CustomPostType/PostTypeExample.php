@@ -3,14 +3,14 @@
 /**
  * File that holds class for PostTypeExample custom post type registration.
  *
- * @package EightshiftBoilerplate\CustomPostType
+ * @package %g_namespace%\CustomPostType
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\CustomPostType;
+namespace %g_namespace%\CustomPostType;
 
-use EightshiftLibs\CustomPostType\AbstractPostType;
+use %g_use_libs%\CustomPostType\AbstractPostType;
 
 /**
  * Class PostTypeExample.
@@ -76,34 +76,21 @@ class PostTypeExample extends AbstractPostType
 	 */
 	protected function getPostTypeArguments(): array
 	{
-		$nouns = [
-			\esc_html_x(
-				'%label%',
-				'post type upper case singular name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%label_lowercaps%',
-				'post type lower case singular name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%plural_label%',
-				'post type upper case plural name',
-				'eightshift-libs'
-			),
-			\esc_html_x(
-				'%plural_label_lowecaps%',
-				'post type lower case plural name',
-				'eightshift-libs'
-			),
-		];
-
-		$labels = $this->getGeneratedLabels($nouns);
-
 		return [
-			'label' => $nouns[0],
-			'labels' => $labels,
+			// phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified
+			'labels' => [
+				'name' => esc_html_x(
+					'%label%',
+					'post type plural name',
+					'%g_textdomain%'
+				),
+				'singular_name' => esc_html_x(
+					'%plural_label%',
+					'post type singular name',
+					'%g_textdomain%'
+				),
+			],
+			// phpcs:enable
 			'public' => true,
 			'publicly_queryable' => true,
 			'show_ui' => true,

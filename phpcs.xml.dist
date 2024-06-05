@@ -20,11 +20,11 @@
 	<file>.</file>
 
 	<!-- Check for PHP cross-version compatibility. -->
-	<config name="testVersion" value="7.4-"/>
+	<config name="testVersion" value="8.2-"/>
 	<rule ref="PHPCompatibilityWP"/>
 
 	<!-- Support only latest 3 WP versions. -->
-	<config name="minimum_supported_wp_version" value="6.0"/>
+	<config name="minimum_supported_wp_version" value="8.0"/>
 
 	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
@@ -55,8 +55,42 @@
 		<exclude-pattern>*/src/Cli/*</exclude-pattern>
 	</rule>
 
+	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceAfter">
+		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
+		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+	</rule>
+
+	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceBefore">
+		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
+		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+	</rule>
+
+	<rule ref="Eightshift.Security.HelpersEscape.OutputNotEscaped">
+		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
+		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified">
+		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
+		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName">
+		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
+		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+	</rule>
+
+	<rule ref="Internal.NoCodeFound">
+		<exclude-pattern>*/src/GitIgnore/GitIgnoreExample.php</exclude-pattern>
+	</rule>
+
 	<!-- Ignore unescaped exceptions. All Eightshift exceptions are escaped. -->
-	<rule ref="Eightshift.Security.ComponentsEscape.ExceptionNotEscaped">
+	<rule ref="Eightshift.Security.HelpersEscape.ExceptionNotEscaped">
 		<severity>0</severity>
 	</rule>
 
@@ -75,17 +109,6 @@
 	</rule>
 	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_fclose">
 		<severity>0</severity>
-	</rule>
-
-	<rule ref="Generic.Files.LineLength">
-		<properties>
-			<property name="lineLimit" value="180" />
-			<property name="ignoreComments" value="true" />
-		</properties>
-	</rule>
-
-	<rule ref="WordPress.WP.GlobalVariablesOverride">
-		<exclude name="WordPress.WP.GlobalVariablesOverride.Prohibited"/>
 	</rule>
 
 	<rule ref="Generic.Files.LineLength">

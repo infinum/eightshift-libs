@@ -1,16 +1,8 @@
 vendor
-node_modules
 docs
 .phpdoc/cache
 
 composer.lock
-package-lock.json
-
-# Tests
-tests/coverage/*
-cliOutput
-.phpunit.result.cache
-latest_dump.tar.gz
 
 # Editor settings
 .vscode/settings.json

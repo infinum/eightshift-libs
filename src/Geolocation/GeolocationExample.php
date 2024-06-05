@@ -3,14 +3,14 @@
 /**
  * Class that adds Geolocation detection.
  *
- * @package EightshiftBoilerplate\Geolocation
+ * @package %g_namespace%\Geolocation
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Geolocation;
+namespace %g_namespace%\Geolocation;
 
-use EightshiftLibs\Geolocation\AbstractGeolocation;
+use %g_use_libs%\Geolocation\AbstractGeolocation;
 
 /**
  * Class Geolocation

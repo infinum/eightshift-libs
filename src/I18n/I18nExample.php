@@ -3,15 +3,16 @@
 /**
  * The Language specific functionality.
  *
- * @package EightshiftBoilerplate\I18n
+ * @package %g_namespace%\I18n
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\I18n;
+namespace %g_namespace%\I18n;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Services\ServiceInterface;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Helpers\Helpers;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class i18n
@@ -38,9 +39,10 @@ class I18nExample implements ServiceInterface
 	 */
 	public function loadThemeTextdomain(): void
 	{
+		$sep = \DIRECTORY_SEPARATOR;
 		\load_theme_textdomain(
 			Config::getProjectName(),
-			Config::getProjectPath('src/I18n/languages')
+			Helpers::getProjectPaths('srcDestination', "I18n{$sep}languages")
 		);
 	}
 
@@ -55,12 +57,13 @@ class I18nExample implements ServiceInterface
 	 */
 	public function setScriptTranslations(): void
 	{
+		$sep = \DIRECTORY_SEPARATOR;
 		$assetsPrefix = Config::getProjectName();
 		$handle = "{$assetsPrefix}-block-editor-scripts";
 		\wp_set_script_translations(
 			$handle,
 			Config::getProjectName(),
-			Config::getProjectPath('src/I18n/languages')
+			Helpers::getProjectPaths('srcDestination', "I18n{$sep}languages")
 		);
 	}
 }

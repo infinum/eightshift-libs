@@ -12,7 +12,8 @@ namespace EightshiftLibs\ConfigProject;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
+use WP_CLI;
 
 /**
  * Class ConfigProjectCli
@@ -47,7 +48,7 @@ class ConfigProjectCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'path' => Components::getProjectPaths('projectRoot'),
+			'path' => Helpers::getProjectPaths('projectRoot'),
 		];
 	}
 
@@ -90,6 +91,8 @@ class ConfigProjectCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -97,28 +100,16 @@ class ConfigProjectCli extends AbstractCli
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs);
+			->renameGlobals($assocArgs);
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite($path, 'wp-config-project.php', $assocArgs);
 
-		$this->cliLog('', 'B');
-		$this->cliLog('Please do the following steps manually to complete the `wp-config-project.php` setup:', 'B');
-		$this->cliLog("1. Open `wp-config.php` file located in the root of your project.", 'B');
-		$this->cliLog("2. Make sure to define `WP_ENVIRONMENT_TYPE` constant to 'development' like so: <?php define( 'WP_ENVIRONMENT_TYPE', 'development' ); ?>`.", 'B');
-		$this->cliLog("3. Make sure to require `wp-config-project.php` (at the end of the file) but before the `wp-settings.php`. Like this:`);", 'B');
-		$this->cliLog("
-		/** Absolute path to the WordPress directory. */
-		if ( !\defined('ABSPATH') ) {
-			define('ABSPATH', \dirname(__FILE__) . '/');
+		if (!\defined('WP_DEBUG')) {
+			WP_CLI::runcommand('config delete WP_DEBUG');
 		}
 
-		// Include wp config for your project.
-		require_once(ABSPATH . 'wp-config-project.php');
-
-		/** Sets up WordPress vars and included files. */
-		require_once(ABSPATH . 'wp-settings.php');
-		", 'B');
+		WP_CLI::runcommand('config set WP_ENVIRONMENT_TYPE development');
+		WP_CLI::runcommand("config set \"configProject\" \"require_once(ABSPATH . 'wp-config-project.php')\" --raw --type='variable'");
 	}
 }

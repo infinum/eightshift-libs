@@ -68,11 +68,9 @@ class InitHeaderFooter extends AbstractCli
 	// @phpstan-ignore-next-line
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
+		$assocArgs = $this->prepareArgs($assocArgs);
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
+		$this->getIntroText($assocArgs);
 
 		// Add initial posts.
 		$createBlocksOptions = [
@@ -93,8 +91,13 @@ class InitHeaderFooter extends AbstractCli
 			WP_CLI::runcommand("option update es-header-partial {$headerReusableBlockId}", $createBlocksOptions);
 		}
 
-		if (!$groupOutput) {
-			$this->cliLogAlert('Header and footer reusable blocks added');
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'Header and footer reusable blocks added.',
+				'success',
+				'Ready to go!'
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 }

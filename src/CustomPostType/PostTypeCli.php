@@ -12,7 +12,7 @@ namespace EightshiftLibs\CustomPostType;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
-use EightshiftLibs\Helpers\Components;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class PostTypeCli
@@ -142,6 +142,8 @@ class PostTypeCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
+		$assocArgs = $this->prepareArgs($assocArgs);
+
 		$this->getIntroText($assocArgs);
 
 		// Get Props.
@@ -161,16 +163,12 @@ class PostTypeCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
-			->renameNamespace($assocArgs)
-			->renameUse($assocArgs)
-			->renameTextDomain($assocArgs)
+			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('slug'), $slug)
 			->searchReplaceString($this->getArgTemplate('rewrite_url'), $rewriteUrl)
 			->searchReplaceString($this->getArgTemplate('rest_endpoint_slug'), $restEndpointSlug)
 			->searchReplaceString($this->getArgTemplate('label'), $label)
-			->searchReplaceString($this->getArgTemplate('label_lowercaps'), \strtolower($label))
-			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
-			->searchReplaceString($this->getArgTemplate('plural_label_lowecaps'), \strtolower($pluralLabel));
+			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel);
 
 		if (!empty($capability)) {
 			$class->searchReplaceString($this->getArgTemplate('capability'), $capability);
@@ -185,6 +183,6 @@ class PostTypeCli extends AbstractCli
 		}
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(Components::getProjectPaths('srcDestination', 'CustomPostType'), "{$className}.php", $assocArgs);
+		$class->outputWrite(Helpers::getProjectPaths('srcDestination', 'CustomPostType'), "{$className}.php", $assocArgs);
 	}
 }

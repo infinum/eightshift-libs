@@ -3,16 +3,15 @@
 /**
  * The Admin Enqueue specific functionality.
  *
- * @package EightshiftBoilerplate\Enqueue\Admin
+ * @package %g_namespace%\Enqueue\Admin
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\Enqueue\Admin;
+namespace %g_namespace%\Enqueue\Admin;
 
-use EightshiftBoilerplate\Config\Config;
-use EightshiftLibs\Manifest\ManifestInterface;
-use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
+use %g_namespace%\Config\Config;
+use %g_use_libs%\Enqueue\Admin\AbstractEnqueueAdmin;
 
 /**
  * Class EnqueueAdminExample
@@ -21,16 +20,6 @@ use EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
  */
 class EnqueueAdminExample extends AbstractEnqueueAdmin
 {
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-	 */
-	public function __construct(ManifestInterface $manifest)
-	{
-		$this->manifest = $manifest;
-	}
-
 	/**
 	 * Register all the hooks
 	 *

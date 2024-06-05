@@ -20,8 +20,7 @@ use EightshiftLibs\Blocks\UseVariationCli;
 use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use EightshiftLibs\Helpers\Components;
-use ReflectionClass;
+use EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class InitBlocksCli
@@ -38,60 +37,38 @@ class InitBlocksCli extends AbstractCli
 		UseWrapperCli::class => [],
 		UseManifestCli::class => [],
 		UseBlockCli::class => [
-			'default' => [
-				'button',
-				'card',
-				'group',
-				'heading',
-				'image',
-				'lists',
-				'paragraph',
-				'site-navigation',
-				'site-footer',
-			],
-			'test' => [
-				'button',
-				'heading',
-			],
+			'button',
+			'card',
+			'group',
+			'heading',
+			'image',
+			'lists',
+			'paragraph',
+			'site-navigation',
+			'site-footer',
 		],
 		UseComponentCli::class => [
-			'default' => [
-				'button',
-				'card',
-				'copyright',
-				'drawer',
-				'footer',
-				'hamburger',
-				'head',
-				'header',
-				'heading',
-				'icon',
-				'image',
-				'lists',
-				'logo',
-				'paragraph',
-				'tracking-before-body-end',
-				'tracking-head',
-				'social-networks',
-				'admin-header-footer-picker',
-			],
-			'test' => [
-				'button',
-				'button-false',
-				'heading',
-				'layout',
-				'responsiveVariables',
-				'typography',
-				'variables',
-			],
+			'admin-header-footer-picker',
+			'button',
+			'card',
+			'copyright',
+			'drawer',
+			'footer',
+			'hamburger',
+			'head',
+			'header',
+			'heading',
+			'icon',
+			'image',
+			'lists',
+			'logo',
+			'paragraph',
+			'tracking-before-body-end',
+			'tracking-head',
+			'social-networks',
 		],
 		UseVariationCli::class => [
-			'default' => [
-				'card-simple'
-			],
-			'test' => [
-				'card-simple'
-			]
+			'card-simple'
 		],
 	];
 
@@ -145,31 +122,26 @@ class InitBlocksCli extends AbstractCli
 	/* @phpstan-ignore-next-line */
 	public function __invoke(array $args, array $assocArgs)
 	{
-		$groupOutput = $assocArgs['groupOutput'] ?? false;
-		$all = $assocArgs['use_all'] ?? false;
+		$assocArgs = $this->prepareArgs($assocArgs);
 
-		if (!$groupOutput) {
-			$this->getIntroText();
-		}
+		$this->getIntroText($assocArgs);
 
-		$this->cliLog("%w╭\n│ %nCreating block editor files", 'mixed');
+		$all = \filter_var($assocArgs['use_all'] ?? false, \FILTER_VALIDATE_BOOLEAN);
 
 		$commands = static::COMMANDS;
 
 		if ($all) {
 			$commands = [];
-			$type = \getenv('ES_TEST') ? 'test' : 'default';
-
 			foreach (\array_keys(static::COMMANDS) as $command) {
 				switch ($command) {
 					case UseBlockCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceCustom'));
+						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceCustom'));
 						break;
 					case UseComponentCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceComponents'));
+						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceComponents'));
 						break;
 					case UseVariationCli::class:
-						$commands[$command][$type] = $this->getFolderItems(Components::getProjectPaths('blocksSourceVariations'));
+						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceVariations'));
 						break;
 					default:
 						$commands[$command] = [];
@@ -180,10 +152,13 @@ class InitBlocksCli extends AbstractCli
 
 		$this->getInitBlocks($assocArgs, $commands);
 
-		$this->cliLog('╰', 'w');
-
-		if (!$groupOutput) {
-			$this->cliLogAlert('Files copied! Run `npm start` to build all the assets.\n\nHappy developing!', 'success', \__('Ready to go!', 'eightshift-libs'));
+		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {
+			$this->cliLogAlert(
+				'All the blocks have been created, you can start working on your awesome project!',
+				'success',
+				'Ready to go!'
+			);
+			$this->getAssetsCommandText();
 		}
 	}
 
@@ -198,34 +173,31 @@ class InitBlocksCli extends AbstractCli
 	private function getInitBlocks(array $assocArgs, array $commands): void
 	{
 		foreach ($commands as $className => $items) {
-			$reflectionClass = new ReflectionClass($className);
-			$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
-
 			if ($items) {
-				$innerItems = $items['default'];
-
-				if (\getenv('ES_TEST')) {
-					$innerItems = $items['test'];
-				}
-
-				$class->__invoke([], \array_merge(
-					$assocArgs,
-					[
-						'name' => \implode(",", $innerItems),
-						'groupOutput' => true,
-						'introOutput' => false,
-						'checkDependency' => false,
-					]
-				));
+				$this->runCliCommand(
+					$className,
+					$this->commandParentName,
+					\array_merge(
+						$assocArgs,
+						[
+							'name' => \implode(",", $items),
+							'checkDependency' => false,
+							self::ARG_GROUP_OUTPUT => true,
+						]
+					)
+				);
 			} else {
-				$class->__invoke([], \array_merge(
-					$assocArgs,
-					[
-						'groupOutput' => true,
-						'introOutput' => false,
-						'checkDependency' => false,
-					]
-				));
+				$this->runCliCommand(
+					$className,
+					$this->commandParentName,
+					\array_merge(
+						$assocArgs,
+						[
+							'checkDependency' => false,
+							self::ARG_GROUP_OUTPUT => true,
+						]
+					)
+				);
 			}
 		}
 	}

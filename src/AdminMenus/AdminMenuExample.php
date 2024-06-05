@@ -3,14 +3,14 @@
 /**
  * File that holds class for admin menu example.
  *
- * @package EightshiftBoilerplate\AdminMenus
+ * @package %g_namespace%\AdminMenus
  */
 
 declare(strict_types=1);
 
-namespace EightshiftBoilerplate\AdminMenus;
+namespace %g_namespace%\AdminMenus;
 
-use EightshiftLibs\AdminMenus\AbstractAdminMenu;
+use %g_use_libs%\AdminMenus\AbstractAdminMenu;
 
 /**
  * AdminMenuExample class.
@@ -52,7 +52,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('%title%', 'eightshift-libs');
+		return \esc_html__('%title%', '%g_textdomain%');
 	}
 
 	/**
@@ -62,7 +62,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getMenuTitle(): string
 	{
-		return \esc_html__('%menu_title%', 'eightshift-libs');
+		return \esc_html__('%menu_title%', '%g_textdomain%');
 	}
 
 	/**
@@ -148,7 +148,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		return [
-			'pageTitle' => \esc_html__('%title%', 'eightshift-libs'),
+			'pageTitle' => \esc_html__('%title%', '%g_textdomain%'),
 		];
 	}
 }
