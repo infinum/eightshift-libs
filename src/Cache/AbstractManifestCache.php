@@ -28,6 +28,13 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	private const TRANSIENT_NAME = 'eightshift_manifest_cache_';
 
 	/**
+	 * Cache key - version.
+	 *
+	 * @var string
+	 */
+	public const VERSION_KEY = 'version';
+
+	/**
 	 * Cache key - blocks.
 	 *
 	 * @var string
@@ -126,6 +133,13 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	abstract public function getCacheName(): string;
 
 	/**
+	 * Get cache version.
+	 *
+	 * @return string.
+	 */
+	abstract public function getVersion(): string;
+
+	/**
 	 * Get cache duration.
 	 * Default is 0 = infinite.
 	 *
@@ -196,6 +210,10 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 */
 	public function setAllCache($ignoreCache = []): void
 	{
+		if (!$this->isCacheVersionValid()) {
+			$this->deleteAllCache();
+		}
+
 		$ignoreCache = \array_flip($ignoreCache);
 
 		if (!isset($ignoreCache[self::TYPE_BLOCKS])) {
@@ -210,6 +228,8 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		if (!isset($ignoreCache[self::TYPE_GEOLOCATION])) {
 			$this->setCache(self::TYPE_GEOLOCATION);
 		}
+
+		$this->setCacheVersion();
 	}
 
 	/**
@@ -224,6 +244,8 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		foreach ($data as $cache) {
 			$this->deleteCache($cache);
 		}
+
+		$this->deleteCacheVersion();
 	}
 
 	/**
@@ -279,10 +301,68 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}") ?: ''; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		if (!$cache) {
-			$this->setCache();
+			$this->setCache($cacheType);
 		}
 
 		return \json_decode($cache, true) ?? [];
+	}
+
+	/**
+	 * Set version cache.
+	 *
+	 * @return void
+	 */
+	protected function setCacheVersion(): void
+	{
+		$name = self::TRANSIENT_NAME . $this->getCacheName() . '_' . self::VERSION_KEY;
+
+		$cache = \get_transient($name);
+
+		if (!$cache) {
+			\set_transient($name, $this->getVersion());
+		}
+	}
+
+	/**
+	 * Get cache version.
+	 *
+	 * @return string
+	 */
+	protected function getCacheVersion(): string
+	{
+		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . '_' . self::VERSION_KEY) ?: ''; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		if (!$cache) {
+			$this->setCacheVersion();
+		}
+
+		return $cache;
+	}
+
+	/**
+	 * Unset cache version.
+	 *
+	 * @return void
+	 */
+	protected function deleteCacheVersion(): void
+	{
+		\delete_transient(self::TRANSIENT_NAME . $this->getCacheName() . '_' . self::VERSION_KEY);
+	}
+
+	/**
+	 * Check if cache version is valid.
+	 *
+	 * @return bool
+	 */
+	protected function isCacheVersionValid(): bool
+	{
+		$cache = $this->getCacheVersion();
+
+		if ($cache === $this->getVersion()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

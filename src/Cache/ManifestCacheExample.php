@@ -27,4 +27,14 @@ class ManifestCacheExample extends AbstractManifestCache
 	{
 		return Config::getProjectTextDomain();
 	}
+
+	/**
+	 * Get cache version.
+	 *
+	 * @return string
+	 */
+	public function getVersion(): string
+	{
+		return Config::getProjectVersion();
+	}
 }
