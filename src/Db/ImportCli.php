@@ -134,7 +134,7 @@ class ImportCli extends AbstractCli
 				)
 			);
 		} catch (ExitException $e) {
-			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		}
 	}
 }

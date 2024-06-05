@@ -67,7 +67,7 @@
 		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
 	</rule>
 
-	<rule ref="Eightshift.Security.ComponentsEscape.OutputNotEscaped">
+	<rule ref="Eightshift.Security.HelpersEscape.OutputNotEscaped">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
 		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
 		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
@@ -90,7 +90,7 @@
 	</rule>
 
 	<!-- Ignore unescaped exceptions. All Eightshift exceptions are escaped. -->
-	<rule ref="Eightshift.Security.ComponentsEscape.ExceptionNotEscaped">
+	<rule ref="Eightshift.Security.HelpersEscape.ExceptionNotEscaped">
 		<severity>0</severity>
 	</rule>
 
