@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [8.0.1]
+## [8.0.2]
 
 ### Fixed
 - Installation of theme and plugin eightshift-frontend-libs repo.
