@@ -14,4 +14,4 @@ parameters:
         - '#^Variable \$renderContent might not be defined\.#'
         - '#^Variable \$this might not be defined\.#'
         - '#^Variable \$templatePath might not be defined\.#'
-    checkGenericClassInNonGenericObjectType: false
+        - identifier: missingType.generics

@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.0.3]
+
+### Added
+- Media support for svg and json.
+- Optimization service class for better performance.
+
+### Fixed
+- Phpstan config fix for theme and plugin setup
+- Project name variable will now be ucfirst on setup.
+- Removed .git folder after the setup.
+
 ## [8.0.2]
 
 ### Fixed
@@ -554,6 +565,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[8.0.3]: https://github.com/infinum/eightshift-libs/compare/8.0.2...8.0.3
 [8.0.2]: https://github.com/infinum/eightshift-libs/compare/8.0.1...8.0.2
 [8.0.1]: https://github.com/infinum/eightshift-libs/compare/8.0.0...8.0.1
 [8.0.0]: https://github.com/infinum/eightshift-libs/compare/7.1.2...8.0.0

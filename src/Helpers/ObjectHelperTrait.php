@@ -28,7 +28,7 @@ trait ObjectHelperTrait
 	 *
 	 * @return boolean
 	 */
-	public function isValidXml(string $xml)
+	public static function isValidXml(string $xml)
 	{
 		\libxml_use_internal_errors(true);
 		$doc = new DOMDocument('1.0', 'utf-8');

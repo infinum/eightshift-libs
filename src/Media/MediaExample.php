@@ -27,6 +27,11 @@ class MediaExample extends AbstractMedia
 	public function register(): void
 	{
 		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 20);
+		\add_filter('upload_mimes', [$this, 'enableMimeTypes']);
+		\add_filter('wp_prepare_attachment_for_js', [$this, 'enableSvgMediaLibraryPreview'], 10, 2);
+		\add_filter('wp_handle_upload_prefilter', [$this, 'validateSvgOnUpload']);
+		\add_filter('wp_check_filetype_and_ext', [$this, 'enableSvgUpload'], 10, 3);
+		\add_filter('wp_check_filetype_and_ext', [$this, 'enableJsonUpload'], 10, 3);
 
 		// WebP.
 		if (\extension_loaded('gd')) {
