@@ -148,22 +148,23 @@ abstract class AbstractMedia implements ServiceInterface
 	 */
 	public function validateSvgOnUpload($response)
 	{
-		if ($response['type'] === 'image/svg+xml' && \class_exists('SimpleXMLElement')) {
-			$path = $response['tmp_name'];
-
-			$svgContent = \file($path);
-			$svgContent = \implode(' ', $svgContent);
-
-			if (\file_exists($path)) {
-				if (!Helpers::isValidXml($svgContent)) {
-					return [
-						'size' => $response,
-						'name' => $response['name'],
-					];
-				}
-			}
+		if ($response['type'] !== 'image/svg+xml' && !\class_exists('SimpleXMLElement')) {
+			return $response;
 		}
-		return $response;
+
+		$path = $response['tmp_name'] ?? '';
+
+		$svgContent = \file($path);
+		$svgContent = \implode(' ', $svgContent);
+
+		if (!\file_exists($path) || Helpers::isValidXml($svgContent)) {
+			return $response;
+		}
+
+		return [
+			'size' => $response,
+			'name' => $response['name'],
+		];
 	}
 
 	/**
