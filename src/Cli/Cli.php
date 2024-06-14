@@ -66,6 +66,7 @@ use EightshiftLibs\Init\InitThemeSetupCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Misc\VersionCli;
+use EightshiftLibs\ModifyAdminAppearance\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
@@ -122,6 +123,7 @@ class Cli
 		MediaCli::class,
 		MenuCli::class,
 		ModifyAdminAppearanceCli::class,
+		OptimizationCli::class,
 		ReadmeCli::class,
 		FieldCli::class,
 		RouteCli::class,

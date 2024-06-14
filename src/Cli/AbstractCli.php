@@ -597,6 +597,10 @@ abstract class AbstractCli implements CliInterface
 	public function renameGeneric(string $keyName, array $args): self
 	{
 		if (isset($args[$keyName])) {
+			if ($keyName === self::ARG_PROJECT_NAME) {
+				$args[$keyName] = \ucfirst($args[$keyName]);
+			}
+
 			$this->fileContents = \str_replace(
 				$this->getArgTemplate($keyName),
 				$args[$keyName],
@@ -641,6 +645,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Removing initial boilerplate setup files', 'C');
+		\shell_exec("cd {$destination} && rm -rf .git"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		\shell_exec("cd {$destination} && rm -rf .github"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		\shell_exec("cd {$destination} && rm CODE_OF_CONDUCT.md"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		\shell_exec("cd {$destination} && rm CHANGELOG.md"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
