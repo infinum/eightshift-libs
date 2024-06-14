@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [8.0.5]
+
+### Fixed
+- optimization wrong service class use constant.
+
 ## [8.0.4]
 
 ### Fixed
@@ -571,6 +576,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[8.0.5]: https://github.com/infinum/eightshift-libs/compare/8.0.4...8.0.5
 [8.0.4]: https://github.com/infinum/eightshift-libs/compare/8.0.3...8.0.4
 [8.0.3]: https://github.com/infinum/eightshift-libs/compare/8.0.2...8.0.3
 [8.0.2]: https://github.com/infinum/eightshift-libs/compare/8.0.1...8.0.2

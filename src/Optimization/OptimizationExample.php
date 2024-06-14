@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace %g_namespace%\Optimization;
 
-use EricssonVendor\EightshiftLibs\Services\ServiceInterface;
+use %g_use_libs%\Services\ServiceInterface;
 
 /**
  * Class that modifies some administrator appearance
