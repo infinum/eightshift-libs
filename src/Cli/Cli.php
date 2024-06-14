@@ -66,7 +66,7 @@ use EightshiftLibs\Init\InitThemeSetupCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Misc\VersionCli;
-use EightshiftLibs\ModifyAdminAppearance\OptimizationCli;
+use EightshiftLibs\Optimization\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;

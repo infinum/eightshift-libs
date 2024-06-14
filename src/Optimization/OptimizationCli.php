@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Class that registers WPCLI command for ModifyAdminAppearance.
+ * Class that registers WPCLI command for Optimization.
  *
- * @package EightshiftLibs\ModifyAdminAppearance
+ * @package EightshiftLibs\Optimization
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\ModifyAdminAppearance;
+namespace EightshiftLibs\Optimization;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;

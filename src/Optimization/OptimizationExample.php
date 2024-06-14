@@ -57,6 +57,10 @@ class OptimizationExample implements ServiceInterface
 	 */
 	public function dequeueScripts(): void
 	{
+		if (!\function_exists('is_plugin_active')) {
+			include_once(\ABSPATH . 'wp-admin/includes/plugin.php');
+		}
+
 		// Query monitor expects jquery to work.
 		if (\is_plugin_active('query-monitor/query-monitor.php') && \is_user_logged_in()) {
 			return;
