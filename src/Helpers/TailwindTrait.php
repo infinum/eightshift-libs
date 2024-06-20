@@ -24,7 +24,7 @@ trait TailwindTrait
 	 *
 	 * @return array<string>
 	 */
-	public static function getBreakpoints($mobileFirst = false)
+	public static function getTwBreakpoints($mobileFirst = false)
 	{
 		$breakpointData = Helpers::getSettingsGlobalVariablesBreakpoints();
 
@@ -50,7 +50,7 @@ trait TailwindTrait
 	 *
 	 * @return string
 	 */
-	public static function getPart($part, $manifest, ...$custom)
+	public static function getTwPart($part, $manifest, ...$custom)
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
 			return '';
@@ -70,7 +70,7 @@ trait TailwindTrait
 	 *
 	 * @return string
 	 */
-	public static function getClasses($attributes, $manifest, ...$custom)
+	public static function getTwClasses($attributes, $manifest, ...$custom)
 	{
 		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
 			return '';
