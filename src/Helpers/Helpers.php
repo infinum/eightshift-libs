@@ -74,6 +74,11 @@ class Helpers
 	use DeprecatedTrait;
 
 	/**
+	 * TailwindCSS trait.
+	 */
+	use TailwindTrait;
+
+	/**
 	 * Get all project paths allowed to be used in the different render methods.
 	 *
 	 * @var array<int, string>
