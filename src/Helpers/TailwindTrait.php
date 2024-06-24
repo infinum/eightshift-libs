@@ -111,7 +111,7 @@ trait TailwindTrait
 						return $curr;
 					}
 
-					$currentClasses = $twClasses[$value[$breakpoint]];
+					$currentClasses = $twClasses[$value[$breakpoint]] ?? '';
 
 					if (!$currentClasses) {
 						return $curr;
