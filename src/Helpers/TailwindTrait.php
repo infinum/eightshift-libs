@@ -107,7 +107,7 @@ trait TailwindTrait
 				$valueKeys = \array_keys($value);
 
 				$responsiveClasses = \array_reduce($valueKeys, function ($curr, $breakpoint) use ($twClasses, $value) {
-					if ($breakpoint === '_mobileFirst') {
+					if ($breakpoint === '_desktopFirst') {
 						return $curr;
 					}
 
