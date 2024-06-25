@@ -20,11 +20,11 @@ trait TailwindTrait
 	/**
 	 * Get Tailwind breakpoints.
 	 *
-	 * @param bool $mobileFirst Whether to use mobile-first breakpoints.
+	 * @param bool $desktopFirst Whether to use desktop-first breakpoints.
 	 *
 	 * @return array<string>
 	 */
-	public static function getTwBreakpoints($mobileFirst = false)
+	public static function getTwBreakpoints($desktopFirst = false)
 	{
 		$breakpointData = Helpers::getSettingsGlobalVariablesBreakpoints();
 
@@ -32,7 +32,7 @@ trait TailwindTrait
 
 		\usort($breakpointNames, fn($a, $b) => $breakpointData[$a] - $breakpointData[$b]);
 
-		if ($mobileFirst) {
+		if ($desktopFirst) {
 			return \array_map(fn($breakpoint) => "max-{$breakpoint}", $breakpointNames);
 		}
 
