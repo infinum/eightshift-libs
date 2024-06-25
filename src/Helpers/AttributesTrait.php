@@ -244,11 +244,13 @@ trait AttributesTrait
 	{
 		$defaultAttributes = [];
 
-		if (!\is_iterable($manifest['attributes'])) {
+		$attrs = $manifest['attributes'] ?? [];
+
+		if (!\is_iterable($attrs)) {
 			return [];
 		}
 
-		foreach ($manifest['attributes'] as $itemKey => $itemValue) {
+		foreach ($attrs as $itemKey => $itemValue) {
 			// Get the correct key for the check in the attributes object.
 			$newKey = self::getAttrKey($itemKey, $attributes, $manifest);
 
