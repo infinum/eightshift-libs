@@ -57,32 +57,42 @@
 
 	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceAfter">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
-		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceBefore">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
-		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="Eightshift.Security.HelpersEscape.OutputNotEscaped">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
-		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
-		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/Init/theme/</exclude-pattern>
-		<exclude-pattern>*/src/Init/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/standard/plugin/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/theme/</exclude-pattern>
+		<exclude-pattern>*/src/Init/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="Internal.NoCodeFound">

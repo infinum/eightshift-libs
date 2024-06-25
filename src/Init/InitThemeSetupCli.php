@@ -108,6 +108,12 @@ class InitThemeSetupCli extends AbstractCli
 					'description' => 'Define Eightshift frontend libs version.',
 					'optional' => true,
 				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_FRONTEND_LIBS_TYPE,
+					'description' => 'Define Eightshift frontend libs type.',
+					'optional' => true,
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -129,11 +135,12 @@ class InitThemeSetupCli extends AbstractCli
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
 		$textdomain = $assocArgs[self::ARG_TEXTDOMAIN];
+		$frontendLibsType = $assocArgs[self::ARG_FRONTEND_LIBS_TYPE];
 
 		$this->getIntroText($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
-		$dir = __DIR__ . "{$sep}theme";
+		$dir = __DIR__ . "{$sep}{$frontendLibsType}{$sep}theme";
 		$files = \array_diff(\scandir($dir), ['..', '.']);
 
 		$destionation = Helpers::getProjectPaths('themeRoot');
@@ -160,6 +167,7 @@ class InitThemeSetupCli extends AbstractCli
 		$this->initMandatoryAfter(
 			$assocArgs[self::ARG_LIBS_VERSION],
 			$assocArgs[self::ARG_FRONTEND_LIBS_VERSION],
+			$assocArgs[self::ARG_FRONTEND_LIBS_TYPE],
 			$newDestionation
 		);
 		$this->cleanUpInitialBoilerplate($newDestionation);

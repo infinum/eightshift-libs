@@ -60,6 +60,8 @@ class UseManifestCli extends AbstractBlocksCli
 
 				Manifest.json file will be created from this file:
 				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/manifest.json
+				or
+				https://github.com/infinum/eightshift-frontend-libs-tailwind/tree/develop/blocks/init/src/Blocks/manifest.json
 			"),
 		];
 	}
@@ -78,7 +80,7 @@ class UseManifestCli extends AbstractBlocksCli
 					'name' => 'manifest.json',
 				],
 			),
-			Helpers::getProjectPaths('blocksSource'),
+			$this->isTailwind() ? Helpers::getProjectPaths('blocksTailwindSource') : Helpers::getProjectPaths('blocksSource'),
 			Helpers::getProjectPaths('blocksDestination'),
 			'file'
 		);

@@ -91,6 +91,8 @@ class UseBlockCli extends AbstractBlocksCli
 
 				All our blocks can be found here:
 				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/custom
+				or
+				https://github.com/infinum/eightshift-frontend-libs-tailwind/tree/develop/blocks/init/src/Blocks/custom
 			"),
 		];
 	}
@@ -104,11 +106,9 @@ class UseBlockCli extends AbstractBlocksCli
 
 		$this->moveItems(
 			$assocArgs,
-			Helpers::getProjectPaths('blocksSourceCustom'),
+			$this->isTailwind() ? Helpers::getProjectPaths('blocksSourceTailwindCustom') : Helpers::getProjectPaths('blocksSourceCustom'),
 			Helpers::getProjectPaths('blocksDestinationCustom'),
-			'block',
-			false,
-			Helpers::getProjectPaths('blocksPrivateSourceCustom')
+			'block'
 		);
 	}
 }

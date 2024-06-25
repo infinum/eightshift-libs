@@ -226,7 +226,7 @@ class Helpers
 		}
 
 		$flibsPath = ["node_modules", "@eightshift", "frontend-libs", "blocks", "init"];
-		$fPLibsPath = ["node_modules", "@eightshift", "frontend-libs-private", "blocks", "init"];
+		$fTailwindLibsPath = ["node_modules", "@eightshift", "frontend-libs-tailwind", "blocks", "init"];
 		$libsPath = ["vendor", "infinum", "eightshift-libs"];
 		$libsPrefixedPath = ["vendor-prefixed", "infinum", "eightshift-libs"];
 		$testsDataPath = ["tests", "data"];
@@ -317,8 +317,22 @@ class Helpers
 					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
 				}
 				break;
-			case 'blocksPrivateSource':
-				$path = self::joinPaths([...$fPLibsPath, ...$blocksPath]);
+			case 'blocksGlobalAssetsTailwindSource':
+				$path = self::joinPaths([...$fTailwindLibsPath, $assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, $assetsPath]);
+				}
+				break;
+			case 'blocksAssetsTailwindSource':
+				$path = self::joinPaths([...$fTailwindLibsPath, ...$blocksPath, $assetsPath]);
+
+				if (\getenv('ES_TEST')) {
+					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $assetsPath]);
+				}
+				break;
+			case 'blocksTailwindSource':
+				$path = self::joinPaths([...$fTailwindLibsPath, ...$blocksPath]);
 
 				if (\getenv('ES_TEST')) {
 					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
@@ -329,26 +343,27 @@ class Helpers
 			case 'custom':
 			case 'blocksDestinationCustom':
 			case 'blocksSourceCustom':
-			case 'blocksPrivateSourceCustom':
+			case 'blocksSourceTailwindCustom':
 				$name = 'custom';
 				break;
 			case 'component':
 			case 'components':
 			case 'blocksDestinationComponents':
 			case 'blocksSourceComponents':
-			case 'blocksPrivateSourceComponents':
+			case 'blocksSourceTailwindComponents':
 				$name = 'components';
 				break;
 			case 'variation':
 			case 'variations':
 			case 'blocksDestinationVariations':
 			case 'blocksSourceVariations':
-			case 'blocksPrivateSourceVariations':
+			case 'blocksSourceTailwindVariations':
 				$name = 'variations';
 				break;
 			case 'wrapper':
 			case 'blocksDestinationWrapper':
 			case 'blocksSourceWrapper':
+			case 'blocksSourceTailwindWrapper':
 				$name = 'wrapper';
 				break;
 			case 'blocksGlobalAssetsDestination':
@@ -385,11 +400,11 @@ class Helpers
 					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);
 				}
 				break;
-
-			case 'blocksPrivateSourceCustom':
-			case 'blocksPrivateSourceComponents':
-			case 'blocksPrivateSourceVariations':
-				$path = self::joinPaths([...$fPLibsPath, ...$blocksPath, $name]);
+			case 'blocksSourceTailwindCustom':
+			case 'blocksSourceTailwindComponents':
+			case 'blocksSourceTailwindVariations':
+			case 'blocksSourceTailwindWrapper':
+				$path = self::joinPaths([...$fTailwindLibsPath, ...$blocksPath, $name]);
 
 				if (\getenv('ES_TEST')) {
 					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);

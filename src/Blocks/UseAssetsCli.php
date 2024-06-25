@@ -61,6 +61,8 @@ class UseAssetsCli extends AbstractBlocksCli
 
 				Assets will be created from this folder:
 				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/assets
+				or
+				https://github.com/infinum/eightshift-frontend-libs-tailwind/tree/develop/blocks/init/src/Blocks/assets
 			"),
 		];
 	}
@@ -79,7 +81,7 @@ class UseAssetsCli extends AbstractBlocksCli
 					'name' => 'assets',
 				],
 			),
-			Helpers::getProjectPaths('blocksAssetsSource'),
+			$this->isTailwind() ? Helpers::getProjectPaths('blocksAssetsTailwindSource') : Helpers::getProjectPaths('blocksAssetsSource'),
 			Helpers::getProjectPaths('blocksAssetsDestination'),
 			'assets folder',
 			true
