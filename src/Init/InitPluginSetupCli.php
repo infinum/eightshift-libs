@@ -108,6 +108,12 @@ class InitPluginSetupCli extends AbstractCli
 					'description' => 'Define Eightshift frontend libs version.',
 					'optional' => true,
 				],
+				[
+					'type' => 'assoc',
+					'name' => self::ARG_FRONTEND_LIBS_TYPE,
+					'description' => 'Define Eightshift frontend libs type.',
+					'optional' => true,
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -164,6 +170,7 @@ class InitPluginSetupCli extends AbstractCli
 		$this->initMandatoryAfter(
 			$assocArgs[self::ARG_LIBS_VERSION],
 			$assocArgs[self::ARG_FRONTEND_LIBS_VERSION],
+			$assocArgs[self::ARG_FRONTEND_LIBS_TYPE],
 			$newDestionation
 		);
 		$this->cleanUpInitialBoilerplate($newDestionation);
