@@ -1,0 +1,23 @@
+{
+	"name": "%g_textdomain%",
+	"description": "%g_project_description%",
+	"private": true,
+	"license": "MIT",
+	"scripts": {
+		"lintStyle": "stylelint **/*.scss",
+		"lintJs": "eslint src/ assets/",
+		"lint": "npm run lintJs && npm run lintStyle && composer standards:check -- --filter=gitstaged",
+		"start": "webpack --watch --mode development",
+		"build": "webpack --mode production"
+	},
+	"devDependencies": {
+		"husky": "^9.0.11",
+		"webpack": "^5.91.0",
+		"webpack-cli": "^5.1.4"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run lint"
+		}
+	}
+}

@@ -284,7 +284,7 @@ abstract class AbstractCli implements CliInterface
 			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? \site_url(),
 			self::ARG_LIBS_VERSION => $args[self::ARG_LIBS_VERSION] ?? '',
 			self::ARG_FRONTEND_LIBS_VERSION => $args[self::ARG_FRONTEND_LIBS_VERSION] ?? '',
-			self::ARG_FRONTEND_LIBS_TYPE => $args[self::ARG_FRONTEND_LIBS_TYPE] ?? 'standard',
+			self::ARG_FRONTEND_LIBS_TYPE => \strtolower($args[self::ARG_FRONTEND_LIBS_TYPE] ?? 'standard'),
 			self::ARG_SKIP_EXISTING => true,
 			self::ARG_GROUP_OUTPUT => true,
 		];

@@ -135,11 +135,12 @@ class InitThemeSetupCli extends AbstractCli
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
 		$textdomain = $assocArgs[self::ARG_TEXTDOMAIN];
+		$frontendLibsType = $assocArgs[self::ARG_FRONTEND_LIBS_TYPE];
 
 		$this->getIntroText($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
-		$dir = __DIR__ . "{$sep}theme";
+		$dir = __DIR__ . "{$sep}{$frontendLibsType}{$sep}theme";
 		$files = \array_diff(\scandir($dir), ['..', '.']);
 
 		$destionation = Helpers::getProjectPaths('themeRoot');

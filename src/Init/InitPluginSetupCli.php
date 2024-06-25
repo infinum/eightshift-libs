@@ -135,11 +135,12 @@ class InitPluginSetupCli extends AbstractCli
 		$assocArgs = $this->prepareSetupArgs($assocArgs);
 
 		$textdomain = $assocArgs[self::ARG_TEXTDOMAIN];
+		$frontendLibsType = $assocArgs[self::ARG_FRONTEND_LIBS_TYPE];
 
 		$this->getIntroText($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
-		$dir = __DIR__ . "{$sep}plugin";
+		$dir = __DIR__ . "{$sep}{$frontendLibsType}{$sep}plugin";
 		$files = \array_diff(\scandir($dir), ['..', '.']);
 
 		$destionation = Helpers::getProjectPaths('pluginRoot');
