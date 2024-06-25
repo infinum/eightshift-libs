@@ -343,23 +343,27 @@ class Helpers
 			case 'custom':
 			case 'blocksDestinationCustom':
 			case 'blocksSourceCustom':
+			case 'blocksSourceTailwindCustom':
 				$name = 'custom';
 				break;
 			case 'component':
 			case 'components':
 			case 'blocksDestinationComponents':
 			case 'blocksSourceComponents':
+			case 'blocksSourceTailwindComponents':
 				$name = 'components';
 				break;
 			case 'variation':
 			case 'variations':
 			case 'blocksDestinationVariations':
 			case 'blocksSourceVariations':
+			case 'blocksSourceTailwindVariations':
 				$name = 'variations';
 				break;
 			case 'wrapper':
 			case 'blocksDestinationWrapper':
 			case 'blocksSourceWrapper':
+			case 'blocksSourceTailwindWrapper':
 				$name = 'wrapper';
 				break;
 			case 'blocksGlobalAssetsDestination':
