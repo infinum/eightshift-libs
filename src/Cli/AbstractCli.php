@@ -1088,4 +1088,14 @@ abstract class AbstractCli implements CliInterface
 			$args,
 		));
 	}
+
+	/**
+	 * Check if the project is using Tailwind.
+	 *
+	 * @return bool
+	 */
+	public function isTailwind(): bool
+	{
+		return \file_exists(Helpers::getProjectPaths('blocksTailwindSource'));
+	}
 }

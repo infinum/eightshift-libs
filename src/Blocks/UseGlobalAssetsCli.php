@@ -61,6 +61,8 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 
 				Global assets will be created from this folder:
 				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/assets
+				or
+				https://github.com/infinum/eightshift-frontend-libs-tailwind/tree/develop/blocks/init/assets
 			"),
 		];
 	}
@@ -79,7 +81,7 @@ class UseGlobalAssetsCli extends AbstractBlocksCli
 					'name' => 'assets',
 				],
 			),
-			Helpers::getProjectPaths('blocksGlobalAssetsSource'),
+			$this->isTailwind() ? Helpers::getProjectPaths('blocksGlobalAssetsTailwindSource') : Helpers::getProjectPaths('blocksGlobalAssetsSource'),
 			Helpers::getProjectPaths('blocksGlobalAssetsDestination'),
 			'assets folder',
 			true
