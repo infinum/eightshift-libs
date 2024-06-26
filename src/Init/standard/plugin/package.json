@@ -19,5 +19,8 @@
 		"hooks": {
 			"pre-commit": "npm run lint"
 		}
-	}
+	},
+	"browserslist": [
+		">= 0.25%"
+	]
 }
