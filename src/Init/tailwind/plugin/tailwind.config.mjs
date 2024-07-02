@@ -7,7 +7,7 @@ import animate from 'tailwindcss-animate';
 import { themeColors } from './assets/scripts/theme-colors';
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
 	content: {
 		files: ['./src/**/*.{html,js,php,json}', './**/*.php'],
 		transform: processEightshiftClasses(Object.keys(globalManifest.globalVariables.breakpoints)),

@@ -7,7 +7,7 @@
  */
 
 use %g_use_libs%\Helpers\Helpers;
-use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
+use %g_namespace%\ThemeOptions\ThemeOptions;
 
 ?>
 <!DOCTYPE html>
@@ -15,9 +15,7 @@ use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
 <head>
 	<?php
 	// Head component.
-	echo Helpers::render('head', [
-		'icon' => Helpers::getAsset('logo.svg'),
-	]);
+	echo Helpers::render('head');
 
 	wp_head();
 	?>
@@ -26,8 +24,8 @@ use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
 
 <?php
 // Header reusable block.
-$headerPartialId = get_option(ReusableBlocksHeaderFooter::HEADER_PARTIAL) ?? '';
-ReusableBlocksHeaderFooter::renderPartial($headerPartialId);
+$headerPartialId = get_option(ThemeOptions::OPTION_NAME)['header'] ?? '';
+ThemeOptions::renderPartial($headerPartialId);
 ?>
 
-<main class="main-content" id="main-content">
+<main class="main-content layout-base" id="main-content">

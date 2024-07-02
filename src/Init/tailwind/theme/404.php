@@ -6,8 +6,12 @@
  * @package %g_namespace%
  */
 
+use %g_namespace%\ThemeOptions\ThemeOptions;
+
 get_header();
 
-esc_html_e('404 - not found', '%g_textdomain%');
+// Header reusable block.
+$partialId = get_option(ThemeOptions::OPTION_NAME)['fourOhFour'] ?? '';
+ThemeOptions::renderPartial($partialId);
 
 get_footer();

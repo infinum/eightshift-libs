@@ -6,16 +6,21 @@
  * @package %g_namespace%
  */
 
-use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
+use %g_namespace%\ThemeOptions\ThemeOptions;
 
 ?>
 
 </main>
 
+<footer class="layout-base">
 <?php
-$footerPartialId = get_option(ReusableBlocksHeaderFooter::FOOTER_PARTIAL) ?? '';
-ReusableBlocksHeaderFooter::renderPartial($footerPartialId);
+// Footer reusable block.
+$footerPartialId = get_option(ThemeOptions::OPTION_NAME)['footer'] ?? '';
+ThemeOptions::renderPartial($footerPartialId);
+?>
+</footer>
 
+<?php
 wp_footer();
 ?>
 </body>

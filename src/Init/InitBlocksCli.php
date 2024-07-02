@@ -135,13 +135,13 @@ class InitBlocksCli extends AbstractCli
 			foreach (\array_keys(static::COMMANDS) as $command) {
 				switch ($command) {
 					case UseBlockCli::class:
-						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceCustom'));
+						$commands[$command] = $this->getFolderItems($this->isTailwind() ? Helpers::getProjectPaths('blocksSourceTailwindCustom') : Helpers::getProjectPaths('blocksSourceCustom'));
 						break;
 					case UseComponentCli::class:
-						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceComponents'));
+						$commands[$command] = $this->getFolderItems($this->isTailwind() ? Helpers::getProjectPaths('blocksSourceTailwindComponents') : Helpers::getProjectPaths('blocksSourceComponents'));
 						break;
 					case UseVariationCli::class:
-						$commands[$command] = $this->getFolderItems(Helpers::getProjectPaths('blocksSourceVariations'));
+						$commands[$command] = $this->getFolderItems($this->isTailwind() ? Helpers::getProjectPaths('blocksSourceTailwindVariations') : Helpers::getProjectPaths('blocksSourceVariations'));
 						break;
 					default:
 						$commands[$command] = [];
