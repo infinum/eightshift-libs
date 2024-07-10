@@ -179,7 +179,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 			],
 		];
 
-		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
+		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::COUNTRIES_KEY, AbstractManifestCache::TYPE_GEOLOCATION);
 
 		foreach ($data as $country) {
 			$code = $country['Code'] ?? '';
