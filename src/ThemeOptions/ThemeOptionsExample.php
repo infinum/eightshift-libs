@@ -12,8 +12,6 @@ namespace %g_namespace%\ThemeOptions;
 use %g_use_libs%\Services\ServiceInterface;
 use WP_Query;
 
-use %g_use_libs%\Services\ServiceInterface;
-
 /**
  * Class ThemeOptionsExample
  */

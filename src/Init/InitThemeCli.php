@@ -21,6 +21,7 @@ use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
+use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 
 /**
  * Class InitThemeCli
@@ -48,6 +49,7 @@ class InitThemeCli extends AbstractCli
 		],
 		'tailwind' => [
 			AdminThemeOptionsMenuCli::class,
+			ThemeOptionsCli::class,
 		],
 	];
 
