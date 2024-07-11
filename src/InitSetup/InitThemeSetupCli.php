@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Class that registers WP-CLI command initial setup of plugin project using npx command.
+ * Class that registers WP-CLI command initial setup of theme project using npx command.
  *
- * @package EightshiftLibs\Init
+ * @package EightshiftLibs\InitSetup
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\Init;
+namespace EightshiftLibs\InitSetup;
 
 use EightshiftLibs\Cli\AbstractCli;
-use EightshiftLibs\Cli\ParentGroups\CliInit;
+use EightshiftLibs\Cli\ParentGroups\CliInitSetup;
 use EightshiftLibs\Helpers\Helpers;
 use WP_CLI;
 
 /**
- * Class InitPluginSetupCli
+ * Class InitThemeSetupCli
  */
-class InitPluginSetupCli extends AbstractCli
+class InitThemeSetupCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -27,7 +27,7 @@ class InitPluginSetupCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliInit::COMMAND_NAME;
+		return CliInitSetup::COMMAND_NAME;
 	}
 
 	/**
@@ -37,7 +37,7 @@ class InitPluginSetupCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'plugin-setup';
+		return 'theme';
 	}
 
 	/**
@@ -58,7 +58,7 @@ class InitPluginSetupCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Setup plugin project with initial boilerplate used with npx command. This command should never be run manually.',
+			'shortdesc' => 'Setup theme project with initial boilerplate used with npx command. This command should never be run manually.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -118,12 +118,12 @@ class InitPluginSetupCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to setup plugin from the initial boilerplate.
+				Used to setup theme from the initial boilerplate.
 				This command should never be run manually as it will break your project.
 
 				## EXAMPLES
 
-				# Setup plugin project with initial boilerplate:
+				# Setup theme project with initial boilerplate:
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 			"),
 		];
@@ -140,13 +140,13 @@ class InitPluginSetupCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		$sep = \DIRECTORY_SEPARATOR;
-		$dir = __DIR__ . "{$sep}{$frontendLibsType}{$sep}plugin";
+		$dir = __DIR__ . "{$sep}{$frontendLibsType}{$sep}theme";
 		$files = \array_diff(\scandir($dir), ['..', '.']);
 
-		$destionation = Helpers::getProjectPaths('pluginRoot');
+		$destionation = Helpers::getProjectPaths('themeRoot');
 
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Moving plugin mandatory files", 'C');
+		$this->cliLog("Moving theme mandatory files", 'C');
 
 		foreach ($files as $file) {
 			if ($file === '.' || $file === '..') {
@@ -161,12 +161,8 @@ class InitPluginSetupCli extends AbstractCli
 		$newDestionation = Helpers::joinPaths([\dirname($destionation), $textdomain]);
 
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Changing the setup plugin to the new plugin with name {$textdomain}", 'C');
+		$this->cliLog("Changing the setup theme to the new theme with name {$textdomain}", 'C');
 		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
-
-		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Changing the setup plugin main PHP file to the new plugin name {$textdomain}.php", 'C');
-		\rename(Helpers::joinPaths([$newDestionation, 'eightshift-boilerplate-plugin.php']), Helpers::joinPaths([$newDestionation, "{$textdomain}.php"])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
 		$this->initMandatoryAfter(
 			$assocArgs[self::ARG_LIBS_VERSION],
@@ -177,19 +173,19 @@ class InitPluginSetupCli extends AbstractCli
 		$this->cleanUpInitialBoilerplate($newDestionation);
 
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Activating new plugin", 'C');
-		WP_CLI::runcommand("plugin activate {$textdomain}");
+		$this->cliLog("Activating new theme", 'C');
+		WP_CLI::runcommand("theme activate {$textdomain}");
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Installing plugin service classes and blocks", 'C');
-		WP_CLI::runcommand(\sprintf("boilerplate init plugin --%s=true", self::ARG_GROUP_OUTPUT));
+		$this->cliLog("Installing theme service classes and blocks", 'C');
+		WP_CLI::runcommand(\sprintf("boilerplate init theme --%s=true", self::ARG_GROUP_OUTPUT));
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Building the new plugin assets", 'C');
+		$this->cliLog("Building the new theme assets", 'C');
 		\shell_exec("cd {$newDestionation} && npm run build"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Finished", 'C');
 		$this->cliLogAlert(
-			"All the files have been created and you can start working on your awesome plugin!
-			Make sure to change directory in your terminal to the new plugin directory by running:\n
+			"All the files have been created and you can start working on your awesome theme!
+			Make sure to change directory in your terminal to the new theme directory by running:\n\n
 			cd {$newDestionation}",
 			'success',
 			'Almost there!'

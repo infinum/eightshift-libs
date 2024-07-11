@@ -31,6 +31,7 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
+use EightshiftLibs\Cli\ParentGroups\CliInitSetup;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Config\ConfigPluginCli;
@@ -93,6 +94,7 @@ class Cli
 		CliRun::class,
 		CliBlocks::class,
 		CliInit::class,
+		CliInitSetup::class,
 	];
 
 	/**
