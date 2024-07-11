@@ -111,8 +111,8 @@ class InitThemeCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		$commands = [
-			...static::COMMANDS['common'],
 			...($this->isTailwind() ? static::COMMANDS['tailwind'] : static::COMMANDS['standard']),
+			...static::COMMANDS['common'],
 		];
 
 		foreach ($commands as $item) {
