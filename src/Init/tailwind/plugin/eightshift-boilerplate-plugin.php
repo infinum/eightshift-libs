@@ -91,5 +91,5 @@ if (\class_exists(Main::class)) {
  * Run all WPCLI commands.
  */
 if (\class_exists(Cli::class)) {
-	(new Cli())->load('boilerplate');
+	(new Cli())->load('boilerplate-plugin');
 }
