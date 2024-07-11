@@ -661,19 +661,15 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Run commands after initial setup.
+	 * Run commands after initial setup - backend.
 	 *
 	 * @param string $libsVersion Version of libs to install.
-	 * @param string $frontendLibsVersion Version of frontend libs to install.
-	 * @param string $frontendLibsType Type of frontend libs to install.
 	 * @param string $destination Destination path.
 	 *
 	 * @return void
 	 */
-	public function initMandatoryAfter(
+	public function initMandatoryBackendAfter(
 		string $libsVersion,
-		string $frontendLibsVersion,
-		string $frontendLibsType,
 		string $destination
 	): void {
 		$this->cliLog('--------------------------------------------------', 'C');
@@ -689,6 +685,22 @@ abstract class AbstractCli implements CliInterface
 		} else {
 			\shell_exec("cd {$destination} && composer require infinum/eightshift-libs"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		}
+	}
+
+	/**
+	 * Run commands after initial setup - frontend.
+	 *
+	 * @param string $frontendLibsVersion Version of frontend libs to install.
+	 * @param string $frontendLibsType Type of frontend libs to install.
+	 * @param string $destination Destination path.
+	 *
+	 * @return void
+	 */
+	public function initMandatoryFrontendAfter(
+		string $frontendLibsVersion,
+		string $frontendLibsType,
+		string $destination
+	): void {
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running npm install', 'C');
 

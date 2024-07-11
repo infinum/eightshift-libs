@@ -168,12 +168,17 @@ class InitPluginSetupCli extends AbstractCli
 		$this->cliLog("Changing the setup plugin main PHP file to the new plugin name {$textdomain}.php", 'C');
 		\rename(Helpers::joinPaths([$newDestionation, 'eightshift-boilerplate-plugin.php']), Helpers::joinPaths([$newDestionation, "{$textdomain}.php"])); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
-		$this->initMandatoryAfter(
+		$this->initMandatoryBackendAfter(
 			$assocArgs[self::ARG_LIBS_VERSION],
+			$newDestionation
+		);
+
+		$this->initMandatoryFrontendAfter(
 			$assocArgs[self::ARG_FRONTEND_LIBS_VERSION],
 			$assocArgs[self::ARG_FRONTEND_LIBS_TYPE],
 			$newDestionation
 		);
+
 		$this->cleanUpInitialBoilerplate($newDestionation);
 
 		$this->cliLog('--------------------------------------------------', 'C');
@@ -181,7 +186,7 @@ class InitPluginSetupCli extends AbstractCli
 		WP_CLI::runcommand("plugin activate {$textdomain}");
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Installing plugin service classes and blocks", 'C');
-		WP_CLI::runcommand(\sprintf("boilerplate init plugin --%s=true", self::ARG_GROUP_OUTPUT));
+		WP_CLI::runcommand(\sprintf("boilerplate-plugin init plugin --%s=true", self::ARG_GROUP_OUTPUT));
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog("Building the new plugin assets", 'C');
 		\shell_exec("cd {$newDestionation} && npm run build"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec

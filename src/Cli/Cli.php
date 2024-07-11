@@ -59,11 +59,12 @@ use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Init\InitBlocksCli;
+use EightshiftLibs\Init\InitPluginCleanCli;
 use EightshiftLibs\Init\InitPluginCli;
-use EightshiftLibs\Init\InitPluginSetupCli;
 use EightshiftLibs\Init\InitProjectCli;
 use EightshiftLibs\Init\InitThemeCli;
-use EightshiftLibs\Init\InitThemeSetupCli;
+use EightshiftLibs\InitSetup\InitPluginSetupCli;
+use EightshiftLibs\InitSetup\InitThemeSetupCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Misc\VersionCli;
@@ -181,10 +182,20 @@ class Cli
 		InitAllCli::class,
 		InitBlocksCli::class,
 		InitPluginCli::class,
+		InitPluginCleanCli::class,
 		InitProjectCli::class,
 		InitThemeCli::class,
+	];
+
+	/**
+	 * All commands used for setting up. Command prefix - init-setup.
+	 *
+	 * @var class-string[]
+	 */
+	public const INIT_SETUP_COMMANDS = [
 		InitThemeSetupCli::class,
 		InitPluginSetupCli::class,
+		InitPluginCleanCli::class,
 	];
 
 	/**
@@ -198,6 +209,7 @@ class Cli
 			...static::CREATE_COMMANDS,
 			...static::BLOCKS_COMMANDS,
 			...static::INIT_COMMANDS,
+			...static::INIT_SETUP_COMMANDS,
 			...static::RUN_COMMANDS,
 		];
 	}

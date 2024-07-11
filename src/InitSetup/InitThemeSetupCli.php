@@ -164,12 +164,17 @@ class InitThemeSetupCli extends AbstractCli
 		$this->cliLog("Changing the setup theme to the new theme with name {$textdomain}", 'C');
 		\rename($destionation, $newDestionation); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 
-		$this->initMandatoryAfter(
+		$this->initMandatoryBackendAfter(
 			$assocArgs[self::ARG_LIBS_VERSION],
+			$newDestionation
+		);
+
+		$this->initMandatoryFrontendAfter(
 			$assocArgs[self::ARG_FRONTEND_LIBS_VERSION],
 			$assocArgs[self::ARG_FRONTEND_LIBS_TYPE],
 			$newDestionation
 		);
+
 		$this->cleanUpInitialBoilerplate($newDestionation);
 
 		$this->cliLog('--------------------------------------------------', 'C');
