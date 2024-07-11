@@ -6,15 +6,15 @@
  * @package %g_namespace%
  */
 
-use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
+use %g_namespace%\AdminMenus\AdminPatternsHeaderFooterMenu;
 
 ?>
 
 </main>
 
 <?php
-$footerPartialId = get_option(ReusableBlocksHeaderFooter::FOOTER_PARTIAL) ?? '';
-ReusableBlocksHeaderFooter::renderPartial($footerPartialId);
+$footerPartialId = get_option(AdminPatternsHeaderFooterMenu::FOOTER_PARTIAL) ?? '';
+AdminPatternsHeaderFooterMenu::renderPartial($footerPartialId);
 
 wp_footer();
 ?>

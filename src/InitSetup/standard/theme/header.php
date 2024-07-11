@@ -7,7 +7,7 @@
  */
 
 use %g_use_libs%\Helpers\Helpers;
-use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
+use %g_namespace%\AdminMenus\AdminPatternsHeaderFooterMenu;
 
 ?>
 <!DOCTYPE html>
@@ -26,8 +26,8 @@ use %g_namespace%\AdminMenus\ReusableBlocksHeaderFooter;
 
 <?php
 // Header reusable block.
-$headerPartialId = get_option(ReusableBlocksHeaderFooter::HEADER_PARTIAL) ?? '';
-ReusableBlocksHeaderFooter::renderPartial($headerPartialId);
+$headerPartialId = get_option(AdminPatternsHeaderFooterMenu::HEADER_PARTIAL) ?? '';
+AdminPatternsHeaderFooterMenu::renderPartial($headerPartialId);
 ?>
 
 <main class="main-content" id="main-content">
