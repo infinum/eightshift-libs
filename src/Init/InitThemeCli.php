@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Init;
 
-use EightshiftLibs\AdminMenus\AdminPatternsMenuCli;
-use EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenuCli;
-use EightshiftLibs\AdminMenus\AdminThemeOptionsMenuCli;
+use EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenu\AdminPatternsHeaderFooterMenuCli;
+use EightshiftLibs\AdminMenus\AdminPatternsMenu\AdminPatternsMenuCli;
+use EightshiftLibs\AdminMenus\AdminThemeOptionsMenu\AdminThemeOptionsMenuCli;
 use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;

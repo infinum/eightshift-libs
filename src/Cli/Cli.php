@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\AdminMenus\AdminMenuCli;
-use EightshiftLibs\AdminMenus\AdminPatternsMenuCli;
+use EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenu\AdminPatternsHeaderFooterMenuCli;
+use EightshiftLibs\AdminMenus\AdminPatternsMenu\AdminPatternsMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
-use EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenuCli;
-use EightshiftLibs\AdminMenus\AdminThemeOptionsMenuCli;
+use EightshiftLibs\AdminMenus\AdminThemeOptionsMenu\AdminThemeOptionsMenuCli;
 use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;

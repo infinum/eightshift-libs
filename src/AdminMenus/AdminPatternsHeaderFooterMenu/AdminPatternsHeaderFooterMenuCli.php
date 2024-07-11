@@ -3,12 +3,12 @@
 /**
  * Class that registers WPCLI command for patterns header/footer picker creation.
  *
- * @package EightshiftLibs\AdminMenus
+ * @package EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenu
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\AdminMenus;
+namespace EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenu;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;

@@ -3,12 +3,12 @@
 /**
  * Class that registers WPCLI command for admin theme options menu creation.
  *
- * @package EightshiftLibs\AdminMenus
+ * @package EightshiftLibs\AdminMenus\AdminThemeOptionsMenu
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\AdminMenus;
+namespace EightshiftLibs\AdminMenus\AdminThemeOptionsMenu;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;

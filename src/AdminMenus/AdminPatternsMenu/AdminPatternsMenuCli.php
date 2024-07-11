@@ -3,12 +3,12 @@
 /**
  * Class that registers WPCLI command for admin patterns menu creation.
  *
- * @package EightshiftLibs\AdminMenus
+ * @package EightshiftLibs\AdminMenus\AdminPatternsMenu
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\AdminMenus;
+namespace EightshiftLibs\AdminMenus\AdminPatternsMenu;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
