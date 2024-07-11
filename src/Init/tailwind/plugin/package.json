@@ -4,7 +4,7 @@
 	"private": true,
 	"license": "MIT",
 	"scripts": {
-		"lintStyle": "stylelint **/*.scss",
+		"lintStyle": "stylelint **/*.css",
 		"lintJs": "eslint src/ assets/",
 		"lint": "npm run lintJs && npm run lintStyle && composer standards:check -- --filter=gitstaged",
 		"start": "webpack --watch --mode development",

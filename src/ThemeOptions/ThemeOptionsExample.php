@@ -9,6 +9,8 @@
 declare(strict_types=1);
 
 namespace %g_namespace%\ThemeOptions;
+use %g_use_libs%\Services\ServiceInterface;
+use WP_Query;
 
 use %g_use_libs%\Services\ServiceInterface;
 
