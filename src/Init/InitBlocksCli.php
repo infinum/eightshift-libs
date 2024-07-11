@@ -93,7 +93,7 @@ class InitBlocksCli extends AbstractCli
 			'site-footer',
 		],
 		UseComponentCli::class => [
-			'admint-theme-options',
+			'admin-theme-options',
 			'button',
 			'card',
 			'head',
