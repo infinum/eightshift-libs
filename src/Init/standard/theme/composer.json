@@ -1,6 +1,7 @@
 {
 	"name": "%g_textdomain%/%g_textdomain%",
 	"description": "%g_project_description%",
+	"version": "1.0.0",
 	"private": true,
 	"license": "MIT",
 	"require-dev": {
