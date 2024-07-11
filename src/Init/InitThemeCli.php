@@ -3,7 +3,7 @@
 /**
  * Class that registers WP-CLI command initial setup of theme project.
  *
- * @package EightshiftLibs\Cli
+ * @package EightshiftLibs\Init
  */
 
 declare(strict_types=1);

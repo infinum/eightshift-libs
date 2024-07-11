@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class that registers WP-CLI command initial setup of plugin project.
+ * Class that registers WP-CLI command initial setup of plugin project with clean no blocks setup.
  *
- * @package EightshiftLibs\Cli
+ * @package EightshiftLibs\Init
  */
 
 declare(strict_types=1);
@@ -24,7 +24,7 @@ class InitPluginCleanCli extends AbstractCli
 	/**
 	 * All classes for initial plugin setup for project.
 	 *
-	 * @var array<int, mixed>
+	 * @var array<string>
 	 */
 	public const COMMANDS = [
 		ConfigPluginCli::class,

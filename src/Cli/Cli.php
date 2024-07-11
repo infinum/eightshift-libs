@@ -62,8 +62,11 @@ use EightshiftLibs\Init\InitBlocksCli;
 use EightshiftLibs\Init\InitPluginCleanCli;
 use EightshiftLibs\Init\InitPluginCli;
 use EightshiftLibs\Init\InitProjectCli;
+use EightshiftLibs\Init\InitThemeCleanCli;
 use EightshiftLibs\Init\InitThemeCli;
+use EightshiftLibs\InitSetup\InitPluginCleanSetupCli;
 use EightshiftLibs\InitSetup\InitPluginSetupCli;
+use EightshiftLibs\InitSetup\InitThemeCleanSetupCli;
 use EightshiftLibs\InitSetup\InitThemeSetupCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
@@ -88,7 +91,7 @@ class Cli
 	/**
 	 * All commands defined as parent list commands.
 	 *
-	 * @var class-string[]
+	 * @var array<string>
 	 */
 	public const PARENT_COMMANDS = [
 		CliCreate::class,
@@ -101,7 +104,7 @@ class Cli
 	/**
 	 * All commands that are service classes type. Command prefix - create.
 	 *
-	 * @var array<string, class-string[]>
+	 * @var array<string>
 	 */
 	public const CREATE_COMMANDS = [
 		AdminMenuCli::class,
@@ -146,7 +149,7 @@ class Cli
 	/**
 	 * All commands that can be used on a WP project directly from the libs. Command prefix - run.
 	 *
-	 * @var class-string[]
+	 * @var array<string>
 	 */
 	public const RUN_COMMANDS = [
 		ExportCli::class,
@@ -159,7 +162,7 @@ class Cli
 	/**
 	 * All commands used for block editor. Command prefix - blocks.
 	 *
-	 * @var class-string[]
+	 * @var array<string>
 	 */
 	public const BLOCKS_COMMANDS = [
 		BlockPatternCli::class,
@@ -176,7 +179,7 @@ class Cli
 	/**
 	 * All commands used for setting up. Command prefix - init.
 	 *
-	 * @var class-string[]
+	 * @var array<string>
 	 */
 	public const INIT_COMMANDS = [
 		InitAllCli::class,
@@ -185,17 +188,19 @@ class Cli
 		InitPluginCleanCli::class,
 		InitProjectCli::class,
 		InitThemeCli::class,
+		InitThemeCleanCli::class,
 	];
 
 	/**
 	 * All commands used for setting up. Command prefix - init-setup.
 	 *
-	 * @var class-string[]
+	 * @var array<string>
 	 */
 	public const INIT_SETUP_COMMANDS = [
 		InitThemeSetupCli::class,
+		InitThemeCleanSetupCli::class,
 		InitPluginSetupCli::class,
-		InitPluginCleanCli::class,
+		InitPluginCleanSetupCli::class,
 	];
 
 	/**

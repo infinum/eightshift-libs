@@ -3,7 +3,7 @@
 /**
  * Class that registers WP-CLI command initial setup of plugin project.
  *
- * @package EightshiftLibs\Cli
+ * @package EightshiftLibs\Init
  */
 
 declare(strict_types=1);
@@ -32,7 +32,7 @@ class InitPluginCli extends AbstractCli
 	/**
 	 * All classes for initial plugin setup for project.
 	 *
-	 * @var array<int, mixed>
+	 * @var array<string, array<string>>
 	 */
 	public const COMMANDS = [
 		'common' => [
