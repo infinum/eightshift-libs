@@ -15,9 +15,9 @@ use %g_use_libs%\Helpers\Helpers;
 use WP_Query;
 
 /**
- * PatternsHeaderFooterExample class.
+ * AdminPatternsHeaderFooterMenuExample class.
  */
-class PatternsHeaderFooterExample extends AbstractAdminMenu
+class AdminPatternsHeaderFooterMenuExample extends AbstractAdminMenu
 {
 	/**
 	 * Patterns Capability.

@@ -105,7 +105,7 @@ class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminPatternsHeaderFooterMenu/PatternsHeaderFooterExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminPatternsHeaderFooterMenu/AdminPatternsHeaderFooterMenuExample.php
 			"),
 		];
 	}
