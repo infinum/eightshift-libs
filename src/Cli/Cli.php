@@ -11,9 +11,10 @@ declare(strict_types=1);
 namespace EightshiftLibs\Cli;
 
 use EightshiftLibs\AdminMenus\AdminMenuCli;
-use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
+use EightshiftLibs\AdminMenus\AdminPatternsMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
-use EightshiftLibs\AdminMenus\ReusableBlocksHeaderFooterCli;
+use EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenuCli;
+use EightshiftLibs\AdminMenus\AdminThemeOptionsMenuCli;
 use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
@@ -57,7 +58,6 @@ use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Init\InitBlocksCli;
-use EightshiftLibs\Init\InitHeaderFooter;
 use EightshiftLibs\Init\InitPluginCli;
 use EightshiftLibs\Init\InitPluginSetupCli;
 use EightshiftLibs\Init\InitProjectCli;
@@ -70,6 +70,7 @@ use EightshiftLibs\Optimization\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\Readme\ReadmeCli;
 use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
+use EightshiftLibs\ThemeOptions\AcfThemeOptionsCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
@@ -97,44 +98,48 @@ class Cli
 	/**
 	 * All commands that are service classes type. Command prefix - create.
 	 *
-	 * @var class-string[]
+	 * @var array<string, class-string[]>
 	 */
 	public const CREATE_COMMANDS = [
-		AdminMenuCli::class,
-		AdminReusableBlocksMenuCli::class,
-		AdminSubMenuCli::class,
-		ReusableBlocksHeaderFooterCli::class,
-		AnalyticsGdprCli::class,
-		WebPMediaColumnCli::class,
-		ConfigPluginCli::class,
-		ConfigThemeCli::class,
-		ConfigProjectCli::class,
-		AcfMetaCli::class,
-		PostTypeCli::class,
-		TaxonomyCli::class,
-		EnqueueAdminCli::class,
-		EnqueueBlocksCli::class,
-		EnqueueThemeCli::class,
-		GeolocationCli::class,
-		GitIgnoreCli::class,
-		I18nCli::class,
-		LoginCli::class,
-		MainCli::class,
-		MediaCli::class,
-		MenuCli::class,
-		ModifyAdminAppearanceCli::class,
-		OptimizationCli::class,
-		ReadmeCli::class,
-		FieldCli::class,
-		RouteCli::class,
-		LoadMoreRouteCli::class,
-		ServiceExampleCli::class,
-		SetupCli::class,
-		ThemeOptionsCli::class,
-		EscapedViewCli::class,
-		WpCli::class,
-		ManifestCacheCli::class,
-		PluginCli::class,
+		'common' => [
+			AdminMenuCli::class,
+			AdminPatternsMenuCli::class,
+			AdminThemeOptionsMenuCli::class,
+			AdminSubMenuCli::class,
+			AdminPatternsHeaderFooterMenuCli::class,
+			AnalyticsGdprCli::class,
+			WebPMediaColumnCli::class,
+			ConfigPluginCli::class,
+			ConfigThemeCli::class,
+			ConfigProjectCli::class,
+			AcfMetaCli::class,
+			PostTypeCli::class,
+			TaxonomyCli::class,
+			EnqueueAdminCli::class,
+			EnqueueBlocksCli::class,
+			EnqueueThemeCli::class,
+			GeolocationCli::class,
+			GitIgnoreCli::class,
+			I18nCli::class,
+			LoginCli::class,
+			MainCli::class,
+			MediaCli::class,
+			MenuCli::class,
+			ModifyAdminAppearanceCli::class,
+			OptimizationCli::class,
+			ReadmeCli::class,
+			FieldCli::class,
+			RouteCli::class,
+			LoadMoreRouteCli::class,
+			ServiceExampleCli::class,
+			SetupCli::class,
+			ThemeOptionsCli::class,
+			AcfThemeOptionsCli::class,
+			EscapedViewCli::class,
+			WpCli::class,
+			ManifestCacheCli::class,
+			PluginCli::class,
+		],
 	];
 
 	/**
@@ -175,7 +180,6 @@ class Cli
 	public const INIT_COMMANDS = [
 		InitAllCli::class,
 		InitBlocksCli::class,
-		InitHeaderFooter::class,
 		InitPluginCli::class,
 		InitProjectCli::class,
 		InitThemeCli::class,

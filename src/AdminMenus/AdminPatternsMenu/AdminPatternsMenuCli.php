@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Admin reusable blocks menu creation.
+ * Class that registers WPCLI command for admin patterns menu creation.
  *
  * @package EightshiftLibs\AdminMenus
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class AdminReusableBlocksMenuCli
+ * Class AdminPatternsMenuCli
  */
-class AdminReusableBlocksMenuCli extends AbstractCli
+class AdminPatternsMenuCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'admin-reusable-blocks-menu';
+		return 'admin-patterns-menu';
 	}
 
 	/**
@@ -47,8 +47,8 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'title' => 'Reusable blocks',
-			'menu_title' => 'Reusable blocks',
+			'title' => 'Patterns',
+			'menu_title' => 'Patterns',
 			'capability' => 'edit_posts',
 			'menu_icon' => 'dashicons-welcome-widgets-menus',
 			'menu_position' => 4,
@@ -63,7 +63,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create reusable blocks admin menu service class.',
+			'shortdesc' => 'Create patterns admin menu service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
@@ -104,7 +104,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create top level sidebar menu page for reusable blocks for easy usage.
+				Used to create top level sidebar menu page for patterns for easy usage.
 
 				## EXAMPLES
 
@@ -114,7 +114,7 @@ class AdminReusableBlocksMenuCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminReusableBlocksMenuExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminPatternsMenu/AdminPatternsMenuExample.php
 			"),
 		];
 	}

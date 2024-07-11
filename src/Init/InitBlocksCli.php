@@ -28,9 +28,9 @@ use EightshiftLibs\Helpers\Helpers;
 class InitBlocksCli extends AbstractCli
 {
 	/**
-	 * All commands to run on init.
+	 * All commands to run on init - standard setup.
 	 */
-	public const COMMANDS = [
+	public const COMMANDS_STANDARD = [
 		BlocksCli::class => [],
 		UseAssetsCli::class => [],
 		UseGlobalAssetsCli::class => [],
@@ -66,6 +66,46 @@ class InitBlocksCli extends AbstractCli
 			'tracking-before-body-end',
 			'tracking-head',
 			'social-networks',
+		],
+		UseVariationCli::class => [
+			'card-simple'
+		],
+	];
+
+	/**
+	 * All commands to run on init - tailwind setup.
+	 */
+	public const COMMANDS_TAILWIND = [
+		BlocksCli::class => [],
+		UseAssetsCli::class => [],
+		UseGlobalAssetsCli::class => [],
+		UseWrapperCli::class => [],
+		UseManifestCli::class => [],
+		UseBlockCli::class => [
+			'button',
+			'card',
+			'group',
+			'heading',
+			'image',
+			'list',
+			'paragraph',
+			'site-navigation',
+			'site-footer',
+		],
+		UseComponentCli::class => [
+			'admint-theme-options',
+			'button',
+			'card',
+			'head',
+			'heading',
+			'icon',
+			'image',
+			'list',
+			'paragraph',
+			'tracking-before-body-end',
+			'tracking-head',
+			'share',
+			'post-header',
 		],
 		UseVariationCli::class => [
 			'card-simple'
@@ -128,11 +168,11 @@ class InitBlocksCli extends AbstractCli
 
 		$all = \filter_var($assocArgs['use_all'] ?? false, \FILTER_VALIDATE_BOOLEAN);
 
-		$commands = static::COMMANDS;
+		$commands = $this->isTailwind() ? static::COMMANDS_TAILWIND : static::COMMANDS_STANDARD;
 
 		if ($all) {
 			$commands = [];
-			foreach (\array_keys(static::COMMANDS) as $command) {
+			foreach (\array_keys($this->isTailwind() ? static::COMMANDS_TAILWIND : static::COMMANDS_STANDARD) as $command) {
 				switch ($command) {
 					case UseBlockCli::class:
 						$commands[$command] = $this->getFolderItems($this->isTailwind() ? Helpers::getProjectPaths('blocksSourceTailwindCustom') : Helpers::getProjectPaths('blocksSourceCustom'));

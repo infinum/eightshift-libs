@@ -60,7 +60,7 @@ export default {
 		},
 	},
 	plugins: [
-		fluid(),
+		fluid,
 		animate,
 		plugin(({ addComponents, addVariant }) => {
 			addComponents({

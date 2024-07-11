@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for ThemeOptions.
+ * Class that registers WPCLI command for ThemeOptions using ACF plugin.
  *
  * @package EightshiftLibs\ThemeOptions
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class ThemeOptionsCli
+ * Class AcfThemeOptionsCli
  */
-class ThemeOptionsCli extends AbstractCli
+class AcfThemeOptionsCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class ThemeOptionsCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'theme-options';
+		return 'theme-options-acf';
 	}
 
 	/**
@@ -47,11 +47,12 @@ class ThemeOptionsCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create project Theme Options service class.',
+			'shortdesc' => 'Create project Theme Options service class using ACF plugin.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create theme options service class to register project specific options.
+				Used to create Advanced Custom Fields theme options service class to register project specific options.
+				ACF plugin must be installed.
 
 				## EXAMPLES
 
@@ -61,7 +62,7 @@ class ThemeOptionsCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/ThemeOptions/ThemeOptionsExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/ThemeOptions/AcfThemeOptionsExample.php
 
 				ACF documentation:
 				https://www.advancedcustomfields.com/resources/options-page/

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds class for reusable blocks header/footer example.
+ * File that holds class for patterns header/footer example.
  *
  * @package %g_namespace%\AdminMenus
  */
@@ -15,17 +15,17 @@ use %g_use_libs%\Helpers\Helpers;
 use WP_Query;
 
 /**
- * ReusableBlocksHeaderFooterExample class.
+ * PatternsHeaderFooterExample class.
  */
-class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
+class PatternsHeaderFooterExample extends AbstractAdminMenu
 {
 	/**
-	 * Reusable blocks Capability.
+	 * Patterns Capability.
 	 */
 	public const ADMIN_MENU_CAPABILITY = '%capability%';
 
 	/**
-	 * Menu slug for reusable blocks menu.
+	 * Menu slug for patterns menu.
 	 *
 	 * @var string
 	 */
@@ -37,7 +37,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	public const ADMIN_ICON = 'dashicons-embed-photo';
 
 	/**
-	 * Menu position for reusable blocks menu.
+	 * Menu position for patterns menu.
 	 *
 	 * @var int
 	 */
@@ -103,9 +103,9 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get the capability required for reusable block menu to be displayed.
+	 * Get the capability required for patterns menu to be displayed.
 	 *
-	 * @return string The capability required for reusable block menu to be displayed to the user.
+	 * @return string The capability required for patterns menu to be displayed to the user.
 	 */
 	protected function getCapability(): string
 	{
@@ -115,8 +115,8 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	/**
 	 * Get the menu slug.
 	 *
-	 * @return string The slug name to refer to reusable block menu by.
-	 *                Should be unique for reusable block menu page and only include lowercase alphanumeric,
+	 * @return string The slug name to refer to patterns menu by.
+	 *                Should be unique for patterns menu page and only include lowercase alphanumeric,
 	 *                dashes, and underscores characters to be compatible with sanitize_key().
 	 */
 	protected function getMenuSlug(): string
@@ -125,9 +125,9 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get the URL to the icon to be used for reusable block menu.
+	 * Get the URL to the icon to be used for patterns menu.
 	 *
-	 * @return string The URL to the icon to be used for reusable block menu.
+	 * @return string The URL to the icon to be used for patterns menu.
 	 *                * Pass a base64-encoded SVG using a data URI, which will be colored to match
 	 *                  the color scheme. This should begin with 'data:image/svg+xml;base64,'.
 	 *                * Pass the name of a Dashicons helper class to use a font icon,
@@ -140,7 +140,7 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get the position of the reusable blocks menu.
+	 * Get the position of the patterns menu.
 	 *
 	 * @return int Number that indicates the position of the menu.
 	 * 5   - below Posts
@@ -270,13 +270,13 @@ class ReusableBlocksHeaderFooterExample extends AbstractAdminMenu
 				?>
 			</select>
 		<?php } else { ?>
-			<i><?php echo \esc_html__('No reusable blocks found.', '%g_textdomain%'); ?></i>
+			<i><?php echo \esc_html__('No patterns found.', '%g_textdomain%'); ?></i>
 			<?php
 		}
 	}
 
 	/**
-	 * Renders a reusable block partial.
+	 * Renders a patterns partial.
 	 *
 	 * @param int|string $partialId Block partial ID.
 	 * @return void

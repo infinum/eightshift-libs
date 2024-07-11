@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Init;
 
-use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
-use EightshiftLibs\AdminMenus\ReusableBlocksHeaderFooterCli;
+use EightshiftLibs\AdminMenus\AdminPatternsMenuCli;
+use EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenuCli;
+use EightshiftLibs\AdminMenus\AdminThemeOptionsMenuCli;
 use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
@@ -29,18 +30,25 @@ class InitThemeCli extends AbstractCli
 	/**
 	 * All classes for initial theme setup for project.
 	 *
-	 * @var array<int, mixed>
+	 * @var array<string, array<string>>
 	 */
 	public const COMMANDS = [
-		ManifestCacheCli::class,
-		ConfigThemeCli::class,
-		MainCli::class,
-		EnqueueAdminCli::class,
-		EnqueueBlocksCli::class,
-		EnqueueThemeCli::class,
-		AdminReusableBlocksMenuCli::class,
-		ReusableBlocksHeaderFooterCli::class,
-		InitBlocksCli::class,
+		'common' => [
+			ManifestCacheCli::class,
+			ConfigThemeCli::class,
+			MainCli::class,
+			EnqueueAdminCli::class,
+			EnqueueBlocksCli::class,
+			EnqueueThemeCli::class,
+			AdminPatternsMenuCli::class,
+			InitBlocksCli::class,
+		],
+		'standard' => [
+			AdminPatternsHeaderFooterMenuCli::class,
+		],
+		'tailwind' => [
+			AdminThemeOptionsMenuCli::class,
+		],
 	];
 
 	/**
@@ -102,7 +110,12 @@ class InitThemeCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		foreach (static::COMMANDS as $item) {
+		$commands = [
+			...static::COMMANDS['common'],
+			...($this->isTailwind() ? static::COMMANDS['tailwind'] : static::COMMANDS['standard']),
+		];
+
+		foreach ($commands as $item) {
 			$this->runCliCommand(
 				$item,
 				$this->commandParentName,

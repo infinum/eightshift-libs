@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Reusable header/footer picker creation.
+ * Class that registers WPCLI command for patterns header/footer picker creation.
  *
  * @package EightshiftLibs\AdminMenus
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class ReusableBlocksHeaderFooterCli
+ * Class AdminPatternsHeaderFooterMenuCli
  */
-class ReusableBlocksHeaderFooterCli extends AbstractCli
+class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class ReusableBlocksHeaderFooterCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'reusable-header-footer';
+		return 'patterns-header-footer';
 	}
 
 	/**
@@ -105,7 +105,7 @@ class ReusableBlocksHeaderFooterCli extends AbstractCli
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/ReusableBlocksHeaderFooterExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminPatternsHeaderFooterMenu/PatternsHeaderFooterExample.php
 			"),
 		];
 	}

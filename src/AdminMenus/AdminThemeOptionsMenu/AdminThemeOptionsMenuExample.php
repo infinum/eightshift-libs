@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds class for admin menu example.
+ * File that holds class for theme options admin menu.
  *
  * @package %g_namespace%\AdminMenus
  */
@@ -13,58 +13,37 @@ namespace %g_namespace%\AdminMenus;
 use %g_use_libs%\AdminMenus\AbstractAdminMenu;
 
 /**
- * AdminReusableBlocksMenuExample class.
+ * AdminThemeOptionsMenuExample class.
  */
-class AdminReusableBlocksMenuExample extends AbstractAdminMenu
+class AdminThemeOptionsMenuExample extends AbstractAdminMenu
 {
 	/**
-	 * Reusable blocks Capability.
-	 */
-	public const ADMIN_REUSABLE_BLOCKS_MENU_CAPABILITY = '%capability%';
-
-	/**
-	 * Menu slug for reusable blocks menu.
+	 * Capability for this admin menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_REUSABLE_BLOCKS_MENU_SLUG = 'edit.php?post_type=wp_block';
+	public const ADMIN_MENU_CAPABILITY = '%capability%';
 
 	/**
-	 * Menu icon for reusable blocks menu.
+	 * Menu slug for this admin menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_REUSABLE_BLOCKS_MENU_ICON = '%menu_icon%';
+	public const ADMIN_MENU_SLUG = '%slug%';
 
 	/**
-	 * Menu position for reusable blocks menu.
+	 * Menu icon for this admin menu
+	 *
+	 * @var string
+	 */
+	public const ADMIN_MENU_ICON = '%menu_icon%';
+
+	/**
+	 * Menu position for this admin menu
 	 *
 	 * @var int
 	 */
-	public const ADMIN_REUSABLE_BLOCKS_MENU_POSITION = 4;
-
-	/**
-	 * Register all the hooks.
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		\add_action(
-			'admin_menu',
-			function () {
-				\add_menu_page(
-					$this->getTitle(),
-					$this->getMenuTitle(),
-					$this->getCapability(),
-					$this->getMenuSlug(),
-					'', // @phpstan-ignore-line
-					$this->getIcon(),
-					$this->getPosition()
-				);
-			}
-		);
-	}
+	public const ADMIN_MENU_POSITION = 100;
 
 	/**
 	 * Get the title to use for the admin page.
@@ -87,31 +66,31 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get the capability required for reusable block menu to be displayed.
+	 * Get the capability required for this menu to be displayed.
 	 *
-	 * @return string The capability required for reusable block menu to be displayed to the user.
+	 * @return string The capability required for this menu to be displayed to the user.
 	 */
 	protected function getCapability(): string
 	{
-		return self::ADMIN_REUSABLE_BLOCKS_MENU_CAPABILITY;
+		return self::ADMIN_MENU_CAPABILITY;
 	}
 
 	/**
 	 * Get the menu slug.
 	 *
-	 * @return string The slug name to refer to reusable block menu by.
-	 *                Should be unique for reusable block menu page and only include lowercase alphanumeric,
+	 * @return string The slug name to refer to this menu by.
+	 *                Should be unique for this menu page and only include lowercase alphanumeric,
 	 *                dashes, and underscores characters to be compatible with sanitize_key().
 	 */
 	protected function getMenuSlug(): string
 	{
-		return self::ADMIN_REUSABLE_BLOCKS_MENU_SLUG;
+		return self::ADMIN_MENU_SLUG;
 	}
 
 	/**
-	 * Get the URL to the icon to be used for reusable block menu.
+	 * Get the URL to the icon to be used for this menu
 	 *
-	 * @return string The URL to the icon to be used for reusable block menu.
+	 * @return string The URL to the icon to be used for this menu.
 	 *                * Pass a base64-encoded SVG using a data URI, which will be colored to match
 	 *                  the color scheme. This should begin with 'data:image/svg+xml;base64,'.
 	 *                * Pass the name of a Dashicons helper class to use a font icon,
@@ -121,16 +100,16 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	protected function getIcon(): string
 	{
 		// If it's a custom SVG; base64 it.
-		if (\substr(self::ADMIN_REUSABLE_BLOCKS_MENU_ICON, 0, 4) === '<svg') {
-			return 'data:image/svg+xml;base64,' . base64_encode(self::ADMIN_REUSABLE_BLOCKS_MENU_ICON); // phpcs:ignore;
+		if (\substr(self::ADMIN_MENU_ICON, 0, 4) === '<svg') {
+			return 'data:image/svg+xml;base64,' . base64_encode(self::ADMIN_MENU_ICON); // phpcs:ignore;
 		}
 
 		// Otherwise just treat it as a DashIcon.
-		return self::ADMIN_REUSABLE_BLOCKS_MENU_ICON;
+		return self::ADMIN_MENU_ICON;
 	}
 
 	/**
-	 * Get the position of the reusable blocks menu.
+	 * Get the position of the menu.
 	 *
 	 * @return int Number that indicates the position of the menu.
 	 * 5   - below Posts
@@ -147,7 +126,7 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	 */
 	protected function getPosition(): int
 	{
-		return self::ADMIN_REUSABLE_BLOCKS_MENU_POSITION;
+		return self::ADMIN_MENU_POSITION;
 	}
 
 	/**
@@ -157,7 +136,7 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return '';
+		return 'admin-theme-options';
 	}
 
 	/**
@@ -174,6 +153,8 @@ class AdminReusableBlocksMenuExample extends AbstractAdminMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		return [];
+		return [
+			'pageTitle' => $this->getTitle(),
+		];
 	}
 }

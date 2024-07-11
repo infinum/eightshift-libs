@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Admin menu creation.
+ * Class that registers WPCLI command for admin theme options menu creation.
  *
  * @package EightshiftLibs\AdminMenus
  */
@@ -15,9 +15,9 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class AdminMenuCli
+ * Class AdminThemeOptionsMenuCli
  */
-class AdminMenuCli extends AbstractCli
+class AdminThemeOptionsMenuCli extends AbstractCli
 {
 	/**
 	 * Get WPCLI command parent name
@@ -36,7 +36,7 @@ class AdminMenuCli extends AbstractCli
 	 */
 	public function getCommandName(): string
 	{
-		return 'admin-menu';
+		return 'admin-theme-options-menu';
 	}
 
 	/**
@@ -47,49 +47,44 @@ class AdminMenuCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'title' => 'Admin Title',
-			'menu_title' => 'Admin Menu Title',
-			'capability' => 'edit_posts',
-			'menu_slug' => 'example-menu-slug',
-			'menu_icon' => 'dashicons-admin-generic',
+			'title' => 'Theme Options',
+			'menu_title' => 'Theme Options',
+			'capability' => 'manage_options',
+			'menu_icon' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.84 1.804A1 1 0 0 1 8.82 1h2.36a1 1 0 0 1 .98.804l.331 1.652a6.993 6.993 0 0 1 1.929 1.115l1.598-.54a1 1 0 0 1 1.186.447l1.18 2.044a1 1 0 0 1-.205 1.251l-1.267 1.113a7.047 7.047 0 0 1 0 2.228l1.267 1.113a1 1 0 0 1 .206 1.25l-1.18 2.045a1 1 0 0 1-1.187.447l-1.598-.54a6.993 6.993 0 0 1-1.929 1.115l-.33 1.652a1 1 0 0 1-.98.804H8.82a1 1 0 0 1-.98-.804l-.331-1.652a6.993 6.993 0 0 1-1.929-1.115l-1.598.54a1 1 0 0 1-1.186-.447l-1.18-2.044a1 1 0 0 1 .205-1.251l1.267-1.114a7.05 7.05 0 0 1 0-2.227L1.821 7.773a1 1 0 0 1-.206-1.25l1.18-2.045a1 1 0 0 1 1.187-.447l1.598.54A6.992 6.992 0 0 1 7.51 3.456l.33-1.652ZM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" /></svg>',
 			'menu_position' => 100,
-			'view_component' => 'layout',
 		];
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WPCLI command doc.
 	 *
-	 * @return array<string, array<int, array<string, bool|string>>|string>
+	 * @return array<string, mixed>
 	 */
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create admin menu service class.',
+			'shortdesc' => 'Create theme options admin menu service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',
 					'name' => 'title',
 					'description' => 'The text to be displayed in the title tags of the page when the menu is selected.',
-					'optional' => false,
+					'optional' => true,
+					'default' => $this->getDefaultArg('title'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'menu_title',
-					'description' => 'The text to be used for the sidebar menu.',
-					'optional' => false,
+					'description' => 'The text to be used for the menu.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('menu_title'),
 				],
 				[
 					'type' => 'assoc',
 					'name' => 'capability',
 					'description' => 'The capability required for this menu to be displayed to the user.',
-					'optional' => false,
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'menu_slug',
-					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes and underscore characters to be compatible with sanitize_key().',
-					'optional' => false,
+					'optional' => true,
+					'default' => $this->getDefaultArg('capability'),
 				],
 				[
 					'type' => 'assoc',
@@ -105,28 +100,21 @@ class AdminMenuCli extends AbstractCli
 					'optional' => true,
 					'default' => $this->getDefaultArg('menu_position'),
 				],
-				[
-					'type' => 'assoc',
-					'name' => 'view_component',
-					'description' => 'The default view component.',
-					'optional' => true,
-					'default' => $this->getDefaultArg('view_component'),
-				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create top level admin pages for settings and etc.
+				Used to create top level sidebar menu page for theme options for easy usage.
 
 				## EXAMPLES
 
 				# Create service class:
-				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --title='Content' --menu_title='content' --capability='edit_posts' --menu_slug='es-content'
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
 
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminMenuExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/AdminMenus/AdminThemeOptionsMenu/AdminThemeOptionsMenuExample.php
 			"),
 		];
 	}
@@ -141,13 +129,11 @@ class AdminMenuCli extends AbstractCli
 		$title = $this->getArg($assocArgs, 'title');
 		$menuTitle = $this->getArg($assocArgs, 'menu_title');
 		$capability = $this->getArg($assocArgs, 'capability');
-		$menuSlug = $this->prepareSlug($this->getArg($assocArgs, 'menu_slug'));
-		$menuIcon =  $this->getArg($assocArgs, 'menu_icon');
-		$menuPosition = $this->getArg($assocArgs, 'menu_position');
-		$viewComponent = $this->getArg($assocArgs, 'view_component');
+		$menuIcon = $this->getArg($assocArgs, 'menu_icon');
+		$menuPosition = (string)($this->getArg($assocArgs, 'menu_position'));
 
 		// Get full class name.
-		$className = $this->getFileName($menuSlug);
+		$className = $this->getFileName('');
 		$className = $className . $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
@@ -156,10 +142,7 @@ class AdminMenuCli extends AbstractCli
 			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('title'), $title)
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle)
-			->searchReplaceString($this->getArgTemplate('capability'), $capability)
-			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug)
-			->searchReplaceString($this->getArgTemplate('view_component'), $viewComponent)
-			;
+			->searchReplaceString($this->getArgTemplate('capability'), $capability);
 
 		if (!empty($menuPosition)) {
 			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);

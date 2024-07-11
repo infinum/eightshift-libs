@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File that holds class for admin menu example.
+ * File that holds class for patterns admin menu.
  *
  * @package %g_namespace%\AdminMenus
  */
@@ -13,37 +13,58 @@ namespace %g_namespace%\AdminMenus;
 use %g_use_libs%\AdminMenus\AbstractAdminMenu;
 
 /**
- * AdminMenuExample class.
+ * AdminPatternsMenuExample class.
  */
-class AdminMenuExample extends AbstractAdminMenu
+class AdminPatternsMenuExample extends AbstractAdminMenu
 {
 	/**
-	 * Capability for this admin menu
-	 *
-	 * @var string
+	 * Patterns Capability.
 	 */
 	public const ADMIN_MENU_CAPABILITY = '%capability%';
 
 	/**
-	 * Menu slug for this admin menu
+	 * Menu slug for patterns menu.
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = '%menu_slug%';
+	public const ADMIN_MENU_SLUG = 'edit.php?post_type=wp_block';
 
 	/**
-	 * Menu icon for this admin menu
+	 * Menu icon for patterns menu.
 	 *
 	 * @var string
 	 */
 	public const ADMIN_MENU_ICON = '%menu_icon%';
 
 	/**
-	 * Menu position for this admin menu
+	 * Menu position for patterns menu.
 	 *
 	 * @var int
 	 */
-	public const ADMIN_MENU_POSITION = 100;
+	public const ADMIN_MENU_POSITION = 4;
+
+	/**
+	 * Register all the hooks.
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_action(
+			'admin_menu',
+			function () {
+				\add_menu_page(
+					$this->getTitle(),
+					$this->getMenuTitle(),
+					$this->getCapability(),
+					$this->getMenuSlug(),
+					'', // @phpstan-ignore-line
+					$this->getIcon(),
+					$this->getPosition()
+				);
+			}
+		);
+	}
 
 	/**
 	 * Get the title to use for the admin page.
@@ -66,9 +87,9 @@ class AdminMenuExample extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get the capability required for this menu to be displayed.
+	 * Get the capability required for patterns menu to be displayed.
 	 *
-	 * @return string The capability required for this menu to be displayed to the user.
+	 * @return string The capability required for patterns menu to be displayed to the user.
 	 */
 	protected function getCapability(): string
 	{
@@ -78,8 +99,8 @@ class AdminMenuExample extends AbstractAdminMenu
 	/**
 	 * Get the menu slug.
 	 *
-	 * @return string The slug name to refer to this menu by.
-	 *                Should be unique for this menu page and only include lowercase alphanumeric,
+	 * @return string The slug name to refer to patterns menu by.
+	 *                Should be unique for patterns menu page and only include lowercase alphanumeric,
 	 *                dashes, and underscores characters to be compatible with sanitize_key().
 	 */
 	protected function getMenuSlug(): string
@@ -88,9 +109,9 @@ class AdminMenuExample extends AbstractAdminMenu
 	}
 
 	/**
-	 * Get the URL to the icon to be used for this menu
+	 * Get the URL to the icon to be used for patterns menu.
 	 *
-	 * @return string The URL to the icon to be used for this menu.
+	 * @return string The URL to the icon to be used for patterns menu.
 	 *                * Pass a base64-encoded SVG using a data URI, which will be colored to match
 	 *                  the color scheme. This should begin with 'data:image/svg+xml;base64,'.
 	 *                * Pass the name of a Dashicons helper class to use a font icon,
@@ -99,11 +120,17 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getIcon(): string
 	{
+		// If it's a custom SVG; base64 it.
+		if (\substr(self::ADMIN_MENU_ICON, 0, 4) === '<svg') {
+			return 'data:image/svg+xml;base64,' . base64_encode(self::ADMIN_MENU_ICON); // phpcs:ignore;
+		}
+
+		// Otherwise just treat it as a DashIcon.
 		return self::ADMIN_MENU_ICON;
 	}
 
 	/**
-	 * Get the position of the menu.
+	 * Get the position of the patterns menu.
 	 *
 	 * @return int Number that indicates the position of the menu.
 	 * 5   - below Posts
@@ -130,7 +157,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return '%view_component%';
+		return '';
 	}
 
 	/**
@@ -147,8 +174,6 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		return [
-			'pageTitle' => $this->getTitle(),
-		];
+		return [];
 	}
 }

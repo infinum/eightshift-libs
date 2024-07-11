@@ -52,6 +52,7 @@ class AdminSubMenuCli extends AbstractCli
 			'menu_title' => 'Admin Sub Menu Title',
 			'capability' => 'edit_posts',
 			'menu_slug' => 'example-menu-slug',
+			'view_component' => 'layout',
 		];
 	}
 
@@ -95,6 +96,13 @@ class AdminSubMenuCli extends AbstractCli
 					'description' => 'The slug name to refer to this menu by. Should be unique for this menu page and only include lowercase alphanumeric, dashes, and underscores characters to be compatible with sanitize_key().', // phpcs:ignore Generic.Files.LineLength.TooLong
 					'optional' => false,
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'view_component',
+					'description' => 'The default view component.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('view_component'),
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -126,6 +134,7 @@ class AdminSubMenuCli extends AbstractCli
 		$menuTitle = $this->getArg($assocArgs, 'menu_title');
 		$capability = $this->getArg($assocArgs, 'capability');
 		$menuSlug = $this->prepareSlug($this->getArg($assocArgs, 'menu_slug'));
+		$viewComponent = $this->getArg($assocArgs, 'view_component');
 
 		// Get full class name.
 		$className = $this->getFileName($menuSlug);
@@ -140,6 +149,7 @@ class AdminSubMenuCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle)
 			->searchReplaceString($this->getArgTemplate('capability'), $capability)
 			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug)
+			->searchReplaceString($this->getArgTemplate('view_component'), $viewComponent)
 			->outputWrite(Helpers::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
 	}
 }
