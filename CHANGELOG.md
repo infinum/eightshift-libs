@@ -3,6 +3,34 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.0.0]
+
+### Changed
+- WP-CLI command `reusable-header-footer` is renamed to `patterns-header-footer`.
+- `Reusable blocks` admin menu is now named `Patterns` when moved to project.
+- WP-CLI command `admin-reusable-blocks-menu` is renamed to `admin-patterns-menu`.
+- Plugin now has WP-CLI prefix as `boilerplate-plugin`.
+- WP-CLI command `theme-options` is renamed to `theme-options-acf`.
+
+### Added
+- WP-CLI command `admin-menu` now supports `view_component` prop.
+- WP-CLI command `admin-sub-menu` now supports `view_component` prop.
+- WP-CLI command `admin-theme-options-menu`
+- WP-CLI commands can now detect if they are used in the standard or Tailwind setup.
+- WP-CLI global param `g_frontend_libs_type`.
+- WP-CLI parent command name `ìnit-setup`.
+- WP-CLI command `init-setup theme`.
+- WP-CLI command `init-setup theme-clean`.
+- WP-CLI command `init-setup plugin`.
+- WP-CLI command `init-setup plugin-clean`.
+- Enqueue function to deregister all WP default styles that should not be there.
+- Tailwind trait for all Tailwind helpers used in the new setup.
+- New setups for Tailwind setup for plugin and theme.
+- WP-CLI command `theme-options`.
+
+### Fixed
+- Admin assets dependency is needed to support the Tailwind setup.
+
 ## [8.0.7]
 
 ### Fixed
@@ -586,6 +614,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[9.0.0]: https://github.com/infinum/eightshift-libs/compare/8.0.7...9.0.0
 [8.0.7]: https://github.com/infinum/eightshift-libs/compare/8.0.6...8.0.7
 [8.0.6]: https://github.com/infinum/eightshift-libs/compare/8.0.5...8.0.6
 [8.0.5]: https://github.com/infinum/eightshift-libs/compare/8.0.4...8.0.5

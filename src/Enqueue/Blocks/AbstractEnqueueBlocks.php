@@ -302,6 +302,29 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
+	 * Un-registers some default styles that add unnecessary overrides.
+	 * The styles are re-registered with a fake URL to prevent breaking style dependencies.
+	 *
+	 * This is a workaround until Gutenberg provides a better way to disable these styles.
+	 *
+	 * Verify that everything looks good in the Block editor after adding!
+	 *
+	 * @return void
+	 */
+	public function unregisterDefaultStyleOverrides(): void
+	{
+		// Unregister unneeded default styles.
+		\wp_deregister_style('forms');
+		\wp_deregister_style('reset');
+
+		// Re-register the styles with a fake URL just so it doesn't break style dependencies.
+		// phpcs:disable WordPress.WP.EnqueuedResourceParameters.MissingVersion
+		\wp_enqueue_style('forms', \get_admin_url(null, 'css'), []);
+		\wp_enqueue_style('reset', \get_admin_url(null, 'css'), []);
+		// phpcs:enable WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	}
+
+	/**
 	 * Get style dependencies
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/

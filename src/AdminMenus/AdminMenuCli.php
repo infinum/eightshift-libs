@@ -53,6 +53,7 @@ class AdminMenuCli extends AbstractCli
 			'menu_slug' => 'example-menu-slug',
 			'menu_icon' => 'dashicons-admin-generic',
 			'menu_position' => 100,
+			'view_component' => 'layout',
 		];
 	}
 
@@ -104,6 +105,13 @@ class AdminMenuCli extends AbstractCli
 					'optional' => true,
 					'default' => $this->getDefaultArg('menu_position'),
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'view_component',
+					'description' => 'The default view component.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('view_component'),
+				],
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -136,6 +144,7 @@ class AdminMenuCli extends AbstractCli
 		$menuSlug = $this->prepareSlug($this->getArg($assocArgs, 'menu_slug'));
 		$menuIcon =  $this->getArg($assocArgs, 'menu_icon');
 		$menuPosition = $this->getArg($assocArgs, 'menu_position');
+		$viewComponent = $this->getArg($assocArgs, 'view_component');
 
 		// Get full class name.
 		$className = $this->getFileName($menuSlug);
@@ -148,7 +157,9 @@ class AdminMenuCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('title'), $title)
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle)
 			->searchReplaceString($this->getArgTemplate('capability'), $capability)
-			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug);
+			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug)
+			->searchReplaceString($this->getArgTemplate('view_component'), $viewComponent)
+			;
 
 		if (!empty($menuPosition)) {
 			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);

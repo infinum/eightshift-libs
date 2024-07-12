@@ -26,11 +26,10 @@ abstract class AbstractBlocksCli extends AbstractCli
 	 * @param string $destination Destination path.
 	 * @param string $type Type of items used for output log.
 	 * @param bool $isSingleFolder Is single folder item.
-	 * @param string $sourcePrivate Source private libs path.
 	 *
 	 * @return void
 	 */
-	protected function moveItems(array $args, string $source, string $destination, string $type, bool $isSingleFolder = false, string $sourcePrivate = ''): void
+	protected function moveItems(array $args, string $source, string $destination, string $type, bool $isSingleFolder = false): void
 	{
 		// Get Props.
 		$skipExisting = $this->getSkipExisting($args);
@@ -63,14 +62,6 @@ abstract class AbstractBlocksCli extends AbstractCli
 
 		$sourceItems = \array_diff(\scandir($source) ?: [], ['..', '.']); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 		$sourceItems = \array_fill_keys(\array_values($sourceItems), $source);
-		$sourceItemsPrivate = [];
-
-		if (\is_dir($sourcePrivate)) {
-			$sourceItemsPrivate = \array_diff(\scandir($sourcePrivate) ?: [], ['..', '.']); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			$sourceItemsPrivate = \array_fill_keys(\array_values($sourceItemsPrivate), $sourcePrivate);
-		}
-
-		$sourceItems = \array_merge($sourceItems, $sourceItemsPrivate);
 
 		if (!$sourceItems) {
 			self::cliError(

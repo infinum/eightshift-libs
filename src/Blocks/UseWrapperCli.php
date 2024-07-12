@@ -57,6 +57,8 @@ class UseWrapperCli extends AbstractBlocksCli
 
 				Our wrapper can be found here:
 				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/wrapper
+				or
+				https://github.com/infinum/eightshift-frontend-libs-tailwind/tree/develop/blocks/init/src/Blocks/wrapper
 			"),
 		];
 	}
@@ -75,7 +77,7 @@ class UseWrapperCli extends AbstractBlocksCli
 					'name' => 'wrapper',
 				],
 			),
-			Helpers::getProjectPaths('blocksSourceWrapper'),
+			$this->isTailwind() ? Helpers::getProjectPaths('blocksSourceTailwindWrapper') : Helpers::getProjectPaths('blocksSourceWrapper'),
 			Helpers::getProjectPaths('blocksDestinationWrapper'),
 			'wrapper',
 			true

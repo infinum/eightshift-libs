@@ -135,6 +135,13 @@ abstract class AbstractCli implements CliInterface
 	public const ARG_FRONTEND_LIBS_VERSION = 'g_frontend_libs_version';
 
 	/**
+	 * Output project frontend libs type arg.
+	 *
+	 * @var string
+	 */
+	public const ARG_FRONTEND_LIBS_TYPE = 'g_frontend_libs_type';
+
+	/**
 	 * Output namespace arg.
 	 *
 	 * @var string
@@ -277,6 +284,7 @@ abstract class AbstractCli implements CliInterface
 			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? \site_url(),
 			self::ARG_LIBS_VERSION => $args[self::ARG_LIBS_VERSION] ?? '',
 			self::ARG_FRONTEND_LIBS_VERSION => $args[self::ARG_FRONTEND_LIBS_VERSION] ?? '',
+			self::ARG_FRONTEND_LIBS_TYPE => \strtolower($args[self::ARG_FRONTEND_LIBS_TYPE] ?? 'standard'),
 			self::ARG_SKIP_EXISTING => true,
 			self::ARG_GROUP_OUTPUT => true,
 		];
@@ -653,17 +661,15 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Run commands after initial setup.
+	 * Run commands after initial setup - backend.
 	 *
 	 * @param string $libsVersion Version of libs to install.
-	 * @param string $frontendLibsVersion Version of frontend libs to install.
 	 * @param string $destination Destination path.
 	 *
 	 * @return void
 	 */
-	public function initMandatoryAfter(
+	public function initMandatoryBackendAfter(
 		string $libsVersion,
-		string $frontendLibsVersion,
 		string $destination
 	): void {
 		$this->cliLog('--------------------------------------------------', 'C');
@@ -679,12 +685,34 @@ abstract class AbstractCli implements CliInterface
 		} else {
 			\shell_exec("cd {$destination} && composer require infinum/eightshift-libs"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		}
+	}
+
+	/**
+	 * Run commands after initial setup - frontend.
+	 *
+	 * @param string $frontendLibsVersion Version of frontend libs to install.
+	 * @param string $frontendLibsType Type of frontend libs to install.
+	 * @param string $destination Destination path.
+	 *
+	 * @return void
+	 */
+	public function initMandatoryFrontendAfter(
+		string $frontendLibsVersion,
+		string $frontendLibsType,
+		string $destination
+	): void {
 		$this->cliLog('--------------------------------------------------', 'C');
 		$this->cliLog('Running npm install', 'C');
+
+		$flibsType = 'frontend-libs';
+		if ($frontendLibsType === 'tailwind') {
+			$flibsType = 'frontend-libs-tailwind';
+		}
+
 		if ($frontendLibsVersion) {
-			\shell_exec("cd {$destination} && npm install infinum/eightshift-frontend-libs#{$frontendLibsVersion}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+			\shell_exec("cd {$destination} && npm install infinum/eightshift-{$flibsType}#{$frontendLibsVersion}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		} else {
-			\shell_exec("cd {$destination} && npm install @eightshift/frontend-libs"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+			\shell_exec("cd {$destination} && npm install @eightshift/{$flibsType}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		}
 	}
 
@@ -1071,5 +1099,15 @@ abstract class AbstractCli implements CliInterface
 		$class->__invoke([], \array_merge(
 			$args,
 		));
+	}
+
+	/**
+	 * Check if the project is using Tailwind.
+	 *
+	 * @return bool
+	 */
+	public function isTailwind(): bool
+	{
+		return \file_exists(Helpers::getProjectPaths('blocksTailwindSource'));
 	}
 }

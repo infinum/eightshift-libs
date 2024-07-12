@@ -81,6 +81,8 @@ class UseVariationCli extends AbstractBlocksCli
 
 				All our variations can be found here:
 				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/variations
+				or
+				https://github.com/infinum/eightshift-frontend-libs-tailwind/tree/develop/blocks/init/src/Blocks/variations
 			"),
 		];
 	}
@@ -94,11 +96,9 @@ class UseVariationCli extends AbstractBlocksCli
 
 		$this->moveItems(
 			$assocArgs,
-			Helpers::getProjectPaths('blocksSourceVariations'),
+			$this->isTailwind() ? Helpers::getProjectPaths('blocksSourceTailwindVariations') : Helpers::getProjectPaths('blocksSourceVariations'),
 			Helpers::getProjectPaths('blocksDestinationVariations'),
-			'variation',
-			false,
-			Helpers::getProjectPaths('blocksPrivateSourceCustom')
+			'variation'
 		);
 
 		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {

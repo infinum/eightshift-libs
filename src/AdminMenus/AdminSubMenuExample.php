@@ -97,7 +97,7 @@ class AdminSubMenuExample extends AbstractAdminSubMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return 'layout';
+		return '%view_component%';
 	}
 
 	/**
@@ -115,7 +115,7 @@ class AdminSubMenuExample extends AbstractAdminSubMenu
 	protected function processAttributes($attr): array
 	{
 		return [
-			'pageTitle' => \esc_html__('%title%', '%g_textdomain%'),
+			'pageTitle' => $this->getTitle(),
 		];
 	}
 }

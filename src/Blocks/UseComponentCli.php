@@ -91,6 +91,8 @@ class UseComponentCli extends AbstractBlocksCli
 
 				All our components can be found here:
 				https://github.com/infinum/eightshift-frontend-libs/tree/develop/blocks/init/src/Blocks/components
+				or
+				https://github.com/infinum/eightshift-frontend-libs-tailwind/tree/develop/blocks/init/src/Blocks/components
 			"),
 		];
 	}
@@ -104,11 +106,9 @@ class UseComponentCli extends AbstractBlocksCli
 
 		$this->moveItems(
 			$assocArgs,
-			Helpers::getProjectPaths('blocksSourceComponents'),
+			$this->isTailwind() ? Helpers::getProjectPaths('blocksSourceTailwindComponents') : Helpers::getProjectPaths('blocksSourceComponents'),
 			Helpers::getProjectPaths('blocksDestinationComponents'),
-			'component',
-			false,
-			Helpers::getProjectPaths('blocksPrivateSourceCustom')
+			'component'
 		);
 
 		if (!$assocArgs[self::ARG_GROUP_OUTPUT]) {

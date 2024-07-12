@@ -1,0 +1,60 @@
+{
+	"name": "%g_textdomain%/%g_textdomain%",
+	"description": "%g_project_description%",
+	"version": "1.0.0",
+	"private": true,
+	"license": "MIT",
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
+		"infinum/eightshift-coding-standards": "^3.0.0",
+		"php-stubs/wordpress-stubs": "^v6.5.3",
+		"szepeviktor/phpstan-wordpress": "^v1.3.4",
+		"wp-cli/wp-cli": "^v2.10.0"
+	},
+	"require": {
+		"php": ">=8.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"%g_namespace%\\": "src/"
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"config": {
+		"sort-packages": true,
+		"optimize-autoloader": true,
+		"process-timeout": 2000,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"scripts": {
+		"test:types": "@php ./vendor/bin/phpstan analyze",
+		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.2-",
+		"test": [
+			"@test:standards",
+			"@test:types"
+		],
+		"prefix-namespaces": [
+			"@php strauss.phar",
+			"composer dump-autoload"
+		],
+		"post-install-cmd": [
+			"@php strauss.phar",
+			"composer dump-autoload"
+		],
+		"post-update-cmd": [
+			"@php strauss.phar",
+			"composer dump-autoload"
+		]
+	},
+	"extra": {
+		"strauss": {
+			"namespace_prefix": "%g_namespace_vendor_prefix%",
+			"exclude_from_prefix": {
+				"file_patterns": ["/Example.php$/"]
+			}
+		}
+	}
+}

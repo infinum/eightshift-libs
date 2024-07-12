@@ -3,15 +3,16 @@
 /**
  * Class that registers WP-CLI command initial setup of theme project.
  *
- * @package EightshiftLibs\Cli
+ * @package EightshiftLibs\Init
  */
 
 declare(strict_types=1);
 
 namespace EightshiftLibs\Init;
 
-use EightshiftLibs\AdminMenus\AdminReusableBlocksMenuCli;
-use EightshiftLibs\AdminMenus\ReusableBlocksHeaderFooterCli;
+use EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenu\AdminPatternsHeaderFooterMenuCli;
+use EightshiftLibs\AdminMenus\AdminPatternsMenu\AdminPatternsMenuCli;
+use EightshiftLibs\AdminMenus\AdminThemeOptionsMenu\AdminThemeOptionsMenuCli;
 use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
@@ -20,6 +21,7 @@ use EightshiftLibs\Enqueue\Admin\EnqueueAdminCli;
 use EightshiftLibs\Enqueue\Blocks\EnqueueBlocksCli;
 use EightshiftLibs\Enqueue\Theme\EnqueueThemeCli;
 use EightshiftLibs\Main\MainCli;
+use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 
 /**
  * Class InitThemeCli
@@ -29,18 +31,26 @@ class InitThemeCli extends AbstractCli
 	/**
 	 * All classes for initial theme setup for project.
 	 *
-	 * @var array<int, mixed>
+	 * @var array<string, array<string>>
 	 */
 	public const COMMANDS = [
-		ManifestCacheCli::class,
-		ConfigThemeCli::class,
-		MainCli::class,
-		EnqueueAdminCli::class,
-		EnqueueBlocksCli::class,
-		EnqueueThemeCli::class,
-		AdminReusableBlocksMenuCli::class,
-		ReusableBlocksHeaderFooterCli::class,
-		InitBlocksCli::class,
+		'common' => [
+			ManifestCacheCli::class,
+			ConfigThemeCli::class,
+			MainCli::class,
+			EnqueueAdminCli::class,
+			EnqueueBlocksCli::class,
+			EnqueueThemeCli::class,
+			AdminPatternsMenuCli::class,
+			InitBlocksCli::class,
+		],
+		'standard' => [
+			AdminPatternsHeaderFooterMenuCli::class,
+		],
+		'tailwind' => [
+			AdminThemeOptionsMenuCli::class,
+			ThemeOptionsCli::class,
+		],
 	];
 
 	/**
@@ -102,7 +112,12 @@ class InitThemeCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		foreach (static::COMMANDS as $item) {
+		$commands = [
+			...($this->isTailwind() ? static::COMMANDS['tailwind'] : static::COMMANDS['standard']),
+			...static::COMMANDS['common'],
+		];
+
+		foreach ($commands as $item) {
 			$this->runCliCommand(
 				$item,
 				$this->commandParentName,

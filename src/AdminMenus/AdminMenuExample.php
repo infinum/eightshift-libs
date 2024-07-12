@@ -130,7 +130,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	 */
 	protected function getViewComponent(): string
 	{
-		return 'layout';
+		return '%view_component%';
 	}
 
 	/**
@@ -148,7 +148,7 @@ class AdminMenuExample extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		return [
-			'pageTitle' => \esc_html__('%title%', '%g_textdomain%'),
+			'pageTitle' => $this->getTitle(),
 		];
 	}
 }

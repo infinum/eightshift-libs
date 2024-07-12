@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for ThemeOptions using ACF.
+ * Class that registers WPCLI command for ThemeOptions.
  *
  * @package EightshiftLibs\ThemeOptions
  */
@@ -47,12 +47,11 @@ class ThemeOptionsCli extends AbstractCli
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create project Theme Options service class using ACF plugin.',
+			'shortdesc' => 'Create project Theme Options service class.',
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used to create Advanced Custom Fields theme options service class to register project specific options.
-				ACF plugin must be installed.
+				Used to create theme options service class to register project specific options.
 
 				## EXAMPLES
 
