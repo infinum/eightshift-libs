@@ -145,7 +145,7 @@ class InitThemeCleanSetupCli extends AbstractCli
 		$destionation = Helpers::getProjectPaths('themeRoot');
 
 		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog("Moving theme mandatory files", 'C');
+		$this->cliLog("Moving mandatory theme files", 'C');
 
 		foreach ($files as $file) {
 			if ($file === '.' || $file === '..') {
