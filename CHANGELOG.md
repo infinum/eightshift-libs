@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.0.1]
+
+### Fixed
+- Blocks registration hooks now uses store registration hooks.
+
 ## [9.0.0]
 
 ### Changed
@@ -614,6 +619,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[9.0.1]: https://github.com/infinum/eightshift-libs/compare/9.0.0...9.0.1
 [9.0.0]: https://github.com/infinum/eightshift-libs/compare/8.0.7...9.0.0
 [8.0.7]: https://github.com/infinum/eightshift-libs/compare/8.0.6...8.0.7
 [8.0.6]: https://github.com/infinum/eightshift-libs/compare/8.0.5...8.0.6

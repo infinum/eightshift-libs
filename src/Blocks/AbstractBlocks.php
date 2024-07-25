@@ -131,7 +131,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$allowedBlockTypes = \array_values(\array_merge(
 				\array_map(
 					fn ($block) => $block['blockFullName'],
-					$this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY)
+					Helpers::getBlocks()
 				),
 				$allowedBlockTypes,
 			));
@@ -175,7 +175,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return;
 		}
 
-		foreach ($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY) as $block) {
+		foreach (Helpers::getBlocks() as $block) {
 			$this->registerBlock($block);
 		}
 	}
