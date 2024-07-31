@@ -120,7 +120,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @throws Exception Exception thrown by the DI container.
 	 */
-	private function getServiceClassesWithDi(): array
+	protected function getServiceClassesWithDi(): array
 	{
 		$services = $this->getServiceClassesPreparedArray();
 
