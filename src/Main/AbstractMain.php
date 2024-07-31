@@ -31,14 +31,14 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @var Object[]
 	 */
-	private array $services = [];
+	protected array $services = [];
 
 	/**
 	 * DI container instance.
 	 *
 	 * @var Container
 	 */
-	private Container $container;
+	protected Container $container;
 
 	/**
 	 * Constructs object and inserts prefixes from composer.
