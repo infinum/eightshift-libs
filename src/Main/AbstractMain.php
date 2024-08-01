@@ -31,14 +31,14 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @var Object[]
 	 */
-	private array $services = [];
+	protected array $services = [];
 
 	/**
 	 * DI container instance.
 	 *
 	 * @var Container
 	 */
-	private Container $container;
+	protected Container $container;
 
 	/**
 	 * Constructs object and inserts prefixes from composer.
@@ -120,7 +120,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @throws Exception Exception thrown by the DI container.
 	 */
-	private function getServiceClassesWithDi(): array
+	protected function getServiceClassesWithDi(): array
 	{
 		$services = $this->getServiceClassesPreparedArray();
 
