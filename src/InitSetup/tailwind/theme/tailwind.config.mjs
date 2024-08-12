@@ -9,7 +9,7 @@ import { themeColors } from './assets/scripts/theme-colors';
 /** @type {import('tailwindcss').Config} */
 export default {
 	content: {
-		files: ['./src/**/*.{html,js,php,json}', './**/*.php'],
+		files: ['./src/**/*.{html,js,php,json}', './*.php'],
 		transform: processEightshiftClasses(Object.keys(globalManifest.globalVariables.breakpoints)),
 		extract,
 	},
