@@ -235,6 +235,10 @@ trait TailwindTrait
 				foreach ($conditions as $key => $attrConditions) {
 					$value = Helpers::checkAttr($key, $attributes, $manifest, true);
 
+					if (\is_bool($value)) {
+						$value = $value ? 'true' : 'false';
+					}
+
 					$isArrayCondition = \is_array($attrConditions);
 
 					if (!$value) {
