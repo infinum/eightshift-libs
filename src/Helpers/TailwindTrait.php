@@ -98,6 +98,10 @@ trait TailwindTrait
 
 				$value = Helpers::checkAttr($attributeName, $attributes, $manifest, true);
 
+				if (\is_bool($value)) {
+					$value = \var_export($value, true);
+				}
+
 				if ($responsive ? empty($value['_default'] ?? '') : !$value) {
 					continue;
 				}
@@ -174,6 +178,10 @@ trait TailwindTrait
 				}
 
 				$value = Helpers::checkAttr($attributeName, $attributes, $manifest, true);
+
+				if (\is_bool($value)) {
+					$value = \var_export($value, true);
+				}
 
 				if ($responsive ? empty($value['_default'] ?? '') : !$value) {
 					continue;
