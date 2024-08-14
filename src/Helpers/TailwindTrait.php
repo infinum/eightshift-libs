@@ -99,7 +99,7 @@ trait TailwindTrait
 				$value = Helpers::checkAttr($attributeName, $attributes, $manifest, true);
 
 				if (\is_bool($value)) {
-					$value = \var_export($value, true);
+					$value = $value ? 'true' : 'false';
 				}
 
 				if ($responsive ? empty($value['_default'] ?? '') : !$value) {
@@ -180,7 +180,7 @@ trait TailwindTrait
 				$value = Helpers::checkAttr($attributeName, $attributes, $manifest, true);
 
 				if (\is_bool($value)) {
-					$value = \var_export($value, true);
+					$value = $value ? 'true' : 'false';
 				}
 
 				if ($responsive ? empty($value['_default'] ?? '') : !$value) {
