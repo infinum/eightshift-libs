@@ -93,7 +93,7 @@ trait TailwindTrait
 
 		if (isset($manifest['tailwind']['options'])) {
 			foreach ($manifest['tailwind']['options'] as $attributeName => $value) {
-				if (isset($value['part']) && $value['part'] !== $part) {
+				if (!isset($value['part']) || $value['part'] !== $part) {
 					continue;
 				}
 
