@@ -10,6 +10,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Fixed Tailwind outputs not working properly with booleans.
 - `twClasses` and `twClassesEditor` can now be passed as an array
 - Fixed a couple of bugs related to Tailwind class output.
+- Tweaked default Prettier config for new projects.
 
 ## [9.0.2]
 
