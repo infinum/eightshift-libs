@@ -58,8 +58,8 @@ trait TailwindTrait
 
 		$partClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
 
-		if (is_array($partClasses)) {
-			$partClasses = implode(' ', $partClasses);
+		if (\is_array($partClasses)) {
+			$partClasses = \implode(' ', $partClasses);
 		}
 
 		return Helpers::classnames([$partClasses, ...$custom]);
@@ -85,8 +85,8 @@ trait TailwindTrait
 
 		$baseClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
 
-		if (is_array($baseClasses)) {
-			$baseClasses = implode(' ', $baseClasses);
+		if (\is_array($baseClasses)) {
+			$baseClasses = \implode(' ', $baseClasses);
 		}
 
 		$mainClasses = [];
@@ -121,8 +121,8 @@ trait TailwindTrait
 				if (!$responsive) {
 					$output = $twClasses[$value] ?? '';
 
-					if (is_array($output)) {
-						$output = implode(' ', $output);
+					if (\is_array($output)) {
+						$output = \implode(' ', $output);
 					}
 
 					$mainClasses = [...$mainClasses, $output];
@@ -138,8 +138,8 @@ trait TailwindTrait
 
 					$currentClasses = $twClasses[$value[$breakpoint]] ?? '';
 
-					if (is_array($currentClasses)) {
-						$currentClasses = implode(' ', $currentClasses);
+					if (\is_array($currentClasses)) {
+						$currentClasses = \implode(' ', $currentClasses);
 					}
 
 					if (!$currentClasses) {
@@ -180,8 +180,8 @@ trait TailwindTrait
 
 		$baseClasses = $manifest['tailwind']['base']['twClasses'] ?? '';
 
-		if (is_array($baseClasses)) {
-			$baseClasses = implode(' ', $baseClasses);
+		if (\is_array($baseClasses)) {
+			$baseClasses = \implode(' ', $baseClasses);
 		}
 
 		$mainClasses = [];
@@ -216,8 +216,8 @@ trait TailwindTrait
 				if (!$responsive) {
 					$output = $twClasses[$value] ?? '';
 
-					if (is_array($output)) {
-						$output = implode(' ', $output);
+					if (\is_array($output)) {
+						$output = \implode(' ', $output);
 					}
 
 					$mainClasses = [...$mainClasses, $output];
@@ -258,8 +258,8 @@ trait TailwindTrait
 				$conditions = $value['attributes'];
 				$twClasses = $value['twClasses'];
 
-				if (is_array($twClasses)) {
-					$twClasses = implode(' ', $twClasses);
+				if (\is_array($twClasses)) {
+					$twClasses = \implode(' ', $twClasses);
 				}
 
 				$matches = true;
