@@ -58,6 +58,10 @@ trait TailwindTrait
 
 		$partClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
 
+		if (is_array($partClasses)) {
+			$partClasses = implode(' ', $partClasses);
+		}
+
 		return Helpers::classnames([$partClasses, ...$custom]);
 	}
 
@@ -80,6 +84,10 @@ trait TailwindTrait
 		}
 
 		$baseClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
+
+		if (is_array($baseClasses)) {
+			$baseClasses = implode(' ', $baseClasses);
+		}
 
 		$mainClasses = [];
 
@@ -111,7 +119,13 @@ trait TailwindTrait
 				}
 
 				if (!$responsive) {
-					$mainClasses = [...$mainClasses, $twClasses[$value]];
+					$output = $twClasses[$value] ?? '';
+
+					if (is_array($output)) {
+						$output = implode(' ', $output);
+					}
+
+					$mainClasses = [...$mainClasses, $output];
 					continue;
 				}
 
@@ -123,6 +137,10 @@ trait TailwindTrait
 					}
 
 					$currentClasses = $twClasses[$value[$breakpoint]] ?? '';
+
+					if (is_array($currentClasses)) {
+						$currentClasses = implode(' ', $currentClasses);
+					}
 
 					if (!$currentClasses) {
 						return $curr;
@@ -162,6 +180,10 @@ trait TailwindTrait
 
 		$baseClasses = $manifest['tailwind']['base']['twClasses'] ?? '';
 
+		if (is_array($baseClasses)) {
+			$baseClasses = implode(' ', $baseClasses);
+		}
+
 		$mainClasses = [];
 
 		if (isset($manifest['tailwind']['options'])) {
@@ -192,7 +214,13 @@ trait TailwindTrait
 				}
 
 				if (!$responsive) {
-					$mainClasses = [...$mainClasses, $twClasses[$value]];
+					$output = $twClasses[$value] ?? '';
+
+					if (is_array($output)) {
+						$output = implode(' ', $output);
+					}
+
+					$mainClasses = [...$mainClasses, $output];
 					continue;
 				}
 
@@ -229,6 +257,10 @@ trait TailwindTrait
 			foreach ($manifest['tailwind']['combinations'] as $attributeName => $value) {
 				$conditions = $value['attributes'];
 				$twClasses = $value['twClasses'];
+
+				if (is_array($twClasses)) {
+					$twClasses = implode(' ', $twClasses);
+				}
 
 				$matches = true;
 
