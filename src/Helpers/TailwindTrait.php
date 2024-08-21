@@ -98,6 +98,10 @@ trait TailwindTrait
 
 				$value = Helpers::checkAttr($attributeName, $attributes, $manifest, true);
 
+				if (\is_bool($value)) {
+					$value = $value ? 'true' : 'false';
+				}
+
 				if ($responsive ? empty($value['_default'] ?? '') : !$value) {
 					continue;
 				}
@@ -175,6 +179,10 @@ trait TailwindTrait
 
 				$value = Helpers::checkAttr($attributeName, $attributes, $manifest, true);
 
+				if (\is_bool($value)) {
+					$value = $value ? 'true' : 'false';
+				}
+
 				if ($responsive ? empty($value['_default'] ?? '') : !$value) {
 					continue;
 				}
@@ -226,6 +234,10 @@ trait TailwindTrait
 
 				foreach ($conditions as $key => $attrConditions) {
 					$value = Helpers::checkAttr($key, $attributes, $manifest, true);
+
+					if (\is_bool($value)) {
+						$value = $value ? 'true' : 'false';
+					}
 
 					$isArrayCondition = \is_array($attrConditions);
 
