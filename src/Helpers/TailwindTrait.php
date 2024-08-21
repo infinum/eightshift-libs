@@ -53,7 +53,7 @@ trait TailwindTrait
 	public static function getTwPart($part, $manifest, ...$custom)
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::classnames($custom) : '';
+			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$partClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
@@ -80,7 +80,7 @@ trait TailwindTrait
 	public static function getTwDynamicPart($part, $attributes, $manifest, ...$custom)
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::classnames($custom) : '';
+			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
@@ -175,7 +175,7 @@ trait TailwindTrait
 	public static function getTwClasses($attributes, $manifest, ...$custom)
 	{
 		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::classnames($custom) : '';
+			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['base']['twClasses'] ?? '';
