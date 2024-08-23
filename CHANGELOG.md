@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.0]
+
+### Fixed
+- Default Tailwind config - PHP files are watched now only in the root folder and anything within `src/`
+- Fixed Tailwind outputs not working properly with booleans.
+- `twClasses` and `twClassesEditor` can now be passed as an array
+- Fixed a couple of bugs related to Tailwind class output.
+- Tweaked default Prettier config for new projects.
+
 ## [9.0.2]
 
 ### Changed
@@ -177,7 +186,7 @@ This is a major release that includes PHP8+ support. We tested it on the PHP 8.2
 - Missing type hinting.
 - New command to change version number.
 - Better copy for `checkAttr`` helper if key is missing.
-- Every enqueue script now has `is<>Used` method that is by default true. 
+- Every enqueue script now has `is<>Used` method that is by default true.
 
 ### Removed
 - Blocks "old" version functions.
@@ -453,7 +462,7 @@ MAYOR BREAKING CHANGES
 
 ## [2.2.2] - 2020-05-15
 
-### Added 
+### Added
 - New helper method for making responsive selectors.
 
 ## [2.2.1] - 2020-05-13
@@ -461,13 +470,13 @@ MAYOR BREAKING CHANGES
 ### Removed
 - PHP version 7.0 from Travis build.
 
-### Added 
+### Added
 - Check for block manifest validation.
 
 ## [2.2.0] - 2020-05-06
 
 ### Changed
-* Removed config dependency from the Asset classes and exposed config through Manifest. 
+* Removed config dependency from the Asset classes and exposed config through Manifest.
 * `editor-color-palette` - Add theme support for editor color palette built from global manifest.json.
 
 ## [2.1.1] - 2020-03-05
@@ -624,6 +633,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[9.1.0]: https://github.com/infinum/eightshift-libs/compare/9.0.2...9.1.0
 [9.0.2]: https://github.com/infinum/eightshift-libs/compare/9.0.1...9.0.2
 [9.0.1]: https://github.com/infinum/eightshift-libs/compare/9.0.0...9.0.1
 [9.0.0]: https://github.com/infinum/eightshift-libs/compare/8.0.7...9.0.0

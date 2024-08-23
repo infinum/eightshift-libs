@@ -53,10 +53,14 @@ trait TailwindTrait
 	public static function getTwPart($part, $manifest, ...$custom)
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return '';
+			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$partClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
+
+		if (\is_array($partClasses)) {
+			$partClasses = \implode(' ', $partClasses);
+		}
 
 		return Helpers::classnames([$partClasses, ...$custom]);
 	}
@@ -76,16 +80,20 @@ trait TailwindTrait
 	public static function getTwDynamicPart($part, $attributes, $manifest, ...$custom)
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return '';
+			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
+
+		if (\is_array($baseClasses)) {
+			$baseClasses = \implode(' ', $baseClasses);
+		}
 
 		$mainClasses = [];
 
 		if (isset($manifest['tailwind']['options'])) {
 			foreach ($manifest['tailwind']['options'] as $attributeName => $value) {
-				if (isset($value['part']) && $value['part'] !== $part) {
+				if (!isset($value['part']) || $value['part'] !== $part) {
 					continue;
 				}
 
@@ -111,7 +119,13 @@ trait TailwindTrait
 				}
 
 				if (!$responsive) {
-					$mainClasses = [...$mainClasses, $twClasses[$value]];
+					$output = $twClasses[$value] ?? '';
+
+					if (\is_array($output)) {
+						$output = \implode(' ', $output);
+					}
+
+					$mainClasses = [...$mainClasses, $output];
 					continue;
 				}
 
@@ -123,6 +137,10 @@ trait TailwindTrait
 					}
 
 					$currentClasses = $twClasses[$value[$breakpoint]] ?? '';
+
+					if (\is_array($currentClasses)) {
+						$currentClasses = \implode(' ', $currentClasses);
+					}
 
 					if (!$currentClasses) {
 						return $curr;
@@ -157,10 +175,14 @@ trait TailwindTrait
 	public static function getTwClasses($attributes, $manifest, ...$custom)
 	{
 		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return '';
+			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['base']['twClasses'] ?? '';
+
+		if (\is_array($baseClasses)) {
+			$baseClasses = \implode(' ', $baseClasses);
+		}
 
 		$mainClasses = [];
 
@@ -192,7 +214,13 @@ trait TailwindTrait
 				}
 
 				if (!$responsive) {
-					$mainClasses = [...$mainClasses, $twClasses[$value]];
+					$output = $twClasses[$value] ?? '';
+
+					if (\is_array($output)) {
+						$output = \implode(' ', $output);
+					}
+
+					$mainClasses = [...$mainClasses, $output];
 					continue;
 				}
 
@@ -229,6 +257,10 @@ trait TailwindTrait
 			foreach ($manifest['tailwind']['combinations'] as $attributeName => $value) {
 				$conditions = $value['attributes'];
 				$twClasses = $value['twClasses'];
+
+				if (\is_array($twClasses)) {
+					$twClasses = \implode(' ', $twClasses);
+				}
 
 				$matches = true;
 
