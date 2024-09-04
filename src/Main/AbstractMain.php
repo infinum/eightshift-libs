@@ -190,7 +190,14 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		if ((\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') && !\defined('WP_CLI')) {
 			$file = \explode('\\', $this->namespace);
 
-			$builder->enableCompilation(__DIR__ . '/Cache', "{$file[0]}CompiledContainer");
+			$sep = \DIRECTORY_SEPARATOR;
+			$cacheFolder = __DIR__ . "{$sep}Cache";
+
+			if (\defined('EIGHTSHIFT_DI_CACHE_FOLDER')) {
+				$cacheFolder = \trim(\EIGHTSHIFT_DI_CACHE_FOLDER, $sep);
+			}
+
+			$builder->enableCompilation($cacheFolder, "{$file[0]}CompiledContainer");
 		}
 
 		return $builder->addDefinitions($definitions)->build();
