@@ -213,7 +213,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 			$cacheFolder = $this->getCachedFolderPath();
 
-			if (!$cacheFolder) {
+			if (!empty($cacheFolder)) {
 				$builder->enableCompilation($cacheFolder, "{$file[0]}CompiledContainer");
 			}
 		}
