@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.2]
+
+### Added
+- Updates on DI container to support caching and better performance.
+
 ## [9.1.1]
 
 ### Added
@@ -638,6 +643,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[9.1.2]: https://github.com/infinum/eightshift-libs/compare/9.1.1...9.1.2
 [9.1.1]: https://github.com/infinum/eightshift-libs/compare/9.1.0...9.1.1
 [9.1.0]: https://github.com/infinum/eightshift-libs/compare/9.0.2...9.1.0
 [9.0.2]: https://github.com/infinum/eightshift-libs/compare/9.0.1...9.0.2

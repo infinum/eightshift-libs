@@ -100,6 +100,23 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	}
 
 	/**
+	 * Get the path to the cache folder.
+	 *
+	 * @return string
+	 */
+	public function getCachedFolderPath(): string
+	{
+		$sep = \DIRECTORY_SEPARATOR;
+		$cacheFolder = __DIR__ . "{$sep}Cache";
+
+		if (\defined('EIGHTSHIFT_DI_CACHE_FOLDER')) {
+			$cacheFolder = \trim(\EIGHTSHIFT_DI_CACHE_FOLDER, $sep);
+		}
+
+		return $cacheFolder;
+	}
+
+	/**
 	 * Merges the autowired definition list with custom user-defined definition list.
 	 *
 	 * You can override autowired definition lists in $this->getServiceClasses().
@@ -187,17 +204,18 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 		$builder = new ContainerBuilder();
 
-		if ((\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') && !\defined('WP_CLI')) {
+		if (
+			(\defined('WP_ENVIRONMENT_TYPE') &&
+			(\WP_ENVIRONMENT_TYPE !== 'development')) &&
+			!\defined('WP_CLI')
+		) {
 			$file = \explode('\\', $this->namespace);
 
-			$sep = \DIRECTORY_SEPARATOR;
-			$cacheFolder = __DIR__ . "{$sep}Cache";
+			$cacheFolder = $this->getCachedFolderPath();
 
-			if (\defined('EIGHTSHIFT_DI_CACHE_FOLDER')) {
-				$cacheFolder = \trim(\EIGHTSHIFT_DI_CACHE_FOLDER, $sep);
+			if (!$cacheFolder) {
+				$builder->enableCompilation($cacheFolder, "{$file[0]}CompiledContainer");
 			}
-
-			$builder->enableCompilation($cacheFolder, "{$file[0]}CompiledContainer");
 		}
 
 		return $builder->addDefinitions($definitions)->build();
