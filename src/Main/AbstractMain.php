@@ -206,7 +206,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 		if (
 			(\defined('WP_ENVIRONMENT_TYPE') &&
-			(\WP_ENVIRONMENT_TYPE !== 'development' || \WP_ENVIRONMENT_TYPE !== 'local')) &&
+			(\WP_ENVIRONMENT_TYPE !== 'development')) &&
 			!\defined('WP_CLI')
 		) {
 			$file = \explode('\\', $this->namespace);
