@@ -43,35 +43,13 @@ class ThemeOptionsExample implements ServiceInterface
 	 */
 	public function addRbHfSettings(): void
 	{
-		$default = [
-			'header' => null,
-			'footer' => null,
-		];
-
-		$schema = [
-			'type' => 'object',
-			'properties' => [
-				'header' => [
-					'type' => 'string',
-				],
-				'footer' => [
-					'type' => 'string',
-				],
-				'fourOhFour' => [
-					'type' => 'string',
-				],
-			],
-		];
-
 		\register_setting(
 			'options',
 			self::OPTION_NAME,
 			[
-				'type' => 'object',
-				'default' => $default,
-				'show_in_rest' => [
-					'schema' => $schema,
-				],
+				'type' => 'string',
+				'show_in_rest' => true,
+				'default' => '{}',
 			]
 		);
 	}

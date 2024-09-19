@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.1.4]
+
+### Fixed
+- Theme options settings are now saved as string and not as object.
+
 ## [9.1.3]
 
 ### Fixed
@@ -648,6 +653,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[9.1.4]: https://github.com/infinum/eightshift-libs/compare/9.1.3...9.1.4
 [9.1.3]: https://github.com/infinum/eightshift-libs/compare/9.1.2...9.1.3
 [9.1.2]: https://github.com/infinum/eightshift-libs/compare/9.1.1...9.1.2
 [9.1.1]: https://github.com/infinum/eightshift-libs/compare/9.1.0...9.1.1
