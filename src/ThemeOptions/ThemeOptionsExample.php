@@ -49,6 +49,7 @@ class ThemeOptionsExample implements ServiceInterface
 			[
 				'type' => 'string',
 				'show_in_rest' => true,
+				'default' => '{}',
 			]
 		);
 	}
