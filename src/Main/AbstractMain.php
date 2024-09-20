@@ -110,7 +110,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		$cacheFolder = __DIR__ . "{$sep}Cache";
 
 		if (\defined('EIGHTSHIFT_DI_CACHE_FOLDER')) {
-			$cacheFolder = \trim(\EIGHTSHIFT_DI_CACHE_FOLDER, $sep);
+			$cacheFolder = \rtrim(\EIGHTSHIFT_DI_CACHE_FOLDER, $sep);
 		}
 
 		return $cacheFolder;
