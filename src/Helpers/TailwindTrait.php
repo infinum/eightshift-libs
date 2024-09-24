@@ -269,7 +269,7 @@ trait TailwindTrait
 
 					$isArrayCondition = \is_array($attrConditions);
 
-					if (!$value) {
+					if ($value === '' || $value === null) {
 						$matches = false;
 						break;
 					} elseif ($isArrayCondition && !\in_array($value, $attrConditions, true)) {
