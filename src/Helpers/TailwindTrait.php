@@ -254,7 +254,7 @@ trait TailwindTrait
 		$combinationClasses = [];
 
 		if (isset($manifest['tailwind']['combinations'])) {
-			foreach ($manifest['tailwind']['combinations'] as $attributeName => $value) {
+			foreach ($manifest['tailwind']['combinations'] as $value) {
 				$conditions = $value['attributes'];
 				$twClasses = $value['twClasses'];
 
@@ -267,13 +267,9 @@ trait TailwindTrait
 				foreach ($conditions as $key => $attrConditions) {
 					$value = Helpers::checkAttr($key, $attributes, $manifest, true);
 
-					if (\is_bool($value)) {
-						$value = $value ? 'true' : 'false';
-					}
-
 					$isArrayCondition = \is_array($attrConditions);
 
-					if (!$value) {
+					if ($value === '' || $value === null) {
 						$matches = false;
 						break;
 					} elseif ($isArrayCondition && !\in_array($value, $attrConditions, true)) {
