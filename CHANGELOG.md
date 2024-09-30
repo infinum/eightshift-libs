@@ -7,9 +7,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 - Introduced new, more flexible, and simpler to use `tailwindClasses` function. Replaces `getTwPart`, `getTwDynamicPart`, and `getTwClasses`.
-	- You can now apply classes to multiple parts within one option or combination! Also work with responsive options.
 	- **Potentially breaking**: `twClassesEditor` is now appended to `twClasses`. If you need editor-only classes, you can now use the `twClassesEditorOnly` key. Editor-only classes replace `twClasses`, but will also have classes from `twClassesEditor`.
-	- There are now (basic) warnings for misconfiugrations of parts and options.
+	- **Potentially breaking**: `parts` key in manifest now supports specifying multiple parts just with a comma-separated string.
+	- You can now apply classes to multiple parts within one option or combination! Also work with responsive options.
+	- There are now (basic) warnings for misconfigurations of parts and options.
 
 ## [9.1.6]
 
