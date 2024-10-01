@@ -158,7 +158,7 @@ trait CliHelpers
 	protected function getFolderItems(string $path): array
 	{
 		$output = \array_diff(\scandir($path), ['..', '.']);
-		$output = \array_values($output);
+		$output = \array_values($output); // @phpstan-ignore-line
 
 		return $output;
 	}

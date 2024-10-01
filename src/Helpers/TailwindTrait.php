@@ -43,8 +43,6 @@ trait TailwindTrait
 	}
 
 	/**
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
 	 * Gets Tailwind classes for the provided part.
 	 *
 	 * The part needs to be defined within the manifest, in the `tailwind` object.
@@ -52,6 +50,8 @@ trait TailwindTrait
 	 * @param string $part Part name.
 	 * @param array<mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
+	 *
+	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
 	 *
 	 * @return string
 	 */
@@ -71,8 +71,6 @@ trait TailwindTrait
 	}
 
 	/**
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
 	 * Gets Tailwind classes for the provided dynamic part.
 	 *
 	 * The part needs to be defined within the manifest, in the `tailwind` object.
@@ -81,6 +79,8 @@ trait TailwindTrait
 	 * @param array<mixed> $attributes Component/block attributes.
 	 * @param array<mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
+	 *
+	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
 	 *
 	 * @return string
 	 */
@@ -171,13 +171,13 @@ trait TailwindTrait
 	}
 
 	/**
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
 	 * Get Tailwind classes for the given component/block.
 	 *
 	 * @param array<mixed> $attributes Component/block attributes.
 	 * @param array<mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
+	 *
+	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
 	 *
 	 * @return string
 	 */
@@ -299,16 +299,38 @@ trait TailwindTrait
 		return Helpers::classnames([$baseClasses, ...$mainClasses, ...$combinationClasses, ...$custom]);
 	}
 
-	private static function unifyClasses($input)
+	/**
+	 * Unifies the given input classes into a single string.
+	 *
+	 * Takes an array or string of CSS classes and unifies them into a single string,
+	 * ensuring that there are no duplicate classes and that the classes are properly formatted.
+	 *
+	 * @param mixed $input The input classes to be unified. This can be a string or an array of strings.
+	 *
+	 * @return string The unified string of CSS classes.
+	 */
+	private static function unifyClasses($input): string
 	{
 		if (\is_array($input)) {
 			return Helpers::classnames($input);
 		}
 
-		return trim($input);
+		return \trim($input);
 	}
 
-	private static function processOption($partName, $optionValue, $defs)
+	/**
+	 * Processes the given option for a specific part name.
+	 *
+	 * This method processes the option value for a given part name based on the provided definitions.
+	 * It ensures that the option value is correctly handled according to the definitions.
+	 *
+	 * @param string $partName The name of the part for which the option is being processed.
+	 * @param mixed $optionValue The value of the option to be processed.
+	 * @param array<mixed> $defs The definitions that dictate how the option should be processed.
+	 *
+	 * @return string The processed option value.
+	 */
+	private static function processOption($partName, $optionValue, $defs): string
 	{
 		$optionClasses = [];
 
@@ -321,7 +343,7 @@ trait TailwindTrait
 			return '';
 		}
 
-		if ($isSingleValue && !str_contains($itemPartName, $partName)) {
+		if ($isSingleValue && !\str_contains($itemPartName, $partName)) {
 			return '';
 		}
 
@@ -333,10 +355,10 @@ trait TailwindTrait
 		}
 
 		// Responsive options.
-		$breakpoints = array_keys($optionValue);
+		$breakpoints = \array_keys($optionValue);
 
-		if (in_array('_desktopFirst', $breakpoints, true)) {
-			$breakpoints = array_filter($breakpoints, fn($breakpoint) => $breakpoint !== '_desktopFirst');
+		if (\in_array('_desktopFirst', $breakpoints, true)) {
+			$breakpoints = \array_filter($breakpoints, fn($breakpoint) => $breakpoint !== '_desktopFirst');
 		}
 
 		foreach ($breakpoints as $breakpoint) {
@@ -355,8 +377,8 @@ trait TailwindTrait
 				continue;
 			}
 
-			$splitClasses = explode(' ', $rawClasses);
-			$splitClasses = array_map(fn($cn) => empty($cn) ? null : "{$breakpoint}:{$cn}", $splitClasses);
+			$splitClasses = \explode(' ', $rawClasses);
+			$splitClasses = \array_map(fn($cn) => empty($cn) ? null : "{$breakpoint}:{$cn}", $splitClasses);
 
 			$optionClasses = [...$optionClasses, ...$splitClasses];
 		}
@@ -364,7 +386,22 @@ trait TailwindTrait
 		return self::unifyClasses($optionClasses);
 	}
 
-	private static function processCombination($partName, $combo, $attributes, $manifest)
+	/**
+	 * Processes the given combination for a specific part name.
+	 *
+	 * This method processes the combination value for a given part name based on the provided attributes and manifest.
+	 * It ensures that the combination is correctly handled according to the attributes and manifest.
+	 *
+	 * @param string $partName The name of the part for which the combination is being processed.
+	 * @param mixed $combo The combination value to be processed.
+	 * @param array<mixed> $attributes The attributes that dictate how the combination should be processed.
+	 * @param array<mixed> $manifest The manifest that provides additional context for processing the combination.
+	 *
+	 * @throws JsonException If the combination was not defined correctly.
+	 *
+	 * @return string The processed combination value.
+	 */
+	private static function processCombination($partName, $combo, $attributes, $manifest): string
 	{
 		$matches = true;
 
@@ -375,7 +412,7 @@ trait TailwindTrait
 				$optionValue = $optionValue ? 'true' : 'false';
 			}
 
-			if (is_array($allowedValue) && !in_array($optionValue, $allowedValue, true)) {
+			if (\is_array($allowedValue) && !\in_array($optionValue, $allowedValue, true)) {
 				$matches = false;
 				break;
 			}
@@ -393,13 +430,13 @@ trait TailwindTrait
 		$itemPartName = isset($combo['part']) ? $combo['part'] : 'base';
 		$isSingleValue = isset($combo['twClasses']) || isset($combo['twClassesEditor']);
 
-		if ($isSingleValue && !str_contains($itemPartName, $partName)) {
+		if ($isSingleValue && !\str_contains($itemPartName, $partName)) {
 			return '';
 		}
 
 		$rawValue = $combo['output'][$partName]['twClasses'] ?? $combo['twClasses'] ?? '';
 
-		if (is_array($rawValue) && !\array_is_list($rawValue)) {
+		if (\is_array($rawValue) && !\array_is_list($rawValue)) {
 			throw new JsonException('Combination was not defined correctly. Please check the combination definition in the manifest.');
 		}
 
@@ -409,25 +446,27 @@ trait TailwindTrait
 	/**
 	 * Get Tailwind classes for the given component/block.
 	 *
-	 * @param string $string Part to get classes for.
+	 * @param string $part Part to get classes for.
 	 * @param array<mixed> $attributes Component/block attributes.
 	 * @param array<mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
 	 *
+	 * @throws Exception If the part is not defined in the manifest.
+	 *
 	 * @return string
 	 */
-	public static function tailwindClasses($part, $attributes, $manifest, ...$custom)
+	public static function tailwindClasses($part, $attributes, $manifest, ...$custom): string
 	{
 		// If nothing is set, return custom classes as a fallback.
 		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
 			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
 		}
 
-		$allParts = isset($manifest['tailwind']['parts']) ? ['base', ...array_keys($manifest['tailwind']['parts'])] : ['base'];
+		$allParts = isset($manifest['tailwind']['parts']) ? ['base', ...\array_keys($manifest['tailwind']['parts'])] : ['base'];
 
 		$partName = 'base';
 
-		if (!empty($part) && isset($manifest['tailwind']['parts'][$part]) && in_array($part, $allParts, true)) {
+		if (!empty($part) && isset($manifest['tailwind']['parts'][$part]) && \in_array($part, $allParts, true)) {
 			$partName = $part;
 		} elseif ($part !== 'base') {
 			throw new Exception("Part '{$part}' is not defined in the manifest.");
