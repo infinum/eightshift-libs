@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.2.0]
+
+### Added
+- Introduced new, more flexible, and simpler to use `tailwindClasses` function. Replaces `getTwPart`, `getTwDynamicPart`, and `getTwClasses`.
+	- **Potentially breaking**: `twClassesEditor` is now appended to `twClasses`. If you need editor-only classes, you can now use the `twClassesEditorOnly` key. Editor-only classes replace `twClasses`, but will also have classes from `twClassesEditor`.
+	- **Potentially breaking**: `parts` key in manifest now supports specifying multiple parts just with a comma-separated string.
+	- You can now apply classes to multiple parts within one option or combination! Also work with responsive options.
+	- There are now (basic) warnings for misconfigurations of parts and options.
+
 ## [9.1.6]
 
 ### Fixed
@@ -663,6 +672,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[9.2.0]: https://github.com/infinum/eightshift-libs/compare/9.1.6...9.2.0
 [9.1.6]: https://github.com/infinum/eightshift-libs/compare/9.1.5...9.1.6
 [9.1.5]: https://github.com/infinum/eightshift-libs/compare/9.1.4...9.1.5
 [9.1.4]: https://github.com/infinum/eightshift-libs/compare/9.1.3...9.1.4
