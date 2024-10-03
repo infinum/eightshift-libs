@@ -36,7 +36,7 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return Config::getProjectTextDomain();
 	}
 
 	/**

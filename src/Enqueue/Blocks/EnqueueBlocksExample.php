@@ -49,7 +49,7 @@ class EnqueueBlocksExample extends AbstractEnqueueBlocks
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return Config::getProjectTextDomain();
 	}
 
 	/**
