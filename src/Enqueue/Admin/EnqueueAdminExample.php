@@ -39,7 +39,7 @@ class EnqueueAdminExample extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return Config::getProjectTextDomain();
 	}
 
 	/**
