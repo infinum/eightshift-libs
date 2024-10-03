@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.2.1]
+
+### Fixed
+- Bug with `combinations` output in `tailwindClasses` helper.
+
 ## [9.2.0]
 
 ### Added
@@ -672,6 +677,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[9.2.1]: https://github.com/infinum/eightshift-libs/compare/9.2.0...9.2.1
 [9.2.0]: https://github.com/infinum/eightshift-libs/compare/9.1.6...9.2.0
 [9.1.6]: https://github.com/infinum/eightshift-libs/compare/9.1.5...9.1.6
 [9.1.5]: https://github.com/infinum/eightshift-libs/compare/9.1.4...9.1.5
