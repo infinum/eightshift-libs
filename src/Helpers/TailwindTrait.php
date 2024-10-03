@@ -412,12 +412,12 @@ trait TailwindTrait
 				$optionValue = $optionValue ? 'true' : 'false';
 			}
 
-			if (\is_array($allowedValue) && !\in_array($optionValue, $allowedValue, true)) {
+			$isArrayCondition = \is_array($allowedValue);
+
+			if ($isArrayCondition && !\in_array($optionValue, $allowedValue, true)) {
 				$matches = false;
 				break;
-			}
-
-			if ($optionValue !== $allowedValue) {
+			} elseif (!$isArrayCondition && $optionValue !== $allowedValue) {
 				$matches = false;
 				break;
 			}
