@@ -408,10 +408,6 @@ trait TailwindTrait
 		foreach ($combo['attributes'] as $attributeName => $allowedValue) {
 			$optionValue = Helpers::checkAttr($attributeName, $attributes, $manifest, true);
 
-			if (\is_bool($optionValue)) {
-				$optionValue = $optionValue ? 'true' : 'false';
-			}
-
 			$isArrayCondition = \is_array($allowedValue);
 
 			if ($isArrayCondition && !\in_array($optionValue, $allowedValue, true)) {
