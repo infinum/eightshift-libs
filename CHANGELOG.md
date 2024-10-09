@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.2.2]
+
+### Fixed
+- Removed boolean conversion to string from `processCombination()`, which breaks strict values checking in `in_array()`.
+- Wrong name for `getAssetsPrefix` method in `Assets` class.
+
 ## [9.2.1]
 
 ### Fixed
@@ -677,6 +683,7 @@ Init setup
 
 [Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
 
+[9.2.2]: https://github.com/infinum/eightshift-libs/compare/9.2.1...9.2.2
 [9.2.1]: https://github.com/infinum/eightshift-libs/compare/9.2.0...9.2.1
 [9.2.0]: https://github.com/infinum/eightshift-libs/compare/9.1.6...9.2.0
 [9.1.6]: https://github.com/infinum/eightshift-libs/compare/9.1.5...9.1.6
