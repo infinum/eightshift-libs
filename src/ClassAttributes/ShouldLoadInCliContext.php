@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * An attribute class used to indicate a ServiceInterface should be loaded in WP-CLI.
+ *
+ * @package EightshiftLibs\ClassAttributes
+ */
+
 namespace EightshiftLibs\ClassAttributes;
 
 use Attribute;
