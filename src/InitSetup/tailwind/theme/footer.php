@@ -15,7 +15,7 @@ use %g_namespace%\ThemeOptions\ThemeOptions;
 <footer class="layout-base">
 <?php
 // Footer reusable block.
-$footerPartialId = get_option(ThemeOptions::OPTION_NAME)['footer'] ?? '';
+$footerPartialId = json_decode(get_option(ThemeOptions::OPTION_NAME), true)['footer'] ?? '';
 ThemeOptions::renderPartial($footerPartialId);
 ?>
 </footer>
