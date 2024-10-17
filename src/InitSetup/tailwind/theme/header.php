@@ -24,7 +24,7 @@ use %g_namespace%\ThemeOptions\ThemeOptions;
 
 <?php
 // Header reusable block.
-$headerPartialId = get_option(ThemeOptions::OPTION_NAME)['header'] ?? '';
+$headerPartialId = json_decode(get_option(ThemeOptions::OPTION_NAME), true)['header'] ?? '';
 ThemeOptions::renderPartial($headerPartialId);
 ?>
 
