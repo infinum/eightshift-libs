@@ -53,7 +53,13 @@ class Autowiring
 	 */
 	public function buildServiceClasses(array $manuallyDefinedDependencies = [], bool $skipInvalid = false): array
 	{
-		if ($cachedValue = \get_transient("{$this->namespace}_autowiring_cache")) {
+		if ( 
+			(
+				(\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') 
+				|| (\defined('EIGHTSHIFT_USE_AUTOWIRING_CACHE') && \EIGHTSHIFT_USE_AUTOWIRING_CACHE)
+			) && !\defined('WP_CLI')
+			 && $cachedValue = \get_transient("{$this->namespace}_autowiring_cache")
+		) {
 			return $cachedValue;
 		}
 
