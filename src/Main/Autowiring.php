@@ -53,6 +53,10 @@ class Autowiring
 	 */
 	public function buildServiceClasses(array $manuallyDefinedDependencies = [], bool $skipInvalid = false): array
 	{
+		if ($cachedValue = \get_transient("{$this->namespace}_autowiring_cache")) {
+			return $cachedValue;
+		}
+
 		$projectReflectionClasses = $this->validateAndBuildClasses(
 			$this->filterManuallyDefinedDependencies(
 				$this->getClassesInNamespace($this->namespace, $this->psr4Prefixes),
@@ -102,7 +106,9 @@ class Autowiring
 		}
 
 		// Convert dependency tree into PHP-DI's definition list.
-		return \array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
+		$value = \array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
+		\set_transient("{$this->namespace}_autowiring_cache", $value);
+		return $value;
 	}
 
 	// phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
