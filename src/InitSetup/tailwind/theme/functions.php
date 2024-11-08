@@ -50,19 +50,23 @@ if (\file_exists(__DIR__ . '/vendor-prefixed/autoload.php')) {
 /**
  * Set all the cache for the theme.
  */
+$manifestCache = null;
 if (\class_exists(ManifestCache::class)) {
-	(new ManifestCache())->setAllCache();
+	$manifestCache = new ManifestCache();
+	$manifestCache->setAllCache();
 }
 
 /**
  * Begins execution of the theme.
  *
- * Since everything within the theme is registered via hooks,
- * then kicking off the theme from this point in the file does
+ * Since everything within the plugin is registered via hooks,
+ * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  */
 if (\class_exists(Main::class)) {
-	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
+	$main = (new Main($loader->getPrefixesPsr4(), __NAMESPACE__));
+	$main->setManifestCache($manifestCache);
+	$main->register();
 }
 
 /**

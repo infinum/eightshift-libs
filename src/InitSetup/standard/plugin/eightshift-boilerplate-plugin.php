@@ -69,11 +69,14 @@ if (\class_exists(PluginFactory::class)) {
 	);
 }
 
+
 /**
  * Set all the cache for the plugin.
  */
+$manifestCache = null;
 if (\class_exists(ManifestCache::class)) {
-	(new ManifestCache())->setAllCache();
+	$manifestCache = new ManifestCache();
+	$manifestCache->setAllCache();
 }
 
 /**
@@ -84,9 +87,10 @@ if (\class_exists(ManifestCache::class)) {
  * not affect the page life cycle.
  */
 if (\class_exists(Main::class)) {
-	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
+	$main = (new Main($loader->getPrefixesPsr4(), __NAMESPACE__));
+	$main->setManifestCache($manifestCache);
+	$main->register();
 }
-
 /**
  * Run all WPCLI commands.
  */
