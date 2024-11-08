@@ -159,13 +159,18 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 	/**
 	 * Get an (abstract) cache item.
+	 *
 	 * @param string $key Cache array key.
 	 * @param string $cacheType Cache type to get.
 	 * @param callable|null $fallback Fallback function for getting a result when not set. Optional.
 	 * @param bool $isJson Determines whether we should try to decode the cached value as JSON.
-	 * @return array|mixed[] An array of cached values.
+	 *
+	 * @throws InvalidManifest If cache item is missing.
+	 *
+	 * @return array<string, mixed> An array of cached values.
 	 */
-	public function getCacheTopItem(string $key, string $cacheType = self::TYPE_BLOCKS, callable $fallback = null, bool $isJson = true): array {
+	public function getCacheTopItem(string $key, string $cacheType = self::TYPE_BLOCKS, callable $fallback = null, bool $isJson = true): array
+	{
 		$output = [];
 
 		if ((\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') && !\defined('WP_CLI')) {
@@ -312,8 +317,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 	/**
 	 * Set a custom (abstract) cache value.
+	 *
 	 * @param string $cacheType Cache type.
-	 * @param array $data Data to set. Does not get encoded, is set directly to a transient.
+	 * @param array<string, mixed> $data Data to set. Does not get encoded, is set directly to a transient.
 	 * @return void
 	 */
 	public function setCustomCache(string $cacheType = self::TYPE_BLOCKS, array $data = []): void
@@ -343,7 +349,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			$this->setCache($cacheType);
 		}
 
-		return ($isJson ? \json_decode($cache, true) : $cache ?? []) ?? [];
+		return ($isJson ? \json_decode($cache, true) : $cache) ?? [];
 	}
 
 	/**
