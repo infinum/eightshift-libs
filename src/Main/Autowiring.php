@@ -140,7 +140,9 @@ class Autowiring
 
 		// Convert dependency tree into PHP-DI's definition list.
 		$serviceClasses = \array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
-		$this->manifestCache->setCustomCache(AbstractManifestCache::TYPE_SERVICES, ['serviceClasses' => $serviceClasses]);
+		if (isset($this->manifestCache)) {
+			$this->manifestCache->setCustomCache(AbstractManifestCache::TYPE_SERVICES, ['serviceClasses' => $serviceClasses]);
+		}
 		return $serviceClasses;
 	}
 

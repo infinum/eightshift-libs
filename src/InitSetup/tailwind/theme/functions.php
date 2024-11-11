@@ -59,13 +59,15 @@ if (\class_exists(ManifestCache::class)) {
 /**
  * Begins execution of the theme.
  *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
+ * Since everything within the theme is registered via hooks,
+ * then kicking off the theme from this point in the file does
  * not affect the page life cycle.
  */
 if (\class_exists(Main::class)) {
 	$main = (new Main($loader->getPrefixesPsr4(), __NAMESPACE__));
-	$main->setManifestCache($manifestCache);
+	if ($manifestCache ?? false) {
+		$main->setManifestCache($manifestCache);
+	}
 	$main->register();
 }
 

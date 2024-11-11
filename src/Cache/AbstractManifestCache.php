@@ -306,6 +306,11 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 */
 	protected function setCache(string $cacheType = self::TYPE_BLOCKS): void
 	{
+		if ($cacheType === self::TYPE_SERVICES) {
+			// Services are set with setCustomCache.
+			return;
+		}
+
 		$name = self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}";
 
 		$cache = \get_transient($name);

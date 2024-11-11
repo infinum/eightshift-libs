@@ -88,7 +88,9 @@ if (\class_exists(ManifestCache::class)) {
  */
 if (\class_exists(Main::class)) {
 	$main = (new Main($loader->getPrefixesPsr4(), __NAMESPACE__));
-	$main->setManifestCache($manifestCache);
+	if ($manifestCache ?? false) {
+		$main->setManifestCache($manifestCache);
+	}
 	$main->register();
 }
 /**
