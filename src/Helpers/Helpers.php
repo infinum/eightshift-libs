@@ -461,7 +461,11 @@ class Helpers
 		);
 
 		$path = \implode($sep, $paths);
-		$path = "{$sep}{$path}";
+
+		// only add the separator if there is not a disk indicator - enables this to work in windows
+		if (!\str_contains(\mb_strstr($path, $sep, true) ?? '', ':')) {
+			$path = "{$sep}{$path}";
+		}
 
 		if (!\pathinfo($path, \PATHINFO_EXTENSION)) {
 			$path = "{$path}{$sep}";
