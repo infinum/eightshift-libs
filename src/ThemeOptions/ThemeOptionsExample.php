@@ -90,6 +90,26 @@ class ThemeOptionsExample implements ServiceInterface
 	}
 
 	/**
+	 * Get theme option.
+	 *
+	 * @param string $item Item to get.
+	 *
+	 * @return string
+	 */
+	public static function getOption(string $item): string
+	{
+		$options = \get_option(ThemeOptions::OPTION_NAME);
+
+		if (!Helpers::isJson($options)) {
+			return '';
+		}
+
+		$options = \json_decode($options, true);
+
+		return $options[$item] ?? '';
+	}
+
+	/**
 	 * Get reusable blocks patterns.
 	 *
 	 * @return array<mixed> Available patterns.
