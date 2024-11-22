@@ -14,10 +14,12 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\Definition\Helper\AutowireDefinitionHelper;
 use DI\Definition\Reference;
+use EightshiftLibs\ClassAttributes\ShouldLoadInCliContext;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Services\ServiceCliInterface;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
+use ReflectionClass;
 
 /**
  * The main start class.
@@ -71,14 +73,29 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		\array_walk(
 			$this->services,
 			function ($class) {
-				// Load services classes but not in the WP-CLI env.
+				// Load services classes but not in the WP-CLI env, unless they have the ShouldLoadInCliContext attr.
 				if (!\defined('WP_CLI') && $class instanceof ServiceInterface) {
 					$class->register();
 				}
 
-				// Load services CLI classes only in WP-CLI env.
-				if (\defined('WP_CLI') && $class instanceof ServiceCliInterface) {
-					$class->register();
+				if (\defined('WP_CLI')) {
+					if ($class instanceof ServiceCliInterface) {
+						// Classes implementing ServiceCliInterface should be loaded only in CLI contexts.
+						$class->register();
+						return;
+					}
+
+					// Allow loading service classes in CLI contexts if it
+					// or a parent class has ShouldLoadInCliContext attribute.
+					$reflection = new ReflectionClass($class);
+					while ($reflection) {
+						if (\count($reflection->getAttributes(ShouldLoadInCliContext::class))) {
+							$class->register();
+							return;
+						}
+
+						$reflection = $reflection->getParentClass();
+					}
 				}
 			}
 		);
