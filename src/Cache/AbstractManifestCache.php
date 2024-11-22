@@ -119,6 +119,13 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	public const TYPE_GEOLOCATION = 'geolocation';
 
 	/**
+	 * Cache key for services.
+	 *
+	 * @var string
+	 */
+	public const TYPE_SERVICES = 'services';
+
+	/**
 	 * Namespace for blocks.
 	 *
 	 * @var string
@@ -151,6 +158,37 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	}
 
 	/**
+	 * Get an (abstract) cache item.
+	 *
+	 * @param string $key Cache array key.
+	 * @param string $cacheType Cache type to get.
+	 * @param callable|null $fallback Fallback function for getting a result when not set. Optional.
+	 * @param bool $isJson Determines whether we should try to decode the cached value as JSON.
+	 *
+	 * @throws InvalidManifest If cache item is missing.
+	 *
+	 * @return array<string, mixed> An array of cached values.
+	 */
+	public function getCacheTopItem(string $key, string $cacheType = self::TYPE_BLOCKS, callable $fallback = null, bool $isJson = true): array
+	{
+		$output = [];
+
+		if ((\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') && !\defined('WP_CLI')) {
+			$output = $this->getCache($cacheType, $isJson)[$key] ?? [];
+		}
+
+		if (!$output && $cacheType !== self::TYPE_SERVICES) {
+			$output = $fallback ? $fallback($cacheType, $key) ?? [] : [];
+		}
+
+		if (!$output && !\defined('WP_CLI')) {
+			throw InvalidManifest::missingCacheTopItemException($key, $this->getFullPath($key, $cacheType));
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Get manifest cache top item.
 	 *
 	 * @param string $key Key of the cache.
@@ -162,21 +200,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 */
 	public function getManifestCacheTopItem(string $key, string $cacheType = self::TYPE_BLOCKS): array
 	{
-		$output = [];
-
-		if ((\defined('WP_ENVIRONMENT_TYPE') && \WP_ENVIRONMENT_TYPE !== 'development') && !\defined('WP_CLI')) {
-			$output = $this->getCache($cacheType)[$key] ?? [];
-		}
-
-		if (!$output) {
-			$output = $this->getAllManifests($cacheType)[$key] ?? [];
-		}
-
-		if (!$output && !\defined('WP_CLI')) {
-			throw InvalidManifest::missingCacheTopItemException($key, $this->getFullPath($key, $cacheType));
-		}
-
-		return $output;
+		return $this->getCacheTopItem($key, $cacheType, function () use ($cacheType, $key) {
+			return $this->getAllManifests($cacheType)[$key] ?? [];
+		});
 	}
 
 	/**
@@ -280,6 +306,11 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 */
 	protected function setCache(string $cacheType = self::TYPE_BLOCKS): void
 	{
+		if ($cacheType === self::TYPE_SERVICES) {
+			// Services are set with setCustomCache.
+			return;
+		}
+
 		$name = self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}";
 
 		$cache = \get_transient($name);
@@ -290,21 +321,40 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	}
 
 	/**
+	 * Set a custom (abstract) cache value.
+	 *
+	 * @param string $cacheType Cache type.
+	 * @param array<string, mixed> $data Data to set. Does not get encoded, is set directly to a transient.
+	 * @return void
+	 */
+	public function setCustomCache(string $cacheType = self::TYPE_BLOCKS, array $data = []): void
+	{
+		$name = self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}";
+
+		$cache = \get_transient($name);
+
+		if (!$cache) {
+			\set_transient($name, $data, $this->getDuration());
+		}
+	}
+
+	/**
 	 * Get cache.
 	 *
 	 * @param string $cacheType Type of the cache.
+	 * @param bool $isJson Determines if we should try to decode the cached value as JSON or not.
 	 *
 	 * @return array<string, array<mixed>> Array of cache.
 	 */
-	protected function getCache(string $cacheType = self::TYPE_BLOCKS): array
+	protected function getCache(string $cacheType = self::TYPE_BLOCKS, bool $isJson = true): array
 	{
-		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}") ?: ''; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$cache = \get_transient(self::TRANSIENT_NAME . $this->getCacheName() . "_{$cacheType}") ?: ($isJson ? '' : []); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		if (!$cache) {
 			$this->setCache($cacheType);
 		}
 
-		return \json_decode($cache, true) ?? [];
+		return ($isJson ? \json_decode($cache, true) : $cache) ?? [];
 	}
 
 	/**
@@ -451,6 +501,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					'fileName' => "src{$sep}Geolocation{$sep}manifest.json",
 				],
 			],
+			self::TYPE_SERVICES => []
 		];
 	}
 
