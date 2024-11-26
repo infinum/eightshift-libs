@@ -24,8 +24,7 @@ use %g_namespace%\ThemeOptions\ThemeOptions;
 
 <?php
 // Header reusable block.
-$headerPartialId = get_option(ThemeOptions::OPTION_NAME)['header'] ?? '';
-ThemeOptions::renderPartial($headerPartialId);
+ThemeOptions::renderPartial(ThemeOptions::getOption('header'));
 ?>
 
 <main class="main-content layout-base" id="main-content">
