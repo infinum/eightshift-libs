@@ -90,6 +90,6 @@ trait ProjectInfoTrait
 
 		$name = \basename($path);
 
-		return \get_plugin_data("{$path}{$name}.php");
+		return \get_plugin_data("{$path}{$name}.php", false, false);
 	}
 }

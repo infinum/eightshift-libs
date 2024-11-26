@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.3.1]
+
+### Fixed
+
+- `get_plugin_data` method will no longer translate the plugin name and description implemented in core `6.7`.
+
 ## [9.3.0]
 
 ### Added
@@ -787,7 +793,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
-[Unreleased]: https://github.com/infinum/eightshift-libs/compare/main...HEAD
+[9.3.1]: https://github.com/infinum/eightshift-libs/compare/9.3.0...9.3.1
 [9.3.0]: https://github.com/infinum/eightshift-libs/compare/9.2.2...9.3.0
 [9.2.2]: https://github.com/infinum/eightshift-libs/compare/9.2.1...9.2.2
 [9.2.1]: https://github.com/infinum/eightshift-libs/compare/9.2.0...9.2.1
