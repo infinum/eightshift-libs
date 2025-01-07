@@ -59,7 +59,13 @@ trait MediaTrait
 	 */
 	public static function isWebPMediaUsed(): bool
 	{
-		return (bool) \get_option(UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME, true);
+		static $isWebPMediaUsed = null;
+
+		if ($isWebPMediaUsed === null) {
+			$isWebPMediaUsed = (bool) \get_option(UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME, true);
+		}
+
+		return $isWebPMediaUsed;
 	}
 
 	/**
