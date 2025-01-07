@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.3.2]
+
+### Updated
+
+- Updated `isWebPMediaUsed` method to use static variable so the check is done only once.
+
 ## [9.3.1]
 
 ### Fixed
@@ -793,6 +799,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[9.3.2]: https://github.com/infinum/eightshift-libs/compare/9.3.1...9.3.2
 [9.3.1]: https://github.com/infinum/eightshift-libs/compare/9.3.0...9.3.1
 [9.3.0]: https://github.com/infinum/eightshift-libs/compare/9.2.2...9.3.0
 [9.2.2]: https://github.com/infinum/eightshift-libs/compare/9.2.1...9.2.2
