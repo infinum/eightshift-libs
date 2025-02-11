@@ -1,6 +1,5 @@
 vendor
 docs
-.phpdoc/cache
 
 composer.lock
 
