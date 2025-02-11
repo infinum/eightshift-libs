@@ -57,52 +57,22 @@
 
 	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceAfter">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceBefore">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="Eightshift.Security.HelpersEscape.OutputNotEscaped">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName">
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/clean/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/standard/plugin/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/theme/</exclude-pattern>
-		<exclude-pattern>*/src/InitSetup/tailwind/plugin/</exclude-pattern>
 	</rule>
 
 	<rule ref="Internal.NoCodeFound">
@@ -136,16 +106,6 @@
 		<properties>
 			<property name="lineLimit" value="180" />
 			<property name="ignoreComments" value="true" />
-		</properties>
-	</rule>
-
-	<!-- Add additional extending CLI classes. -->
-	<rule ref="Eightshift.Commenting.FunctionComment">
-		<properties>
-			<property name="allowedExtendedClasses" type="array">
-				<element value="AbstractCli"/>
-				<element value="AbstractBlocksCli"/>
-			</property>
 		</properties>
 	</rule>
 </ruleset>
