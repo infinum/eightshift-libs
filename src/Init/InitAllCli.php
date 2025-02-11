@@ -12,7 +12,6 @@ namespace EightshiftLibs\Init;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\Cli;
-use EightshiftLibs\Cli\ParentGroups\CliInit;
 
 /**
  * Class InitAllCli
@@ -26,7 +25,7 @@ class InitAllCli extends AbstractCli
 	 */
 	public function getCommandParentName(): string
 	{
-		return CliInit::COMMAND_NAME;
+		return 'debug';
 	}
 
 	/**
@@ -68,12 +67,7 @@ class InitAllCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		$commands = \array_merge(
-			Cli::CREATE_COMMANDS,
-			[
-				InitBlocksCli::class,
-			]
-		);
+		$commands = Cli::CREATE_COMMANDS;
 
 		foreach ($commands as $item) {
 			$this->runCliCommand(

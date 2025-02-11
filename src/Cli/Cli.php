@@ -18,20 +18,12 @@ use EightshiftLibs\AdminMenus\AdminThemeOptionsMenu\AdminThemeOptionsMenuCli;
 use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
-use EightshiftLibs\Blocks\UseComponentCli;
-use EightshiftLibs\Blocks\UseBlockCli;
-use EightshiftLibs\Blocks\UseAssetsCli;
-use EightshiftLibs\Blocks\UseGlobalAssetsCli;
-use EightshiftLibs\Blocks\UseManifestCli;
-use EightshiftLibs\Blocks\UseVariationCli;
-use EightshiftLibs\Blocks\UseWrapperCli;
 use EightshiftLibs\Cache\ManifestCacheCli;
 use EightshiftLibs\Cli\ParentGroups\CliBoilerplate;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use EightshiftLibs\Cli\ParentGroups\CliInitSetup;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Config\ConfigPluginCli;
@@ -58,16 +50,6 @@ use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Init\InitAllCli;
-use EightshiftLibs\Init\InitBlocksCli;
-use EightshiftLibs\Init\InitPluginCleanCli;
-use EightshiftLibs\Init\InitPluginCli;
-use EightshiftLibs\Init\InitProjectCli;
-use EightshiftLibs\Init\InitThemeCleanCli;
-use EightshiftLibs\Init\InitThemeCli;
-use EightshiftLibs\InitSetup\InitPluginCleanSetupCli;
-use EightshiftLibs\InitSetup\InitPluginSetupCli;
-use EightshiftLibs\InitSetup\InitThemeCleanSetupCli;
-use EightshiftLibs\InitSetup\InitThemeSetupCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Misc\VersionCli;
@@ -98,7 +80,6 @@ class Cli
 		CliRun::class,
 		CliBlocks::class,
 		CliInit::class,
-		CliInitSetup::class,
 	];
 
 	/**
@@ -167,13 +148,6 @@ class Cli
 	public const BLOCKS_COMMANDS = [
 		BlockPatternCli::class,
 		BlocksCli::class,
-		UseAssetsCli::class,
-		UseBlockCli::class,
-		UseComponentCli::class,
-		UseGlobalAssetsCli::class,
-		UseManifestCli::class,
-		UseVariationCli::class,
-		UseWrapperCli::class,
 	];
 
 	/**
@@ -183,24 +157,6 @@ class Cli
 	 */
 	public const INIT_COMMANDS = [
 		InitAllCli::class,
-		InitBlocksCli::class,
-		InitPluginCli::class,
-		InitPluginCleanCli::class,
-		InitProjectCli::class,
-		InitThemeCli::class,
-		InitThemeCleanCli::class,
-	];
-
-	/**
-	 * All commands used for setting up. Command prefix - init-setup.
-	 *
-	 * @var array<string>
-	 */
-	public const INIT_SETUP_COMMANDS = [
-		InitThemeSetupCli::class,
-		InitThemeCleanSetupCli::class,
-		InitPluginSetupCli::class,
-		InitPluginCleanSetupCli::class,
 	];
 
 	/**
@@ -214,7 +170,6 @@ class Cli
 			...static::CREATE_COMMANDS,
 			...static::BLOCKS_COMMANDS,
 			...static::INIT_COMMANDS,
-			...static::INIT_SETUP_COMMANDS,
 			...static::RUN_COMMANDS,
 		];
 	}

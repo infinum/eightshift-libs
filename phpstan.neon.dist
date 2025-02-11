@@ -12,12 +12,6 @@ parameters:
 		- src/
 	excludePaths:
 		- src/**/*Example.php
-		- src/InitSetup/clean/theme/
-		- src/InitSetup/clean/plugin/
-		- src/InitSetup/standard/theme/
-		- src/InitSetup/standard/plugin/
-		- src/InitSetup/tailwind/theme/
-		- src/InitSetup/tailwind/plugin/
 	ignoreErrors:
 		# Ignore errors about reflection class variable being undefined. Errors are caught.
 		- '/^Variable \$reflectionClass might not be defined\.$/'
