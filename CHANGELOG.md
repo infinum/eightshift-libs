@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [9.3.3]
+
+### Added
+- option to set css variables to other attribute values in the `outputCssVariables` method.
+
 ## [9.3.2]
 
 ### Updated
@@ -799,6 +804,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[9.3.3]: https://github.com/infinum/eightshift-libs/compare/9.3.2...9.3.3
 [9.3.2]: https://github.com/infinum/eightshift-libs/compare/9.3.1...9.3.2
 [9.3.1]: https://github.com/infinum/eightshift-libs/compare/9.3.0...9.3.1
 [9.3.0]: https://github.com/infinum/eightshift-libs/compare/9.2.2...9.3.0

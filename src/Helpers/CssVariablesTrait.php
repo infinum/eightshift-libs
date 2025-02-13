@@ -652,7 +652,7 @@ trait CssVariablesTrait
 						)
 					) {
 						// Merge data variables with the new variables array.
-						$data[$index]['variable'] = \array_merge($item['variable'], self::variablesInner($variable, $attributeValue));
+						$data[$index]['variable'] = \array_merge($item['variable'], self::variablesInner($variable, $attributeValue, $attributes));
 					}
 				}
 			}
@@ -749,10 +749,11 @@ trait CssVariablesTrait
 	 *
 	 * @param array<string, mixed> $variables Array of variables of CSS variables.
 	 * @param mixed $attributeValue Original attribute value used in magic variable.
+	 * @param array<string, mixed> $attributes Attributes that are read from component's/block's manifest.
 	 *
 	 * @return array<int, mixed>|string[]
 	 */
-	private static function variablesInner(array $variables, $attributeValue): array
+	private static function variablesInner(array $variables, $attributeValue, array $attributes): array
 	{
 		$output = [];
 
@@ -767,8 +768,14 @@ trait CssVariablesTrait
 			$internalKey = Helpers::camelToKebabCase($variableKey);
 
 			// If value contains magic variable swap that variable with original attribute value.
-			if (\strpos($variableValue, '%value%') !== false) {
+			if (\str_contains($variableValue, '%value%')) {
 				$variableValue = \str_replace('%value%', (string) $attributeValue, $variableValue);
+			}
+
+			foreach ($attributes as $attrKey => $attrValue) {
+				if (\str_contains($variableValue, "%attr-{$attrKey}%")) {
+					$variableValue = \str_replace("%attr-{$attrKey}%", (string) $attrValue, $variableValue);
+				}
 			}
 
 			// Output the custom CSS variable by adding the attribute key + custom object key.
