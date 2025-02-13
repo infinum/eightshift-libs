@@ -652,7 +652,7 @@ trait CssVariablesTrait
 						)
 					) {
 						// Merge data variables with the new variables array.
-						$data[$index]['variable'] = \array_merge($item['variable'], self::variablesInner($variable, $attributeValue, $attributes));
+						$data[$index]['variable'] = \array_merge($item['variable'], self::variablesInner($variable, $attributeValue, $attributes, $manifest));
 					}
 				}
 			}
@@ -750,10 +750,11 @@ trait CssVariablesTrait
 	 * @param array<string, mixed> $variables Array of variables of CSS variables.
 	 * @param mixed $attributeValue Original attribute value used in magic variable.
 	 * @param array<string, mixed> $attributes Attributes that are read from component's/block's manifest.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 *
 	 * @return array<int, mixed>|string[]
 	 */
-	private static function variablesInner(array $variables, $attributeValue, array $attributes): array
+	private static function variablesInner(array $variables, $attributeValue, array $attributes, array $manifest): array
 	{
 		$output = [];
 
@@ -773,8 +774,14 @@ trait CssVariablesTrait
 			}
 
 			foreach ($attributes as $attrKey => $attrValue) {
-				if (\str_contains($variableValue, "%attr-{$attrKey}%")) {
-					$variableValue = \str_replace("%attr-{$attrKey}%", (string) $attrValue, $variableValue);
+				if (isset($attributes['prefix'])) {
+					$key = (string)\str_replace($attributes['prefix'], Helpers::kebabToCamelCase($manifest['componentName']), $attrKey);
+				} else {
+					$key = $attrKey;
+				}
+
+				if (\str_contains($variableValue, "%attr-{$key}%")) {
+					$variableValue = \str_replace("%attr-{$key}%", (string) $attrValue, $variableValue);
 				}
 			}
 
