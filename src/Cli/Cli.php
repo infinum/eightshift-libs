@@ -56,7 +56,6 @@ use EightshiftLibs\Misc\VersionCli;
 use EightshiftLibs\Optimization\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\Readme\ReadmeCli;
-use EightshiftLibs\Rest\Routes\LoadMore\LoadMoreRouteCli;
 use EightshiftLibs\ThemeOptions\AcfThemeOptionsCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\WpCli\WpCli;
@@ -116,7 +115,6 @@ class Cli
 		ReadmeCli::class,
 		FieldCli::class,
 		RouteCli::class,
-		LoadMoreRouteCli::class,
 		ServiceExampleCli::class,
 		SetupCli::class,
 		ThemeOptionsCli::class,
