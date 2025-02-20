@@ -26,6 +26,19 @@ trait StoreBlocksTrait
 	 */
 	public static $styles = [];
 
+	/**
+	 * Get filters.
+	 *
+	 * @return array<mixed>
+	 */
+	private const FILTERS_PREFIX = [
+		AbstractManifestCache::BLOCKS_KEY => 'es_boilerplate_get_blocks',
+		AbstractManifestCache::COMPONENTS_KEY => 'es_boilerplate_get_components',
+		AbstractManifestCache::VARIATIONS_KEY => 'es_boilerplate_get_variations',
+		AbstractManifestCache::WRAPPER_KEY => 'es_boilerplate_get_wrapper',
+		AbstractManifestCache::SETTINGS_KEY => 'es_boilerplate_get_settings',
+	];
+
 	// -----------------------------------------------------
 	// BLOCKS
 	// -----------------------------------------------------
@@ -45,10 +58,10 @@ trait StoreBlocksTrait
 			throw InvalidBlock::missingItemException('project', 'blocks');
 		}
 
-		$filterName = 'es_boilerplate_get_blocks';
+		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::BLOCKS_KEY];
 
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, CacheTrait::getCacheName());
+			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
 		}
 
 		return $output;
@@ -89,6 +102,12 @@ trait StoreBlocksTrait
 			throw InvalidBlock::missingItemException('project', 'components');
 		}
 
+		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::COMPONENTS_KEY];
+
+		if (\has_filter($filterName)) {
+			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
+		}
+
 		return $output;
 	}
 
@@ -127,6 +146,12 @@ trait StoreBlocksTrait
 			throw InvalidBlock::missingItemException('project', 'variations');
 		}
 
+		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::VARIATIONS_KEY];
+
+		if (\has_filter($filterName)) {
+			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
+		}
+
 		return $output;
 	}
 
@@ -163,6 +188,12 @@ trait StoreBlocksTrait
 
 		if (!$output) {
 			throw InvalidBlock::missingItemException('blocks wrapper', 'component');
+		}
+
+		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::WRAPPER_KEY];
+
+		if (\has_filter($filterName)) {
+			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
 		}
 
 		return $output;
@@ -279,6 +310,12 @@ trait StoreBlocksTrait
 
 		if (!$output) {
 			throw InvalidBlock::missingItemException('project', 'global settings');
+		}
+
+		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::SETTINGS_KEY];
+
+		if (\has_filter($filterName)) {
+			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
 		}
 
 		return $output;
