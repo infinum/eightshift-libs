@@ -18,8 +18,6 @@ use JsonException;
  */
 trait TailwindTrait
 {
-	use StoreBlocksTrait;
-
 	/**
 	 * Get Tailwind breakpoints.
 	 *

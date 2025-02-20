@@ -19,7 +19,12 @@ use EightshiftLibs\Exception\InvalidPath;
 class Helpers
 {
 	/**
-	 * Store trait.
+	 * Cache trait.
+	 */
+	use CacheTrait;
+
+	/**
+	 * Store blocks trait.
 	 */
 	use StoreBlocksTrait;
 

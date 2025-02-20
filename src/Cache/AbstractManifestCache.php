@@ -25,7 +25,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @var string
 	 */
-	private const TRANSIENT_NAME = 'eightshift_manifest_cache_';
+	public const TRANSIENT_NAME = 'eightshift_manifest_cache_';
 
 	// Cache keys.
 	public const VERSION_KEY = 'version';
@@ -60,7 +60,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	/**
 	 * Get cache version.
 	 *
-	 * @return string.
+	 * @return string Cache version.
 	 */
 	abstract public function getVersion(): string;
 
@@ -83,7 +83,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	public function setAllCache(): void
 	{
 		Helpers::setCacheDetails(
-			self::TRANSIENT_NAME . $this->getCacheName(),
 			$this->getCacheBuilder(),
 			$this->getCacheName(),
 			$this->getVersion()
@@ -112,9 +111,9 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 */
 	protected function setCache(string $cacheType): void
 	{
-		if (!\get_transient(Helpers::getCacheName($cacheType))) {
+		if (!\get_transient(Helpers::getCacheTransientName($cacheType))) {
 			\set_transient(
-				Helpers::getCacheName($cacheType),
+				Helpers::getCacheTransientName($cacheType),
 				\wp_json_encode($this->getAllManifests($cacheType)),
 				$this->getDuration()
 			);

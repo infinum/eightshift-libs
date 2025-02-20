@@ -24,6 +24,8 @@ class ConfigPluginExample
 	 * Method that returns project name.
 	 *
 	 * Generally used for naming assets handlers, languages, etc.
+	 *
+	 * @return string Project name.
 	 */
 	public static function getProjectName(): string
 	{
@@ -34,6 +36,8 @@ class ConfigPluginExample
 	 * Method that returns project version.
 	 *
 	 * Generally used for versioning asset handlers while enqueueing them.
+	 *
+	 * @return string Project version.
 	 */
 	public static function getProjectVersion(): string
 	{
@@ -44,6 +48,8 @@ class ConfigPluginExample
 	 * Method that returns project text domain.
 	 *
 	 * Generally used for caching and translations.
+	 *
+	 * @return string Project text domain.
 	 */
 	public static function getProjectTextDomain(): string
 	{
