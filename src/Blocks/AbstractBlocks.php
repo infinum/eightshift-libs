@@ -215,6 +215,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	}
 
 	/**
+	 * Render inline css variables in dom. Used with wp_footer hook.
+	 *
+	 * @return void
+	 */
+	public function outputCssVariablesInline(): void
+	{
+		echo Helpers::outputCssVariablesInline(); // phpcs:ignore
+	}
+
+	/**
 	 * Method used to really register Gutenberg blocks.
 	 *
 	 * It uses native register_block_type() function from WP.
