@@ -88,8 +88,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			$this->getVersion()
 		);
 
-		Helpers::shouldCache();
-
 		if (!Helpers::isCacheVersionValid() || !Helpers::shouldCache()) {
 			Helpers::deleteCacheVersion();
 		}
