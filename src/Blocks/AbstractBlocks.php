@@ -30,10 +30,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function changeEditorColorPalette(): void
 	{
-		// Unable to use state due to this method is used in JS and store is not registered there.
-		$colors = Helpers::getSettingsGlobalVariablesColors();
-
-		if ($colors) {
+		if ($colors = Helpers::getSettingsGlobalVariablesColors()) {
 			\add_theme_support('editor-color-palette', $colors);
 		}
 	}
