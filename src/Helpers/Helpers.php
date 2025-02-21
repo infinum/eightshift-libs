@@ -89,6 +89,8 @@ class Helpers
 	 * @var array<int, string>
 	 */
 	private const PROJECT_RENDER_ALLOWED_NAMES = [
+		'src',
+		'blocksRoot',
 		'blocks',
 		'components',
 		'variations',
@@ -126,10 +128,10 @@ class Helpers
 				$componentName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
 
 				if ($componentName) {
-					$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, "{$renderName}.php"]);
+					$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
 					$manifest = Helpers::getComponent($componentName);
 				} else {
-					$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, $renderName, "{$renderName}.php"]);
+					$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, $renderPrefixPath, $renderName, "{$renderName}.php"]);
 					$manifest = Helpers::getComponent($renderName);
 				}
 
@@ -138,23 +140,23 @@ class Helpers
 				break;
 			case 'wrapper':
 				$manifest = Helpers::getWrapper();
-				$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), "{$renderName}.php"]);
+				$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, "{$renderName}.php"]);
 				break;
 			case 'blocks':
 				$blockName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
 
 				if ($blockName) {
-					$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, "{$renderName}.php"]);
+					$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
 					$manifest = Helpers::getBlock($blockName);
 				} else {
-					$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, $renderName, "{$renderName}.php"]);
+					$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, $renderPrefixPath, $renderName, "{$renderName}.php"]);
 					$manifest = Helpers::getBlock($renderName);
 				}
 
 				unset($blockName);
 				break;
 			default:
-				$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, "{$renderName}.php"]);
+				$renderPath = Helpers::getProjectPaths('', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
 				break;
 		}
 
@@ -196,42 +198,6 @@ class Helpers
 		);
 
 		return \trim((string) \ob_get_clean());
-	}
-
-	/**
-	 * Get manifest json by path and name.
-	 *
-	 * @param string $path Absolute path to.
-	 *
-	 * @throws InvalidManifest If the manifest is not allowed.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getManifestByDir(string $path): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$root = Helpers::getProjectPaths('src');
-		$newPath = \str_replace($root, '', $path);
-		$newPath = \array_filter(\explode($sep, $newPath));
-
-		if (!isset($newPath[0]) && $newPath[0] !== 'Blocks') {
-			throw InvalidManifest::notAllowedManifestPathException($path);
-		}
-
-		if (!isset($newPath[1])) {
-			throw InvalidManifest::notAllowedManifestPathException($path);
-		}
-
-		switch ($newPath[1]) {
-			case 'wrapper':
-				return Helpers::getWrapper();
-			case 'components':
-				return Helpers::getComponent(\end($newPath));
-			case 'custom':
-				return Helpers::getBlock(\end($newPath));
-			default:
-				throw InvalidManifest::missingManifestException($path);
-		}
 	}
 
 	/**
