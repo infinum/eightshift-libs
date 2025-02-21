@@ -51,7 +51,7 @@ class ImportCli extends AbstractCli
 			'from' => '',
 			'to' => '',
 			'file_name' => '',
-			'setup_file' => Helpers::getProjectPaths('projectRoot', 'setup.json'),
+			'setup_file' => Helpers::getProjectPaths('root', 'setup.json'),
 		];
 	}
 

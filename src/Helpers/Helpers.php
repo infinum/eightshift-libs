@@ -251,7 +251,7 @@ class Helpers
 		}
 
 		switch ($type) {
-			case 'projectRoot':
+			case 'root':
 				return self::joinPaths([\dirname(__FILE__, 9), ...$suffix]);
 			case 'src':
 				return self::joinPaths([$root, 'src', ...$suffix]);
@@ -270,7 +270,7 @@ class Helpers
 			case 'wrapper':
 				return self::joinPaths([$root, 'src', 'Blocks', 'wrapper', ...$suffix]);
 			default:
-				return '';
+				return $root;
 		}
 	}
 

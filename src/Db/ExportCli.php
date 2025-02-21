@@ -92,7 +92,7 @@ class ExportCli extends AbstractCli
 
 		try {
 			dbExport( // phpcs:ignore
-				Helpers::getProjectPaths('projectRoot')
+				Helpers::getProjectPaths('root')
 			);
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
