@@ -81,7 +81,7 @@ trait CacheTrait
 
 		$output = [];
 
-		foreach (self::$cacheBuilder as $type => $value) {
+		foreach (\array_keys(self::$cacheBuilder) as $type) {
 			$data = \get_transient(self::getCacheTransientName($type));
 
 			if (!$data) {
