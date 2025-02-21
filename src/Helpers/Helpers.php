@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
-use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Exception\InvalidPath;
 
 /**

@@ -23,7 +23,7 @@ trait DeprecatedTrait
 	 * @param string $path Absolute path to.
 	 *
 	 * @throws InvalidManifest If the manifest is not allowed.
-	 * 
+	 *
 	 * @deprecated 10.0.0 This method is deprecated and will be removed in the next major release. Every component and block has $manifest variable available by default.
 	 *
 	 * @return array<string, mixed>
