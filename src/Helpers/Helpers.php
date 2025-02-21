@@ -127,10 +127,10 @@ class Helpers
 				$componentName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
 
 				if ($componentName) {
-					$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
+					$renderPath = Helpers::getProjectPaths('components', [$renderPrefixPath, "{$renderName}.php"]);
 					$manifest = Helpers::getComponent($componentName);
 				} else {
-					$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, $renderPrefixPath, $renderName, "{$renderName}.php"]);
+					$renderPath = Helpers::getProjectPaths('components', [$renderPrefixPath, $renderName, "{$renderName}.php"]);
 					$manifest = Helpers::getComponent($renderName);
 				}
 
@@ -139,16 +139,16 @@ class Helpers
 				break;
 			case 'wrapper':
 				$manifest = Helpers::getWrapper();
-				$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, "{$renderName}.php"]);
+				$renderPath = Helpers::getProjectPaths('wrapper', ["{$renderName}.php"]);
 				break;
 			case 'blocks':
 				$blockName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
 
 				if ($blockName) {
-					$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
+					$renderPath = Helpers::getProjectPaths('blocks', [$renderPrefixPath, "{$renderName}.php"]);
 					$manifest = Helpers::getBlock($blockName);
 				} else {
-					$renderPath = Helpers::getProjectPaths('blocksRoot', [$renderPathName, $renderPrefixPath, $renderName, "{$renderName}.php"]);
+					$renderPath = Helpers::getProjectPaths('blocks', [$renderPrefixPath, $renderName, "{$renderName}.php"]);
 					$manifest = Helpers::getBlock($renderName);
 				}
 
@@ -198,6 +198,7 @@ class Helpers
 
 		return \trim((string) \ob_get_clean());
 	}
+
 
 	/**
 	 * Internal helper for getting all project paths for easy mocking in tests.
