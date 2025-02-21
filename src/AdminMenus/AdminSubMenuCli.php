@@ -150,6 +150,6 @@ class AdminSubMenuCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('capability'), $capability)
 			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug)
 			->searchReplaceString($this->getArgTemplate('view_component'), $viewComponent)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'AdminMenus'), "{$className}.php", $assocArgs);
 	}
 }

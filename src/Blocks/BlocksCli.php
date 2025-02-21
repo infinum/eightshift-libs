@@ -78,6 +78,6 @@ class BlocksCli extends AbstractCli
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('blocksDestination'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('blocksRoot'), "{$className}.php", $assocArgs);
 	}
 }

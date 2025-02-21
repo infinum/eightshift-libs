@@ -167,10 +167,8 @@ trait MediaWebPTrait
 	private function convertMediaToWebPByPath(string $filePath, int $quality, bool $force = false): string
 	{
 		// Bailout if media origin doesn't exist.
-		if (!\getenv('ES_TEST')) {
-			if (!\file_exists($filePath)) {
-				return '';
-			}
+		if (!\file_exists($filePath)) {
+			return '';
 		}
 
 		// Detect type of media.
@@ -265,10 +263,8 @@ trait MediaWebPTrait
 		// Replace the image name extension with the WebP.
 		$filePathNew = \str_replace(".{$ext}", '.webp', $filePath);
 
-		if (!\getenv('ES_TEST')) {
-			if (!\file_exists($filePathNew)) {
-				return '';
-			}
+		if (!\file_exists($filePathNew)) {
+			return '';
 		}
 
 		// Delete file from disk.

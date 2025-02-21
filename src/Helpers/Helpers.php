@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
-use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Exception\InvalidPath;
 
 /**
@@ -19,7 +18,12 @@ use EightshiftLibs\Exception\InvalidPath;
 class Helpers
 {
 	/**
-	 * Store trait.
+	 * Cache trait.
+	 */
+	use CacheTrait;
+
+	/**
+	 * Store blocks trait.
 	 */
 	use StoreBlocksTrait;
 
@@ -84,15 +88,14 @@ class Helpers
 	 * @var array<int, string>
 	 */
 	private const PROJECT_RENDER_ALLOWED_NAMES = [
+		'src',
+		'blocksRoot',
 		'blocks',
 		'components',
 		'variations',
 		'wrapper',
-		'root',
-		'srcDestination',
 		'themeRoot',
 		'pluginRoot',
-		'blocksDestination',
 	];
 
 	/**
@@ -117,46 +120,69 @@ class Helpers
 		string $renderPrefixPath = '',
 		string $renderContent = ''
 	): string {
-		if (empty($renderPathName)) {
-			$renderPathName = 'components';
-		}
+		$manifest = [];
 
-		if ($renderName === 'wrapper') {
-			$renderPathName = 'blocksDestination';
+		switch ($renderPathName) {
+			case 'components':
+				$componentName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
+
+				if ($componentName) {
+					$renderPath = Helpers::getProjectPaths('components', [$renderPrefixPath, "{$renderName}.php"]);
+					$manifest = Helpers::getComponent($componentName);
+				} else {
+					$renderPath = Helpers::getProjectPaths('components', [$renderPrefixPath, $renderName, "{$renderName}.php"]);
+					$manifest = Helpers::getComponent($renderName);
+				}
+
+				unset($componentName);
+
+				break;
+			case 'wrapper':
+				$manifest = Helpers::getWrapper();
+				$renderPath = Helpers::getProjectPaths('wrapper', ["{$renderName}.php"]);
+				break;
+			case 'blocks':
+				$blockName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
+
+				if ($blockName) {
+					$renderPath = Helpers::getProjectPaths('blocks', [$renderPrefixPath, "{$renderName}.php"]);
+					$manifest = Helpers::getBlock($blockName);
+				} else {
+					$renderPath = Helpers::getProjectPaths('blocks', [$renderPrefixPath, $renderName, "{$renderName}.php"]);
+					$manifest = Helpers::getBlock($renderName);
+				}
+
+				unset($blockName);
+				break;
+			default:
+				$renderPath = Helpers::getProjectPaths('', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
+				break;
 		}
 
 		if (!isset(\array_flip(self::PROJECT_RENDER_ALLOWED_NAMES)[$renderPathName])) {
 			throw InvalidPath::wrongOrNotAllowedParentPathException($renderPathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
 		}
 
-		$renderPrefix = $renderName;
-
-		if (!empty($renderPrefixPath)) {
-			$renderPrefix = $renderPrefixPath;
-		}
-
-		$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefix, "{$renderName}.php"]);
-
 		if (!\file_exists($renderPath)) {
 			throw InvalidPath::missingFileException($renderPath);
 		}
 
 		// Merge default attributes with the component attributes.
-		if ($renderUseComponentDefaults) {
-			$renderAttributes = Helpers::getDefaultRenderAttributes(Helpers::getComponent($renderName), $renderAttributes);
+		if ($renderUseComponentDefaults && !empty($manifest)) {
+			$renderAttributes = Helpers::getDefaultRenderAttributes($manifest, $renderAttributes);
 		}
 
 		\ob_start();
 
-		// Allowed variables are $attributes, $renderAttributes, $renderContent, $renderPath.
+		// Allowed variables are $attributes, $renderAttributes, $renderContent, $renderPath, $manifest, $globalManifest.
 		$attributes = $renderAttributes;
+		$globalManifest = Helpers::getSettings();
 
 		unset(
 			$renderName,
 			$renderPathName,
 			$renderUseComponentDefaults,
 			$renderPrefixPath,
-			$renderPrefix
 		);
 
 		include $renderPath;
@@ -165,279 +191,53 @@ class Helpers
 			$renderAttributes,
 			$attributes,
 			$renderContent,
-			$renderPath
+			$renderPath,
+			$manifest,
+			$globalManifest
 		);
 
 		return \trim((string) \ob_get_clean());
 	}
 
-	/**
-	 * Get manifest json by path and name.
-	 *
-	 * @param string $path Absolute path to.
-	 *
-	 * @throws InvalidManifest If the manifest is not allowed.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getManifestByDir(string $path): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$root = Helpers::getProjectPaths('srcDestination');
-		$newPath = \str_replace($root, '', $path);
-		$newPath = \array_filter(\explode($sep, $newPath));
-
-		if (!isset($newPath[0]) && $newPath[0] !== 'Blocks') {
-			throw InvalidManifest::notAllowedManifestPathException($path);
-		}
-
-		if (!isset($newPath[1])) {
-			throw InvalidManifest::notAllowedManifestPathException($path);
-		}
-
-		switch ($newPath[1]) {
-			case 'wrapper':
-				return Helpers::getWrapper();
-			case 'components':
-				return Helpers::getComponent(\end($newPath));
-			case 'custom':
-				return Helpers::getBlock(\end($newPath));
-			default:
-				throw InvalidManifest::missingManifestException($path);
-		}
-	}
 
 	/**
 	 * Internal helper for getting all project paths for easy mocking in tests.
 	 *
 	 * @param string $type Type fo path to return.
-	 * @param string $suffix Additional suffix path to add.
-	 * @param string $prefix Additional prefix instead of dirname path.
+	 * @param string|array<int, string> $suffix Suffix to add to the path.
 	 *
 	 * @return string
 	 */
-	public static function getProjectPaths(string $type = '', string $suffix = '', string $prefix = ''): string
+	public static function getProjectPaths(string $type, array|string $suffix = ''): string
 	{
-		$path = '';
-		$internalPrefix = \dirname(__FILE__, 6);
+		$root = \dirname(__FILE__, 6);
 
-		if (\getenv('ES_TEST')) {
-			$internalPrefix = \dirname(__FILE__, 3);
+		if (\is_string($suffix)) {
+			$suffix = [$suffix];
 		}
 
-		$flibsPath = ["node_modules", "@eightshift", "frontend-libs", "blocks", "init"];
-		$fTailwindLibsPath = ["node_modules", "@eightshift", "frontend-libs-tailwind", "blocks", "init"];
-		$libsPath = ["vendor", "infinum", "eightshift-libs"];
-		$libsPrefixedPath = ["vendor-prefixed", "infinum", "eightshift-libs"];
-		$testsDataPath = ["tests", "data"];
-		$testsDatasetsPath = ["tests", "Datasets"];
-		$srcPath = "src";
-		$blocksPath = [$srcPath, "Blocks"];
-		$assetsPath = "assets";
-		$cliOutputPath = "cliOutput";
-
-		$name = '';
-
 		switch ($type) {
-			case 'projectRoot':
-				$internalPrefix = \dirname(__FILE__, 9);
-
-				if (\getenv('ES_TEST')) {
-					$internalPrefix = \dirname(__FILE__, 3);
-				}
-				break;
-			case 'testsDatasetsPath':
-				if (\getenv('ES_TEST')) {
-					$internalPrefix = \dirname(__FILE__, 3);
-					$path = self::joinPaths([...$testsDatasetsPath]);
-				}
-				break;
-			case 'testsData':
-				if (\getenv('ES_TEST')) {
-					$internalPrefix = \dirname(__FILE__, 3);
-					$path = self::joinPaths([...$testsDataPath]);
-				}
-				break;
-			case 'srcDestination':
-				$path = $srcPath;
-
-				if (\getenv('ES_TEST')) {
-					$internalPrefix = \dirname(__FILE__, 3);
-					$path = self::joinPaths([$cliOutputPath, $srcPath]);
-				}
-				break;
-			case 'cliOutput':
 			case 'root':
-			case 'themeRoot':
-			case 'pluginRoot':
-				if (\getenv('ES_TEST')) {
-					$internalPrefix = \dirname(__FILE__, 3);
-					$path = $cliOutputPath;
-				}
-				break;
-			case 'wpContent':
-				$internalPrefix = \dirname(__FILE__, 8);
-
-				if (\getenv('ES_TEST')) {
-					$internalPrefix = \dirname(__FILE__, 3);
-				}
-				break;
+				return self::joinPaths([\dirname(__FILE__, 9), ...$suffix]);
+			case 'src':
+				return self::joinPaths([$root, 'src', ...$suffix]);
 			case 'libs':
-				$path = self::joinPaths($libsPath);
-
-				if (\getenv('ES_TEST')) {
-					$path = '';
-				}
-				break;
+				return self::joinPaths([$root, 'vendor', 'infinum', 'eightshift-libs']);
 			case 'libsPrefixed':
-				$path = self::joinPaths($libsPrefixedPath);
-
-				if (\getenv('ES_TEST')) {
-					$path = '';
-				}
-				break;
-			case 'blocksGlobalAssetsSource':
-				$path = self::joinPaths([...$flibsPath, $assetsPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, $assetsPath]);
-				}
-				break;
-			case 'blocksAssetsSource':
-				$path = self::joinPaths([...$flibsPath, ...$blocksPath, $assetsPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $assetsPath]);
-				}
-				break;
-			case 'blocksSource':
-				$path = self::joinPaths([...$flibsPath, ...$blocksPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
-				}
-				break;
-			case 'blocksGlobalAssetsTailwindSource':
-				$path = self::joinPaths([...$fTailwindLibsPath, $assetsPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, $assetsPath]);
-				}
-				break;
-			case 'blocksAssetsTailwindSource':
-				$path = self::joinPaths([...$fTailwindLibsPath, ...$blocksPath, $assetsPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $assetsPath]);
-				}
-				break;
-			case 'blocksTailwindSource':
-				$path = self::joinPaths([...$fTailwindLibsPath, ...$blocksPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, ...$blocksPath]);
-				}
-				break;
-			case 'block':
+				return self::joinPaths([$root, 'vendor-prefixed', 'infinum', 'eightshift-libs']);
+			case 'blocksRoot':
+				return self::joinPaths([$root, 'src', 'Blocks', ...$suffix]);
 			case 'blocks':
-			case 'custom':
-			case 'blocksDestinationCustom':
-			case 'blocksSourceCustom':
-			case 'blocksSourceTailwindCustom':
-				$name = 'custom';
-				break;
-			case 'component':
+				return self::joinPaths([$root, 'src', 'Blocks', 'custom', ...$suffix]);
 			case 'components':
-			case 'blocksDestinationComponents':
-			case 'blocksSourceComponents':
-			case 'blocksSourceTailwindComponents':
-				$name = 'components';
-				break;
-			case 'variation':
+				return self::joinPaths([$root, 'src', 'Blocks', 'components', ...$suffix]);
 			case 'variations':
-			case 'blocksDestinationVariations':
-			case 'blocksSourceVariations':
-			case 'blocksSourceTailwindVariations':
-				$name = 'variations';
-				break;
+				return self::joinPaths([$root, 'src', 'Blocks', 'variations', ...$suffix]);
 			case 'wrapper':
-			case 'blocksDestinationWrapper':
-			case 'blocksSourceWrapper':
-			case 'blocksSourceTailwindWrapper':
-				$name = 'wrapper';
-				break;
-			case 'blocksGlobalAssetsDestination':
-				$path = self::joinPaths([$assetsPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([$cliOutputPath, $assetsPath]);
-				}
-				break;
-			case 'blocksAssetsDestination':
-				$path = self::joinPaths([...$blocksPath, $assetsPath]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([$cliOutputPath, ...$blocksPath, $assetsPath]);
-				}
-				break;
-			case 'blocksDestination':
-				$path = self::joinPaths($blocksPath);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([$cliOutputPath, ...$blocksPath]);
-				}
-				break;
+				return self::joinPaths([$root, 'src', 'Blocks', 'wrapper', ...$suffix]);
+			default:
+				return $root;
 		}
-
-		switch ($type) {
-			case 'blocksSourceCustom':
-			case 'blocksSourceComponents':
-			case 'blocksSourceVariations':
-			case 'blocksSourceWrapper':
-				$path = self::joinPaths([...$flibsPath, ...$blocksPath, $name]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);
-				}
-				break;
-			case 'blocksSourceTailwindCustom':
-			case 'blocksSourceTailwindComponents':
-			case 'blocksSourceTailwindVariations':
-			case 'blocksSourceTailwindWrapper':
-				$path = self::joinPaths([...$fTailwindLibsPath, ...$blocksPath, $name]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([...$testsDataPath, ...$blocksPath, $name]);
-				}
-				break;
-
-			case 'block':
-			case 'blocks':
-			case 'custom':
-			case 'component':
-			case 'components':
-			case 'variation':
-			case 'variations':
-			case 'wrapper':
-			case 'blocksDestinationCustom':
-			case 'blocksDestinationComponents':
-			case 'blocksDestinationVariations':
-			case 'blocksDestinationWrapper':
-				$path = self::joinPaths([...$blocksPath, $name]);
-
-				if (\getenv('ES_TEST')) {
-					$path = self::joinPaths([$cliOutputPath, ...$blocksPath, $name]);
-				}
-				break;
-		}
-
-		if (!$prefix) {
-			$prefix = $internalPrefix;
-		}
-
-		$path = self::joinPaths([$prefix, $path, $suffix]);
-
-		return $path;
 	}
 
 	/**
@@ -451,22 +251,11 @@ class Helpers
 	{
 		$sep = \DIRECTORY_SEPARATOR;
 
-		$paths = \array_filter(
-			\array_map(
-				static function ($path) use ($sep) {
-					return \trim($path, $sep);
-				},
-				$paths
-			)
-		);
+		$paths = \array_map(fn($path) => \trim($path, $sep), $paths);
+		$paths = \array_filter($paths);
 
-		$path = \implode($sep, $paths);
-		$path = "{$sep}{$path}";
+		$path = $sep . \implode($sep, $paths);
 
-		if (!\pathinfo($path, \PATHINFO_EXTENSION)) {
-			$path = "{$path}{$sep}";
-		}
-
-		return $path;
+		return !\pathinfo($path, \PATHINFO_EXTENSION) ? $path . $sep : $path;
 	}
 }

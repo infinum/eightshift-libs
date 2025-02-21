@@ -79,6 +79,6 @@ class MediaCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Media'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'Media'), "{$className}.php", $assocArgs);
 	}
 }

@@ -26,8 +26,7 @@ class BlocksExample extends AbstractBlocks
 	public function register(): void
 	{
 		// Register all custom blocks.
-		\add_action('init', [$this, 'getBlocksDataFullRaw'], 10);
-		\add_action('init', [$this, 'registerBlocks'], 11);
+		\add_action('init', [$this, 'registerBlocks'], 10);
 
 		// Remove P tags from content.
 		\remove_filter('the_content', 'wpautop');

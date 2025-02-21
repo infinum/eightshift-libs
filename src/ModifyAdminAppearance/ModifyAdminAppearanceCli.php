@@ -79,6 +79,6 @@ class ModifyAdminAppearanceCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'ModifyAdminAppearance'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'ModifyAdminAppearance'), "{$className}.php", $assocArgs);
 	}
 }

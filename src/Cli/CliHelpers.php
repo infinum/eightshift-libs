@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Helpers\Helpers;
 use WP_CLI;
 use WP_CLI\ExitException;
 
@@ -31,20 +30,10 @@ trait CliHelpers
 	public static function cliError(string $errorMessage): void
 	{
 		try {
-			// Special condition for test because WP_CLI::error logs to STDERR, and regular log does not.
-			// WP_CLI::error, however, also adds the "Error:" prefix, which is in this case unwanted.
-			if (\getenv('ES_TEST')) {
-				WP_CLI::error($errorMessage);
-			} else {
-				self::cliLogAlert($errorMessage, 'error');
-				WP_CLI::halt(1);
-			}
-
-			// @codeCoverageIgnoreStart
-			// Cannot test the exit.
+			self::cliLogAlert($errorMessage, 'error');
+			WP_CLI::halt(1);
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-			// @codeCoverageIgnoreEnd
 		}
 	}
 
@@ -133,34 +122,6 @@ trait CliHelpers
 		$output = \preg_replace('/`(.*)`/', '%_$1%n', $output);
 
 		WP_CLI::log(WP_CLI::colorize($output));
-	}
-
-	/**
-	 * Return shorten CLI path output
-	 *
-	 * @param string $path Path to check.
-	 * @param string $ref Ref from getProjectPaths to remove.
-	 *
-	 * @return string
-	 */
-	protected function getShortenCliPathOutput(string $path, string $ref = 'projectRoot'): string
-	{
-		return \str_replace(Helpers::getProjectPaths($ref), '', $path);
-	}
-
-	/**
-	 * Scan folder for items.
-	 *
-	 * @param string $path Path to search.
-	 *
-	 * @return array<int, string>
-	 */
-	protected function getFolderItems(string $path): array
-	{
-		$output = \array_diff(\scandir($path), ['..', '.']);
-		$output = \array_values($output); // @phpstan-ignore-line
-
-		return $output;
 	}
 
 	/**

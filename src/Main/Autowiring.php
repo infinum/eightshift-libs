@@ -14,8 +14,6 @@ use EightshiftLibs\Exception\InvalidAutowireDependency;
 use EightshiftLibs\Exception\NonPsr4CompliantClass;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Services\ServiceCliInterface;
-use EightshiftLibs\Cache\AbstractManifestCache;
-use EightshiftLibs\Exception\InvalidManifest;
 use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -30,18 +28,11 @@ use ReflectionException;
 class Autowiring
 {
 	/**
-	 * The AbstractManifestCache, optionally used for caching service classes.
-	 *
-	 * @var AbstractManifestCache
-	 */
-	protected AbstractManifestCache $manifestCache;
-
-	/**
 	 * Array of psr-4 prefixes. Should be provided by Composer's ClassLoader. $ClassLoader->getPsr4Prefixes().
 	 *
 	 * @var array<string, mixed>
 	 */
-	protected $psr4Prefixes;
+	protected array $psr4Prefixes;
 
 	/**
 	 * Project namespace
@@ -49,23 +40,6 @@ class Autowiring
 	 * @var string
 	 */
 	protected string $namespace;
-
-	/**
-	 * A setter method for a instantiated concrete AbstractManifestCache implementation, as it can not be autowired
-	 * at this point.
-	 *
-	 * @param AbstractManifestCache|null $manifestCache The manifest cache implementation.
-	 * @return void
-	 */
-	public function setManifestCache(AbstractManifestCache $manifestCache = null): void
-	{
-		if (!$manifestCache) {
-			return;
-		}
-
-		$this->manifestCache = $manifestCache;
-	}
-
 
 	/**
 	 * Autowiring.
@@ -79,17 +53,6 @@ class Autowiring
 	 */
 	public function buildServiceClasses(array $manuallyDefinedDependencies = [], bool $skipInvalid = false): array
 	{
-		try {
-			if (isset($this->manifestCache)) {
-				$serviceClasses = $this->manifestCache->getCacheTopItem('serviceClasses', AbstractManifestCache::TYPE_SERVICES, isJson: false);
-				if ($serviceClasses) {
-					return $serviceClasses;
-				}
-			}
-		} catch (InvalidManifest) {
-			// ignored, cache is simply not set.
-		}
-
 		$projectReflectionClasses = $this->validateAndBuildClasses(
 			$this->filterManuallyDefinedDependencies(
 				$this->getClassesInNamespace($this->namespace, $this->psr4Prefixes),
@@ -139,11 +102,7 @@ class Autowiring
 		}
 
 		// Convert dependency tree into PHP-DI's definition list.
-		$serviceClasses = \array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
-		if (isset($this->manifestCache)) {
-			$this->manifestCache->setCustomCache(AbstractManifestCache::TYPE_SERVICES, ['serviceClasses' => $serviceClasses]);
-		}
-		return $serviceClasses;
+		return \array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
 	}
 
 	// phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber

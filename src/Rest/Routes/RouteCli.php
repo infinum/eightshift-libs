@@ -143,6 +143,6 @@ class RouteCli extends AbstractCli
 			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('endpoint_slug'), $endpointSlug)
 			->searchReplaceString("'{$this->getArgTemplate('method')}'", static::VERB_ENUM[$method])
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Routes'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', ['Rest', 'Routes']), "{$className}.php", $assocArgs);
 	}
 }

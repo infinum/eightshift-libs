@@ -42,7 +42,7 @@ class I18nExample implements ServiceInterface
 		$sep = \DIRECTORY_SEPARATOR;
 		\load_theme_textdomain(
 			Config::getProjectName(),
-			Helpers::getProjectPaths('srcDestination', "I18n{$sep}languages")
+			Helpers::getProjectPaths('src', ['I18n', 'languages'])
 		);
 	}
 
@@ -63,7 +63,7 @@ class I18nExample implements ServiceInterface
 		\wp_set_script_translations(
 			$handle,
 			Config::getProjectName(),
-			Helpers::getProjectPaths('srcDestination', "I18n{$sep}languages")
+			Helpers::getProjectPaths('src', ['I18n', 'languages'])
 		);
 	}
 }

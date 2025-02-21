@@ -80,6 +80,6 @@ class MainCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Main'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'Main'), "{$className}.php", $assocArgs);
 	}
 }

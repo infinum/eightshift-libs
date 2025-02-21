@@ -115,6 +115,6 @@ class FieldCli extends AbstractCli
 			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('object_type'), $objectType)
 			->searchReplaceString($this->getArgTemplate('field_name'), $fieldName)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Rest' . \DIRECTORY_SEPARATOR . 'Fields'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', ['Rest', 'Fields']), "{$className}.php", $assocArgs);
 	}
 }

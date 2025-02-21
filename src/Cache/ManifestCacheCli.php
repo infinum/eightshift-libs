@@ -79,6 +79,6 @@ class ManifestCacheCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Cache'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'Cache'), "{$className}.php", $assocArgs);
 	}
 }

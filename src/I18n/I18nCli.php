@@ -77,7 +77,7 @@ class I18nCli extends AbstractCli
 
 		$sep = \DIRECTORY_SEPARATOR;
 
-		$sourceLanguages = Helpers::getProjectPaths('srcDestination', "I18n{$sep}languages");
+		$sourceLanguages = Helpers::getProjectPaths('src', "I18n{$sep}languages");
 
 		if (!\is_dir($sourceLanguages)) {
 			\mkdir($sourceLanguages, 0755, true);
@@ -87,6 +87,6 @@ class I18nCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'I18n'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'I18n'), "{$className}.php", $assocArgs);
 	}
 }

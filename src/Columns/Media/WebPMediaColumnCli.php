@@ -79,6 +79,6 @@ class WebPMediaColumnCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Columns' . \DIRECTORY_SEPARATOR . 'Media'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', ['Columns', 'Media']), "{$className}.php", $assocArgs);
 	}
 }

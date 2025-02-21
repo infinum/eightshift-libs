@@ -86,7 +86,7 @@ class PluginCli extends AbstractCli
 			$this->getExampleTemplate(__DIR__, $className)
 				->renameClassName($className)
 				->renameGlobals($assocArgs)
-				->outputWrite(Helpers::getProjectPaths('srcDestination'), "{$className}.php", $assocArgs);
+				->outputWrite(Helpers::getProjectPaths('src'), "{$className}.php", $assocArgs);
 		}
 	}
 }

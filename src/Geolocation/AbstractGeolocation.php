@@ -10,8 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Geolocation;
 
-use EightshiftLibs\Cache\AbstractManifestCache;
-use EightshiftLibs\Cache\ManifestCacheInterface;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use Exception;
 use Throwable;
@@ -21,23 +20,6 @@ use Throwable;
  */
 abstract class AbstractGeolocation implements ServiceInterface
 {
-	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
-	 */
-	public function __construct(ManifestCacheInterface $manifestCache)
-	{
-		$this->manifestCache = $manifestCache;
-	}
-
 	/**
 	 * Get geolocation cookie name.
 	 *
@@ -179,7 +161,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 			],
 		];
 
-		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::COUNTRIES_KEY, AbstractManifestCache::TYPE_GEOLOCATION);
+		$data = Helpers::getGeolocationCountries();
 
 		foreach ($data as $country) {
 			$code = $country['Code'] ?? '';
