@@ -114,6 +114,6 @@ class GeolocationCli extends AbstractCli
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite(
-			Helpers::getProjectPaths('srcDestination', 'Geolocation'), "{$className}.php", $assocArgs);
+			Helpers::getProjectPaths('src', 'Geolocation'), "{$className}.php", $assocArgs);
 	}
 }

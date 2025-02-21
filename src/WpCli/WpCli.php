@@ -108,6 +108,6 @@ class WpCli extends AbstractCli
 			->renameClassNameWithPrefix($this->getClassShortName(true), $className)
 			->renameGlobals($assocArgs)
 			->searchReplaceString($this->getArgTemplate('command_name'), $commandName)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'WpCli'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'WpCli'), "{$className}.php", $assocArgs);
 	}
 }

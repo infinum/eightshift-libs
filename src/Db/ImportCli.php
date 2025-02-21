@@ -119,7 +119,7 @@ class ImportCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		require Helpers::getProjectPaths('libsPrefixed', 'src/Db/DbImport.php');
+		require Helpers::getProjectPaths('libsPrefixed', ['src', 'Db', 'DbImport.php']);
 
 		try {
 			dbImport( // phpcs:ignore

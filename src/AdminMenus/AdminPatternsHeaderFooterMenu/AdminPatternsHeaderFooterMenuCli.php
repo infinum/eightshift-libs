@@ -139,6 +139,6 @@ class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 		}
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(Helpers::getProjectPaths('srcDestination', 'AdminMenus'), "{$className}.php", $assocArgs);
+		$class->outputWrite(Helpers::getProjectPaths('src', 'AdminMenus'), "{$className}.php", $assocArgs);
 	}
 }

@@ -10,15 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Cli;
 
-use EightshiftLibs\Exception\InvalidPath;
 use EightshiftLibs\Helpers\Helpers;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
-use UnexpectedValueException;
 use WP_CLI;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
@@ -259,35 +254,6 @@ abstract class AbstractCli implements CliInterface
 			],
 			$args
 		);
-	}
-
-	/**
-	 * Prepare arguments for setup commands.
-	 *
-	 * @param array<string, mixed> $args Arguments array.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function prepareSetupArgs(array $args = []): array
-	{
-		$namespace = $this->convertToNamespace($args[self::ARG_PROJECT_NAME]);
-
-		return [
-			self::ARG_NAMESPACE => $namespace,
-			self::ARG_NAMESPACE_VENDOR_PREFIX => "{$namespace}Vendor",
-			self::ARG_TEXTDOMAIN => Helpers::camelToKebabCase($namespace),
-			self::ARG_PROJECT_NAME => $args[self::ARG_PROJECT_NAME] ?? 'Eightshift Boilerplate',
-			self::ARG_PROJECT_DESCRIPTION => $args[self::ARG_PROJECT_DESCRIPTION] ?? 'Eightshift Boilerplate is a WordPress starter theme that helps you build better and faster using the modern development tools.',
-			self::ARG_PROJECT_AUTHOR => $args[self::ARG_PROJECT_AUTHOR] ?? 'Team Eightshift',
-			self::ARG_PROJECT_AUTHOR_URL => $args[self::ARG_PROJECT_AUTHOR_URL] ?? 'https://eightshift.com/',
-			self::ARG_PROJECT_VERSION => $args[self::ARG_PROJECT_VERSION] ?? '1.0.0',
-			self::ARG_SITE_URL => $args[self::ARG_SITE_URL] ?? \site_url(),
-			self::ARG_LIBS_VERSION => $args[self::ARG_LIBS_VERSION] ?? '',
-			self::ARG_FRONTEND_LIBS_VERSION => $args[self::ARG_FRONTEND_LIBS_VERSION] ?? '',
-			self::ARG_FRONTEND_LIBS_TYPE => \strtolower($args[self::ARG_FRONTEND_LIBS_TYPE] ?? 'standard'),
-			self::ARG_SKIP_EXISTING => true,
-			self::ARG_GROUP_OUTPUT => true,
-		];
 	}
 
 	/**
@@ -557,26 +523,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Get full output dir path
-	 *
-	 * @param string $file File name.
-	 *
-	 * @return string
-	 */
-	public function getOutputFile(string $file): string
-	{
-		$ds = \DIRECTORY_SEPARATOR;
-
-		$file = \trim($file, $ds);
-
-		if (\strpos($file, '.') !== false) {
-			return "{$ds}{$file}";
-		}
-
-		return "{$ds}{$file}.php";
-	}
-
-	/**
 	 * Replace use in class
 	 *
 	 * @param array<string, mixed> $args CLI args array.
@@ -587,7 +533,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		$this->fileContents = \str_replace(
 			$this->getArgTemplate(self::ARG_USE_LIBS),
-			!\getenv('ES_TEST') ? $args[self::ARG_NAMESPACE_VENDOR_PREFIX] . "\EightshiftLibs" : 'EightshiftLibs',
+			$args[self::ARG_NAMESPACE_VENDOR_PREFIX] . "\EightshiftLibs",
 			$this->fileContents
 		);
 
@@ -643,80 +589,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Clean up initial boilerplate files.
-	 *
-	 * @param string $destination Destination path.
-	 *
-	 * @return void
-	 */
-	public function cleanUpInitialBoilerplate(string $destination): void
-	{
-		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog('Removing initial boilerplate setup files', 'C');
-		\shell_exec("cd {$destination} && rm -rf .git"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		\shell_exec("cd {$destination} && rm -rf .github"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		\shell_exec("cd {$destination} && rm CODE_OF_CONDUCT.md"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		\shell_exec("cd {$destination} && rm CHANGELOG.md"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		\shell_exec("cd {$destination} && rm LICENSE.md"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-	}
-
-	/**
-	 * Run commands after initial setup - backend.
-	 *
-	 * @param string $libsVersion Version of libs to install.
-	 * @param string $destination Destination path.
-	 *
-	 * @return void
-	 */
-	public function initMandatoryBackendAfter(
-		string $libsVersion,
-		string $destination
-	): void {
-		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog('Removing setup vendor folder', 'C');
-		\shell_exec("cd {$destination} && rm -rf vendor"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog('Removing setup composer.lock', 'C');
-		\shell_exec("cd {$destination} && rm composer.lock"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog('Running composer install', 'C');
-		if ($libsVersion) {
-			\shell_exec("cd {$destination} && composer require infinum/eightshift-libs:dev-{$libsVersion}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		} else {
-			\shell_exec("cd {$destination} && composer require infinum/eightshift-libs"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		}
-	}
-
-	/**
-	 * Run commands after initial setup - frontend.
-	 *
-	 * @param string $frontendLibsVersion Version of frontend libs to install.
-	 * @param string $frontendLibsType Type of frontend libs to install.
-	 * @param string $destination Destination path.
-	 *
-	 * @return void
-	 */
-	public function initMandatoryFrontendAfter(
-		string $frontendLibsVersion,
-		string $frontendLibsType,
-		string $destination
-	): void {
-		$this->cliLog('--------------------------------------------------', 'C');
-		$this->cliLog('Running npm install', 'C');
-
-		$flibsType = 'frontend-libs';
-		if ($frontendLibsType === 'tailwind') {
-			$flibsType = 'frontend-libs-tailwind';
-		}
-
-		if ($frontendLibsVersion) {
-			\shell_exec("cd {$destination} && npm install infinum/eightshift-{$flibsType}#{$frontendLibsVersion}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		} else {
-			\shell_exec("cd {$destination} && npm install @eightshift/{$flibsType}"); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-		}
-	}
-
-	/**
 	 * Change Class full name
 	 *
 	 * @param string $className Class Name.
@@ -744,22 +616,6 @@ abstract class AbstractCli implements CliInterface
 
 		return $this;
 	}
-
-	/**
-	 * Change version number as a string.
-	 *
-	 * @param string $version New version.
-	 *
-	 * @return AbstractCli Current CLI class.
-	 */
-	public function renameVersionString(string $version): self
-	{
-		$this->fileContents = \preg_replace('/Version: .*/', "Version: {$version}", $this->fileContents);
-		$this->fileContents = \preg_replace('/"version": ".*"/', "\"version\": \"{$version}\"", $this->fileContents);
-
-		return $this;
-	}
-
 
 	/**
 	 * Search and replace wrapper
@@ -816,38 +672,6 @@ abstract class AbstractCli implements CliInterface
 		}
 
 		return \str_replace('_', '-', \str_replace(' ', '-', $stringToConvert));
-	}
-
-	/**
-	 * Get full dir files.
-	 *
-	 * @param string $path Path to scan.
-	 * @param string $sufix Sufix to add to path.
-	 *
-	 * @return string[]
-	 */
-	public function getFullDirFiles(string $path, string $sufix = ''): array
-	{
-		$scanDir = Helpers::joinPaths([$path, $sufix]);
-
-		if (!\is_dir($scanDir)) {
-			return [$path];
-		}
-
-		$dir = \array_diff(\scandir($scanDir), ['..', '.']);
-
-		return \array_filter(\array_map(
-			static function ($item) use ($path, $sufix) {
-				if (!\is_dir(Helpers::joinPaths([$path, $sufix, $item]))) {
-					if ($sufix) {
-						return "{$sufix}/{$item}";
-					} else {
-						return $item;
-					}
-				}
-			},
-			$dir
-		));
 	}
 
 	/**
@@ -909,85 +733,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Manually prepare arguments to pass to runcommand method.
-	 *
-	 * @param array<string, mixed> $args Array of arguments.
-	 *
-	 * @return string
-	 */
-	public function prepareArgsManual(array $args): string
-	{
-		$output = '';
-		foreach ($args as $key => $value) {
-			$output .= "--{$key}='{$value}' ";
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Recursive copy helper
-	 *
-	 * @link https://stackoverflow.com/a/7775949/629127
-	 *
-	 * @param string $source Source path.
-	 * @param string $destination Destination path.
-	 *
-	 * @throws InvalidPath Exception in case the source path is missing.
-	 *
-	 * @return void
-	 */
-	protected function copyRecursively(string $source, string $destination): void
-	{
-		if (!\is_dir($destination)) {
-			\mkdir($destination, 0755, true);
-		}
-
-		try {
-			$iterator = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS),
-				RecursiveIteratorIterator::SELF_FIRST
-			);
-		} catch (UnexpectedValueException $exception) {
-			throw InvalidPath::missingFileException($source);
-		}
-
-		$ds = \DIRECTORY_SEPARATOR;
-
-		foreach ($iterator as $item) {
-			$subPathName = $iterator->getSubPathname();
-			$destinationPath = \rtrim($destination, $ds) . $ds . $subPathName;
-
-			if ($item->isDir()) {
-				if (!\file_exists($destinationPath)) {
-					\mkdir($destinationPath, 0755, true);
-				}
-			} else {
-				\copy($item->getPathname(), $destinationPath);
-			}
-		}
-	}
-
-	/**
-	 * Copy item from source to destination.
-	 *
-	 * @param string $source Source path.
-	 * @param string $destination Destination path.
-	 *
-	 * @return void
-	 */
-	protected function copyItem(string $source, string $destination): void
-	{
-		$dir = \dirname($destination);
-
-		if (!\file_exists($dir)) {
-			\mkdir($dir, 0755, true);
-		}
-
-		\copy($source, $destination);
-	}
-
-	/**
 	 * Return cli intro.
 	 *
 	 * @param array<string, mixed> $assocArgs $argument to pass.
@@ -1028,61 +773,6 @@ abstract class AbstractCli implements CliInterface
 	}
 
 	/**
-	 * Get manifest json. Generally used for getting block/components manifest. Used to directly fetch json file.
-	 * Used in combination with getManifest helper.
-	 *
-	 * @param string $path Absolute path to manifest folder.
-	 *
-	 * @throws InvalidPath Exception in case the manifest file is missing.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getManifestDirect(string $path): array
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = \rtrim($path, $sep);
-
-		$manifest = "{$path}{$sep}manifest.json";
-
-		if (!\file_exists($manifest)) {
-			throw InvalidPath::missingFileException($manifest);
-		}
-
-		return \json_decode(\implode(' ', (array)\file($manifest)), true);
-	}
-
-	/**
-	 * Convert string to valid namespace.
-	 *
-	 * @param string $name Name to convert.
-	 *
-	 * @return string
-	 */
-	public function convertToNamespace(string $name): string
-	{
-		// Replace all non-alphanumeric characters with underscores.
-		$namespace = \preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
-
-		// Replace multiple underscores with a single underscore.
-		$namespace = \preg_replace('/_+/', '_', $namespace);
-
-		// Trim underscores from the start and end of the namespace.
-		$namespace = \trim($namespace, '_');
-
-		// Ensure the namespace does not start with a digit.
-		if (\ctype_digit($namespace[0])) {
-				$namespace = 'N' . $namespace;
-		}
-
-		// Convert to PascalCase as an optional style.
-		$namespace = \str_replace('_', ' ', $namespace);
-		$namespace = \ucwords($namespace);
-		$namespace = \str_replace(' ', '', $namespace);
-
-		return $namespace;
-	}
-
-	/**
 	 * Run CLI command.
 	 *
 	 * @param string $commandClass Command class to run.
@@ -1099,15 +789,5 @@ abstract class AbstractCli implements CliInterface
 		$class->__invoke([], \array_merge(
 			$args,
 		));
-	}
-
-	/**
-	 * Check if the project is using Tailwind.
-	 *
-	 * @return bool
-	 */
-	public function isTailwind(): bool
-	{
-		return \file_exists(Helpers::getProjectPaths('blocksTailwindSource'));
 	}
 }

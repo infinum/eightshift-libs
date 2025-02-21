@@ -130,7 +130,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		return [
 			self::TYPE_BLOCKS => [
 				self::SETTINGS_KEY => [
-					'path' => 'blocksDestination',
+					'path' => 'blocksRoot',
 					'multiple' => false,
 					'validation' => [
 						'$schema',
@@ -182,7 +182,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					],
 				],
 				self::BLOCKS_KEY => [
-					'path' => 'blocksDestinationCustom',
+					'path' => 'blocks',
 					'id' => 'blockName',
 					'multiple' => true,
 					'autoset' => [
@@ -212,7 +212,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					],
 				],
 				self::COMPONENTS_KEY => [
-					'path' => 'blocksDestinationComponents',
+					'path' => 'components',
 					'multiple' => true,
 					'id' => 'componentName',
 					'validation' => [
@@ -222,7 +222,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					],
 				],
 				self::VARIATIONS_KEY => [
-					'path' => 'blocksDestinationVariations',
+					'path' => 'variations',
 					'id' => 'name',
 					'multiple' => true,
 					'validation' => [
@@ -235,7 +235,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					],
 				],
 				self::WRAPPER_KEY => [
-					'path' => 'blocksDestinationWrapper',
+					'path' => 'wrapper',
 					'validation' => [
 						'$schema',
 						'title',

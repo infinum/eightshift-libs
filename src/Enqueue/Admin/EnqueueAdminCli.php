@@ -79,6 +79,6 @@ class EnqueueAdminCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Enqueue' . \DIRECTORY_SEPARATOR . 'Admin'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', ['Enqueue', 'Admin']), "{$className}.php", $assocArgs);
 	}
 }

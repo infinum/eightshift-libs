@@ -81,6 +81,6 @@ class AnalyticsGdprCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'AnalyticsGdpr'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'AnalyticsGdpr'), "{$className}.php", $assocArgs);
 	}
 }

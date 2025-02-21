@@ -79,6 +79,6 @@ class EnqueueThemeCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Enqueue' . \DIRECTORY_SEPARATOR . 'Theme'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', ['Enqueue', 'Theme']), "{$className}.php", $assocArgs);
 	}
 }

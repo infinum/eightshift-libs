@@ -83,42 +83,40 @@ if (!function_exists('dbImport')) {
 			$toScheme = $to['scheme'];
 		}
 
-		if (!getenv('ES_TEST')) {
-			// Define db export file name.
-			$dbFileName = 'latest.sql';
+		// Define db export file name.
+		$dbFileName = 'latest.sql';
 
-			// Execute db export.
-			WP_CLI::runcommand('db export --set-gtid-purged=OFF');
-			WP_CLI::log('Db backup exported successfully.');
-			WP_CLI::log('--------------------------------------------------');
+		// Execute db export.
+		WP_CLI::runcommand('db export --set-gtid-purged=OFF');
+		WP_CLI::log('Db backup exported successfully.');
+		WP_CLI::log('--------------------------------------------------');
 
-			WP_CLI::runcommand('db reset');
-			WP_CLI::log('--------------------------------------------------');
+		WP_CLI::runcommand('db reset');
+		WP_CLI::log('--------------------------------------------------');
 
-			// Import new database.
-			WP_CLI::runcommand("db import {$fileName}");
-			WP_CLI::log('Database import done.');
-			WP_CLI::log('--------------------------------------------------');
+		// Import new database.
+		WP_CLI::runcommand("db import {$fileName}");
+		WP_CLI::log('Database import done.');
+		WP_CLI::log('--------------------------------------------------');
 
-			// Search and replace url host.
-			WP_CLI::runcommand("search-replace {$fromHost} {$toHost} --url={$fromHost} --all-tables --network");
-			WP_CLI::log('Database search replace for host successfully finished.');
-			WP_CLI::log('--------------------------------------------------');
+		// Search and replace url host.
+		WP_CLI::runcommand("search-replace {$fromHost} {$toHost} --url={$fromHost} --all-tables --network");
+		WP_CLI::log('Database search replace for host successfully finished.');
+		WP_CLI::log('--------------------------------------------------');
 
-			// Search and replace url scheme.
-			if ($toScheme !== $fromScheme) {
-				WP_CLI::runcommand("search-replace {$fromScheme}://{$toHost} {$toScheme}://{$toHost} --all-tables --network");
-				WP_CLI::log('Database search replace for scheme successfully finished.');
-				WP_CLI::log('--------------------------------------------------');
-			}
-
-			// Clean up.
-			WP_CLI::runcommand('cache flush');
-			WP_CLI::runcommand('transient delete --all');
-			WP_CLI::runcommand('rewrite flush');
-			WP_CLI::log('Flushing cache, removing transients and resetting permalinks!');
+		// Search and replace url scheme.
+		if ($toScheme !== $fromScheme) {
+			WP_CLI::runcommand("search-replace {$fromScheme}://{$toHost} {$toScheme}://{$toHost} --all-tables --network");
+			WP_CLI::log('Database search replace for scheme successfully finished.');
 			WP_CLI::log('--------------------------------------------------');
 		}
+
+		// Clean up.
+		WP_CLI::runcommand('cache flush');
+		WP_CLI::runcommand('transient delete --all');
+		WP_CLI::runcommand('rewrite flush');
+		WP_CLI::log('Flushing cache, removing transients and resetting permalinks!');
+		WP_CLI::log('--------------------------------------------------');
 
 		WP_CLI::success('Finished! Success!');
 	}

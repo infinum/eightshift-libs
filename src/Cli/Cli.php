@@ -52,7 +52,6 @@ use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
-use EightshiftLibs\Misc\VersionCli;
 use EightshiftLibs\Optimization\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\Readme\ReadmeCli;
@@ -135,7 +134,6 @@ class Cli
 		ImportCli::class,
 		RegenerateWebPMediaCli::class,
 		UseWebPMediaCli::class,
-		VersionCli::class,
 	];
 
 	/**
@@ -184,7 +182,7 @@ class Cli
 	public function load(string $commandParentName): void
 	{
 		// Duplicate condition because WP_CLI will throw error on the project.
-		if (!\getenv('ES_TEST') && \defined('WP_CLI')) {
+		if (\defined('WP_CLI')) {
 			// Top Level command name.
 			WP_CLI::add_command($commandParentName, new CliBoilerplate());
 
