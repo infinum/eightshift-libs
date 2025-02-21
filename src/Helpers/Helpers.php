@@ -122,46 +122,69 @@ class Helpers
 		string $renderPrefixPath = '',
 		string $renderContent = ''
 	): string {
-		if (empty($renderPathName)) {
-			$renderPathName = 'components';
-		}
+		$manifest = [];
 
-		if ($renderName === 'wrapper') {
-			$renderPathName = 'blocksDestination';
+		switch ($renderPathName) {
+			case 'components':
+				$componentName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
+
+				if ($componentName) {
+					$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, "{$renderName}.php"]);
+					$manifest = Helpers::getComponent($componentName);
+				} else {
+					$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, $renderName, "{$renderName}.php"]);
+					$manifest = Helpers::getComponent($renderName);
+				}
+
+				unset($componentName);
+
+				break;
+			case 'wrapper':
+				$manifest = Helpers::getWrapper();
+				$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), "{$renderName}.php"]);
+				break;
+			case 'blocks':
+				$blockName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
+
+				if ($blockName) {
+					$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, "{$renderName}.php"]);
+					$manifest = Helpers::getBlock($blockName);
+				} else {
+					$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, $renderName, "{$renderName}.php"]);
+					$manifest = Helpers::getBlock($renderName);
+				}
+
+				unset($blockName);
+				break;
+			default:
+				$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefixPath, "{$renderName}.php"]);
+				break;
 		}
 
 		if (!isset(\array_flip(self::PROJECT_RENDER_ALLOWED_NAMES)[$renderPathName])) {
 			throw InvalidPath::wrongOrNotAllowedParentPathException($renderPathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
 		}
 
-		$renderPrefix = $renderName;
-
-		if (!empty($renderPrefixPath)) {
-			$renderPrefix = $renderPrefixPath;
-		}
-
-		$renderPath = self::joinPaths([Helpers::getProjectPaths($renderPathName), $renderPrefix, "{$renderName}.php"]);
-
 		if (!\file_exists($renderPath)) {
 			throw InvalidPath::missingFileException($renderPath);
 		}
 
 		// Merge default attributes with the component attributes.
-		if ($renderUseComponentDefaults) {
-			$renderAttributes = Helpers::getDefaultRenderAttributes(Helpers::getComponent($renderName), $renderAttributes);
+		if ($renderUseComponentDefaults && !empty($manifest)) {
+			$renderAttributes = Helpers::getDefaultRenderAttributes($manifest, $renderAttributes);
 		}
 
 		\ob_start();
 
-		// Allowed variables are $attributes, $renderAttributes, $renderContent, $renderPath.
+		// Allowed variables are $attributes, $renderAttributes, $renderContent, $renderPath, $manifest, $globalManifest.
 		$attributes = $renderAttributes;
+		$globalManifest = Helpers::getSettings();
 
 		unset(
 			$renderName,
 			$renderPathName,
 			$renderUseComponentDefaults,
 			$renderPrefixPath,
-			$renderPrefix
 		);
 
 		include $renderPath;
@@ -170,7 +193,9 @@ class Helpers
 			$renderAttributes,
 			$attributes,
 			$renderContent,
-			$renderPath
+			$renderPath,
+			$manifest,
+			$globalManifest
 		);
 
 		return \trim((string) \ob_get_clean());
