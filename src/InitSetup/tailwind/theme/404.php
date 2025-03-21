@@ -11,7 +11,6 @@ use %g_namespace%\ThemeOptions\ThemeOptions;
 get_header();
 
 // Header reusable block.
-$partialId = get_option(ThemeOptions::OPTION_NAME)['fourOhFour'] ?? '';
-ThemeOptions::renderPartial($partialId);
+ThemeOptions::renderPartial(ThemeOptions::getOption('fourOhFour'));
 
 get_footer();
