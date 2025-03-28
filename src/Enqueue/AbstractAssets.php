@@ -56,7 +56,7 @@ abstract class AbstractAssets implements ServiceInterface
 	 */
 	protected function getAdminScriptDependencies(): array
 	{
-		return ['wp-element', 'wp-i18n', 'wp-api-fetch'];
+		return ['wp-element', 'wp-i18n', 'wp-api-fetch', 'wp-blocks'];
 	}
 
 	/**
