@@ -108,6 +108,6 @@ class AcfMetaCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
 			->renameClassNameWithPrefix($this->getClassShortName(), $className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'CustomMeta'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'CustomMeta'), "{$className}.php", $assocArgs);
 	}
 }

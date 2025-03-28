@@ -131,6 +131,6 @@ class ServiceExampleCli extends AbstractCli
 			->searchReplaceString($className, $classNameNew)
 			->renameGlobals($assocArgs)
 			->searchReplaceString('\\Services;', "{$newNamespace};")
-			->outputWrite(Helpers::getProjectPaths('srcDestination', $folder), "{$classNameNew}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', $folder), "{$classNameNew}.php", $assocArgs);
 	}
 }

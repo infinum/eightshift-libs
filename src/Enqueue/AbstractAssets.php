@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue;
 
-use EightshiftLibs\Cache\AbstractManifestCache;
-use EightshiftLibs\Cache\ManifestCacheInterface;
-use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -25,23 +23,6 @@ use EightshiftLibs\Services\ServiceInterface;
  */
 abstract class AbstractAssets implements ServiceInterface
 {
-	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
-	 */
-	public function __construct(ManifestCacheInterface $manifestCache)
-	{
-		$this->manifestCache = $manifestCache;
-	}
-
 	/**
 	 * Media style const
 	 */
@@ -182,19 +163,11 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @param string $key The key from the manifest.json file.
 	 *
-	 * @throws InvalidManifest If manifest key is missing.
-	 *
 	 * @return string The value from the manifest.json file.
 	 */
 	public function setAssetsItem(string $key): string
 	{
-		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
-
-		if (!isset($data[$key]) && !\defined('WP_CLI')) {
-			throw InvalidManifest::missingManifestKeyException($key, 'public');
-		}
-
-		return $data[$key] ?? '';
+		return Helpers::getAsset($key);
 	}
 
 	/**

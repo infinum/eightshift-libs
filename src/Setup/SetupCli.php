@@ -47,7 +47,7 @@ class SetupCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'path' => Helpers::getProjectPaths('projectRoot'),
+			'path' => Helpers::getProjectPaths('root'),
 			'file_name' => 'setup.json',
 			'source_path' => __DIR__,
 		];

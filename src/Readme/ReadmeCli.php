@@ -47,7 +47,7 @@ class ReadmeCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'path' => Helpers::getProjectPaths('projectRoot'),
+			'path' => Helpers::getProjectPaths('root'),
 		];
 	}
 
