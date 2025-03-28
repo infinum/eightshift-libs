@@ -104,7 +104,7 @@ if (!function_exists('dbImport')) {
 		WP_CLI::log('Database search replace for host successfully finished.');
 		WP_CLI::log('--------------------------------------------------');
 
-		// Search and replace url scheme.
+		// Search and replace URL scheme.
 		if ($toScheme !== $fromScheme) {
 			WP_CLI::runcommand("search-replace {$fromScheme}://{$toHost} {$toScheme}://{$toHost} --all-tables --network");
 			WP_CLI::log('Database search replace for scheme successfully finished.');
