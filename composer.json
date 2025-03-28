@@ -24,7 +24,7 @@
 		"source": "https://github.com/infinum/eightshift-libs"
 	},
 	"require": {
-		"php": ">=8.2",
+		"php": ">=8.3",
 		"ext-dom": "*",
 		"ext-json": "*",
 		"ext-libxml": "*",
@@ -63,8 +63,8 @@
 			"vendor/bin/captainhook install -f -s"
 		],
 		"test:types": "@php ./vendor/bin/phpstan analyze",
-		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.2-",
-		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.2-",
+		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.3-",
+		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.3-",
 		"test": [
 			"@test:standards",
 			"@test:types"
