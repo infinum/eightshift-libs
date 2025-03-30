@@ -27,19 +27,34 @@ abstract class AbstractAdminSubMenu extends AbstractAdminMenu
 	 */
 	public function register(): void
 	{
-		\add_action(
-			'admin_menu',
-			function () {
-				\add_submenu_page(
-					$this->getParentMenu(),
-					$this->getTitle(),
-					$this->getMenuTitle(),
-					$this->getCapability(),
-					$this->getMenuSlug(),
-					[$this, 'processAdminSubmenu']
-				);
-			}
+		\add_action('admin_menu', [$this, 'callback'], $this->getPriorityOrder());
+	}
+
+	/**
+	 * Return action callback method.
+	 *
+	 * @return void
+	 */
+	public function callback(): void
+	{
+		\add_submenu_page(
+			$this->getParentMenu(),
+			$this->getTitle(),
+			$this->getMenuTitle(),
+			$this->getCapability(),
+			$this->getMenuSlug(),
+			[$this, 'processAdminSubmenu']
 		);
+	}
+
+	/**
+	 * Return hook priority order.
+	 *
+	 * @return integer
+	 */
+	public function getPriorityOrder(): int
+	{
+		return 200;
 	}
 
 	/**
@@ -60,7 +75,7 @@ abstract class AbstractAdminSubMenu extends AbstractAdminMenu
 		$attr['adminMenuSlug'] = $this->getMenuSlug();
 		$attr['nonceField'] = $this->renderNonce();
 
-		echo $this->render((array)$attr); // phpcs:ignore
+		echo $this->getViewComponent($attr); // phpcs:ignore
 	}
 
 	/**
