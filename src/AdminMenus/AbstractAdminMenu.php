@@ -112,9 +112,11 @@ abstract class AbstractAdminMenu implements ServiceInterface
 	/**
 	 * Get the view component that will render correct view.
 	 *
+	 * @param array<string, mixed> $attributes Attributes passed to the view.
+	 *
 	 * @return string View uri.
 	 */
-	abstract protected function getViewComponent(): string;
+	abstract protected function getViewComponent(array $attributes): string;
 
 	/**
 	 * Process the admin menu attributes.
