@@ -125,8 +125,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 */
 	protected function getCacheBuilder(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-
 		return [
 			self::TYPE_BLOCKS => [
 				self::SETTINGS_KEY => [
@@ -250,7 +248,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			self::TYPE_GEOLOCATION => [
 				self::COUNTRIES_KEY => [
 					'path' => 'eightshift',
-					'fileName' => "geolocation.json",
+					'fileName' => "countries.json",
 				],
 			],
 		];

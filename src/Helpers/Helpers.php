@@ -227,8 +227,6 @@ class Helpers
 				return self::joinPaths([$root, 'src', ...$suffix]);
 			case 'public':
 				return self::joinPaths([$root, 'public', ...$suffix]);
-			case 'libs':
-				return self::joinPaths([$root, 'vendor', 'infinum', 'eightshift-libs']);
 			case 'libsPrefixed':
 				return self::joinPaths([$root, 'vendor-prefixed', 'infinum', 'eightshift-libs']);
 			case 'blocksRoot':
@@ -242,7 +240,7 @@ class Helpers
 			case 'wrapper':
 				return self::joinPaths([$root, 'src', 'Blocks', 'wrapper', ...$suffix]);
 			default:
-				return $root;
+				return self::joinPaths([$root, ...$suffix]);
 		}
 	}
 
