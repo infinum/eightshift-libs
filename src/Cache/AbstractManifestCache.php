@@ -90,11 +90,12 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 		if (!Helpers::isCacheVersionValid() || !Helpers::shouldCache()) {
 			Helpers::deleteCacheVersion();
+			Helpers::deleteAllCache();
 		}
 
-		$this->setCache(self::TYPE_BLOCKS);
-		$this->setCache(self::TYPE_ASSETS);
-		$this->setCache(self::TYPE_GEOLOCATION);
+		foreach (\array_keys($this->getCacheBuilder()) as $key) {
+			$this->setCache($key);
+		}
 
 		Helpers::setCacheVersion();
 		Helpers::setCache();
