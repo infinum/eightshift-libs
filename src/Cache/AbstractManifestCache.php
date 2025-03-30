@@ -244,15 +244,13 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			],
 			self::TYPE_ASSETS => [
 				self::ASSETS_KEY => [
-					'path' => 'themeRoot',
-					'fileName' => "public{$sep}manifest.json",
+					'path' => 'public',
 				],
 			],
 			self::TYPE_GEOLOCATION => [
 				self::COUNTRIES_KEY => [
-					'path' => 'libs',
-					'pathAlternative' => 'libsPrefixed',
-					'fileName' => "src{$sep}Geolocation{$sep}manifest.json",
+					'path' => 'eightshift',
+					'fileName' => "geolocation.json",
 				],
 			],
 		];
@@ -411,24 +409,12 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		}
 
 		$path = $data['path'] ?? '';
-		$pathAlternative = $data['pathAlternative'] ?? '';
-		$pathCustom = $data['pathCustom'] ?? '';
 		$fileName = $data['fileName'] ?? 'manifest.json';
 
-		$realPath = Helpers::getProjectPaths($path);
-
-		if (!\is_dir($realPath) && $pathAlternative) {
-			$realPath = $pathAlternative;
-		}
-
-		if ($pathCustom) {
-			$realPath = $pathCustom;
-		}
-
 		if (!$name) {
-			return Helpers::getProjectPaths($realPath, [$fileName]);
+			return Helpers::getProjectPaths($path, [$fileName]);
 		}
 
-		return Helpers::getProjectPaths($realPath, [$name, $fileName]);
+		return Helpers::getProjectPaths($path, [$name, $fileName]);
 	}
 }

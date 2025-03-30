@@ -216,15 +216,17 @@ class Helpers
 			$suffix = [$suffix];
 		}
 
-		$root = \dirname(__FILE__, 9);
+		$projectRoot = \dirname(__FILE__, 9);
 
 		switch ($type) {
 			case 'root':
-				return self::joinPaths([$root, ...$suffix]);
+				return self::joinPaths([$projectRoot, ...$suffix]);
 			case 'eightshift':
-				return self::joinPaths([$root, 'eightshift', ...$suffix]);
+				return self::joinPaths([$projectRoot, 'eightshift', ...$suffix]);
 			case 'src':
 				return self::joinPaths([$root, 'src', ...$suffix]);
+			case 'public':
+				return self::joinPaths([$root, 'public', ...$suffix]);
 			case 'libs':
 				return self::joinPaths([$root, 'vendor', 'infinum', 'eightshift-libs']);
 			case 'libsPrefixed':
