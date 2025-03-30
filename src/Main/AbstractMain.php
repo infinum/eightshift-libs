@@ -213,12 +213,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 		if (Helpers::shouldCache()) {
 			$fileName = \explode('\\', $this->namespace);
-
-			$cacheFolder = $this->getCachedFolderPath();
-
-			if (!empty($cacheFolder)) {
-				$builder->enableCompilation($cacheFolder, "{$fileName[0]}CompiledContainer");
-			}
+			$builder->enableCompilation(Helpers::getEightshiftOutputPath(), "{$fileName[0]}CompiledContainer");
 		}
 
 		return $builder->addDefinitions($definitions)->build();
@@ -267,45 +262,21 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	private function createServiceClassesCacheFile(array $services): array
 	{
 		if (Helpers::shouldCache()) {
-			$sep = \DIRECTORY_SEPARATOR;
 			$file = \explode('\\', $this->namespace);
 
-			$cacheFolder = $this->getCachedFolderPath();
-			$cacheFile = "{$cacheFolder}{$sep}{$file[0]}ServiceClasses.json";
+			$cacheFile = Helpers::getEightshiftOutputPath("{$file[0]}ServiceClasses.json");
 
 			if (\file_exists($cacheFile)) {
 				return \json_decode(\file_get_contents($cacheFile), true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			}
 
-			if (!\file_exists($cacheFolder)) {
-				\mkdir($cacheFolder, 0755, true);
+			if (\file_put_contents($cacheFile, \wp_json_encode($services))) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+				\chmod($cacheFile, 0644); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 			}
-
-			\file_put_contents( // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-				$cacheFile,
-				\wp_json_encode($services)
-			);
 
 			return $services;
 		}
 
 		return $services;
-	}
-
-	/**
-	 * Get the path to the cache folder.
-	 *
-	 * @return string
-	 */
-	private function getCachedFolderPath(): string
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$cacheFolder = __DIR__ . "{$sep}Cache";
-
-		if (\defined('EIGHTSHIFT_DI_CACHE_FOLDER')) {
-			$cacheFolder = \rtrim(\EIGHTSHIFT_DI_CACHE_FOLDER, $sep);
-		}
-
-		return $cacheFolder;
 	}
 }

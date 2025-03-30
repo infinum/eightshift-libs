@@ -216,9 +216,13 @@ class Helpers
 			$suffix = [$suffix];
 		}
 
+		$root = \dirname(__FILE__, 9);
+
 		switch ($type) {
 			case 'root':
-				return self::joinPaths([\dirname(__FILE__, 9), ...$suffix]);
+				return self::joinPaths([$root, ...$suffix]);
+			case 'eightshift':
+				return self::joinPaths([$root, 'eightshift', ...$suffix]);
 			case 'src':
 				return self::joinPaths([$root, 'src', ...$suffix]);
 			case 'libs':
@@ -257,5 +261,27 @@ class Helpers
 		$path = $sep . \implode($sep, $paths);
 
 		return !\pathinfo($path, \PATHINFO_EXTENSION) ? $path . $sep : $path;
+	}
+
+	/**
+	 * Get eightshift root folder output path and create the directory if it doesn't exist.
+	 *
+	 * @param string $fileName File name to append to the path.
+	 *
+	 * @return string
+	 */
+	public static function getEightshiftOutputPath($fileName = ''): string
+	{
+		$filePath = Helpers::getProjectPaths('eightshift');
+
+		if (!\is_dir($filePath)) {
+			\mkdir($filePath, 0755, true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
+		}
+
+		if ($fileName) {
+			return $filePath . \DIRECTORY_SEPARATOR . $fileName;
+		}
+
+		return $filePath;
 	}
 }
