@@ -264,33 +264,13 @@ trait StoreBlocksTrait
 	}
 
 	/**
-	 * Get global config value for use components.
+	 * Get global config value for use legacy components.
 	 *
 	 * @return bool
 	 */
-	public static function getConfigUseComponents(): bool
+	public static function getConfigUseLegacyComponents(): bool
 	{
-		return (bool) self::getConfig()['useComponents'];
-	}
-
-	/**
-	 * Get global config value for use blocks.
-	 *
-	 * @return bool
-	 */
-	public static function getConfigUseBlocks(): bool
-	{
-		return (bool) self::getConfig()['useBlocks'];
-	}
-
-	/**
-	 * Get global config value for use variations.
-	 *
-	 * @return bool
-	 */
-	public static function getConfigUseVariations(): bool
-	{
-		return (bool) self::getConfig()['useVariations'];
+		return (bool) self::getConfig()['useLegacyComponents'];
 	}
 
 	// -----------------------------------------------------

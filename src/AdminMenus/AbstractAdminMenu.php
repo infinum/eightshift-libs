@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftLibs\AdminMenus;
 
 use EightshiftLibs\Services\ServiceInterface;
-use Exception;
 
 /**
  * Abstract class AbstractAdminMenu class.
@@ -67,7 +66,6 @@ abstract class AbstractAdminMenu implements ServiceInterface
 	 * @param array<string, mixed>|string $attr Attributes as passed to the admin menu.
 	 *
 	 * @return void The rendered content needs to be echoed.
-	 * @throws Exception Exception in case the component is missing.
 	 */
 	public function processAdminMenu($attr): void
 	{

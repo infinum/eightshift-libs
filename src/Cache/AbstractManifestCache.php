@@ -144,27 +144,17 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 							'parent' => 'config',
 						],
 						[
+							'key' => 'useLegacyComponents',
+							'value' => false,
+							'parent' => 'config',
+						],
+						[
 							'key' => 'outputCssOptimize',
 							'value' => true,
 							'parent' => 'config',
 						],
 						[
 							'key' => 'useWrapper',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
-							'key' => 'useComponents',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
-							'key' => 'useBlocks',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
-							'key' => 'useVariations',
 							'value' => true,
 							'parent' => 'config',
 						],

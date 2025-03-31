@@ -115,12 +115,16 @@ class Helpers
 	public static function render(
 		string $renderName,
 		array $renderAttributes = [],
-		string $renderPathName = 'components',
+		string $renderPathName = '',
 		bool $renderUseComponentDefaults = false,
 		string $renderPrefixPath = '',
 		string $renderContent = ''
 	): string {
 		$manifest = [];
+
+		if (!$renderPathName) {
+			$renderPathName = Helpers::getConfigUseLegacyComponents() ? 'components' : 'blocks';
+		}
 
 		switch ($renderPathName) {
 			case 'components':
