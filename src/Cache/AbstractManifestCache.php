@@ -306,7 +306,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 				$autosetItemValue = $autosetItem['value'] ?? '';
 				$autosetItemParent = $autosetItem['parent'] ?? '';
 
-				if (!$autosetItemKey || !$autosetItemValue) {
+				if (!$autosetItemKey) {
 					continue;
 				}
 
