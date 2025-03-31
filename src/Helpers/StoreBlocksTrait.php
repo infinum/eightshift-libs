@@ -54,10 +54,6 @@ trait StoreBlocksTrait
 	{
 		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::BLOCKS_KEY] ?? [];
 
-		if (!$output) {
-			throw InvalidBlock::missingItemException('project', 'blocks');
-		}
-
 		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::BLOCKS_KEY];
 
 		if (\has_filter($filterName)) {
@@ -97,10 +93,6 @@ trait StoreBlocksTrait
 	public static function getComponents(): array
 	{
 		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::COMPONENTS_KEY] ?? [];
-
-		if (!$output) {
-			throw InvalidBlock::missingItemException('project', 'components');
-		}
 
 		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::COMPONENTS_KEY];
 
@@ -142,10 +134,6 @@ trait StoreBlocksTrait
 	{
 		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::VARIATIONS_KEY] ?? [];
 
-		if (!$output) {
-			throw InvalidBlock::missingItemException('project', 'variations');
-		}
-
 		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::VARIATIONS_KEY];
 
 		if (\has_filter($filterName)) {
@@ -185,10 +173,6 @@ trait StoreBlocksTrait
 	public static function getWrapper(): array
 	{
 		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::WRAPPER_KEY] ?? [];
-
-		if (!$output) {
-			throw InvalidBlock::missingItemException('blocks wrapper', 'component');
-		}
 
 		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::WRAPPER_KEY];
 
