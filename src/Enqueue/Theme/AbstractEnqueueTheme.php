@@ -48,40 +48,22 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 	 */
 	public function getThemeScriptHandle(): string
 	{
-		return "{$this->getAssetsPrefix()}-scripts";
-	}
-
-	/**
-	 * Method that returns assets hook used to determine hook usage.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return boolean
-	 */
-	public function isEnqueueStylesUsed(string $hook): bool
-	{
-		return true;
+		return "{$this->getAssetsPrefix()}-theme-scripts";
 	}
 
 	/**
 	 * Register the Stylesheets for the front end of the theme.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueStyles(string $hook): void
+	public function enqueueStyles(): void
 	{
-		if (!$this->isEnqueueStylesUsed($hook)) {
-			return;
-		}
-
 		$handle = $this->getThemeStyleHandle();
 
 		\wp_register_style(
 			$handle,
 			$this->setAssetsItem(static::THEME_STYLE_URI),
-			$this->getFrontendStyleDependencies(),
+			$this->getThemeStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
@@ -101,7 +83,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 		\wp_register_script(
 			$handle,
 			$this->setAssetsItem(static::THEME_SCRIPT_URI),
-			$this->getFrontendScriptDependencies(),
+			$this->getThemeScriptDependencies(),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
@@ -111,5 +93,29 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 		foreach ($this->getLocalizations() as $objectName => $dataArray) {
 			\wp_localize_script($handle, $objectName, $dataArray);
 		}
+	}
+
+	/**
+	 * Get script dependencies
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
+	 *
+	 * @return array<int, string> List of all the script dependencies.
+	 */
+	protected function getThemeScriptDependencies(): array
+	{
+		return [];
+	}
+
+	/**
+	 * Get style dependencies
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return array<int, string> List of all the style dependencies.
+	 */
+	protected function getThemeStyleDependencies(): array
+	{
+		return [];
 	}
 }
