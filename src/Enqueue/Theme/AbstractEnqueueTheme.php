@@ -56,7 +56,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 	 *
 	 * @return void
 	 */
-	public function enqueueStyles(): void
+	public function enqueueThemeStyles(): void
 	{
 		$handle = $this->getThemeStyleHandle();
 
@@ -76,7 +76,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 	 *
 	 * @return void
 	 */
-	public function enqueueScripts(): void
+	public function enqueueThemeScripts(): void
 	{
 		$handle = $this->getThemeScriptHandle();
 

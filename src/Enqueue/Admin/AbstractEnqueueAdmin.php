@@ -48,7 +48,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 *
 	 * @return void
 	 */
-	public function enqueueStyles(): void
+	public function enqueueAdminStyles(): void
 	{
 		if (!$this->getConditionUse()) {
 			$handle = $this->getAdminStyleHandle();
@@ -80,7 +80,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 *
 	 * @return void
 	 */
-	public function enqueueScripts(): void
+	public function enqueueAdminScripts(): void
 	{
 		if (!$this->getConditionUse()) {
 			$handle = $this->getAdminScriptHandle();
@@ -144,4 +144,8 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	{
 		return [];
 	}
+
+	/* --------------------------------------------------------------------------- */
+	/* LOGIN  */
+	/* --------------------------------------------------------------------------- */
 }
