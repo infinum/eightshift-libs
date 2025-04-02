@@ -74,11 +74,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return $allowedBlockTypes;
 		}
 
-		if (Helpers::getConfigUseBlocks()) {
+		$blocks = Helpers::getBlocks();
+
+		if ($blocks) {
 			$allowedBlockTypes = \array_values(\array_merge(
 				\array_map(
 					fn ($block) => $block['blockFullName'],
-					Helpers::getBlocks()
+					$blocks
 				),
 				$allowedBlockTypes,
 			));
@@ -118,10 +120,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function registerBlocks(): void
 	{
-		if (!Helpers::getConfigUseBlocks()) {
-			return;
-		}
-
 		foreach (Helpers::getBlocks() as $block) {
 			$this->registerBlock($block);
 		}
@@ -375,7 +373,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$output = [];
 
 		// Determine if this is component or block and provide the name, not used for anything important but only to output the error msg.
-		$name = $manifest['blockName'] ?? $manifest['componentName'];
+		$name = $manifest['blockName'] ?? '';
+
+		if (Helpers::getConfigUseLegacyComponents()) {
+			$name = $manifest['blockName'] ?? $manifest['componentName'];
+		}
 
 		$components = $manifest['components'] ?? [];
 

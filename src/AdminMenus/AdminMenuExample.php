@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace %g_namespace%\AdminMenus;
 
 use %g_use_libs%\AdminMenus\AbstractAdminMenu;
+use %g_use_libs%\Helpers\Helpers;
 
 /**
  * AdminMenuExample class.
@@ -126,11 +127,16 @@ class AdminMenuExample extends AbstractAdminMenu
 	/**
 	 * Get the view component that will render correct view.
 	 *
+	 * @param array<string, mixed> $attributes Attributes passed to the view.
+	 *
 	 * @return string View uri.
 	 */
-	protected function getViewComponent(): string
+	protected function getViewComponent(array $attributes): string
 	{
-		return '%view_component%';
+		return Helpers::render(
+			'%view_component%',
+			$attributes
+		);
 	}
 
 	/**

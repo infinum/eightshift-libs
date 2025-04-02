@@ -15,7 +15,6 @@ use EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenu\AdminPatternsHeaderF
 use EightshiftLibs\AdminMenus\AdminPatternsMenu\AdminPatternsMenuCli;
 use EightshiftLibs\AdminMenus\AdminSubMenuCli;
 use EightshiftLibs\AdminMenus\AdminThemeOptionsMenu\AdminThemeOptionsMenuCli;
-use EightshiftLibs\AnalyticsGdpr\AnalyticsGdprCli;
 use EightshiftLibs\BlockPatterns\BlockPatternCli;
 use EightshiftLibs\Blocks\BlocksCli;
 use EightshiftLibs\Cache\ManifestCacheCli;
@@ -27,9 +26,7 @@ use EightshiftLibs\Cli\ParentGroups\CliInit;
 use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Config\ConfigPluginCli;
-use EightshiftLibs\ConfigProject\ConfigProjectCli;
 use EightshiftLibs\View\EscapedViewCli;
-use EightshiftLibs\CustomMeta\AcfMetaCli;
 use EightshiftLibs\Setup\SetupCli;
 use EightshiftLibs\CustomPostType\PostTypeCli;
 use EightshiftLibs\CustomTaxonomy\TaxonomyCli;
@@ -54,8 +51,6 @@ use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Optimization\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
-use EightshiftLibs\Readme\ReadmeCli;
-use EightshiftLibs\ThemeOptions\AcfThemeOptionsCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
 use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
@@ -91,12 +86,9 @@ class Cli
 		AdminThemeOptionsMenuCli::class,
 		AdminSubMenuCli::class,
 		AdminPatternsHeaderFooterMenuCli::class,
-		AnalyticsGdprCli::class,
 		WebPMediaColumnCli::class,
 		ConfigPluginCli::class,
 		ConfigThemeCli::class,
-		ConfigProjectCli::class,
-		AcfMetaCli::class,
 		PostTypeCli::class,
 		TaxonomyCli::class,
 		EnqueueAdminCli::class,
@@ -111,13 +103,11 @@ class Cli
 		MenuCli::class,
 		ModifyAdminAppearanceCli::class,
 		OptimizationCli::class,
-		ReadmeCli::class,
 		FieldCli::class,
 		RouteCli::class,
 		ServiceExampleCli::class,
 		SetupCli::class,
 		ThemeOptionsCli::class,
-		AcfThemeOptionsCli::class,
 		EscapedViewCli::class,
 		WpCli::class,
 		ManifestCacheCli::class,

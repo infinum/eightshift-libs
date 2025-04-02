@@ -115,12 +115,16 @@ class Helpers
 	public static function render(
 		string $renderName,
 		array $renderAttributes = [],
-		string $renderPathName = 'components',
+		string $renderPathName = '',
 		bool $renderUseComponentDefaults = false,
 		string $renderPrefixPath = '',
 		string $renderContent = ''
 	): string {
 		$manifest = [];
+
+		if (!$renderPathName) {
+			$renderPathName = Helpers::getConfigUseLegacyComponents() ? 'components' : 'blocks';
+		}
 
 		switch ($renderPathName) {
 			case 'components':
@@ -216,13 +220,17 @@ class Helpers
 			$suffix = [$suffix];
 		}
 
+		$projectRoot = \dirname(__FILE__, 9);
+
 		switch ($type) {
 			case 'root':
-				return self::joinPaths([\dirname(__FILE__, 9), ...$suffix]);
+				return self::joinPaths([$projectRoot, ...$suffix]);
+			case 'eightshift':
+				return self::joinPaths([$projectRoot, 'eightshift', ...$suffix]);
 			case 'src':
 				return self::joinPaths([$root, 'src', ...$suffix]);
-			case 'libs':
-				return self::joinPaths([$root, 'vendor', 'infinum', 'eightshift-libs']);
+			case 'public':
+				return self::joinPaths([$root, 'public', ...$suffix]);
 			case 'libsPrefixed':
 				return self::joinPaths([$root, 'vendor-prefixed', 'infinum', 'eightshift-libs']);
 			case 'blocksRoot':
@@ -236,7 +244,7 @@ class Helpers
 			case 'wrapper':
 				return self::joinPaths([$root, 'src', 'Blocks', 'wrapper', ...$suffix]);
 			default:
-				return $root;
+				return self::joinPaths([$root, ...$suffix]);
 		}
 	}
 
@@ -257,5 +265,27 @@ class Helpers
 		$path = $sep . \implode($sep, $paths);
 
 		return !\pathinfo($path, \PATHINFO_EXTENSION) ? $path . $sep : $path;
+	}
+
+	/**
+	 * Get eightshift root folder output path and create the directory if it doesn't exist.
+	 *
+	 * @param string $fileName File name to append to the path.
+	 *
+	 * @return string
+	 */
+	public static function getEightshiftOutputPath($fileName = ''): string
+	{
+		$filePath = Helpers::getProjectPaths('eightshift');
+
+		if (!\is_dir($filePath)) {
+			\mkdir($filePath, 0755, true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
+		}
+
+		if ($fileName) {
+			return $filePath . \DIRECTORY_SEPARATOR . $fileName;
+		}
+
+		return $filePath;
 	}
 }

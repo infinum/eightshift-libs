@@ -7,9 +7,6 @@
 	<exclude-pattern>*/tests/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
-	<exclude-pattern>*/src/commands/templates/*</exclude-pattern>
-	<exclude-pattern>*/src/Build/BuildExample.php</exclude-pattern>
-	<exclude-pattern>*/bin/cli.php</exclude-pattern>
 
 	<!-- Additional arguments. -->
 	<arg value="sp"/>
@@ -26,33 +23,8 @@
 	<!-- Support only latest 3 WP versions. -->
 	<config name="minimum_supported_wp_version" value="8.2"/>
 
-	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
-
-	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.system_calls_system">
-		<exclude-pattern>*/src/**/*Cli</exclude-pattern>
-	</rule>
-
 	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
 		<exclude-pattern>*/src/**/*Cli</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec">
-		<exclude-pattern>*/src/Db/*</exclude-pattern>
-		<exclude-pattern>*/src/Build/*</exclude-pattern>
-		<exclude-pattern>*/cliOutput/bin/Build.php</exclude-pattern>
-		<exclude-pattern>*/src/LintPhp/LintPhpCli.php</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.WP.AlternativeFunctions.file_system_read_fopen">
-		<exclude-pattern>*/src/Cli/*</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.WP.AlternativeFunctions.file_system_read_fwrite">
-		<exclude-pattern>*/src/Cli/*</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.WP.AlternativeFunctions.file_system_read_fclose">
-		<exclude-pattern>*/src/Cli/*</exclude-pattern>
 	</rule>
 
 	<rule ref="PSR12.Operators.OperatorSpacing.NoSpaceAfter">
@@ -75,10 +47,6 @@
 		<exclude-pattern>*/src/*/*Example.php</exclude-pattern>
 	</rule>
 
-	<rule ref="Internal.NoCodeFound">
-		<exclude-pattern>*/src/GitIgnore/GitIgnoreExample.php</exclude-pattern>
-	</rule>
-
 	<!-- Ignore unescaped exceptions. All Eightshift exceptions are escaped. -->
 	<rule ref="Eightshift.Security.HelpersEscape.ExceptionNotEscaped">
 		<severity>0</severity>
@@ -86,9 +54,6 @@
 
 	<!-- Ignore filesystem alternative functions. -->
 	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_mkdir">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPress.WP.AlternativeFunctions.unlink_unlink">
 		<severity>0</severity>
 	</rule>
 	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_fopen">
@@ -105,7 +70,6 @@
 		<exclude-pattern>*/src/**/*Cli.php</exclude-pattern>
 		<properties>
 			<property name="lineLimit" value="180" />
-			<property name="ignoreComments" value="true" />
 		</properties>
 	</rule>
 </ruleset>

@@ -46,3 +46,6 @@ wflogs
 # Databases and exports
 latest_dump.tar.gz
 latest_dump
+
+# Project files
+/eightshift

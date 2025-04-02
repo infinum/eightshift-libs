@@ -5,14 +5,13 @@
  *
  * It is used to provide manifest.json file location stored in the transient cache.
  *
- * @package EightshiftFormsVendor\EightshiftLibs\Cache
+ * @package EightshiftLibs\Cache
  */
 
 declare(strict_types=1);
 
 namespace EightshiftLibs\Cache;
 
-use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -25,7 +24,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 *
 	 * @var string
 	 */
-	public const TRANSIENT_NAME = 'eightshift_manifest_cache_';
+	public const TRANSIENT_PREFIX_NAME = 'eightshift_manifest_cache';
 
 	// Cache keys.
 	public const VERSION_KEY = 'version';
@@ -42,13 +41,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	public const TYPE_BLOCKS = 'blocks';
 	public const TYPE_ASSETS = 'assets';
 	public const TYPE_GEOLOCATION = 'geolocation';
-
-	/**
-	 * Namespace for blocks.
-	 *
-	 * @var string
-	 */
-	private $blocksNamespace = '';
 
 	/**
 	 * Get cache name.
@@ -85,37 +77,19 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		Helpers::setCacheDetails(
 			$this->getCacheBuilder(),
 			$this->getCacheName(),
-			$this->getVersion()
+			$this->getVersion(),
+			$this->getDuration()
 		);
-
-		if (!Helpers::isCacheVersionValid() || !Helpers::shouldCache()) {
-			Helpers::deleteCacheVersion();
-		}
-
-		$this->setCache(self::TYPE_BLOCKS);
-		$this->setCache(self::TYPE_ASSETS);
-		$this->setCache(self::TYPE_GEOLOCATION);
-
-		Helpers::setCacheVersion();
-		Helpers::setCache();
 	}
 
 	/**
-	 * Set cache.
+	 * Get cache for geolocation
 	 *
-	 * @param string $cacheType Type of the cache.
-	 *
-	 * @return void
+	 * @return bool
 	 */
-	protected function setCache(string $cacheType): void
+	public function useGeolocation(): bool
 	{
-		if (!\get_transient(Helpers::getCacheTransientName($cacheType))) {
-			\set_transient(
-				Helpers::getCacheTransientName($cacheType),
-				\wp_json_encode($this->getAllManifests($cacheType)),
-				$this->getDuration()
-			);
-		}
+		return false;
 	}
 
 	/**
@@ -125,9 +99,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	 */
 	protected function getCacheBuilder(): array
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-
-		return [
+		$output = [
 			self::TYPE_BLOCKS => [
 				self::SETTINGS_KEY => [
 					'path' => 'blocksRoot',
@@ -145,27 +117,17 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 							'parent' => 'config',
 						],
 						[
+							'key' => 'useLegacyComponents',
+							'value' => false,
+							'parent' => 'config',
+						],
+						[
 							'key' => 'outputCssOptimize',
 							'value' => true,
 							'parent' => 'config',
 						],
 						[
 							'key' => 'useWrapper',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
-							'key' => 'useComponents',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
-							'key' => 'useBlocks',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
-							'key' => 'useVariations',
 							'value' => true,
 							'parent' => 'config',
 						],
@@ -244,191 +206,20 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			],
 			self::TYPE_ASSETS => [
 				self::ASSETS_KEY => [
-					'path' => 'themeRoot',
-					'fileName' => "public{$sep}manifest.json",
-				],
-			],
-			self::TYPE_GEOLOCATION => [
-				self::COUNTRIES_KEY => [
-					'path' => 'libs',
-					'pathAlternative' => 'libsPrefixed',
-					'fileName' => "src{$sep}Geolocation{$sep}manifest.json",
+					'path' => 'public',
 				],
 			],
 		];
-	}
 
-	/**
-	 * Get all manifests from the paths.
-	 *
-	 * @param string $cacheType Type of the cache.
-	 *
-	 * @return array<string, array<mixed>> Array of manifests.
-	 */
-	private function getAllManifests(string $cacheType): array
-	{
-		$output = [];
-
-		foreach ($this->getCacheBuilder()[$cacheType] ?? [] as $parent => $data) {
-			$multiple = $data['multiple'] ?? false;
-
-			if ($multiple) {
-				$output[$parent] = $this->geItems($this->getFullPath($parent, $cacheType, '*'), $data, $parent);
-			} else {
-				$output[$parent] = $this->getItem($this->getFullPath($parent, $cacheType), $data, $parent);
-			}
+		if ($this->useGeolocation()) {
+			$output[self::TYPE_GEOLOCATION] = [
+				self::COUNTRIES_KEY => [
+					'path' => 'eightshift',
+					'fileName' => "countries.json",
+				],
+			];
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Get single item from the path.
-	 *
-	 * @param string $path Path to the item.
-	 * @param array<mixed> $data Data array.
-	 * @param string $parent Parent key.
-	 *
-	 * @throws InvalidManifest If manifest key is missing.
-	 *
-	 * @return array<string, mixed> Item.
-	 */
-	private function getItem(string $path, array $data, string $parent): array
-	{
-		if (!\file_exists($path)) {
-			return [];
-		}
-
-		$file = \file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-
-		if (!$file) {
-			return [];
-		}
-
-		$fileDecoded = \json_decode($file, true);
-
-		if (!$fileDecoded) {
-			return [];
-		}
-
-		$autoset = $data['autoset'] ?? [];
-
-		if ($autoset) {
-			foreach ($autoset as $autosetItem) {
-				$autosetItemKey = $autosetItem['key'] ?? '';
-				$autosetItemValue = $autosetItem['value'] ?? '';
-				$autosetItemParent = $autosetItem['parent'] ?? '';
-
-				if (!$autosetItemKey || !$autosetItemValue) {
-					continue;
-				}
-
-				// Handle the case where there is no parent.
-				if (!$autosetItemParent) {
-					if (!isset($fileDecoded[$autosetItemKey])) {
-						$fileDecoded[$autosetItemKey] = $autosetItemValue;
-					}
-					continue;
-				}
-
-				// Handle the case where there is a parent.
-				if (!isset($fileDecoded[$autosetItemParent][$autosetItemKey])) {
-					$fileDecoded[$autosetItemParent][$autosetItemKey] = $autosetItemValue;
-				}
-			}
-		}
-
-		switch ($parent) {
-			case self::BLOCKS_KEY:
-				if ($this->blocksNamespace) {
-					$fileDecoded['namespace'] = $this->blocksNamespace;
-					$fileDecoded['blockFullName'] = "{$this->blocksNamespace}/{$fileDecoded['blockName']}";
-				}
-				break;
-			case self::SETTINGS_KEY:
-				$this->blocksNamespace = $fileDecoded['namespace'] ?? '';
-				break;
-		}
-
-		$validation = $data['validation'] ?? [];
-
-		if ($validation) {
-			foreach ($validation as $key) {
-				if (!isset($fileDecoded[$key])) {
-					throw InvalidManifest::missingManifestKeyException($key, $path);
-				}
-			}
-		}
-
-		return $fileDecoded;
-	}
-
-	/**
-	 * Get multiple items from the path.
-	 *
-	 * @param string $path Path to the items.
-	 * @param array<mixed> $data Data array.
-	 * @param string $parent Parent key.
-	 *
-	 * @return array<string, array<mixed>> Array of items.
-	 */
-	private function geItems(string $path, array $data, string $parent): array
-	{
-		$output = [];
-
-		$id = $data['id'] ?? '';
-
-		foreach ((array)\glob($path) as $itemPath) {
-			$item = $this->getItem($itemPath, $data, $parent);
-
-			$idName = $item[$id] ?? '';
-
-			if (!$idName) {
-				continue;
-			}
-
-			$output[$idName] = $item;
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Get full path.
-	 *
-	 * @param string $type Type of the item.
-	 * @param string $cacheType Type of the cache.
-	 * @param string $name Name of the item.
-	 *
-	 * @return string Full path.
-	 */
-	private function getFullPath($type, string $cacheType, $name = ''): string
-	{
-		$data = $this->getCacheBuilder()[$cacheType][$type] ?? [];
-
-		if (!$data) {
-			return '';
-		}
-
-		$path = $data['path'] ?? '';
-		$pathAlternative = $data['pathAlternative'] ?? '';
-		$pathCustom = $data['pathCustom'] ?? '';
-		$fileName = $data['fileName'] ?? 'manifest.json';
-
-		$realPath = Helpers::getProjectPaths($path);
-
-		if (!\is_dir($realPath) && $pathAlternative) {
-			$realPath = $pathAlternative;
-		}
-
-		if ($pathCustom) {
-			$realPath = $pathCustom;
-		}
-
-		if (!$name) {
-			return Helpers::getProjectPaths($realPath, [$fileName]);
-		}
-
-		return Helpers::getProjectPaths($realPath, [$name, $fileName]);
 	}
 }
