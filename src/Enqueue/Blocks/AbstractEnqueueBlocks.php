@@ -17,9 +17,9 @@ use EightshiftLibs\Enqueue\AbstractAssets;
  */
 abstract class AbstractEnqueueBlocks extends AbstractAssets
 {
-	/* --------------------------------------------------------------------------- */
-	/* ONLY EDITOR  */
-	/* --------------------------------------------------------------------------- */
+	// ---------------------------------------------------------------------------
+	// ONLY EDITOR
+	// ---------------------------------------------------------------------------
 
 	/**
 	 * Block editor script handle.
@@ -136,9 +136,9 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		return [];
 	}
 
-	/* --------------------------------------------------------------------------- */
-	/* ONLY FRONTEND  */
-	/* --------------------------------------------------------------------------- */
+	// ---------------------------------------------------------------------------
+	// ONLY FRONTEND
+	// ---------------------------------------------------------------------------
 
 	/**
 	 * Block frontend style handle.
@@ -154,7 +154,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public const BLOCKS_FRONTEND_SCRIPT_URI = 'applicationBlocksFrontend.js';
 
-		/**
+	/**
 	 * Get block frontend JavaScript handle.
 	 *
 	 * @return string
@@ -243,11 +243,11 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		return [];
 	}
 
-	/* --------------------------------------------------------------------------- */
-	/* BOTH EDITOR AND FRONTEND  */
-	/* --------------------------------------------------------------------------- */
+	// ---------------------------------------------------------------------------
+	// BOTH EDITOR AND FRONTEND
+	// ---------------------------------------------------------------------------
 
-		/**
+	/**
 	 * Block style handle.
 	 *
 	 * @return string
@@ -296,9 +296,9 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		return [];
 	}
 
-	/* --------------------------------------------------------------------------- */
-	/* GENERAL  */
-	/* --------------------------------------------------------------------------- */
+	// ---------------------------------------------------------------------------
+	// GENERAL
+	// ---------------------------------------------------------------------------
 
 	/**
 	 * Un-registers some default styles that add unnecessary overrides.
