@@ -267,7 +267,10 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 			$cacheFile = Helpers::getEightshiftOutputPath("{$file[0]}ServiceClasses.json");
 
 			if (\file_exists($cacheFile)) {
-				return \json_decode(\file_get_contents($cacheFile), true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$handle = \fopen($cacheFile, 'r');
+				$output = \stream_get_contents($handle);
+
+				return \json_decode($output, true);
 			}
 
 			if (\file_put_contents($cacheFile, \wp_json_encode($services))) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
