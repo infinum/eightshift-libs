@@ -198,7 +198,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	protected function getBlockFrontendScriptDependencies(): array
 	{
-		return [];
+		return ['wp-element', 'wp-i18n', 'wp-api-fetch', 'wp-blocks'];
 	}
 
 	/**
