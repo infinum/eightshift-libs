@@ -133,7 +133,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	protected function getBlockEditorStyleDependencies(): array
 	{
-		return [];
+		return ["{$this->getAssetsPrefix()}-block-style"];
 	}
 
 	// ---------------------------------------------------------------------------
@@ -240,7 +240,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	protected function getBlockFrontendStyleDependencies(): array
 	{
-		return [];
+		return ["{$this->getAssetsPrefix()}-block-style"];
 	}
 
 	// ---------------------------------------------------------------------------
