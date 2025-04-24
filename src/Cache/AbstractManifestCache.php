@@ -118,7 +118,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 						],
 						[
 							'key' => 'useLegacyComponents',
-							'value' => false,
+							'value' => true,
 							'parent' => 'config',
 						],
 						[
