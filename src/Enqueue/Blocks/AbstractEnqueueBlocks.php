@@ -17,6 +17,10 @@ use EightshiftLibs\Enqueue\AbstractAssets;
  */
 abstract class AbstractEnqueueBlocks extends AbstractAssets
 {
+	// ---------------------------------------------------------------------------
+	// ONLY EDITOR
+	// ---------------------------------------------------------------------------
+
 	/**
 	 * Block editor script handle.
 	 *
@@ -32,11 +36,109 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	public const BLOCKS_EDITOR_STYLE_URI = 'applicationBlocksEditor.css';
 
 	/**
-	 * Block style handle.
+	 * Get block editor JavaScript handle.
 	 *
 	 * @return string
 	 */
-	public const BLOCKS_STYLE_URI = 'applicationBlocks.css';
+	public function getBlockEditorScriptsHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-editor-scripts";
+	}
+
+	/**
+	 * Enqueue blocks script for editor only.
+	 *
+	 * @return void
+	 */
+	public function enqueueBlockEditorScript(): void
+	{
+		$handle = $this->getBlockEditorScriptsHandle();
+
+		\wp_register_script(
+			$handle,
+			$this->setAssetsItem(static::BLOCKS_EDITOR_SCRIPT_URI),
+			$this->getBlockEditorScriptDependencies(),
+			$this->getAssetsVersion(),
+			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
+		);
+
+		\wp_enqueue_script($handle);
+
+		foreach ($this->getLocalizations() as $objectName => $dataArray) {
+			\wp_localize_script($handle, $objectName, $dataArray);
+		}
+	}
+
+	/**
+	 * List block editor script dependencies.
+	 *
+	 * @return string[] List of all the admin dependencies.
+	 */
+	protected function getBlockEditorScriptDependencies(): array
+	{
+		return [
+			'react',
+			'react-dom',
+			'wp-components',
+			'wp-blocks',
+			'wp-element',
+			'wp-editor',
+			'wp-date',
+			'wp-data',
+			'wp-i18n',
+			'wp-api-fetch',
+			'wp-viewport',
+			'wp-blob',
+			'wp-url',
+			'lodash',
+		];
+	}
+
+	/**
+	 * Get block editor stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockEditorStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-editor-style";
+	}
+
+	/**
+	 * Enqueue blocks style for editor only.
+	 *
+	 * @return void
+	 */
+	public function enqueueBlockEditorStyle(): void
+	{
+		$handle = $this->getBlockEditorStyleHandle();
+
+		\wp_register_style(
+			$handle,
+			$this->setAssetsItem(static::BLOCKS_EDITOR_STYLE_URI),
+			$this->getBlockEditorStyleDependencies(),
+			$this->getAssetsVersion(),
+			$this->getMedia()
+		);
+
+		\wp_enqueue_style($handle);
+	}
+
+	/**
+	 * Get style dependencies
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return string[] List of all the style dependencies.
+	 */
+	protected function getBlockEditorStyleDependencies(): array
+	{
+		return ["{$this->getAssetsPrefix()}-block-style"];
+	}
+
+	// ---------------------------------------------------------------------------
+	// ONLY FRONTEND
+	// ---------------------------------------------------------------------------
 
 	/**
 	 * Block frontend style handle.
@@ -53,154 +155,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	public const BLOCKS_FRONTEND_SCRIPT_URI = 'applicationBlocksFrontend.js';
 
 	/**
-	 * Get block editor JavaScript handle.
-	 *
-	 * @return string
-	 */
-	public function getBlockEditorScriptsHandle(): string
-	{
-		return "{$this->getAssetsPrefix()}-block-editor-scripts";
-	}
-
-	/**
-	 * Method that returns assets hook used to determine hook usage.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return boolean
-	 */
-	public function isEnqueueBlockEditorScriptUsed(string $hook): bool
-	{
-		return true;
-	}
-
-	/**
-	 * Enqueue blocks script for editor only.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return void
-	 */
-	public function enqueueBlockEditorScript(string $hook): void
-	{
-		if (!$this->isEnqueueBlockEditorScriptUsed($hook)) {
-			return;
-		}
-
-		$handle = $this->getBlockEditorScriptsHandle();
-
-		\wp_register_script(
-			$handle,
-			$this->setAssetsItem(static::BLOCKS_EDITOR_SCRIPT_URI),
-			$this->getAdminScriptDependencies(),
-			$this->getAssetsVersion(),
-			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
-		);
-
-		\wp_enqueue_script($handle);
-
-		foreach ($this->getLocalizations() as $objectName => $dataArray) {
-			\wp_localize_script($handle, $objectName, $dataArray);
-		}
-	}
-
-	/**
-	 * Get block editor Stylesheet handle.
-	 *
-	 * @return string
-	 */
-	public function getBlockEditorStyleHandle(): string
-	{
-		return "{$this->getAssetsPrefix()}-block-editor-style";
-	}
-
-	/**
-	 * Method that returns assets hook used to determine hook usage.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return boolean
-	 */
-	public function isEnqueueBlockEditorStyleUsed(string $hook): bool
-	{
-		return true;
-	}
-
-	/**
-	 * Enqueue blocks style for editor only.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return void
-	 */
-	public function enqueueBlockEditorStyle(string $hook): void
-	{
-		if (!$this->isEnqueueBlockEditorStyleUsed($hook)) {
-			return;
-		}
-
-		$handle = $this->getBlockEditorStyleHandle();
-
-		\wp_register_style(
-			$handle,
-			$this->setAssetsItem(static::BLOCKS_EDITOR_STYLE_URI),
-			$this->getAdminStyleDependencies(),
-			$this->getAssetsVersion(),
-			$this->getMedia()
-		);
-
-		\wp_enqueue_style($handle);
-	}
-
-	/**
-	 * Get block Stylesheet handle.
-	 *
-	 * @return string
-	 */
-	public function getBlockStyleHandle(): string
-	{
-		return "{$this->getAssetsPrefix()}-block-style";
-	}
-
-	/**
-	 * Method that returns assets hook used to determine hook usage.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return boolean
-	 */
-	public function isEnqueueBlockStyleUsed(string $hook): bool
-	{
-		return true;
-	}
-
-	/**
-	 * Enqueue blocks style for editor and frontend.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return void
-	 */
-	public function enqueueBlockStyle(string $hook): void
-	{
-		if (!$this->isEnqueueBlockStyleUsed($hook)) {
-			return;
-		}
-
-		$handle = $this->getBlockStyleHandle();
-
-		\wp_register_style(
-			$handle,
-			$this->setAssetsItem(static::BLOCKS_STYLE_URI),
-			$this->getFrontendStyleDependencies(),
-			$this->getAssetsVersion(),
-			$this->getMedia()
-		);
-
-		\wp_enqueue_style($handle);
-	}
-
-	/**
 	 * Get block frontend JavaScript handle.
 	 *
 	 * @return string
@@ -211,36 +165,18 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
-	 * Method that returns assets hook used to determine hook usage.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return boolean
-	 */
-	public function isEnqueueBlockFrontendScriptUsed(string $hook): bool
-	{
-		return true;
-	}
-
-	/**
 	 * Enqueue blocks script for frontend only.
-	 *
-	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendScript(string $hook): void
+	public function enqueueBlockFrontendScript(): void
 	{
-		if (!$this->isEnqueueBlockFrontendScriptUsed($hook)) {
-			return;
-		}
-
 		$handle = $this->getBlockFrontendScriptHandle();
 
 		\wp_register_script(
 			$handle,
 			$this->setAssetsItem(static::BLOCKS_FRONTEND_SCRIPT_URI),
-			$this->getFrontendScriptDependencies(),
+			$this->getBlockFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
@@ -254,6 +190,18 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
+	 * Get block frontend script dependencies.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
+	 *
+	 * @return array<int, string> List of all the script dependencies.
+	 */
+	protected function getBlockFrontendScriptDependencies(): array
+	{
+		return ['wp-element', 'wp-i18n', 'wp-api-fetch', 'wp-blocks'];
+	}
+
+	/**
 	 * Get block frontend Stylesheet handle.
 	 *
 	 * @return string
@@ -264,42 +212,93 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	/**
-	 * Method that returns assets hook used to determine hook usage.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return boolean
-	 */
-	public function isEnqueueBlockFrontendStyleUsed(string $hook): bool
-	{
-		return true;
-	}
-
-	/**
 	 * Enqueue blocks style for frontend only.
-	 *
-	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendStyle(string $hook): void
+	public function enqueueBlockFrontendStyle(): void
 	{
-		if (!$this->isEnqueueBlockFrontendStyleUsed($hook)) {
-			return;
-		}
-
 		$handle = $this->getBlockFrontendStyleHandle();
 
 		\wp_register_style(
 			$handle,
 			$this->setAssetsItem(static::BLOCKS_FRONTEND_STYLE_URI),
-			$this->getFrontendStyleDependencies(),
+			$this->getBlockFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
 
 		\wp_enqueue_style($handle);
 	}
+
+	/**
+	 * Get front end style dependencies
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return array<int, string> List of all the style dependencies.
+	 */
+	protected function getBlockFrontendStyleDependencies(): array
+	{
+		return ["{$this->getAssetsPrefix()}-block-style"];
+	}
+
+	// ---------------------------------------------------------------------------
+	// BOTH EDITOR AND FRONTEND
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Block style handle.
+	 *
+	 * @return string
+	 */
+	public const BLOCKS_STYLE_URI = 'applicationBlocks.css';
+
+	/**
+	 * Get block Stylesheet handle.
+	 *
+	 * @return string
+	 */
+	public function getBlockStyleHandle(): string
+	{
+		return "{$this->getAssetsPrefix()}-block-style";
+	}
+
+	/**
+	 * Enqueue blocks style for editor and frontend.
+	 *
+	 * @return void
+	 */
+	public function enqueueBlockStyle(): void
+	{
+		$handle = $this->getBlockStyleHandle();
+
+		\wp_register_style(
+			$handle,
+			$this->setAssetsItem(static::BLOCKS_STYLE_URI),
+			$this->getBlockStyleDependencies(),
+			$this->getAssetsVersion(),
+			$this->getMedia()
+		);
+
+		\wp_enqueue_style($handle);
+	}
+
+	/**
+	 * Get front end style dependencies
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return array<int, string> List of all the style dependencies.
+	 */
+	protected function getBlockStyleDependencies(): array
+	{
+		return [];
+	}
+
+	// ---------------------------------------------------------------------------
+	// GENERAL
+	// ---------------------------------------------------------------------------
 
 	/**
 	 * Un-registers some default styles that add unnecessary overrides.
@@ -322,40 +321,5 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		\wp_enqueue_style('forms', \get_admin_url(null, 'css'), []);
 		\wp_enqueue_style('reset', \get_admin_url(null, 'css'), []);
 		// phpcs:enable WordPress.WP.EnqueuedResourceParameters.MissingVersion
-	}
-
-	/**
-	 * Get style dependencies
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
-	 *
-	 * @return string[] List of all the style dependencies.
-	 */
-	protected function getAdminStyleDependencies(): array
-	{
-		return ["{$this->getAssetsPrefix()}-block-style"];
-	}
-
-	/**
-	 * List of admin script dependencies
-	 *
-	 * @return string[] List of all the admin dependencies.
-	 */
-	protected function getAdminScriptDependencies(): array
-	{
-		return [
-			'jquery',
-			'wp-components',
-			'wp-blocks',
-			'wp-element',
-			'wp-editor',
-			'wp-date',
-			'wp-data',
-			'wp-i18n',
-			'wp-viewport',
-			'wp-blob',
-			'wp-url',
-			'lodash',
-		];
 	}
 }

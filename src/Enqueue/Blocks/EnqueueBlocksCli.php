@@ -79,6 +79,6 @@ class EnqueueBlocksCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Enqueue' . \DIRECTORY_SEPARATOR . 'Blocks'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', ['Enqueue', 'Blocks']), "{$className}.php", $assocArgs);
 	}
 }

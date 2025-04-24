@@ -10,17 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\AdminMenus;
 
-use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
-use EightshiftLibs\Blocks\RenderableBlockInterface;
-use Exception;
 
 /**
  * Abstract class AbstractAdminMenu class.
  *
  * Class responsible for creating admin menus, separately from CPT admin menus.
  */
-abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInterface
+abstract class AbstractAdminMenu implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
@@ -69,7 +66,6 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	 * @param array<string, mixed>|string $attr Attributes as passed to the admin menu.
 	 *
 	 * @return void The rendered content needs to be echoed.
-	 * @throws Exception Exception in case the component is missing.
 	 */
 	public function processAdminMenu($attr): void
 	{
@@ -78,29 +74,7 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 		$attr['adminMenuSlug'] = $this->getMenuSlug();
 		$attr['nonceField'] = $this->renderNonce();
 
-		echo $this->render((array)$attr); // phpcs:ignore
-	}
-
-	/**
-	 * Render the current view.
-	 *
-	 * @param array<string, mixed>  $attributes Array of attributes passed to the view.
-	 * @param string $innerBlockContent Not used here.
-	 *
-	 * @return string Rendered HTML.
-	 * @throws Exception On missing attributes OR missing template.
-	 */
-	public function render(array $attributes = [], string $innerBlockContent = ''): string
-	{
-		try {
-			return Helpers::render($this->getViewComponent(), $attributes);
-		} catch (Exception $exception) { // To do: once new libs are released, replace with ComponentException.
-			// Don't let exceptions bubble up. Just render the exception message into the admin menu.
-			return \sprintf(
-				'<pre>%s</pre>',
-				$exception->getMessage()
-			);
-		}
+		echo $this->getViewComponent($attr); // phpcs:ignore
 	}
 
 	/**
@@ -136,9 +110,11 @@ abstract class AbstractAdminMenu implements ServiceInterface, RenderableBlockInt
 	/**
 	 * Get the view component that will render correct view.
 	 *
+	 * @param array<string, mixed> $attributes Attributes passed to the view.
+	 *
 	 * @return string View uri.
 	 */
-	abstract protected function getViewComponent(): string;
+	abstract protected function getViewComponent(array $attributes): string;
 
 	/**
 	 * Process the admin menu attributes.

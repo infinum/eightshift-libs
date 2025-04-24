@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue;
 
-use EightshiftLibs\Cache\AbstractManifestCache;
-use EightshiftLibs\Cache\ManifestCacheInterface;
-use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -26,23 +24,6 @@ use EightshiftLibs\Services\ServiceInterface;
 abstract class AbstractAssets implements ServiceInterface
 {
 	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
-	 */
-	public function __construct(ManifestCacheInterface $manifestCache)
-	{
-		$this->manifestCache = $manifestCache;
-	}
-
-	/**
 	 * Media style const
 	 */
 	public const MEDIA_ALL = 'all';
@@ -53,30 +34,6 @@ abstract class AbstractAssets implements ServiceInterface
 	 * Load scripts in footer const
 	 */
 	public const IN_FOOTER = true;
-
-	/**
-	 * Get frontend script dependencies
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
-	 *
-	 * @return array<int, string> List of all the script dependencies.
-	 */
-	protected function getFrontendScriptDependencies(): array
-	{
-		return [];
-	}
-
-	/**
-	 * Get admin script dependencies
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
-	 *
-	 * @return array<int, string> List of all the script dependencies.
-	 */
-	protected function getAdminScriptDependencies(): array
-	{
-		return ['wp-element', 'wp-i18n', 'wp-api-fetch', 'wp-blocks'];
-	}
 
 	/**
 	 * Get script localizations
@@ -93,30 +50,6 @@ abstract class AbstractAssets implements ServiceInterface
 	 * @return array<string, mixed> Key value pair of different localizations.
 	 */
 	protected function getLocalizations(): array
-	{
-		return [];
-	}
-
-	/**
-	 * Get front end style dependencies
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
-	 *
-	 * @return array<int, string> List of all the style dependencies.
-	 */
-	protected function getFrontendStyleDependencies(): array
-	{
-		return [];
-	}
-
-	/**
-	 * Get admin style dependencies
-	 *
-	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
-	 *
-	 * @return array<int, string> List of all the style dependencies.
-	 */
-	protected function getAdminStyleDependencies(): array
 	{
 		return [];
 	}
@@ -182,19 +115,11 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @param string $key The key from the manifest.json file.
 	 *
-	 * @throws InvalidManifest If manifest key is missing.
-	 *
 	 * @return string The value from the manifest.json file.
 	 */
 	public function setAssetsItem(string $key): string
 	{
-		$data = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::ASSETS_KEY, AbstractManifestCache::TYPE_ASSETS);
-
-		if (!isset($data[$key]) && !\defined('WP_CLI')) {
-			throw InvalidManifest::missingManifestKeyException($key, 'public');
-		}
-
-		return $data[$key] ?? '';
+		return Helpers::getAsset($key);
 	}
 
 	/**

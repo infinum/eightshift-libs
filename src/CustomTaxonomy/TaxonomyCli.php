@@ -141,6 +141,6 @@ class TaxonomyCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('post_type_slug'), $postTypeSlug)
 			->searchReplaceString($this->getArgTemplate('label'), $label)
 			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'CustomTaxonomy'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'CustomTaxonomy'), "{$className}.php", $assocArgs);
 	}
 }

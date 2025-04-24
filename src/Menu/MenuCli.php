@@ -79,6 +79,6 @@ class MenuCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Menu'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'Menu'), "{$className}.php", $assocArgs);
 	}
 }

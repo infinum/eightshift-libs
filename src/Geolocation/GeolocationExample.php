@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace %g_namespace%\Geolocation;
 
 use %g_use_libs%\Geolocation\AbstractGeolocation;
+use %g_use_libs%\Helpers\Helpers;
 
 /**
  * Class Geolocation
@@ -42,7 +43,7 @@ class GeolocationExample extends AbstractGeolocation
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		return __DIR__ . \DIRECTORY_SEPARATOR . 'geoip2.phar';
+		return Helpers::getEightshiftOutputPath('geoip2.phar');
 	}
 
 	/**
@@ -52,6 +53,6 @@ class GeolocationExample extends AbstractGeolocation
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		return __DIR__ . \DIRECTORY_SEPARATOR . 'GeoLite2-Country.mmdb';
+		return Helpers::getEightshiftOutputPath('GeoLite2-Country.mmdb');
 	}
 }

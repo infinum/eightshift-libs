@@ -137,7 +137,7 @@ class BlockPatternCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('name'), $name)
 			->searchReplaceString($this->getArgTemplate('content'), $content)
 			->searchReplaceString($this->getArgTemplate('description'), $description)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'BlockPatterns'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'BlockPatterns'), "{$className}.php", $assocArgs);
 	}
 
 	/**

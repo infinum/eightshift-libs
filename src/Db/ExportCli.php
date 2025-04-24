@@ -88,11 +88,11 @@ class ExportCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		require Helpers::getProjectPaths('libsPrefixed', 'src/Db/DbExport.php');
+		require Helpers::getProjectPaths('libsPrefixed', ['src', 'Db', 'DbExport.php']);
 
 		try {
 			dbExport( // phpcs:ignore
-				Helpers::getProjectPaths('projectRoot')
+				Helpers::getProjectPaths('root')
 			);
 		} catch (ExitException $e) {
 			exit("{$e->getCode()}: {$e->getMessage()}"); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped

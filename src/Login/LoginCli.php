@@ -79,6 +79,6 @@ class LoginCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'Login'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'Login'), "{$className}.php", $assocArgs);
 	}
 }

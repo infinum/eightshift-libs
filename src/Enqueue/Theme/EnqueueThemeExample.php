@@ -25,8 +25,8 @@ class EnqueueThemeExample extends AbstractEnqueueTheme
 	 */
 	public function register(): void
 	{
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueStyles'], 10);
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueThemeStyles'], 10);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueThemeScripts']);
 	}
 
 	/**

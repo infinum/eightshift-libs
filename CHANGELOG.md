@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.0.0]
+
+### Removed
+
+- Add Block and initial setup configuration.
+- Unnecessary documentation
+
+### Changed
+
+- Enqueue methods names for Theme and Admin
+- Admin settings page view method no longer auto renders the view.
+- Way the blocks are registered.
+- Internal caching mechanism for manifests.
+- All caching is now stored in the `eightshift` folder in the root of the project.
+- DI container caching for autowiring classes are now cached.
+
 ## [9.3.5]
 
 ### Added
@@ -817,6 +833,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.0.0]: https://github.com/infinum/eightshift-libs/compare/9.3.5...10.0.0
 [9.3.5]: https://github.com/infinum/eightshift-libs/compare/9.3.4...9.3.5
 [9.3.4]: https://github.com/infinum/eightshift-libs/compare/9.3.3...9.3.4
 [9.3.3]: https://github.com/infinum/eightshift-libs/compare/9.3.2...9.3.3

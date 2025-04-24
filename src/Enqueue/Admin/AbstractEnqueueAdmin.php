@@ -44,30 +44,12 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	}
 
 	/**
-	 * Method that returns assets hook used to determine hook usage.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return boolean
-	 */
-	public function isEnqueueStylesUsed(string $hook): bool
-	{
-		return true;
-	}
-
-	/**
 	 * Register the Stylesheets for the admin area.
-	 *
-	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueStyles(string $hook): void
+	public function enqueueAdminStyles(): void
 	{
-		if (!$this->isEnqueueStylesUsed($hook)) {
-			return;
-		}
-
 		if (!$this->getConditionUse()) {
 			$handle = $this->getAdminStyleHandle();
 
@@ -94,30 +76,12 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	}
 
 	/**
-	 * Method that returns assets hook used to determine hook usage.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return boolean
-	 */
-	public function isEnqueueScriptsUsed(string $hook): bool
-	{
-		return true;
-	}
-
-	/**
 	 * Register the JavaScript for the admin area.
-	 *
-	 * @param string $hook Hook name.
 	 *
 	 * @return void
 	 */
-	public function enqueueScripts(string $hook): void
+	public function enqueueAdminScripts(): void
 	{
-		if (!$this->isEnqueueScriptsUsed($hook)) {
-			return;
-		}
-
 		if (!$this->getConditionUse()) {
 			$handle = $this->getAdminScriptHandle();
 
@@ -155,5 +119,29 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get script dependencies
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_script/#default-scripts-included-and-registered-by-wordpress
+	 *
+	 * @return array<int, string> List of all the script dependencies.
+	 */
+	protected function getAdminScriptDependencies(): array
+	{
+		return ['wp-element', 'wp-i18n', 'wp-api-fetch', 'wp-blocks'];
+	}
+
+	/**
+	 * Get style dependencies
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+	 *
+	 * @return array<int, string> List of all the style dependencies.
+	 */
+	protected function getAdminStyleDependencies(): array
+	{
+		return [];
 	}
 }

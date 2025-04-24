@@ -78,12 +78,12 @@ trait ProjectInfoTrait
 	/**
 	 * Get the plugin details.
 	 *
-	 * @return array<string, string>
+	 * @return array<mixed>
 	 */
 	protected static function getPluginDetails(): array
 	{
 		if (!\function_exists('get_plugin_data')) {
-			require_once(\ABSPATH . 'wp-admin/includes/plugin.php');
+			require_once(\ABSPATH . 'wp-admin/includes/plugin.php'); // @phpstan-ignore-line
 		}
 
 		$path = Helpers::getProjectPaths('pluginRoot');

@@ -79,6 +79,6 @@ class EscapedViewCli extends AbstractCli
 		$this->getExampleTemplate(__DIR__, $className)
 			->renameClassName($className)
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('srcDestination', 'View'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'View'), "{$className}.php", $assocArgs);
 	}
 }

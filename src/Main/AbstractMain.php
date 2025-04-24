@@ -15,6 +15,7 @@ use DI\ContainerBuilder;
 use DI\Definition\Helper\AutowireDefinitionHelper;
 use DI\Definition\Reference;
 use EightshiftLibs\ClassAttributes\ShouldLoadInCliContext;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Services\ServiceCliInterface;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -117,23 +118,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	}
 
 	/**
-	 * Get the path to the cache folder.
-	 *
-	 * @return string
-	 */
-	public function getCachedFolderPath(): string
-	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$cacheFolder = __DIR__ . "{$sep}Cache";
-
-		if (\defined('EIGHTSHIFT_DI_CACHE_FOLDER')) {
-			$cacheFolder = \rtrim(\EIGHTSHIFT_DI_CACHE_FOLDER, $sep);
-		}
-
-		return $cacheFolder;
-	}
-
-	/**
 	 * Merges the autowired definition list with custom user-defined definition list.
 	 *
 	 * You can override autowired definition lists in $this->getServiceClasses().
@@ -157,6 +141,12 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	protected function getServiceClassesWithDi(): array
 	{
 		$services = $this->getServiceClassesPreparedArray();
+
+		if (!$services) {
+			return [];
+		}
+
+		$services = $this->createServiceClassesCacheFile($services);
 
 		$container = $this->getDiContainer($services);
 
@@ -221,18 +211,9 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 		$builder = new ContainerBuilder();
 
-		if (
-			(\defined('WP_ENVIRONMENT_TYPE') &&
-			(\WP_ENVIRONMENT_TYPE !== 'development')) &&
-			!\defined('WP_CLI')
-		) {
-			$file = \explode('\\', $this->namespace);
-
-			$cacheFolder = $this->getCachedFolderPath();
-
-			if (!empty($cacheFolder)) {
-				$builder->enableCompilation($cacheFolder, "{$file[0]}CompiledContainer");
-			}
+		if (Helpers::shouldCache()) {
+			$fileName = \explode('\\', $this->namespace);
+			$builder->enableCompilation(Helpers::getEightshiftOutputPath(), "{$fileName[0]}CompiledContainer");
 		}
 
 		return $builder->addDefinitions($definitions)->build();
@@ -269,5 +250,36 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	protected function getServiceClasses(): array
 	{
 		return [];
+	}
+
+	/**
+	 * Create the service classes cache file and return the services array.
+	 *
+	 * @param array<string, mixed> $services Array of services.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function createServiceClassesCacheFile(array $services): array
+	{
+		if (Helpers::shouldCache()) {
+			$file = \explode('\\', $this->namespace);
+
+			$cacheFile = Helpers::getEightshiftOutputPath("{$file[0]}ServiceClasses.json");
+
+			if (\file_exists($cacheFile)) {
+				$handle = \fopen($cacheFile, 'r');
+				$output = \stream_get_contents($handle);
+
+				return \json_decode($output, true);
+			}
+
+			if (\file_put_contents($cacheFile, \wp_json_encode($services))) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+				\chmod($cacheFile, 0644); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
+			}
+
+			return $services;
+		}
+
+		return $services;
 	}
 }

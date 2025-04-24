@@ -775,7 +775,11 @@ trait CssVariablesTrait
 
 			foreach ($attributes as $attrKey => $attrValue) {
 				if (isset($attributes['prefix'])) {
-					$key = (string)\str_replace($attributes['prefix'], Helpers::kebabToCamelCase($manifest['componentName']), $attrKey);
+					$key = (string)\str_replace(
+						$attributes['prefix'],
+						Helpers::kebabToCamelCase(Helpers::getConfigUseLegacyComponents() ? $manifest['componentName'] : $manifest['blockName']),
+						$attrKey
+					);
 				} else {
 					$key = $attrKey;
 				}

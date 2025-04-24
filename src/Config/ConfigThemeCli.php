@@ -92,6 +92,6 @@ class ConfigThemeCli extends AbstractCli
 			->renameGlobals($assocArgs);
 
 		// Output final class to new file/folder and finish.
-		$class->outputWrite(Helpers::getProjectPaths('srcDestination', 'Config'), "{$newName}.php", $assocArgs);
+		$class->outputWrite(Helpers::getProjectPaths('src', 'Config'), "{$newName}.php", $assocArgs);
 	}
 }

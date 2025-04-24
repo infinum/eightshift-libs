@@ -165,10 +165,10 @@ class RegenerateWebPMediaCli extends AbstractCli
 
 		switch ($action) {
 			case 'delete':
-				$this->deleteMedia($args); // @phpstan-ignore-line
+				$this->deleteMedia($args);
 				break;
 			default:
-				$this->generateMedia($options, $args); // @phpstan-ignore-line
+				$this->generateMedia($options, $args);
 				break;
 		}
 	}

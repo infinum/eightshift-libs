@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Blocks;
 
-use EightshiftLibs\Cache\AbstractManifestCache;
-use EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
@@ -25,23 +23,6 @@ use WP_Post;
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
-	 */
-	public function __construct(ManifestCacheInterface $manifestCache)
-	{
-		$this->manifestCache = $manifestCache;
-	}
-
-	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
 	 *
@@ -49,10 +30,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function changeEditorColorPalette(): void
 	{
-		// Unable to use state due to this method is used in JS and store is not registered there.
-		$colors = $this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::SETTINGS_KEY)['globalVariables']['colors'] ?? [];
-
-		if ($colors) {
+		if ($colors = Helpers::getSettingsGlobalVariablesColors()) {
 			\add_theme_support('editor-color-palette', $colors);
 		}
 	}
@@ -65,37 +43,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public function addThemeSupport(): void
 	{
 		\add_theme_support('align-wide');
-	}
-
-	/**
-	 * Get blocks full data from global settings, blocks and wrapper.
-	 *
-	 * You should never call this method directly. It is used to prepare global store of data for all the blocks. Instead, you should call $this->blocks.
-	 *
-	 * @return void
-	 */
-	public function getBlocksDataFullRaw(): void
-	{
-		// Register store and set all the data.
-		Helpers::setStore();
-		Helpers::setSettings($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::SETTINGS_KEY));
-		Helpers::setConfigFlags();
-
-		if (Helpers::getConfigUseBlocks()) {
-			Helpers::setBlocks($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::BLOCKS_KEY));
-		}
-
-		if (Helpers::getConfigUseComponents()) {
-			Helpers::setComponents($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::COMPONENTS_KEY));
-		}
-
-		if (Helpers::getConfigUseVariations()) {
-			Helpers::setVariations($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::VARIATIONS_KEY));
-		}
-
-		if (Helpers::getConfigUseWrapper()) {
-			Helpers::setWrapper($this->manifestCache->getManifestCacheTopItem(AbstractManifestCache::WRAPPER_KEY));
-		}
 	}
 
 	/**
@@ -127,11 +74,13 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return $allowedBlockTypes;
 		}
 
-		if (Helpers::getConfigUseBlocks()) {
+		$blocks = Helpers::getBlocks();
+
+		if ($blocks) {
 			$allowedBlockTypes = \array_values(\array_merge(
 				\array_map(
 					fn ($block) => $block['blockFullName'],
-					Helpers::getBlocks()
+					$blocks
 				),
 				$allowedBlockTypes,
 			));
@@ -171,10 +120,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function registerBlocks(): void
 	{
-		if (!Helpers::getConfigUseBlocks()) {
-			return;
-		}
-
 		foreach (Helpers::getBlocks() as $block) {
 			$this->registerBlock($block);
 		}
@@ -312,12 +257,12 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	private function getAttributes(array $blockDetails): array
 	{
 		$blockName = $blockDetails['blockName'];
-		$blockClassPrefix = Helpers::getSettingsBlockClassPrefix();
+		$blockClassPrefix = Helpers::getSettings()['blockClassPrefix'] ?? 'block';
 
 		$wrapperAttributes = [];
 
 		if (Helpers::getConfigUseWrapper()) {
-			$wrapperAttributes = Helpers::getWrapperAttributes();
+			$wrapperAttributes = Helpers::getWrapper()['attributes'] ?? [];
 		}
 
 		return \array_merge(
@@ -351,7 +296,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					'default' => false,
 				],
 			],
-			Helpers::getSettingsAttributes(),
+			Helpers::getSettings()['attributes'] ?? [],
 			$wrapperAttributes,
 			$this->prepareComponentAttributes($blockDetails)
 		);
@@ -428,7 +373,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		$output = [];
 
 		// Determine if this is component or block and provide the name, not used for anything important but only to output the error msg.
-		$name = $manifest['blockName'] ?? $manifest['componentName'];
+		$name = $manifest['blockName'] ?? '';
+
+		if (Helpers::getConfigUseLegacyComponents()) {
+			$name = $manifest['blockName'] ?? $manifest['componentName'];
+		}
 
 		$components = $manifest['components'] ?? [];
 
