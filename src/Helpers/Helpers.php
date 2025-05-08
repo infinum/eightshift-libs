@@ -212,7 +212,7 @@ class Helpers
 	 *
 	 * @return string
 	 */
-	public static function getProjectPaths(string $type, array|string $suffix = ''): string
+	public static function getProjectPaths(string $type = '', array|string $suffix = ''): string
 	{
 		$root = \dirname(__FILE__, 6);
 
@@ -232,7 +232,9 @@ class Helpers
 			case 'public':
 				return self::joinPaths([$root, 'public', ...$suffix]);
 			case 'libsPrefixed':
-				return self::joinPaths([$root, 'vendor-prefixed', 'infinum', 'eightshift-libs']);
+				return self::joinPaths([$root, 'vendor-prefixed', 'infinum', 'eightshift-libs', ...$suffix]);
+			case 'libsPrefixedGeolocation':
+				return self::joinPaths([$root, 'vendor-prefixed', 'infinum', 'eightshift-libs', 'src', 'Geolocation', ...$suffix]);
 			case 'blocksRoot':
 				return self::joinPaths([$root, 'src', 'Blocks', ...$suffix]);
 			case 'blocks':

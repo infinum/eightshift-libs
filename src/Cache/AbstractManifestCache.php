@@ -214,8 +214,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 		if ($this->useGeolocation()) {
 			$output[self::TYPE_GEOLOCATION] = [
 				self::COUNTRIES_KEY => [
-					'path' => 'eightshift',
-					'fileName' => "countries.json",
+					'path' => 'libsPrefixedGeolocation',
 				],
 			];
 		}
