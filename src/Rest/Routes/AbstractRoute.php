@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Rest\Routes;
 
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Rest\RouteInterface;
+use WP_REST_Request;
 use WP_REST_Server;
 
 /**
@@ -147,5 +149,87 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	protected function overrideRoute(): bool
 	{
 		return false;
+	}
+
+
+	/**
+	 * Extract params from request.
+	 * Check if array then output only value that is not empty.
+	 *
+	 * @param WP_REST_Request $request $request Data got from endpoint url.
+	 * @param string $type Request type.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE): array
+	{
+		// Check type of request and extract params.
+		switch ($type) {
+			case self::CREATABLE:
+				$params = $request->get_body_params();
+				break;
+			case self::READABLE:
+				$params = $request->get_params();
+				break;
+			default:
+				$params = [];
+				break;
+		}
+
+		// Check if request maybe has json params usually sent by the Block editor.
+		if ($request->get_json_params()) {
+			$params = \array_merge(
+				$params,
+				$request->get_json_params(),
+			);
+		}
+
+		return $params;
+	}
+
+	/**
+	 * Convert JS FormData object to usable data in php.
+	 *
+	 * @param WP_REST_Request $request $request Data got from endpoint url.
+	 * @param string $type Request type.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function prepareSimpleApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
+	{
+		// Get params.
+		$params = $this->getRequestParams($request, $type);
+
+		// Bailout if there are no params.
+		if (!$params) {
+			return [];
+		}
+
+		return \array_map(
+			static function ($item) {
+				return \sanitize_text_field($item);
+			},
+			$params
+		);
+	}
+
+	/**
+	 * Check user permission for route action.
+	 *
+	 * @param string $permission Permission to check.
+	 * @param array<string, mixed> $additional Additional data to pass.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function checkUserPermission(string $permission, array $additional = []): array
+	{
+		if (\current_user_can($permission)) {
+			return [];
+		}
+
+		return Helpers::getApiErrorPublicOutput(
+			\__('You don\'t have enough permissions to perform this action!', 'eightshift-libs'),
+			$additional
+		);
 	}
 }
