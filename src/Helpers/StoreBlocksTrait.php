@@ -106,7 +106,7 @@ trait StoreBlocksTrait
 	/**
 	 * Get component details.
 	 *
-	 * @param string $component Componennt name to get.
+	 * @param string $component Component name to get.
 	 *
 	 * @throws InvalidBlock If component is missing.
 	 *
