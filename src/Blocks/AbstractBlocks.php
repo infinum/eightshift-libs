@@ -61,15 +61,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	public function getAllAllowedBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
 	{
-		// Allow forms to be used correctly.
-		if (
-			$blockEditorContext->post instanceof WP_Post &&
-			!empty($blockEditorContext->post->post_type) &&
-			$blockEditorContext->post->post_type === 'eightshift-forms'
-		) {
-			return true;
-		}
-
 		if (\is_bool($allowedBlockTypes)) {
 			return $allowedBlockTypes;
 		}
@@ -79,7 +70,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		if ($blocks) {
 			$allowedBlockTypes = \array_values(\array_merge(
 				\array_map(
-					fn ($block) => $block['blockFullName'],
+					fn($block) => $block['blockFullName'],
 					$blocks
 				),
 				$allowedBlockTypes,
@@ -87,7 +78,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		// Allow reusable block.
-		$allowedBlockTypes[] = 'eightshift-forms/forms';
 		$allowedBlockTypes[] = 'core/block';
 		$allowedBlockTypes[] = 'core/template';
 
@@ -136,7 +126,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public function render(array $attributes, string $innerBlockContent): string
 	{
 		// Get block view path.
-		$blockOutpout = Helpers::render(
+		$blockOutput = Helpers::render(
 			$attributes['blockName'] ?? '',
 			$attributes,
 			'blocks',
@@ -153,11 +143,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				'wrapper',
 				false,
 				'',
-				$blockOutpout
+				$blockOutput
 			);
 		}
 
-		return $blockOutpout;
+		return $blockOutput;
 	}
 
 	/**

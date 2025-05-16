@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.3.0]
+
+### Fixed
+
+- Allowed blocks for forms broken on the WP 6.8 version.
+
 ## [10.2.0]
 
 ### Added
@@ -847,6 +853,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.3.0]: https://github.com/infinum/eightshift-libs/compare/10.2.0...10.3.0
 [10.2.0]: https://github.com/infinum/eightshift-libs/compare/10.1.0...10.2.0
 [10.1.0]: https://github.com/infinum/eightshift-libs/compare/10.0.0...10.1.0
 [10.0.0]: https://github.com/infinum/eightshift-libs/compare/9.3.5...10.0.0
