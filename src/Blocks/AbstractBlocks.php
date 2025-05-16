@@ -15,7 +15,6 @@ use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use WP_Block_Editor_Context;
-use WP_Post;
 
 /**
  * Class Blocks
@@ -210,6 +209,16 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	public function outputCssVariablesInline(): void
 	{
 		echo Helpers::outputCssVariablesInline(); // phpcs:ignore
+	}
+
+	/**
+	 * Render global css variables in dom. Used with wp_head hook.
+	 *
+	 * @return void
+	 */
+	public function outputCssVariablesGlobal(): void
+	{
+		echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore
 	}
 
 	/**

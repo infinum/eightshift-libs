@@ -44,6 +44,7 @@ class BlocksExample extends AbstractBlocks
 		\add_filter('render_block_data', [$this, 'filterBlocksContent'], 10, 2);
 
 		// Output inline css variables.
+		\add_action('wp_head', [$this, 'outputCssVariablesGlobal']);
 		\add_action('wp_footer', [$this, 'outputCssVariablesInline']);
 	}
 }
