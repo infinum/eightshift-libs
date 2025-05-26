@@ -47,18 +47,18 @@ trait CacheTrait
 	private static $version = '';
 
 	/**
-	 * Cache duration.
-	 *
-	 * @var int
-	 */
-	private static $duration = 0;
-
-	/**
 	 * Namespace for blocks.
 	 *
 	 * @var string
 	 */
 	private static $blocksNamespace = '';
+
+	/**
+	 * Cache file name.
+	 *
+	 * @var string
+	 */
+	private static $cacheFileName = '';
 
 	// -----------------------------------------------------
 	// CACHE
@@ -70,26 +70,19 @@ trait CacheTrait
 	 * @param array<mixed> $cacheBuilder Cache builder.
 	 * @param string $cacheName Cache name.
 	 * @param string $version Cache version.
-	 * @param int $duration Cache duration.
 	 *
 	 * @return void
 	 */
 	public static function setCacheDetails(
 		array $cacheBuilder,
 		string $cacheName,
-		string $version,
-		int $duration,
+		string $version
 	): void {
 		self::$cacheBuilder = $cacheBuilder;
 		self::$cacheName = $cacheName;
 		self::$version = $version;
-		self::$duration = $duration;
+		self::$cacheFileName = \str_replace(' ', '', "{$cacheName}Manifests.json");
 
-		if (!Helpers::isCacheVersionValid() || !Helpers::shouldCache()) {
-			Helpers::deleteAllCache();
-		}
-
-		Helpers::setCacheVersion();
 		Helpers::setAllCache();
 	}
 
@@ -109,30 +102,19 @@ trait CacheTrait
 			return;
 		}
 
-		$data = \get_transient(Helpers::getCacheTransientName());
+		$cacheFile = Helpers::getEightshiftOutputPath(self::$cacheFileName);
 
-		if (!$data) {
-			$data = self::getAllManifests();
+		if (\file_exists($cacheFile)) {
+			$handle = \fopen($cacheFile, 'r');
+			$output = \stream_get_contents($handle);
 
-			\set_transient(
-				Helpers::getCacheTransientName(),
-				\wp_json_encode($data),
-				self::$duration
-			);
-
-			self::$cache = $data;
-
+			self::$cache = \json_decode($output, true);
 			return;
 		}
 
-		$data = \json_decode($data, true);
-		if (!$data) {
-			self::$cache = [];
-			return;
-		}
-
+		$data = self::getAllManifests();
+		\file_put_contents($cacheFile, \wp_json_encode($data)); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 		self::$cache = $data;
-
 		return;
 	}
 
@@ -157,77 +139,6 @@ trait CacheTrait
 	}
 
 	/**
-	 * Get cache transient name.
-	 *
-	 * @param string $type Type of the cache.
-	 *
-	 * @return string
-	 */
-	public static function getCacheTransientName(string $type = ''): string
-	{
-		$name = AbstractManifestCache::TRANSIENT_PREFIX_NAME . '_' . self::$cacheName;
-
-		if (!$type) {
-			return $name;
-		}
-
-		return "{$name}_{$type}";
-	}
-
-	/**
-	 * Check if cache version is valid.
-	 *
-	 * @return bool
-	 */
-	public static function isCacheVersionValid(): bool
-	{
-		return self::getCacheVersion() === self::$version;
-	}
-
-	/**
-	 * Set version cache.
-	 *
-	 * @return void
-	 */
-	public static function setCacheVersion(): void
-	{
-		$name = self::getCacheTransientName(AbstractManifestCache::VERSION_KEY);
-
-		$cache = \get_transient($name);
-
-		if (!$cache) {
-			\set_transient($name, self::$version);
-		}
-	}
-
-	/**
-	 * Get cache version.
-	 *
-	 * @return string
-	 */
-	public static function getCacheVersion(): string
-	{
-		$cache = \get_transient(self::getCacheTransientName(AbstractManifestCache::VERSION_KEY)) ?: ''; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		if (!$cache) {
-			self::setCacheVersion();
-		}
-
-		return $cache;
-	}
-
-	/**
-	 * Unset all manifest cache.
-	 *
-	 * @return void
-	 */
-	public static function deleteAllCache(): void
-	{
-		\delete_transient(self::getCacheTransientName());
-		\delete_transient(self::getCacheTransientName(AbstractManifestCache::VERSION_KEY));
-	}
-
-	/**
 	 * Check if we should cache the service classes.
 	 *
 	 * @return bool
@@ -236,7 +147,7 @@ trait CacheTrait
 	{
 		return !(
 			(\defined('WP_ENVIRONMENT_TYPE') &&
-			(\WP_ENVIRONMENT_TYPE === 'development' || \WP_ENVIRONMENT_TYPE === 'local')) ||
+				(\WP_ENVIRONMENT_TYPE === 'development' || \WP_ENVIRONMENT_TYPE === 'local')) ||
 			\defined('WP_CLI')
 		);
 	}

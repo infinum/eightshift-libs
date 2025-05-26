@@ -226,7 +226,7 @@ class Helpers
 			case 'root':
 				return self::joinPaths([$projectRoot, ...$suffix]);
 			case 'eightshift':
-				return self::joinPaths([$projectRoot, 'eightshift', ...$suffix]);
+				return self::joinPaths([$root, 'eightshift', ...$suffix]);
 			case 'src':
 				return self::joinPaths([$root, 'src', ...$suffix]);
 			case 'public':
@@ -285,7 +285,7 @@ class Helpers
 		}
 
 		if ($fileName) {
-			return $filePath . \DIRECTORY_SEPARATOR . $fileName;
+			return "{$filePath}{$fileName}";
 		}
 
 		return $filePath;
