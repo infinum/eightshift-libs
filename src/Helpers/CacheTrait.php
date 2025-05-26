@@ -81,7 +81,7 @@ trait CacheTrait
 		self::$cacheBuilder = $cacheBuilder;
 		self::$cacheName = $cacheName;
 		self::$version = $version;
-		self::$cacheFileName = \str_replace(' ', '', "{$cacheName}Manifests.json");
+		self::$cacheFileName = \str_replace(' ', '', "{$cacheName}Manifests{$version}.json");
 
 		Helpers::setAllCache();
 	}
