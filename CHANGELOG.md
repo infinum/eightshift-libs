@@ -11,6 +11,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Internal caching mechanism for manifests.
 - All caching is now stored in the `eightshift` folder in the root of the theme or plugin.
 - All manifest caching is now stored on the disk and not in the transients.
+- `Render` method for faster rendering time.
 
 ## [10.3.1]
 
