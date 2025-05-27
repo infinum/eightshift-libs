@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.4.1]
+
+### Fixed
+
+- Manifest combined cache name.
+
 ## [10.4.0]
 
 ### Changed
@@ -868,6 +874,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.4.1]: https://github.com/infinum/eightshift-libs/compare/10.4.0...10.4.1
 [10.4.0]: https://github.com/infinum/eightshift-libs/compare/10.3.1...10.4.0
 [10.3.1]: https://github.com/infinum/eightshift-libs/compare/10.3.0...10.3.1
 [10.3.0]: https://github.com/infinum/eightshift-libs/compare/10.2.0...10.3.0

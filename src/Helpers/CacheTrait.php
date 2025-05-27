@@ -53,13 +53,6 @@ trait CacheTrait
 	 */
 	private static $blocksNamespace = '';
 
-	/**
-	 * Cache file name.
-	 *
-	 * @var string
-	 */
-	private static $cacheFileName = '';
-
 	// -----------------------------------------------------
 	// CACHE
 	// -----------------------------------------------------
@@ -81,7 +74,6 @@ trait CacheTrait
 		self::$cacheBuilder = $cacheBuilder;
 		self::$cacheName = $cacheName;
 		self::$version = $version;
-		self::$cacheFileName = \str_replace(' ', '', "{$cacheName}Manifests{$version}.json");
 
 		Helpers::setAllCache();
 	}
@@ -102,7 +94,7 @@ trait CacheTrait
 			return;
 		}
 
-		$cacheFile = Helpers::getEightshiftOutputPath(self::$cacheFileName);
+		$cacheFile = Helpers::getEightshiftOutputPath('manifests.json');
 
 		if (\file_exists($cacheFile)) {
 			$handle = \fopen($cacheFile, 'r');

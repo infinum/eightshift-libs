@@ -243,6 +243,8 @@ class Helpers
 				return self::joinPaths([$projectRoot, ...$suffix]);
 			case 'eightshift':
 				return self::joinPaths([$root, 'eightshift', ...$suffix]);
+			case 'eightshiftRoot':
+				return self::joinPaths([$projectRoot, 'eightshift', ...$suffix]);
 			case 'src':
 				return self::joinPaths([$root, 'src', ...$suffix]);
 			case 'public':
