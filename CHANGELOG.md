@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.4.0]
+
+### Changed
+
+- Internal caching mechanism for manifests.
+- All caching is now stored in the `eightshift` folder in the root of the theme or plugin.
+- All manifest caching is now stored on the disk and not in the transients.
+- `Render` method for faster rendering time.
+
 ## [10.3.1]
 
 ### Added
@@ -859,6 +868,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.4.0]: https://github.com/infinum/eightshift-libs/compare/10.3.1...10.4.0
 [10.3.1]: https://github.com/infinum/eightshift-libs/compare/10.3.0...10.3.1
 [10.3.0]: https://github.com/infinum/eightshift-libs/compare/10.2.0...10.3.0
 [10.2.0]: https://github.com/infinum/eightshift-libs/compare/10.1.0...10.2.0

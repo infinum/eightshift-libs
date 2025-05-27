@@ -57,17 +57,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	abstract public function getVersion(): string;
 
 	/**
-	 * Get cache duration.
-	 * Default is 0 = infinite.
-	 *
-	 * @return int Cache duration.
-	 */
-	public function getDuration(): int
-	{
-		return 0;
-	}
-
-	/**
 	 * Set all cache.
 	 *
 	 * @return void
@@ -78,7 +67,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 			$this->getCacheBuilder(),
 			$this->getCacheName(),
 			$this->getVersion(),
-			$this->getDuration()
 		);
 	}
 

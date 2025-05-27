@@ -99,6 +99,13 @@ class Helpers
 	];
 
 	/**
+	 * Cached flipped array for faster lookups.
+	 *
+	 * @var array<string, int>|null
+	 */
+	private static ?array $allowedNamesFlipped = null;
+
+	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
 	 * @param string $renderName The name of the component to render.
@@ -120,16 +127,33 @@ class Helpers
 		string $renderPrefixPath = '',
 		string $renderContent = ''
 	): string {
-		$manifest = [];
-
+		// Set default path name if not provided.
 		if (!$renderPathName) {
 			$renderPathName = Helpers::getConfigUseLegacyComponents() ? 'components' : 'blocks';
 		}
 
+		// Validate path name early.
+		if (self::$allowedNamesFlipped === null) {
+			self::$allowedNamesFlipped = \array_flip(self::PROJECT_RENDER_ALLOWED_NAMES);
+		}
+
+		if (!isset(self::$allowedNamesFlipped[$renderPathName])) {
+			throw InvalidPath::wrongOrNotAllowedParentPathException($renderPathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
+		}
+
+		// Initialize variables.
+		$manifest = [];
+		$renderPath = '';
+		$componentName = '';
+
+		// Extract component/block name once if needed.
+		if ($renderPrefixPath && ($renderPathName === 'components' || $renderPathName === 'blocks')) {
+			$componentName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
+		}
+
+		// Build path and get manifest based on path type.
 		switch ($renderPathName) {
 			case 'components':
-				$componentName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
-
 				if ($componentName) {
 					$renderPath = Helpers::getProjectPaths('components', [$renderPrefixPath, "{$renderName}.php"]);
 					$manifest = Helpers::getComponent($componentName);
@@ -137,45 +161,36 @@ class Helpers
 					$renderPath = Helpers::getProjectPaths('components', [$renderPrefixPath, $renderName, "{$renderName}.php"]);
 					$manifest = Helpers::getComponent($renderName);
 				}
-
-				unset($componentName);
-
 				break;
 			case 'wrapper':
-				$manifest = Helpers::getWrapper();
 				$renderPath = Helpers::getProjectPaths('wrapper', ["{$renderName}.php"]);
+				$manifest = Helpers::getWrapper();
 				break;
 			case 'blocks':
-				$blockName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
-
-				if ($blockName) {
+				if ($componentName) {
 					$renderPath = Helpers::getProjectPaths('blocks', [$renderPrefixPath, "{$renderName}.php"]);
-					$manifest = Helpers::getBlock($blockName);
+					$manifest = Helpers::getBlock($componentName);
 				} else {
 					$renderPath = Helpers::getProjectPaths('blocks', [$renderPrefixPath, $renderName, "{$renderName}.php"]);
 					$manifest = Helpers::getBlock($renderName);
 				}
-
-				unset($blockName);
 				break;
 			default:
 				$renderPath = Helpers::getProjectPaths('', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
 				break;
 		}
 
-		if (!isset(\array_flip(self::PROJECT_RENDER_ALLOWED_NAMES)[$renderPathName])) {
-			throw InvalidPath::wrongOrNotAllowedParentPathException($renderPathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
-		}
-
+		// Check if file exists.
 		if (!\file_exists($renderPath)) {
 			throw InvalidPath::missingFileException($renderPath);
 		}
 
-		// Merge default attributes with the component attributes.
+		// Merge default attributes with the component attributes if needed.
 		if ($renderUseComponentDefaults && !empty($manifest)) {
 			$renderAttributes = Helpers::getDefaultRenderAttributes($manifest, $renderAttributes);
 		}
 
+		// Start output buffering and include the file.
 		\ob_start();
 
 		// Allowed variables are $attributes, $renderAttributes, $renderContent, $renderPath, $manifest, $globalManifest.
@@ -184,15 +199,16 @@ class Helpers
 
 		unset(
 			$renderName,
+			$renderAttributes,
 			$renderPathName,
 			$renderUseComponentDefaults,
 			$renderPrefixPath,
+			$componentName,
 		);
 
 		include $renderPath;
 
 		unset(
-			$renderAttributes,
 			$attributes,
 			$renderContent,
 			$renderPath,
@@ -226,7 +242,7 @@ class Helpers
 			case 'root':
 				return self::joinPaths([$projectRoot, ...$suffix]);
 			case 'eightshift':
-				return self::joinPaths([$projectRoot, 'eightshift', ...$suffix]);
+				return self::joinPaths([$root, 'eightshift', ...$suffix]);
 			case 'src':
 				return self::joinPaths([$root, 'src', ...$suffix]);
 			case 'public':
@@ -285,7 +301,7 @@ class Helpers
 		}
 
 		if ($fileName) {
-			return $filePath . \DIRECTORY_SEPARATOR . $fileName;
+			return "{$filePath}{$fileName}";
 		}
 
 		return $filePath;
