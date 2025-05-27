@@ -105,7 +105,7 @@ trait CacheTrait
 		}
 
 		$data = self::getAllManifests();
-		\file_put_contents($cacheFile, \wp_json_encode($data)); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		\file_put_contents($cacheFile, \json_encode($data)); // phpcs:ignore
 		self::$cache = $data;
 		return;
 	}

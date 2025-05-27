@@ -273,7 +273,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 				return \json_decode($output, true);
 			}
 
-			if (\file_put_contents($cacheFile, \wp_json_encode($services))) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			if (\file_put_contents($cacheFile, \json_encode($services))) { // phpcs:ignore
 				\chmod($cacheFile, 0644); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 			}
 
