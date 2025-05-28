@@ -49,7 +49,7 @@ use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Optimization\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
-use EightshiftLibs\WP-CLI\WP-CLI;
+use EightshiftLibs\WpCli\WpCli;
 use ReflectionClass;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
@@ -105,7 +105,7 @@ class Cli
 		SetupCli::class,
 		ThemeOptionsCli::class,
 		EscapedViewCli::class,
-		WP-CLI::class,
+		WpCli::class,
 		ManifestCacheCli::class,
 		PluginCli::class,
 	];

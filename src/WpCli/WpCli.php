@@ -3,12 +3,12 @@
 /**
  * Class that registers WP-CLI command for custom WP-CLI command.
  *
- * @package EightshiftLibs\WP-CLI
+ * @package EightshiftLibs\WpCli
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\WP-CLI;
+namespace EightshiftLibs\WpCli;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
@@ -17,7 +17,7 @@ use EightshiftLibs\Helpers\Helpers;
 /**
  * Class WP-CLI
  */
-class WP-CLI extends AbstractCli
+class WpCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name

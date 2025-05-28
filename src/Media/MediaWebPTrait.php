@@ -183,7 +183,7 @@ trait MediaWebPTrait
 			return '';
 		}
 
-		// Convert using different methods for differnet extensions.
+		// Convert using different methods for different extensions.
 		switch ($ext) {
 			case 'gif':
 				try {

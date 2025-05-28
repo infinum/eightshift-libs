@@ -3,7 +3,7 @@
 /**
  * The WpCliExample specific functionality.
  *
- * @package EightshiftLibs\WP-CLI
+ * @package EightshiftLibs\WpCli
  */
 
 declare(strict_types=1);

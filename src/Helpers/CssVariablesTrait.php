@@ -219,7 +219,7 @@ trait CssVariablesTrait
 						continue;
 					}
 
-					// Bailout if breakpont is missing.
+					// Bailout if breakpoint is missing.
 					if (!isset($breakpoints["{$type}---{$value}"])) {
 						continue;
 					}

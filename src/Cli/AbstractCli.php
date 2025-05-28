@@ -491,7 +491,7 @@ abstract class AbstractCli implements CliInterface
 			$this->cliError(
 				// translators: %s will be replaced with path.
 				\sprintf(
-					"%s could not be created.'\n\nAn unknown error ocurred.",
+					"%s could not be created.'\n\nAn unknown error occurred.",
 					$destinationFile
 				),
 			);

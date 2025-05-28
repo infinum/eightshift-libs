@@ -110,7 +110,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
-				Used as a project command to generate WebP meda from the provided data.
+				Used as a project command to generate WebP media from the provided data.
 
 				## EXAMPLES
 				# Regenerate all supported media to WebP format.
@@ -125,7 +125,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 				# Force regenerate attachments no matter if they all-ready exist.
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --force='true'
 
-				# Regenerate media with diffferent quality.
+				# Regenerate media with different quality.
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --quality='90'
 
 				# Delete all WebP media formats.
@@ -232,7 +232,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 				WP_CLI::success("Attachment original converted!");
 				WP_CLI::log($original);
 			} else {
-				WP_CLI::warning("Attachment original not converted - allready exists!");
+				WP_CLI::warning("Attachment original not converted - already exists!");
 			}
 
 			$sizes = $this->generateWebPMediaAllSizes($id, $quality, $force);
@@ -243,7 +243,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 					WP_CLI::log($sizeValue);
 				}
 			} else {
-				WP_CLI::warning("Attachment sizes not converted - allready exists or media is to small for additional sizes!");
+				WP_CLI::warning("Attachment sizes not converted - already exists or media is to small for additional sizes!");
 			}
 
 			WP_CLI::log('--------------------------------------------------');
@@ -278,7 +278,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 				WP_CLI::success("Attachment original deleted!");
 				WP_CLI::log($original);
 			} else {
-				WP_CLI::warning("Attachment original not deleted - allready deleted or missing!");
+				WP_CLI::warning("Attachment original not deleted - already deleted or missing!");
 			}
 
 			$sizes = $this->deleteWebPMediaAllSizes($id);
@@ -289,7 +289,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 					WP_CLI::log($sizeValue);
 				}
 			} else {
-				WP_CLI::warning("Attachment sizes not deleted - allready deleted or missing!");
+				WP_CLI::warning("Attachment sizes not deleted - already deleted or missing!");
 			}
 
 			WP_CLI::log('--------------------------------------------------');

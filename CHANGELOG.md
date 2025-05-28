@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.5.1]
+
+### Removed
+
+- AbstractCli Trait helper and moved it to the Abstract CLI class.
+
 ## [10.5.0]
 
 ### Removed
@@ -887,6 +893,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.5.1]: https://github.com/infinum/eightshift-libs/compare/10.5.0...10.5.1
 [10.5.0]: https://github.com/infinum/eightshift-libs/compare/10.4.2...10.5.0
 [10.4.2]: https://github.com/infinum/eightshift-libs/compare/10.4.1...10.4.2
 [10.4.1]: https://github.com/infinum/eightshift-libs/compare/10.4.0...10.4.1

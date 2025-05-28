@@ -51,7 +51,7 @@ class OptimizationCli extends AbstractCli
 			'longdesc' => $this->prepareLongDesc("
 			## USAGE
 
-			Used to create optimization service class remove unecesery WP core stuff for faster loading.
+			Used to create optimization service class remove unnecessary WP core stuff for faster loading.
 
 			## EXAMPLES
 
