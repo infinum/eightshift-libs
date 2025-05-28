@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Use WebP Media.
+ * Class that registers WP-CLI command for Use WebP Media.
  *
  * @package EightshiftLibs\Media
  */
@@ -32,7 +32,7 @@ class UseWebPMediaCli extends AbstractCli
 	public const USE_WEBP_MEDIA_OPTION_NAME = 'es-use-webp-media';
 
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -42,7 +42,7 @@ class UseWebPMediaCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -52,7 +52,7 @@ class UseWebPMediaCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */

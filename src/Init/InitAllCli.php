@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command initial setup for all.
+ * Class that registers WP-CLI command initial setup for all.
  *
  * @package EightshiftLibs\Init
  */
@@ -19,7 +19,7 @@ use EightshiftLibs\Cli\Cli;
 class InitAllCli extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name.
+	 * Get WP-CLI command parent name.
 	 *
 	 * @return string
 	 */
@@ -29,7 +29,7 @@ class InitAllCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name.
+	 * Get WP-CLI command name.
 	 *
 	 * @return string
 	 */
@@ -39,7 +39,7 @@ class InitAllCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WP-CLI command doc.
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */

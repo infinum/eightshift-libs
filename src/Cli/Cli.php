@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class file that holds abstract class for WPCLI
+ * The class file that holds abstract class for WP-CLI
  *
  * @package EightshiftLibs\Cli
  */
@@ -49,7 +49,7 @@ use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Optimization\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
-use EightshiftLibs\WpCli\WpCli;
+use EightshiftLibs\WP-CLI\WP-CLI;
 use ReflectionClass;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
@@ -105,7 +105,7 @@ class Cli
 		SetupCli::class,
 		ThemeOptionsCli::class,
 		EscapedViewCli::class,
-		WpCli::class,
+		WP-CLI::class,
 		ManifestCacheCli::class,
 		PluginCli::class,
 	];
@@ -155,7 +155,7 @@ class Cli
 	}
 
 	/**
-	 * Run all CLI commands for normal WPCLI.
+	 * Run all CLI commands for normal WP-CLI.
 	 *
 	 * @param string $commandParentName Define top level commands name.
 	 *

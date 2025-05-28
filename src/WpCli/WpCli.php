@@ -1,26 +1,26 @@
 <?php
 
 /**
- * Class that registers WPCLI command for custom WPCLI command.
+ * Class that registers WP-CLI command for custom WP-CLI command.
  *
- * @package EightshiftLibs\WpCli
+ * @package EightshiftLibs\WP-CLI
  */
 
 declare(strict_types=1);
 
-namespace EightshiftLibs\WpCli;
+namespace EightshiftLibs\WP-CLI;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
 
 /**
- * Class WpCli
+ * Class WP-CLI
  */
-class WpCli extends AbstractCli
+class WP-CLI extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -30,7 +30,7 @@ class WpCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -52,14 +52,14 @@ class WpCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDoc(): array
 	{
 		return [
-			'shortdesc' => 'Create custom WPCLI command service class.',
+			'shortdesc' => 'Create custom WP-CLI command service class.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',

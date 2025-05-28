@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Rest Routes.
+ * Class that registers WP-CLI command for Rest Routes.
  *
  * @package EightshiftLibs\Rest\Routes
  */
@@ -34,7 +34,7 @@ class RouteCli extends AbstractCli
 	];
 
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -44,7 +44,7 @@ class RouteCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -67,7 +67,7 @@ class RouteCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, mixed>
 	 */

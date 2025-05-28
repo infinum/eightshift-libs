@@ -3,7 +3,7 @@
 // phpcs:ignoreFile Generic.Files.LineLength.TooLong
 
 /**
- * Class that registers WPCLI command for Geolocation creation.
+ * Class that registers WP-CLI command for Geolocation creation.
  *
  * @package EightshiftLibs\Geolocation
  */
@@ -22,7 +22,7 @@ use EightshiftLibs\Helpers\Helpers;
 class GeolocationCli extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -32,7 +32,7 @@ class GeolocationCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -54,7 +54,7 @@ class GeolocationCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
@@ -114,6 +114,9 @@ class GeolocationCli extends AbstractCli
 
 		// Output final class to new file/folder and finish.
 		$class->outputWrite(
-			Helpers::getProjectPaths('src', 'Geolocation'), "{$className}.php", $assocArgs);
+			Helpers::getProjectPaths('src', 'Geolocation'),
+			"{$className}.php",
+			$assocArgs
+		);
 	}
 }

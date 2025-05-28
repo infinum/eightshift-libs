@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Regenerate WebP Media.
+ * Class that registers WP-CLI command for Regenerate WebP Media.
  *
  * @package EightshiftLibs\Media
  */
@@ -26,7 +26,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 	use MediaWebPTrait;
 
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -36,7 +36,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -61,7 +61,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, mixed>
 	 */

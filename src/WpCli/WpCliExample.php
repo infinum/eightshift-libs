@@ -3,7 +3,7 @@
 /**
  * The WpCliExample specific functionality.
  *
- * @package EightshiftLibs\WpCli
+ * @package EightshiftLibs\WP-CLI
  */
 
 declare(strict_types=1);
@@ -27,7 +27,7 @@ class WpCliExample implements ServiceCliInterface
 	public const COMMAND_NAME = '%command_name%';
 
 	/**
-	 * Register method for WPCLI command
+	 * Register method for WP-CLI command
 	 *
 	 * @return void
 	 */
@@ -37,7 +37,7 @@ class WpCliExample implements ServiceCliInterface
 	}
 
 	/**
-	 * Register actial command in WP-CLI.
+	 * Register actual command in WP-CLI.
 	 *
 	 * @return void
 	 */
@@ -51,14 +51,14 @@ class WpCliExample implements ServiceCliInterface
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getDocs(): array
 	{
 		return [
-			'shortdesc' => 'Generates custom WPCLI command in your project.'
+			'shortdesc' => 'Generates custom WP-CLI command in your project.'
 		];
 	}
 

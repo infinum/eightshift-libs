@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for admin patterns menu creation.
+ * Class that registers WP-CLI command for admin patterns menu creation.
  *
  * @package EightshiftLibs\AdminMenus\AdminPatternsMenu
  */
@@ -20,7 +20,7 @@ use EightshiftLibs\Helpers\Helpers;
 class AdminPatternsMenuCli extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -30,7 +30,7 @@ class AdminPatternsMenuCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -56,7 +56,7 @@ class AdminPatternsMenuCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc.
+	 * Get WP-CLI command doc.
 	 *
 	 * @return array<string, mixed>
 	 */

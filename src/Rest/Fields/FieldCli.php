@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Rest Fields.
+ * Class that registers WP-CLI command for Rest Fields.
  *
  * @package EightshiftLibs\Rest\Fields
  */
@@ -20,7 +20,7 @@ use EightshiftLibs\Helpers\Helpers;
 class FieldCli extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -30,7 +30,7 @@ class FieldCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */

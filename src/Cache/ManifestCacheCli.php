@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Manifest Cache.
+ * Class that registers WP-CLI command for Manifest Cache.
  *
  * @package EightshiftLibs\Cache
  */
@@ -20,7 +20,7 @@ use EightshiftLibs\Helpers\Helpers;
 class ManifestCacheCli extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -30,7 +30,7 @@ class ManifestCacheCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -40,7 +40,7 @@ class ManifestCacheCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */

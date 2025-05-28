@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Config Theme.
+ * Class that registers WP-CLI command for Config Theme.
  *
  * @package EightshiftLibs\Config
  */
@@ -20,7 +20,7 @@ use EightshiftLibs\Helpers\Helpers;
 class ConfigThemeCli extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -30,7 +30,7 @@ class ConfigThemeCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -50,7 +50,7 @@ class ConfigThemeCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */

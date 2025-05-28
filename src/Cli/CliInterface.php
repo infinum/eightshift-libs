@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command interface used in all CLI commands.
+ * Class that registers WP-CLI command interface used in all CLI commands.
  *
  * @package EightshiftLibs\Cli
  */
@@ -13,7 +13,7 @@ namespace EightshiftLibs\Cli;
 interface CliInterface
 {
 	/**
-	 * Register method for WPCLI command
+	 * Register method for WP-CLI command
 	 *
 	 * @return void
 	 */
@@ -32,21 +32,21 @@ interface CliInterface
 	public function __invoke(array $args, array $assocArgs); // @phpstan-ignore-line
 
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
 	public function getCommandParentName(): string;
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
 	public function getCommandName(): string;
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */

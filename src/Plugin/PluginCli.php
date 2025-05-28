@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Plugin.
+ * Class that registers WP-CLI command for Plugin.
  *
  * @package EightshiftLibs\Plugin
  */
@@ -20,7 +20,7 @@ use EightshiftLibs\Helpers\Helpers;
 class PluginCli extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -30,7 +30,7 @@ class PluginCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -40,7 +40,7 @@ class PluginCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
@@ -82,7 +82,7 @@ class PluginCli extends AbstractCli
 		];
 
 		foreach ($output as $className) {
-		// Read the template contents, and replace the placeholders with provided variables.
+			// Read the template contents, and replace the placeholders with provided variables.
 			$this->getExampleTemplate(__DIR__, $className)
 				->renameClassName($className)
 				->renameGlobals($assocArgs)

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI commands used as parent placeholders.
+ * Class that registers WP-CLI commands used as parent placeholders.
  *
  * @package EightshiftLibs\Cli\ParentGroups
  */

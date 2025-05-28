@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that registers WPCLI command for Admin menu creation.
+ * Class that registers WP-CLI command for Admin menu creation.
  *
  * @package EightshiftLibs\AdminMenus
  */
@@ -20,7 +20,7 @@ use EightshiftLibs\Helpers\Helpers;
 class AdminMenuCli extends AbstractCli
 {
 	/**
-	 * Get WPCLI command parent name
+	 * Get WP-CLI command parent name
 	 *
 	 * @return string
 	 */
@@ -30,7 +30,7 @@ class AdminMenuCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command name
+	 * Get WP-CLI command name
 	 *
 	 * @return string
 	 */
@@ -58,7 +58,7 @@ class AdminMenuCli extends AbstractCli
 	}
 
 	/**
-	 * Get WPCLI command doc
+	 * Get WP-CLI command doc
 	 *
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
@@ -158,8 +158,7 @@ class AdminMenuCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle)
 			->searchReplaceString($this->getArgTemplate('capability'), $capability)
 			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug)
-			->searchReplaceString($this->getArgTemplate('view_component'), $viewComponent)
-			;
+			->searchReplaceString($this->getArgTemplate('view_component'), $viewComponent);
 
 		if (!empty($menuPosition)) {
 			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);
