@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.5.0]
+
+### Removed
+
+- GitIgnore CLI command and example file.
+- Export and Import CLI commands and example files.
+
 ## [10.4.2]
 
 ### Fixed
@@ -880,6 +887,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.5.0]: https://github.com/infinum/eightshift-libs/compare/10.4.2...10.5.0
 [10.4.2]: https://github.com/infinum/eightshift-libs/compare/10.4.1...10.4.2
 [10.4.1]: https://github.com/infinum/eightshift-libs/compare/10.4.0...10.4.1
 [10.4.0]: https://github.com/infinum/eightshift-libs/compare/10.3.1...10.4.0

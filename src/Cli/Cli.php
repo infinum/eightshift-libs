@@ -42,10 +42,7 @@ use EightshiftLibs\Menu\MenuCli;
 use EightshiftLibs\ModifyAdminAppearance\ModifyAdminAppearanceCli;
 use EightshiftLibs\Rest\Fields\FieldCli;
 use EightshiftLibs\Rest\Routes\RouteCli;
-use EightshiftLibs\Db\ExportCli;
-use EightshiftLibs\Db\ImportCli;
 use EightshiftLibs\Geolocation\GeolocationCli;
-use EightshiftLibs\GitIgnore\GitIgnoreCli;
 use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
 use EightshiftLibs\Media\UseWebPMediaCli;
@@ -95,7 +92,6 @@ class Cli
 		EnqueueBlocksCli::class,
 		EnqueueThemeCli::class,
 		GeolocationCli::class,
-		GitIgnoreCli::class,
 		I18nCli::class,
 		LoginCli::class,
 		MainCli::class,
@@ -120,8 +116,6 @@ class Cli
 	 * @var array<string>
 	 */
 	public const RUN_COMMANDS = [
-		ExportCli::class,
-		ImportCli::class,
 		RegenerateWebPMediaCli::class,
 		UseWebPMediaCli::class,
 	];
