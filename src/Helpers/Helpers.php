@@ -347,16 +347,16 @@ class Helpers
 
 		// Fast path for empty type
 		if ($type === '') {
-			return self::joinPathsOptimized(\array_merge([self::$basePaths['root']], $suffix));
+			return self::joinPaths(\array_merge([self::$basePaths['root']], $suffix));
 		}
 
 		// Use cached path configuration for fast lookup
 		if (isset(self::$pathConfigs[$type])) {
-			return self::joinPathsOptimized(\array_merge(self::$pathConfigs[$type], $suffix));
+			return self::joinPaths(\array_merge(self::$pathConfigs[$type], $suffix));
 		}
 
 		// Fallback for unknown type (should rarely happen)
-		return self::joinPathsOptimized(\array_merge([self::$basePaths['root']], $suffix));
+		return self::joinPaths(\array_merge([self::$basePaths['root']], $suffix));
 	}
 
 	/**
@@ -366,7 +366,7 @@ class Helpers
 	 *
 	 * @return string
 	 */
-	private static function joinPathsOptimized(array $paths): string
+	private static function joinPaths(array $paths): string
 	{
 		// Early return for empty paths
 		if (empty($paths)) {
@@ -395,18 +395,6 @@ class Helpers
 		$hasExtension = \str_contains($lastPart, '.');
 
 		return $hasExtension ? $joinedPath : $joinedPath . $sep;
-	}
-
-	/**
-	 * Legacy joinPaths method for backward compatibility.
-	 *
-	 * @param array<int, string> $paths Paths to join.
-	 *
-	 * @return string
-	 */
-	public static function joinPaths(array $paths): string
-	{
-		return self::joinPathsOptimized($paths);
 	}
 
 	/**
