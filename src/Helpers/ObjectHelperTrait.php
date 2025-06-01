@@ -13,8 +13,6 @@ namespace EightshiftLibs\Helpers;
 
 use DOMDocument;
 use EightshiftLibs\Exception\InvalidManifest;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 
 /**
  * Class Object Helper
