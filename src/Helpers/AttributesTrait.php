@@ -187,77 +187,76 @@ trait AttributesTrait
 	 */
 	public static function props(string $newName, array $attributes, array $manual = []): array
 	{
+		// Cache flipped includes array for O(1) lookup instead of O(n) in_array
+		static $includesFlipped = null;
+		if ($includesFlipped === null) {
+			$includes = [
+				'blockName',
+				'blockClientId',
+				'blockTopLevelId',
+				'blockFullName',
+				'blockClass',
+				'blockJsClass',
+				'blockStyles',
+				'blockSsr',
+				'componentJsClass',
+				'selectorClass',
+				'additionalClass',
+				'uniqueWrapperId',
+				'parentClass'
+			];
+			$includesFlipped = array_flip($includes);
+		}
 
 		$output = [];
 
-		// Check what attributes we need to includes.
-		$includes = [
-			'blockName',
-			'blockClientId',
-			'blockTopLevelId',
-			'blockFullName',
-			'blockClass',
-			'blockJsClass',
-			'blockStyles',
-			'blockSsr',
-			'componentJsClass',
-			'selectorClass',
-			'additionalClass',
-			'uniqueWrapperId',
-			'parentClass'
-		];
-
+		// Cache frequently accessed values
 		$blockName = $attributes['blockName'] ?? '';
+		$attributesPrefix = $attributes['prefix'] ?? null;
 
-		// Populate prefix key for recursive checks of attribute names.
-		$prefix = (!isset($attributes['prefix'])) ? Helpers::kebabToCamelCase($blockName) : $attributes['prefix'];
+		// Compute prefix once and cache kebab-to-camel conversions
+		$newNameCamel = Helpers::kebabToCamelCase($newName);
 
-		// Set component prefix.
-		if (empty($prefix)) {
-			$output['prefix'] = Helpers::kebabToCamelCase($newName);
+		if ($attributesPrefix === null) {
+			$prefix = $blockName ? Helpers::kebabToCamelCase($blockName) : '';
 		} else {
-			$output['prefix'] = $prefix . \ucfirst(Helpers::kebabToCamelCase($newName));
+			$prefix = $attributesPrefix;
 		}
 
-		// Iterate over the attributes.
+		// Set component prefix
+		$output['prefix'] = empty($prefix) ? $newNameCamel : $prefix . ucfirst($newNameCamel);
+
+		// Cache prefix length for substr comparison optimization
+		$prefixLength = strlen($output['prefix']);
+
+		// Process main attributes in a single optimized loop
 		foreach ($attributes as $key => $value) {
-			// Include attributes from iteration.
-			if (\in_array($key, $includes, true)) {
+			// Fast lookup for includes using array key existence (O(1) vs O(n))
+			if (isset($includesFlipped[$key])) {
 				$output[$key] = $value;
-				continue;
-			}
-
-			// If attribute starts with the prefix key leave it in the object if not remove it.
-			if (\substr((string)$key, 0, \strlen($output['prefix'])) === $output['prefix']) {
+			} elseif ($prefixLength > 0 && str_starts_with($key, $output['prefix'])) {
+				// Use modern PHP str_starts_with for better performance
 				$output[$key] = $value;
 			}
 		}
 
-		// Check if you have manual object and prepare the attribute keys and merge them with the original attributes for output.
+		// Process manual attributes if present
 		if ($manual) {
-			// Iterate manual attributes.
+			// Cache the component name pattern for string replacement
+			$componentPattern = lcfirst($newNameCamel);
+
 			foreach ($manual as $key => $value) {
-				// Include attributes from iteration.
-				if (\in_array($key, $includes, true)) {
+				if (isset($includesFlipped[$key])) {
 					$output[$key] = $value;
-					continue;
+				} else {
+					// Optimize string replacement - only do it once
+					$newKey = str_replace($componentPattern, '', $key);
+					$transformedKey = $output['prefix'] . ucfirst($newKey);
+					$output[$transformedKey] = $value;
 				}
-
-				// Remove the current component name from the attribute name.
-				$newKey = \str_replace(\lcfirst(Helpers::kebabToCamelCase($newName)), '', $key);
-
-				// Remove the old key.
-				unset($manual[$key]);
-
-				// Add new key to the output with prepared attribute name.
-				$manual[$output['prefix'] . \ucfirst($newKey)] = $value;
 			}
-
-			// Merge manual and output objects to one.
-			$output = \array_merge($output, $manual);
 		}
 
-		// Return the original attribute for optimization purposes.
 		return $output;
 	}
 
@@ -271,23 +270,50 @@ trait AttributesTrait
 	 */
 	private static function getDefaultRenderAttributes(array $manifest, array $attributes): array
 	{
+		// Cache manifest attributes to avoid repeated array access
+		$attrs = $manifest['attributes'] ?? null;
+
+		// Early return for empty or invalid attributes
+		if ($attrs === null || !is_iterable($attrs) || empty($attrs)) {
+			return $attributes;
+		}
+
+		// Pre-allocate with estimated size for better memory performance
 		$defaultAttributes = [];
 
-		$attrs = $manifest['attributes'] ?? [];
+		// Determine if we need key transformation (only for components with prefix)
+		$needsKeyTransformation = !isset($manifest['blockName']) &&
+			!empty($attributes['prefix']) &&
+			!empty($manifest['componentName']);
 
-		if (!\is_iterable($attrs)) {
-			return [];
+		// Cache values for key transformation if needed
+		$componentNameCamel = null;
+		$prefix = null;
+		if ($needsKeyTransformation) {
+			$componentNameCamel = Helpers::kebabToCamelCase($manifest['componentName']);
+			$prefix = $attributes['prefix'];
 		}
 
+		// Process attributes in a single optimized loop
 		foreach ($attrs as $itemKey => $itemValue) {
-			// Get the correct key for the check in the attributes object.
-			$newKey = self::getAttrKey($itemKey, $attributes, $manifest);
-
-			if (isset($itemValue['default'])) {
-				$defaultAttributes[$newKey] = $itemValue['default'];
+			// Skip if no default value is set
+			if (!isset($itemValue['default'])) {
+				continue;
 			}
+
+			// Optimize key transformation
+			if ($needsKeyTransformation && !str_contains($itemKey, 'wrapper')) {
+				// Apply transformation directly without function call
+				$newKey = str_replace($componentNameCamel, $prefix, $itemKey);
+			} else {
+				// Use original key (block context or no transformation needed)
+				$newKey = $itemKey;
+			}
+
+			$defaultAttributes[$newKey] = $itemValue['default'];
 		}
 
-		return \array_merge($defaultAttributes, $attributes);
+		// Merge defaults with provided attributes (provided attributes take precedence)
+		return array_merge($defaultAttributes, $attributes);
 	}
 }
