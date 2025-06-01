@@ -30,22 +30,32 @@ trait SelectorsTrait
 	 */
 	public static function selector($condition, string $block, string $element = '', string $modifier = ''): string
 	{
-		$fullModifier = '';
-		$fullElement = '';
-
-		$element = \trim($element);
-		$modifier = \trim($modifier);
-		$block = \trim($block);
-
-		if (!empty($element)) {
-			$fullElement = "__{$element}";
+		// Early return for falsy conditions
+		if (!$condition) {
+			return '';
 		}
 
-		if (!empty($modifier)) {
-			$fullModifier = "--{$modifier}";
+		// Trim and cache block (required parameter)
+		$block = trim($block);
+
+		// Build selector efficiently - only trim when needed
+		$selector = $block;
+
+		if ($element !== '') {
+			$element = trim($element);
+			if ($element !== '') {
+				$selector .= "__{$element}";
+			}
 		}
 
-		return $condition ? "{$block}{$fullElement}{$fullModifier}"  : '';
+		if ($modifier !== '') {
+			$modifier = trim($modifier);
+			if ($modifier !== '') {
+				$selector .= "--{$modifier}";
+			}
+		}
+
+		return $selector;
 	}
 
 	/**
@@ -66,24 +76,32 @@ trait SelectorsTrait
 	 */
 	public static function responsiveSelectors(array $items, string $selector, string $parent, bool $useModifier = true): string
 	{
+		// Early return for empty items
+		if (empty($items)) {
+			return '';
+		}
+
+		// Pre-allocate output array for better memory performance
 		$output = [];
 
+		// Cache selector pattern for performance
+		$selectorBase = "{$parent}__{$selector}-";
+
 		foreach ($items as $itemKey => $itemValue) {
-			if (
-				(\is_string($itemValue) && $itemValue === '') ||
-				(\is_bool($itemValue) && $itemValue === false) ||
-				\is_array($itemValue)
-			) {
+			// Optimized type and value checking
+			if ($itemValue === '' || $itemValue === false || is_array($itemValue)) {
 				continue;
 			}
 
+			// Build selector efficiently
 			if ($useModifier) {
-				$output[] = "{$parent}__{$selector}-{$itemKey}--{$itemValue}";
+				$output[] = $selectorBase . $itemKey . '--' . $itemValue;
 			} else {
-				$output[] = "{$parent}__{$selector}-{$itemKey}";
+				$output[] = $selectorBase . $itemKey;
 			}
 		}
 
+		// Use optimized classnames method
 		return self::classnames($output);
 	}
 
@@ -99,25 +117,35 @@ trait SelectorsTrait
 	 */
 	public static function ensureString($variable): string
 	{
-		$output = '';
-
-		if (\is_array($variable)) {
-			$isAssociative = \array_values($variable) === $variable;
-
-			if ($isAssociative) {
-				$output = \implode('', $variable);
-			} else {
-				foreach ($variable as $key => $value) {
-					$output .= $key . '="' . \htmlspecialchars($value) . '" ';
-				}
-			}
-		} elseif (\is_string($variable)) {
-			$output = $variable;
-		} else {
-			throw ComponentException::throwNotStringOrArray($variable);
+		// Fast path for strings
+		if (is_string($variable)) {
+			return $variable;
 		}
 
-		return $output;
+		if (is_array($variable)) {
+			// Early return for empty arrays
+			if (empty($variable)) {
+				return '';
+			}
+
+			// Check if array is associative (has string keys or non-sequential numeric keys)
+			$isAssociative = !array_is_list($variable);
+
+			if ($isAssociative) {
+				// For associative arrays, build data attributes
+				$output = '';
+				foreach ($variable as $key => $value) {
+					$output .= $key . '="' . htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8') . '" ';
+				}
+				return rtrim($output); // Remove trailing space
+			} else {
+				// For sequential arrays, join elements
+				return implode('', $variable);
+			}
+		}
+
+		// Invalid type - throw exception
+		throw ComponentException::throwNotStringOrArray($variable);
 	}
 
 	/**
@@ -129,6 +157,9 @@ trait SelectorsTrait
 	 */
 	public static function classnames(array $classes): string
 	{
-		return \trim(\implode(' ', \array_filter($classes)));
+		// Use array_filter with a more efficient callback and avoid trim
+		return implode(' ', array_filter($classes, function ($class) {
+			return $class !== '' && $class !== null && $class !== false;
+		}));
 	}
 }
