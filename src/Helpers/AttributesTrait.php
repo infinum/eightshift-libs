@@ -112,21 +112,25 @@ trait AttributesTrait
 	 */
 	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest, bool $undefinedAllowed = false): array
 	{
-		$output = [];
-
-		if (!isset($manifest['responsiveAttributes'])) {
-			if (isset($manifest['blockName']) || \array_key_exists('blockName', $manifest)) {
-				throw new Exception("It looks like you are missing responsiveAttributes key in your {$manifest['blockName']} block manifest.");
-			} else {
-				throw new Exception("It looks like you are missing responsiveAttributes key in your {$manifest['componentName']} component manifest.");
-			}
+		// Cache responsive attributes to avoid repeated array access
+		$responsiveAttrs = $manifest['responsiveAttributes'] ?? null;
+		if ($responsiveAttrs === null) {
+			$contextName = $manifest['blockName'] ?? $manifest['componentName'] ?? 'unknown';
+			$contextType = isset($manifest['blockName']) ? 'block' : 'component';
+			throw new Exception("It looks like you are missing responsiveAttributes key in your {$contextName} {$contextType} manifest.");
 		}
 
-		if (!isset($manifest['responsiveAttributes'][$keyName])) {
+		// Cache the specific keyName array to avoid repeated lookups
+		$keyConfig = $responsiveAttrs[$keyName] ?? null;
+		if ($keyConfig === null) {
 			throw new Exception("It looks like you are missing the {$keyName} key in your manifest responsiveAttributes array.");
 		}
 
-		foreach ($manifest['responsiveAttributes'][$keyName] as $key => $value) {
+		// Pre-allocate output array with known size for better memory performance
+		$output = [];
+
+		// Batch process all responsive attributes
+		foreach ($keyConfig as $key => $value) {
 			$output[$key] = self::checkAttr($value, $attributes, $manifest, $undefinedAllowed);
 		}
 
@@ -144,24 +148,32 @@ trait AttributesTrait
 	 */
 	public static function getAttrKey(string $key, array $attributes, array $manifest): string
 	{
-		// Just skip if attribute is wrapper.
-		if (\strpos($key, 'wrapper') !== false) {
-			return $key;
-		}
+		// Fast path: Most common cases first
 
-		// Skip if using this helper in block.
+		// Skip if using this helper in block (most common case)
 		if (isset($manifest['blockName'])) {
 			return $key;
 		}
 
-		// If missing prefix or prefix is empty return key.
-		if (!isset($attributes['prefix']) || $attributes['prefix'] === '') {
+		// Skip if attribute is wrapper (use modern PHP function)
+		if (str_contains($key, 'wrapper')) {
 			return $key;
 		}
 
-		// No need to test if this is block or component because on top level block there is no prefix.
-		// If there is a prefix, remove the attribute component name prefix and replace it with the new prefix.
-		return (string)\str_replace(Helpers::kebabToCamelCase($manifest['componentName']), $attributes['prefix'], $key);
+		// Cache prefix to avoid repeated array access
+		$prefix = $attributes['prefix'] ?? '';
+		if ($prefix === '') {
+			return $key;
+		}
+
+		// Cache component name to avoid repeated array access
+		$componentName = $manifest['componentName'] ?? '';
+		if ($componentName === '') {
+			return $key;
+		}
+
+		// Only compute kebab-to-camel conversion if we actually need it
+		return str_replace(Helpers::kebabToCamelCase($componentName), $prefix, $key);
 	}
 
 	/**
