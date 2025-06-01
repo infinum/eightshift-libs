@@ -106,6 +106,146 @@ class Helpers
 	private static ?array $allowedNamesFlipped = null;
 
 	/**
+	 * Cached base paths for performance optimization.
+	 *
+	 * @var array<string, string>|null
+	 */
+	private static ?array $basePaths = null;
+
+	/**
+	 * Cached path configurations for fast lookups.
+	 *
+	 * @var array<string, array<string>>|null
+	 */
+	private static ?array $pathConfigs = null;
+
+	/**
+	 * Cached render type patterns for performance.
+	 *
+	 * @var array<string, callable>|null
+	 */
+	private static ?array $renderHandlers = null;
+
+	/**
+	 * Initialize static caches if not already done.
+	 *
+	 * @return void
+	 */
+	private static function initializeCaches(): void
+	{
+		if (self::$allowedNamesFlipped === null) {
+			self::$allowedNamesFlipped = \array_flip(self::PROJECT_RENDER_ALLOWED_NAMES);
+		}
+
+		if (self::$basePaths === null) {
+			$root = \dirname(__FILE__, 6);
+			$projectRoot = \dirname(__FILE__, 9);
+
+			self::$basePaths = [
+				'root' => $root,
+				'projectRoot' => $projectRoot,
+				'src' => $root . \DIRECTORY_SEPARATOR . 'src',
+				'public' => $root . \DIRECTORY_SEPARATOR . 'public',
+				'blocksRoot' => $root . \DIRECTORY_SEPARATOR . 'src' . \DIRECTORY_SEPARATOR . 'Blocks',
+			];
+		}
+
+		if (self::$pathConfigs === null) {
+			$sep = \DIRECTORY_SEPARATOR;
+			$root = self::$basePaths['root'];
+			$projectRoot = self::$basePaths['projectRoot'];
+
+			self::$pathConfigs = [
+				'root' => [$projectRoot],
+				'eightshift' => [$root, 'eightshift'],
+				'eightshiftRoot' => [$projectRoot, 'eightshift'],
+				'src' => [$root, 'src'],
+				'public' => [$root, 'public'],
+				'libsPrefixed' => [$root, 'vendor-prefixed', 'infinum', 'eightshift-libs'],
+				'libsPrefixedGeolocation' => [$root, 'vendor-prefixed', 'infinum', 'eightshift-libs', 'src', 'Geolocation'],
+				'blocksRoot' => [$root, 'src', 'Blocks'],
+				'blocks' => [$root, 'src', 'Blocks', 'custom'],
+				'components' => [$root, 'src', 'Blocks', 'components'],
+				'variations' => [$root, 'src', 'Blocks', 'variations'],
+				'wrapper' => [$root, 'src', 'Blocks', 'wrapper'],
+			];
+		}
+
+		if (self::$renderHandlers === null) {
+			self::$renderHandlers = [
+				'components' => [self::class, 'handleComponentsRender'],
+				'wrapper' => [self::class, 'handleWrapperRender'],
+				'blocks' => [self::class, 'handleBlocksRender'],
+			];
+		}
+	}
+
+	/**
+	 * Handle components render logic.
+	 *
+	 * @param string $renderName Render name.
+	 * @param string $renderPrefixPath Prefix path.
+	 * @param string $componentName Component name.
+	 *
+	 * @return array{path: string, manifest: array<mixed>}
+	 */
+	private static function handleComponentsRender(string $renderName, string $renderPrefixPath, string $componentName): array
+	{
+		if ($componentName) {
+			return [
+				'path' => self::getProjectPaths('components', [$renderPrefixPath, "{$renderName}.php"]),
+				'manifest' => self::getComponent($componentName)
+			];
+		}
+
+		return [
+			'path' => self::getProjectPaths('components', [$renderPrefixPath, $renderName, "{$renderName}.php"]),
+			'manifest' => self::getComponent($renderName)
+		];
+	}
+
+	/**
+	 * Handle wrapper render logic.
+	 *
+	 * @param string $renderName Render name.
+	 * @param string $renderPrefixPath Prefix path.
+	 * @param string $componentName Component name.
+	 *
+	 * @return array{path: string, manifest: array<mixed>}
+	 */
+	private static function handleWrapperRender(string $renderName, string $renderPrefixPath, string $componentName): array
+	{
+		return [
+			'path' => self::getProjectPaths('wrapper', ["{$renderName}.php"]),
+			'manifest' => self::getWrapper()
+		];
+	}
+
+	/**
+	 * Handle blocks render logic.
+	 *
+	 * @param string $renderName Render name.
+	 * @param string $renderPrefixPath Prefix path.
+	 * @param string $componentName Component name.
+	 *
+	 * @return array{path: string, manifest: array<mixed>}
+	 */
+	private static function handleBlocksRender(string $renderName, string $renderPrefixPath, string $componentName): array
+	{
+		if ($componentName) {
+			return [
+				'path' => self::getProjectPaths('blocks', [$renderPrefixPath, "{$renderName}.php"]),
+				'manifest' => self::getBlock($componentName)
+			];
+		}
+
+		return [
+			'path' => self::getProjectPaths('blocks', [$renderPrefixPath, $renderName, "{$renderName}.php"]),
+			'manifest' => self::getBlock($renderName)
+		];
+	}
+
+	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
 	 * @param string $renderName The name of the component to render.
@@ -127,101 +267,68 @@ class Helpers
 		string $renderPrefixPath = '',
 		string $renderContent = ''
 	): string {
-		// Set default path name if not provided.
+		// Initialize all caches once
+		self::initializeCaches();
+
+		// Set default path name if not provided (optimized with early return)
 		if (!$renderPathName) {
-			$renderPathName = Helpers::getConfigUseLegacyComponents() ? 'components' : 'blocks';
+			$renderPathName = self::getConfigUseLegacyComponents() ? 'components' : 'blocks';
 		}
 
-		// Validate path name early.
-		if (self::$allowedNamesFlipped === null) {
-			self::$allowedNamesFlipped = \array_flip(self::PROJECT_RENDER_ALLOWED_NAMES);
-		}
-
+		// Fast path validation using pre-cached flipped array
 		if (!isset(self::$allowedNamesFlipped[$renderPathName])) {
 			throw InvalidPath::wrongOrNotAllowedParentPathException($renderPathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
 		}
 
-		// Initialize variables.
-		$manifest = [];
-		$renderPath = '';
+		// Extract component/block name once if needed (optimized extraction)
 		$componentName = '';
-
-		// Extract component/block name once if needed.
 		if ($renderPrefixPath && ($renderPathName === 'components' || $renderPathName === 'blocks')) {
-			$componentName = \explode(\DIRECTORY_SEPARATOR, $renderPrefixPath)[0] ?? '';
+			$separatorPos = \strpos($renderPrefixPath, \DIRECTORY_SEPARATOR);
+			$componentName = $separatorPos !== false ? \substr($renderPrefixPath, 0, $separatorPos) : $renderPrefixPath;
 		}
 
-		// Build path and get manifest based on path type.
-		switch ($renderPathName) {
-			case 'components':
-				if ($componentName) {
-					$renderPath = Helpers::getProjectPaths('components', [$renderPrefixPath, "{$renderName}.php"]);
-					$manifest = Helpers::getComponent($componentName);
-				} else {
-					$renderPath = Helpers::getProjectPaths('components', [$renderPrefixPath, $renderName, "{$renderName}.php"]);
-					$manifest = Helpers::getComponent($renderName);
-				}
-				break;
-			case 'wrapper':
-				$renderPath = Helpers::getProjectPaths('wrapper', ["{$renderName}.php"]);
-				$manifest = Helpers::getWrapper();
-				break;
-			case 'blocks':
-				if ($componentName) {
-					$renderPath = Helpers::getProjectPaths('blocks', [$renderPrefixPath, "{$renderName}.php"]);
-					$manifest = Helpers::getBlock($componentName);
-				} else {
-					$renderPath = Helpers::getProjectPaths('blocks', [$renderPrefixPath, $renderName, "{$renderName}.php"]);
-					$manifest = Helpers::getBlock($renderName);
-				}
-				break;
-			default:
-				$renderPath = Helpers::getProjectPaths('', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
-				break;
+		// Use optimized render handlers
+		if (isset(self::$renderHandlers[$renderPathName])) {
+			$result = self::$renderHandlers[$renderPathName]($renderName, $renderPrefixPath, $componentName);
+			$renderPath = $result['path'];
+			$manifest = $result['manifest'];
+		} else {
+			// Default case - optimized path building
+			$renderPath = self::getProjectPaths('', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
+			$manifest = [];
 		}
 
-		// Check if file exists.
+		// Early file existence check to fail fast
 		if (!\file_exists($renderPath)) {
 			throw InvalidPath::missingFileException($renderPath);
 		}
 
-		// Merge default attributes with the component attributes if needed.
+		// Optimize attribute merging with early return
 		if ($renderUseComponentDefaults && !empty($manifest)) {
-			$renderAttributes = Helpers::getDefaultRenderAttributes($manifest, $renderAttributes);
+			$renderAttributes = self::getDefaultRenderAttributes($manifest, $renderAttributes);
 		}
 
-		// Start output buffering and include the file.
+		// Optimize output buffering and variable assignment
 		\ob_start();
 
-		// Allowed variables are $attributes, $renderAttributes, $renderContent, $renderPath, $manifest, $globalManifest.
+		// Pre-assign variables for performance (avoid repeated method calls)
 		$attributes = $renderAttributes;
-		$globalManifest = Helpers::getSettings();
+		$globalManifest = self::getSettings();
 
-		unset(
-			$renderName,
-			$renderAttributes,
-			$renderPathName,
-			$renderUseComponentDefaults,
-			$renderPrefixPath,
-			$componentName,
-		);
+		// Unset variables for memory optimization
+		unset($renderName, $renderAttributes, $renderPathName, $renderUseComponentDefaults, $renderPrefixPath, $componentName);
 
 		include $renderPath;
 
-		unset(
-			$attributes,
-			$renderContent,
-			$renderPath,
-			$manifest,
-			$globalManifest
-		);
+		// Clean up variables
+		unset($attributes, $renderContent, $renderPath, $manifest, $globalManifest);
 
 		return \trim((string) \ob_get_clean());
 	}
 
-
 	/**
 	 * Internal helper for getting all project paths for easy mocking in tests.
+	 * Optimized with static caching and reduced function calls.
 	 *
 	 * @param string $type Type fo path to return.
 	 * @param string|array<int, string> $suffix Suffix to add to the path.
@@ -230,46 +337,68 @@ class Helpers
 	 */
 	public static function getProjectPaths(string $type = '', array|string $suffix = ''): string
 	{
-		$root = \dirname(__FILE__, 6);
+		// Initialize caches if needed
+		self::initializeCaches();
 
+		// Convert string suffix to array efficiently
 		if (\is_string($suffix)) {
-			$suffix = [$suffix];
+			$suffix = $suffix !== '' ? [$suffix] : [];
 		}
 
-		$projectRoot = \dirname(__FILE__, 9);
-
-		switch ($type) {
-			case 'root':
-				return self::joinPaths([$projectRoot, ...$suffix]);
-			case 'eightshift':
-				return self::joinPaths([$root, 'eightshift', ...$suffix]);
-			case 'eightshiftRoot':
-				return self::joinPaths([$projectRoot, 'eightshift', ...$suffix]);
-			case 'src':
-				return self::joinPaths([$root, 'src', ...$suffix]);
-			case 'public':
-				return self::joinPaths([$root, 'public', ...$suffix]);
-			case 'libsPrefixed':
-				return self::joinPaths([$root, 'vendor-prefixed', 'infinum', 'eightshift-libs', ...$suffix]);
-			case 'libsPrefixedGeolocation':
-				return self::joinPaths([$root, 'vendor-prefixed', 'infinum', 'eightshift-libs', 'src', 'Geolocation', ...$suffix]);
-			case 'blocksRoot':
-				return self::joinPaths([$root, 'src', 'Blocks', ...$suffix]);
-			case 'blocks':
-				return self::joinPaths([$root, 'src', 'Blocks', 'custom', ...$suffix]);
-			case 'components':
-				return self::joinPaths([$root, 'src', 'Blocks', 'components', ...$suffix]);
-			case 'variations':
-				return self::joinPaths([$root, 'src', 'Blocks', 'variations', ...$suffix]);
-			case 'wrapper':
-				return self::joinPaths([$root, 'src', 'Blocks', 'wrapper', ...$suffix]);
-			default:
-				return self::joinPaths([$root, ...$suffix]);
+		// Fast path for empty type
+		if ($type === '') {
+			return self::joinPathsOptimized(\array_merge([self::$basePaths['root']], $suffix));
 		}
+
+		// Use cached path configuration for fast lookup
+		if (isset(self::$pathConfigs[$type])) {
+			return self::joinPathsOptimized(\array_merge(self::$pathConfigs[$type], $suffix));
+		}
+
+		// Fallback for unknown type (should rarely happen)
+		return self::joinPathsOptimized(\array_merge([self::$basePaths['root']], $suffix));
 	}
 
 	/**
-	 * Paths join
+	 * Optimized paths join with reduced function calls and memory allocations.
+	 *
+	 * @param array<int, string> $paths Paths to join.
+	 *
+	 * @return string
+	 */
+	private static function joinPathsOptimized(array $paths): string
+	{
+		// Early return for empty paths
+		if (empty($paths)) {
+			return \DIRECTORY_SEPARATOR;
+		}
+
+		$sep = \DIRECTORY_SEPARATOR;
+
+		// Pre-allocate and filter in single pass for better performance
+		$filteredPaths = [];
+		foreach ($paths as $path) {
+			$trimmed = \trim($path, $sep);
+			if ($trimmed !== '') {
+				$filteredPaths[] = $trimmed;
+			}
+		}
+
+		if (empty($filteredPaths)) {
+			return $sep;
+		}
+
+		$joinedPath = $sep . \implode($sep, $filteredPaths);
+
+		// Optimized extension check using string comparison
+		$lastPart = $filteredPaths[\count($filteredPaths) - 1];
+		$hasExtension = \str_contains($lastPart, '.');
+
+		return $hasExtension ? $joinedPath : $joinedPath . $sep;
+	}
+
+	/**
+	 * Legacy joinPaths method for backward compatibility.
 	 *
 	 * @param array<int, string> $paths Paths to join.
 	 *
@@ -277,18 +406,12 @@ class Helpers
 	 */
 	public static function joinPaths(array $paths): string
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-
-		$paths = \array_map(fn($path) => \trim($path, $sep), $paths);
-		$paths = \array_filter($paths);
-
-		$path = $sep . \implode($sep, $paths);
-
-		return !\pathinfo($path, \PATHINFO_EXTENSION) ? $path . $sep : $path;
+		return self::joinPathsOptimized($paths);
 	}
 
 	/**
 	 * Get eightshift root folder output path and create the directory if it doesn't exist.
+	 * Optimized with static caching.
 	 *
 	 * @param string $fileName File name to append to the path.
 	 *
@@ -296,16 +419,16 @@ class Helpers
 	 */
 	public static function getEightshiftOutputPath($fileName = ''): string
 	{
-		$filePath = Helpers::getProjectPaths('eightshift');
+		static $eightshiftPath = null;
 
-		if (!\is_dir($filePath)) {
-			\mkdir($filePath, 0755, true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
+		if ($eightshiftPath === null) {
+			$eightshiftPath = self::getProjectPaths('eightshift');
+
+			if (!\is_dir($eightshiftPath)) {
+				\mkdir($eightshiftPath, 0755, true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
+			}
 		}
 
-		if ($fileName) {
-			return "{$filePath}{$fileName}";
-		}
-
-		return $filePath;
+		return $fileName !== '' ? $eightshiftPath . $fileName : $eightshiftPath;
 	}
 }
