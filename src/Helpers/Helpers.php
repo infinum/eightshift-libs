@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Helpers;
 
-use EightshiftLibs\Exception\InvalidPath;
-
 /**
  * All the helpers for components.
  */
