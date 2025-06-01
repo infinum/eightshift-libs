@@ -53,12 +53,40 @@ trait CacheTrait
 	 */
 	private static $blocksNamespace = '';
 
+	/**
+	 * Cache for shouldCache() result to avoid repeated environment checks.
+	 *
+	 * @var bool|null
+	 */
+	private static ?bool $shouldCacheResult = null;
+
+	/**
+	 * Cache for file existence checks to avoid repeated filesystem operations.
+	 *
+	 * @var array<string, bool>
+	 */
+	private static array $fileExistsCache = [];
+
+	/**
+	 * Cache for file contents to avoid repeated file reads.
+	 *
+	 * @var array<string, string|false>
+	 */
+	private static array $fileContentsCache = [];
+
+	/**
+	 * Cache for JSON decoded results to avoid repeated parsing.
+	 *
+	 * @var array<string, array<mixed>|false>
+	 */
+	private static array $jsonDecodeCache = [];
+
 	// -----------------------------------------------------
 	// CACHE
 	// -----------------------------------------------------
 
 	/**
-	 * Set cache details.
+	 * Set cache details with optimized validation.
 	 *
 	 * @param array<mixed> $cacheBuilder Cache builder.
 	 * @param string $cacheName Cache name.
@@ -71,6 +99,15 @@ trait CacheTrait
 		string $cacheName,
 		string $version
 	): void {
+		// Early return if already set with same values
+		if (
+			self::$cacheBuilder === $cacheBuilder &&
+			self::$cacheName === $cacheName &&
+			self::$version === $version
+		) {
+			return;
+		}
+
 		self::$cacheBuilder = $cacheBuilder;
 		self::$cacheName = $cacheName;
 		self::$version = $version;
@@ -79,35 +116,48 @@ trait CacheTrait
 	}
 
 	/**
-	 * Set internal cache.
+	 * Set internal cache with optimized file operations.
 	 *
 	 * @return void
 	 */
 	public static function setAllCache(): void
 	{
-		if (self::$cache) {
+		// Early return if cache already set
+		if (!empty(self::$cache)) {
 			return;
 		}
 
-		if (!Helpers::shouldCache()) {
+		// Check if we should use file caching
+		if (!self::shouldCache()) {
 			self::$cache = self::getAllManifests();
 			return;
 		}
 
 		$cacheFile = Helpers::getEightshiftOutputPath('manifests.json');
 
-		if (\file_exists($cacheFile)) {
-			$handle = \fopen($cacheFile, 'r');
-			$output = \stream_get_contents($handle);
+		// Optimized file existence check with caching
+		if (self::fileExistsCached($cacheFile)) {
+			$content = self::getFileContentsCached($cacheFile);
 
-			self::$cache = \json_decode($output, true);
-			return;
+			if ($content !== false) {
+				$decoded = self::jsonDecodeCached($content);
+				if ($decoded !== false) {
+					self::$cache = $decoded;
+					return;
+				}
+			}
 		}
 
+		// Generate cache data and write to file
 		$data = self::getAllManifests();
-		\file_put_contents($cacheFile, \json_encode($data)); // phpcs:ignore
-		self::$cache = $data;
-		return;
+
+		// Optimized file writing with error handling
+		if (self::writeFileOptimized($cacheFile, \json_encode($data))) {
+			self::$cache = $data;
+		} else {
+			// Fallback if file writing fails
+			self::$cache = $data;
+		}
 	}
 
 	/**
@@ -131,36 +181,72 @@ trait CacheTrait
 	}
 
 	/**
-	 * Check if we should cache the service classes.
+	 * Check if we should cache the service classes with optimized environment detection.
 	 *
 	 * @return bool
 	 */
 	public static function shouldCache(): bool
 	{
-		return !(
-			(\defined('WP_ENVIRONMENT_TYPE') &&
-				(\WP_ENVIRONMENT_TYPE === 'development' || \WP_ENVIRONMENT_TYPE === 'local')) ||
-			\defined('WP_CLI')
-		);
+		// Return cached result if already computed
+		if (self::$shouldCacheResult !== null) {
+			return self::$shouldCacheResult;
+		}
+
+		// Check WP_CLI first (fastest check)
+		if (\defined('WP_CLI') && \WP_CLI) {
+			self::$shouldCacheResult = false;
+			return false;
+		}
+
+		// Check WP_ENVIRONMENT_TYPE with proper constant checking
+		if (\defined('WP_ENVIRONMENT_TYPE')) {
+			$envType = \constant('WP_ENVIRONMENT_TYPE');
+			if ($envType === 'development' || $envType === 'local') {
+				self::$shouldCacheResult = false;
+				return false;
+			}
+		}
+
+		self::$shouldCacheResult = true;
+		return true;
 	}
 
 	/**
-	 * Get all manifests from the paths.
+	 * Get all manifests from the paths with optimized processing.
 	 *
 	 * @return array<string, array<mixed>> Array of manifests.
 	 */
 	private static function getAllManifests(): array
 	{
+		// Early return for empty cache builder
+		if (empty(self::$cacheBuilder)) {
+			return [];
+		}
+
 		$output = [];
 
-		foreach (self::$cacheBuilder as $type => $item) {
-			foreach ($item as $parent => $data) {
+		foreach (self::$cacheBuilder as $type => $items) {
+			if (empty($items)) {
+				continue;
+			}
+
+			$output[$type] = [];
+
+			foreach ($items as $parent => $data) {
+				if (empty($data)) {
+					continue;
+				}
+
 				$multiple = $data['multiple'] ?? false;
 
 				if ($multiple) {
-					$output[$type][$parent] = self::getItems(self::getFullPath($parent, $type, '*'), $data, $parent);
+					$result = self::getItems(self::getFullPath($parent, $type, '*'), $data, $parent);
 				} else {
-					$output[$type][$parent] = self::getItem(self::getFullPath($parent, $type), $data, $parent);
+					$result = self::getItem(self::getFullPath($parent, $type), $data, $parent);
+				}
+
+				if (!empty($result)) {
+					$output[$type][$parent] = $result;
 				}
 			}
 		}
@@ -169,7 +255,7 @@ trait CacheTrait
 	}
 
 	/**
-	 * Get single item from the path.
+	 * Get single item from the path with optimized file operations and error handling.
 	 *
 	 * @param string $path Path to the item.
 	 * @param array<mixed> $data Data array.
@@ -181,55 +267,107 @@ trait CacheTrait
 	 */
 	private static function getItem(string $path, array $data, string $parent): array
 	{
-		if (!\file_exists($path)) {
+		// Early return for empty path
+		if ($path === '') {
 			return [];
 		}
 
-		$handle = \fopen($path, 'r');
-		$file = \stream_get_contents($handle);
-
-		if (!$file) {
+		// Optimized file existence check
+		if (!self::fileExistsCached($path)) {
 			return [];
 		}
 
-		$fileDecoded = \json_decode($file, true);
-
-		if (!$fileDecoded) {
+		// Optimized file content reading
+		$fileContent = self::getFileContentsCached($path);
+		if ($fileContent === false || $fileContent === '') {
 			return [];
 		}
 
+		// Optimized JSON decoding
+		$fileDecoded = self::jsonDecodeCached($fileContent);
+		if ($fileDecoded === false || !is_array($fileDecoded)) {
+			return [];
+		}
+
+		// Process autoset configuration efficiently
+		$fileDecoded = self::processAutoset($fileDecoded, $data);
+
+		// Handle specific parent cases efficiently
+		$fileDecoded = self::processParentSpecificLogic($fileDecoded, $parent);
+
+		// Validate required keys efficiently
+		self::validateManifestKeys($fileDecoded, $data, $path);
+
+		return $fileDecoded;
+	}
+
+	/**
+	 * Process autoset configuration efficiently.
+	 *
+	 * @param array<string, mixed> $fileDecoded Decoded file data.
+	 * @param array<mixed> $data Configuration data.
+	 *
+	 * @return array<string, mixed> Processed file data.
+	 */
+	private static function processAutoset(array $fileDecoded, array $data): array
+	{
 		$autoset = $data['autoset'] ?? [];
 
-		if ($autoset) {
-			foreach ($autoset as $autosetItem) {
-				$autosetItemKey = $autosetItem['key'] ?? '';
-				$autosetItemValue = $autosetItem['value'] ?? '';
-				$autosetItemParent = $autosetItem['parent'] ?? '';
+		if (empty($autoset)) {
+			return $fileDecoded;
+		}
 
-				if (!$autosetItemKey) {
-					continue;
-				}
+		foreach ($autoset as $autosetItem) {
+			if (empty($autosetItem)) {
+				continue;
+			}
 
-				// Handle the case where there is no parent.
-				if (!$autosetItemParent) {
-					if (!isset($fileDecoded[$autosetItemKey])) {
-						$fileDecoded[$autosetItemKey] = $autosetItemValue;
-					}
-					continue;
-				}
+			$key = $autosetItem['key'] ?? '';
+			$value = $autosetItem['value'] ?? '';
+			$parent = $autosetItem['parent'] ?? '';
 
-				// Handle the case where there is a parent.
-				if (!isset($fileDecoded[$autosetItemParent][$autosetItemKey])) {
-					$fileDecoded[$autosetItemParent][$autosetItemKey] = $autosetItemValue;
+			if ($key === '') {
+				continue;
+			}
+
+			// Handle case with no parent
+			if ($parent === '') {
+				if (!isset($fileDecoded[$key])) {
+					$fileDecoded[$key] = $value;
 				}
+				continue;
+			}
+
+			// Handle case with parent
+			if (!isset($fileDecoded[$parent][$key])) {
+				if (!isset($fileDecoded[$parent])) {
+					$fileDecoded[$parent] = [];
+				}
+				$fileDecoded[$parent][$key] = $value;
 			}
 		}
 
+		return $fileDecoded;
+	}
+
+	/**
+	 * Process parent-specific logic efficiently.
+	 *
+	 * @param array<string, mixed> $fileDecoded Decoded file data.
+	 * @param string $parent Parent type.
+	 *
+	 * @return array<string, mixed> Processed file data.
+	 */
+	private static function processParentSpecificLogic(array $fileDecoded, string $parent): array
+	{
 		switch ($parent) {
 			case AbstractManifestCache::BLOCKS_KEY:
-				if (self::$blocksNamespace) {
+				if (self::$blocksNamespace !== '') {
 					$fileDecoded['namespace'] = self::$blocksNamespace;
-					$fileDecoded['blockFullName'] = self::$blocksNamespace . "/{$fileDecoded['blockName']}";
+					$blockName = $fileDecoded['blockName'] ?? '';
+					if ($blockName !== '') {
+						$fileDecoded['blockFullName'] = self::$blocksNamespace . "/{$blockName}";
+					}
 				}
 				break;
 			case AbstractManifestCache::SETTINGS_KEY:
@@ -237,21 +375,37 @@ trait CacheTrait
 				break;
 		}
 
-		$validation = $data['validation'] ?? [];
-
-		if ($validation) {
-			foreach ($validation as $key) {
-				if (!isset($fileDecoded[$key])) {
-					throw InvalidManifest::missingManifestKeyException($key, $path);
-				}
-			}
-		}
-
-		return (array) $fileDecoded;
+		return $fileDecoded;
 	}
 
 	/**
-	 * Get multiple items from the path.
+	 * Validate manifest keys efficiently.
+	 *
+	 * @param array<string, mixed> $fileDecoded Decoded file data.
+	 * @param array<mixed> $data Configuration data.
+	 * @param string $path File path for error reporting.
+	 *
+	 * @throws InvalidManifest If required key is missing.
+	 *
+	 * @return void
+	 */
+	private static function validateManifestKeys(array $fileDecoded, array $data, string $path): void
+	{
+		$validation = $data['validation'] ?? [];
+
+		if (empty($validation)) {
+			return;
+		}
+
+		foreach ($validation as $key) {
+			if (!isset($fileDecoded[$key])) {
+				throw InvalidManifest::missingManifestKeyException($key, $path);
+			}
+		}
+	}
+
+	/**
+	 * Get multiple items from the path with optimized processing.
 	 *
 	 * @param string $path Path to the items.
 	 * @param array<mixed> $data Data array.
@@ -261,16 +415,37 @@ trait CacheTrait
 	 */
 	private static function getItems(string $path, array $data, string $parent): array
 	{
-		$output = [];
+		// Early return for empty path
+		if ($path === '') {
+			return [];
+		}
 
+		$output = [];
 		$id = $data['id'] ?? '';
 
-		foreach ((array)\glob($path) as $itemPath) {
+		// Early return if no ID specified
+		if ($id === '') {
+			return [];
+		}
+
+		// Use optimized glob with error handling
+		$globResults = \glob($path);
+		if ($globResults === false) {
+			return [];
+		}
+
+		foreach ($globResults as $itemPath) {
+			if ($itemPath === '') {
+				continue;
+			}
+
 			$item = self::getItem($itemPath, $data, $parent);
+			if (empty($item)) {
+				continue;
+			}
 
 			$idName = $item[$id] ?? '';
-
-			if (!$idName) {
+			if ($idName === '') {
 				continue;
 			}
 
@@ -281,7 +456,7 @@ trait CacheTrait
 	}
 
 	/**
-	 * Get full path.
+	 * Get full path with optimized string building.
 	 *
 	 * @param string $type Type of the item.
 	 * @param string $cacheType Type of the cache.
@@ -291,19 +466,129 @@ trait CacheTrait
 	 */
 	private static function getFullPath(string $type, string $cacheType, string $name = ''): string
 	{
-		$data = self::$cacheBuilder[$cacheType][$type] ?? [];
+		// Early return for empty inputs
+		if ($type === '' || $cacheType === '') {
+			return '';
+		}
 
-		if (!$data) {
+		$data = self::$cacheBuilder[$cacheType][$type] ?? [];
+		if (empty($data)) {
 			return '';
 		}
 
 		$path = $data['path'] ?? '';
 		$fileName = $data['fileName'] ?? 'manifest.json';
 
-		if (!$name) {
+		// Early return for empty path
+		if ($path === '') {
+			return '';
+		}
+
+		if ($name === '') {
 			return Helpers::getProjectPaths($path, [$fileName]);
 		}
 
 		return Helpers::getProjectPaths($path, [$name, $fileName]);
+	}
+
+	/**
+	 * Optimized file existence check with caching.
+	 *
+	 * @param string $path File path.
+	 *
+	 * @return bool Whether file exists.
+	 */
+	private static function fileExistsCached(string $path): bool
+	{
+		if (isset(self::$fileExistsCache[$path])) {
+			return self::$fileExistsCache[$path];
+		}
+
+		$exists = \file_exists($path);
+
+		// Cache result (limit cache size to prevent memory bloat)
+		if (\count(self::$fileExistsCache) < 1000) {
+			self::$fileExistsCache[$path] = $exists;
+		}
+
+		return $exists;
+	}
+
+	/**
+	 * Optimized file content reading with caching and error handling.
+	 *
+	 * @param string $path File path.
+	 *
+	 * @return string|false File contents or false on failure.
+	 */
+	private static function getFileContentsCached(string $path)
+	{
+		if (isset(self::$fileContentsCache[$path])) {
+			return self::$fileContentsCache[$path];
+		}
+
+		// Use file_get_contents for better performance than fopen/stream_get_contents
+		$content = \file_get_contents($path);
+
+		// Cache result (limit cache size)
+		if (\count(self::$fileContentsCache) < 500) {
+			self::$fileContentsCache[$path] = $content;
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Optimized JSON decoding with caching and error handling.
+	 *
+	 * @param string $content JSON content.
+	 *
+	 * @return array<mixed>|false Decoded array or false on failure.
+	 */
+	private static function jsonDecodeCached(string $content)
+	{
+		// Use content hash as cache key to handle same content from different files
+		$cacheKey = \hash('xxh3', $content);
+
+		if (isset(self::$jsonDecodeCache[$cacheKey])) {
+			return self::$jsonDecodeCache[$cacheKey];
+		}
+
+		$decoded = \json_decode($content, true);
+
+		// Only cache successful decodes
+		if (\json_last_error() === \JSON_ERROR_NONE && is_array($decoded)) {
+			// Cache result (limit cache size)
+			if (\count(self::$jsonDecodeCache) < 500) {
+				self::$jsonDecodeCache[$cacheKey] = $decoded;
+			}
+			return $decoded;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Optimized file writing with error handling.
+	 *
+	 * @param string $path File path.
+	 * @param string $content Content to write.
+	 *
+	 * @return bool Success status.
+	 */
+	private static function writeFileOptimized(string $path, string $content): bool
+	{
+		// Ensure directory exists
+		$directory = \dirname($path);
+		if (!is_dir($directory)) {
+			if (!\mkdir($directory, 0755, true)) {
+				return false;
+			}
+		}
+
+		// Use LOCK_EX for atomic writes
+		$result = \file_put_contents($path, $content, \LOCK_EX);
+
+		return $result !== false;
 	}
 }
