@@ -32,52 +32,69 @@ trait AttributesTrait
 	 */
 	public static function checkAttr(string $key, array $attributes, array $manifest, bool $undefinedAllowed = false)
 	{
+		// Fast path: Check if the original key exists first (most common case)
+		if (isset($attributes[$key])) {
+			return $attributes[$key];
+		}
 
-		// Get the correct key for the check in the attributes object.
-		$newKey = self::getAttrKey($key, $attributes, $manifest);
+		// Cache manifest attributes to avoid repeated array access
+		$manifestAttrs = $manifest['attributes'] ?? null;
+		if ($manifestAttrs === null) {
+			// Handle missing attributes array case
+			$contextName = $manifest['blockName'] ?? $manifest['componentName'] ?? 'unknown';
+			$contextType = isset($manifest['blockName']) ? 'block' : 'component';
+			throw new Exception("{$key} key does not exist - missing attributes in {$contextName} {$contextType} manifest.");
+		}
 
-		// If key exists in the attributes object, just return that key value.
-		if (isset($attributes[$newKey])) {
+		// Only compute the transformed key if the original key wasn't found
+		$newKey = $key; // Default to original key
+
+		// Only call getAttrKey if we're in a component context and need prefix transformation
+		if (
+			!isset($manifest['blockName']) &&
+			!str_contains($key, 'wrapper') &&
+			!empty($attributes['prefix'])
+		) {
+			$newKey = str_replace(
+				Helpers::kebabToCamelCase($manifest['componentName'] ?? ''),
+				$attributes['prefix'],
+				$key
+			);
+		}
+
+		// Check transformed key if different from original
+		if ($newKey !== $key && isset($attributes[$newKey])) {
 			return $attributes[$newKey];
-		};
-
-		$manifestKey = $manifest['attributes'][$key] ?? null;
-
-		$tipOutput = '';
-
-		if (isset($manifest['components'])) {
-			$tipOutput = ' If you are using additional components, check if you used the correct block/component prefix in your attribute name.';
 		}
 
+		// Cache manifest key to avoid repeated access
+		$manifestKey = $manifestAttrs[$key] ?? null;
 		if ($manifestKey === null) {
-			if (isset($manifest['blockName']) || \array_key_exists('blockName', $manifest)) {
-				throw new Exception("{$key} key does not exist in the {$manifest['blockName']} block manifest. Please check your implementation.{$tipOutput} ");
-			} else {
-				throw new Exception("{$key} key does not exist in the {$manifest['componentName']} component manifest. Please check your implementation.{$tipOutput} ");
-			}
+			$contextName = $manifest['blockName'] ?? $manifest['componentName'] ?? 'unknown';
+			$contextType = isset($manifest['blockName']) ? 'block' : 'component';
+			$tipOutput = isset($manifest['components']) ?
+				' If you are using additional components, check if you used the correct block/component prefix in your attribute name.' : '';
+			throw new Exception("{$key} key does not exist in the {$contextName} {$contextType} manifest. Please check your implementation.{$tipOutput}");
 		}
 
-		// If undefinedAllowed is true and attribute is missing default just return null to be able to recognize non set variable.
-		if (empty($manifestKey['default']) && $undefinedAllowed) {
-			return;
+		// Early return for undefined allowed case
+		if ($undefinedAllowed && empty($manifestKey['default'])) {
+			return null;
 		}
 
-		$defaultType = $manifestKey['type'];
-
-		switch ($defaultType) {
-			case 'boolean':
-				$defaultValue = $manifestKey['default'] ?? false;
-				break;
-			case 'array':
-			case 'object':
-				$defaultValue = $manifestKey['default'] ?? [];
-				break;
-			default:
-				$defaultValue = $manifestKey['default'] ?? '';
-				break;
+		// Optimized default value assignment - avoid switch statement overhead
+		$default = $manifestKey['default'] ?? null;
+		if ($default !== null) {
+			return $default;
 		}
 
-		return $defaultValue;
+		// Fallback defaults based on type (only when no default is specified)
+		$type = $manifestKey['type'] ?? 'string';
+		return match ($type) {
+			'boolean' => false,
+			'array', 'object' => [],
+			default => ''
+		};
 	}
 
 	/**
