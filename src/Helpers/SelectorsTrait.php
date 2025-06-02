@@ -55,6 +55,40 @@ trait SelectorsTrait
 			}
 		}
 
+		return self::bem($block, $element, $modifier);
+	}
+
+	/**
+	 * Return a BEM class selector.
+	 *
+	 * @param string $block BEM Block selector.
+	 * @param string $element BEM Element selector.
+	 * @param string $modifier BEM Modifier selector.
+	 *
+	 * @return string
+	 */
+	public static function bem(string $block, string $element = '', string $modifier = ''): string
+	{
+		// Trim and cache block (required parameter)
+		$block = trim($block);
+
+		// Build selector efficiently - only trim when needed
+		$selector = $block;
+
+		if ($element !== '') {
+			$element = trim($element);
+			if ($element !== '') {
+				$selector .= "__{$element}";
+			}
+		}
+
+		if ($modifier !== '') {
+			$modifier = trim($modifier);
+			if ($modifier !== '') {
+				$selector .= "--{$modifier}";
+			}
+		}
+
 		return $selector;
 	}
 
@@ -155,7 +189,7 @@ trait SelectorsTrait
 	 *
 	 * @return string
 	 */
-	public static function classnames(array $classes): string
+	public static function clsx(array $classes): string
 	{
 		// Use array_filter with a more efficient callback and avoid trim
 		return implode(' ', array_filter($classes, function ($class) {

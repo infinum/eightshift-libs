@@ -1,8 +1,7 @@
 <?php
 
 /**
- * The object helper specific functionality inside classes.
- * Used in admin or theme side but only inside a class.
+ * The general helper specific functionality.
  *
  * @package EightshiftLibs\Helpers
  */
@@ -15,9 +14,9 @@ use DOMDocument;
 use EightshiftLibs\Exception\InvalidManifest;
 
 /**
- * Class Object Helper
+ * Class General Helper
  */
-trait ObjectHelperTrait
+trait GeneralTrait
 {
 	/**
 	 * Cache for case conversion results to avoid repeated processing.

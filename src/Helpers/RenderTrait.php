@@ -95,12 +95,10 @@ trait RenderTrait
 	 * Handle wrapper render logic.
 	 *
 	 * @param string $renderName Render name.
-	 * @param string $renderPrefixPath Prefix path.
-	 * @param string $componentName Component name.
 	 *
 	 * @return array{path: string, manifest: array<mixed>}
 	 */
-	private static function handleWrapperRender(string $renderName, string $renderPrefixPath, string $componentName): array
+	private static function handleWrapperRender(string $renderName): array
 	{
 		return [
 			'path' => Helpers::getProjectPaths('wrapper', ["{$renderName}.php"]),

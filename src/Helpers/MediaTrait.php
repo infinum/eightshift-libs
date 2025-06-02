@@ -60,7 +60,7 @@ trait MediaTrait
 	 *
 	 * @return string|null
 	 */
-	private static function getFileExtensionFast(string $path): ?string
+	private static function getFileExtension(string $path): ?string
 	{
 		// Fast path: find last dot and extract extension
 		$lastDot = \strrpos($path, '.');
@@ -127,7 +127,7 @@ trait MediaTrait
 		self::initializeMediaCaches($allowed);
 
 		// Fast extension extraction instead of wp_check_filetype
-		$ext = self::getFileExtensionFast($path);
+		$ext = self::getFileExtension($path);
 
 		if ($ext === null) {
 			self::$webpMediaCache[$cacheKey] = [];

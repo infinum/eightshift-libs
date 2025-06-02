@@ -31,6 +31,16 @@ class Helpers
 	use CssVariablesTrait;
 
 	/**
+	 * Render trait.
+	 */
+	use RenderTrait;
+
+	/**
+	 * Paths trait.
+	 */
+	use PathsTrait;
+
+	/**
 	 * Selectors trait.
 	 */
 	use SelectorsTrait;
@@ -41,9 +51,9 @@ class Helpers
 	use AttributesTrait;
 
 	/**
-	 * Generic object helper trait.
+	 * Generic general helper trait.
 	 */
-	use ObjectHelperTrait;
+	use GeneralTrait;
 
 	/**
 	 * Shortcode trait.
@@ -79,14 +89,4 @@ class Helpers
 	 * TailwindCSS trait.
 	 */
 	use TailwindTrait;
-
-	/**
-	 * Render trait.
-	 */
-	use RenderTrait;
-
-	/**
-	 * Paths trait.
-	 */
-	use PathsTrait;
 }
