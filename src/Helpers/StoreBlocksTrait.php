@@ -82,7 +82,7 @@ trait StoreBlocksTrait
 		}
 
 		// Get data from main cache
-		$data = self::getCache()[$type][$key] ?? [];
+		$data = Helpers::getCache()[$type][$key] ?? [];
 
 		// Cache the result (limit cache size to prevent memory bloat)
 		if (\count(self::$dataCache) < 50) {

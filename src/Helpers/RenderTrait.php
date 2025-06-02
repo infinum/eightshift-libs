@@ -80,14 +80,14 @@ trait RenderTrait
 	{
 		if ($componentName) {
 			return [
-				'path' => self::getProjectPaths('components', [$renderPrefixPath, "{$renderName}.php"]),
-				'manifest' => self::getComponent($componentName)
+				'path' => Helpers::getProjectPaths('components', [$renderPrefixPath, "{$renderName}.php"]),
+				'manifest' => Helpers::getComponent($componentName)
 			];
 		}
 
 		return [
-			'path' => self::getProjectPaths('components', [$renderPrefixPath, $renderName, "{$renderName}.php"]),
-			'manifest' => self::getComponent($renderName)
+			'path' => Helpers::getProjectPaths('components', [$renderPrefixPath, $renderName, "{$renderName}.php"]),
+			'manifest' => Helpers::getComponent($renderName)
 		];
 	}
 
@@ -103,8 +103,8 @@ trait RenderTrait
 	private static function handleWrapperRender(string $renderName, string $renderPrefixPath, string $componentName): array
 	{
 		return [
-			'path' => self::getProjectPaths('wrapper', ["{$renderName}.php"]),
-			'manifest' => self::getWrapper()
+			'path' => Helpers::getProjectPaths('wrapper', ["{$renderName}.php"]),
+			'manifest' => Helpers::getWrapper()
 		];
 	}
 
@@ -121,14 +121,14 @@ trait RenderTrait
 	{
 		if ($componentName) {
 			return [
-				'path' => self::getProjectPaths('blocks', [$renderPrefixPath, "{$renderName}.php"]),
-				'manifest' => self::getBlock($componentName)
+				'path' => Helpers::getProjectPaths('blocks', [$renderPrefixPath, "{$renderName}.php"]),
+				'manifest' => Helpers::getBlock($componentName)
 			];
 		}
 
 		return [
-			'path' => self::getProjectPaths('blocks', [$renderPrefixPath, $renderName, "{$renderName}.php"]),
-			'manifest' => self::getBlock($renderName)
+			'path' => Helpers::getProjectPaths('blocks', [$renderPrefixPath, $renderName, "{$renderName}.php"]),
+			'manifest' => Helpers::getBlock($renderName)
 		];
 	}
 
@@ -157,14 +157,11 @@ trait RenderTrait
 		// Initialize render caches and path caches
 		self::initializeRenderCaches();
 
-		// Initialize path caches if the method exists (for path operations)
-		if (\method_exists(self::class, 'initializePathCaches')) {
-			self::initializePathCaches();
-		}
+		Helpers::initializePathCaches();
 
 		// Set default path name if not provided (optimized with early return)
 		if (!$renderPathName) {
-			$renderPathName = self::getConfigUseLegacyComponents() ? 'components' : 'blocks';
+			$renderPathName = Helpers::getConfigUseLegacyComponents() ? 'components' : 'blocks';
 		}
 
 		// Fast path validation using pre-cached flipped array
@@ -186,7 +183,7 @@ trait RenderTrait
 			$manifest = $result['manifest'];
 		} else {
 			// Default case - optimized path building
-			$renderPath = self::getProjectPaths('', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
+			$renderPath = Helpers::getProjectPaths('', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
 			$manifest = [];
 		}
 
@@ -197,7 +194,7 @@ trait RenderTrait
 
 		// Optimize attribute merging with early return
 		if ($renderUseComponentDefaults && !empty($manifest)) {
-			$renderAttributes = self::getDefaultRenderAttributes($manifest, $renderAttributes);
+			$renderAttributes = Helpers::getDefaultRenderAttributes($manifest, $renderAttributes);
 		}
 
 		// Optimize output buffering and variable assignment
@@ -205,7 +202,7 @@ trait RenderTrait
 
 		// Pre-assign variables for performance (avoid repeated method calls)
 		$attributes = $renderAttributes;
-		$globalManifest = self::getSettings();
+		$globalManifest = Helpers::getSettings();
 
 		// Unset variables for memory optimization
 		unset($renderName, $renderAttributes, $renderPathName, $renderUseComponentDefaults, $renderPrefixPath, $componentName);

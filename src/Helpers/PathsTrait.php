@@ -34,7 +34,7 @@ trait PathsTrait
 	 *
 	 * @return void
 	 */
-	private static function initializePathCaches(): void
+	public static function initializePathCaches(): void
 	{
 		if (self::$basePaths === null) {
 			$root = \dirname(__FILE__, 6);

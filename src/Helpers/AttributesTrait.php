@@ -268,7 +268,7 @@ trait AttributesTrait
 	 *
 	 * @return array<string, mixed>
 	 */
-	private static function getDefaultRenderAttributes(array $manifest, array $attributes): array
+	public static function getDefaultRenderAttributes(array $manifest, array $attributes): array
 	{
 		// Cache manifest attributes to avoid repeated array access
 		$attrs = $manifest['attributes'] ?? null;
