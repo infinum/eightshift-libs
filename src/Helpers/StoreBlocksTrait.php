@@ -61,7 +61,7 @@ trait StoreBlocksTrait
 	];
 
 	// -----------------------------------------------------
-	// CORE DATA ACCESS
+	// CORE DATA ACCESS.
 	// -----------------------------------------------------
 
 	/**
@@ -76,15 +76,15 @@ trait StoreBlocksTrait
 	{
 		$cacheKey = "{$type}_{$key}";
 
-		// Return cached data if available
+		// Return cached data if available.
 		if (isset(self::$dataCache[$cacheKey])) {
 			return self::$dataCache[$cacheKey];
 		}
 
-		// Get data from main cache
+		// Get data from main cache.
 		$data = Helpers::getCache()[$type][$key] ?? [];
 
-		// Cache the result (limit cache size to prevent memory bloat)
+		// Cache the result (limit cache size to prevent memory bloat).
 		if (\count(self::$dataCache) < 50) {
 			self::$dataCache[$cacheKey] = $data;
 		}
@@ -102,28 +102,28 @@ trait StoreBlocksTrait
 	 */
 	private static function applyFiltersOptimized(string $filterName, array $data): array
 	{
-		// Check filter existence cache first
+		// Check filter existence cache first.
 		if (!isset(self::$filterExistsCache[$filterName])) {
 			self::$filterExistsCache[$filterName] = \has_filter($filterName);
 		}
 
-		// Early return if no filter exists
+		// Early return if no filter exists.
 		if (!self::$filterExistsCache[$filterName]) {
 			return $data;
 		}
 
-		// Generate cache key for filtered data
-		$cacheKey = $filterName . '_' . \hash('xxh3', \serialize($data));
+		// Generate cache key for filtered data.
+		$cacheKey = $filterName . '_' . \hash('xxh3', \serialize($data)); // phpcs:ignore
 
-		// Return cached filtered data if available
+		// Return cached filtered data if available.
 		if (isset(self::$appliedFiltersCache[$cacheKey])) {
 			return self::$appliedFiltersCache[$cacheKey];
 		}
 
-		// Apply filter and cache result
+		// Apply filter and cache result.
 		$filteredData = \apply_filters($filterName, $data, Helpers::getCacheName());
 
-		// Cache the result (limit cache size)
+		// Cache the result (limit cache size).
 		if (\count(self::$appliedFiltersCache) < 20) {
 			self::$appliedFiltersCache[$cacheKey] = $filteredData;
 		}
@@ -132,7 +132,7 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// BLOCKS
+	// BLOCKS.
 	// -----------------------------------------------------
 
 	/**
@@ -159,7 +159,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getBlock(string $block): array
 	{
-		// Early return for empty block name
+		// Early return for empty block name.
 		if ($block === '') {
 			throw InvalidBlock::missingItemException($block, 'block');
 		}
@@ -197,7 +197,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getComponent(string $component): array
 	{
-		// Early return for empty component name
+		// Early return for empty component name.
 		if ($component === '') {
 			throw InvalidBlock::missingItemException($component, 'component');
 		}
@@ -235,7 +235,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getVariation(string $variation): array
 	{
-		// Early return for empty variation name
+		// Early return for empty variation name.
 		if ($variation === '') {
 			throw InvalidBlock::missingItemException($variation, 'variation');
 		}
@@ -263,7 +263,7 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// SETTINGS CONFIG
+	// SETTINGS CONFIG.
 	// -----------------------------------------------------
 
 	/**
@@ -273,7 +273,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getConfig(): array
 	{
-		// Use static cache for config since it's accessed frequently
+		// Use static cache for config since it's accessed frequently.
 		static $configCache = null;
 
 		if ($configCache !== null) {
@@ -329,7 +329,7 @@ trait StoreBlocksTrait
 		$config = self::getConfig();
 		$styles = $config['outputCssGloballyAdditionalStyles'] ?? [];
 
-		// Ensure array return type
+		// Ensure array return type.
 		return \is_array($styles) ? $styles : [];
 	}
 
@@ -356,7 +356,7 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// SETTINGS
+	// SETTINGS.
 	// -----------------------------------------------------
 
 	/**
@@ -454,7 +454,7 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// STYLES
+	// STYLES.
 	// -----------------------------------------------------
 
 	/**
@@ -466,7 +466,7 @@ trait StoreBlocksTrait
 	 */
 	public static function setStyle(array $style): void
 	{
-		// Early return for empty style
+		// Early return for empty style.
 		if (empty($style)) {
 			return;
 		}
@@ -485,7 +485,7 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// ASSETS
+	// ASSETS.
 	// -----------------------------------------------------
 
 	/**
@@ -499,7 +499,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getAsset(string $asset): string
 	{
-		// Early return for empty asset name
+		// Early return for empty asset name.
 		if ($asset === '') {
 			throw InvalidBlock::missingItemException($asset, 'public asset');
 		}
@@ -514,7 +514,7 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// GEOLOCATION
+	// GEOLOCATION.
 	// -----------------------------------------------------
 
 	/**

@@ -62,7 +62,7 @@ trait MediaTrait
 	 */
 	private static function getFileExtension(string $path): ?string
 	{
-		// Fast path: find last dot and extract extension
+		// Fast path: find last dot and extract extension.
 		$lastDot = \strrpos($path, '.');
 		if ($lastDot === false) {
 			return null;
@@ -70,7 +70,7 @@ trait MediaTrait
 
 		$ext = \substr($path, $lastDot + 1);
 
-		// Quick validation - extensions should be 3-4 chars typically
+		// Quick validation - extensions should be 3-4 chars typically.
 		$extLength = \strlen($ext);
 		if ($extLength < 2 || $extLength > 5) {
 			return null;
@@ -89,7 +89,7 @@ trait MediaTrait
 	 */
 	private static function replaceExtensionToWebP(string $path, string $ext): string
 	{
-		// Find the last occurrence of the extension and replace it
+		// Find the last occurrence of the extension and replace it.
 		$extLen = \strlen($ext);
 		$lastPos = \strrpos($path, ".{$ext}");
 
@@ -97,7 +97,7 @@ trait MediaTrait
 			return \substr($path, 0, $lastPos) . '.webp';
 		}
 
-		// Fallback to simple replacement if position not found
+		// Fallback to simple replacement if position not found.
 		return \str_replace(".{$ext}", '.webp', $path);
 	}
 
@@ -112,21 +112,21 @@ trait MediaTrait
 	 */
 	public static function getWebPMedia(string $path, array $allowed = AbstractMedia::WEBP_ALLOWED_EXT): array
 	{
-		// Early return for empty path
+		// Early return for empty path.
 		if ($path === '') {
 			return [];
 		}
 
-		// Check cache first for repeated calls
+		// Check cache first for repeated calls.
 		$cacheKey = $path;
 		if (isset(self::$webpMediaCache[$cacheKey])) {
 			return self::$webpMediaCache[$cacheKey];
 		}
 
-		// Initialize caches
+		// Initialize caches.
 		self::initializeMediaCaches($allowed);
 
-		// Fast extension extraction instead of wp_check_filetype
+		// Fast extension extraction instead of wp_check_filetype.
 		$ext = self::getFileExtension($path);
 
 		if ($ext === null) {
@@ -134,7 +134,7 @@ trait MediaTrait
 			return [];
 		}
 
-		// Fast path for WebP files
+		// Fast path for WebP files.
 		if ($ext === 'webp') {
 			$result = [
 				'src' => $path,
@@ -144,13 +144,13 @@ trait MediaTrait
 			return $result;
 		}
 
-		// Fast O(1) lookup instead of in_array
+		// Fast O(1) lookup instead of in_array.
 		if (!isset(self::$allowedExtensionsFlipped[$ext])) {
 			self::$webpMediaCache[$cacheKey] = [];
 			return [];
 		}
 
-		// Optimized path replacement
+		// Optimized path replacement.
 		$newPath = self::replaceExtensionToWebP($path, $ext);
 
 		$result = [
@@ -158,7 +158,7 @@ trait MediaTrait
 			'type' => 'image/webp',
 		];
 
-		// Cache the result
+		// Cache the result.
 		self::$webpMediaCache[$cacheKey] = $result;
 		return $result;
 	}
@@ -190,12 +190,12 @@ trait MediaTrait
 	 */
 	public static function existsWebPMedia(int $attachmentId): bool
 	{
-		// Check cache first to avoid repeated filesystem operations
+		// Check cache first to avoid repeated filesystem operations.
 		if (isset(self::$webpExistsCache[$attachmentId])) {
 			return self::$webpExistsCache[$attachmentId];
 		}
 
-		// Early return for invalid attachment ID
+		// Early return for invalid attachment ID.
 		if ($attachmentId <= 0) {
 			self::$webpExistsCache[$attachmentId] = false;
 			return false;
@@ -203,7 +203,7 @@ trait MediaTrait
 
 		$filePath = \get_attached_file($attachmentId);
 
-		// Early return if no file path
+		// Early return if no file path.
 		if (!$filePath) {
 			self::$webpExistsCache[$attachmentId] = false;
 			return false;
@@ -211,16 +211,16 @@ trait MediaTrait
 
 		$image = self::getWebPMedia($filePath);
 
-		// Early return if WebP conversion not possible
+		// Early return if WebP conversion not possible.
 		if (empty($image) || !isset($image['src'])) {
 			self::$webpExistsCache[$attachmentId] = false;
 			return false;
 		}
 
-		// Check file existence
+		// Check file existence.
 		$exists = \file_exists($image['src']);
 
-		// Cache the result
+		// Cache the result.
 		self::$webpExistsCache[$attachmentId] = $exists;
 
 		return $exists;

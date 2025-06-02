@@ -99,7 +99,7 @@ trait CacheTrait
 		string $cacheName,
 		string $version
 	): void {
-		// Early return if already set with same values
+		// Early return if already set with same values.
 		if (
 			self::$cacheBuilder === $cacheBuilder &&
 			self::$cacheName === $cacheName &&
@@ -122,12 +122,12 @@ trait CacheTrait
 	 */
 	public static function setAllCache(): void
 	{
-		// Early return if cache already set
+		// Early return if cache already set.
 		if (!empty(self::$cache)) {
 			return;
 		}
 
-		// Check if we should use file caching
+		// Check if we should use file caching.
 		if (!self::shouldCache()) {
 			self::$cache = self::getAllManifests();
 			return;
@@ -135,7 +135,7 @@ trait CacheTrait
 
 		$cacheFile = Helpers::getEightshiftOutputPath('manifests.json');
 
-		// Optimized file existence check with caching
+		// Optimized file existence check with caching.
 		if (self::fileExistsCached($cacheFile)) {
 			$content = self::getFileContentsCached($cacheFile);
 
@@ -148,14 +148,14 @@ trait CacheTrait
 			}
 		}
 
-		// Generate cache data and write to file
+		// Generate cache data and write to file.
 		$data = self::getAllManifests();
 
-		// Optimized file writing with error handling
-		if (self::writeFileOptimized($cacheFile, \json_encode($data))) {
+		// Optimized file writing with error handling.
+		if (self::writeFileOptimized($cacheFile, \wp_json_encode($data))) {
 			self::$cache = $data;
 		} else {
-			// Fallback if file writing fails
+			// Fallback if file writing fails.
 			self::$cache = $data;
 		}
 	}
@@ -187,18 +187,18 @@ trait CacheTrait
 	 */
 	public static function shouldCache(): bool
 	{
-		// Return cached result if already computed
+		// Return cached result if already computed.
 		if (self::$shouldCacheResult !== null) {
 			return self::$shouldCacheResult;
 		}
 
-		// Check WP_CLI first (fastest check)
+		// Check WP_CLI first (fastest check).
 		if (\defined('WP_CLI') && \WP_CLI) {
 			self::$shouldCacheResult = false;
 			return false;
 		}
 
-		// Check WP_ENVIRONMENT_TYPE with proper constant checking
+		// Check WP_ENVIRONMENT_TYPE with proper constant checking.
 		if (\defined('WP_ENVIRONMENT_TYPE')) {
 			$envType = \constant('WP_ENVIRONMENT_TYPE');
 			if ($envType === 'development' || $envType === 'local') {
@@ -218,7 +218,7 @@ trait CacheTrait
 	 */
 	private static function getAllManifests(): array
 	{
-		// Early return for empty cache builder
+		// Early return for empty cache builder.
 		if (empty(self::$cacheBuilder)) {
 			return [];
 		}
@@ -267,35 +267,35 @@ trait CacheTrait
 	 */
 	private static function getItem(string $path, array $data, string $parent): array
 	{
-		// Early return for empty path
+		// Early return for empty path.
 		if ($path === '') {
 			return [];
 		}
 
-		// Optimized file existence check
+		// Optimized file existence check.
 		if (!self::fileExistsCached($path)) {
 			return [];
 		}
 
-		// Optimized file content reading
+		// Optimized file content reading.
 		$fileContent = self::getFileContentsCached($path);
 		if ($fileContent === false || $fileContent === '') {
 			return [];
 		}
 
-		// Optimized JSON decoding
+		// Optimized JSON decoding.
 		$fileDecoded = self::jsonDecodeCached($fileContent);
-		if ($fileDecoded === false || !is_array($fileDecoded)) {
+		if ($fileDecoded === false || !\is_array($fileDecoded)) {
 			return [];
 		}
 
-		// Process autoset configuration efficiently
+		// Process autoset configuration efficiently.
 		$fileDecoded = self::processAutoset($fileDecoded, $data);
 
-		// Handle specific parent cases efficiently
+		// Handle specific parent cases efficiently.
 		$fileDecoded = self::processParentSpecificLogic($fileDecoded, $parent);
 
-		// Validate required keys efficiently
+		// Validate required keys efficiently.
 		self::validateManifestKeys($fileDecoded, $data, $path);
 
 		return $fileDecoded;
@@ -330,7 +330,7 @@ trait CacheTrait
 				continue;
 			}
 
-			// Handle case with no parent
+			// Handle case with no parent.
 			if ($parent === '') {
 				if (!isset($fileDecoded[$key])) {
 					$fileDecoded[$key] = $value;
@@ -338,7 +338,7 @@ trait CacheTrait
 				continue;
 			}
 
-			// Handle case with parent
+			// Handle case with parent.
 			if (!isset($fileDecoded[$parent][$key])) {
 				if (!isset($fileDecoded[$parent])) {
 					$fileDecoded[$parent] = [];
@@ -415,7 +415,7 @@ trait CacheTrait
 	 */
 	private static function getItems(string $path, array $data, string $parent): array
 	{
-		// Early return for empty path
+		// Early return for empty path.
 		if ($path === '') {
 			return [];
 		}
@@ -423,12 +423,12 @@ trait CacheTrait
 		$output = [];
 		$id = $data['id'] ?? '';
 
-		// Early return if no ID specified
+		// Early return if no ID specified.
 		if ($id === '') {
 			return [];
 		}
 
-		// Use optimized glob with error handling
+		// Use optimized glob with error handling.
 		$globResults = \glob($path);
 		if ($globResults === false) {
 			return [];
@@ -466,7 +466,7 @@ trait CacheTrait
 	 */
 	private static function getFullPath(string $type, string $cacheType, string $name = ''): string
 	{
-		// Early return for empty inputs
+		// Early return for empty inputs.
 		if ($type === '' || $cacheType === '') {
 			return '';
 		}
@@ -479,7 +479,7 @@ trait CacheTrait
 		$path = $data['path'] ?? '';
 		$fileName = $data['fileName'] ?? 'manifest.json';
 
-		// Early return for empty path
+		// Early return for empty path.
 		if ($path === '') {
 			return '';
 		}
@@ -506,7 +506,7 @@ trait CacheTrait
 
 		$exists = \file_exists($path);
 
-		// Cache result (limit cache size to prevent memory bloat)
+		// Cache result (limit cache size to prevent memory bloat).
 		if (\count(self::$fileExistsCache) < 1000) {
 			self::$fileExistsCache[$path] = $exists;
 		}
@@ -527,10 +527,10 @@ trait CacheTrait
 			return self::$fileContentsCache[$path];
 		}
 
-		// Use file_get_contents for better performance than fopen/stream_get_contents
-		$content = \file_get_contents($path);
+		// Use file_get_contents for better performance than fopen/stream_get_contents.
+		$content = \file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
-		// Cache result (limit cache size)
+		// Cache result (limit cache size).
 		if (\count(self::$fileContentsCache) < 500) {
 			self::$fileContentsCache[$path] = $content;
 		}
@@ -547,7 +547,7 @@ trait CacheTrait
 	 */
 	private static function jsonDecodeCached(string $content)
 	{
-		// Use content hash as cache key to handle same content from different files
+		// Use content hash as cache key to handle same content from different files.
 		$cacheKey = \hash('xxh3', $content);
 
 		if (isset(self::$jsonDecodeCache[$cacheKey])) {
@@ -556,9 +556,9 @@ trait CacheTrait
 
 		$decoded = \json_decode($content, true);
 
-		// Only cache successful decodes
-		if (\json_last_error() === \JSON_ERROR_NONE && is_array($decoded)) {
-			// Cache result (limit cache size)
+		// Only cache successful decodes.
+		if (\json_last_error() === \JSON_ERROR_NONE && \is_array($decoded)) {
+			// Cache result (limit cache size).
 			if (\count(self::$jsonDecodeCache) < 500) {
 				self::$jsonDecodeCache[$cacheKey] = $decoded;
 			}
@@ -578,16 +578,16 @@ trait CacheTrait
 	 */
 	private static function writeFileOptimized(string $path, string $content): bool
 	{
-		// Ensure directory exists
+		// Ensure directory exists.
 		$directory = \dirname($path);
-		if (!is_dir($directory)) {
+		if (!\is_dir($directory)) {
 			if (!\mkdir($directory, 0755, true)) {
 				return false;
 			}
 		}
 
-		// Use LOCK_EX for atomic writes
-		$result = \file_put_contents($path, $content, \LOCK_EX);
+		// Use LOCK_EX for atomic writes.
+		$result = \file_put_contents($path, $content, \LOCK_EX); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 
 		return $result !== false;
 	}

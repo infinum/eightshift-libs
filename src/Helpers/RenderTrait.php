@@ -152,62 +152,62 @@ trait RenderTrait
 		string $renderPrefixPath = '',
 		string $renderContent = ''
 	): string {
-		// Initialize render caches and path caches
+		// Initialize render caches and path caches.
 		self::initializeRenderCaches();
 
 		Helpers::initializePathCaches();
 
-		// Set default path name if not provided (optimized with early return)
+		// Set default path name if not provided (optimized with early return).
 		if (!$renderPathName) {
 			$renderPathName = Helpers::getConfigUseLegacyComponents() ? 'components' : 'blocks';
 		}
 
-		// Fast path validation using pre-cached flipped array
+		// Fast path validation using pre-cached flipped array.
 		if (!isset(self::$allowedNamesFlipped[$renderPathName])) {
 			throw InvalidPath::wrongOrNotAllowedParentPathException($renderPathName, \implode(', ', self::PROJECT_RENDER_ALLOWED_NAMES));
 		}
 
-		// Extract component/block name once if needed (optimized extraction)
+		// Extract component/block name once if needed (optimized extraction).
 		$componentName = '';
 		if ($renderPrefixPath && ($renderPathName === 'components' || $renderPathName === 'blocks')) {
 			$separatorPos = \strpos($renderPrefixPath, \DIRECTORY_SEPARATOR);
 			$componentName = $separatorPos !== false ? \substr($renderPrefixPath, 0, $separatorPos) : $renderPrefixPath;
 		}
 
-		// Use optimized render handlers
+		// Use optimized render handlers.
 		if (isset(self::$renderHandlers[$renderPathName])) {
 			$result = self::$renderHandlers[$renderPathName]($renderName, $renderPrefixPath, $componentName);
 			$renderPath = $result['path'];
 			$manifest = $result['manifest'];
 		} else {
-			// Default case - optimized path building
+			// Default case - optimized path building.
 			$renderPath = Helpers::getProjectPaths('', [$renderPathName, $renderPrefixPath, "{$renderName}.php"]);
 			$manifest = [];
 		}
 
-		// Early file existence check to fail fast
+		// Early file existence check to fail fast.
 		if (!\file_exists($renderPath)) {
 			throw InvalidPath::missingFileException($renderPath);
 		}
 
-		// Optimize attribute merging with early return
+		// Optimize attribute merging with early return.
 		if ($renderUseComponentDefaults && !empty($manifest)) {
 			$renderAttributes = Helpers::getDefaultRenderAttributes($manifest, $renderAttributes);
 		}
 
-		// Optimize output buffering and variable assignment
+		// Optimize output buffering and variable assignment.
 		\ob_start();
 
-		// Pre-assign variables for performance (avoid repeated method calls)
+		// Pre-assign variables for performance (avoid repeated method calls).
 		$attributes = $renderAttributes;
 		$globalManifest = Helpers::getSettings();
 
-		// Unset variables for memory optimization
+		// Unset variables for memory optimization.
 		unset($renderName, $renderAttributes, $renderPathName, $renderUseComponentDefaults, $renderPrefixPath, $componentName);
 
 		include $renderPath;
 
-		// Clean up variables
+		// Clean up variables.
 		unset($attributes, $renderContent, $renderPath, $manifest, $globalManifest);
 
 		return \trim((string) \ob_get_clean());

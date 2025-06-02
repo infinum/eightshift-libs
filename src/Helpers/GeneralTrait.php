@@ -56,17 +56,17 @@ trait GeneralTrait
 	 */
 	public static function isValidXml(string $xml): bool
 	{
-		// Early return for empty or very short strings
+		// Early return for empty or very short strings.
 		if (\strlen($xml) < 5) {
 			return false;
 		}
 
-		// Quick check for basic XML structure
+		// Quick check for basic XML structure.
 		if (!\str_contains($xml, '<') || !\str_contains($xml, '>')) {
 			return false;
 		}
 
-		// Suppress errors during validation
+		// Suppress errors during validation.
 		$originalErrorState = \libxml_use_internal_errors(true);
 
 		try {
@@ -79,7 +79,7 @@ trait GeneralTrait
 
 			return $result && empty($errors);
 		} finally {
-			// Restore original settings
+			// Restore original settings.
 			\libxml_use_internal_errors($originalErrorState);
 			\libxml_clear_errors();
 		}
@@ -94,18 +94,18 @@ trait GeneralTrait
 	 */
 	public static function isJson(string $jsonString): bool
 	{
-		// Early return for empty strings
+		// Early return for empty strings.
 		if ($jsonString === '') {
 			return false;
 		}
 
-		// Quick structural check
+		// Quick structural check.
 		$trimmed = \trim($jsonString);
 		if ($trimmed === '' || ($trimmed[0] !== '{' && $trimmed[0] !== '[')) {
 			return false;
 		}
 
-		// Check cache for repeated validations
+		// Check cache for repeated validations.
 		$cacheKey = \hash('xxh3', $jsonString);
 		if (isset(self::$jsonValidationCache[$cacheKey])) {
 			return self::$jsonValidationCache[$cacheKey];
@@ -114,7 +114,7 @@ trait GeneralTrait
 		\json_decode($jsonString);
 		$isValid = (\json_last_error() === \JSON_ERROR_NONE);
 
-		// Cache the result (limit cache size to prevent memory bloat)
+		// Cache the result (limit cache size to prevent memory bloat).
 		if (\count(self::$jsonValidationCache) < 1000) {
 			self::$jsonValidationCache[$cacheKey] = $isValid;
 		}
@@ -131,13 +131,13 @@ trait GeneralTrait
 	 */
 	public static function flattenArray(array $arrayToFlatten): array
 	{
-		// Early return for empty arrays
+		// Early return for empty arrays.
 		if (empty($arrayToFlatten)) {
 			return [];
 		}
 
-		// Check cache for repeated flattening
-		$cacheKey = \serialize($arrayToFlatten);
+		// Check cache for repeated flattening.
+		$cacheKey = \serialize($arrayToFlatten);  // phpcs:ignore
 		if (isset(self::$flattenCache[$cacheKey])) {
 			return self::$flattenCache[$cacheKey];
 		}
@@ -145,7 +145,7 @@ trait GeneralTrait
 		$output = [];
 		$stack = [$arrayToFlatten];
 
-		// Iterative approach instead of recursive for better performance
+		// Iterative approach instead of recursive for better performance.
 		while (!empty($stack)) {
 			$current = \array_pop($stack);
 
@@ -158,7 +158,7 @@ trait GeneralTrait
 			}
 		}
 
-		// Cache result (limit cache size)
+		// Cache result (limit cache size).
 		if (\count(self::$flattenCache) < 100) {
 			self::$flattenCache[$cacheKey] = $output;
 		}
@@ -176,13 +176,13 @@ trait GeneralTrait
 	 */
 	public static function recursiveArrayFind(array $array, string $needle): array
 	{
-		// Early return for empty inputs
+		// Early return for empty inputs.
 		if (empty($array) || $needle === '') {
 			return [];
 		}
 
-		// Check cache for repeated searches
-		$cacheKey = \hash('xxh3', \serialize($array) . $needle);
+		// Check cache for repeated searches.
+		$cacheKey = \hash('xxh3', \serialize($array) . $needle); // phpcs:ignore
 		if (isset(self::$recursiveSearchCache[$cacheKey])) {
 			return self::$recursiveSearchCache[$cacheKey];
 		}
@@ -190,7 +190,7 @@ trait GeneralTrait
 		$aHitList = [];
 		$stack = [$array];
 
-		// Iterative approach for better performance and memory usage
+		// Iterative approach for better performance and memory usage.
 		while (!empty($stack)) {
 			$current = \array_pop($stack);
 
@@ -205,7 +205,7 @@ trait GeneralTrait
 			}
 		}
 
-		// Cache result (limit cache size)
+		// Cache result (limit cache size).
 		if (\count(self::$recursiveSearchCache) < 100) {
 			self::$recursiveSearchCache[$cacheKey] = $aHitList;
 		}
@@ -225,12 +225,12 @@ trait GeneralTrait
 	 */
 	public static function sanitizeArray(array $arrayToSanitize, string $sanitizationFunction): array
 	{
-		// Early return for empty array
+		// Early return for empty array.
 		if (empty($arrayToSanitize)) {
 			return [];
 		}
 
-		// Validate function exists
+		// Validate function exists.
 		if (!\function_exists($sanitizationFunction)) {
 			return $arrayToSanitize;
 		}
@@ -258,7 +258,7 @@ trait GeneralTrait
 	 */
 	public static function sortArrayByOrderKey(array $items): array
 	{
-		// Early return for arrays with less than 2 items
+		// Early return for arrays with less than 2 items.
 		if (\count($items) < 2) {
 			return $items;
 		}
@@ -284,22 +284,22 @@ trait GeneralTrait
 	 */
 	public static function camelToKebabCase(string $convert): string
 	{
-		// Early return for empty string
+		// Early return for empty string.
 		if ($convert === '') {
 			return '';
 		}
 
-		// Check cache first
+		// Check cache first.
 		$cacheKey = "camel_kebab_{$convert}";
 		if (isset(self::$caseConversionCache[$cacheKey])) {
 			return self::$caseConversionCache[$cacheKey];
 		}
 
-		// Optimized conversion using modern PHP functions
+		// Optimized conversion using modern PHP functions.
 		$output = \ltrim(\mb_strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $convert)), '-');
 		$output = \str_replace(['_', ' ', '--'], ['-', '-', '-'], $output);
 
-		// Cache result (limit cache size)
+		// Cache result (limit cache size).
 		if (\count(self::$caseConversionCache) < 500) {
 			self::$caseConversionCache[$cacheKey] = $output;
 		}
@@ -316,12 +316,12 @@ trait GeneralTrait
 	 */
 	public static function camelToSnakeCase(string $input): string
 	{
-		// Early return for empty string
+		// Early return for empty string.
 		if ($input === '') {
 			return '';
 		}
 
-		// Check cache first
+		// Check cache first.
 		$cacheKey = "camel_snake_{$input}";
 		if (isset(self::$caseConversionCache[$cacheKey])) {
 			return self::$caseConversionCache[$cacheKey];
@@ -329,7 +329,7 @@ trait GeneralTrait
 
 		$output = \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
 
-		// Cache result (limit cache size)
+		// Cache result (limit cache size).
 		if (\count(self::$caseConversionCache) < 500) {
 			self::$caseConversionCache[$cacheKey] = $output;
 		}
@@ -347,12 +347,12 @@ trait GeneralTrait
 	 */
 	public static function kebabToCamelCase(string $stringToConvert, string $separator = '-'): string
 	{
-		// Early return for empty string
+		// Early return for empty string.
 		if ($stringToConvert === '') {
 			return '';
 		}
 
-		// Check cache first
+		// Check cache first.
 		$cacheKey = "kebab_camel_{$stringToConvert}_{$separator}";
 		if (isset(self::$caseConversionCache[$cacheKey])) {
 			return self::$caseConversionCache[$cacheKey];
@@ -360,7 +360,7 @@ trait GeneralTrait
 
 		$output = \lcfirst(\str_replace($separator, '', \ucwords($stringToConvert, $separator)));
 
-		// Cache result (limit cache size)
+		// Cache result (limit cache size).
 		if (\count(self::$caseConversionCache) < 500) {
 			self::$caseConversionCache[$cacheKey] = $output;
 		}
@@ -377,12 +377,12 @@ trait GeneralTrait
 	 */
 	public static function kebabToSnakeCase(string $stringToConvert): string
 	{
-		// Early return for empty string
+		// Early return for empty string.
 		if ($stringToConvert === '') {
 			return '';
 		}
 
-		// Check cache first
+		// Check cache first.
 		$cacheKey = "kebab_snake_{$stringToConvert}";
 		if (isset(self::$caseConversionCache[$cacheKey])) {
 			return self::$caseConversionCache[$cacheKey];
@@ -390,7 +390,7 @@ trait GeneralTrait
 
 		$output = \str_replace('-', '_', $stringToConvert);
 
-		// Cache result (limit cache size)
+		// Cache result (limit cache size).
 		if (\count(self::$caseConversionCache) < 500) {
 			self::$caseConversionCache[$cacheKey] = $output;
 		}
@@ -408,17 +408,17 @@ trait GeneralTrait
 	 */
 	public static function arrayIsList(array $array): bool
 	{
-		// Early return for empty array
+		// Early return for empty array.
 		if (empty($array)) {
 			return true;
 		}
 
-		// Use PHP 8.1+ native function if available (much faster)
+		// Use PHP 8.1+ native function if available (much faster).
 		if (\function_exists('array_is_list')) {
 			return \array_is_list($array);
 		}
 
-		// Fallback optimized implementation
+		// Fallback optimized implementation.
 		return \array_keys($array) === \range(0, \count($array) - 1);
 	}
 
@@ -435,7 +435,7 @@ trait GeneralTrait
 	 */
 	public static function parseManifest(string $manifest): array
 	{
-		// Early return for empty manifest
+		// Early return for empty manifest.
 		if ($manifest === '') {
 			throw InvalidManifest::manifestStructureException(\esc_html__('Empty manifest provided.', 'eightshift-libs'));
 		}
@@ -443,12 +443,12 @@ trait GeneralTrait
 		$result = \json_decode($manifest, true);
 		$jsonError = \json_last_error();
 
-		// Fast path for no errors
+		// Fast path for no errors.
 		if ($jsonError === \JSON_ERROR_NONE) {
 			return $result;
 		}
 
-		// Optimized error handling using lookup table
+		// Optimized error handling using lookup table.
 		$errorMessages = [
 			\JSON_ERROR_DEPTH => \esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs'),
 			\JSON_ERROR_STATE_MISMATCH => \esc_html__('Invalid or malformed JSON.', 'eightshift-libs'),
@@ -472,12 +472,12 @@ trait GeneralTrait
 	 */
 	public static function getCurrentUrl(): string
 	{
-		// Cache server variables to avoid repeated sanitization
+		// Cache server variables to avoid repeated sanitization.
 		static $cachedUrl = null;
 		static $lastRequestTime = null;
-		$currentTime = $_SERVER['REQUEST_TIME'] ?? \time();
+		$currentTime = isset($_SERVER['REQUEST_TIME']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_TIME'])) : \time();
 
-		// Return cached URL if it's from the same request
+		// Return cached URL if it's from the same request.
 		if ($cachedUrl !== null && $lastRequestTime === $currentTime) {
 			return $cachedUrl;
 		}
@@ -486,7 +486,7 @@ trait GeneralTrait
 		$host = isset($_SERVER['HTTP_HOST']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_HOST'])) : '';
 		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : '';
 
-		// Optimized URL building
+		// Optimized URL building.
 		$protocol = $isHttps ? 'https' : 'http';
 		$cachedUrl = "{$protocol}://{$host}{$request}";
 		$lastRequestTime = $currentTime;
@@ -503,12 +503,12 @@ trait GeneralTrait
 	 */
 	public static function cleanUrlParams(string $url): string
 	{
-		// Early return for empty URL
+		// Early return for empty URL.
 		if ($url === '') {
 			return '';
 		}
 
-		// Fast path using strpos instead of preg_replace for simple cases
+		// Fast path using strpos instead of preg_replace for simple cases.
 		$queryPos = \strpos($url, '?');
 		if ($queryPos === false) {
 			return $url;

@@ -1,45 +1,97 @@
 name: Continuous Integration
 
 on:
-  push:
-    branches:
-      - "develop"
-      - "main"
-    paths-ignore:
-      - "**.md"
-  pull_request:
-    paths-ignore:
-      - "**.md"
+    push:
+        branches:
+            - "develop"
+            - "main"
+        paths-ignore:
+            - "**.md"
+    pull_request:
+        paths-ignore:
+            - "**.md"
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.ref }}"
-  cancel-in-progress: true
+    group: "${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
 
 jobs:
-  phpstan:
-    name: PHP static code analysis using PHP - ${{ matrix.php }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php: [ '8.3' ]
-    steps:
-      - name: PHP Static code analysis
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint/php-stan@main
-        with:
-          PHP_VERSION: ${{ matrix.php }}
-          PROJECT_PATH: ''
+    phpstan:
+        name: PHP static code analysis using PHP - ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: ["8.3"]
+        steps:
+            - name: PHP Static code analysis
+              uses: infinum/eightshift-deploy-actions-public/.github/actions/lint/php-stan@main
+              with:
+                  PHP_VERSION: ${{ matrix.php }}
+                  PROJECT_PATH: ""
 
-  phpcs:
-    name: PHP check coding standards using PHP - ${{ matrix.php }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php: [ '8.3' ]
-    steps:
-      - name: PHP check coding standards
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint/php-cs@main
-        with:
-          PHP_VERSION: ${{ matrix.php }}
-          PROJECT_PATH: ''
+    phpcs:
+        name: PHP check coding standards using PHP - ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: ["8.3"]
+        steps:
+            - name: PHP check coding standards
+              uses: infinum/eightshift-deploy-actions-public/.github/actions/lint/php-cs@main
+              with:
+                  PHP_VERSION: ${{ matrix.php }}
+                  PROJECT_PATH: ""
+
+    tests:
+        name: Run PHPUnit tests and generate coverage using PHP - ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: ["8.3"]
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  coverage: xdebug
+                  extensions: json, mbstring, xml, curl
+                  tools: composer:v2
+
+            - name: Get composer cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache composer dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-interaction --no-progress
+
+            - name: Run PHPUnit tests with coverage
+              run: ./vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-html=coverage-html
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v3
+              with:
+                  file: ./coverage.xml
+                  flags: unittests
+                  name: codecov-umbrella
+                  fail_ci_if_error: true
+
+            - name: Upload coverage HTML report
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                  name: coverage-report-php-${{ matrix.php }}
+                  path: coverage-html/
+                  retention-days: 30

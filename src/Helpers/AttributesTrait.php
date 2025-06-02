@@ -32,42 +32,42 @@ trait AttributesTrait
 	 */
 	public static function checkAttr(string $key, array $attributes, array $manifest, bool $undefinedAllowed = false)
 	{
-		// Fast path: Check if the original key exists first (most common case)
+		// Fast path: Check if the original key exists first (most common case).
 		if (isset($attributes[$key])) {
 			return $attributes[$key];
 		}
 
-		// Cache manifest attributes to avoid repeated array access
+		// Cache manifest attributes to avoid repeated array access.
 		$manifestAttrs = $manifest['attributes'] ?? null;
 		if ($manifestAttrs === null) {
-			// Handle missing attributes array case
+			// Handle missing attributes array case.
 			$contextName = $manifest['blockName'] ?? $manifest['componentName'] ?? 'unknown';
 			$contextType = isset($manifest['blockName']) ? 'block' : 'component';
 			throw new Exception("{$key} key does not exist - missing attributes in {$contextName} {$contextType} manifest.");
 		}
 
-		// Only compute the transformed key if the original key wasn't found
-		$newKey = $key; // Default to original key
+		// Only compute the transformed key if the original key wasn't found.
+		$newKey = $key; // Default to original key.
 
-		// Only call getAttrKey if we're in a component context and need prefix transformation
+		// Only call getAttrKey if we're in a component context and need prefix transformation.
 		if (
 			!isset($manifest['blockName']) &&
-			!str_contains($key, 'wrapper') &&
+			!\str_contains($key, 'wrapper') &&
 			!empty($attributes['prefix'])
 		) {
-			$newKey = str_replace(
+			$newKey = \str_replace(
 				Helpers::kebabToCamelCase($manifest['componentName'] ?? ''),
 				$attributes['prefix'],
 				$key
 			);
 		}
 
-		// Check transformed key if different from original
+		// Check transformed key if different from original.
 		if ($newKey !== $key && isset($attributes[$newKey])) {
 			return $attributes[$newKey];
 		}
 
-		// Cache manifest key to avoid repeated access
+		// Cache manifest key to avoid repeated access.
 		$manifestKey = $manifestAttrs[$key] ?? null;
 		if ($manifestKey === null) {
 			$contextName = $manifest['blockName'] ?? $manifest['componentName'] ?? 'unknown';
@@ -77,18 +77,18 @@ trait AttributesTrait
 			throw new Exception("{$key} key does not exist in the {$contextName} {$contextType} manifest. Please check your implementation.{$tipOutput}");
 		}
 
-		// Early return for undefined allowed case
+		// Early return for undefined allowed case.
 		if ($undefinedAllowed && empty($manifestKey['default'])) {
 			return null;
 		}
 
-		// Optimized default value assignment - avoid switch statement overhead
+		// Optimized default value assignment - avoid switch statement overhead.
 		$default = $manifestKey['default'] ?? null;
 		if ($default !== null) {
 			return $default;
 		}
 
-		// Fallback defaults based on type (only when no default is specified)
+		// Fallback defaults based on type (only when no default is specified).
 		$type = $manifestKey['type'] ?? 'string';
 		return match ($type) {
 			'boolean' => false,
@@ -112,7 +112,7 @@ trait AttributesTrait
 	 */
 	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest, bool $undefinedAllowed = false): array
 	{
-		// Cache responsive attributes to avoid repeated array access
+		// Cache responsive attributes to avoid repeated array access.
 		$responsiveAttrs = $manifest['responsiveAttributes'] ?? null;
 		if ($responsiveAttrs === null) {
 			$contextName = $manifest['blockName'] ?? $manifest['componentName'] ?? 'unknown';
@@ -120,16 +120,16 @@ trait AttributesTrait
 			throw new Exception("It looks like you are missing responsiveAttributes key in your {$contextName} {$contextType} manifest.");
 		}
 
-		// Cache the specific keyName array to avoid repeated lookups
+		// Cache the specific keyName array to avoid repeated lookups.
 		$keyConfig = $responsiveAttrs[$keyName] ?? null;
 		if ($keyConfig === null) {
 			throw new Exception("It looks like you are missing the {$keyName} key in your manifest responsiveAttributes array.");
 		}
 
-		// Pre-allocate output array with known size for better memory performance
+		// Pre-allocate output array with known size for better memory performance.
 		$output = [];
 
-		// Batch process all responsive attributes
+		// Batch process all responsive attributes.
 		foreach ($keyConfig as $key => $value) {
 			$output[$key] = self::checkAttr($value, $attributes, $manifest, $undefinedAllowed);
 		}
@@ -148,32 +148,32 @@ trait AttributesTrait
 	 */
 	public static function getAttrKey(string $key, array $attributes, array $manifest): string
 	{
-		// Fast path: Most common cases first
+		// Fast path: Most common cases first.
 
-		// Skip if using this helper in block (most common case)
+		// Skip if using this helper in block (most common case).
 		if (isset($manifest['blockName'])) {
 			return $key;
 		}
 
-		// Skip if attribute is wrapper (use modern PHP function)
-		if (str_contains($key, 'wrapper')) {
+		// Skip if attribute is wrapper (use modern PHP function).
+		if (\str_contains($key, 'wrapper')) {
 			return $key;
 		}
 
-		// Cache prefix to avoid repeated array access
+		// Cache prefix to avoid repeated array access.
 		$prefix = $attributes['prefix'] ?? '';
 		if ($prefix === '') {
 			return $key;
 		}
 
-		// Cache component name to avoid repeated array access
+		// Cache component name to avoid repeated array access.
 		$componentName = $manifest['componentName'] ?? '';
 		if ($componentName === '') {
 			return $key;
 		}
 
-		// Only compute kebab-to-camel conversion if we actually need it
-		return str_replace(Helpers::kebabToCamelCase($componentName), $prefix, $key);
+		// Only compute kebab-to-camel conversion if we actually need it.
+		return \str_replace(Helpers::kebabToCamelCase($componentName), $prefix, $key);
 	}
 
 	/**
@@ -187,7 +187,7 @@ trait AttributesTrait
 	 */
 	public static function props(string $newName, array $attributes, array $manual = []): array
 	{
-		// Cache flipped includes array for O(1) lookup instead of O(n) in_array
+		// Cache flipped includes array for O(1) lookup instead of O(n) in_array.
 		static $includesFlipped = null;
 		if ($includesFlipped === null) {
 			$includes = [
@@ -205,16 +205,16 @@ trait AttributesTrait
 				'uniqueWrapperId',
 				'parentClass'
 			];
-			$includesFlipped = array_flip($includes);
+			$includesFlipped = \array_flip($includes);
 		}
 
 		$output = [];
 
-		// Cache frequently accessed values
+		// Cache frequently accessed values.
 		$blockName = $attributes['blockName'] ?? '';
 		$attributesPrefix = $attributes['prefix'] ?? null;
 
-		// Compute prefix once and cache kebab-to-camel conversions
+		// Compute prefix once and cache kebab-to-camel conversions.
 		$newNameCamel = Helpers::kebabToCamelCase($newName);
 
 		if ($attributesPrefix === null) {
@@ -223,35 +223,35 @@ trait AttributesTrait
 			$prefix = $attributesPrefix;
 		}
 
-		// Set component prefix
-		$output['prefix'] = empty($prefix) ? $newNameCamel : $prefix . ucfirst($newNameCamel);
+		// Set component prefix.
+		$output['prefix'] = empty($prefix) ? $newNameCamel : $prefix . \ucfirst($newNameCamel);
 
-		// Cache prefix length for substr comparison optimization
-		$prefixLength = strlen($output['prefix']);
+		// Cache prefix length for substr comparison optimization.
+		$prefixLength = \strlen($output['prefix']);
 
-		// Process main attributes in a single optimized loop
+		// Process main attributes in a single optimized loop.
 		foreach ($attributes as $key => $value) {
-			// Fast lookup for includes using array key existence (O(1) vs O(n))
+			// Fast lookup for includes using array key existence (O(1) vs O(n)).
 			if (isset($includesFlipped[$key])) {
 				$output[$key] = $value;
-			} elseif ($prefixLength > 0 && str_starts_with($key, $output['prefix'])) {
-				// Use modern PHP str_starts_with for better performance
+			} elseif ($prefixLength > 0 && \str_starts_with($key, $output['prefix'])) {
+				// Use modern PHP str_starts_with for better performance.
 				$output[$key] = $value;
 			}
 		}
 
-		// Process manual attributes if present
+		// Process manual attributes if present.
 		if ($manual) {
-			// Cache the component name pattern for string replacement
-			$componentPattern = lcfirst($newNameCamel);
+			// Cache the component name pattern for string replacement.
+			$componentPattern = \lcfirst($newNameCamel);
 
 			foreach ($manual as $key => $value) {
 				if (isset($includesFlipped[$key])) {
 					$output[$key] = $value;
 				} else {
-					// Optimize string replacement - only do it once
-					$newKey = str_replace($componentPattern, '', $key);
-					$transformedKey = $output['prefix'] . ucfirst($newKey);
+					// Optimize string replacement - only do it once.
+					$newKey = \str_replace($componentPattern, '', $key);
+					$transformedKey = $output['prefix'] . \ucfirst($newKey);
 					$output[$transformedKey] = $value;
 				}
 			}
@@ -270,23 +270,23 @@ trait AttributesTrait
 	 */
 	public static function getDefaultRenderAttributes(array $manifest, array $attributes): array
 	{
-		// Cache manifest attributes to avoid repeated array access
+		// Cache manifest attributes to avoid repeated array access.
 		$attrs = $manifest['attributes'] ?? null;
 
-		// Early return for empty or invalid attributes
-		if ($attrs === null || !is_iterable($attrs) || empty($attrs)) {
+		// Early return for empty or invalid attributes.
+		if ($attrs === null || !\is_iterable($attrs) || empty($attrs)) {
 			return $attributes;
 		}
 
-		// Pre-allocate with estimated size for better memory performance
+		// Pre-allocate with estimated size for better memory performance.
 		$defaultAttributes = [];
 
-		// Determine if we need key transformation (only for components with prefix)
+		// Determine if we need key transformation (only for components with prefix).
 		$needsKeyTransformation = !isset($manifest['blockName']) &&
 			!empty($attributes['prefix']) &&
 			!empty($manifest['componentName']);
 
-		// Cache values for key transformation if needed
+		// Cache values for key transformation if needed.
 		$componentNameCamel = null;
 		$prefix = null;
 		if ($needsKeyTransformation) {
@@ -294,26 +294,26 @@ trait AttributesTrait
 			$prefix = $attributes['prefix'];
 		}
 
-		// Process attributes in a single optimized loop
+		// Process attributes in a single optimized loop.
 		foreach ($attrs as $itemKey => $itemValue) {
-			// Skip if no default value is set
+			// Skip if no default value is set.
 			if (!isset($itemValue['default'])) {
 				continue;
 			}
 
-			// Optimize key transformation
-			if ($needsKeyTransformation && !str_contains($itemKey, 'wrapper')) {
-				// Apply transformation directly without function call
-				$newKey = str_replace($componentNameCamel, $prefix, $itemKey);
+			// Optimize key transformation.
+			if ($needsKeyTransformation && !\str_contains($itemKey, 'wrapper')) {
+				// Apply transformation directly without function call.
+				$newKey = \str_replace($componentNameCamel, $prefix, $itemKey);
 			} else {
-				// Use original key (block context or no transformation needed)
+				// Use original key (block context or no transformation needed).
 				$newKey = $itemKey;
 			}
 
 			$defaultAttributes[$newKey] = $itemValue['default'];
 		}
 
-		// Merge defaults with provided attributes (provided attributes take precedence)
-		return array_merge($defaultAttributes, $attributes);
+		// Merge defaults with provided attributes (provided attributes take precedence).
+		return \array_merge($defaultAttributes, $attributes);
 	}
 }

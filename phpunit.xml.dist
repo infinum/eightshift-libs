@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+	bootstrap="tests/bootstrap.php"
+	colors="true"
+	cacheDirectory=".phpunit.cache"
+	executionOrder="depends,defects"
+	requireCoverageMetadata="false"
+	beStrictAboutCoverageMetadata="false"
+	beStrictAboutOutputDuringTests="true"
+	failOnRisky="true"
+	failOnWarning="true">
+	<testsuites>
+		<testsuite name="EightshiftLibs Test Suite">
+			<directory>tests</directory>
+		</testsuite>
+	</testsuites>
+	<source>
+		<include>
+			<directory suffix=".php">src</directory>
+		</include>
+		<exclude>
+			<directory>src/WpCli</directory>
+			<file>src/AdminMenus/AdminMenuExample.php</file>
+			<file>src/AdminMenus/AdminSubMenuExample.php</file>
+			<file>src/AdminMenus/AdminPatternsHeaderFooterMenu/AdminPatternsHeaderFooterMenuExample.php</file>
+			<file>src/AdminMenus/AdminThemeOptionsMenu/AdminThemeOptionsMenuExample.php</file>
+			<file>src/AdminMenus/AdminPatternsMenu/AdminPatternsMenuExample.php</file>
+			<file>src/Blocks/BlocksExample.php</file>
+			<file>src/BlockPatterns/BlockPatternExample.php</file>
+			<file>src/Cache/ManifestCacheExample.php</file>
+			<file>src/Cli/CliExample.php</file>
+			<file>src/Columns/Media/WebPMediaColumnExample.php</file>
+			<file>src/Config/ConfigPluginExample.php</file>
+			<file>src/Config/ConfigThemeExample.php</file>
+			<file>src/CustomPostType/PostTypeExample.php</file>
+			<file>src/CustomTaxonomy/TaxonomyExample.php</file>
+			<file>src/Enqueue/Admin/EnqueueAdminExample.php</file>
+			<file>src/Enqueue/Blocks/EnqueueBlocksExample.php</file>
+			<file>src/Enqueue/Theme/EnqueueThemeExample.php</file>
+			<file>src/Geolocation/GeolocationExample.php</file>
+			<file>src/I18n/I18nExample.php</file>
+			<file>src/Login/LoginExample.php</file>
+			<file>src/Main/MainExample.php</file>
+			<file>src/Media/MediaExample.php</file>
+			<file>src/Menu/MenuExample.php</file>
+			<file>src/ModifyAdminAppearance/ModifyAdminAppearanceExample.php</file>
+			<file>src/Optimization/OptimizationExample.php</file>
+			<file>src/Plugin/ActivateExample.php</file>
+			<file>src/Plugin/DeactivateExample.php</file>
+			<file>src/Plugin/PluginFactoryExample.php</file>
+			<file>src/Rest/Fields/FieldExample.php</file>
+			<file>src/Rest/Routes/RouteExample.php</file>
+			<file>src/Services/ServiceExample.php</file>
+			<file>src/ThemeOptions/ThemeOptionsExample.php</file>
+			<file>src/View/EscapedViewExample.php</file>
+		</exclude>
+	</source>
+	<coverage>
+		<report>
+			<html outputDirectory="coverage" lowUpperBound="50" highLowerBound="90"/>
+			<text outputFile="php://stdout" showUncoveredFiles="false"/>
+		</report>
+	</coverage>
+	<php>
+		<!-- <const name="WP_TESTS_PHPUNIT_POLYFILLS_PATH" value="vendor/yoast/phpunit-polyfills"/> -->
+		<env name="WP_TESTS_TABLE_PREFIX" value="wptests_"/>
+		<env name="WP_TESTS_DOMAIN" value="example.org"/>
+		<env name="WP_TESTS_EMAIL" value="admin@example.org"/>
+		<env name="WP_TESTS_TITLE" value="Test Blog"/>
+		<server name="SERVER_NAME" value="http://example.org"/>
+	</php>
+</phpunit> 

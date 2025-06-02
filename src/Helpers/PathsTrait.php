@@ -50,7 +50,6 @@ trait PathsTrait
 		}
 
 		if (self::$pathConfigs === null) {
-			$sep = \DIRECTORY_SEPARATOR;
 			$root = self::$basePaths['root'];
 			$projectRoot = self::$basePaths['projectRoot'];
 
@@ -82,25 +81,25 @@ trait PathsTrait
 	 */
 	public static function getProjectPaths(string $type = '', array|string $suffix = ''): string
 	{
-		// Initialize caches if needed
+		// Initialize caches if needed.
 		self::initializePathCaches();
 
-		// Convert string suffix to array efficiently
+		// Convert string suffix to array efficiently.
 		if (\is_string($suffix)) {
 			$suffix = $suffix !== '' ? [$suffix] : [];
 		}
 
-		// Fast path for empty type
+		// Fast path for empty type.
 		if ($type === '') {
 			return self::joinPaths(\array_merge([self::$basePaths['root']], $suffix));
 		}
 
-		// Use cached path configuration for fast lookup
+		// Use cached path configuration for fast lookup.
 		if (isset(self::$pathConfigs[$type])) {
 			return self::joinPaths(\array_merge(self::$pathConfigs[$type], $suffix));
 		}
 
-		// Fallback for unknown type (should rarely happen)
+		// Fallback for unknown type (should rarely happen).
 		return self::joinPaths(\array_merge([self::$basePaths['root']], $suffix));
 	}
 
@@ -113,14 +112,14 @@ trait PathsTrait
 	 */
 	public static function joinPaths(array $paths): string
 	{
-		// Early return for empty paths
+		// Early return for empty paths.
 		if (empty($paths)) {
 			return \DIRECTORY_SEPARATOR;
 		}
 
 		$sep = \DIRECTORY_SEPARATOR;
 
-		// Pre-allocate and filter in single pass for better performance
+		// Pre-allocate and filter in single pass for better performance.
 		$filteredPaths = [];
 		foreach ($paths as $path) {
 			$trimmed = \trim($path, $sep);
@@ -135,7 +134,7 @@ trait PathsTrait
 
 		$joinedPath = $sep . \implode($sep, $filteredPaths);
 
-		// Optimized extension check using string comparison
+		// Optimized extension check using string comparison.
 		$lastPart = $filteredPaths[\count($filteredPaths) - 1];
 		$hasExtension = \str_contains($lastPart, '.');
 
@@ -158,7 +157,7 @@ trait PathsTrait
 			$eightshiftPath = self::getProjectPaths('eightshift');
 
 			if (!\is_dir($eightshiftPath)) {
-				\mkdir($eightshiftPath, 0755, true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
+				\mkdir($eightshiftPath, 0755, true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir.
 			}
 		}
 

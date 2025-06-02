@@ -52,37 +52,37 @@ trait PostTrait
 	 */
 	public static function getReadingTime(int $postID, int $averageWordCount = 200): int
 	{
-		// Early return for invalid inputs
+		// Early return for invalid inputs.
 		if ($postID <= 0) {
 			return 0;
 		}
 
-		// Normalize average word count to prevent division by zero
+		// Normalize average word count to prevent division by zero.
 		if ($averageWordCount <= 0) {
 			$averageWordCount = 200;
 		}
 
-		// Create cache key for this specific calculation
+		// Create cache key for this specific calculation.
 		$cacheKey = "reading_time_{$postID}_{$averageWordCount}";
 
-		// Check cache first for exact same calculation
+		// Check cache first for exact same calculation.
 		if (isset(self::$readingTimeCache[$cacheKey])) {
 			return self::$readingTimeCache[$cacheKey];
 		}
 
-		// Get word count (cached separately for reuse with different average speeds)
+		// Get word count (cached separately for reuse with different average speeds).
 		$wordCount = self::getPostWordCount($postID);
 
-		// Early return if no content
+		// Early return if no content.
 		if ($wordCount === 0) {
 			self::$readingTimeCache[$cacheKey] = 0;
 			return 0;
 		}
 
-		// Calculate reading time
+		// Calculate reading time.
 		$readingTime = (int) \ceil($wordCount / $averageWordCount);
 
-		// Cache the result (limit cache size to prevent memory bloat)
+		// Cache the result (limit cache size to prevent memory bloat).
 		if (\count(self::$readingTimeCache) < 1000) {
 			self::$readingTimeCache[$cacheKey] = $readingTime;
 		}
@@ -99,23 +99,23 @@ trait PostTrait
 	 */
 	private static function getPostWordCount(int $postID): int
 	{
-		// Check content cache first
+		// Check content cache first.
 		$contentCacheKey = "content_{$postID}";
 		if (isset(self::$contentCache[$contentCacheKey])) {
 			return \str_word_count(self::$contentCache[$contentCacheKey]);
 		}
 
-		// Get raw post content with caching
+		// Get raw post content with caching.
 		$rawContent = self::getRawPostContent($postID);
 		if ($rawContent === '') {
 			self::$contentCache[$contentCacheKey] = '';
 			return 0;
 		}
 
-		// Parse and process content efficiently
+		// Parse and process content efficiently.
 		$cleanedContent = self::processPostContent($rawContent);
 
-		// Cache the cleaned content (limit cache size)
+		// Cache the cleaned content (limit cache size).
 		if (\count(self::$contentCache) < 500) {
 			self::$contentCache[$contentCacheKey] = $cleanedContent;
 		}
@@ -132,18 +132,18 @@ trait PostTrait
 	 */
 	private static function getRawPostContent(int $postID): string
 	{
-		// Check cache first
+		// Check cache first.
 		if (isset(self::$postContentCache[$postID])) {
 			return self::$postContentCache[$postID];
 		}
 
-		// Get content from WordPress
+		// Get content from WordPress.
 		$content = \get_the_content(null, false, $postID);
 		if (!$content) {
 			$content = '';
 		}
 
-		// Cache the result (limit cache size)
+		// Cache the result (limit cache size).
 		if (\count(self::$postContentCache) < 200) {
 			self::$postContentCache[$postID] = $content;
 		}
@@ -160,49 +160,49 @@ trait PostTrait
 	 */
 	private static function processPostContent(string $rawContent): string
 	{
-		// Early return for empty content
+		// Early return for empty content.
 		if ($rawContent === '') {
 			return '';
 		}
 
-		// Parse blocks once
+		// Parse blocks once.
 		$contentBlocks = \parse_blocks($rawContent);
 
-		// Early return if no blocks
+		// Early return if no blocks.
 		if (empty($contentBlocks)) {
 			return '';
 		}
 
-		// Process blocks in a single efficient pass
+		// Process blocks in a single efficient pass.
 		$cleanedParts = [];
 
 		foreach ($contentBlocks as $block) {
-			// Render block and apply filters
+			// Render block and apply filters.
 			$rendered = \render_block($block);
 			if (!$rendered) {
 				continue;
 			}
 
-			// Apply content filters and sanitize
+			// Apply content filters and sanitize.
 			$filtered = \wp_kses_post(\apply_filters('the_content', $rendered));
 			if ($filtered === '') {
 				continue;
 			}
 
-			// Strip all HTML tags
+			// Strip all HTML tags.
 			$stripped = \wp_strip_all_tags($filtered);
 			if ($stripped === '') {
 				continue;
 			}
 
-			// Clean whitespace efficiently
+			// Clean whitespace efficiently.
 			$cleaned = \preg_replace('/\s+/', ' ', \trim($stripped));
 			if ($cleaned !== '' && $cleaned !== ' ') {
 				$cleanedParts[] = $cleaned;
 			}
 		}
 
-		// Join all parts with single space
+		// Join all parts with single space.
 		return \implode(' ', $cleanedParts);
 	}
 }
