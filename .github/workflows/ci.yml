@@ -86,12 +86,5 @@ jobs:
                   file: ./coverage.xml
                   flags: unittests
                   name: codecov-umbrella
+                  token: ${{ secrets.CODECOV_TOKEN }}
                   fail_ci_if_error: true
-
-            - name: Upload coverage HTML report
-              uses: actions/upload-artifact@v3
-              if: always()
-              with:
-                  name: coverage-report-php-${{ matrix.php }}
-                  path: coverage-html/
-                  retention-days: 30
