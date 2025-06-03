@@ -1,0 +1,14 @@
+{
+	"redefinable-internals": [
+		"defined",
+		"constant",
+		"file_exists",
+		"file_get_contents",
+		"file_put_contents",
+		"is_dir",
+		"mkdir",
+		"dirname",
+		"glob"
+	],
+	"whitelist": ["WP_CLI", "WP_ENVIRONMENT_TYPE"]
+}
