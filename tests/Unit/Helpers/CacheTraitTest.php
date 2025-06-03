@@ -310,6 +310,694 @@ class CacheTraitTest extends BaseTestCase
 	}
 
 	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheWhenShouldNotCacheAndEmptyBuilder(): void
+	{
+		// Mock environment where caching is disabled and empty cache builder
+		Functions\when('defined')->alias(function ($const) {
+			return $const === 'WP_CLI';
+		});
+		Functions\when('constant')->alias(function ($const) {
+			if ($const === 'WP_CLI') {
+				return true;
+			}
+			return false;
+		});
+
+		$this->wrapper::setAllCache();
+
+		// Should set cache directly from getAllManifests (which returns empty with empty builder)
+		$result = $this->wrapper::getCache();
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheWhenShouldNotCacheWithData(): void
+	{
+		// Mock environment where caching is disabled
+		Functions\when('defined')->alias(function ($const) {
+			return $const === 'WP_CLI';
+		});
+		Functions\when('constant')->alias(function ($const) {
+			if ($const === 'WP_CLI') {
+				return true;
+			}
+			return false;
+		});
+
+		// Set up cache builder with data
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'component' => [
+					'path' => 'components',
+					'fileName' => 'manifest.json',
+					'multiple' => false
+				]
+			]
+		]);
+
+		$this->wrapper::setAllCache();
+
+		// Should set cache directly from getAllManifests
+		$result = $this->wrapper::getCache();
+		$this->assertIsArray($result);
+	}
+
+	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheWithCacheFileExists(): void
+	{
+		// Mock environment where caching is enabled
+		Functions\when('defined')->alias(function ($const) {
+			return in_array($const, ['WP_CLI', 'WP_ENVIRONMENT_TYPE']);
+		});
+		Functions\when('constant')->alias(function ($const) {
+			if ($const === 'WP_ENVIRONMENT_TYPE') {
+				return 'production';
+			}
+			if ($const === 'WP_CLI') {
+				return false;
+			}
+			return false;
+		});
+
+		// Mock cache file exists and has valid content
+		Functions\when('file_exists')->alias(function ($path) {
+			return strpos($path, 'manifests.json') !== false;
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) {
+			if (strpos($path, 'manifests.json') !== false) {
+				return '{"blocks": {"component": {"test": "data"}}}';
+			}
+			return false;
+		});
+
+		// Mock getEightshiftOutputPath
+		Functions\when('EightshiftLibs\Helpers\Helpers::getEightshiftOutputPath')
+			->alias(function ($fileName) {
+				return '/mock/output/' . $fileName;
+			});
+
+		$this->wrapper::setAllCache();
+
+		// Should load cache from file
+		$result = $this->wrapper::getCache();
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('blocks', $result);
+	}
+
+	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheWithCacheFileExistsButInvalidContent(): void
+	{
+		// Mock environment where caching is enabled
+		Functions\when('defined')->alias(function ($const) {
+			return in_array($const, ['WP_CLI', 'WP_ENVIRONMENT_TYPE']);
+		});
+		Functions\when('constant')->alias(function ($const) {
+			if ($const === 'WP_ENVIRONMENT_TYPE') {
+				return 'production';
+			}
+			if ($const === 'WP_CLI') {
+				return false;
+			}
+			return false;
+		});
+
+		// Mock cache file exists but has invalid JSON
+		Functions\when('file_exists')->alias(function ($path) {
+			return strpos($path, 'manifests.json') !== false;
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) {
+			if (strpos($path, 'manifests.json') !== false) {
+				return '{"invalid": json}';
+			}
+			return false;
+		});
+
+		// Mock writing to file
+		Functions\when('file_put_contents')->alias(function ($path, $content, $flags) {
+			return strlen($content);
+		});
+
+		// Mock getEightshiftOutputPath
+		Functions\when('EightshiftLibs\Helpers\Helpers::getEightshiftOutputPath')
+			->alias(function ($fileName) {
+				return '/mock/output/' . $fileName;
+			});
+
+		$this->wrapper::setAllCache();
+
+		// Should generate new cache data
+		$result = $this->wrapper::getCache();
+		$this->assertIsArray($result);
+	}
+
+	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheWithNoExistingCacheFile(): void
+	{
+		// Mock environment where caching is enabled
+		Functions\when('defined')->alias(function ($const) {
+			return in_array($const, ['WP_CLI', 'WP_ENVIRONMENT_TYPE']);
+		});
+		Functions\when('constant')->alias(function ($const) {
+			if ($const === 'WP_ENVIRONMENT_TYPE') {
+				return 'production';
+			}
+			if ($const === 'WP_CLI') {
+				return false;
+			}
+			return false;
+		});
+
+		// Mock cache file doesn't exist
+		Functions\when('file_exists')->alias(function ($path) {
+			return false;
+		});
+
+		// Mock successful file writing
+		Functions\when('file_put_contents')->alias(function ($path, $content, $flags) {
+			return strlen($content);
+		});
+
+		// Mock getEightshiftOutputPath
+		Functions\when('EightshiftLibs\Helpers\Helpers::getEightshiftOutputPath')
+			->alias(function ($fileName) {
+				return '/mock/output/' . $fileName;
+			});
+
+		$this->wrapper::setAllCache();
+
+		// Should generate and cache new data
+		$result = $this->wrapper::getCache();
+		$this->assertIsArray($result);
+	}
+
+	/**
+	 * @covers ::getAllManifests
+	 */
+	public function testGetAllManifestsWithEmptyCacheBuilder(): void
+	{
+		$result = $this->wrapper::getAllManifestsWrapper();
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getAllManifests
+	 */
+	public function testGetAllManifestsWithValidCacheBuilder(): void
+	{
+		// Set up cache builder
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'component' => [
+					'path' => 'components',
+					'fileName' => 'manifest.json',
+					'multiple' => false
+				]
+			]
+		]);
+
+		// Mock getFullPath to return empty (no files found)
+		$result = $this->wrapper::getAllManifestsWrapper();
+
+		// Should return empty structure since no actual files exist
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getAllManifests
+	 */
+	public function testGetAllManifestsWithEmptyItems(): void
+	{
+		// Set up cache builder with empty items
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [],
+			'settings' => [
+				'global' => [
+					'path' => 'settings',
+					'fileName' => 'manifest.json'
+				]
+			]
+		]);
+
+		$result = $this->wrapper::getAllManifestsWrapper();
+
+		// Should skip empty items and return empty since no files exist
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getAllManifests
+	 */
+	public function testGetAllManifestsWithMultipleFlag(): void
+	{
+		// Set up cache builder with multiple flag
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'component' => [
+					'path' => 'components',
+					'fileName' => 'manifest.json',
+					'multiple' => true,
+					'id' => 'blockName'
+				]
+			]
+		]);
+
+		$result = $this->wrapper::getAllManifestsWrapper();
+
+		// Should process as multiple items and return empty since no files exist
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getItem
+	 */
+	public function testGetItemWithEmptyPath(): void
+	{
+		$result = $this->wrapper::getItemWrapper('', [], 'blocks');
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getItem
+	 */
+	public function testGetItemWithNonExistentFile(): void
+	{
+		Functions\when('file_exists')->alias(function ($path) {
+			return false;
+		});
+
+		$result = $this->wrapper::getItemWrapper('/test/path.json', [], 'blocks');
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getItem
+	 */
+	public function testGetItemWithValidFile(): void
+	{
+		$filePath = '/test/valid.json';
+		$fileContent = '{"blockName": "test-block", "title": "Test Block"}';
+		$data = ['validation' => ['blockName']];
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) use ($filePath, $fileContent) {
+			return $path === $filePath ? $fileContent : false;
+		});
+
+		$result = $this->wrapper::getItemWrapper($filePath, $data, 'blocks');
+
+		$this->assertIsArray($result);
+		$this->assertEquals('test-block', $result['blockName']);
+		$this->assertEquals('Test Block', $result['title']);
+	}
+
+	/**
+	 * @covers ::getItem
+	 */
+	public function testGetItemWithEmptyFileContent(): void
+	{
+		$filePath = '/test/empty.json';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) use ($filePath) {
+			return $path === $filePath ? '' : false;
+		});
+
+		$result = $this->wrapper::getItemWrapper($filePath, [], 'blocks');
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getItem
+	 */
+	public function testGetItemWithInvalidJson(): void
+	{
+		$filePath = '/test/invalid.json';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) use ($filePath) {
+			return $path === $filePath ? '{"invalid": json}' : false;
+		});
+
+		$result = $this->wrapper::getItemWrapper($filePath, [], 'blocks');
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getItem
+	 */
+	public function testGetItemWithAutosetData(): void
+	{
+		$filePath = '/test/autoset.json';
+		$fileContent = '{"blockName": "test-block"}';
+		$data = [
+			'autoset' => [
+				[
+					'key' => 'category',
+					'value' => 'custom'
+				]
+			]
+		];
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) use ($filePath, $fileContent) {
+			return $path === $filePath ? $fileContent : false;
+		});
+
+		$result = $this->wrapper::getItemWrapper($filePath, $data, 'blocks');
+
+		$this->assertIsArray($result);
+		$this->assertEquals('test-block', $result['blockName']);
+		$this->assertEquals('custom', $result['category']);
+	}
+
+	/**
+	 * @covers ::getItems
+	 */
+	public function testGetItemsWithEmptyPath(): void
+	{
+		$result = $this->wrapper::getItemsWrapper('', ['id' => 'blockName'], 'blocks');
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getItems
+	 */
+	public function testGetItemsWithEmptyId(): void
+	{
+		$result = $this->wrapper::getItemsWrapper('/test/path/*', [], 'blocks');
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getItems
+	 */
+	public function testGetItemsWithFailedGlob(): void
+	{
+		Functions\when('glob')->alias(function ($path) {
+			return false;
+		});
+
+		$result = $this->wrapper::getItemsWrapper('/test/path/*', ['id' => 'blockName'], 'blocks');
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getItems
+	 */
+	public function testGetItemsWithValidFiles(): void
+	{
+		$data = ['id' => 'blockName'];
+
+		// Mock glob to return file paths
+		Functions\when('glob')->alias(function ($path) {
+			if (strpos($path, '/test/blocks/*') !== false) {
+				return ['/test/blocks/button.json', '/test/blocks/card.json'];
+			}
+			return false;
+		});
+
+		// Mock file operations for each file
+		Functions\when('file_exists')->alias(function ($path) {
+			return in_array($path, ['/test/blocks/button.json', '/test/blocks/card.json']);
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) {
+			if ($path === '/test/blocks/button.json') {
+				return '{"blockName": "button", "title": "Button"}';
+			}
+			if ($path === '/test/blocks/card.json') {
+				return '{"blockName": "card", "title": "Card"}';
+			}
+			return false;
+		});
+
+		$result = $this->wrapper::getItemsWrapper('/test/blocks/*', $data, 'blocks');
+
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('button', $result);
+		$this->assertArrayHasKey('card', $result);
+		$this->assertEquals('Button', $result['button']['title']);
+		$this->assertEquals('Card', $result['card']['title']);
+	}
+
+	/**
+	 * @covers ::getItems
+	 */
+	public function testGetItemsWithSomeInvalidFiles(): void
+	{
+		$data = ['id' => 'blockName'];
+
+		// Mock glob to return file paths
+		Functions\when('glob')->alias(function ($path) {
+			if (strpos($path, '/test/blocks/*') !== false) {
+				return ['/test/blocks/valid.json', '/test/blocks/invalid.json', '/test/blocks/empty.json'];
+			}
+			return false;
+		});
+
+		Functions\when('file_exists')->alias(function ($path) {
+			return in_array($path, ['/test/blocks/valid.json', '/test/blocks/invalid.json', '/test/blocks/empty.json']);
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) {
+			if ($path === '/test/blocks/valid.json') {
+				return '{"blockName": "valid", "title": "Valid Block"}';
+			}
+			if ($path === '/test/blocks/invalid.json') {
+				return '{"invalid": json}';
+			}
+			if ($path === '/test/blocks/empty.json') {
+				return '{}';
+			}
+			return false;
+		});
+
+		$result = $this->wrapper::getItemsWrapper('/test/blocks/*', $data, 'blocks');
+
+		// Should only include valid files with proper blockName
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('valid', $result);
+		$this->assertArrayNotHasKey('invalid', $result);
+		$this->assertArrayNotHasKey('empty', $result);
+	}
+
+	/**
+	 * @covers ::getItems
+	 */
+	public function testGetItemsWithFilesWithoutId(): void
+	{
+		$data = ['id' => 'blockName'];
+
+		Functions\when('glob')->alias(function ($path) {
+			if (strpos($path, '/test/blocks/*') !== false) {
+				return ['/test/blocks/no-id.json'];
+			}
+			return false;
+		});
+
+		Functions\when('file_exists')->alias(function ($path) {
+			return $path === '/test/blocks/no-id.json';
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) {
+			if ($path === '/test/blocks/no-id.json') {
+				return '{"title": "Block without blockName"}';
+			}
+			return false;
+		});
+
+		$result = $this->wrapper::getItemsWrapper('/test/blocks/*', $data, 'blocks');
+
+		// Should be empty since file doesn't have the required ID field
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * @covers ::getFullPath
+	 */
+	public function testGetFullPathWithEmptyInputs(): void
+	{
+		$result = $this->wrapper::getFullPathWrapper('', 'blocks');
+		$this->assertEquals('', $result);
+
+		$result = $this->wrapper::getFullPathWrapper('component', '');
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @covers ::getFullPath
+	 */
+	public function testGetFullPathWithValidInputsButNoCacheBuilder(): void
+	{
+		$result = $this->wrapper::getFullPathWrapper('component', 'blocks');
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @covers ::getFullPath
+	 */
+	public function testGetFullPathWithMissingTypeInCacheBuilder(): void
+	{
+		// Set up cache builder without the requested type
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'button' => [
+					'path' => 'blocks',
+					'fileName' => 'manifest.json'
+				]
+			]
+		]);
+
+		$result = $this->wrapper::getFullPathWrapper('component', 'blocks');
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @covers ::getFullPath
+	 */
+	public function testGetFullPathWithEmptyPath(): void
+	{
+		// Set up cache builder with empty path
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'component' => [
+					'path' => '',
+					'fileName' => 'manifest.json'
+				]
+			]
+		]);
+
+		$result = $this->wrapper::getFullPathWrapper('component', 'blocks');
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @covers ::getFullPath
+	 */
+	public function testGetFullPathWithValidDataNoName(): void
+	{
+		// Set up cache builder
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'component' => [
+					'path' => 'components',
+					'fileName' => 'manifest.json'
+				]
+			]
+		]);
+
+		// Mock the static helper call
+		Functions\when('EightshiftLibs\Helpers\Helpers::getProjectPaths')
+			->alias(function ($path, $files) {
+				return '/mock/project/' . $path . '/' . $files[0];
+			});
+
+		$result = $this->wrapper::getFullPathWrapper('component', 'blocks');
+		$this->assertEquals('/mock/project/components/manifest.json', $result);
+	}
+
+	/**
+	 * @covers ::getFullPath
+	 */
+	public function testGetFullPathWithValidDataAndName(): void
+	{
+		// Set up cache builder
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'component' => [
+					'path' => 'components',
+					'fileName' => 'manifest.json'
+				]
+			]
+		]);
+
+		// Mock the static helper call
+		Functions\when('EightshiftLibs\Helpers\Helpers::getProjectPaths')
+			->alias(function ($path, $files) {
+				return '/mock/project/' . $path . '/' . implode('/', $files);
+			});
+
+		$result = $this->wrapper::getFullPathWrapper('component', 'blocks', 'button');
+		$this->assertEquals('/mock/project/components/button/manifest.json', $result);
+	}
+
+	/**
+	 * @covers ::getFullPath
+	 */
+	public function testGetFullPathWithCustomFileName(): void
+	{
+		// Set up cache builder with custom fileName
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'settings' => [
+				'global' => [
+					'path' => 'settings',
+					'fileName' => 'settings.json'
+				]
+			]
+		]);
+
+		// Mock the static helper call
+		Functions\when('EightshiftLibs\Helpers\Helpers::getProjectPaths')
+			->alias(function ($path, $files) {
+				return '/mock/project/' . $path . '/' . $files[0];
+			});
+
+		$result = $this->wrapper::getFullPathWrapper('global', 'settings');
+		$this->assertEquals('/mock/project/settings/settings.json', $result);
+	}
+
+	/**
 	 * @covers ::fileExistsCached
 	 */
 	public function testFileExistsCachedWithExistingFile(): void
@@ -705,80 +1393,6 @@ class CacheTraitTest extends BaseTestCase
 		// Should not throw exception
 		$this->wrapper::validateManifestKeysWrapper($fileDecoded, $data, $path);
 		$this->addToAssertionCount(1);
-	}
-
-	/**
-	 * @covers ::getFullPath
-	 */
-	public function testGetFullPathWithEmptyInputs(): void
-	{
-		$result = $this->wrapper::getFullPathWrapper('', 'blocks');
-		$this->assertEquals('', $result);
-
-		$result = $this->wrapper::getFullPathWrapper('component', '');
-		$this->assertEquals('', $result);
-	}
-
-	/**
-	 * @covers ::getAllManifests
-	 */
-	public function testGetAllManifestsWithEmptyCacheBuilder(): void
-	{
-		$result = $this->wrapper::getAllManifestsWrapper();
-		$this->assertEquals([], $result);
-	}
-
-	/**
-	 * @covers ::getItem
-	 */
-	public function testGetItemWithEmptyPath(): void
-	{
-		$result = $this->wrapper::getItemWrapper('', [], 'blocks');
-		$this->assertEquals([], $result);
-	}
-
-	/**
-	 * @covers ::getItem
-	 */
-	public function testGetItemWithNonExistentFile(): void
-	{
-		Functions\when('file_exists')->alias(function ($path) {
-			return false;
-		});
-
-		$result = $this->wrapper::getItemWrapper('/test/path.json', [], 'blocks');
-		$this->assertEquals([], $result);
-	}
-
-	/**
-	 * @covers ::getItems
-	 */
-	public function testGetItemsWithEmptyPath(): void
-	{
-		$result = $this->wrapper::getItemsWrapper('', ['id' => 'blockName'], 'blocks');
-		$this->assertEquals([], $result);
-	}
-
-	/**
-	 * @covers ::getItems
-	 */
-	public function testGetItemsWithEmptyId(): void
-	{
-		$result = $this->wrapper::getItemsWrapper('/test/path/*', [], 'blocks');
-		$this->assertEquals([], $result);
-	}
-
-	/**
-	 * @covers ::getItems
-	 */
-	public function testGetItemsWithFailedGlob(): void
-	{
-		Functions\when('glob')->alias(function ($path) {
-			return false;
-		});
-
-		$result = $this->wrapper::getItemsWrapper('/test/path/*', ['id' => 'blockName'], 'blocks');
-		$this->assertEquals([], $result);
 	}
 
 	/**
