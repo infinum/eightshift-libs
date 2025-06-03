@@ -8,7 +8,12 @@
 		"is_dir",
 		"mkdir",
 		"dirname",
-		"glob"
+		"glob",
+		"function_exists",
+		"basename",
+		"ob_start",
+		"ob_get_clean",
+		"trim"
 	],
 	"whitelist": ["WP_CLI", "WP_ENVIRONMENT_TYPE"]
 }
