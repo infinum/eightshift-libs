@@ -302,7 +302,7 @@ trait CssVariablesTrait
 	 */
 	public static function getUnique(): string
 	{
-		return \bin2hex(\random_bytes(4));
+		return \wp_unique_id('es-');
 	}
 
 	/**

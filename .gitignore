@@ -6,3 +6,8 @@ composer.lock
 .vscode/settings.json
 .vscode/launch.json
 .idea/*
+
+# Testing
+coverage/
+.phpunit.cache/
+phpunit.xml

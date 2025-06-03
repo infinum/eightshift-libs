@@ -27,9 +27,30 @@ trait StoreBlocksTrait
 	public static $styles = [];
 
 	/**
+	 * Cache for frequently accessed data to avoid repeated processing.
+	 *
+	 * @var array<string, mixed>
+	 */
+	private static array $dataCache = [];
+
+	/**
+	 * Cache for filter existence checks to avoid repeated has_filter() calls.
+	 *
+	 * @var array<string, bool>
+	 */
+	private static array $filterExistsCache = [];
+
+	/**
+	 * Cache for applied filters to avoid repeated filter processing.
+	 *
+	 * @var array<string, mixed>
+	 */
+	private static array $appliedFiltersCache = [];
+
+	/**
 	 * Get filters.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, string>
 	 */
 	private const FILTERS_PREFIX = [
 		AbstractManifestCache::BLOCKS_KEY => 'es_boilerplate_get_blocks',
@@ -40,11 +61,82 @@ trait StoreBlocksTrait
 	];
 
 	// -----------------------------------------------------
-	// BLOCKS
+	// CORE DATA ACCESS.
 	// -----------------------------------------------------
 
 	/**
-	 * Get blocks details.
+	 * Get cached data with optimized access patterns.
+	 *
+	 * @param string $type Data type to retrieve.
+	 * @param string $key Data key to retrieve.
+	 *
+	 * @return array<mixed>
+	 */
+	private static function getCachedData(string $type, string $key): array
+	{
+		$cacheKey = "{$type}_{$key}";
+
+		// Return cached data if available.
+		if (isset(self::$dataCache[$cacheKey])) {
+			return self::$dataCache[$cacheKey];
+		}
+
+		// Get data from main cache.
+		$data = Helpers::getCache()[$type][$key] ?? [];
+
+		// Cache the result (limit cache size to prevent memory bloat).
+		if (\count(self::$dataCache) < 50) {
+			self::$dataCache[$cacheKey] = $data;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Apply filters with optimized caching.
+	 *
+	 * @param string $filterName Filter name to apply.
+	 * @param array<mixed> $data Data to filter.
+	 *
+	 * @return array<mixed>
+	 */
+	private static function applyFiltersOptimized(string $filterName, array $data): array
+	{
+		// Check filter existence cache first.
+		if (!isset(self::$filterExistsCache[$filterName])) {
+			self::$filterExistsCache[$filterName] = \has_filter($filterName);
+		}
+
+		// Early return if no filter exists.
+		if (!self::$filterExistsCache[$filterName]) {
+			return $data;
+		}
+
+		// Generate cache key for filtered data.
+		$cacheKey = $filterName . '_' . \hash('xxh3', \serialize($data)); // phpcs:ignore
+
+		// Return cached filtered data if available.
+		if (isset(self::$appliedFiltersCache[$cacheKey])) {
+			return self::$appliedFiltersCache[$cacheKey];
+		}
+
+		// Apply filter and cache result.
+		$filteredData = \apply_filters($filterName, $data, Helpers::getCacheName());
+
+		// Cache the result (limit cache size).
+		if (\count(self::$appliedFiltersCache) < 20) {
+			self::$appliedFiltersCache[$cacheKey] = $filteredData;
+		}
+
+		return $filteredData;
+	}
+
+	// -----------------------------------------------------
+	// BLOCKS.
+	// -----------------------------------------------------
+
+	/**
+	 * Get blocks details with optimized caching.
 	 *
 	 * @throws InvalidBlock If blocks are missing.
 	 *
@@ -52,19 +144,12 @@ trait StoreBlocksTrait
 	 */
 	public static function getBlocks(): array
 	{
-		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::BLOCKS_KEY] ?? [];
-
-		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::BLOCKS_KEY];
-
-		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
-		}
-
-		return $output;
+		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::BLOCKS_KEY);
+		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::BLOCKS_KEY], $data);
 	}
 
 	/**
-	 * Get block details.
+	 * Get block details with optimized error handling.
 	 *
 	 * @throws InvalidBlock If block is missing.
 	 *
@@ -74,17 +159,22 @@ trait StoreBlocksTrait
 	 */
 	public static function getBlock(string $block): array
 	{
-		$output = self::getBlocks()[$block] ?? [];
-
-		if (!$output) {
+		// Early return for empty block name.
+		if ($block === '') {
 			throw InvalidBlock::missingItemException($block, 'block');
 		}
 
-		return $output;
+		$blocks = self::getBlocks();
+
+		if (!isset($blocks[$block]) || empty($blocks[$block])) {
+			throw InvalidBlock::missingItemException($block, 'block');
+		}
+
+		return $blocks[$block];
 	}
 
 	/**
-	 * Get components details.
+	 * Get components details with optimized caching.
 	 *
 	 * @throws InvalidBlock If components are missing.
 	 *
@@ -92,19 +182,12 @@ trait StoreBlocksTrait
 	 */
 	public static function getComponents(): array
 	{
-		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::COMPONENTS_KEY] ?? [];
-
-		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::COMPONENTS_KEY];
-
-		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
-		}
-
-		return $output;
+		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::COMPONENTS_KEY);
+		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::COMPONENTS_KEY], $data);
 	}
 
 	/**
-	 * Get component details.
+	 * Get component details with optimized error handling.
 	 *
 	 * @param string $component Component name to get.
 	 *
@@ -114,17 +197,22 @@ trait StoreBlocksTrait
 	 */
 	public static function getComponent(string $component): array
 	{
-		$output = self::getComponents()[$component] ?? [];
-
-		if (!$output) {
+		// Early return for empty component name.
+		if ($component === '') {
 			throw InvalidBlock::missingItemException($component, 'component');
 		}
 
-		return $output;
+		$components = self::getComponents();
+
+		if (!isset($components[$component]) || empty($components[$component])) {
+			throw InvalidBlock::missingItemException($component, 'component');
+		}
+
+		return $components[$component];
 	}
 
 	/**
-	 * Get variations details.
+	 * Get variations details with optimized caching.
 	 *
 	 * @throws InvalidBlock If variations are missing.
 	 *
@@ -132,19 +220,12 @@ trait StoreBlocksTrait
 	 */
 	public static function getVariations(): array
 	{
-		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::VARIATIONS_KEY] ?? [];
-
-		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::VARIATIONS_KEY];
-
-		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
-		}
-
-		return $output;
+		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::VARIATIONS_KEY);
+		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::VARIATIONS_KEY], $data);
 	}
 
 	/**
-	 * Get variation details.
+	 * Get variation details with optimized error handling.
 	 *
 	 * @param string $variation Variation name to get.
 	 *
@@ -154,17 +235,22 @@ trait StoreBlocksTrait
 	 */
 	public static function getVariation(string $variation): array
 	{
-		$output = self::getVariations()[$variation] ?? [];
-
-		if (!$output) {
+		// Early return for empty variation name.
+		if ($variation === '') {
 			throw InvalidBlock::missingItemException($variation, 'variation');
 		}
 
-		return $output;
+		$variations = self::getVariations();
+
+		if (!isset($variations[$variation]) || empty($variations[$variation])) {
+			throw InvalidBlock::missingItemException($variation, 'variation');
+		}
+
+		return $variations[$variation];
 	}
 
 	/**
-	 * Get wrapper details.
+	 * Get wrapper details with optimized caching.
 	 *
 	 * @throws InvalidBlock If wrapper is missing.
 	 *
@@ -172,97 +258,109 @@ trait StoreBlocksTrait
 	 */
 	public static function getWrapper(): array
 	{
-		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::WRAPPER_KEY] ?? [];
-
-		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::WRAPPER_KEY];
-
-		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
-		}
-
-		return $output;
+		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::WRAPPER_KEY);
+		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::WRAPPER_KEY], $data);
 	}
 
 	// -----------------------------------------------------
-	// SETTINGS CONFIG
+	// SETTINGS CONFIG.
 	// -----------------------------------------------------
 
 	/**
-	 * Get all global config settings.
+	 * Get all global config settings with optimized caching.
 	 *
 	 * @return array<mixed>
 	 */
 	public static function getConfig(): array
 	{
-		return self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::SETTINGS_KEY]['config'] ?? [];
+		// Use static cache for config since it's accessed frequently.
+		static $configCache = null;
+
+		if ($configCache !== null) {
+			return $configCache;
+		}
+
+		$settings = self::getSettings();
+		$configCache = $settings['config'] ?? [];
+
+		return $configCache;
 	}
 
 	/**
-	 * Get global config value for output css globally.
+	 * Get global config value for output css globally with type safety.
 	 *
 	 * @return boolean
 	 */
 	public static function getConfigOutputCssGlobally(): bool
 	{
-		return (bool) self::getConfig()['outputCssGlobally'];
+		$config = self::getConfig();
+		return isset($config['outputCssGlobally']) ? (bool) $config['outputCssGlobally'] : false;
 	}
 
 	/**
-	 * Get global config value for output css optimize.
+	 * Get global config value for output css optimize with type safety.
 	 *
 	 * @return boolean
 	 */
 	public static function getConfigOutputCssOptimize(): bool
 	{
-		return (bool) self::getConfig()['outputCssOptimize'];
+		$config = self::getConfig();
+		return isset($config['outputCssOptimize']) ? (bool) $config['outputCssOptimize'] : false;
 	}
 
 	/**
-	 * Get global config value for output css selector name.
+	 * Get global config value for output css selector name with type safety.
 	 *
 	 * @return string
 	 */
 	public static function getConfigOutputCssSelectorName(): string
 	{
-		return self::getConfig()['outputCssSelectorName'];
+		$config = self::getConfig();
+		return $config['outputCssSelectorName'] ?? '';
 	}
 
 	/**
-	 * Get global config value for output css globally additional styles.
+	 * Get global config value for output css globally additional styles with type safety.
 	 *
 	 * @return array<string>
 	 */
 	public static function getConfigOutputCssGloballyAdditionalStyles(): array
 	{
-		return self::getConfig()['outputCssGloballyAdditionalStyles'];
+		$config = self::getConfig();
+		$styles = $config['outputCssGloballyAdditionalStyles'] ?? [];
+
+		// Ensure array return type.
+		return \is_array($styles) ? $styles : [];
 	}
 
 	/**
-	 * Get global config value for use wrapper.
+	 * Get global config value for use wrapper with type safety.
 	 *
 	 * @return bool
 	 */
 	public static function getConfigUseWrapper(): bool
 	{
-		return (bool) self::getConfig()['useWrapper'];
+		$config = self::getConfig();
+		return isset($config['useWrapper']) ? (bool) $config['useWrapper'] : false;
 	}
 
 	/**
-	 * Get global config value for use legacy components.
+	 * Get global config value for use legacy components with type safety.
 	 *
 	 * @return bool
 	 */
 	public static function getConfigUseLegacyComponents(): bool
 	{
-		return (bool) self::getConfig()['useLegacyComponents'];
+		$config = self::getConfig();
+		return isset($config['useLegacyComponents']) ? (bool) $config['useLegacyComponents'] : false;
 	}
 
 	// -----------------------------------------------------
-	// SETTINGS
+	// SETTINGS.
 	// -----------------------------------------------------
 
 	/**
-	 * Get global settings details.
+	 * Get global settings details with optimized caching and error handling.
 	 *
 	 * @throws InvalidBlock If settings are missing.
 	 *
@@ -270,67 +368,97 @@ trait StoreBlocksTrait
 	 */
 	public static function getSettings(): array
 	{
-		$output = self::getCache()[AbstractManifestCache::TYPE_BLOCKS][AbstractManifestCache::SETTINGS_KEY] ?? [];
+		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::SETTINGS_KEY);
 
-		if (!$output) {
+		if (empty($data)) {
 			throw InvalidBlock::missingItemException('project', 'global settings');
 		}
 
-		$filterName = self::FILTERS_PREFIX[AbstractManifestCache::SETTINGS_KEY];
-
-		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, Helpers::getCacheName());
-		}
-
-		return $output;
+		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::SETTINGS_KEY], $data);
 	}
 
 	/**
-	 * Get global settings details - namespace.
+	 * Get global settings details - namespace with optimized access.
 	 *
 	 * @return string
 	 */
 	public static function getSettingsNamespace(): string
 	{
-		return self::getSettings()['namespace'] ?? '';
+		static $namespaceCache = null;
+
+		if ($namespaceCache !== null) {
+			return $namespaceCache;
+		}
+
+		$settings = self::getSettings();
+		$namespaceCache = $settings['namespace'] ?? '';
+
+		return $namespaceCache;
 	}
 
 	/**
-	 * Get global settings details - global variables.
+	 * Get global settings details - global variables with optimized access.
 	 *
 	 * @return array<mixed>
 	 */
 	public static function getSettingsGlobalVariables(): array
 	{
-		return self::getSettings()['globalVariables'] ?? [];
+		static $globalVarsCache = null;
+
+		if ($globalVarsCache !== null) {
+			return $globalVarsCache;
+		}
+
+		$settings = self::getSettings();
+		$globalVarsCache = $settings['globalVariables'] ?? [];
+
+		return $globalVarsCache;
 	}
 
 	/**
-	 * Get global settings details - global variables breakpoints.
+	 * Get global settings details - global variables breakpoints with optimized access.
 	 *
 	 * @return array<mixed>
 	 */
 	public static function getSettingsGlobalVariablesBreakpoints(): array
 	{
-		return self::getSettingsGlobalVariables()['breakpoints'] ?? [];
+		static $breakpointsCache = null;
+
+		if ($breakpointsCache !== null) {
+			return $breakpointsCache;
+		}
+
+		$globalVars = self::getSettingsGlobalVariables();
+		$breakpointsCache = $globalVars['breakpoints'] ?? [];
+
+		return $breakpointsCache;
 	}
 
 	/**
-	 * Get global settings details - global variables colors.
+	 * Get global settings details - global variables colors with optimized access.
 	 *
 	 * @return array<mixed>
 	 */
 	public static function getSettingsGlobalVariablesColors(): array
 	{
-		return self::getSettingsGlobalVariables()['colors'] ?? [];
+		static $colorsCache = null;
+
+		if ($colorsCache !== null) {
+			return $colorsCache;
+		}
+
+		$globalVars = self::getSettingsGlobalVariables();
+		$colorsCache = $globalVars['colors'] ?? [];
+
+		return $colorsCache;
 	}
 
 	// -----------------------------------------------------
-	// STYLES
+	// STYLES.
 	// -----------------------------------------------------
 
 	/**
-	 * Set styles details.
+	 * Set styles details with validation.
 	 *
 	 * @param array<mixed> $style Style to store.
 	 *
@@ -338,6 +466,11 @@ trait StoreBlocksTrait
 	 */
 	public static function setStyle(array $style): void
 	{
+		// Early return for empty style.
+		if (empty($style)) {
+			return;
+		}
+
 		self::$styles[] = $style;
 	}
 
@@ -352,11 +485,11 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// ASSETS
+	// ASSETS.
 	// -----------------------------------------------------
 
 	/**
-	 * Get asset details.
+	 * Get asset details with optimized error handling.
 	 *
 	 * @param string $asset Asset name to get.
 	 *
@@ -366,21 +499,26 @@ trait StoreBlocksTrait
 	 */
 	public static function getAsset(string $asset): string
 	{
-		$output = self::getCache()[AbstractManifestCache::TYPE_ASSETS][AbstractManifestCache::ASSETS_KEY][$asset] ?? '';
-
-		if (!$output) {
+		// Early return for empty asset name.
+		if ($asset === '') {
 			throw InvalidBlock::missingItemException($asset, 'public asset');
 		}
 
-		return $output;
+		$assets = self::getCachedData(AbstractManifestCache::TYPE_ASSETS, AbstractManifestCache::ASSETS_KEY);
+
+		if (!isset($assets[$asset]) || $assets[$asset] === '') {
+			throw InvalidBlock::missingItemException($asset, 'public asset');
+		}
+
+		return (string) $assets[$asset];
 	}
 
 	// -----------------------------------------------------
-	// GEOLOCATION
+	// GEOLOCATION.
 	// -----------------------------------------------------
 
 	/**
-	 * Get geolocation countries details.
+	 * Get geolocation countries details with optimized error handling.
 	 *
 	 * @throws InvalidManifest If geolocation countries are missing.
 	 *
@@ -388,12 +526,12 @@ trait StoreBlocksTrait
 	 */
 	public static function getGeolocationCountries(): array
 	{
-		$output = self::getCache()[AbstractManifestCache::TYPE_GEOLOCATION][AbstractManifestCache::COUNTRIES_KEY] ?? [];
+		$data = self::getCachedData(AbstractManifestCache::TYPE_GEOLOCATION, AbstractManifestCache::COUNTRIES_KEY);
 
-		if (!$output) {
+		if (empty($data)) {
 			throw InvalidManifest::missingManifestException(AbstractManifestCache::TYPE_GEOLOCATION);
 		}
 
-		return $output;
+		return $data;
 	}
 }

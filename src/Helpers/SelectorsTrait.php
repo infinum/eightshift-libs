@@ -30,22 +30,46 @@ trait SelectorsTrait
 	 */
 	public static function selector($condition, string $block, string $element = '', string $modifier = ''): string
 	{
-		$fullModifier = '';
-		$fullElement = '';
+		// Early return for falsy conditions.
+		if (!$condition) {
+			return '';
+		}
 
-		$element = \trim($element);
-		$modifier = \trim($modifier);
+		return self::bem($block, $element, $modifier);
+	}
+
+	/**
+	 * Return a BEM class selector.
+	 *
+	 * @param string $block BEM Block selector.
+	 * @param string $element BEM Element selector.
+	 * @param string $modifier BEM Modifier selector.
+	 *
+	 * @return string
+	 */
+	public static function bem(string $block, string $element = '', string $modifier = ''): string
+	{
+		// Trim and cache block (required parameter).
 		$block = \trim($block);
 
-		if (!empty($element)) {
-			$fullElement = "__{$element}";
+		// Build selector efficiently - only trim when needed.
+		$selector = $block;
+
+		if ($element !== '') {
+			$element = \trim($element);
+			if ($element !== '') {
+				$selector .= "__{$element}";
+			}
 		}
 
-		if (!empty($modifier)) {
-			$fullModifier = "--{$modifier}";
+		if ($modifier !== '') {
+			$modifier = \trim($modifier);
+			if ($modifier !== '') {
+				$selector .= "--{$modifier}";
+			}
 		}
 
-		return $condition ? "{$block}{$fullElement}{$fullModifier}"  : '';
+		return $selector;
 	}
 
 	/**
@@ -66,24 +90,32 @@ trait SelectorsTrait
 	 */
 	public static function responsiveSelectors(array $items, string $selector, string $parent, bool $useModifier = true): string
 	{
+		// Early return for empty items.
+		if (empty($items)) {
+			return '';
+		}
+
+		// Pre-allocate output array for better memory performance.
 		$output = [];
 
+		// Cache selector pattern for performance.
+		$selectorBase = "{$parent}__{$selector}-";
+
 		foreach ($items as $itemKey => $itemValue) {
-			if (
-				(\is_string($itemValue) && $itemValue === '') ||
-				(\is_bool($itemValue) && $itemValue === false) ||
-				\is_array($itemValue)
-			) {
+			// Optimized type and value checking.
+			if ($itemValue === '' || $itemValue === false || \is_array($itemValue)) {
 				continue;
 			}
 
+			// Build selector efficiently.
 			if ($useModifier) {
-				$output[] = "{$parent}__{$selector}-{$itemKey}--{$itemValue}";
+				$output[] = $selectorBase . $itemKey . '--' . $itemValue;
 			} else {
-				$output[] = "{$parent}__{$selector}-{$itemKey}";
+				$output[] = $selectorBase . $itemKey;
 			}
 		}
 
+		// Use optimized classnames method.
 		return self::classnames($output);
 	}
 
@@ -99,36 +131,47 @@ trait SelectorsTrait
 	 */
 	public static function ensureString($variable): string
 	{
-		$output = '';
-
-		if (\is_array($variable)) {
-			$isAssociative = \array_values($variable) === $variable;
-
-			if ($isAssociative) {
-				$output = \implode('', $variable);
-			} else {
-				foreach ($variable as $key => $value) {
-					$output .= $key . '="' . \htmlspecialchars($value) . '" ';
-				}
-			}
-		} elseif (\is_string($variable)) {
-			$output = $variable;
-		} else {
-			throw ComponentException::throwNotStringOrArray($variable);
+		// Fast path for strings.
+		if (\is_string($variable)) {
+			return $variable;
 		}
 
-		return $output;
+		if (\is_array($variable)) {
+			// Early return for empty arrays.
+			if (empty($variable)) {
+				return '';
+			}
+
+			// Check if array is associative (has string keys or non-sequential numeric keys).
+			$isAssociative = !\array_is_list($variable);
+
+			if ($isAssociative) {
+				// For associative arrays, build data attributes.
+				$output = '';
+				foreach ($variable as $key => $value) {
+					$output .= $key . '="' . \htmlspecialchars((string)$value, \ENT_QUOTES, 'UTF-8') . '" ';
+				}
+				return \rtrim($output); // Remove trailing space.
+			} else {
+				// For sequential arrays, join elements.
+				return \implode('', $variable);
+			}
+		}
+
+		// Invalid type - throw exception.
+		throw ComponentException::throwNotStringOrArray($variable);
 	}
 
 	/**
 	 * Converts an array of classes into a string which can be echoed.
 	 *
-	 * @param array<string> $classes Array of classes.
+	 * @param array<string|null|false> $classes Array of classes.
 	 *
 	 * @return string
 	 */
-	public static function classnames(array $classes): string
+	public static function clsx(array $classes): string
 	{
-		return \trim(\implode(' ', \array_filter($classes)));
+		// Use array_filter with a more efficient callback and avoid trim.
+		return \implode(' ', \array_filter($classes, fn($class) => $class !== '' && $class !== null && $class !== false));
 	}
 }

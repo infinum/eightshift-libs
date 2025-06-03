@@ -54,4 +54,18 @@ trait DeprecatedTrait
 				throw InvalidManifest::missingManifestException($path);
 		}
 	}
+
+	/**
+	 * Converts an array of classes into a string which can be echoed.
+	 *
+	 * @param array<string> $classes Array of classes.
+	 *
+	 * @deprecated 10.0.0 This method is deprecated and will be removed in the next major release. Replace with clsx.
+	 *
+	 * @return string
+	 */
+	public static function classnames(array $classes): string
+	{
+		return Helpers::clsx($classes);
+	}
 }
