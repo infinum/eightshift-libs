@@ -134,11 +134,11 @@ trait PathsTrait
 
 		$joinedPath = $sep . \implode($sep, $filteredPaths);
 
-		// Optimized extension check using string comparison.
-		$lastPart = $filteredPaths[\count($filteredPaths) - 1];
-		$hasExtension = \str_contains($lastPart, '.');
+		if (\pathinfo($joinedPath, \PATHINFO_EXTENSION)) {
+			return $joinedPath;
+		}
 
-		return $hasExtension ? $joinedPath : $joinedPath . $sep;
+		return $joinedPath . $sep;
 	}
 
 	/**
