@@ -116,7 +116,7 @@ trait CacheTrait
 	}
 
 	/**
-	 * Set internal cache with optimized file operations.
+	 * Set internal cache with optimized file operations and transient support.
 	 *
 	 * @return void
 	 */
@@ -127,32 +127,50 @@ trait CacheTrait
 			return;
 		}
 
-		// Check if we should use file caching.
+		// Check if we should use caching at all.
 		if (!self::shouldCache()) {
 			self::$cache = self::getAllManifests();
 			return;
 		}
 
 		$cacheFile = Helpers::getEightshiftOutputPath('manifests.json');
+		$transientKey = self::getTransientKey();
+		$timestampKey = self::getTimestampKey();
 
-		// Optimized file existence check with caching.
+		// Try to load from transient first.
+		$transientData = \get_transient($transientKey);
+		if ($transientData !== false && \is_array($transientData)) {
+			// Validate timestamp consistency between transient and file.
+			if (self::isTransientValid($cacheFile, $timestampKey)) {
+				self::$cache = $transientData;
+				return;
+			}
+
+			// Timestamp mismatch, remove invalid transient.
+			\delete_transient($transientKey);
+		}
+
+		// Try to load from file cache.
 		if (self::fileExistsCached($cacheFile)) {
 			$content = self::getFileContentsCached($cacheFile);
 
 			if ($content !== false) {
 				$decoded = self::jsonDecodeCached($content);
 				if ($decoded !== false) {
+					// Update transient and timestamp from file cache.
+					self::updateTransientCache($transientKey, $timestampKey, $decoded, $cacheFile);
 					self::$cache = $decoded;
 					return;
 				}
 			}
 		}
 
-		// Generate cache data and write to file.
+		// Generate new cache data.
 		$data = self::getAllManifests();
 
-		// Optimized file writing with error handling.
+		// Write to file and update transient.
 		if (self::writeFileOptimized($cacheFile, \wp_json_encode($data))) {
+			self::updateTransientCache($transientKey, $timestampKey, $data, $cacheFile);
 			self::$cache = $data;
 		} else {
 			// Fallback if file writing fails.
@@ -209,6 +227,110 @@ trait CacheTrait
 
 		self::$shouldCacheResult = true;
 		return true;
+	}
+
+	/**
+	 * Get transient key for cache storage.
+	 *
+	 * @return string
+	 */
+	private static function getTransientKey(): string
+	{
+		return 'es_cache_' . \md5(self::$cacheName . self::$version);
+	}
+
+	/**
+	 * Get timestamp key for version tracking.
+	 *
+	 * @return string
+	 */
+	private static function getTimestampKey(): string
+	{
+		return 'es_cache_stamp_' . \md5(self::$cacheName . self::$version);
+	}
+
+	/**
+	 * Check if transient cache is valid by comparing timestamps.
+	 *
+	 * @param string $cacheFile Path to the cache file.
+	 * @param string $timestampKey Database option key for timestamp.
+	 *
+	 * @return bool Whether the transient is valid.
+	 */
+	private static function isTransientValid(string $cacheFile, string $timestampKey): bool
+	{
+		// Get stored timestamp from database.
+		$storedTimestamp = \get_option($timestampKey, 0);
+
+		// Get file modification time if file exists.
+		if (self::fileExistsCached($cacheFile)) {
+			$fileTimestamp = \filemtime($cacheFile);
+			if ($fileTimestamp === false) {
+				return false;
+			}
+
+			// Compare timestamps.
+			return (int) $storedTimestamp === (int) $fileTimestamp;
+		}
+
+		// If no file exists, transient is invalid.
+		return false;
+	}
+
+	/**
+	 * Update transient cache and timestamp in database.
+	 *
+	 * @param string $transientKey Transient key for cache storage.
+	 * @param string $timestampKey Database option key for timestamp.
+	 * @param array<mixed> $data Cache data to store.
+	 * @param string $cacheFile Path to the cache file.
+	 *
+	 * @return void
+	 */
+	private static function updateTransientCache(
+		string $transientKey,
+		string $timestampKey,
+		array $data,
+		string $cacheFile
+	): void {
+		// Store data in transient (expire after 24 hours as fallback).
+		\set_transient($transientKey, $data, \DAY_IN_SECONDS);
+
+		// Update timestamp in database.
+		if (self::fileExistsCached($cacheFile)) {
+			$fileTimestamp = \filemtime($cacheFile);
+			if ($fileTimestamp !== false) {
+				\update_option($timestampKey, (int) $fileTimestamp, false);
+			}
+		}
+	}
+
+	/**
+	 * Clear all cache layers (transient, file, and memory).
+	 *
+	 * @return void
+	 */
+	public static function clearAllCache(): void
+	{
+		// Clear memory cache.
+		self::$cache = [];
+		self::$fileExistsCache = [];
+		self::$fileContentsCache = [];
+		self::$jsonDecodeCache = [];
+
+		// Clear transient cache.
+		$transientKey = self::getTransientKey();
+		\delete_transient($transientKey);
+
+		// Clear timestamp option.
+		$timestampKey = self::getTimestampKey();
+		\delete_option($timestampKey);
+
+		// Remove cache file.
+		$cacheFile = Helpers::getEightshiftOutputPath('manifests.json');
+		if (self::fileExistsCached($cacheFile)) {
+			\unlink($cacheFile); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+		}
 	}
 
 	/**

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.7.0]
+
+### Changed
+
+- Manifest cache is not stored in internal cache and transients and auto invalidated if needed. This approach is more efficient and faster and is preparation if you have persistent cache storage.
+
 ## [10.6.1]
 
 ### Fixed
@@ -910,6 +916,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.7.0]: https://github.com/infinum/eightshift-libs/compare/10.6.1...10.7.0
 [10.6.1]: https://github.com/infinum/eightshift-libs/compare/10.6.0...10.6.1
 [10.6.0]: https://github.com/infinum/eightshift-libs/compare/10.5.1...10.6.0
 [10.5.1]: https://github.com/infinum/eightshift-libs/compare/10.5.0...10.5.1
