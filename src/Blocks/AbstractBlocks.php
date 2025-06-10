@@ -232,6 +232,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function registerBlock(array $blockDetails): void
 	{
+		if (($blockDetails['active'] ?? true) === false) {
+			return;
+		}
+
 		\register_block_type(
 			$blockDetails['blockFullName'],
 			[
