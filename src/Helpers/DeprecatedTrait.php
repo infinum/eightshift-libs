@@ -68,4 +68,44 @@ trait DeprecatedTrait
 	{
 		return Helpers::clsx($classes);
 	}
+
+	/**
+	 * Check if provided array is associative or sequential. Will return true if array is sequential.
+	 * Optimized to use modern PHP functions when available.
+	 *
+	 * @param array<string, mixed>|string[] $array Array to check.
+	 *
+	 * @deprecated Since 10.8.0. Use array_is_list instead.
+	 *
+	 * @return boolean
+	 */
+	public static function arrayIsList(array $array): bool
+	{
+		// Early return for empty array.
+		if (empty($array)) {
+			return true;
+		}
+
+		// Use PHP 8.1+ native function if available (much faster).
+		if (\function_exists('array_is_list')) {
+			return \array_is_list($array);
+		}
+
+		// Fallback optimized implementation.
+		return \array_keys($array) === \range(0, \count($array) - 1);
+	}
+
+	/**
+	 * Check if json is valid with caching for repeated checks.
+	 *
+	 * @param string $jsonString String to check.
+	 *
+	 * @deprecated Since 10.8.0. Use json_validate instead.
+	 *
+	 * @return bool
+	 */
+	public static function isJson(string $jsonString): bool
+	{
+		return \json_validate($jsonString);
+	}
 }

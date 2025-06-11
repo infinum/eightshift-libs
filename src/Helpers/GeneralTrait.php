@@ -12,40 +12,14 @@ namespace EightshiftLibs\Helpers;
 
 use DOMDocument;
 use EightshiftLibs\Exception\InvalidManifest;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Class General Helper
  */
 trait GeneralTrait
 {
-	/**
-	 * Cache for case conversion results to avoid repeated processing.
-	 *
-	 * @var array<string, string>
-	 */
-	private static array $caseConversionCache = [];
-
-	/**
-	 * Cache for flattened arrays to avoid repeated processing.
-	 *
-	 * @var array<string, array<mixed>>
-	 */
-	private static array $flattenCache = [];
-
-	/**
-	 * Cache for recursive array search results.
-	 *
-	 * @var array<string, array<int, string>>
-	 */
-	private static array $recursiveSearchCache = [];
-
-	/**
-	 * Cache for JSON validation results.
-	 *
-	 * @var array<string, bool>
-	 */
-	private static array $jsonValidationCache = [];
-
 	/**
 	 * Check if XML is valid file used for svg.
 	 * Optimized with early validation and error handling.
@@ -86,43 +60,6 @@ trait GeneralTrait
 	}
 
 	/**
-	 * Check if json is valid with caching for repeated checks.
-	 *
-	 * @param string $jsonString String to check.
-	 *
-	 * @return bool
-	 */
-	public static function isJson(string $jsonString): bool
-	{
-		// Early return for empty strings.
-		if ($jsonString === '') {
-			return false;
-		}
-
-		// Quick structural check.
-		$trimmed = \trim($jsonString);
-		if ($trimmed === '' || ($trimmed[0] !== '{' && $trimmed[0] !== '[')) {
-			return false;
-		}
-
-		// Check cache for repeated validations.
-		$cacheKey = \hash('xxh3', $jsonString);
-		if (isset(self::$jsonValidationCache[$cacheKey])) {
-			return self::$jsonValidationCache[$cacheKey];
-		}
-
-		\json_decode($jsonString);
-		$isValid = (\json_last_error() === \JSON_ERROR_NONE);
-
-		// Cache the result (limit cache size to prevent memory bloat).
-		if (\count(self::$jsonValidationCache) < 1000) {
-			self::$jsonValidationCache[$cacheKey] = $isValid;
-		}
-
-		return $isValid;
-	}
-
-	/**
 	 * Flatten multidimensional array with optimized performance.
 	 *
 	 * @param array<mixed> $arrayToFlatten Multidimensional array to flatten.
@@ -131,37 +68,16 @@ trait GeneralTrait
 	 */
 	public static function flattenArray(array $arrayToFlatten): array
 	{
-		// Early return for empty arrays.
-		if (empty($arrayToFlatten)) {
-			return [];
-		}
-
-		// Check cache for repeated flattening.
-		$cacheKey = \serialize($arrayToFlatten);  // phpcs:ignore
-		if (isset(self::$flattenCache[$cacheKey])) {
-			return self::$flattenCache[$cacheKey];
-		}
-
 		$output = [];
-		$stack = [$arrayToFlatten];
 
-		// Iterative approach instead of recursive for better performance.
-		while (!empty($stack)) {
-			$current = \array_pop($stack);
-
-			foreach ($current as $item) {
-				if (\is_array($item)) {
-					$stack[] = $item;
-				} elseif (!empty($item)) {
-					$output[] = $item;
+		\array_walk_recursive(
+			$arrayToFlatten,
+			function ($a) use (&$output) {
+				if (!empty($a)) {
+					$output[] = $a;
 				}
 			}
-		}
-
-		// Cache result (limit cache size).
-		if (\count(self::$flattenCache) < 100) {
-			self::$flattenCache[$cacheKey] = $output;
-		}
+		);
 
 		return $output;
 	}
@@ -176,38 +92,14 @@ trait GeneralTrait
 	 */
 	public static function recursiveArrayFind(array $array, string $needle): array
 	{
-		// Early return for empty inputs.
-		if (empty($array) || $needle === '') {
-			return [];
-		}
-
-		// Check cache for repeated searches.
-		$cacheKey = \hash('xxh3', \serialize($array) . $needle); // phpcs:ignore
-		if (isset(self::$recursiveSearchCache[$cacheKey])) {
-			return self::$recursiveSearchCache[$cacheKey];
-		}
-
+		$iterator  = new RecursiveArrayIterator($array);
+		$recursive = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
 		$aHitList = [];
-		$stack = [$array];
 
-		// Iterative approach for better performance and memory usage.
-		while (!empty($stack)) {
-			$current = \array_pop($stack);
-
-			foreach ($current as $key => $value) {
-				if ($key === $needle) {
-					$aHitList[] = $value;
-				}
-
-				if (\is_array($value)) {
-					$stack[] = $value;
-				}
+		foreach ($recursive as $key => $value) {
+			if ($key === $needle) {
+				\array_push($aHitList, $value);
 			}
-		}
-
-		// Cache result (limit cache size).
-		if (\count(self::$recursiveSearchCache) < 100) {
-			self::$recursiveSearchCache[$cacheKey] = $aHitList;
 		}
 
 		return $aHitList;
@@ -276,41 +168,28 @@ trait GeneralTrait
 	}
 
 	/**
-	 * Convert string from camel to kebab case with caching.
+	 * Convert string from camel to kebab case.
 	 *
-	 * @param string $convert String to convert.
+	 * @param string $input String to convert.
 	 *
 	 * @return string
 	 */
-	public static function camelToKebabCase(string $convert): string
+	public static function camelToKebabCase(string $input): string
 	{
 		// Early return for empty string.
-		if ($convert === '') {
+		if ($input === '') {
 			return '';
 		}
 
-		// Check cache first.
-		$cacheKey = "camel_kebab_{$convert}";
-		if (isset(self::$caseConversionCache[$cacheKey])) {
-			return self::$caseConversionCache[$cacheKey];
-		}
-
 		// Optimized conversion using modern PHP functions.
-		$output = \ltrim(\mb_strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $convert)), '-');
-		$output = \str_replace(['_', ' ', '--'], ['-', '-', '-'], $output);
-
-		// Cache result (limit cache size).
-		if (\count(self::$caseConversionCache) < 500) {
-			self::$caseConversionCache[$cacheKey] = $output;
-		}
-
-		return $output;
+		$output = \ltrim(\mb_strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
+		return \str_replace(['_', ' ', '--'], ['-', '-', '-'], $output);
 	}
 
 	/**
-	 * Convert camel to snake case with caching.
+	 * Convert camel to snake case.
 	 *
-	 * @param string $input Name to change.
+	 * @param string $input String to convert.
 	 *
 	 * @return string
 	 */
@@ -321,105 +200,37 @@ trait GeneralTrait
 			return '';
 		}
 
-		// Check cache first.
-		$cacheKey = "camel_snake_{$input}";
-		if (isset(self::$caseConversionCache[$cacheKey])) {
-			return self::$caseConversionCache[$cacheKey];
-		}
-
-		$output = \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
-
-		// Cache result (limit cache size).
-		if (\count(self::$caseConversionCache) < 500) {
-			self::$caseConversionCache[$cacheKey] = $output;
-		}
-
-		return $output;
+		return \strtolower((string) \preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
 	}
 
 	/**
-	 * Convert string from kebab to camel case with caching.
+	 * Convert string from kebab to camel case.
 	 *
-	 * @param string $stringToConvert    String to convert.
+	 * @param string $input String to convert.
 	 * @param string $separator Separator to use for conversion.
 	 *
 	 * @return string
 	 */
-	public static function kebabToCamelCase(string $stringToConvert, string $separator = '-'): string
+	public static function kebabToCamelCase(string $input, string $separator = '-'): string
 	{
-		// Early return for empty string.
-		if ($stringToConvert === '') {
-			return '';
-		}
-
-		// Check cache first.
-		$cacheKey = "kebab_camel_{$stringToConvert}_{$separator}";
-		if (isset(self::$caseConversionCache[$cacheKey])) {
-			return self::$caseConversionCache[$cacheKey];
-		}
-
-		$output = \lcfirst(\str_replace($separator, '', \ucwords($stringToConvert, $separator)));
-
-		// Cache result (limit cache size).
-		if (\count(self::$caseConversionCache) < 500) {
-			self::$caseConversionCache[$cacheKey] = $output;
-		}
-
-		return $output;
+		return \lcfirst(\str_replace($separator, '', \ucwords($input, $separator)));
 	}
 
 	/**
-	 * Convert string from kebab to snake case with caching.
+	 * Convert string from kebab to snake case.
 	 *
-	 * @param string $stringToConvert String to convert.
+	 * @param string $input String to convert.
 	 *
 	 * @return string
 	 */
-	public static function kebabToSnakeCase(string $stringToConvert): string
+	public static function kebabToSnakeCase(string $input): string
 	{
 		// Early return for empty string.
-		if ($stringToConvert === '') {
+		if ($input === '') {
 			return '';
 		}
 
-		// Check cache first.
-		$cacheKey = "kebab_snake_{$stringToConvert}";
-		if (isset(self::$caseConversionCache[$cacheKey])) {
-			return self::$caseConversionCache[$cacheKey];
-		}
-
-		$output = \str_replace('-', '_', $stringToConvert);
-
-		// Cache result (limit cache size).
-		if (\count(self::$caseConversionCache) < 500) {
-			self::$caseConversionCache[$cacheKey] = $output;
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Check if provided array is associative or sequential. Will return true if array is sequential.
-	 * Optimized to use modern PHP functions when available.
-	 *
-	 * @param array<string, mixed>|string[] $array Array to check.
-	 *
-	 * @return boolean
-	 */
-	public static function arrayIsList(array $array): bool
-	{
-		// Early return for empty array.
-		if (empty($array)) {
-			return true;
-		}
-
-		// Use PHP 8.1+ native function if available (much faster).
-		if (\function_exists('array_is_list')) {
-			return \array_is_list($array);
-		}
-
-		// Fallback optimized implementation.
-		return \array_keys($array) === \range(0, \count($array) - 1);
+		return \str_replace('-', '_', $input);
 	}
 
 	/**

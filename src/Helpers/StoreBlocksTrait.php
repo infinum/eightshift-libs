@@ -26,40 +26,6 @@ trait StoreBlocksTrait
 	 */
 	public static $styles = [];
 
-	/**
-	 * Cache for frequently accessed data to avoid repeated processing.
-	 *
-	 * @var array<string, mixed>
-	 */
-	private static array $dataCache = [];
-
-	/**
-	 * Cache for filter existence checks to avoid repeated has_filter() calls.
-	 *
-	 * @var array<string, bool>
-	 */
-	private static array $filterExistsCache = [];
-
-	/**
-	 * Cache for applied filters to avoid repeated filter processing.
-	 *
-	 * @var array<string, mixed>
-	 */
-	private static array $appliedFiltersCache = [];
-
-	/**
-	 * Get filters.
-	 *
-	 * @return array<string, string>
-	 */
-	private const FILTERS_PREFIX = [
-		AbstractManifestCache::BLOCKS_KEY => 'es_boilerplate_get_blocks',
-		AbstractManifestCache::COMPONENTS_KEY => 'es_boilerplate_get_components',
-		AbstractManifestCache::VARIATIONS_KEY => 'es_boilerplate_get_variations',
-		AbstractManifestCache::WRAPPER_KEY => 'es_boilerplate_get_wrapper',
-		AbstractManifestCache::SETTINGS_KEY => 'es_boilerplate_get_settings',
-	];
-
 	// -----------------------------------------------------
 	// CORE DATA ACCESS.
 	// -----------------------------------------------------
@@ -74,61 +40,7 @@ trait StoreBlocksTrait
 	 */
 	private static function getCachedData(string $type, string $key): array
 	{
-		$cacheKey = "{$type}_{$key}";
-
-		// Return cached data if available.
-		if (isset(self::$dataCache[$cacheKey])) {
-			return self::$dataCache[$cacheKey];
-		}
-
-		// Get data from main cache.
-		$data = Helpers::getCache()[$type][$key] ?? [];
-
-		// Cache the result (limit cache size to prevent memory bloat).
-		if (\count(self::$dataCache) < 50) {
-			self::$dataCache[$cacheKey] = $data;
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Apply filters with optimized caching.
-	 *
-	 * @param string $filterName Filter name to apply.
-	 * @param array<mixed> $data Data to filter.
-	 *
-	 * @return array<mixed>
-	 */
-	private static function applyFiltersOptimized(string $filterName, array $data): array
-	{
-		// Check filter existence cache first.
-		if (!isset(self::$filterExistsCache[$filterName])) {
-			self::$filterExistsCache[$filterName] = \has_filter($filterName);
-		}
-
-		// Early return if no filter exists.
-		if (!self::$filterExistsCache[$filterName]) {
-			return $data;
-		}
-
-		// Generate cache key for filtered data.
-		$cacheKey = $filterName . '_' . \hash('xxh3', \serialize($data)); // phpcs:ignore
-
-		// Return cached filtered data if available.
-		if (isset(self::$appliedFiltersCache[$cacheKey])) {
-			return self::$appliedFiltersCache[$cacheKey];
-		}
-
-		// Apply filter and cache result.
-		$filteredData = \apply_filters($filterName, $data, Helpers::getCacheName());
-
-		// Cache the result (limit cache size).
-		if (\count(self::$appliedFiltersCache) < 20) {
-			self::$appliedFiltersCache[$cacheKey] = $filteredData;
-		}
-
-		return $filteredData;
+		return Helpers::getCache()[$type][$key] ?? [];
 	}
 
 	// -----------------------------------------------------
@@ -144,8 +56,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getBlocks(): array
 	{
-		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::BLOCKS_KEY);
-		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::BLOCKS_KEY], $data);
+		return self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::BLOCKS_KEY);
 	}
 
 	/**
@@ -182,8 +93,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getComponents(): array
 	{
-		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::COMPONENTS_KEY);
-		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::COMPONENTS_KEY], $data);
+		return self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::COMPONENTS_KEY);
 	}
 
 	/**
@@ -220,8 +130,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getVariations(): array
 	{
-		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::VARIATIONS_KEY);
-		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::VARIATIONS_KEY], $data);
+		return self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::VARIATIONS_KEY);
 	}
 
 	/**
@@ -258,8 +167,7 @@ trait StoreBlocksTrait
 	 */
 	public static function getWrapper(): array
 	{
-		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::WRAPPER_KEY);
-		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::WRAPPER_KEY], $data);
+		return self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::WRAPPER_KEY);
 	}
 
 	// -----------------------------------------------------
@@ -374,7 +282,7 @@ trait StoreBlocksTrait
 			throw InvalidBlock::missingItemException('project', 'global settings');
 		}
 
-		return self::applyFiltersOptimized(self::FILTERS_PREFIX[AbstractManifestCache::SETTINGS_KEY], $data);
+		return $data;
 	}
 
 	/**

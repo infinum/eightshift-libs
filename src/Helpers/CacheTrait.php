@@ -12,6 +12,8 @@ namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftLibs\Exception\InvalidManifest;
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use Exception;
 
 /**
  * Class CacheTrait Helper
@@ -60,27 +62,6 @@ trait CacheTrait
 	 */
 	private static ?bool $shouldCacheResult = null;
 
-	/**
-	 * Cache for file existence checks to avoid repeated filesystem operations.
-	 *
-	 * @var array<string, bool>
-	 */
-	private static array $fileExistsCache = [];
-
-	/**
-	 * Cache for file contents to avoid repeated file reads.
-	 *
-	 * @var array<string, string|false>
-	 */
-	private static array $fileContentsCache = [];
-
-	/**
-	 * Cache for JSON decoded results to avoid repeated parsing.
-	 *
-	 * @var array<string, array<mixed>|false>
-	 */
-	private static array $jsonDecodeCache = [];
-
 	// -----------------------------------------------------
 	// CACHE
 	// -----------------------------------------------------
@@ -118,7 +99,11 @@ trait CacheTrait
 	/**
 	 * Set internal cache with optimized file operations and transient support.
 	 *
+	 * @throws Exception If cache file is not valid.
+	 *
 	 * @return void
+	 *
+	 * phpcs:ignore Squiz.Commenting.FunctionCommentThrowTag.Missing
 	 */
 	public static function setAllCache(): void
 	{
@@ -139,10 +124,16 @@ trait CacheTrait
 
 		// Try to load from transient first.
 		$transientData = \get_transient($transientKey);
-		if ($transientData !== false && \is_array($transientData)) {
+
+		if ($transientData !== false && \is_string($transientData)) {
 			// Validate timestamp consistency between transient and file.
 			if (self::isTransientValid($cacheFile, $timestampKey)) {
-				self::$cache = $transientData;
+				try {
+					self::$cache = self::parseManifest($transientData);
+				} catch (Exception $e) {
+					throw $e;
+				}
+
 				return;
 			}
 
@@ -151,16 +142,18 @@ trait CacheTrait
 		}
 
 		// Try to load from file cache.
-		if (self::fileExistsCached($cacheFile)) {
-			$content = self::getFileContentsCached($cacheFile);
+		if (\file_exists($cacheFile)) {
+			$content = \file_get_contents($cacheFile); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
 			if ($content !== false) {
-				$decoded = self::jsonDecodeCached($content);
-				if ($decoded !== false) {
+				try {
+					$decoded = self::parseManifest($content);
 					// Update transient and timestamp from file cache.
-					self::updateTransientCache($transientKey, $timestampKey, $decoded, $cacheFile);
+					self::updateTransientCache($transientKey, $timestampKey, $content, $cacheFile);
 					self::$cache = $decoded;
 					return;
+				} catch (Exception $e) {
+					throw $e;
 				}
 			}
 		}
@@ -170,7 +163,7 @@ trait CacheTrait
 
 		// Write to file and update transient.
 		if (self::writeFileOptimized($cacheFile, \wp_json_encode($data))) {
-			self::updateTransientCache($transientKey, $timestampKey, $data, $cacheFile);
+			self::updateTransientCache($transientKey, $timestampKey, \wp_json_encode($data), $cacheFile);
 			self::$cache = $data;
 		} else {
 			// Fallback if file writing fails.
@@ -236,7 +229,7 @@ trait CacheTrait
 	 */
 	private static function getTransientKey(): string
 	{
-		return 'es_cache_' . \md5(self::$cacheName . self::$version);
+		return 'es_cache_' . \md5(self::$cacheName);
 	}
 
 	/**
@@ -246,7 +239,7 @@ trait CacheTrait
 	 */
 	private static function getTimestampKey(): string
 	{
-		return 'es_cache_stamp_' . \md5(self::$cacheName . self::$version);
+		return 'es_cache_stamp_' . \md5(self::$cacheName);
 	}
 
 	/**
@@ -263,7 +256,7 @@ trait CacheTrait
 		$storedTimestamp = \get_option($timestampKey, 0);
 
 		// Get file modification time if file exists.
-		if (self::fileExistsCached($cacheFile)) {
+		if (\file_exists($cacheFile)) {
 			$fileTimestamp = \filemtime($cacheFile);
 			if ($fileTimestamp === false) {
 				return false;
@@ -282,7 +275,7 @@ trait CacheTrait
 	 *
 	 * @param string $transientKey Transient key for cache storage.
 	 * @param string $timestampKey Database option key for timestamp.
-	 * @param array<mixed> $data Cache data to store.
+	 * @param string $data Cache data to store.
 	 * @param string $cacheFile Path to the cache file.
 	 *
 	 * @return void
@@ -290,17 +283,17 @@ trait CacheTrait
 	private static function updateTransientCache(
 		string $transientKey,
 		string $timestampKey,
-		array $data,
+		string $data,
 		string $cacheFile
 	): void {
-		// Store data in transient (expire after 24 hours as fallback).
-		\set_transient($transientKey, $data, \DAY_IN_SECONDS);
+		// Store data in transient.
+		\set_transient($transientKey, $data, 0);
 
 		// Update timestamp in database.
-		if (self::fileExistsCached($cacheFile)) {
+		if (\file_exists($cacheFile)) {
 			$fileTimestamp = \filemtime($cacheFile);
 			if ($fileTimestamp !== false) {
-				\update_option($timestampKey, (int) $fileTimestamp, false);
+				\update_option($timestampKey, (int) $fileTimestamp, true);
 			}
 		}
 	}
@@ -314,9 +307,6 @@ trait CacheTrait
 	{
 		// Clear memory cache.
 		self::$cache = [];
-		self::$fileExistsCache = [];
-		self::$fileContentsCache = [];
-		self::$jsonDecodeCache = [];
 
 		// Clear transient cache.
 		$transientKey = self::getTransientKey();
@@ -328,7 +318,7 @@ trait CacheTrait
 
 		// Remove cache file.
 		$cacheFile = Helpers::getEightshiftOutputPath('manifests.json');
-		if (self::fileExistsCached($cacheFile)) {
+		if (\file_exists($cacheFile)) {
 			\unlink($cacheFile); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
 		}
 	}
@@ -395,19 +385,20 @@ trait CacheTrait
 		}
 
 		// Optimized file existence check.
-		if (!self::fileExistsCached($path)) {
+		if (!\file_exists($path)) {
 			return [];
 		}
 
 		// Optimized file content reading.
-		$fileContent = self::getFileContentsCached($path);
+		$fileContent = \file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if ($fileContent === false || $fileContent === '') {
 			return [];
 		}
 
 		// Optimized JSON decoding.
-		$fileDecoded = self::jsonDecodeCached($fileContent);
-		if ($fileDecoded === false || !\is_array($fileDecoded)) {
+		try {
+			$fileDecoded = self::parseManifest($fileContent);
+		} catch (Exception $e) {
 			return [];
 		}
 
@@ -611,83 +602,6 @@ trait CacheTrait
 		}
 
 		return Helpers::getProjectPaths($path, [$name, $fileName]);
-	}
-
-	/**
-	 * Optimized file existence check with caching.
-	 *
-	 * @param string $path File path.
-	 *
-	 * @return bool Whether file exists.
-	 */
-	private static function fileExistsCached(string $path): bool
-	{
-		if (isset(self::$fileExistsCache[$path])) {
-			return self::$fileExistsCache[$path];
-		}
-
-		$exists = \file_exists($path);
-
-		// Cache result (limit cache size to prevent memory bloat).
-		if (\count(self::$fileExistsCache) < 1000) {
-			self::$fileExistsCache[$path] = $exists;
-		}
-
-		return $exists;
-	}
-
-	/**
-	 * Optimized file content reading with caching and error handling.
-	 *
-	 * @param string $path File path.
-	 *
-	 * @return string|false File contents or false on failure.
-	 */
-	private static function getFileContentsCached(string $path)
-	{
-		if (isset(self::$fileContentsCache[$path])) {
-			return self::$fileContentsCache[$path];
-		}
-
-		// Use file_get_contents for better performance than fopen/stream_get_contents.
-		$content = \file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-
-		// Cache result (limit cache size).
-		if (\count(self::$fileContentsCache) < 500) {
-			self::$fileContentsCache[$path] = $content;
-		}
-
-		return $content;
-	}
-
-	/**
-	 * Optimized JSON decoding with caching and error handling.
-	 *
-	 * @param string $content JSON content.
-	 *
-	 * @return array<mixed>|false Decoded array or false on failure.
-	 */
-	private static function jsonDecodeCached(string $content)
-	{
-		// Use content hash as cache key to handle same content from different files.
-		$cacheKey = \hash('xxh3', $content);
-
-		if (isset(self::$jsonDecodeCache[$cacheKey])) {
-			return self::$jsonDecodeCache[$cacheKey];
-		}
-
-		$decoded = \json_decode($content, true);
-
-		// Only cache successful decodes.
-		if (\json_last_error() === \JSON_ERROR_NONE && \is_array($decoded)) {
-			// Cache result (limit cache size).
-			if (\count(self::$jsonDecodeCache) < 500) {
-				self::$jsonDecodeCache[$cacheKey] = $decoded;
-			}
-			return $decoded;
-		}
-
-		return false;
 	}
 
 	/**

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.8.0]
+
+### Changed
+
+- Refactored all internal helpers for optimized performance
+
 ## [10.7.1]
 
 ### Added
@@ -922,6 +928,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.8.0]: https://github.com/infinum/eightshift-libs/compare/10.7.1...10.8.0
 [10.7.1]: https://github.com/infinum/eightshift-libs/compare/10.7.0...10.7.1
 [10.7.0]: https://github.com/infinum/eightshift-libs/compare/10.6.1...10.7.0
 [10.6.1]: https://github.com/infinum/eightshift-libs/compare/10.6.0...10.6.1
