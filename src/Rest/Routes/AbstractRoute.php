@@ -197,20 +197,7 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	 */
 	protected function prepareSimpleApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
-		// Get params.
-		$params = $this->getRequestParams($request, $type);
-
-		// Bailout if there are no params.
-		if (!$params) {
-			return [];
-		}
-
-		return \array_map(
-			static function ($item) {
-				return \sanitize_text_field($item);
-			},
-			$params
-		);
+		return Helpers::sanitizeArray($this->getRequestParams($request, $type), 'sanitize_text_field');
 	}
 
 	/**
