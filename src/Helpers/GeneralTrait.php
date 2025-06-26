@@ -256,7 +256,7 @@ trait GeneralTrait
 
 		// Fast path for no errors.
 		if ($jsonError === \JSON_ERROR_NONE) {
-			return $result;
+			return $result ?? [];
 		}
 
 		// Optimized error handling using lookup table.
