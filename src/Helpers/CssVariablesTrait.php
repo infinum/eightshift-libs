@@ -298,10 +298,16 @@ trait CssVariablesTrait
 	/**
 	 * Return unique ID for block processing.
 	 *
+	 * @param array<string, mixed> $attributes Attributes.
+	 *
 	 * @return string
 	 */
-	public static function getUnique(): string
+	public static function getUnique(array $attributes = []): string
 	{
+		if (isset($attributes['blockSsr']) && boolval($attributes['blockSsr'])) {
+			return \bin2hex(\random_bytes(4));
+		}
+
 		return \wp_unique_id('es-');
 	}
 
