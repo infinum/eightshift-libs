@@ -86,7 +86,7 @@ trait ProjectInfoTrait
 			require_once(\ABSPATH . 'wp-admin/includes/plugin.php'); // @phpstan-ignore-line
 		}
 
-		$path = Helpers::getProjectPaths('root');
+		$path = Helpers::getProjectPaths();
 
 		$name = \basename($path);
 
