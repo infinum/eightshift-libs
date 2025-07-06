@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.9.0]
+
+### Changed
+
+- `getProjectPaths` helper now supports `root` and `projectRoot` paths as a deprecated option.
+- CssVariables helpers now support global settings so it can be overridden via filter.
+
 ## [10.8.3]
 
 ### Updated
@@ -946,6 +953,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.9.0]: https://github.com/infinum/eightshift-libs/compare/10.8.3...10.9.0
 [10.8.3]: https://github.com/infinum/eightshift-libs/compare/10.8.2...10.8.3
 [10.8.2]: https://github.com/infinum/eightshift-libs/compare/10.8.1...10.8.2
 [10.8.1]: https://github.com/infinum/eightshift-libs/compare/10.8.0...10.8.1

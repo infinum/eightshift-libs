@@ -55,6 +55,7 @@ trait PathsTrait
 
 			self::$pathConfigs = [
 				'root' => [$projectRoot],
+				'projectRoot' => [$projectRoot], // @deprecated 10.8.0. Use root instead.
 				'eightshift' => [$root, 'eightshift'],
 				'eightshiftRoot' => [$projectRoot, 'eightshift'],
 				'src' => [$root, 'src'],

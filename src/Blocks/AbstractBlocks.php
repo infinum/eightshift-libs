@@ -204,21 +204,25 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Render inline css variables in dom. Used with wp_footer hook.
 	 *
+	 * @param array<string, mixed> $globalSettings Global settings.
+	 *
 	 * @return void
 	 */
-	public function outputCssVariablesInline(): void
+	public function outputCssVariablesInline(array $globalSettings = []): void
 	{
-		echo Helpers::outputCssVariablesInline(); // phpcs:ignore
+		echo Helpers::outputCssVariablesInline($globalSettings); // phpcs:ignore
 	}
 
 	/**
 	 * Render global css variables in dom. Used with wp_head hook.
 	 *
+	 * @param array<string, mixed> $globalSettings Global settings.
+	 *
 	 * @return void
 	 */
-	public function outputCssVariablesGlobal(): void
+	public function outputCssVariablesGlobal(array $globalSettings = []): void
 	{
-		echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore
+		echo Helpers::outputCssVariablesGlobal($globalSettings); // phpcs:ignore
 	}
 
 	/**

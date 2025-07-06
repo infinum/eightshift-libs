@@ -18,13 +18,17 @@ trait CssVariablesTrait
 	/**
 	 * Get Global Manifest.json and return globalVariables as CSS variables.
 	 *
+	 * @param array<string, mixed> $globalSettings Global settings.
+	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobal(): string
+	public static function outputCssVariablesGlobal(array $globalSettings = []): string
 	{
 		$output = '';
 
-		foreach (Helpers::getSettingsGlobalVariables() as $itemKey => $itemValue) {
+		$globalVariables = !empty($globalSettings) ? ($globalSettings['globalVariables'] ?? []) : Helpers::getSettingsGlobalVariables();
+
+		foreach ($globalVariables as $itemKey => $itemValue) {
 			$itemKey = Helpers::camelToKebabCase($itemKey);
 
 			if (\gettype($itemValue) === 'array') {
@@ -52,10 +56,11 @@ trait CssVariablesTrait
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
 	 * @param string $customSelector Output custom selector to use as a style prefix.
+	 * @param array<string, mixed> $globalSettings Global settings.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = ''): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = '', array $globalSettings = []): string
 	{
 		// Bailout if manifest is missing variables key.
 		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
@@ -63,7 +68,7 @@ trait CssVariablesTrait
 		}
 
 		// Define variables from globalManifest.
-		$breakpoints = Helpers::getSettingsGlobalVariablesBreakpoints();
+		$breakpoints = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : self::getSettingsGlobalVariablesBreakpoints();
 
 		// Sort breakpoints in ascending order.
 		\asort($breakpoints);
@@ -139,9 +144,11 @@ trait CssVariablesTrait
 	/**
 	 * Output css variables as a one inline style tag. Used with wp_footer filter.
 	 *
+	 * @param array<string, mixed> $globalSettings Global settings.
+	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesInline(): string
+	public static function outputCssVariablesInline(array $globalSettings = []): string
 	{
 		// Load normal styles if server side render is used.
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -159,7 +166,7 @@ trait CssVariablesTrait
 		// Bailout if styles are missing.
 		if ($styles) {
 			// Define variables from globalManifest.
-			$breakpointsData = self::getSettingsGlobalVariablesBreakpoints();
+			$breakpointsData = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : self::getSettingsGlobalVariablesBreakpoints();
 
 			// Sort breakpoints in ascending order.
 			\asort($breakpointsData);
@@ -304,7 +311,7 @@ trait CssVariablesTrait
 	 */
 	public static function getUnique(array $attributes = []): string
 	{
-		if (isset($attributes['blockSsr']) && boolval($attributes['blockSsr'])) {
+		if (isset($attributes['blockSsr']) && \boolval($attributes['blockSsr'])) {
 			return \bin2hex(\random_bytes(4));
 		}
 
@@ -620,7 +627,7 @@ trait CssVariablesTrait
 			}
 
 			// If type default or value.
-			if (!Helpers::arrayIsList($variableValue)) {
+			if (!\array_is_list($variableValue)) {
 				$variableValue = $variableValue[$attributeValue] ?? [];
 			}
 
@@ -765,7 +772,7 @@ trait CssVariablesTrait
 		$output = [];
 
 		// Bailout if provided list is not an object.
-		if (Helpers::arrayIsList($variables)) {
+		if (\array_is_list($variables)) {
 			return $output;
 		}
 
