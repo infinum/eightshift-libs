@@ -18,12 +18,16 @@ trait CssVariablesTrait
 	/**
 	 * Get Global Manifest.json and return globalVariables as CSS variables.
 	 *
-	 * @param array<string, mixed> $globalSettings Global settings.
+	 * @param array<string, mixed>|mixed $globalSettings Global settings.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobal(array $globalSettings = []): string
+	public static function outputCssVariablesGlobal($globalSettings = []): string
 	{
+		if (!is_array($globalSettings) || !$globalSettings) {
+			$globalSettings = [];
+		}
+
 		$output = '';
 
 		$globalVariables = !empty($globalSettings) ? ($globalSettings['globalVariables'] ?? []) : Helpers::getSettingsGlobalVariables();
@@ -144,12 +148,16 @@ trait CssVariablesTrait
 	/**
 	 * Output css variables as a one inline style tag. Used with wp_footer filter.
 	 *
-	 * @param array<string, mixed> $globalSettings Global settings.
+	 * @param array<string, mixed>|mixed $globalSettings Global settings.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesInline(array $globalSettings = []): string
+	public static function outputCssVariablesInline($globalSettings = []): string
 	{
+		if (!is_array($globalSettings) || !$globalSettings) {
+			$globalSettings = [];
+		}
+
 		// Load normal styles if server side render is used.
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
