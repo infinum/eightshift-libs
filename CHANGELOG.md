@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.9.2]
+
+### Fixed
+
+- `outputCssVariablesInline` and `outputCssVariablesGlobal` methods now correctly output the css variables.
+
 ## [10.9.1]
 
 ### Fixed
@@ -959,6 +965,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.9.2]: https://github.com/infinum/eightshift-libs/compare/10.9.1...10.9.2
 [10.9.1]: https://github.com/infinum/eightshift-libs/compare/10.9.0...10.9.1
 [10.9.0]: https://github.com/infinum/eightshift-libs/compare/10.8.3...10.9.0
 [10.8.3]: https://github.com/infinum/eightshift-libs/compare/10.8.2...10.8.3
