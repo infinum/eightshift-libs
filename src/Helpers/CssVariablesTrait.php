@@ -60,12 +60,16 @@ trait CssVariablesTrait
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
 	 * @param string $customSelector Output custom selector to use as a style prefix.
-	 * @param array<string, mixed> $globalSettings Global settings.
+	 * @param array<string, mixed>|mixed $globalSettings Global settings.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = '', array $globalSettings = []): string
+	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = '', $globalSettings = []): string
 	{
+		if (!is_array($globalSettings) || !$globalSettings) {
+			$globalSettings = [];
+		}
+
 		// Bailout if manifest is missing variables key.
 		if (!isset($manifest['variables']) && !isset($manifest['variablesCustom'])) {
 			return '';
