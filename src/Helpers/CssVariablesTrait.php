@@ -24,7 +24,7 @@ trait CssVariablesTrait
 	 */
 	public static function outputCssVariablesGlobal($globalSettings = []): string
 	{
-		if (!is_array($globalSettings) || !$globalSettings) {
+		if (!\is_array($globalSettings) || !$globalSettings) {
 			$globalSettings = [];
 		}
 
@@ -66,7 +66,7 @@ trait CssVariablesTrait
 	 */
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = '', $globalSettings = []): string
 	{
-		if (!is_array($globalSettings) || !$globalSettings) {
+		if (!\is_array($globalSettings) || !$globalSettings) {
 			$globalSettings = [];
 		}
 
@@ -158,7 +158,7 @@ trait CssVariablesTrait
 	 */
 	public static function outputCssVariablesInline($globalSettings = []): string
 	{
-		if (!is_array($globalSettings) || !$globalSettings) {
+		if (!\is_array($globalSettings) || !$globalSettings) {
 			$globalSettings = [];
 		}
 
