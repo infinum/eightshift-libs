@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.9.3]
+
+### Added
+
+- `getAttrsOutput` helper to output attributes in a more readable format.
+
 ## [10.9.2]
 
 ### Fixed
@@ -965,6 +971,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.9.3]: https://github.com/infinum/eightshift-libs/compare/10.9.2...10.9.3
 [10.9.2]: https://github.com/infinum/eightshift-libs/compare/10.9.1...10.9.2
 [10.9.1]: https://github.com/infinum/eightshift-libs/compare/10.9.0...10.9.1
 [10.9.0]: https://github.com/infinum/eightshift-libs/compare/10.8.3...10.9.0
