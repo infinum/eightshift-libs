@@ -316,4 +316,26 @@ trait AttributesTrait
 		// Merge defaults with provided attributes (provided attributes take precedence).
 		return \array_merge($defaultAttributes, $attributes);
 	}
+
+	/**
+	 * Get html attrs output.
+	 *
+	 * @param array<string, string> $attrs Array of attributes.
+	 *
+	 * @return string
+	 */
+	public static function getAttrsOutput(array $attrs): string
+	{
+		$htmlAttrs = '';
+
+		foreach ($attrs as $key => $value) {
+			if (empty($value)) {
+				$htmlAttrs .= " {$key}";
+			} else {
+				$htmlAttrs .= " {$key}='{$value}'";
+			}
+		}
+
+		return $htmlAttrs;
+	}
 }
