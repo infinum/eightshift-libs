@@ -17,7 +17,7 @@ use %g_use_libs%\Services\ServiceInterface;
 /**
  * Class i18n
  *
- * This class handles theme or admin languages.
+ * This class handles languages.
  */
 class I18nPluginExample implements ServiceInterface
 {
