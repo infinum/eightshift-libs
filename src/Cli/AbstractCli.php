@@ -228,7 +228,7 @@ abstract class AbstractCli implements CliInterface
 	 */
 	public function prepareArgs(array $args = []): array
 	{
-		$configPath = $args[self::ARG_COMPOSER_CONFIG_PATH] ?? Helpers::getProjectPaths('root', 'composer.json');
+		$configPath = $args[self::ARG_COMPOSER_CONFIG_PATH] ?? Helpers::getProjectPaths('', 'composer.json');
 		$composerFile = $this->getComposer($configPath);
 
 		$namespace = $composerFile ? \rtrim(\array_key_first($composerFile['autoload']['psr-4']), '\\') : 'EightshiftBoilerplate';

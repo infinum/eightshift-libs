@@ -321,14 +321,20 @@ trait AttributesTrait
 	 * Get html attrs output.
 	 *
 	 * @param array<string, string> $attrs Array of attributes.
+	 * @param bool $escape Escape the attributes.
 	 *
 	 * @return string
 	 */
-	public static function getAttrsOutput(array $attrs): string
+	public static function getAttrsOutput(array $attrs, bool $escape = true): string
 	{
 		$htmlAttrs = '';
 
 		foreach ($attrs as $key => $value) {
+			if ($escape) {
+				$value = \esc_attr($value);
+				$key = \esc_attr($key);
+			}
+
 			if (empty($value)) {
 				$htmlAttrs .= " {$key}";
 			} else {
