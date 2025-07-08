@@ -19,7 +19,7 @@ use %g_use_libs%\Services\ServiceInterface;
  *
  * This class handles theme or admin languages.
  */
-class I18nExample implements ServiceInterface
+class I18nThemeExample implements ServiceInterface
 {
 	/**
 	 * Register all the hooks

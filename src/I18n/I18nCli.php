@@ -40,14 +40,39 @@ class I18nCli extends AbstractCli
 	}
 
 	/**
+	 * Define default arguments.
+	 *
+	 * @return array<string, int|string|boolean>
+	 */
+	public function getDefaultArgs(): array
+	{
+		return [
+			'type' => 'theme',
+		];
+	}
+
+	/**
 	 * Get WP-CLI command doc
 	 *
-	 * @return array<string, array<int, array<string, bool|string>>|string>
+	 * @return array<string, mixed>
 	 */
 	public function getDoc(): array
 	{
 		return [
 			'shortdesc' => 'Create i18n language service class.',
+			'synopsis' => [
+				[
+					'type' => 'assoc',
+					'name' => 'type',
+					'description' => 'Type of the i18n service class. Available options: theme, plugin.',
+					'optional' => false,
+					'default' => $this->getDefaultArg('type'),
+					'options' => [
+						'theme',
+						'plugin',
+					],
+				],
+			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
 
@@ -56,12 +81,13 @@ class I18nCli extends AbstractCli
 				## EXAMPLES
 
 				# Create service class:
-				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()}
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --type='theme'
 
 				## RESOURCES
 
 				Service class will be created from this example:
-				https://github.com/infinum/eightshift-libs/blob/develop/src/I18n/I18nExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/I18n/I18nThemeExample.php
+				https://github.com/infinum/eightshift-libs/blob/develop/src/I18n/I18nPluginExample.php
 			"),
 		];
 	}
@@ -73,7 +99,8 @@ class I18nCli extends AbstractCli
 
 		$this->getIntroText($assocArgs);
 
-		$className = $this->getClassShortName();
+		// Get Props.
+		$type = $this->getArg($assocArgs, 'type');
 
 		$sep = \DIRECTORY_SEPARATOR;
 
@@ -84,9 +111,9 @@ class I18nCli extends AbstractCli
 		}
 
 		// Read the template contents, and replace the placeholders with provided variables.
-		$this->getExampleTemplate(__DIR__, $className)
-			->renameClassName($className)
+		$this->getExampleTemplate(__DIR__, $type === 'theme' ? 'I18nTheme' : 'I18nPlugin')
+			->searchReplaceString($type === 'theme' ? 'I18nThemeExample' : 'I18nPluginExample', 'I18n')
 			->renameGlobals($assocArgs)
-			->outputWrite(Helpers::getProjectPaths('src', 'I18n'), "{$className}.php", $assocArgs);
+			->outputWrite(Helpers::getProjectPaths('src', 'I18n'), "I18n.php", $assocArgs);
 	}
 }

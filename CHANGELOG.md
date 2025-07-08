@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.10.0]
+
+### Added
+
+- New `I18nThemeCli` and `I18nPluginCli` commands for creating i18n service classes for theme and plugin.
+
 ## [10.9.4]
 
 ### Fixed
@@ -978,6 +984,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.10.0]: https://github.com/infinum/eightshift-libs/compare/10.9.4...10.10.0
 [10.9.4]: https://github.com/infinum/eightshift-libs/compare/10.9.3...10.9.4
 [10.9.3]: https://github.com/infinum/eightshift-libs/compare/10.9.2...10.9.3
 [10.9.2]: https://github.com/infinum/eightshift-libs/compare/10.9.1...10.9.2
