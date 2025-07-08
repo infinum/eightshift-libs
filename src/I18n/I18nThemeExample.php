@@ -33,7 +33,7 @@ class I18nThemeExample implements ServiceInterface
 	}
 
 	/**
-	 * Load the plugin text domain for translation.
+	 * Load the theme text domain for translation.
 	 *
 	 * @return void
 	 */
