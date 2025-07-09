@@ -20,14 +20,14 @@ trait ShortcodeTrait
 	 *
 	 * @param string $tag The shortcode whose function to call.
 	 * @param array<mixed> $attr The attributes to pass to the shortcode function. Optional.
-	 * @param string|null $content The shortcode's content. Default is null (none).
+	 * @param string $content The shortcode's content. Default is empty string.
 	 *
 	 * @return string|bool False on failure, the result of the shortcode on success.
 	 * @author J.D. Grimes
 	 *
 	 * @link https://codesymphony.co/dont-do_shortcode/
 	 */
-	public static function getShortcode(string $tag, array $attr = [], string $content = null)
+	public static function getShortcode(string $tag, array $attr = [], string $content = '')
 	{
 		global $shortcode_tags; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
