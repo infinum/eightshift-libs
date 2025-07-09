@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.11.0]
+
+### Added
+
+- Added `ServiceCliInterface` to custom post type and taxonomy abstract methods so that they are available in the CLI commands when flushing permalinks.
+
 ## [10.10.0]
 
 ### Added
@@ -984,6 +990,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.11.0]: https://github.com/infinum/eightshift-libs/compare/10.10.0...10.11.0
 [10.10.0]: https://github.com/infinum/eightshift-libs/compare/10.9.4...10.10.0
 [10.9.4]: https://github.com/infinum/eightshift-libs/compare/10.9.3...10.9.4
 [10.9.3]: https://github.com/infinum/eightshift-libs/compare/10.9.2...10.9.3

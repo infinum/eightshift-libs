@@ -10,12 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\CustomTaxonomy;
 
+use EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Abstract class AbstractBaseTaxonomy class.
  */
-abstract class AbstractTaxonomy implements ServiceInterface
+abstract class AbstractTaxonomy implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Register custom taxonomy.

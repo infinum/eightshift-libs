@@ -10,12 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\CustomPostType;
 
+use EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Abstract class AbstractPostType class.
  */
-abstract class AbstractPostType implements ServiceInterface
+abstract class AbstractPostType implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Register custom post type.
