@@ -10,6 +10,14 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Replace `$attributes` check with `$part` for `tailwindClasses` helper method because component can be without attributes.
 
+### Updated
+
+- Replace deprecated `classnames` helper with `clsx`
+
+### Added
+
+- Output block/component title in `tailwindClasses` if WP_DEBUG is true
+
 ## [10.11.0]
 
 ### Added
