@@ -29,9 +29,6 @@ class EnqueueBlocksExample extends AbstractEnqueueBlocks
 		// Editor only style.
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
-		// Editor only debug class in body element.
-		\add_action('enqueue_block_editor_assets', [$this, 'addEditorBodyDebugClass']);
-
 		// Editor and frontend style.
 		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyle'], 50);
 

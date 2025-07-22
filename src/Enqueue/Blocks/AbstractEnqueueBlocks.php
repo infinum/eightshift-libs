@@ -67,6 +67,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		foreach ($this->getLocalizations() as $objectName => $dataArray) {
 			\wp_localize_script($handle, $objectName, $dataArray);
 		}
+
+		$this->addEditorBodyDebugClass();
 	}
 
 	/**
