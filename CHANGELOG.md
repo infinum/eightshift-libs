@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.11.1]
+
+### Fixed
+
+- Replace `$attributes` check with `$part` for `tailwindClasses` helper method because component can be without attributes.
+
+### Updated
+
+- Replace deprecated `classnames` helper with `clsx`
+
+### Added
+
+- Output block/component title in `tailwindClasses` if WP_DEBUG is true
+
 ## [10.11.0]
 
 ### Added
@@ -990,6 +1004,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.11.1]: https://github.com/infinum/eightshift-libs/compare/10.11.0...10.11.1
 [10.11.0]: https://github.com/infinum/eightshift-libs/compare/10.10.0...10.11.0
 [10.10.0]: https://github.com/infinum/eightshift-libs/compare/10.9.4...10.10.0
 [10.9.4]: https://github.com/infinum/eightshift-libs/compare/10.9.3...10.9.4
