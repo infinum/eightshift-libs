@@ -56,7 +56,7 @@ trait TailwindTrait
 	public static function getTwPart($part, $manifest, ...$custom)
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
+			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$partClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
@@ -65,7 +65,7 @@ trait TailwindTrait
 			$partClasses = \implode(' ', $partClasses);
 		}
 
-		return Helpers::classnames([$partClasses, ...$custom]);
+		return Helpers::clsx([$partClasses, ...$custom]);
 	}
 
 	/**
@@ -85,7 +85,7 @@ trait TailwindTrait
 	public static function getTwDynamicPart($part, $attributes, $manifest, ...$custom)
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
+			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
@@ -165,7 +165,7 @@ trait TailwindTrait
 			}
 		}
 
-		return Helpers::classnames([$baseClasses, ...$mainClasses, ...$custom]);
+		return Helpers::clsx([$baseClasses, ...$mainClasses, ...$custom]);
 	}
 
 	/**
@@ -182,7 +182,7 @@ trait TailwindTrait
 	public static function getTwClasses($attributes, $manifest, ...$custom)
 	{
 		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
+			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['base']['twClasses'] ?? '';
@@ -294,7 +294,7 @@ trait TailwindTrait
 			}
 		}
 
-		return Helpers::classnames([$baseClasses, ...$mainClasses, ...$combinationClasses, ...$custom]);
+		return Helpers::clsx([$baseClasses, ...$mainClasses, ...$combinationClasses, ...$custom]);
 	}
 
 	/**
@@ -310,7 +310,7 @@ trait TailwindTrait
 	private static function unifyClasses($input): string
 	{
 		if (\is_array($input)) {
-			return Helpers::classnames($input);
+			return Helpers::clsx($input);
 		}
 
 		return \trim($input);
@@ -453,7 +453,7 @@ trait TailwindTrait
 	{
 		// If nothing is set, return custom classes as a fallback.
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
+			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$allParts = isset($manifest['tailwind']['parts']) ? ['base', ...\array_keys($manifest['tailwind']['parts'])] : ['base'];
@@ -493,6 +493,6 @@ trait TailwindTrait
 			$combinationClasses[] = self::processCombination($partName, $combo, $attributes, $manifest);
 		}
 
-		return Helpers::classnames([$baseClasses, ...$optionClasses, ...$combinationClasses, ...$custom]);
+		return Helpers::clsx([$baseClasses, ...$optionClasses, ...$combinationClasses, ...$custom]);
 	}
 }
