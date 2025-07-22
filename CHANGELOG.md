@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- Added `addEditorBodyDebugClass` method for debugging `tailindClasses` for usage with Eightshift Frontend Libs Tailwind
+- Added `addEditorBodyDebugClass` method for debugging `tailwindClasses` for usage with Eightshift Frontend Libs Tailwind
 
 ## [10.11.1]
 
