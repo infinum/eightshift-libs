@@ -493,6 +493,9 @@ trait TailwindTrait
 			$combinationClasses[] = self::processCombination($partName, $combo, $attributes, $manifest);
 		}
 
-		return Helpers::clsx([$baseClasses, ...$optionClasses, ...$combinationClasses, ...$custom]);
+		$partPrefix = \strtolower(\preg_replace('/[^a-zA-Z]+/', '-', $manifest['title']));
+		$isWpDebugActive = \defined('WP_DEBUG') && \WP_DEBUG;
+
+		return Helpers::clsx([$isWpDebugActive ? "_es__{$partPrefix}/{$part}" : '', $baseClasses, ...$optionClasses, ...$combinationClasses, ...$custom]);
 	}
 }
