@@ -67,6 +67,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		foreach ($this->getLocalizations() as $objectName => $dataArray) {
 			\wp_localize_script($handle, $objectName, $dataArray);
 		}
+
+		$this->addEditorBodyDebugClass();
 	}
 
 	/**
@@ -321,5 +323,29 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		\wp_enqueue_style('forms', \get_admin_url(null, 'css'), []);
 		\wp_enqueue_style('reset', \get_admin_url(null, 'css'), []);
 		// phpcs:enable WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	}
+
+	/**
+	 * Adds a debug class to the body in Editor only.
+	 *
+	 * This is used for debugging purposes when working with `tailwindClasses` helper in Eightshift Frontend Libs Tailwind.
+	 * The class is used to check for WP_DEBUG mode and if it is true it will be used to prepend the block/component title to the tailwindClasses output.
+	 *
+	 * @return void
+	 */
+	public function addEditorBodyDebugClass(): void
+	{
+
+		if (!\defined('WP_DEBUG') || !\WP_DEBUG) {
+			return;
+		}
+
+		if (!\is_admin()) {
+			return;
+		}
+
+		\add_filter('admin_body_class', function ($classes) {
+			return "{$classes} es-wp-debug";
+		});
 	}
 }
