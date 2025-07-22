@@ -452,7 +452,7 @@ trait TailwindTrait
 	public static function tailwindClasses($part, $attributes, $manifest, ...$custom): string
 	{
 		// If nothing is set, return custom classes as a fallback.
-		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
+		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
 			return $custom ? Helpers::classnames($custom) : ''; // @phpstan-ignore-line
 		}
 
