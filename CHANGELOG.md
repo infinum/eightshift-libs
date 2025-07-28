@@ -22,6 +22,26 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `API_RESPONSE_CODE_ERROR_FORBIDDEN` constant.
 - `API_RESPONSE_CODE_SUCCESS_RANGE` constant.
 
+## [10.11.2]
+
+### Added
+
+- Added `addEditorBodyDebugClass` method for debugging `tailwindClasses` for usage with Eightshift Frontend Libs Tailwind
+
+## [10.11.1]
+
+### Fixed
+
+- Replace `$attributes` check with `$part` for `tailwindClasses` helper method because component can be without attributes.
+
+### Updated
+
+- Replace deprecated `classnames` helper with `clsx`
+
+### Added
+
+- Output block/component title in `tailwindClasses` if WP_DEBUG is true
+
 ## [10.11.0]
 
 ### Added
@@ -1008,7 +1028,9 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
-[10.12.0]: https://github.com/infinum/eightshift-libs/compare/10.11.0...10.12.0
+[10.12.0]: https://github.com/infinum/eightshift-libs/compare/10.11.2...10.12.0
+[10.11.2]: https://github.com/infinum/eightshift-libs/compare/10.11.1...10.11.2
+[10.11.1]: https://github.com/infinum/eightshift-libs/compare/10.11.0...10.11.1
 [10.11.0]: https://github.com/infinum/eightshift-libs/compare/10.10.0...10.11.0
 [10.10.0]: https://github.com/infinum/eightshift-libs/compare/10.9.4...10.10.0
 [10.9.4]: https://github.com/infinum/eightshift-libs/compare/10.9.3...10.9.4
