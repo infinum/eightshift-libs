@@ -58,7 +58,6 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	public const API_RESPONSE_CODE_ALREADY_REPORTED = 208;
 	public const API_RESPONSE_CODE_IM_USED = 226;
 
-
 	public const API_RESPONSE_CODE_MULTIPLE_CHOICES = 300;
 	public const API_RESPONSE_CODE_MOVED_PERMANENTLY = 301;
 	public const API_RESPONSE_CODE_FOUND = 302;
