@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Exception\InvalidManifest;
+use EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * Class DeprecatedTrait Helper.
@@ -107,5 +108,80 @@ trait DeprecatedTrait
 	public static function isJson(string $jsonString): bool
 	{
 		return \json_validate($jsonString);
+	}
+
+	/**
+	 * Return API success response array.
+	 *
+	 * @param string $msg Message for the user.
+	 * @param array<int|string, mixed> $additional Additional data to attach to response.
+	 *
+	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public static function getApiSuccessPublicOutput(string $msg, array $additional = []): array
+	{
+		$output = [
+			'status' => AbstractRoute::STATUS_SUCCESS,
+			'code' => AbstractRoute::API_RESPONSE_CODE_OK,
+			'message' => $msg,
+		];
+
+		if ($additional) {
+			$output['data'] = $additional;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return API warning response array.
+	 *
+	 * @param string $msg Msg for the user.
+	 * @param array<int|string, mixed> $additional Additional data to attach to response.
+	 *
+	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public static function getApiWarningPublicOutput(string $msg, array $additional = []): array
+	{
+		$output = [
+			'status' => AbstractRoute::STATUS_WARNING,
+			'code' => AbstractRoute::API_RESPONSE_CODE_OK,
+			'message' => $msg,
+		];
+
+		if ($additional) {
+			$output['data'] = $additional;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return API error response array.
+	 *
+	 * @param string $msg Message for the user.
+	 * @param array<string, mixed> $additional Additional data to attach to response.
+	 *
+	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public static function getApiErrorPublicOutput(string $msg, array $additional = []): array
+	{
+		$output = [
+			'status' => AbstractRoute::STATUS_ERROR,
+			'code' => AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
+			'message' => $msg,
+		];
+
+		if ($additional) {
+			$output['data'] = $additional;
+		}
+
+		return $output;
 	}
 }

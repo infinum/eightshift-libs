@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.12.0]
+
+### Added
+
+- New `getApiResponse` helper for better API response output.
+- API response codes constants.
+
+### Deprecated
+
+- `getApiSuccessPublicOutput` helper.
+- `getApiWarningPublicOutput` helper.
+- `getApiErrorPublicOutput` helper.
+- `API_RESPONSE_CODE_SUCCESS` constant.
+- `API_RESPONSE_CODE_ERROR` constant.
+- `API_RESPONSE_CODE_ERROR_MISSING` constant.
+- `API_RESPONSE_CODE_ERROR_FORBIDDEN` constant.
+- `API_RESPONSE_CODE_SUCCESS_RANGE` constant.
+
 ## [10.11.2]
 
 ### Added
@@ -1010,6 +1028,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.12.0]: https://github.com/infinum/eightshift-libs/compare/10.11.2...10.12.0
 [10.11.2]: https://github.com/infinum/eightshift-libs/compare/10.11.1...10.11.2
 [10.11.1]: https://github.com/infinum/eightshift-libs/compare/10.11.0...10.11.1
 [10.11.0]: https://github.com/infinum/eightshift-libs/compare/10.10.0...10.11.0

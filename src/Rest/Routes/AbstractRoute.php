@@ -42,8 +42,79 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	 */
 	public const STATUS_WARNING = 'warning';
 
+	public const API_RESPONSE_CODE_CONTINUE = 100;
+	public const API_RESPONSE_CODE_SWITCHING_PROTOCOLS = 101;
+	public const API_RESPONSE_CODE_PROCESSING = 102;
+	public const API_RESPONSE_CODE_EARLY_HINTS = 103;
+
+	public const API_RESPONSE_CODE_OK = 200;
+	public const API_RESPONSE_CODE_CREATED = 201;
+	public const API_RESPONSE_CODE_ACCEPTED = 202;
+	public const API_RESPONSE_CODE_NON_AUTHORITATIVE_INFORMATION = 203;
+	public const API_RESPONSE_CODE_NO_CONTENT = 204;
+	public const API_RESPONSE_CODE_RESET_CONTENT = 205;
+	public const API_RESPONSE_CODE_PARTIAL_CONTENT = 206;
+	public const API_RESPONSE_CODE_MULTI_STATUS = 207;
+	public const API_RESPONSE_CODE_ALREADY_REPORTED = 208;
+	public const API_RESPONSE_CODE_IM_USED = 226;
+
+	public const API_RESPONSE_CODE_MULTIPLE_CHOICES = 300;
+	public const API_RESPONSE_CODE_MOVED_PERMANENTLY = 301;
+	public const API_RESPONSE_CODE_FOUND = 302;
+	public const API_RESPONSE_CODE_SEE_OTHER = 303;
+	public const API_RESPONSE_CODE_NOT_MODIFIED = 304;
+	public const API_RESPONSE_CODE_USE_PROXY = 305;
+	public const API_RESPONSE_CODE_TEMPORARY_REDIRECT = 307;
+	public const API_RESPONSE_CODE_PERMANENT_REDIRECT = 308;
+
+	public const API_RESPONSE_CODE_BAD_REQUEST = 400;
+	public const API_RESPONSE_CODE_UNAUTHORIZED = 401;
+	public const API_RESPONSE_CODE_PAYMENT_REQUIRED = 402;
+	public const API_RESPONSE_CODE_FORBIDDEN = 403;
+	public const API_RESPONSE_CODE_NOT_FOUND = 404;
+	public const API_RESPONSE_CODE_METHOD_NOT_ALLOWED = 405;
+	public const API_RESPONSE_CODE_NOT_ACCEPTABLE = 406;
+	public const API_RESPONSE_CODE_PROXY_AUTHENTICATION_REQUIRED = 407;
+	public const API_RESPONSE_CODE_REQUEST_TIMEOUT = 408;
+	public const API_RESPONSE_CODE_CONFLICT = 409;
+	public const API_RESPONSE_CODE_GONE = 410;
+	public const API_RESPONSE_CODE_LENGTH_REQUIRED = 411;
+	public const API_RESPONSE_CODE_PRECONDITION_FAILED = 412;
+	public const API_RESPONSE_CODE_PAYLOAD_TOO_LARGE = 413;
+	public const API_RESPONSE_CODE_URI_TOO_LONG = 414;
+	public const API_RESPONSE_CODE_UNSUPPORTED_MEDIA_TYPE = 415;
+	public const API_RESPONSE_CODE_RANGE_NOT_SATISFIABLE = 416;
+	public const API_RESPONSE_CODE_EXPECTATION_FAILED = 417;
+	public const API_RESPONSE_CODE_IM_A_TEAPOT = 418;
+	public const API_RESPONSE_CODE_MISDIRECTED_REQUEST = 421;
+	public const API_RESPONSE_CODE_UNPROCESSABLE_ENTITY = 422;
+	public const API_RESPONSE_CODE_LOCKED = 423;
+	public const API_RESPONSE_CODE_FAILED_DEPENDENCY = 424;
+	public const API_RESPONSE_CODE_TOO_EARLY = 425;
+	public const API_RESPONSE_CODE_UPGRADE_REQUIRED = 426;
+	public const API_RESPONSE_CODE_PRECONDITION_REQUIRED = 428;
+	public const API_RESPONSE_CODE_TOO_MANY_REQUESTS = 429;
+	public const API_RESPONSE_CODE_REQUEST_HEADER_FIELDS_TOO_LARGE = 431;
+	public const API_RESPONSE_CODE_UNAVAILABLE_FOR_LEGAL_REASONS = 451;
+	public const API_RESPONSE_CODE_CLIENT_CLOSED_REQUEST = 499;
+
+	public const API_RESPONSE_CODE_INTERNAL_SERVER_ERROR = 500;
+	public const API_RESPONSE_CODE_NOT_IMPLEMENTED = 501;
+	public const API_RESPONSE_CODE_BAD_GATEWAY = 502;
+	public const API_RESPONSE_CODE_SERVICE_UNAVAILABLE = 503;
+	public const API_RESPONSE_CODE_GATEWAY_TIMEOUT = 504;
+	public const API_RESPONSE_CODE_HTTP_VERSION_NOT_SUPPORTED = 505;
+	public const API_RESPONSE_CODE_VARIANT_ALSO_NEGOTIATES = 506;
+	public const API_RESPONSE_CODE_INSUFFICIENT_STORAGE = 507;
+	public const API_RESPONSE_CODE_LOOP_DETECTED = 508;
+	public const API_RESPONSE_CODE_NOT_EXTENDED = 510;
+	public const API_RESPONSE_CODE_NETWORK_AUTHENTICATION_REQUIRED = 511;
+	public const API_RESPONSE_CODE_NETWORK_CONNECT_TIMEOUT_ERROR = 599;
+
 	/**
 	 * API response code success const.
+	 *
+	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_OK instead.
 	 *
 	 * @var int
 	 */
@@ -52,12 +123,15 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	/**
 	 * API response code success range const.
 	 *
+	 * @deprecated 10.0.0 Do not use this constant.
+	 *
 	 * @var int
 	 */
 	public const API_RESPONSE_CODE_SUCCESS_RANGE = 299;
-
 	/**
 	 * API response code error const.
+	 *
+	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_BAD_REQUEST instead.
 	 *
 	 * @var int
 	 */
@@ -66,23 +140,29 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	/**
 	 * API response code error missing const.
 	 *
+	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_NOT_FOUND instead.
+	 *
 	 * @var int
 	 */
 	public const API_RESPONSE_CODE_ERROR_MISSING = 404;
 
 	/**
-	 * API response code error server const.
-	 *
-	 * @var int
-	 */
-	public const API_RESPONSE_CODE_ERROR_SERVER = 500;
-
-	/**
 	 * API response code error forbidden const.
+	 *
+	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_FORBIDDEN instead.
 	 *
 	 * @var int
 	 */
 	public const API_RESPONSE_CODE_ERROR_FORBIDDEN = 403;
+
+	/**
+	 * API response code error server const.
+	 *
+	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_INTERNAL_SERVER_ERROR instead.
+	 *
+	 * @var int
+	 */
+	public const API_RESPONSE_CODE_ERROR_SERVER = 500;
 
 	/**
 	 * A register method holds register_rest_route function to register api route
@@ -214,9 +294,11 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 			return [];
 		}
 
-		return Helpers::getApiErrorPublicOutput(
-			\__('You don\'t have enough permissions to perform this action!', 'eightshift-libs'),
-			$additional
-		);
+		return [
+			'status' => self::STATUS_ERROR,
+			'code' => self::API_RESPONSE_CODE_ERROR_FORBIDDEN,
+			'message' => \__('You don\'t have enough permissions to perform this action!', 'eightshift-libs'),
+			'data' => $additional,
+		];
 	}
 }
