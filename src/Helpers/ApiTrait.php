@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Rest\Routes\AbstractRoute;
+use WP_REST_Response;
 
 /**
  * Class ApiTrait Helper.
@@ -18,64 +19,24 @@ use EightshiftLibs\Rest\Routes\AbstractRoute;
 trait ApiTrait
 {
 	/**
-	 * Return API success response array.
+	 * Return API response.
 	 *
 	 * @param string $msg Message for the user.
-	 * @param array<int|string, mixed> $additional Additional data to attach to response.
-	 *
-	 * @return array<string, array<mixed>|int|string>
-	 */
-	public static function getApiSuccessPublicOutput(string $msg, array $additional = []): array
-	{
-		$output = [
-			'status' => AbstractRoute::STATUS_SUCCESS,
-			'code' => AbstractRoute::API_RESPONSE_CODE_SUCCESS,
-			'message' => $msg,
-		];
-
-		if ($additional) {
-			$output['data'] = $additional;
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Return API warning response array.
-	 *
-	 * @param string $msg Msg for the user.
-	 * @param array<int|string, mixed> $additional Additional data to attach to response.
-	 *
-	 * @return array<string, array<mixed>|int|string>
-	 */
-	public static function getApiWarningPublicOutput(string $msg, array $additional = []): array
-	{
-		$output = [
-			'status' => AbstractRoute::STATUS_WARNING,
-			'code' => AbstractRoute::API_RESPONSE_CODE_SUCCESS,
-			'message' => $msg,
-		];
-
-		if ($additional) {
-			$output['data'] = $additional;
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Return API error response array.
-	 *
-	 * @param string $msg Message for the user.
+	 * @param int $code The code.
+	 * @param string $status The status.
 	 * @param array<string, mixed> $additional Additional data to attach to response.
 	 *
-	 * @return array<string, array<mixed>|int|string>
+	 * @return WP_REST_Response
 	 */
-	public static function getApiErrorPublicOutput(string $msg, array $additional = []): array
-	{
+	public static function getApiResponse(
+		string $msg,
+		int $code = AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
+		string $status = AbstractRoute::STATUS_ERROR,
+		array $additional = []
+	): WP_REST_Response {
 		$output = [
-			'status' => AbstractRoute::STATUS_ERROR,
-			'code' => AbstractRoute::API_RESPONSE_CODE_ERROR,
+			'status' => $status,
+			'code' => $code,
 			'message' => $msg,
 		];
 
@@ -83,7 +44,7 @@ trait ApiTrait
 			$output['data'] = $additional;
 		}
 
-		return $output;
+		return new WP_REST_Response($output, $code);
 	}
 
 	/**
