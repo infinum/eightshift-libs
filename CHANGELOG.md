@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [10.12.1]
+
+### Added
+
+- `pathUrl` to the `getApiRouteUrlData` helper
+
 ## [10.12.0]
 
 ### Added
@@ -1028,6 +1034,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[10.12.1]: https://github.com/infinum/eightshift-libs/compare/10.12.0...10.12.1
 [10.12.0]: https://github.com/infinum/eightshift-libs/compare/10.11.2...10.12.0
 [10.11.2]: https://github.com/infinum/eightshift-libs/compare/10.11.1...10.11.2
 [10.11.1]: https://github.com/infinum/eightshift-libs/compare/10.11.0...10.11.1
