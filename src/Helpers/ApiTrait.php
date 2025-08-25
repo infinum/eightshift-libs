@@ -65,6 +65,7 @@ trait ApiTrait
 			'namespace' => $namespace,
 			'version' => $version,
 			'url' => "{$prefix}/{$namespace}/{$version}/{$path}",
+			'pathUrl' => "/{$namespace}/{$version}/{$path}",
 		];
 	}
 }
