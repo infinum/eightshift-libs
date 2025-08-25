@@ -460,7 +460,7 @@ trait TailwindTrait
 
 		$partName = 'base';
 
-		if (!empty($part) && isset($manifest['tailwind']['parts'][$part]) && \in_array($part, $allParts, true)) {
+		if (isset($manifest['tailwind']['parts'][$part]) && \in_array($part, $allParts, true)) {
 			$partName = $part;
 		} elseif ($part !== 'base') {
 			throw new Exception("Part '{$part}' is not defined in the manifest.");
