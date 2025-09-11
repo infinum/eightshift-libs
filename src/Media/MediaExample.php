@@ -35,9 +35,7 @@ class MediaExample extends AbstractMedia
 
 		// WebP.
 		if (\extension_loaded('gd')) {
-			\add_filter('wp_generate_attachment_metadata', [$this, 'generateWebPMedia'], 10, 2);
-			\add_filter('wp_update_attachment_metadata', [$this, 'generateWebPMedia'], 10, 2);
-			\add_action('delete_attachment', [$this, 'deleteWebPMedia']);
+			\add_filter('wp_handle_upload', [$this, 'convertMediaToWebP']);
 		}
 	}
 
