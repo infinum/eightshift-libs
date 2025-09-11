@@ -12,6 +12,7 @@ namespace EightshiftLibs\Media;
 
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
+use EightshiftLibs\Helpers\Helpers;
 use WP_CLI;
 use WP_Query;
 
@@ -20,11 +21,6 @@ use WP_Query;
  */
 class RegenerateWebPMediaCli extends AbstractCli
 {
-	/**
-	 * Media WebP Trait.
-	 */
-	use MediaWebPTrait;
-
 	/**
 	 * Get WP-CLI command parent name
 	 *
@@ -53,10 +49,8 @@ class RegenerateWebPMediaCli extends AbstractCli
 	public function getDefaultArgs(): array
 	{
 		return [
-			'action' => 'generate',
 			'quality' => '80',
 			'ids' => '',
-			'force' => 'false',
 		];
 	}
 
@@ -72,17 +66,6 @@ class RegenerateWebPMediaCli extends AbstractCli
 			'synopsis' => [
 				[
 					'type' => 'assoc',
-					'name' => 'action',
-					'description' => 'Action to use "generate" or "delete". Default: generate',
-					'optional' => true,
-					'default' => $this->getDefaultArg('action'),
-					'options' => [
-						'generate',
-						'delete',
-					],
-				],
-				[
-					'type' => 'assoc',
 					'name' => 'quality',
 					'description' => 'Quality of conversion 0-100. Default: 80',
 					'optional' => true,
@@ -94,17 +77,6 @@ class RegenerateWebPMediaCli extends AbstractCli
 					'description' => 'Ids of attachment separated by comma.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('ids'),
-				],
-				[
-					'type' => 'assoc',
-					'name' => 'force',
-					'description' => 'Force generation no matter if the file exists. Default: false',
-					'optional' => true,
-					'default' => $this->getDefaultArg('force'),
-					'options' => [
-						'true',
-						'false',
-					],
 				],
 			],
 			'longdesc' => $this->prepareLongDesc("
@@ -122,20 +94,8 @@ class RegenerateWebPMediaCli extends AbstractCli
 				# Regenerate multiple attachments by IDs.
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911, 1692, 1302'
 
-				# Force regenerate attachments no matter if they all-ready exist.
-				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --force='true'
-
 				# Regenerate media with different quality.
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --quality='90'
-
-				# Delete all WebP media formats.
-				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --action='delete'
-
-				# Delete only one WebP attachment by ID.
-				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911' --action='delete'
-
-				# Delete multiple WebP attachments by ID.
-				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --ids='16911, 1692, 1302' --action='delete'
 			"),
 		];
 	}
@@ -148,9 +108,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 		$this->getIntroText($assocArgs);
 
 		$quality = $this->getArg($assocArgs, 'quality');
-		$action = $this->getArg($assocArgs, 'action');
 		$ids = $this->getArg($assocArgs, 'ids');
-		$force = $this->getArg($assocArgs, 'force');
 
 		$args = [];
 
@@ -160,17 +118,9 @@ class RegenerateWebPMediaCli extends AbstractCli
 
 		$options = [
 			'quality' => (int) $quality,
-			'force' => (bool) $force,
 		];
 
-		switch ($action) {
-			case 'delete':
-				$this->deleteMedia($args);
-				break;
-			default:
-				$this->generateMedia($options, $args);
-				break;
-		}
+		$this->generateMedia($options, $args);
 	}
 
 	/**
@@ -191,12 +141,12 @@ class RegenerateWebPMediaCli extends AbstractCli
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
 			'fields' => 'ids',
-			'post_mime_type' => \array_map(
-				static function ($item) {
-					return "image/{$item}";
-				},
-				AbstractMedia::WEBP_ALLOWED_EXT
-			),
+			// 'post_mime_type' => \array_map(
+			// 	static function ($item) {
+			// 		return "image/{$item}";
+			// 	},
+			// 	// AbstractMedia::WEBP_ALLOWED_EXT
+			// ),
 		];
 
 		return \array_merge($defaultArgs, $args);
@@ -213,7 +163,6 @@ class RegenerateWebPMediaCli extends AbstractCli
 	private function generateMedia(array $options, array $args = []): void
 	{
 		$quality = $options['quality'];
-		$force = $options['force'];
 
 		$theQuery = new WP_Query($this->getQueryArgs($args));
 
@@ -224,7 +173,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 		foreach ($theQuery->posts as $id) {
 			$title = \get_the_title($id);
 
-			$original = $this->generateWebPMediaOriginal($id, $quality, $force);
+			$original = Helpers::convertMediaToWebPById($id, $quality);
 
 			WP_CLI::log("Attachment '{$title}' conversion to WebP status: {$id}");
 
@@ -233,63 +182,6 @@ class RegenerateWebPMediaCli extends AbstractCli
 				WP_CLI::log($original);
 			} else {
 				WP_CLI::warning("Attachment original not converted - already exists!");
-			}
-
-			$sizes = $this->generateWebPMediaAllSizes($id, $quality, $force);
-
-			if ($sizes) {
-				foreach ($sizes as $size => $sizeValue) {
-					WP_CLI::success("Attachment size {$size} converted!");
-					WP_CLI::log($sizeValue);
-				}
-			} else {
-				WP_CLI::warning("Attachment sizes not converted - already exists or media is to small for additional sizes!");
-			}
-
-			WP_CLI::log('--------------------------------------------------');
-		}
-
-		\wp_reset_postdata();
-	}
-
-	/**
-	 * Delete media.
-	 *
-	 * @param array<string> $args Parameters from WP-CLI.
-	 *
-	 * @return void
-	 */
-	private function deleteMedia(array $args = []): void
-	{
-		$theQuery = new WP_Query($this->getQueryArgs($args));
-
-		if (!$theQuery->posts) {
-			WP_CLI::error("No attachments found!");
-		}
-
-		foreach ($theQuery->posts as $id) {
-			$title = \get_the_title($id);
-
-			$original = $this->deleteWebPMediaOriginal($id);
-
-			WP_CLI::log("Attachment '{$title}' deleting WebP status: {$id}");
-
-			if ($original) {
-				WP_CLI::success("Attachment original deleted!");
-				WP_CLI::log($original);
-			} else {
-				WP_CLI::warning("Attachment original not deleted - already deleted or missing!");
-			}
-
-			$sizes = $this->deleteWebPMediaAllSizes($id);
-
-			if ($sizes) {
-				foreach ($sizes as $size => $sizeValue) {
-					WP_CLI::success("Attachment size {$size} deleted!");
-					WP_CLI::log($sizeValue);
-				}
-			} else {
-				WP_CLI::warning("Attachment sizes not deleted - already deleted or missing!");
 			}
 
 			WP_CLI::log('--------------------------------------------------');

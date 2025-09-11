@@ -23,62 +23,6 @@ use WP_Post;
 abstract class AbstractMedia implements ServiceInterface
 {
 	/**
-	 * Media WebP Trait.
-	 */
-	use MediaWebPTrait;
-
-	/**
-	 * WebP allowed extensions.
-	 *
-	 * @var array<string>
-	 */
-	public const WEBP_ALLOWED_EXT = ['gif', 'jpg', 'jpeg', 'png', 'bmp'];
-
-	/**
-	 * WebP Quality compression range 0-100.
-	 *
-	 * @var int
-	 */
-	public const WEBP_QUALITY = 80;
-
-	/**
-	 * Generate WebP media images.
-	 *
-	 * @param array<string, mixed> $metadata An array of attachment meta data.
-	 * @param integer $attachmentId Current attachment ID.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function generateWebPMedia(array $metadata, int $attachmentId): array
-	{
-		$this->generateWebPMediaOriginal($attachmentId, $this->getMediaWebPQuality());
-		$this->generateWebPMediaAllSizes($attachmentId, $this->getMediaWebPQuality());
-
-		return $metadata;
-	}
-
-	/**
-	 * Delete all created WebP media after original media is deleted.
-	 *
-	 * @param integer $attachmentId Current attachment ID.
-	 * @return void
-	 */
-	public function deleteWebPMedia(int $attachmentId): void
-	{
-		// WPML will not delete the file unless all files are removed from all languages.
-		if (\has_filter('wpml_element_has_translations')) {
-			$isTranslated = \apply_filters('wpml_element_has_translations', null, $attachmentId, 'attachment');
-
-			if ($isTranslated) {
-				return;
-			}
-		}
-
-		$this->deleteWebPMediaOriginal($attachmentId);
-		$this->deleteWebPMediaAllSizes($attachmentId);
-	}
-
-	/**
 	 * Enable additional uploads in media.
 	 *
 	 * @param array<object|string> $mimes Load all mimes types.
@@ -202,12 +146,51 @@ abstract class AbstractMedia implements ServiceInterface
 	}
 
 	/**
+	 * Convert media to WebP on upload.
+	 *
+	 * @param array<string, mixed> $upload Upload data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function convertMediaToWebP(array $upload): array
+	{
+		$name = \pathinfo($upload['file'], \PATHINFO_FILENAME);
+		$ext = \pathinfo($upload['file'], \PATHINFO_EXTENSION);
+
+		if (!\in_array($ext, $this->getWebPAllowedExt(), true)) {
+			return $upload;
+		}
+
+		$webpPath = Helpers::convertMediaToWebPByPath($upload['file'], $this->getMediaWebPQuality());
+
+		$output = [
+			'file' => $webpPath,
+			'url' => \wp_get_upload_dir()['url'] . "/{$name}.webp",
+			'type' => 'image/webp',
+		];
+
+		\wp_delete_file($upload['file']);
+
+		return $output;
+	}
+
+	/**
 	 * WebP Quality compression range 0-100.
 	 *
 	 * @return integer
 	 */
 	protected function getMediaWebPQuality(): int
 	{
-		return self::WEBP_QUALITY;
+		return 80;
+	}
+
+	/**
+	 * Get WebP allowed extensions.
+	 *
+	 * @return array<string>
+	 */
+	protected function getWebPAllowedExt(): array
+	{
+		return ['jpg', 'jpeg', 'png', 'bmp'];
 	}
 }
