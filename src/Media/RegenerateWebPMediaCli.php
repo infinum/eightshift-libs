@@ -90,7 +90,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 				[
 					'type' => 'assoc',
 					'name' => 'only_update_db',
-					'description' => 'Only update the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.',
+					'description' => 'Only update the database, not the media files as assumed that the media files are already converted and located on S3 or other storage.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('skip_skipped'),
 				]
