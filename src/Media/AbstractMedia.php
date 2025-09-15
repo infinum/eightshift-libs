@@ -154,24 +154,27 @@ abstract class AbstractMedia implements ServiceInterface
 	 */
 	public function convertMediaToWebP(array $upload): array
 	{
-		$name = \pathinfo($upload['file'], \PATHINFO_FILENAME);
-		$ext = \pathinfo($upload['file'], \PATHINFO_EXTENSION);
+		try {
+			$ext = \pathinfo($upload['file'], \PATHINFO_EXTENSION);
 
-		if (!\in_array($ext, $this->getWebPAllowedExt(), true)) {
+			if (!\in_array($ext, $this->getWebPAllowedExt(), true)) {
+				return $upload;
+			}
+
+			$webpPath = Helpers::convertMediaToWebPByPath($upload['file'], $this->getMediaWebPQuality());
+
+			$output = [
+				'file' => $webpPath['newFilePath'],
+				'url' => $webpPath['newUrl'],
+				'type' => $webpPath['newType'],
+			];
+
+			\wp_delete_file($upload['file']);
+
+			return $output;
+		} catch (Exception $e) {
 			return $upload;
 		}
-
-		$webpPath = Helpers::convertMediaToWebPByPath($upload['file'], $this->getMediaWebPQuality());
-
-		$output = [
-			'file' => $webpPath,
-			'url' => \wp_get_upload_dir()['url'] . "/{$name}.webp",
-			'type' => 'image/webp',
-		];
-
-		\wp_delete_file($upload['file']);
-
-		return $output;
 	}
 
 	/**

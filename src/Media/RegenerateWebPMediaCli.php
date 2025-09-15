@@ -13,6 +13,7 @@ namespace EightshiftLibs\Media;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Helpers\Helpers;
+use Exception;
 use WP_CLI;
 use WP_Query;
 
@@ -51,6 +52,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 		return [
 			'quality' => '80',
 			'ids' => '',
+			'allowed_ext' => 'jpg,jpeg,png,bmp',
 		];
 	}
 
@@ -73,11 +75,25 @@ class RegenerateWebPMediaCli extends AbstractCli
 				],
 				[
 					'type' => 'assoc',
+					'name' => 'allowed_ext',
+					'description' => 'Regenerate all supported media to WebP format.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('allowed_ext'),
+				],
+				[
+					'type' => 'assoc',
 					'name' => 'ids',
 					'description' => 'Ids of attachment separated by comma.',
 					'optional' => true,
 					'default' => $this->getDefaultArg('ids'),
 				],
+				[
+					'type' => 'assoc',
+					'name' => 'only_update_db',
+					'description' => 'Only update the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.',
+					'optional' => true,
+					'default' => $this->getDefaultArg('skip_skipped'),
+				]
 			],
 			'longdesc' => $this->prepareLongDesc("
 				## USAGE
@@ -96,6 +112,9 @@ class RegenerateWebPMediaCli extends AbstractCli
 
 				# Regenerate media with different quality.
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --quality='90'
+
+				# Only update the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.
+				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --only_update_db='true'
 			"),
 		];
 	}
@@ -109,29 +128,50 @@ class RegenerateWebPMediaCli extends AbstractCli
 
 		$quality = $this->getArg($assocArgs, 'quality');
 		$ids = $this->getArg($assocArgs, 'ids');
+		$allowedExt = $this->getArg($assocArgs, 'allowed_ext');
+		$onlyUpdateDb = (bool) $this->getArg($assocArgs, 'only_update_db');
 
 		$args = [];
 
 		if ($ids) {
 			$args['post__in'] = \explode(',', $ids);
+		} else {
+			$args['post_mime_type'] = \array_map(
+				static function ($item) {
+					return "image/{$item}";
+				},
+				\explode(',', \str_replace(' ', '', $allowedExt))
+			);
 		}
 
 		$options = [
 			'quality' => (int) $quality,
 		];
 
-		$this->generateMedia($options, $args);
+		WP_CLI::log("Depending on the number of attachments, this process may take a while...");
+
+		if ($onlyUpdateDb) {
+			WP_CLI::log("Only updating the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.");
+		}
+
+		$this->generateMedia($options, $args, $onlyUpdateDb);
 	}
 
 	/**
-	 * Get Query args
+	 * Generate media.
 	 *
-	 * @param array<string> $args Args to merge on the original array.
+	 * @param array<mixed> $options Options from WP-CLI.
+	 * @param array<mixed> $args Parameters from WP-CLI.
+	 * @param bool $onlyUpdateDb Only update the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.
 	 *
-	 * @return array<string>
+	 * @return void
 	 */
-	private function getQueryArgs(array $args): array
+	private function generateMedia(array $options, array $args = [], bool $onlyUpdateDb = false): void
 	{
+		global $wpdb;
+
+		$quality = $options['quality'];
+
 		$defaultArgs = [
 			'post_type' => 'attachment',
 			'post_status' => 'inherit',
@@ -141,50 +181,85 @@ class RegenerateWebPMediaCli extends AbstractCli
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
 			'fields' => 'ids',
-			// 'post_mime_type' => \array_map(
-			// 	static function ($item) {
-			// 		return "image/{$item}";
-			// 	},
-			// 	// AbstractMedia::WEBP_ALLOWED_EXT
-			// ),
 		];
 
-		return \array_merge($defaultArgs, $args);
-	}
-
-	/**
-	 * Generate media.
-	 *
-	 * @param array<string, mixed> $options Options from WP-CLI.
-	 * @param array<string> $args Parameters from WP-CLI.
-	 *
-	 * @return void
-	 */
-	private function generateMedia(array $options, array $args = []): void
-	{
-		$quality = $options['quality'];
-
-		$theQuery = new WP_Query($this->getQueryArgs($args));
+		$theQuery = new WP_Query(\array_merge($defaultArgs, $args));
 
 		if (!$theQuery->posts) {
-			WP_CLI::error("No attachments found!");
+			WP_CLI::error("No attachments found with allowed extensions!");
 		}
 
-		foreach ($theQuery->posts as $id) {
-			$title = \get_the_title($id);
+		$skipped = [];
 
-			$original = Helpers::convertMediaToWebPById($id, $quality);
+		foreach ($theQuery->posts as $attachmentId) {
+			$title = \get_the_title($attachmentId);
 
-			WP_CLI::log("Attachment '{$title}' conversion to WebP status: {$id}");
+			WP_CLI::log('--------------------------------------------------');
 
-			if ($original) {
-				WP_CLI::success("Attachment original converted!");
-				WP_CLI::log($original);
-			} else {
-				WP_CLI::warning("Attachment original not converted - already exists!");
+			WP_CLI::log("Attachment: '{$attachmentId} - {$title}' is being processed...");
+
+			try {
+				$attachmentMetadata = \get_post_meta($attachmentId, '_wp_attachment_metadata', true);
+
+				$mainAttachment = Helpers::convertMediaToWebPById($attachmentId, $quality, $onlyUpdateDb);
+
+				if ($mainAttachment['originalUrl'] !== $mainAttachment['newUrl']) {
+					// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->update(
+						$wpdb->posts,
+						[
+							'guid' => $mainAttachment['newUrl'],
+							'post_mime_type' => $mainAttachment['newType'],
+						],
+						['ID' => $attachmentId]
+					);
+					// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+					WP_CLI::runcommand("search-replace '{$mainAttachment['originalUrl']}' '{$mainAttachment['newUrl']}'");
+
+					$attachmentMetadata['file'] = $mainAttachment['dirnameRelative'] . '/' . $mainAttachment['newFileName'];
+				}
+
+				$outputSizesMeta = [];
+				if ($sizes = \wp_get_attachment_metadata($attachmentId)['sizes'] ?? []) {
+					foreach ($sizes as $sizeName => $sizeData) {
+						$sizeFullPath = $mainAttachment['dirname'] . '/' . $sizeData['file'];
+						$sizeAttachment = Helpers::convertMediaToWebPByPath($sizeFullPath, $quality, $onlyUpdateDb);
+
+						$sizeData['file'] = $sizeAttachment['newFileName'];
+						$sizeData['mime-type'] = $sizeAttachment['newType'];
+
+						$outputSizesMeta[$sizeName] = $sizeData;
+					}
+				}
+
+				if ($outputSizesMeta) {
+					$attachmentMetadata['sizes'] = $outputSizesMeta;
+				}
+
+				\update_post_meta($attachmentId, '_wp_attachment_metadata', $attachmentMetadata);
+				\update_post_meta($attachmentId, '_wp_attached_file', $mainAttachment['dirnameRelative'] . '/' . $mainAttachment['newFileName']);
+
+				WP_CLI::success("Attachment: '{$attachmentId} - {$title}' converted to WebP format with new URL: {$mainAttachment['newUrl']}");
+			} catch (Exception $e) {
+				WP_CLI::warning("Attachment: '{$attachmentId}' failed with error: '{$e->getMessage()}'! Skipped.");
+				$skipped[$attachmentId] = [
+					'id' => $attachmentId,
+					'title' => $title,
+					'error' => $e->getMessage(),
+				];
+				continue;
 			}
 
 			WP_CLI::log('--------------------------------------------------');
+		}
+
+		if ($skipped) {
+			WP_CLI::log('--------------------------------------------------');
+			WP_CLI::log('Here is the list of skipped attachments:');
+			WP_CLI::log('Skipped attachments count: ' . \count($skipped));
+			$skippedCount = \wp_json_encode($skipped);
+			WP_CLI::log($skippedCount);
 		}
 
 		\wp_reset_postdata();
