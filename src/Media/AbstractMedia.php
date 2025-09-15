@@ -164,7 +164,7 @@ abstract class AbstractMedia implements ServiceInterface
 			$webpPath = Helpers::convertMediaToWebPByPath($upload['file'], $this->getMediaWebPQuality());
 
 			$output = [
-				'file' => $webpPath['newFilePath'],
+				'file' => $webpPath['newFullPath'],
 				'url' => $webpPath['newUrl'],
 				'type' => $webpPath['newType'],
 			];
