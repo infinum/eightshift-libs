@@ -151,7 +151,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 		WP_CLI::log("Depending on the number of attachments, this process may take a while...");
 
 		if ($onlyUpdateDb) {
-			WP_CLI::log("Only updating the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.");
+			WP_CLI::log("Only updating the database, not the media files as assumed that the media files are already converted and located on S3 or other storage.");
 		}
 
 		WP_CLI::confirm("Are you sure you want to regenerate the media, this process is irreversible and will regenerate all the media files and update the database? Make sure you have a backup of your database!", $assocArgs);
