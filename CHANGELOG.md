@@ -12,7 +12,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Changed
 
-- WebP helpers are now using totally different approach with different hooks and methods.
+- WebP helpers are now using totally different approach with different hooks and methods. We are no longer creating a new image on upload and using the helper method to detect the extension but we are creating a new image on upload and using using native WordPress functions.
+
+### Updated
+
+- composer packages.
 
 ## [10.12.1]
 
@@ -1044,6 +1048,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[12.0.0]: https://github.com/infinum/eightshift-libs/compare/10.12.1...11.0.0
 [11.0.0]: https://github.com/infinum/eightshift-libs/compare/10.12.1...11.0.0
 [10.12.1]: https://github.com/infinum/eightshift-libs/compare/10.12.0...10.12.1
 [10.12.0]: https://github.com/infinum/eightshift-libs/compare/10.11.2...10.12.0
