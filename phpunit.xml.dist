@@ -31,7 +31,6 @@
 			<file>src/BlockPatterns/BlockPatternExample.php</file>
 			<file>src/Cache/ManifestCacheExample.php</file>
 			<file>src/Cli/CliExample.php</file>
-			<file>src/Columns/Media/WebPMediaColumnExample.php</file>
 			<file>src/Config/ConfigPluginExample.php</file>
 			<file>src/Config/ConfigThemeExample.php</file>
 			<file>src/CustomPostType/PostTypeExample.php</file>

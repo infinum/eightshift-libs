@@ -23,7 +23,6 @@ use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Cli\ParentGroups\CliRun;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Cli\ParentGroups\CliInit;
-use EightshiftLibs\Columns\Media\WebPMediaColumnCli;
 use EightshiftLibs\Config\ConfigThemeCli;
 use EightshiftLibs\Config\ConfigPluginCli;
 use EightshiftLibs\View\EscapedViewCli;
@@ -45,7 +44,6 @@ use EightshiftLibs\Rest\Routes\RouteCli;
 use EightshiftLibs\Geolocation\GeolocationCli;
 use EightshiftLibs\Init\InitAllCli;
 use EightshiftLibs\Media\RegenerateWebPMediaCli;
-use EightshiftLibs\Media\UseWebPMediaCli;
 use EightshiftLibs\Optimization\OptimizationCli;
 use EightshiftLibs\Plugin\PluginCli;
 use EightshiftLibs\ThemeOptions\ThemeOptionsCli;
@@ -83,7 +81,6 @@ class Cli
 		AdminThemeOptionsMenuCli::class,
 		AdminSubMenuCli::class,
 		AdminPatternsHeaderFooterMenuCli::class,
-		WebPMediaColumnCli::class,
 		ConfigPluginCli::class,
 		ConfigThemeCli::class,
 		PostTypeCli::class,
@@ -117,7 +114,6 @@ class Cli
 	 */
 	public const RUN_COMMANDS = [
 		RegenerateWebPMediaCli::class,
-		UseWebPMediaCli::class,
 	];
 
 	/**
