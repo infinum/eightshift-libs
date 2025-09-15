@@ -113,7 +113,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 				# Regenerate media with different quality.
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --quality='90'
 
-				# Only update the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.
+				# Only update the database, not the media files as assumed that the media files are already converted and located on S3 or other storage.
 				$ wp {$this->commandParentName} {$this->getCommandParentName()} {$this->getCommandName()} --only_update_db='true'
 			"),
 		];
