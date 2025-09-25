@@ -161,7 +161,7 @@ trait MediaTrait
 		$newImage = \imagewebp($createdImage, $filePathNew, $quality);
 
 		// Free up memory.
-		\imagedestroy($createdImage);
+		unset($createdImage);
 
 		if (!$newImage) {
 			throw new Exception(\esc_html__('Failed to create image due to unknown error', 'eightshift-libs'));

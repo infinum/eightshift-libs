@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [11.0.1]
+
+### Fixed
+
+- Memory leak in `MediaTrait` helper.
+
 ## [11.0.0]
 
 ### Removed
@@ -1048,7 +1054,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
-[12.0.0]: https://github.com/infinum/eightshift-libs/compare/10.12.1...11.0.0
+[11.0.1]: https://github.com/infinum/eightshift-libs/compare/11.0.0...11.0.1
 [11.0.0]: https://github.com/infinum/eightshift-libs/compare/10.12.1...11.0.0
 [10.12.1]: https://github.com/infinum/eightshift-libs/compare/10.12.0...10.12.1
 [10.12.0]: https://github.com/infinum/eightshift-libs/compare/10.11.2...10.12.0
