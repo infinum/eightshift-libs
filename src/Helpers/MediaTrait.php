@@ -62,6 +62,10 @@ trait MediaTrait
 	 */
 	public static function convertMediaToWebPByPath(string $filePath, int $quality = 80, bool $onlyOutput = false): array
 	{
+		if (!$filePath) {
+			throw new Exception(\esc_html__('Media origin does not exist', 'eightshift-libs'));
+		}
+
 		// Detect type of media.
 		$originalExtension = \pathinfo($filePath, \PATHINFO_EXTENSION);
 		$originalFileName = \pathinfo($filePath, \PATHINFO_FILENAME);

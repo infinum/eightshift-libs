@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [11.0.2]
+
+### Fixed
+
+- `convertMediaToWebPByPath` helper now correctly throws an error if the media origin does not exist.
+
 ## [11.0.1]
 
 ### Fixed
@@ -1054,6 +1060,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[11.0.2]: https://github.com/infinum/eightshift-libs/compare/11.0.1...11.0.2
 [11.0.1]: https://github.com/infinum/eightshift-libs/compare/11.0.0...11.0.1
 [11.0.0]: https://github.com/infinum/eightshift-libs/compare/10.12.1...11.0.0
 [10.12.1]: https://github.com/infinum/eightshift-libs/compare/10.12.0...10.12.1
