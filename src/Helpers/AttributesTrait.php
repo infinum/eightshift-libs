@@ -335,11 +335,12 @@ trait AttributesTrait
 				$key = \esc_attr($key);
 			}
 
-			if (empty($value)) {
-				$htmlAttrs .= " {$key}";
-			} else {
+			if ($value == 0 || !empty($value)) { // intentional loose comparison to allow 0 values.
 				$htmlAttrs .= " {$key}='{$value}'";
+				continue;
 			}
+
+			$htmlAttrs .= " {$key}";
 		}
 
 		return $htmlAttrs;
