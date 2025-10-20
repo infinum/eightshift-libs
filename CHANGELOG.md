@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [11.0.3]
+
+### Fixed
+
+- `getAttrsOutput` helper for not escaping the attributes if the value is 0.
+
 ## [11.0.2]
 
 ### Fixed
@@ -1060,6 +1066,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[11.0.3]: https://github.com/infinum/eightshift-libs/compare/11.0.2...11.0.3
 [11.0.2]: https://github.com/infinum/eightshift-libs/compare/11.0.1...11.0.2
 [11.0.1]: https://github.com/infinum/eightshift-libs/compare/11.0.0...11.0.1
 [11.0.0]: https://github.com/infinum/eightshift-libs/compare/10.12.1...11.0.0
