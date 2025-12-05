@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [11.0.4]
+
+### Added
+
+- `outputCssVariablesGlobalClean` method to the `CssVariablesTrait` helper. Not wrapped in a style tag. Used in patterns.
+- `outputCssVariablesGlobal` method to the `CssVariablesTrait` helper.
+- `outputCssVariablesInlineClean` method to the `CssVariablesTrait` helper. Not wrapped in a style tag. Used in patterns.
+- `outputCssVariablesInline` method to the `CssVariablesTrait` helper.
+
 ## [11.0.3]
 
 ### Fixed
@@ -1066,6 +1075,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[11.0.4]: https://github.com/infinum/eightshift-libs/compare/11.0.3...11.0.4
 [11.0.3]: https://github.com/infinum/eightshift-libs/compare/11.0.2...11.0.3
 [11.0.2]: https://github.com/infinum/eightshift-libs/compare/11.0.1...11.0.2
 [11.0.1]: https://github.com/infinum/eightshift-libs/compare/11.0.0...11.0.1
