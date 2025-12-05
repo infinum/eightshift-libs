@@ -16,13 +16,13 @@ namespace EightshiftLibs\Helpers;
 trait CssVariablesTrait
 {
 	/**
-	 * Get Global Manifest.json and return globalVariables as CSS variables.
+	 * Get Global Manifest.json and return globalVariables as CSS variables. Not wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesGlobal(array $globalSettings = []): string
+	public static function outputCssVariablesGlobalClean(array $globalSettings = []): string
 	{
 		$output = '';
 
@@ -38,15 +38,28 @@ trait CssVariablesTrait
 			}
 		}
 
-		$id = Helpers::getConfigOutputCssSelectorName();
-
-		$output = "<style id='{$id}-global'>:root {{$output}}</style>";
+		$output = ":root {{$output}}";
 
 		if (Helpers::getConfigOutputCssOptimize()) {
 			$output = \str_replace(["\n", "\r"], '', $output);
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Get Global Manifest.json and return globalVariables as CSS variables. Wrapped in a style tag.
+	 *
+	 * @param array<string, mixed> $globalSettings Global settings.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariablesGlobal(array $globalSettings = []): string
+	{
+		$output = self::outputCssVariablesGlobalClean($globalSettings);
+		$id = Helpers::getConfigOutputCssSelectorName() . '-global';
+
+		return "<style id='{$id}'>{$output}</style>";
 	}
 
 	/**
@@ -142,13 +155,13 @@ trait CssVariablesTrait
 	}
 
 	/**
-	 * Output css variables as a one inline style tag. Used with wp_footer filter.
+	 * Output css variables as a one inline style tag. Used with wp_footer filter. Not wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
 	 *
 	 * @return string
 	 */
-	public static function outputCssVariablesInline(array $globalSettings = []): string
+	public static function outputCssVariablesInlineClean(array $globalSettings = []): string
 	{
 		// Load normal styles if server side render is used.
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -266,9 +279,22 @@ trait CssVariablesTrait
 		$additionalStyles = Helpers::getConfigOutputCssGloballyAdditionalStyles();
 		$additionalStylesOutput = $additionalStyles ? \esc_html(\implode(";\n", $additionalStyles)) : '';
 
+		return "{$output} {$additionalStylesOutput}";
+	}
+
+	/**
+	 * Output css variables as a one inline style tag. Used with wp_footer filter. Wrapped in a style tag.
+	 *
+	 * @param array<string, mixed> $globalSettings Global settings.
+	 *
+	 * @return string
+	 */
+	public static function outputCssVariablesInline(array $globalSettings = []): string
+	{
+		$output = self::outputCssVariablesInlineClean($globalSettings);
 		$selector = Helpers::getConfigOutputCssSelectorName();
 
-		return "<style id='{$selector}'>{$output} {$additionalStylesOutput}</style>";
+		return "<style id='{$selector}'>{$output}</style>";
 	}
 
 	/**
@@ -366,9 +392,9 @@ trait CssVariablesTrait
 
 		// Prepare final output for testing.
 		$fullOutput = "
-			{$output}
-			{$manual}
-		";
+				{$output}
+				{$manual}
+			";
 
 		// Check if final output is empty and and remove if it is.
 		if (empty(\trim($fullOutput))) {

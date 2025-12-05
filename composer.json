@@ -32,13 +32,13 @@
 		"php-di/php-di": "^7.1.1"
 	},
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "1.1.2",
+		"dealerdirect/phpcodesniffer-composer-installer": "1.2.0",
 		"infinum/eightshift-coding-standards": "^3.0.0",
 		"php-parallel-lint/php-parallel-lint": "^v1.4.0",
-		"php-stubs/wordpress-stubs": "6.8.2",
-		"szepeviktor/phpstan-wordpress": "2.0.2",
+		"php-stubs/wordpress-stubs": "6.9.0",
+		"szepeviktor/phpstan-wordpress": "2.0.3",
 		"wp-cli/wp-cli": "2.12.0",
-		"phpunit/phpunit": "^12.3.10",
+		"phpunit/phpunit": "^12.5.0",
 		"brain/monkey": "^2.6.2",
 		"mockery/mockery": "^1.6.12"
 	},
