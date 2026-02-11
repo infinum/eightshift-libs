@@ -39,7 +39,8 @@
 			<file>src/Enqueue/Blocks/EnqueueBlocksExample.php</file>
 			<file>src/Enqueue/Theme/EnqueueThemeExample.php</file>
 			<file>src/Geolocation/GeolocationExample.php</file>
-			<file>src/I18n/I18nExample.php</file>
+			<file>src/I18n/I18nThemeExample.php</file>
+			<file>src/I18n/I18nPluginExample.php</file>
 			<file>src/Login/LoginExample.php</file>
 			<file>src/Main/MainExample.php</file>
 			<file>src/Media/MediaExample.php</file>
@@ -70,4 +71,4 @@
 		<env name="WP_TESTS_TITLE" value="Test Blog"/>
 		<server name="SERVER_NAME" value="http://example.org"/>
 	</php>
-</phpunit> 
+</phpunit>
