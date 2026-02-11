@@ -13,7 +13,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Updated
 
-- increased code coverage for the existing tests.
+- increased code coverage.
+- CI now uses PHP 8.4
 
 ## [11.0.4]
 
