@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Comprehensive tests for MediaTrait helper methods.
+ * Tests for MediaTrait helper methods.
  *
  * @package EightshiftLibs\Tests\Unit\Helpers
  */
@@ -12,10 +12,8 @@ namespace EightshiftLibs\Tests\Unit\Helpers;
 
 use EightshiftLibs\Tests\BaseTestCase;
 use EightshiftLibs\Helpers\MediaTrait;
-use EightshiftLibs\Media\AbstractMedia;
-use EightshiftLibs\Media\UseWebPMediaCli;
 use Brain\Monkey\Functions;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Exception;
 
 /**
  * Wrapper class to test MediaTrait methods without conflicts.
@@ -23,93 +21,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class MediaTraitWrapper
 {
 	use MediaTrait;
-
-	/**
-	 * Public wrapper for getFileExtension method for testing.
-	 */
-	public static function getFileExtensionWrapper(string $path): ?string
-	{
-		return self::getFileExtension($path);
-	}
-
-	/**
-	 * Public wrapper for replaceExtensionToWebP method for testing.
-	 */
-	public static function replaceExtensionToWebPWrapper(string $path, string $ext): string
-	{
-		return self::replaceExtensionToWebP($path, $ext);
-	}
-
-	/**
-	 * Public wrapper for initializeMediaCaches method for testing.
-	 */
-	public static function initializeMediaCachesWrapper(array $allowed = AbstractMedia::WEBP_ALLOWED_EXT): void
-	{
-		self::initializeMediaCaches($allowed);
-	}
-
-	/**
-	 * Reset all static properties for clean testing.
-	 */
-	public static function resetCaches(): void
-	{
-		$reflection = new \ReflectionClass(self::class);
-		$properties = [
-			'allowedExtensionsFlipped',
-			'webpMediaCache',
-			'webpExistsCache'
-		];
-
-		foreach ($properties as $property) {
-			if ($reflection->hasProperty($property)) {
-				$prop = $reflection->getProperty($property);
-				$prop->setAccessible(true);
-
-				if ($property === 'allowedExtensionsFlipped') {
-					$prop->setValue(null, null);
-				} else {
-					$prop->setValue(null, []);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Get the current state of allowedExtensionsFlipped cache for testing.
-	 */
-	public static function getAllowedExtensionsFlippedCache(): ?array
-	{
-		$reflection = new \ReflectionClass(self::class);
-		$prop = $reflection->getProperty('allowedExtensionsFlipped');
-		$prop->setAccessible(true);
-		return $prop->getValue();
-	}
-
-	/**
-	 * Get the current state of webpMediaCache for testing.
-	 */
-	public static function getWebpMediaCache(): array
-	{
-		$reflection = new \ReflectionClass(self::class);
-		$prop = $reflection->getProperty('webpMediaCache');
-		$prop->setAccessible(true);
-		return $prop->getValue();
-	}
-
-	/**
-	 * Get the current state of webpExistsCache for testing.
-	 */
-	public static function getWebpExistsCache(): array
-	{
-		$reflection = new \ReflectionClass(self::class);
-		$prop = $reflection->getProperty('webpExistsCache');
-		$prop->setAccessible(true);
-		return $prop->getValue();
-	}
 }
 
 /**
- * Comprehensive test case for MediaTrait utility methods.
+ * Test case for MediaTrait utility methods.
  *
  * @coversDefaultClass EightshiftLibs\Helpers\MediaTrait
  */
@@ -122,554 +37,287 @@ class MediaTraitTest extends BaseTestCase
 		parent::setUp();
 		$this->wrapper = new MediaTraitWrapper();
 
-		// Reset caches between tests
-		MediaTraitWrapper::resetCaches();
-
 		// Mock WordPress functions
-		Functions\when('get_option')->returnArg(1);
-		Functions\when('get_attached_file')->alias(function ($id) {
-			if ($id === 123) {
-				return '/uploads/2023/test.jpg';
-			}
-			if ($id === 456) {
-				return '/uploads/2023/test.png';
-			}
-			return false;
+		Functions\when('esc_html__')->returnArg(1);
+		Functions\when('wp_get_upload_dir')->alias(function () {
+			return [
+				'basedir' => '/var/www/uploads',
+				'baseurl' => 'https://example.com/uploads',
+			];
 		});
-		Functions\when('file_exists')->alias('file_exists');
 	}
 
 	/**
-	 * @covers ::getFileExtension
+	 * @covers ::convertMediaToWebPById
 	 */
-	public function testGetFileExtensionWithValidPath(): void
+	public function testConvertMediaToWebPByIdWithOnlyOutput(): void
 	{
-		$result = $this->wrapper::getFileExtensionWrapper('/path/to/image.jpg');
-		$this->assertEquals('jpg', $result);
-	}
+		$attachmentId = 123;
+		$filePath = '/var/www/uploads/2024/01/test-image.jpg';
 
-	/**
-	 * @covers ::getFileExtension
-	 */
-	public function testGetFileExtensionWithValidPathUppercase(): void
-	{
-		$result = $this->wrapper::getFileExtensionWrapper('/path/to/image.JPG');
-		$this->assertEquals('jpg', $result);
-	}
+		Functions\when('get_attached_file')->alias(function ($id) use ($filePath) {
+			return $filePath;
+		});
 
-	/**
-	 * @covers ::getFileExtension
-	 */
-	#[DataProvider('validExtensionsProvider')]
-	public function testGetFileExtensionWithVariousValidExtensions(string $filename, string $expected): void
-	{
-		$result = $this->wrapper::getFileExtensionWrapper($filename);
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @covers ::getFileExtension
-	 */
-	public function testGetFileExtensionWithNoExtension(): void
-	{
-		$result = $this->wrapper::getFileExtensionWrapper('/path/to/file');
-		$this->assertNull($result);
-	}
-
-	/**
-	 * @covers ::getFileExtension
-	 */
-	public function testGetFileExtensionWithEmptyPath(): void
-	{
-		$result = $this->wrapper::getFileExtensionWrapper('');
-		$this->assertNull($result);
-	}
-
-	/**
-	 * @covers ::getFileExtension
-	 */
-	#[DataProvider('invalidExtensionsProvider')]
-	public function testGetFileExtensionWithInvalidExtensions(string $filename): void
-	{
-		$result = $this->wrapper::getFileExtensionWrapper($filename);
-		$this->assertNull($result);
-	}
-
-	/**
-	 * @covers ::replaceExtensionToWebP
-	 */
-	public function testReplaceExtensionToWebPWithSimplePath(): void
-	{
-		$result = $this->wrapper::replaceExtensionToWebPWrapper('/path/to/image.jpg', 'jpg');
-		$this->assertEquals('/path/to/image.webp', $result);
-	}
-
-	/**
-	 * @covers ::replaceExtensionToWebP
-	 */
-	public function testReplaceExtensionToWebPWithMultipleDots(): void
-	{
-		$result = $this->wrapper::replaceExtensionToWebPWrapper('/path/to/image.test.jpg', 'jpg');
-		$this->assertEquals('/path/to/image.test.webp', $result);
-	}
-
-	/**
-	 * @covers ::replaceExtensionToWebP
-	 */
-	public function testReplaceExtensionToWebPWithNoMatchingExtension(): void
-	{
-		$result = $this->wrapper::replaceExtensionToWebPWrapper('/path/to/image.png', 'jpg');
-		$this->assertEquals('/path/to/image.png', $result);
-	}
-
-	/**
-	 * @covers ::replaceExtensionToWebP
-	 */
-	#[DataProvider('extensionReplacementProvider')]
-	public function testReplaceExtensionToWebPWithVariousExtensions(string $path, string $ext, string $expected): void
-	{
-		$result = $this->wrapper::replaceExtensionToWebPWrapper($path, $ext);
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @covers ::initializeMediaCaches
-	 */
-	public function testInitializeMediaCachesWithDefaultExtensions(): void
-	{
-		$this->wrapper::initializeMediaCachesWrapper();
-
-		$cache = $this->wrapper::getAllowedExtensionsFlippedCache();
-		$this->assertIsArray($cache);
-		$this->assertArrayHasKey('jpg', $cache);
-		$this->assertArrayHasKey('png', $cache);
-		$this->assertArrayHasKey('gif', $cache);
-		$this->assertArrayHasKey('jpeg', $cache);
-		$this->assertArrayHasKey('bmp', $cache);
-	}
-
-	/**
-	 * @covers ::initializeMediaCaches
-	 */
-	public function testInitializeMediaCachesWithCustomExtensions(): void
-	{
-		$customAllowed = ['jpg', 'png'];
-		$this->wrapper::initializeMediaCachesWrapper($customAllowed);
-
-		$cache = $this->wrapper::getAllowedExtensionsFlippedCache();
-		$this->assertIsArray($cache);
-		$this->assertArrayHasKey('jpg', $cache);
-		$this->assertArrayHasKey('png', $cache);
-		$this->assertArrayNotHasKey('gif', $cache);
-		$this->assertCount(2, $cache);
-	}
-
-	/**
-	 * @covers ::initializeMediaCaches
-	 */
-	public function testInitializeMediaCachesOnlyInitializesOnce(): void
-	{
-		$this->wrapper::initializeMediaCachesWrapper(['jpg']);
-		$firstCache = $this->wrapper::getAllowedExtensionsFlippedCache();
-
-		// Call again with different allowed extensions
-		$this->wrapper::initializeMediaCachesWrapper(['png', 'gif']);
-		$secondCache = $this->wrapper::getAllowedExtensionsFlippedCache();
-
-		// Should remain the same (only initialized once)
-		$this->assertEquals($firstCache, $secondCache);
-		$this->assertArrayHasKey('jpg', $secondCache);
-		$this->assertArrayNotHasKey('png', $secondCache);
-	}
-
-	/**
-	 * @covers ::getWebPMedia
-	 */
-	public function testGetWebPMediaWithEmptyPath(): void
-	{
-		$result = $this->wrapper::getWebPMedia('');
-		$this->assertEquals([], $result);
-	}
-
-	/**
-	 * @covers ::getWebPMedia
-	 */
-	public function testGetWebPMediaWithValidJpgPath(): void
-	{
-		$path = '/uploads/2023/image.jpg';
-		$result = $this->wrapper::getWebPMedia($path);
+		$result = $this->wrapper::convertMediaToWebPById($attachmentId, 80, true);
 
 		$this->assertIsArray($result);
-		$this->assertArrayHasKey('src', $result);
-		$this->assertArrayHasKey('type', $result);
-		$this->assertEquals('/uploads/2023/image.webp', $result['src']);
-		$this->assertEquals('image/webp', $result['type']);
+		$this->assertArrayHasKey('attachmentId', $result);
+		$this->assertEquals($attachmentId, $result['attachmentId']);
+		$this->assertArrayHasKey('originalFullPath', $result);
+		$this->assertArrayHasKey('newFullPath', $result);
+		$this->assertArrayHasKey('originalExtension', $result);
+		$this->assertArrayHasKey('newExtension', $result);
+		$this->assertEquals('webp', $result['newExtension']);
 	}
 
 	/**
-	 * @covers ::getWebPMedia
+	 * @covers ::convertMediaToWebPById
 	 */
-	public function testGetWebPMediaWithExistingWebPPath(): void
+	public function testConvertMediaToWebPByIdMergesAttachmentId(): void
 	{
-		$path = '/uploads/2023/image.webp';
-		$result = $this->wrapper::getWebPMedia($path);
+		$attachmentId = 456;
+		$filePath = '/var/www/uploads/2024/02/photo.png';
+
+		Functions\when('get_attached_file')->alias(function ($id) use ($attachmentId, $filePath) {
+			if ($id === $attachmentId) {
+				return $filePath;
+			}
+			return false;
+		});
+
+		$result = $this->wrapper::convertMediaToWebPById($attachmentId, 85, true);
+
+		// Verify it includes both path data and attachment ID
+		$this->assertEquals($attachmentId, $result['attachmentId']);
+		$this->assertEquals($filePath, $result['originalFullPath']);
+		$this->assertEquals('png', $result['originalExtension']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPById
+	 */
+	public function testConvertMediaToWebPByIdWithDifferentQuality(): void
+	{
+		$attachmentId = 789;
+		$filePath = '/var/www/uploads/high-quality.jpg';
+
+		Functions\when('get_attached_file')->justReturn($filePath);
+
+		$result = $this->wrapper::convertMediaToWebPById($attachmentId, 95, true);
+
+		$this->assertEquals($attachmentId, $result['attachmentId']);
+		$this->assertArrayHasKey('newExtension', $result);
+		$this->assertEquals('webp', $result['newExtension']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPById
+	 */
+	public function testConvertMediaToWebPByIdWithJpegFile(): void
+	{
+		$attachmentId = 111;
+		$filePath = '/var/www/uploads/photo.jpeg';
+
+		Functions\when('get_attached_file')->justReturn($filePath);
+
+		$result = $this->wrapper::convertMediaToWebPById($attachmentId, 80, true);
+
+		$this->assertEquals($attachmentId, $result['attachmentId']);
+		$this->assertEquals('jpeg', $result['originalExtension']);
+		$this->assertEquals('photo.webp', $result['newFileName']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPById
+	 */
+	public function testConvertMediaToWebPByIdWithGifFile(): void
+	{
+		$attachmentId = 222;
+		$filePath = '/var/www/uploads/animation.gif';
+
+		Functions\when('get_attached_file')->justReturn($filePath);
+
+		$result = $this->wrapper::convertMediaToWebPById($attachmentId, 80, true);
+
+		$this->assertEquals($attachmentId, $result['attachmentId']);
+		$this->assertEquals('gif', $result['originalExtension']);
+		$this->assertEquals('animation.webp', $result['newFileName']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPById
+	 */
+	public function testConvertMediaToWebPByIdReturnsAllFields(): void
+	{
+		$attachmentId = 333;
+		$filePath = '/var/www/uploads/complete-test.png';
+
+		Functions\when('get_attached_file')->justReturn($filePath);
+
+		$result = $this->wrapper::convertMediaToWebPById($attachmentId, 80, true);
+
+		// Should have all path conversion fields plus attachment ID
+		$this->assertArrayHasKey('attachmentId', $result);
+		$this->assertArrayHasKey('newFullPath', $result);
+		$this->assertArrayHasKey('originalFullPath', $result);
+		$this->assertArrayHasKey('newUrl', $result);
+		$this->assertArrayHasKey('originalUrl', $result);
+		$this->assertArrayHasKey('newExtension', $result);
+		$this->assertArrayHasKey('originalExtension', $result);
+		$this->assertArrayHasKey('newType', $result);
+		$this->assertArrayHasKey('originalType', $result);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertMediaToWebPByPathWithOnlyOutput(): void
+	{
+		$filePath = '/var/www/uploads/2024/01/test-image.jpg';
+
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, true);
 
 		$this->assertIsArray($result);
-		$this->assertArrayHasKey('src', $result);
-		$this->assertArrayHasKey('type', $result);
-		$this->assertEquals('/uploads/2023/image.webp', $result['src']);
-		$this->assertEquals('image/webp', $result['type']);
+		$this->assertArrayHasKey('newFullPath', $result);
+		$this->assertArrayHasKey('newUrl', $result);
+		$this->assertArrayHasKey('newExtension', $result);
+		$this->assertArrayHasKey('newType', $result);
+		$this->assertArrayHasKey('newFileName', $result);
+		$this->assertArrayHasKey('originalFullPath', $result);
+		$this->assertArrayHasKey('originalUrl', $result);
+		$this->assertArrayHasKey('originalExtension', $result);
+		$this->assertArrayHasKey('originalFileName', $result);
+		$this->assertArrayHasKey('originalType', $result);
+
+		$this->assertEquals($filePath, $result['originalFullPath']);
+		$this->assertEquals('jpg', $result['originalExtension']);
+		$this->assertEquals('webp', $result['newExtension']);
+		$this->assertEquals('test-image', $result['originalFileName']);
+		$this->assertEquals('test-image.webp', $result['newFileName']);
 	}
 
 	/**
-	 * @covers ::getWebPMedia
+	 * @covers ::convertMediaToWebPByPath
 	 */
-	#[DataProvider('allowedExtensionsProvider')]
-	public function testGetWebPMediaWithAllowedExtensions(string $ext): void
+	public function testConvertMediaToWebPByPathWithPngFile(): void
 	{
-		$path = "/uploads/2023/image.{$ext}";
-		$result = $this->wrapper::getWebPMedia($path);
+		$filePath = '/var/www/uploads/image.png';
 
-		$this->assertIsArray($result);
-		$this->assertArrayHasKey('src', $result);
-		$this->assertArrayHasKey('type', $result);
-		$this->assertEquals('/uploads/2023/image.webp', $result['src']);
-		$this->assertEquals('image/webp', $result['type']);
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 90, true);
+
+		$this->assertEquals('png', $result['originalExtension']);
+		$this->assertEquals('image/png', $result['originalType']);
+		$this->assertEquals('webp', $result['newExtension']);
+		$this->assertEquals('image/webp', $result['newType']);
 	}
 
 	/**
-	 * @covers ::getWebPMedia
+	 * @covers ::convertMediaToWebPByPath
 	 */
-	public function testGetWebPMediaWithDisallowedExtension(): void
+	public function testConvertMediaToWebPByPathWithGifFile(): void
 	{
-		$path = '/uploads/2023/document.pdf';
-		$result = $this->wrapper::getWebPMedia($path);
+		$filePath = '/var/www/uploads/animation.gif';
 
-		$this->assertEquals([], $result);
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, true);
+
+		$this->assertEquals('gif', $result['originalExtension']);
+		$this->assertEquals('animation.webp', $result['newFileName']);
 	}
 
 	/**
-	 * @covers ::getWebPMedia
+	 * @covers ::convertMediaToWebPByPath
 	 */
-	public function testGetWebPMediaWithNoExtension(): void
+	public function testConvertMediaToWebPByPathWithBmpFile(): void
 	{
-		$path = '/uploads/2023/file';
-		$result = $this->wrapper::getWebPMedia($path);
+		$filePath = '/var/www/uploads/photo.bmp';
 
-		$this->assertEquals([], $result);
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, true);
+
+		$this->assertEquals('bmp', $result['originalExtension']);
+		$this->assertEquals('photo.webp', $result['newFileName']);
 	}
 
 	/**
-	 * @covers ::getWebPMedia
+	 * @covers ::convertMediaToWebPByPath
 	 */
-	public function testGetWebPMediaCachingBehavior(): void
+	public function testConvertMediaToWebPByPathWithEmptyPath(): void
 	{
-		$path = '/uploads/2023/image.jpg';
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Media origin does not exist');
 
-		// First call
-		$result1 = $this->wrapper::getWebPMedia($path);
-		$cache1 = $this->wrapper::getWebpMediaCache();
-
-		// Second call should use cache
-		$result2 = $this->wrapper::getWebPMedia($path);
-		$cache2 = $this->wrapper::getWebpMediaCache();
-
-		$this->assertEquals($result1, $result2);
-		$this->assertEquals($cache1, $cache2);
-		$this->assertArrayHasKey($path, $cache2);
+		$this->wrapper::convertMediaToWebPByPath('', 80, false);
 	}
 
 	/**
-	 * @covers ::getWebPMedia
+	 * @covers ::convertMediaToWebPByPath
 	 */
-	public function testGetWebPMediaWithCustomAllowedExtensions(): void
+	public function testConvertMediaToWebPByPathGeneratesCorrectUrls(): void
 	{
-		$path = '/uploads/2023/image.tiff';
-		$customAllowed = ['tiff', 'webp'];
+		$filePath = '/var/www/uploads/2024/01/my-image.jpg';
 
-		$result = $this->wrapper::getWebPMedia($path, $customAllowed);
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, true);
 
-		$this->assertIsArray($result);
-		$this->assertArrayHasKey('src', $result);
-		$this->assertEquals('/uploads/2023/image.webp', $result['src']);
+		$this->assertEquals('https://example.com/uploads/2024/01/my-image.jpg', $result['originalUrl']);
+		$this->assertEquals('https://example.com/uploads/2024/01/my-image.webp', $result['newUrl']);
 	}
 
 	/**
-	 * @covers ::getWebPMedia
+	 * @covers ::convertMediaToWebPByPath
 	 */
-	public function testGetWebPMediaWithComplexPath(): void
+	public function testConvertMediaToWebPByPathWithQualityParameter(): void
 	{
-		$path = '/uploads/2023/subfolder/image-with-dashes_and_underscores.jpg';
-		$result = $this->wrapper::getWebPMedia($path);
+		$filePath = '/var/www/uploads/test.jpg';
 
-		$this->assertIsArray($result);
-		$this->assertEquals('/uploads/2023/subfolder/image-with-dashes_and_underscores.webp', $result['src']);
+		// Test with different quality values
+		$result1 = $this->wrapper::convertMediaToWebPByPath($filePath, 100, true);
+		$result2 = $this->wrapper::convertMediaToWebPByPath($filePath, 50, true);
+
+		// Both should have same structure
+		$this->assertEquals($result1['originalFullPath'], $result2['originalFullPath']);
+		$this->assertEquals($result1['newExtension'], $result2['newExtension']);
 	}
 
 	/**
-	 * @covers ::isWebPMediaUsed
+	 * @covers ::convertMediaToWebPByPath
 	 */
-	public function testIsWebPMediaUsedWhenEnabled(): void
+	public function testConvertMediaToWebPByPathWithJpegExtension(): void
 	{
-		// Note: Static caching in isWebPMediaUsed means this test may be affected by previous tests
-		// This is testing the method behavior rather than the exact return value
-		Functions\when('get_option')->alias(function ($optionName, $default) {
-			if ($optionName === UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME) {
-				return true;
-			}
-			return $default;
-		});
+		$filePath = '/var/www/uploads/photo.jpeg';
 
-		$result = $this->wrapper::isWebPMediaUsed();
-		// Due to static caching from previous tests, we verify it returns a boolean
-		// The method works correctly, but static caching affects the result based on test order
-		$this->assertIsBool($result);
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, true);
+
+		$this->assertEquals('jpeg', $result['originalExtension']);
+		$this->assertEquals('photo.webp', $result['newFileName']);
 	}
 
 	/**
-	 * @covers ::isWebPMediaUsed
+	 * @covers ::convertMediaToWebPByPath
 	 */
-	public function testIsWebPMediaUsedWhenDisabled(): void
+	public function testConvertMediaToWebPByPathReturnsAllRequiredFields(): void
 	{
-		// Note: Static caching in isWebPMediaUsed means this test may be affected by previous tests
-		// This is testing the boolean conversion behavior rather than the exact return value
-		Functions\when('get_option')->alias(function ($optionName, $default) {
-			if ($optionName === UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME) {
-				return false;
-			}
-			return $default;
-		});
+		$filePath = '/var/www/uploads/test.png';
 
-		$result = $this->wrapper::isWebPMediaUsed();
-		// Due to static caching, we just verify it returns a boolean
-		$this->assertIsBool($result);
-	}
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, true);
 
-	/**
-	 * @covers ::isWebPMediaUsed
-	 */
-	public function testIsWebPMediaUsedWithStringValue(): void
-	{
-		Functions\when('get_option')->alias(function ($optionName, $default) {
-			if ($optionName === UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME) {
-				return '1'; // String value
-			}
-			return $default;
-		});
-
-		$result = $this->wrapper::isWebPMediaUsed();
-		// Due to static caching, we just verify it returns a boolean
-		$this->assertIsBool($result);
-	}
-
-	/**
-	 * @covers ::isWebPMediaUsed
-	 */
-	public function testIsWebPMediaUsedCachingBehavior(): void
-	{
-		$callCount = 0;
-		Functions\when('get_option')->alias(function ($optionName, $default) use (&$callCount) {
-			if ($optionName === UseWebPMediaCli::USE_WEBP_MEDIA_OPTION_NAME) {
-				$callCount++;
-				return true;
-			}
-			return $default;
-		});
-
-		// Multiple calls - the static cache may already be initialized from previous tests
-		$result1 = $this->wrapper::isWebPMediaUsed();
-		$result2 = $this->wrapper::isWebPMediaUsed();
-
-		$this->assertIsBool($result1);
-		$this->assertIsBool($result2);
-		$this->assertEquals($result1, $result2);
-		// Due to static caching from previous tests, we can't guarantee the exact call count
-		// but we verify that multiple calls return the same result
-		$this->assertLessThanOrEqual(1, $callCount);
-	}
-
-	/**
-	 * @covers ::existsWebPMedia
-	 */
-	public function testExistsWebPMediaWithInvalidAttachmentId(): void
-	{
-		$result = $this->wrapper::existsWebPMedia(0);
-		$this->assertFalse($result);
-
-		$result = $this->wrapper::existsWebPMedia(-1);
-		$this->assertFalse($result);
-	}
-
-	/**
-	 * @covers ::existsWebPMedia
-	 */
-	public function testExistsWebPMediaWithNonExistentAttachment(): void
-	{
-		Functions\when('get_attached_file')->alias(function ($id) {
-			return false; // Attachment doesn't exist
-		});
-
-		$result = $this->wrapper::existsWebPMedia(999);
-		$this->assertFalse($result);
-	}
-
-	/**
-	 * @covers ::existsWebPMedia
-	 */
-	public function testExistsWebPMediaWithValidAttachmentAndExistingWebP(): void
-	{
-		Functions\when('get_attached_file')->alias(function ($id) {
-			if ($id === 123) {
-				return '/uploads/2023/test.jpg';
-			}
-			return false;
-		});
-
-		Functions\when('file_exists')->alias(function ($path) {
-			return $path === '/uploads/2023/test.webp';
-		});
-
-		$result = $this->wrapper::existsWebPMedia(123);
-		$this->assertTrue($result);
-	}
-
-	/**
-	 * @covers ::existsWebPMedia
-	 */
-	public function testExistsWebPMediaWithValidAttachmentButNoWebP(): void
-	{
-		Functions\when('get_attached_file')->alias(function ($id) {
-			if ($id === 123) {
-				return '/uploads/2023/test.jpg';
-			}
-			return false;
-		});
-
-		Functions\when('file_exists')->alias(function ($path) {
-			return false; // WebP file doesn't exist
-		});
-
-		$result = $this->wrapper::existsWebPMedia(123);
-		$this->assertFalse($result);
-	}
-
-	/**
-	 * @covers ::existsWebPMedia
-	 */
-	public function testExistsWebPMediaWithUnsupportedFileType(): void
-	{
-		Functions\when('get_attached_file')->alias(function ($id) {
-			if ($id === 123) {
-				return '/uploads/2023/document.pdf';
-			}
-			return false;
-		});
-
-		$result = $this->wrapper::existsWebPMedia(123);
-		$this->assertFalse($result);
-	}
-
-	/**
-	 * @covers ::existsWebPMedia
-	 */
-	public function testExistsWebPMediaCachingBehavior(): void
-	{
-		$fileExistsCallCount = 0;
-		$getAttachedFileCallCount = 0;
-
-		Functions\when('get_attached_file')->alias(function ($id) use (&$getAttachedFileCallCount) {
-			$getAttachedFileCallCount++;
-			if ($id === 123) {
-				return '/uploads/2023/test.jpg';
-			}
-			return false;
-		});
-
-		Functions\when('file_exists')->alias(function ($path) use (&$fileExistsCallCount) {
-			$fileExistsCallCount++;
-			return $path === '/uploads/2023/test.webp';
-		});
-
-		// First call
-		$result1 = $this->wrapper::existsWebPMedia(123);
-		$cache1 = $this->wrapper::getWebpExistsCache();
-
-		// Second call should use cache
-		$result2 = $this->wrapper::existsWebPMedia(123);
-		$cache2 = $this->wrapper::getWebpExistsCache();
-
-		$this->assertTrue($result1);
-		$this->assertTrue($result2);
-		$this->assertEquals($cache1, $cache2);
-		$this->assertArrayHasKey(123, $cache2);
-		$this->assertEquals(1, $getAttachedFileCallCount);
-		$this->assertEquals(1, $fileExistsCallCount);
-	}
-
-	/**
-	 * @covers ::existsWebPMedia
-	 */
-	public function testExistsWebPMediaWithFileNoExtension(): void
-	{
-		Functions\when('get_attached_file')->alias(function ($id) {
-			if ($id === 123) {
-				return '/uploads/2023/file_without_extension';
-			}
-			return false;
-		});
-
-		$result = $this->wrapper::existsWebPMedia(123);
-		$this->assertFalse($result);
-	}
-
-	/**
-	 * Data providers
-	 */
-	public static function validExtensionsProvider(): array
-	{
-		return [
-			'jpg' => ['/path/image.jpg', 'jpg'],
-			'jpeg' => ['/path/image.jpeg', 'jpeg'],
-			'png' => ['/path/image.png', 'png'],
-			'gif' => ['/path/image.gif', 'gif'],
-			'bmp' => ['/path/image.bmp', 'bmp'],
-			'webp' => ['/path/image.webp', 'webp'],
-			'uppercase' => ['/path/image.PNG', 'png'],
-			'mixed case' => ['/path/image.JpG', 'jpg'],
+		$requiredFields = [
+			'newFullPath',
+			'newUrl',
+			'newExtension',
+			'newType',
+			'newFileName',
+			'originalFullPath',
+			'originalUrl',
+			'originalExtension',
+			'originalFileName',
+			'originalType',
+			'dirnameRelative',
+			'dirname',
+			'dirnameUpload'
 		];
-	}
 
-	public static function invalidExtensionsProvider(): array
-	{
-		return [
-			'too short' => ['/path/file.a'],
-			'too long' => ['/path/file.toolong'],
-			'no extension' => ['/path/file'],
-			'ends with dot' => ['/path/file.'],
-			'multiple dots empty' => ['/path/file..'],
-		];
-	}
-
-	public static function extensionReplacementProvider(): array
-	{
-		return [
-			'simple jpg' => ['/path/image.jpg', 'jpg', '/path/image.webp'],
-			'simple png' => ['/path/image.png', 'png', '/path/image.webp'],
-			'with subdirs' => ['/uploads/2023/image.jpeg', 'jpeg', '/uploads/2023/image.webp'],
-			'multiple dots in filename' => ['/path/image.test.jpg', 'jpg', '/path/image.test.webp'],
-			'extension not found' => ['/path/image.png', 'jpg', '/path/image.png'],
-			'complex path' => ['/var/www/uploads/2023/01/complex-name_123.jpg', 'jpg', '/var/www/uploads/2023/01/complex-name_123.webp'],
-		];
-	}
-
-	public static function allowedExtensionsProvider(): array
-	{
-		return [
-			['jpg'],
-			['jpeg'],
-			['png'],
-			['gif'],
-			['bmp'],
-		];
+		foreach ($requiredFields as $field) {
+			$this->assertArrayHasKey($field, $result, "Missing required field: $field");
+		}
 	}
 }
