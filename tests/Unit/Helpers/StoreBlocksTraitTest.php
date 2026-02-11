@@ -10,8 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Tests\Unit\Helpers;
 
+use Brain\Monkey;
+use Brain\Monkey\Functions;
 use EightshiftLibs\Tests\BaseTestCase;
 use EightshiftLibs\Helpers\StoreBlocksTrait;
+use EightshiftLibs\Exception\InvalidBlock;
 use ReflectionClass;
 
 /**
@@ -34,8 +37,17 @@ class StoreBlocksTraitTest extends BaseTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
+		Monkey\setUp();
 		$this->wrapper = new StoreBlocksTraitWrapper();
 		$this->clearStaticCache();
+
+		Functions\when('esc_html__')->returnArg(1);
+	}
+
+	protected function tearDown(): void
+	{
+		Monkey\tearDown();
+		parent::tearDown();
 	}
 
 	/**
@@ -55,97 +67,138 @@ class StoreBlocksTraitTest extends BaseTestCase
 	 */
 	public function testGetBlocksMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getBlocks'));
-	}
-
-	public function testGetBlockMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getBlock'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getBlocks'));
 	}
 
 	public function testGetComponentsMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getComponents'));
-	}
-
-	public function testGetComponentMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getComponent'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getComponents'));
 	}
 
 	public function testGetVariationsMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getVariations'));
-	}
-
-	public function testGetVariationMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getVariation'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getVariations'));
 	}
 
 	public function testGetWrapperMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getWrapper'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getWrapper'));
 	}
 
 	public function testGetConfigMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getConfig'));
-	}
-
-	public function testGetConfigOutputCssGloballyMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getConfigOutputCssGlobally'));
-	}
-
-	public function testGetConfigOutputCssOptimizeMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getConfigOutputCssOptimize'));
-	}
-
-	public function testGetConfigOutputCssSelectorNameMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getConfigOutputCssSelectorName'));
-	}
-
-	public function testGetConfigOutputCssGloballyAdditionalStylesMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getConfigOutputCssGloballyAdditionalStyles'));
-	}
-
-	public function testGetConfigUseWrapperMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getConfigUseWrapper'));
-	}
-
-	public function testGetConfigUseLegacyComponentsMethodExists(): void
-	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getConfigUseLegacyComponents'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getConfig'));
 	}
 
 	public function testGetSettingsMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getSettings'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getSettings'));
 	}
 
+	public function testGetAssetMethodExists(): void
+	{
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getAsset'));
+	}
+
+	public function testGetGeolocationCountriesMethodExists(): void
+	{
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getGeolocationCountries'));
+	}
+
+	/**
+	 * @covers ::getConfigOutputCssGlobally
+	 */
+	public function testGetConfigOutputCssGloballyMethodExists(): void
+	{
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getConfigOutputCssGlobally'));
+	}
+
+	public function testGetConfigOutputCssOptimizeMethodExists(): void
+	{
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getConfigOutputCssOptimize'));
+	}
+
+	public function testGetConfigOutputCssSelectorNameMethodExists(): void
+	{
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getConfigOutputCssSelectorName'));
+	}
+
+	public function testGetConfigOutputCssGloballyAdditionalStylesMethodExists(): void
+	{
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getConfigOutputCssGloballyAdditionalStyles'));
+	}
+
+	public function testGetConfigUseWrapperMethodExists(): void
+	{
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getConfigUseWrapper'));
+	}
+
+	public function testGetConfigUseLegacyComponentsMethodExists(): void
+	{
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getConfigUseLegacyComponents'));
+	}
+
+	/**
+	 * @covers ::getSettingsNamespace
+	 */
 	public function testGetSettingsNamespaceMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getSettingsNamespace'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getSettingsNamespace'));
 	}
 
 	public function testGetSettingsGlobalVariablesMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getSettingsGlobalVariables'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getSettingsGlobalVariables'));
 	}
 
 	public function testGetSettingsGlobalVariablesBreakpointsMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getSettingsGlobalVariablesBreakpoints'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getSettingsGlobalVariablesBreakpoints'));
 	}
 
 	public function testGetSettingsGlobalVariablesColorsMethodExists(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getSettingsGlobalVariablesColors'));
+		$this->assertTrue(\method_exists(StoreBlocksTraitWrapper::class, 'getSettingsGlobalVariablesColors'));
+	}
+
+	/**
+	 * @covers ::getBlock
+	 */
+	public function testGetBlockThrowsExceptionForEmptyString(): void
+	{
+		$this->expectException(InvalidBlock::class);
+
+		StoreBlocksTraitWrapper::getBlock('');
+	}
+
+	/**
+	 * @covers ::getComponent
+	 */
+	public function testGetComponentThrowsExceptionForEmptyString(): void
+	{
+		$this->expectException(InvalidBlock::class);
+
+		StoreBlocksTraitWrapper::getComponent('');
+	}
+
+	/**
+	 * @covers ::getVariation
+	 */
+	public function testGetVariationThrowsExceptionForEmptyString(): void
+	{
+		$this->expectException(InvalidBlock::class);
+
+		StoreBlocksTraitWrapper::getVariation('');
+	}
+
+	/**
+	 * @covers ::getAsset
+	 */
+	public function testGetAssetThrowsExceptionForEmptyString(): void
+	{
+		$this->expectException(InvalidBlock::class);
+
+		StoreBlocksTraitWrapper::getAsset('');
 	}
 
 	/**
@@ -179,13 +232,40 @@ class StoreBlocksTraitTest extends BaseTestCase
 		$this->assertCount(0, $styles);
 	}
 
-	public function testGetAssetMethodExists(): void
+	/**
+	 * @covers ::getStyles
+	 */
+	public function testGetStylesReturnsEmptyArrayInitially(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getAsset'));
+		$this->assertSame([], StoreBlocksTraitWrapper::getStyles());
 	}
 
-	public function testGetGeolocationCountriesMethodExists(): void
+	/**
+	 * @covers ::setStyle
+	 * @covers ::getStyles
+	 */
+	public function testMultipleStylesAccumulateInOrder(): void
 	{
-		$this->assertTrue(method_exists(StoreBlocksTraitWrapper::class, 'getGeolocationCountries'));
+		for ($i = 0; $i < 5; $i++) {
+			StoreBlocksTraitWrapper::setStyle(['index' => $i]);
+		}
+
+		$styles = StoreBlocksTraitWrapper::getStyles();
+		$this->assertCount(5, $styles);
+		$this->assertSame(0, $styles[0]['index']);
+		$this->assertSame(4, $styles[4]['index']);
+	}
+
+	/**
+	 * @covers ::$styles
+	 */
+	public function testStylesPropertyIsPublicStaticArray(): void
+	{
+		$reflection = new ReflectionClass(StoreBlocksTraitWrapper::class);
+		$property = $reflection->getProperty('styles');
+
+		$this->assertTrue($property->isStatic());
+		$this->assertTrue($property->isPublic());
+		$this->assertIsArray($property->getValue());
 	}
 }

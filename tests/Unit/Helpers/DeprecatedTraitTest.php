@@ -44,7 +44,32 @@ class DeprecatedTraitTest extends BaseTestCase
 	public function testClassnames(): void
 	{
 		$result = DeprecatedTraitWrapper::classnames(['class1', 'class2', 'class3']);
-		$this->assertIsString($result);
+		$this->assertSame('class1 class2 class3', $result);
+	}
+
+	/**
+	 * @covers ::classnames
+	 */
+	public function testClassnamesReturnsEmptyStringForEmptyArray(): void
+	{
+		$this->assertSame('', DeprecatedTraitWrapper::classnames([]));
+	}
+
+	/**
+	 * @covers ::classnames
+	 */
+	public function testClassnamesFiltersFalsyValues(): void
+	{
+		$result = DeprecatedTraitWrapper::classnames(['', 'class1', null, false, 'class2']);
+		$this->assertSame('class1 class2', $result);
+	}
+
+	/**
+	 * @covers ::classnames
+	 */
+	public function testClassnamesWithSingleClass(): void
+	{
+		$this->assertSame('my-class', DeprecatedTraitWrapper::classnames(['my-class']));
 	}
 
 	/**
