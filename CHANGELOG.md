@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [11.0.5]
+
+### Fixed
+
+- PHPStan errors.
+- tests.
+
 ## [11.0.4]
 
 ### Added
@@ -1075,6 +1082,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[11.0.5]: https://github.com/infinum/eightshift-libs/compare/11.0.4...11.0.5
 [11.0.4]: https://github.com/infinum/eightshift-libs/compare/11.0.3...11.0.4
 [11.0.3]: https://github.com/infinum/eightshift-libs/compare/11.0.2...11.0.3
 [11.0.2]: https://github.com/infinum/eightshift-libs/compare/11.0.1...11.0.2
