@@ -464,7 +464,6 @@ class CacheTraitTest extends BaseTestCase
 		});
 
 		// When cache file has invalid JSON, the code throws InvalidManifest exception
-		// TODO: Consider if this should be caught and fallback to rebuilding cache
 		$this->expectException(InvalidManifest::class);
 		$this->wrapper::setAllCache();
 	}

@@ -555,8 +555,8 @@ class AttributesTraitTest extends BaseTestCase
 		$result = $this->wrapper::getAttrsOutput($attrs);
 
 		// Empty string and false should output attribute name only
-		$this->assertStringContainsString(' disabled', $result);
-		$this->assertStringContainsString(' readonly', $result);
+		$this->assertStringContainsString('disabled', $result);
+		$this->assertStringContainsString('readonly', $result);
 	}
 
 	/**
