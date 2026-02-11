@@ -34,11 +34,9 @@ class AbstractRouteTest extends BaseTestCase
 		parent::setUp();
 		Monkey\setUp();
 
-		if (!\defined('WP_REST_Server::READABLE')) {
-			if (!\class_exists('WP_REST_Server')) {
-				// phpcs:ignore
-				eval('class WP_REST_Server { const READABLE = "GET"; const CREATABLE = "POST"; }');
-			}
+		if (!\class_exists('WP_REST_Server')) {
+			// phpcs:ignore
+			eval('class WP_REST_Server { const READABLE = "GET"; const CREATABLE = "POST"; }');
 		}
 	}
 
@@ -320,7 +318,7 @@ class AbstractRouteTest extends BaseTestCase
 
 		$this->assertArrayHasKey('methods', $result);
 		$this->assertArrayHasKey('callback', $result);
-		$this->assertEquals(WP_REST_Server::READABLE, $result['methods']);
+		$this->assertEquals('GET', $result['methods']);
 	}
 }
 
@@ -367,7 +365,7 @@ class ConcreteRoute extends AbstractRoute
 	protected function getCallbackArguments(): array
 	{
 		return [
-			'methods' => WP_REST_Server::READABLE,
+			'methods' => 'GET',
 			'callback' => [$this, 'routeCallback'],
 		];
 	}
