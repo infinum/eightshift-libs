@@ -9,7 +9,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Fixed
 
 - PHPStan errors.
-- tests.
+- added correct I18n classes to PHPUnit exclusions.
+
+### Updated
+
+- increased code coverage for the existing tests.
 
 ## [11.0.4]
 

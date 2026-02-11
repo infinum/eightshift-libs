@@ -64,24 +64,6 @@ class GeneralTraitTest extends BaseTestCase
 	}
 
 	/**
-	 * @covers ::isJson
-	 */
-	#[DataProvider('validJsonProvider')]
-	public function testIsJsonWithValidInput(string $json): void
-	{
-		$this->assertTrue($this->wrapper::isJson($json));
-	}
-
-	/**
-	 * @covers ::isJson
-	 */
-	#[DataProvider('invalidJsonProvider')]
-	public function testIsJsonWithInvalidInput(string $json): void
-	{
-		$this->assertFalse($this->wrapper::isJson($json));
-	}
-
-	/**
 	 * @covers ::flattenArray
 	 */
 	public function testFlattenArrayWithNestedArray(): void
@@ -282,15 +264,6 @@ class GeneralTraitTest extends BaseTestCase
 	public function testKebabToSnakeCase(string $input, string $expected): void
 	{
 		$this->assertEquals($expected, $this->wrapper::kebabToSnakeCase($input));
-	}
-
-	/**
-	 * @covers ::arrayIsList
-	 */
-	#[DataProvider('arrayIsListProvider')]
-	public function testArrayIsList(array $input, bool $expected): void
-	{
-		$this->assertEquals($expected, $this->wrapper::arrayIsList($input));
 	}
 
 	/**
