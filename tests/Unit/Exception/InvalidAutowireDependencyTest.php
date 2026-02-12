@@ -95,4 +95,89 @@ class InvalidAutowireDependencyTest extends BaseTestCase
 			$this->assertStringContainsString('autowiring', $message);
 		}
 	}
+
+	/**
+	 * @covers ::throwMoreThanOneClassFound
+	 */
+	public function testThrowMoreThanOneClassFoundMessage(): void
+	{
+		$className = 'LoggerService';
+		$interfaceName = 'LoggerInterface';
+		$exception = InvalidAutowireDependency::throwMoreThanOneClassFound($className, $interfaceName);
+
+		$this->assertInstanceOf(InvalidAutowireDependency::class, $exception);
+		$this->assertInstanceOf(InvalidArgumentException::class, $exception);
+		$this->assertInstanceOf(GeneralExceptionInterface::class, $exception);
+
+		$message = $exception->getMessage();
+		$this->assertStringContainsString('Found more than 1 class called "LoggerService"', $message);
+		$this->assertStringContainsString('implements LoggerInterface interface', $message);
+		$this->assertStringContainsString('manually define dependencies', $message);
+		$this->assertStringContainsString('https://eightshift.com/docs/basics/autowiring', $message);
+	}
+
+	/**
+	 * @covers ::throwMoreThanOneClassFound
+	 */
+	public function testThrowMoreThanOneClassFoundWithEmptyValues(): void
+	{
+		$exception = InvalidAutowireDependency::throwMoreThanOneClassFound('', '');
+
+		$message = $exception->getMessage();
+		$this->assertStringContainsString('Found more than 1 class called ""', $message);
+	}
+
+	/**
+	 * @covers ::throwMoreThanOneClassFound
+	 */
+	public function testThrowMoreThanOneClassFoundIsThrowable(): void
+	{
+		$exception = InvalidAutowireDependency::throwMoreThanOneClassFound('SomeClass', 'SomeInterface');
+
+		$this->expectException(InvalidAutowireDependency::class);
+		throw $exception;
+	}
+
+	/**
+	 * @covers ::throwPrimitiveDependencyFound
+	 */
+	public function testThrowPrimitiveDependencyFoundMessage(): void
+	{
+		$className = 'NotificationService';
+		$param = '$apiKey';
+		$exception = InvalidAutowireDependency::throwPrimitiveDependencyFound($className, $param);
+
+		$this->assertInstanceOf(InvalidAutowireDependency::class, $exception);
+		$this->assertInstanceOf(InvalidArgumentException::class, $exception);
+		$this->assertInstanceOf(GeneralExceptionInterface::class, $exception);
+
+		$message = $exception->getMessage();
+		$this->assertStringContainsString('primitive dependency for NotificationService', $message);
+		$this->assertStringContainsString('param $apiKey', $message);
+		$this->assertStringContainsString('Autowire is unable to figure out', $message);
+		$this->assertStringContainsString('https://eightshift.com/docs/basics/autowiring', $message);
+	}
+
+	/**
+	 * @covers ::throwPrimitiveDependencyFound
+	 */
+	public function testThrowPrimitiveDependencyFoundWithEmptyValues(): void
+	{
+		$exception = InvalidAutowireDependency::throwPrimitiveDependencyFound('', '');
+
+		$message = $exception->getMessage();
+		$this->assertStringContainsString('primitive dependency for ', $message);
+		$this->assertStringContainsString('param ', $message);
+	}
+
+	/**
+	 * @covers ::throwPrimitiveDependencyFound
+	 */
+	public function testThrowPrimitiveDependencyFoundIsThrowable(): void
+	{
+		$exception = InvalidAutowireDependency::throwPrimitiveDependencyFound('MyClass', '$myParam');
+
+		$this->expectException(InvalidAutowireDependency::class);
+		throw $exception;
+	}
 }

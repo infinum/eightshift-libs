@@ -13,6 +13,7 @@ namespace EightshiftLibs\Tests\Unit\Geolocation;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftLibs\Geolocation\AbstractGeolocation;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Tests\BaseTestCase;
 
@@ -197,6 +198,267 @@ class AbstractGeolocationTest extends BaseTestCase
 		// If we got here without error, cookie check worked
 		$this->assertTrue(true);
 	}
+
+	/**
+	 * Test that getGeolocation returns 'localhost' for 127.0.0.1
+	 *
+	 * @return void
+	 */
+	public function testGetGeolocationReturnsLocalhostForLoopbackIpv4(): void
+	{
+		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+		$geolocation = new ConcreteGeolocation();
+		$result = $geolocation->getGeolocation();
+
+		$this->assertSame('localhost', $result);
+
+		unset($_SERVER['REMOTE_ADDR']);
+	}
+
+	/**
+	 * Test that getGeolocation returns 'localhost' for ::1 (IPv6 loopback)
+	 *
+	 * @return void
+	 */
+	public function testGetGeolocationReturnsLocalhostForLoopbackIpv6(): void
+	{
+		$_SERVER['REMOTE_ADDR'] = '::1';
+
+		$geolocation = new ConcreteGeolocation();
+		$result = $geolocation->getGeolocation();
+
+		$this->assertSame('localhost', $result);
+
+		unset($_SERVER['REMOTE_ADDR']);
+	}
+
+	/**
+	 * Test that getGeolocation returns 'localhost' when REMOTE_ADDR is not set
+	 *
+	 * @return void
+	 */
+	public function testGetGeolocationReturnsLocalhostWhenNoRemoteAddr(): void
+	{
+		unset($_SERVER['REMOTE_ADDR']);
+
+		$geolocation = new ConcreteGeolocation();
+		$result = $geolocation->getGeolocation();
+
+		$this->assertSame('localhost', $result);
+	}
+
+	/**
+	 * Test that getGeolocation throws when phar file is missing
+	 *
+	 * @return void
+	 */
+	public function testGetGeolocationThrowsWhenPharMissing(): void
+	{
+		$_SERVER['REMOTE_ADDR'] = '8.8.8.8';
+		Functions\when('esc_html__')->returnArg();
+
+		Functions\when('file_exists')->justReturn(false);
+
+		$geolocation = new ConcreteGeolocation();
+
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Missing Geolocation phar');
+
+		try {
+			$geolocation->getGeolocation();
+		} finally {
+			unset($_SERVER['REMOTE_ADDR']);
+		}
+	}
+
+	/**
+	 * Test that getGeolocation throws when db file is missing
+	 *
+	 * @return void
+	 */
+	public function testGetGeolocationThrowsWhenDbMissing(): void
+	{
+		$_SERVER['REMOTE_ADDR'] = '8.8.8.8';
+		Functions\when('esc_html__')->returnArg();
+
+		Functions\when('file_exists')->alias(function ($path) {
+			// Phar exists, but DB does not.
+			if (\str_contains($path, 'phar')) {
+				return true;
+			}
+			return false;
+		});
+
+		$geolocation = new ConcreteGeolocation();
+
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Missing Geolocation database');
+
+		try {
+			$geolocation->getGeolocation();
+		} finally {
+			unset($_SERVER['REMOTE_ADDR']);
+		}
+	}
+
+	/**
+	 * Test that getGeolocation uses manual IP address when provided
+	 *
+	 * @return void
+	 */
+	public function testGetGeolocationUsesManualIpAddress(): void
+	{
+		// ConcreteGeolocationWithIp has getIpAddress returning '127.0.0.1'.
+		$geolocation = new ConcreteGeolocationWithIp();
+		$result = $geolocation->getGeolocation();
+
+		// Manual IP is 127.0.0.1 → localhost.
+		$this->assertSame('localhost', $result);
+	}
+
+	/**
+	 * Test that setLocationCookie catches exception and logs error
+	 *
+	 * @return void
+	 */
+	public function testSetLocationCookieLogsErrorOnException(): void
+	{
+		Functions\when('is_admin')->justReturn(false);
+		Functions\when('esc_html__')->returnArg();
+
+		$_SERVER['REMOTE_ADDR'] = '8.8.8.8';
+
+		// Make file_exists fail so getGeolocation throws.
+		Functions\when('file_exists')->justReturn(false);
+
+		// Mock error_log and verify it gets called with the exception message.
+		Functions\expect('error_log')
+			->once()
+			->with(\Mockery::on(function ($message) {
+				return \str_contains($message, 'Missing Geolocation phar');
+			}));
+
+		$geolocation = new ConcreteGeolocation();
+
+		// setLocationCookie should catch the exception and not rethrow.
+		$geolocation->setLocationCookie();
+
+		unset($_SERVER['REMOTE_ADDR']);
+	}
+
+	/**
+	 * Test that getCountries returns array with default region groups and individual countries
+	 *
+	 * @return void
+	 */
+	public function testGetCountriesReturnsCountriesFromCache(): void
+	{
+		Functions\when('__')->returnArg();
+
+		// Set up Helpers cache with geolocation countries data.
+		$reflection = new \ReflectionClass(Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, [
+			'geolocation' => [
+				'countries' => [
+					['Code' => 'us', 'Name' => 'United States'],
+					['Code' => 'de', 'Name' => 'Germany'],
+				],
+			],
+		]);
+
+		$geolocation = new ConcreteGeolocation();
+		$countries = $geolocation->getCountries();
+
+		$this->assertIsArray($countries);
+
+		// Should contain the 3 default region groups + 2 countries from cache.
+		$this->assertGreaterThanOrEqual(5, \count($countries));
+
+		// Check default regions are present.
+		$values = \array_column($countries, 'value');
+		$this->assertContains('europe', $values);
+		$this->assertContains('european-union', $values);
+		$this->assertContains('ex-yugoslavia', $values);
+
+		// Check countries from cache are present.
+		$this->assertContains('us', $values);
+		$this->assertContains('de', $values);
+
+		// Check individual country structure.
+		$usEntry = \array_filter($countries, fn($c) => ($c['value'] ?? '') === 'us');
+		$usEntry = \array_values($usEntry)[0];
+		$this->assertSame('United States', $usEntry['label']);
+		$this->assertSame(['US'], $usEntry['group']);
+
+		// Cleanup.
+		$cacheProperty->setValue(null, []);
+	}
+
+	/**
+	 * Test that getCountries includes additional custom countries
+	 *
+	 * @return void
+	 */
+	public function testGetCountriesIncludesAdditionalCountries(): void
+	{
+		Functions\when('__')->returnArg();
+
+		$reflection = new \ReflectionClass(Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, [
+			'geolocation' => [
+				'countries' => [
+					['Code' => 'hr', 'Name' => 'Croatia'],
+				],
+			],
+		]);
+
+		$geolocation = new ConcreteGeolocationWithCustomCountries();
+		$countries = $geolocation->getCountries();
+
+		$values = \array_column($countries, 'value');
+		$this->assertContains('custom-region', $values);
+
+		// Cleanup.
+		$cacheProperty->setValue(null, []);
+	}
+
+	/**
+	 * Test that getCountries skips entries without Code
+	 *
+	 * @return void
+	 */
+	public function testGetCountriesSkipsEntriesWithoutCode(): void
+	{
+		Functions\when('__')->returnArg();
+
+		$reflection = new \ReflectionClass(Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, [
+			'geolocation' => [
+				'countries' => [
+					['Code' => '', 'Name' => 'Unknown'],
+					['Code' => 'jp', 'Name' => 'Japan'],
+					['Name' => 'No Code'],
+				],
+			],
+		]);
+
+		$geolocation = new ConcreteGeolocation();
+		$countries = $geolocation->getCountries();
+
+		$values = \array_column($countries, 'value');
+		$this->assertContains('jp', $values);
+		// Entries without Code should be skipped.
+		$this->assertNotContains('', $values);
+
+		$cacheProperty->setValue(null, []);
+	}
 }
 
 /**
@@ -258,5 +520,43 @@ class ConcreteGeolocationDisabled extends ConcreteGeolocation
 	public function useGeolocation(): bool
 	{
 		return false;
+	}
+}
+
+/**
+ * Concrete implementation with manual IP address for testing
+ */
+class ConcreteGeolocationWithIp extends ConcreteGeolocation
+{
+	/**
+	 * Returns a manual IP address for testing.
+	 *
+	 * @return string
+	 */
+	public function getIpAddress(): string
+	{
+		return '127.0.0.1';
+	}
+}
+
+/**
+ * Concrete implementation with additional custom countries for testing
+ */
+class ConcreteGeolocationWithCustomCountries extends ConcreteGeolocation
+{
+	/**
+	 * Gets additional locations for country list.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getAdditionalCountries(): array
+	{
+		return [
+			[
+				'label' => 'Custom Region',
+				'value' => 'custom-region',
+				'group' => ['XX'],
+			],
+		];
 	}
 }

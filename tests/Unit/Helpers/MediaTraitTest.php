@@ -320,4 +320,70 @@ class MediaTraitTest extends BaseTestCase
 			$this->assertArrayHasKey($field, $result, "Missing required field: $field");
 		}
 	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertMediaToWebPByPathThrowsWhenWebpAlreadyExists(): void
+	{
+		$filePath = '/var/www/uploads/test.jpg';
+
+		// Mock file_exists: the new .webp path already exists.
+		Functions\when('file_exists')->alias(function ($path) {
+			// The new webp path would be /var/www/uploads/test.webp.
+			return \str_ends_with($path, '.webp');
+		});
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Media already exists');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertMediaToWebPByPathThrowsWhenOriginDoesNotExist(): void
+	{
+		$filePath = '/var/www/uploads/nonexistent.jpg';
+
+		// Mock file_exists: webp doesn't exist, but neither does original.
+		Functions\when('file_exists')->justReturn(false);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Media origin does not exist');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertMediaToWebPByPathThrowsForUnsupportedExtension(): void
+	{
+		$filePath = '/var/www/uploads/document.tiff';
+
+		// Mock file_exists: webp doesn't exist, original exists.
+		Functions\when('file_exists')->alias(function ($path) {
+			return !\str_ends_with($path, '.webp');
+		});
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Unsupported media extension');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPById
+	 */
+	public function testConvertMediaToWebPByIdThrowsWhenEmptyFilePath(): void
+	{
+		Functions\when('get_attached_file')->justReturn('');
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Media origin does not exist');
+
+		$this->wrapper::convertMediaToWebPById(999, 80, false);
+	}
 }

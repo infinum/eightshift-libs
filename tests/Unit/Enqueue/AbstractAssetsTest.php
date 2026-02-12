@@ -12,6 +12,7 @@ namespace EightshiftLibs\Tests\Unit\Enqueue;
 
 use Brain\Monkey;
 use EightshiftLibs\Enqueue\AbstractAssets;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Tests\BaseTestCase;
 
@@ -172,6 +173,35 @@ class AbstractAssetsTest extends BaseTestCase
 		$assets = new ConcreteAssets();
 
 		$this->assertEquals('1.0.0', $assets->getAssetsVersion());
+	}
+
+	/**
+	 * Test that setAssetsItem delegates to Helpers::getAsset with correct key
+	 *
+	 * @return void
+	 */
+	public function testSetAssetsItemReturnsAssetValue(): void
+	{
+		// Populate Helpers cache with test asset data.
+		$reflection = new \ReflectionClass(Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, [
+			'assets' => [
+				'assets' => [
+					'application.js' => '/public/application.js',
+					'style.css' => '/public/style.css',
+				],
+			],
+		]);
+
+		$assets = new ConcreteAssets();
+		$result = $assets->setAssetsItem('application.js');
+
+		$this->assertEquals('/public/application.js', $result);
+
+		// Clean up cache.
+		$cacheProperty->setValue(null, []);
 	}
 }
 
