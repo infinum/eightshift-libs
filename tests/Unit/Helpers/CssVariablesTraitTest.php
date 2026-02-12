@@ -2314,6 +2314,15 @@ class CssVariablesTraitTest extends BaseTestCase
 	{
 		$this->setupHelpersCache(['outputCssOptimize' => true]);
 
+		// Override getConfigOutputCssOptimize directly to bypass the function-level
+		// static $configCache in getConfig() which may be stale from prior tests.
+		\Patchwork\redefine(
+			\EightshiftLibs\Helpers\Helpers::class . '::getConfigOutputCssOptimize',
+			function () {
+				return true;
+			}
+		);
+
 		$globalSettings = [
 			'globalVariables' => [
 				'maxWidth' => '1200px',
@@ -2327,6 +2336,7 @@ class CssVariablesTraitTest extends BaseTestCase
 		$this->assertStringNotContainsString("\n", $result);
 		$this->assertStringContainsString('--global-max-width: 1200px;', $result);
 
+		\Patchwork\restoreAll();
 		$this->clearHelpersCache();
 	}
 }
