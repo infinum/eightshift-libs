@@ -508,6 +508,71 @@ class AbstractMediaTest extends BaseTestCase
 
 		\unlink($tmpFile);
 	}
+
+	/**
+	 * Test enableSvgMediaLibraryPreview portrait orientation
+	 */
+	public function testEnableSvgMediaLibraryPreviewPortraitOrientation(): void
+	{
+		$svgPath = \dirname(__DIR__, 2) . '/fixtures/media/portrait.svg';
+
+		Functions\when('get_attached_file')->justReturn($svgPath);
+		Functions\when('file_exists')->alias('file_exists');
+
+		$media = new ConcreteMedia();
+
+		$response = [
+			'type' => 'image',
+			'subtype' => 'svg+xml',
+			'url' => 'https://example.com/portrait.svg',
+		];
+
+		$result = $media->enableSvgMediaLibraryPreview($response, 123);
+
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('sizes', $result);
+		$this->assertEquals('portrait', $result['sizes']['full']['orientation']);
+		$this->assertEquals(50, $result['sizes']['full']['width']);
+		$this->assertEquals(100, $result['sizes']['full']['height']);
+	}
+
+	/**
+	 * Test convertMediaToWebP success path
+	 */
+	public function testConvertMediaToWebPSuccessPath(): void
+	{
+		$media = new ConcreteMedia();
+
+		$upload = [
+			'file' => '/tmp/uploads/photo.jpg',
+			'url' => 'https://example.com/uploads/photo.jpg',
+			'type' => 'image/jpeg',
+		];
+
+		// Mock Helpers::convertMediaToWebPByPath via Patchwork.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::convertMediaToWebPByPath',
+			function ($filePath, $quality) {
+				return [
+					'newFullPath' => '/tmp/uploads/photo.webp',
+					'newUrl' => 'https://example.com/uploads/photo.webp',
+					'newType' => 'image/webp',
+				];
+			}
+		);
+
+		$deleteCalled = false;
+		Functions\when('wp_delete_file')->alias(function ($file) use (&$deleteCalled) {
+			$deleteCalled = true;
+		});
+
+		$result = $media->convertMediaToWebP($upload);
+
+		$this->assertEquals('/tmp/uploads/photo.webp', $result['file']);
+		$this->assertEquals('https://example.com/uploads/photo.webp', $result['url']);
+		$this->assertEquals('image/webp', $result['type']);
+		$this->assertTrue($deleteCalled, 'wp_delete_file should be called with original file');
+	}
 }
 
 /**

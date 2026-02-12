@@ -320,6 +320,134 @@ class AbstractRouteTest extends BaseTestCase
 		$this->assertArrayHasKey('callback', $result);
 		$this->assertEquals('GET', $result['methods']);
 	}
+
+	/**
+	 * Test getRequestParams with CREATABLE type returns body params
+	 *
+	 * @return void
+	 */
+	public function testGetRequestParamsCreatableReturnsBodyParams(): void
+	{
+		$request = \Mockery::mock(WP_REST_Request::class);
+		$request->shouldReceive('get_body_params')->andReturn(['key' => 'value']);
+		$request->shouldReceive('get_json_params')->andReturn([]);
+
+		$route = new ConcreteRoute();
+		$reflection = new \ReflectionMethod($route, 'getRequestParams');
+		$result = $reflection->invoke($route, $request, RouteInterface::CREATABLE);
+
+		$this->assertEquals(['key' => 'value'], $result);
+	}
+
+	/**
+	 * Test getRequestParams with READABLE type returns query params
+	 *
+	 * @return void
+	 */
+	public function testGetRequestParamsReadableReturnsQueryParams(): void
+	{
+		$request = \Mockery::mock(WP_REST_Request::class);
+		$request->shouldReceive('get_params')->andReturn(['search' => 'test']);
+		$request->shouldReceive('get_json_params')->andReturn([]);
+
+		$route = new ConcreteRoute();
+		$reflection = new \ReflectionMethod($route, 'getRequestParams');
+		$result = $reflection->invoke($route, $request, RouteInterface::READABLE);
+
+		$this->assertEquals(['search' => 'test'], $result);
+	}
+
+	/**
+	 * Test getRequestParams with unknown type returns empty array
+	 *
+	 * @return void
+	 */
+	public function testGetRequestParamsUnknownTypeReturnsEmpty(): void
+	{
+		$request = \Mockery::mock(WP_REST_Request::class);
+		$request->shouldReceive('get_json_params')->andReturn([]);
+
+		$route = new ConcreteRoute();
+		$reflection = new \ReflectionMethod($route, 'getRequestParams');
+		$result = $reflection->invoke($route, $request, 'UNKNOWN');
+
+		$this->assertEquals([], $result);
+	}
+
+	/**
+	 * Test getRequestParams merges JSON params
+	 *
+	 * @return void
+	 */
+	public function testGetRequestParamsMergesJsonParams(): void
+	{
+		$request = \Mockery::mock(WP_REST_Request::class);
+		$request->shouldReceive('get_body_params')->andReturn(['key1' => 'a']);
+		$request->shouldReceive('get_json_params')->andReturn(['key2' => 'b']);
+
+		$route = new ConcreteRoute();
+		$reflection = new \ReflectionMethod($route, 'getRequestParams');
+		$result = $reflection->invoke($route, $request, RouteInterface::CREATABLE);
+
+		$this->assertEquals(['key1' => 'a', 'key2' => 'b'], $result);
+	}
+
+	/**
+	 * Test getRequestParams JSON params override body params on conflict
+	 *
+	 * @return void
+	 */
+	public function testGetRequestParamsJsonOverridesBodyOnConflict(): void
+	{
+		$request = \Mockery::mock(WP_REST_Request::class);
+		$request->shouldReceive('get_body_params')->andReturn(['key' => 'body']);
+		$request->shouldReceive('get_json_params')->andReturn(['key' => 'json']);
+
+		$route = new ConcreteRoute();
+		$reflection = new \ReflectionMethod($route, 'getRequestParams');
+		$result = $reflection->invoke($route, $request, RouteInterface::CREATABLE);
+
+		$this->assertEquals('json', $result['key']);
+	}
+
+	/**
+	 * Test checkUserPermission with additional data
+	 *
+	 * @return void
+	 */
+	public function testCheckUserPermissionWithAdditionalData(): void
+	{
+		Functions\when('current_user_can')->justReturn(false);
+		Functions\when('__')->returnArg(1);
+
+		$route = new ConcreteRoute();
+		$reflection = new \ReflectionMethod($route, 'checkUserPermission');
+		$additional = ['context' => 'test'];
+		$result = $reflection->invoke($route, 'manage_options', $additional);
+
+		$this->assertEquals($additional, $result['data']);
+	}
+
+	/**
+	 * Test prepareSimpleApiParams sanitizes request params
+	 *
+	 * @return void
+	 */
+	public function testPrepareSimpleApiParamsReturnsArray(): void
+	{
+		Functions\when('sanitize_text_field')->returnArg(1);
+
+		$request = \Mockery::mock(WP_REST_Request::class);
+		$request->shouldReceive('get_body_params')->andReturn(['name' => 'test']);
+		$request->shouldReceive('get_json_params')->andReturn([]);
+
+		$route = new ConcreteRoute();
+		$reflection = new \ReflectionMethod($route, 'prepareSimpleApiParams');
+		$result = $reflection->invoke($route, $request, RouteInterface::CREATABLE);
+
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('name', $result);
+	}
 }
 
 /**

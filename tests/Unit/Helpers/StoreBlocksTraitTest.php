@@ -13,8 +13,10 @@ namespace EightshiftLibs\Tests\Unit\Helpers;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EightshiftLibs\Tests\BaseTestCase;
+use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Helpers\StoreBlocksTrait;
 use EightshiftLibs\Exception\InvalidBlock;
+use EightshiftLibs\Exception\InvalidManifest;
 use ReflectionClass;
 
 /**
@@ -59,6 +61,74 @@ class StoreBlocksTraitTest extends BaseTestCase
 		$stylesProperty = $reflection->getProperty('styles');
 		$stylesProperty->setAccessible(true);
 		$stylesProperty->setValue(null, []);
+	}
+
+	/**
+	 * Set up Helpers cache with test data.
+	 */
+	private function setupHelpersCache(array $overrides = []): void
+	{
+		$defaults = [
+			'blocks' => [
+				'blocks' => [
+					'button' => ['blockName' => 'button', 'attributes' => []],
+					'card' => ['blockName' => 'card'],
+				],
+				'components' => [
+					'heading' => ['componentName' => 'heading'],
+					'paragraph' => ['componentName' => 'paragraph'],
+				],
+				'variations' => [
+					'default' => ['variationName' => 'default'],
+				],
+				'wrapper' => ['componentName' => 'wrapper', 'attributes' => []],
+				'settings' => [
+					'config' => [
+						'outputCssGlobally' => true,
+						'outputCssOptimize' => false,
+						'outputCssSelectorName' => 'es-css',
+						'outputCssGloballyAdditionalStyles' => ['style1', 'style2'],
+						'useWrapper' => true,
+						'useLegacyComponents' => false,
+					],
+					'namespace' => 'eightshift-boilerplate',
+					'globalVariables' => [
+						'breakpoints' => ['sm' => 640, 'md' => 768, 'lg' => 1024],
+						'colors' => ['primary' => '#000', 'secondary' => '#fff'],
+					],
+				],
+			],
+			'assets' => [
+				'assets' => [
+					'app.js' => '/dist/app.js',
+					'style.css' => '/dist/style.css',
+				],
+			],
+			'geolocation' => [
+				'countries' => [
+					['Code' => 'us', 'Name' => 'United States'],
+					['Code' => 'de', 'Name' => 'Germany'],
+				],
+			],
+		];
+
+		$cache = \array_replace_recursive($defaults, $overrides);
+
+		$reflection = new ReflectionClass(Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, $cache);
+	}
+
+	/**
+	 * Clear Helpers cache.
+	 */
+	private function clearHelpersCache(): void
+	{
+		$reflection = new ReflectionClass(Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, []);
 	}
 
 	/**
@@ -267,5 +337,484 @@ class StoreBlocksTraitTest extends BaseTestCase
 		$this->assertTrue($property->isStatic());
 		$this->assertTrue($property->isPublic());
 		$this->assertIsArray($property->getValue());
+	}
+
+	/**
+	 * @covers ::getBlocks
+	 * @covers ::getCachedData
+	 */
+	public function testGetBlocksReturnsBlocksFromCache(): void
+	{
+		$this->setupHelpersCache();
+
+		$blocks = StoreBlocksTraitWrapper::getBlocks();
+
+		$this->assertIsArray($blocks);
+		$this->assertArrayHasKey('button', $blocks);
+		$this->assertArrayHasKey('card', $blocks);
+		$this->assertEquals('button', $blocks['button']['blockName']);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getBlocks
+	 */
+	public function testGetBlocksReturnsEmptyArrayWhenCacheEmpty(): void
+	{
+		$this->clearHelpersCache();
+
+		$blocks = StoreBlocksTraitWrapper::getBlocks();
+
+		$this->assertSame([], $blocks);
+	}
+
+	/**
+	 * @covers ::getBlock
+	 * @covers ::getCachedData
+	 */
+	public function testGetBlockReturnsBlockData(): void
+	{
+		$this->setupHelpersCache();
+
+		$block = StoreBlocksTraitWrapper::getBlock('button');
+
+		$this->assertIsArray($block);
+		$this->assertEquals('button', $block['blockName']);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getBlock
+	 */
+	public function testGetBlockThrowsForMissingBlock(): void
+	{
+		$this->setupHelpersCache();
+
+		$this->expectException(InvalidBlock::class);
+
+		try {
+			StoreBlocksTraitWrapper::getBlock('nonexistent');
+		} finally {
+			$this->clearHelpersCache();
+		}
+	}
+
+	/**
+	 * @covers ::getComponents
+	 * @covers ::getCachedData
+	 */
+	public function testGetComponentsReturnsComponentsFromCache(): void
+	{
+		$this->setupHelpersCache();
+
+		$components = StoreBlocksTraitWrapper::getComponents();
+
+		$this->assertIsArray($components);
+		$this->assertArrayHasKey('heading', $components);
+		$this->assertArrayHasKey('paragraph', $components);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getComponent
+	 * @covers ::getCachedData
+	 */
+	public function testGetComponentReturnsComponentData(): void
+	{
+		$this->setupHelpersCache();
+
+		$component = StoreBlocksTraitWrapper::getComponent('heading');
+
+		$this->assertIsArray($component);
+		$this->assertEquals('heading', $component['componentName']);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getComponent
+	 */
+	public function testGetComponentThrowsForMissingComponent(): void
+	{
+		$this->setupHelpersCache();
+
+		$this->expectException(InvalidBlock::class);
+
+		try {
+			StoreBlocksTraitWrapper::getComponent('nonexistent');
+		} finally {
+			$this->clearHelpersCache();
+		}
+	}
+
+	/**
+	 * @covers ::getVariations
+	 * @covers ::getCachedData
+	 */
+	public function testGetVariationsReturnsVariationsFromCache(): void
+	{
+		$this->setupHelpersCache();
+
+		$variations = StoreBlocksTraitWrapper::getVariations();
+
+		$this->assertIsArray($variations);
+		$this->assertArrayHasKey('default', $variations);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getVariation
+	 * @covers ::getCachedData
+	 */
+	public function testGetVariationReturnsVariationData(): void
+	{
+		$this->setupHelpersCache();
+
+		$variation = StoreBlocksTraitWrapper::getVariation('default');
+
+		$this->assertIsArray($variation);
+		$this->assertEquals('default', $variation['variationName']);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getVariation
+	 */
+	public function testGetVariationThrowsForMissingVariation(): void
+	{
+		$this->setupHelpersCache();
+
+		$this->expectException(InvalidBlock::class);
+
+		try {
+			StoreBlocksTraitWrapper::getVariation('nonexistent');
+		} finally {
+			$this->clearHelpersCache();
+		}
+	}
+
+	/**
+	 * @covers ::getWrapper
+	 * @covers ::getCachedData
+	 */
+	public function testGetWrapperReturnsWrapperFromCache(): void
+	{
+		$this->setupHelpersCache();
+
+		$wrapper = StoreBlocksTraitWrapper::getWrapper();
+
+		$this->assertIsArray($wrapper);
+		$this->assertEquals('wrapper', $wrapper['componentName']);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getSettings
+	 * @covers ::getCachedData
+	 */
+	public function testGetSettingsReturnsSettingsFromCache(): void
+	{
+		$this->setupHelpersCache();
+
+		$settings = StoreBlocksTraitWrapper::getSettings();
+
+		$this->assertIsArray($settings);
+		$this->assertArrayHasKey('config', $settings);
+		$this->assertArrayHasKey('namespace', $settings);
+		$this->assertArrayHasKey('globalVariables', $settings);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getSettings
+	 */
+	public function testGetSettingsThrowsWhenEmpty(): void
+	{
+		$this->clearHelpersCache();
+
+		$this->expectException(InvalidBlock::class);
+
+		StoreBlocksTraitWrapper::getSettings();
+	}
+
+	/**
+	 * @covers ::getConfig
+	 */
+	public function testGetConfigReturnsConfigArray(): void
+	{
+		$this->setupHelpersCache();
+
+		$config = StoreBlocksTraitWrapper::getConfig();
+
+		$this->assertIsArray($config);
+		// getConfig() has function-level static cache; just verify it returns an array.
+		// The actual values depend on whether this is the first getConfig call in the run.
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getConfigOutputCssGlobally
+	 */
+	public function testGetConfigOutputCssGloballyReturnsBool(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getConfigOutputCssGlobally();
+
+		$this->assertIsBool($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getConfigOutputCssOptimize
+	 */
+	public function testGetConfigOutputCssOptimizeReturnsBool(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getConfigOutputCssOptimize();
+
+		$this->assertIsBool($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getConfigOutputCssSelectorName
+	 */
+	public function testGetConfigOutputCssSelectorNameReturnsString(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getConfigOutputCssSelectorName();
+
+		$this->assertIsString($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getConfigOutputCssGloballyAdditionalStyles
+	 */
+	public function testGetConfigOutputCssGloballyAdditionalStylesReturnsArray(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getConfigOutputCssGloballyAdditionalStyles();
+
+		$this->assertIsArray($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getConfigUseWrapper
+	 */
+	public function testGetConfigUseWrapperReturnsBool(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getConfigUseWrapper();
+
+		$this->assertIsBool($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getConfigUseLegacyComponents
+	 */
+	public function testGetConfigUseLegacyComponentsReturnsBool(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getConfigUseLegacyComponents();
+
+		$this->assertIsBool($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getSettingsNamespace
+	 */
+	public function testGetSettingsNamespaceReturnsString(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getSettingsNamespace();
+
+		$this->assertIsString($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getSettingsGlobalVariables
+	 */
+	public function testGetSettingsGlobalVariablesReturnsArray(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getSettingsGlobalVariables();
+
+		$this->assertIsArray($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getSettingsGlobalVariablesBreakpoints
+	 */
+	public function testGetSettingsGlobalVariablesBreakpointsReturnsArray(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getSettingsGlobalVariablesBreakpoints();
+
+		$this->assertIsArray($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getSettingsGlobalVariablesColors
+	 */
+	public function testGetSettingsGlobalVariablesColorsReturnsArray(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getSettingsGlobalVariablesColors();
+
+		$this->assertIsArray($result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getAsset
+	 * @covers ::getCachedData
+	 */
+	public function testGetAssetReturnsAssetPath(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getAsset('app.js');
+
+		$this->assertIsString($result);
+		$this->assertEquals('/dist/app.js', $result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getAsset
+	 */
+	public function testGetAssetThrowsForMissingAsset(): void
+	{
+		$this->setupHelpersCache();
+
+		$this->expectException(InvalidBlock::class);
+
+		try {
+			StoreBlocksTraitWrapper::getAsset('nonexistent.js');
+		} finally {
+			$this->clearHelpersCache();
+		}
+	}
+
+	/**
+	 * @covers ::getGeolocationCountries
+	 * @covers ::getCachedData
+	 */
+	public function testGetGeolocationCountriesReturnsCountries(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = StoreBlocksTraitWrapper::getGeolocationCountries();
+
+		$this->assertIsArray($result);
+		$this->assertCount(2, $result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getGeolocationCountries
+	 */
+	public function testGetGeolocationCountriesThrowsWhenEmpty(): void
+	{
+		// Set cache with empty geolocation countries directly (can't use setupHelpersCache
+		// because array_replace_recursive doesn't override non-empty with empty).
+		$reflection = new ReflectionClass(Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, [
+			'geolocation' => ['countries' => []],
+		]);
+
+		$this->expectException(InvalidManifest::class);
+
+		try {
+			StoreBlocksTraitWrapper::getGeolocationCountries();
+		} finally {
+			$this->clearHelpersCache();
+		}
+	}
+
+	/**
+	 * @covers ::getSettingsNamespace
+	 */
+	public function testGetSettingsNamespaceCacheHit(): void
+	{
+		$this->setupHelpersCache();
+
+		// First call populates the function-level static cache.
+		$result1 = StoreBlocksTraitWrapper::getSettingsNamespace();
+		// Second call returns from cache (line 298).
+		$result2 = StoreBlocksTraitWrapper::getSettingsNamespace();
+
+		$this->assertSame($result1, $result2);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getSettingsGlobalVariablesBreakpoints
+	 */
+	public function testGetSettingsGlobalVariablesBreakpointsCacheHit(): void
+	{
+		$this->setupHelpersCache();
+
+		$result1 = StoreBlocksTraitWrapper::getSettingsGlobalVariablesBreakpoints();
+		$result2 = StoreBlocksTraitWrapper::getSettingsGlobalVariablesBreakpoints();
+
+		$this->assertSame($result1, $result2);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getSettingsGlobalVariablesColors
+	 */
+	public function testGetSettingsGlobalVariablesColorsCacheHit(): void
+	{
+		$this->setupHelpersCache();
+
+		$result1 = StoreBlocksTraitWrapper::getSettingsGlobalVariablesColors();
+		$result2 = StoreBlocksTraitWrapper::getSettingsGlobalVariablesColors();
+
+		$this->assertSame($result1, $result2);
+
+		$this->clearHelpersCache();
 	}
 }

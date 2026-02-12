@@ -386,4 +386,239 @@ class MediaTraitTest extends BaseTestCase
 
 		$this->wrapper::convertMediaToWebPById(999, 80, false);
 	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertJpegToWebPSuccessfully(): void
+	{
+		$filePath = '/var/www/uploads/photo.jpg';
+		$fakeImage = \imagecreatetruecolor(1, 1);
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefromjpeg')->justReturn($fakeImage);
+		Functions\when('imagewebp')->justReturn(true);
+
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+
+		$this->assertSame('webp', $result['newExtension']);
+		$this->assertSame($filePath, $result['originalFullPath']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertJpegExtensionToWebPSuccessfully(): void
+	{
+		$filePath = '/var/www/uploads/photo.jpeg';
+		$fakeImage = \imagecreatetruecolor(1, 1);
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefromjpeg')->justReturn($fakeImage);
+		Functions\when('imagewebp')->justReturn(true);
+
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 90, false);
+
+		$this->assertSame('jpeg', $result['originalExtension']);
+		$this->assertSame('webp', $result['newExtension']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertPngToWebPSuccessfully(): void
+	{
+		$filePath = '/var/www/uploads/image.png';
+		$fakeImage = \imagecreatetruecolor(1, 1);
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefrompng')->justReturn($fakeImage);
+		Functions\when('imagepalettetotruecolor')->justReturn(true);
+		Functions\when('imagealphablending')->justReturn(true);
+		Functions\when('imagesavealpha')->justReturn(true);
+		Functions\when('imagewebp')->justReturn(true);
+
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+
+		$this->assertSame('png', $result['originalExtension']);
+		$this->assertSame('webp', $result['newExtension']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertGifToWebPSuccessfully(): void
+	{
+		$filePath = '/var/www/uploads/animation.gif';
+		$fakeImage = \imagecreatetruecolor(1, 1);
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefromgif')->justReturn($fakeImage);
+		Functions\when('imagepalettetotruecolor')->justReturn(true);
+		Functions\when('imagealphablending')->justReturn(true);
+		Functions\when('imagesavealpha')->justReturn(true);
+		Functions\when('imagewebp')->justReturn(true);
+
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+
+		$this->assertSame('gif', $result['originalExtension']);
+		$this->assertSame('webp', $result['newExtension']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertBmpToWebPSuccessfully(): void
+	{
+		$filePath = '/var/www/uploads/photo.bmp';
+		$fakeImage = \imagecreatetruecolor(1, 1);
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefrombmp')->justReturn($fakeImage);
+		Functions\when('imagewebp')->justReturn(true);
+
+		$result = $this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+
+		$this->assertSame('bmp', $result['originalExtension']);
+		$this->assertSame('webp', $result['newExtension']);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertJpegThrowsWhenImageCreateFails(): void
+	{
+		$filePath = '/var/www/uploads/corrupt.jpg';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefromjpeg')->alias(function () {
+			throw new \Exception('GD error');
+		});
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Failed to create image from JPEG');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertPngThrowsWhenImageCreateFails(): void
+	{
+		$filePath = '/var/www/uploads/corrupt.png';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefrompng')->alias(function () {
+			throw new \Exception('GD error');
+		});
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Failed to create image from PNG');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertGifThrowsWhenImageCreateFails(): void
+	{
+		$filePath = '/var/www/uploads/corrupt.gif';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefromgif')->alias(function () {
+			throw new \Exception('GD error');
+		});
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Failed to create image from GIF');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertBmpThrowsWhenImageCreateFails(): void
+	{
+		$filePath = '/var/www/uploads/corrupt.bmp';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefrombmp')->alias(function () {
+			throw new \Exception('GD error');
+		});
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Failed to create image from BMP');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertThrowsWhenImageCreateReturnsNull(): void
+	{
+		$filePath = '/var/www/uploads/bad.jpg';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefromjpeg')->justReturn(null);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Failed to create image');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
+
+	/**
+	 * @covers ::convertMediaToWebPByPath
+	 */
+	public function testConvertThrowsWhenImageWebpFails(): void
+	{
+		$filePath = '/var/www/uploads/photo.jpg';
+		$fakeImage = \imagecreatetruecolor(1, 1);
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('imagecreatefromjpeg')->justReturn($fakeImage);
+		Functions\when('imagewebp')->justReturn(false);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Failed to create image due to unknown error');
+
+		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
+	}
 }
