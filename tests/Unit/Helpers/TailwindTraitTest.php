@@ -952,4 +952,805 @@ class TailwindTraitTest extends BaseTestCase
 
 		TailwindTraitWrapper::tailwindClasses('base', ['testBold' => true], $manifest);
 	}
+
+	/**
+	 * Helper to set up Helpers cache with breakpoints.
+	 *
+	 * @param array<string, int> $breakpoints Breakpoints to set.
+	 */
+	private function setupHelpersCache(array $breakpoints = []): void
+	{
+		$bp = $breakpoints ?: [
+			'mobile' => 480,
+			'tablet' => 768,
+			'desktop' => 1200,
+		];
+
+		$cache = [
+			'blocks' => [
+				'settings' => [
+					'config' => [],
+					'globalVariables' => [
+						'breakpoints' => $bp,
+					],
+				],
+			],
+		];
+
+		$reflection = new \ReflectionClass(\EightshiftLibs\Helpers\Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setValue(null, $cache);
+	}
+
+	/**
+	 * Helper to clear Helpers cache.
+	 */
+	private function clearHelpersCache(): void
+	{
+		$reflection = new \ReflectionClass(\EightshiftLibs\Helpers\Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setValue(null, []);
+	}
+
+	/**
+	 * @covers ::getTwBreakpoints
+	 */
+	public function testGetTwBreakpointsMobileFirst(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = TailwindTraitWrapper::getTwBreakpoints();
+
+		$this->assertIsArray($result);
+		$this->assertCount(3, $result);
+		// Sorted ascending by value.
+		$this->assertSame(['mobile', 'tablet', 'desktop'], $result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getTwBreakpoints
+	 */
+	public function testGetTwBreakpointsDesktopFirst(): void
+	{
+		$this->setupHelpersCache();
+
+		$result = TailwindTraitWrapper::getTwBreakpoints(true);
+
+		$this->assertIsArray($result);
+		$this->assertCount(3, $result);
+		// Desktop-first should add max- prefix.
+		$this->assertContains('max-mobile', $result);
+		$this->assertContains('max-tablet', $result);
+		$this->assertContains('max-desktop', $result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::getTwBreakpoints
+	 */
+	public function testGetTwBreakpointsSortsByValue(): void
+	{
+		// Use Patchwork to bypass the static cache with different breakpoints.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getSettingsGlobalVariablesBreakpoints',
+			function () {
+				return [
+					'desktop' => 1200,
+					'mobile' => 480,
+					'wide' => 1440,
+					'tablet' => 768,
+				];
+			}
+		);
+
+		$result = TailwindTraitWrapper::getTwBreakpoints();
+
+		// Should be sorted by value, ascending.
+		$this->assertSame(['mobile', 'tablet', 'desktop', 'wide'], $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesWithResponsiveOption(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testWidth' => ['type' => 'string', 'default' => 'full'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'options' => [
+					'testWidth' => [
+						'responsive' => true,
+						'twClasses' => [
+							'full' => 'w-full',
+							'half' => 'w-1/2',
+						],
+					],
+				],
+			],
+		];
+
+		$attributes = [
+			'testWidth' => [
+				'_default' => 'full',
+				'md' => 'half',
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwClasses($attributes, $manifest);
+
+		$this->assertStringContainsString('flex', $result);
+		$this->assertStringContainsString('w-full', $result);
+		$this->assertStringContainsString('md:w-1/2', $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesWithResponsiveDesktopFirst(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testAlign' => ['type' => 'string', 'default' => 'left'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'block'],
+				'options' => [
+					'testAlign' => [
+						'responsive' => true,
+						'twClasses' => [
+							'left' => 'text-left',
+							'center' => 'text-center',
+						],
+					],
+				],
+			],
+		];
+
+		$attributes = [
+			'testAlign' => [
+				'_default' => 'left',
+				'_desktopFirst' => true,
+				'sm' => 'center',
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwClasses($attributes, $manifest);
+
+		$this->assertStringContainsString('text-left', $result);
+		$this->assertStringContainsString('sm:text-center', $result);
+		// _desktopFirst key should be filtered out.
+		$this->assertStringNotContainsString('_desktopFirst', $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesWithResponsiveEmptyBreakpointValue(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testColor' => ['type' => 'string', 'default' => 'red'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'p-4'],
+				'options' => [
+					'testColor' => [
+						'responsive' => true,
+						'twClasses' => [
+							'red' => 'text-red',
+							'blue' => 'text-blue',
+						],
+					],
+				],
+			],
+		];
+
+		$attributes = [
+			'testColor' => [
+				'_default' => 'red',
+				'md' => '',
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwClasses($attributes, $manifest);
+
+		$this->assertStringContainsString('text-red', $result);
+		// Empty breakpoint value should be skipped.
+		$this->assertStringNotContainsString('md:', $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesCombinationsWithArrayCondition(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testSize' => ['type' => 'string', 'default' => 'md'],
+				'testColor' => ['type' => 'string', 'default' => 'red'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'combinations' => [
+					[
+						'attributes' => [
+							'testSize' => ['sm', 'md'],
+							'testColor' => 'red',
+						],
+						'twClasses' => 'border-2 border-red',
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwClasses(
+			['testSize' => 'sm', 'testColor' => 'red'],
+			$manifest
+		);
+
+		$this->assertStringContainsString('border-2', $result);
+		$this->assertStringContainsString('border-red', $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesCombinationsNoMatch(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testSize' => ['type' => 'string', 'default' => 'md'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'combinations' => [
+					[
+						'attributes' => ['testSize' => 'xl'],
+						'twClasses' => 'extra-large',
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwClasses(
+			['testSize' => 'md'],
+			$manifest
+		);
+
+		$this->assertStringContainsString('flex', $result);
+		$this->assertStringNotContainsString('extra-large', $result);
+	}
+
+	/**
+	 * @covers ::getTwDynamicPart
+	 */
+	public function testGetTwDynamicPartDesktopFirstResponsive(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testPad' => ['type' => 'string', 'default' => 'sm'],
+			],
+			'tailwind' => [
+				'parts' => ['body' => ['twClasses' => 'mt-2']],
+				'options' => [
+					'testPad' => [
+						'part' => 'body',
+						'responsive' => true,
+						'twClasses' => [
+							'sm' => 'p-2',
+							'lg' => 'p-6',
+						],
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwDynamicPart('body', [
+			'testPad' => [
+				'_default' => 'sm',
+				'_desktopFirst' => true,
+				'lg' => 'lg',
+			],
+		], $manifest);
+
+		$this->assertStringContainsString('p-2', $result);
+		$this->assertStringContainsString('lg:p-6', $result);
+	}
+
+	/**
+	 * @covers ::getTwDynamicPart
+	 */
+	public function testGetTwDynamicPartResponsiveEmptyBreakpoint(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testFont' => ['type' => 'string', 'default' => 'sans'],
+			],
+			'tailwind' => [
+				'parts' => ['title' => ['twClasses' => 'text-xl']],
+				'options' => [
+					'testFont' => [
+						'part' => 'title',
+						'responsive' => true,
+						'twClasses' => [
+							'sans' => 'font-sans',
+							'serif' => 'font-serif',
+						],
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwDynamicPart('title', [
+			'testFont' => [
+				'_default' => 'sans',
+				'sm' => '',
+			],
+		], $manifest);
+
+		$this->assertStringContainsString('font-sans', $result);
+		// Empty sm value should be skipped.
+		$this->assertStringNotContainsString('sm:', $result);
+	}
+
+	/**
+	 * @covers ::tailwindClasses
+	 * @covers ::processOption
+	 */
+	public function testTailwindClassesWithPartSpecificResponsiveOption(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'title' => 'Test Block',
+			'attributes' => [
+				'testMargin' => ['type' => 'string', 'default' => 'sm'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'parts' => ['header' => ['twClasses' => 'bg-gray']],
+				'options' => [
+					'testMargin' => [
+						'part' => 'header',
+						'responsive' => true,
+						'twClasses' => [
+							'sm' => 'm-2',
+							'lg' => 'm-6',
+						],
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::tailwindClasses('header', [
+			'testMargin' => [
+				'_default' => 'sm',
+				'md' => 'lg',
+			],
+		], $manifest);
+
+		$this->assertStringContainsString('bg-gray', $result);
+		$this->assertStringContainsString('m-2', $result);
+		$this->assertStringContainsString('md:m-6', $result);
+	}
+
+	/**
+	 * @covers ::tailwindClasses
+	 * @covers ::processOption
+	 */
+	public function testTailwindClassesOptionNotForCurrentPart(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'title' => 'Test Block',
+			'attributes' => [
+				'testPad' => ['type' => 'string', 'default' => 'sm'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'parts' => ['footer' => ['twClasses' => 'mt-auto']],
+				'options' => [
+					'testPad' => [
+						'part' => 'footer',
+						'twClasses' => [
+							'sm' => 'p-2',
+							'lg' => 'p-6',
+						],
+					],
+				],
+			],
+		];
+
+		// Requesting 'base' part, but option is for 'footer'.
+		$result = TailwindTraitWrapper::tailwindClasses('base', [
+			'testPad' => 'sm',
+		], $manifest);
+
+		$this->assertStringContainsString('flex', $result);
+		$this->assertStringNotContainsString('p-2', $result);
+	}
+
+	/**
+	 * @covers ::tailwindClasses
+	 * @covers ::processOption
+	 */
+	public function testTailwindClassesOptionWithDesktopFirstFilter(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'title' => 'Test Block',
+			'attributes' => [
+				'testSize' => ['type' => 'string', 'default' => 'md'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'block'],
+				'options' => [
+					'testSize' => [
+						'responsive' => true,
+						'twClasses' => [
+							'md' => 'text-base',
+							'lg' => 'text-lg',
+						],
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::tailwindClasses('base', [
+			'testSize' => [
+				'_default' => 'md',
+				'_desktopFirst' => true,
+				'lg' => 'lg',
+			],
+		], $manifest);
+
+		$this->assertStringContainsString('text-base', $result);
+		$this->assertStringContainsString('lg:text-lg', $result);
+		$this->assertStringNotContainsString('_desktopFirst', $result);
+	}
+
+	/**
+	 * @covers ::tailwindClasses
+	 * @covers ::processCombination
+	 */
+	public function testTailwindClassesCombinationPartMismatch(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'title' => 'Test Block',
+			'attributes' => [
+				'testBold' => ['type' => 'boolean', 'default' => false],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'parts' => ['icon' => ['twClasses' => 'w-4']],
+				'combinations' => [
+					[
+						'attributes' => ['testBold' => true],
+						'part' => 'icon',
+						'twClasses' => 'font-bold',
+					],
+				],
+			],
+		];
+
+		// Request 'base' part, but combination is for 'icon'.
+		$result = TailwindTraitWrapper::tailwindClasses('base', ['testBold' => true], $manifest);
+
+		$this->assertStringContainsString('flex', $result);
+		// Combination for icon should NOT appear in base.
+		$this->assertStringNotContainsString('font-bold', $result);
+	}
+
+	/**
+	 * @covers ::tailwindClasses
+	 * @covers ::processCombination
+	 */
+	public function testTailwindClassesCombinationArrayConditionNoMatch(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'title' => 'Test Block',
+			'attributes' => [
+				'testAlign' => ['type' => 'string', 'default' => 'left'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'combinations' => [
+					[
+						'attributes' => ['testAlign' => ['center', 'right']],
+						'twClasses' => 'justify-end',
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::tailwindClasses('base', ['testAlign' => 'left'], $manifest);
+
+		// 'left' not in ['center', 'right'] → no match.
+		$this->assertStringNotContainsString('justify-end', $result);
+	}
+
+	/**
+	 * @covers ::getTwDynamicPart
+	 */
+	public function testGetTwDynamicPartSkipsOptionWithEmptyTwClasses(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testOpt' => ['type' => 'string', 'default' => 'val'],
+			],
+			'tailwind' => [
+				'parts' => ['body' => ['twClasses' => 'mt-2']],
+				'options' => [
+					'testOpt' => [
+						'part' => 'body',
+						'twClasses' => null,
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwDynamicPart('body', ['testOpt' => 'val'], $manifest);
+
+		// Base classes only, option skipped due to null twClasses.
+		$this->assertSame('mt-2', $result);
+	}
+
+	/**
+	 * @covers ::getTwDynamicPart
+	 */
+	public function testGetTwDynamicPartSkipsOptionWithEmptyAttributeValue(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testOpt' => ['type' => 'string'],
+			],
+			'tailwind' => [
+				'parts' => ['body' => ['twClasses' => 'mt-2']],
+				'options' => [
+					'testOpt' => [
+						'part' => 'body',
+						'twClasses' => [
+							'val' => 'text-sm',
+						],
+					],
+				],
+			],
+		];
+
+		// Empty attribute value → should skip option.
+		$result = TailwindTraitWrapper::getTwDynamicPart('body', ['testOpt' => ''], $manifest);
+
+		$this->assertSame('mt-2', $result);
+	}
+
+	/**
+	 * @covers ::getTwDynamicPart
+	 */
+	public function testGetTwDynamicPartSkipsOptionWithMissingTwClassesForValue(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testOpt' => ['type' => 'string', 'default' => 'val'],
+			],
+			'tailwind' => [
+				'parts' => ['body' => ['twClasses' => 'p-4']],
+				'options' => [
+					'testOpt' => [
+						'part' => 'body',
+						'twClasses' => [
+							'other' => 'text-lg',
+						],
+					],
+				],
+			],
+		];
+
+		// Value 'val' has no matching twClasses entry → skip.
+		$result = TailwindTraitWrapper::getTwDynamicPart('body', ['testOpt' => 'val'], $manifest);
+
+		$this->assertSame('p-4', $result);
+	}
+
+	/**
+	 * @covers ::getTwDynamicPart
+	 */
+	public function testGetTwDynamicPartResponsiveArrayClasses(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testSize' => ['type' => 'string', 'default' => 'md'],
+			],
+			'tailwind' => [
+				'parts' => ['title' => ['twClasses' => 'text-xl']],
+				'options' => [
+					'testSize' => [
+						'part' => 'title',
+						'responsive' => true,
+						'twClasses' => [
+							'sm' => ['text-sm', 'leading-tight'],
+							'lg' => ['text-lg', 'leading-loose'],
+						],
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwDynamicPart('title', [
+			'testSize' => [
+				'_default' => 'sm',
+				'md' => 'lg',
+			],
+		], $manifest);
+
+		$this->assertStringContainsString('text-sm', $result);
+		$this->assertStringContainsString('leading-tight', $result);
+		$this->assertStringContainsString('md:text-lg', $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesSkipsOptionWithEmptyTwClasses(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testOpt' => ['type' => 'string', 'default' => 'val'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'options' => [
+					'testOpt' => [
+						'twClasses' => null,
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwClasses(['testOpt' => 'val'], $manifest);
+
+		$this->assertSame('flex', $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesSkipsOptionWithEmptyValue(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testOpt' => ['type' => 'string'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'block'],
+				'options' => [
+					'testOpt' => [
+						'twClasses' => [
+							'val' => 'text-sm',
+						],
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwClasses(['testOpt' => ''], $manifest);
+
+		$this->assertSame('block', $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesSkipsOptionWithMissingTwClassesForValue(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testOpt' => ['type' => 'string', 'default' => 'val'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'grid'],
+				'options' => [
+					'testOpt' => [
+						'twClasses' => [
+							'other' => 'text-lg',
+						],
+					],
+				],
+			],
+		];
+
+		$result = TailwindTraitWrapper::getTwClasses(['testOpt' => 'val'], $manifest);
+
+		$this->assertSame('grid', $result);
+	}
+
+	/**
+	 * @covers ::getTwClasses
+	 */
+	public function testGetTwClassesCombinationWithEmptyAttributeValue(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'attributes' => [
+				'testSize' => ['type' => 'string', 'default' => 'md'],
+				'testUnset' => ['type' => 'string'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'combinations' => [
+					[
+						'attributes' => [
+							'testUnset' => 'needed',
+						],
+						'twClasses' => 'special-combo',
+					],
+				],
+			],
+		];
+
+		// testUnset not in attributes, manifest has no default, undefinedAllowed returns null.
+		$result = TailwindTraitWrapper::getTwClasses(
+			['testSize' => 'md'],
+			$manifest
+		);
+
+		// Combination should not match because testUnset is null/empty.
+		$this->assertStringNotContainsString('special-combo', $result);
+	}
+
+	/**
+	 * @covers ::tailwindClasses
+	 * @covers ::processOption
+	 */
+	public function testTailwindClassesProcessOptionMultiPartMissing(): void
+	{
+		$manifest = [
+			'blockName' => 'test',
+			'title' => 'Test Block',
+			'attributes' => [
+				'testOpt' => ['type' => 'string', 'default' => 'md'],
+			],
+			'tailwind' => [
+				'base' => ['twClasses' => 'flex'],
+				'parts' => ['header' => ['twClasses' => 'bg-white']],
+				'options' => [
+					'testOpt' => [
+						// Multi-part option without single twClasses — has part-specific defs.
+						'header' => [
+							'twClasses' => [
+								'md' => 'text-base',
+							],
+						],
+					],
+				],
+			],
+		];
+
+		// Request base part but option is defined for 'header' part only.
+		$result = TailwindTraitWrapper::tailwindClasses('base', ['testOpt' => 'md'], $manifest);
+
+		$this->assertStringContainsString('flex', $result);
+		// The option should NOT be applied since defs don't have 'base'.
+		$this->assertStringNotContainsString('text-base', $result);
+	}
 }

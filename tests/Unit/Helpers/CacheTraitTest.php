@@ -1568,6 +1568,352 @@ class CacheTraitTest extends BaseTestCase
 	}
 
 	/**
+	 * @covers ::setCacheDetails
+	 */
+	public function testSetCacheDetailsEarlyReturnOnSameValues(): void
+	{
+		$cacheBuilder = [];
+		$cacheName = 'early-return-test';
+		$version = '2.0.0';
+
+		// First call sets values and triggers setAllCache.
+		$this->wrapper::setCacheDetails($cacheBuilder, $cacheName, $version);
+		$this->assertEquals($cacheName, $this->wrapper::getCacheName());
+
+		// Second call with identical values triggers early return (L89).
+		$this->wrapper::setCacheDetails($cacheBuilder, $cacheName, $version);
+		$this->assertEquals($cacheName, $this->wrapper::getCacheName());
+	}
+
+	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheWithValidTransientAndMatchingTimestamp(): void
+	{
+		// Force shouldCache to return true.
+		$ref = new \ReflectionClass($this->wrapper);
+		$prop = $ref->getProperty('shouldCacheResult');
+		$prop->setAccessible(true);
+		$prop->setValue(null, true);
+
+		$validJson = '{"blocks":{"component":{"test":"data"}}}';
+
+		// Mock Helpers::getEightshiftOutputPath to return a known path.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getEightshiftOutputPath',
+			function ($fileName = '') {
+				return '/test/eightshift/' . $fileName;
+			}
+		);
+
+		// get_transient returns valid JSON string.
+		Functions\when('get_transient')->justReturn($validJson);
+		// get_option returns matching timestamp.
+		Functions\when('get_option')->justReturn(1000);
+		// file_exists returns true for cache file.
+		Functions\when('file_exists')->alias(function ($path) {
+			return \strpos($path, 'manifests.json') !== false;
+		});
+		// filemtime returns matching timestamp.
+		Functions\when('filemtime')->justReturn(1000);
+
+		$this->wrapper::setAllCache();
+
+		$result = $this->wrapper::getCache();
+		$this->assertEquals(['blocks' => ['component' => ['test' => 'data']]], $result);
+	}
+
+	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheThrowsWhenTransientHasInvalidJson(): void
+	{
+		// Force shouldCache to return true.
+		$ref = new \ReflectionClass($this->wrapper);
+		$prop = $ref->getProperty('shouldCacheResult');
+		$prop->setAccessible(true);
+		$prop->setValue(null, true);
+
+		// Mock Helpers::getEightshiftOutputPath.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getEightshiftOutputPath',
+			function ($fileName = '') {
+				return '/test/eightshift/' . $fileName;
+			}
+		);
+
+		// Transient has invalid JSON.
+		Functions\when('get_transient')->justReturn('{invalid json}');
+		Functions\when('get_option')->justReturn(1000);
+		Functions\when('file_exists')->alias(function ($path) {
+			return \strpos($path, 'manifests.json') !== false;
+		});
+		Functions\when('filemtime')->justReturn(1000);
+
+		$this->expectException(InvalidManifest::class);
+		$this->wrapper::setAllCache();
+	}
+
+	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheDeletesTransientOnTimestampMismatch(): void
+	{
+		// Force shouldCache to return true.
+		$ref = new \ReflectionClass($this->wrapper);
+		$prop = $ref->getProperty('shouldCacheResult');
+		$prop->setAccessible(true);
+		$prop->setValue(null, true);
+
+		// Mock Helpers::getEightshiftOutputPath.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getEightshiftOutputPath',
+			function ($fileName = '') {
+				return '/test/eightshift/' . $fileName;
+			}
+		);
+
+		// Transient exists but timestamps don't match.
+		Functions\when('get_transient')->justReturn('{"old":"data"}');
+		// Stored timestamp differs from file timestamp.
+		Functions\when('get_option')->justReturn(2000);
+		Functions\when('filemtime')->justReturn(1000);
+
+		// Track delete_transient call.
+		$deleteTransientCalled = false;
+		Functions\when('delete_transient')->alias(function ($key) use (&$deleteTransientCalled) {
+			$deleteTransientCalled = true;
+			return true;
+		});
+
+		// file_exists true for cache file so file cache path is taken after transient deletion.
+		Functions\when('file_exists')->alias(function ($path) {
+			return \strpos($path, 'manifests.json') !== false;
+		});
+		// file_get_contents returns valid JSON for file cache fallback.
+		Functions\when('file_get_contents')->alias(function ($path) {
+			if (\strpos($path, 'manifests.json') !== false) {
+				return '{"fromFile":"data"}';
+			}
+			return false;
+		});
+		Functions\when('set_transient')->justReturn(true);
+		Functions\when('update_option')->justReturn(true);
+
+		$this->wrapper::setAllCache();
+
+		$this->assertTrue($deleteTransientCalled, 'delete_transient should be called on timestamp mismatch');
+		$result = $this->wrapper::getCache();
+		$this->assertEquals(['fromFile' => 'data'], $result);
+	}
+
+	/**
+	 * @covers ::setAllCache
+	 */
+	public function testSetAllCacheFallbackWhenWriteFileFails(): void
+	{
+		// Force shouldCache to return true.
+		$ref = new \ReflectionClass($this->wrapper);
+		$prop = $ref->getProperty('shouldCacheResult');
+		$prop->setAccessible(true);
+		$prop->setValue(null, true);
+
+		// Mock Helpers::getEightshiftOutputPath.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getEightshiftOutputPath',
+			function ($fileName = '') {
+				return '/test/eightshift/' . $fileName;
+			}
+		);
+
+		// No transient data.
+		Functions\when('get_transient')->justReturn(false);
+		// No file cache.
+		Functions\when('file_exists')->justReturn(false);
+		// Directory exists but write fails.
+		Functions\when('is_dir')->justReturn(true);
+		Functions\when('file_put_contents')->justReturn(false);
+		Functions\when('dirname')->alias('dirname');
+
+		$this->wrapper::setAllCache();
+
+		// Cache should still be set via fallback (L166-167).
+		$result = $this->wrapper::getCache();
+		$this->assertIsArray($result);
+		$this->assertEmpty($result);
+	}
+
+	/**
+	 * @covers ::isTransientValid
+	 */
+	public function testIsTransientValidReturnsFalseWhenFilemtimeReturnsFalse(): void
+	{
+		// file_exists returns true but filemtime returns false.
+		Functions\when('file_exists')->alias(function ($path) {
+			return $path === '/test/cache-filemtime-false.json';
+		});
+		Functions\when('filemtime')->justReturn(false);
+		Functions\when('get_option')->justReturn(1000);
+
+		$result = CacheTraitWrapper::isTransientValidWrapper('/test/cache-filemtime-false.json', 'test_key');
+
+		$this->assertFalse($result);
+	}
+
+	/**
+	 * @covers ::clearAllCache
+	 */
+	public function testClearAllCacheUnlinksExistingCacheFile(): void
+	{
+		// Mock Helpers::getEightshiftOutputPath.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getEightshiftOutputPath',
+			function ($fileName = '') {
+				return '/test/eightshift/' . $fileName;
+			}
+		);
+
+		Functions\when('delete_transient')->justReturn(true);
+		Functions\when('delete_option')->justReturn(true);
+
+		// file_exists returns true for cache file.
+		Functions\when('file_exists')->alias(function ($path) {
+			return \strpos($path, 'manifests.json') !== false;
+		});
+
+		$unlinkCalled = false;
+		Functions\when('unlink')->alias(function ($path) use (&$unlinkCalled) {
+			$unlinkCalled = true;
+			return true;
+		});
+
+		CacheTraitWrapper::clearAllCache();
+
+		$this->assertTrue($unlinkCalled, 'unlink should be called when cache file exists');
+	}
+
+	/**
+	 * @covers ::getAllManifests
+	 */
+	public function testGetAllManifestsSkipsEmptyDataEntry(): void
+	{
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'component' => [],       // Empty data → triggers L349 continue.
+				'settings' => [          // Non-empty data → processed normally.
+					'path' => 'settings',
+					'fileName' => 'manifest.json',
+					'multiple' => false,
+				],
+			],
+		]);
+
+		$result = $this->wrapper::getAllManifestsWrapper();
+
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('blocks', $result);
+		// 'component' should be skipped, 'settings' processed but may yield empty.
+		$this->assertArrayNotHasKey('component', $result['blocks']);
+	}
+
+	/**
+	 * @covers ::getAllManifests
+	 */
+	public function testGetAllManifestsStoresNonEmptyResult(): void
+	{
+		$reflection = new \ReflectionClass($this->wrapper);
+		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
+		$cacheBuilderProperty->setAccessible(true);
+		$cacheBuilderProperty->setValue(null, [
+			'blocks' => [
+				'component' => [
+					'path' => 'components',
+					'fileName' => 'manifest.json',
+					'multiple' => false,
+				],
+			],
+		]);
+
+		// Mock Helpers::getProjectPaths so getFullPath returns a valid path.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getProjectPaths',
+			function ($type = '', $suffix = '') {
+				$parts = \is_array($suffix) ? $suffix : [$suffix];
+				return '/test/' . $type . '/' . \implode('/', \array_filter($parts));
+			}
+		);
+
+		// Mock file operations so getItem returns non-empty result.
+		Functions\when('file_exists')->alias(function ($path) {
+			return \strpos($path, 'manifest.json') !== false;
+		});
+		Functions\when('file_get_contents')->alias(function ($path) {
+			if (\strpos($path, 'manifest.json') !== false) {
+				return '{"blockName":"test-component","title":"Test"}';
+			}
+			return false;
+		});
+
+		$result = $this->wrapper::getAllManifestsWrapper();
+
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('blocks', $result);
+		$this->assertArrayHasKey('component', $result['blocks']);
+		$this->assertEquals('test-component', $result['blocks']['component']['blockName']);
+	}
+
+	/**
+	 * @covers ::processAutoset
+	 */
+	public function testProcessAutosetSkipsEmptyAutosetItem(): void
+	{
+		$fileDecoded = ['existing' => 'value'];
+		$data = [
+			'autoset' => [
+				[],                                     // Empty item → L435 continue.
+				['key' => 'newKey', 'value' => 'val'],  // Valid item.
+			],
+		];
+
+		$result = $this->wrapper::processAutosetWrapper($fileDecoded, $data);
+
+		$this->assertEquals('value', $result['existing']);
+		$this->assertEquals('val', $result['newKey']);
+	}
+
+	/**
+	 * @covers ::getItems
+	 */
+	public function testGetItemsSkipsEmptyPathInGlobResults(): void
+	{
+		$data = ['id' => 'blockName'];
+
+		// glob returns array including an empty string path.
+		Functions\when('glob')->alias(function ($path) {
+			return ['', '/test/blocks/valid.json'];
+		});
+
+		// Mock file operations for the valid file.
+		Functions\when('file_exists')->alias(function ($path) {
+			return $path === '/test/blocks/valid.json';
+		});
+		Functions\when('file_get_contents')->alias(function ($path) {
+			if ($path === '/test/blocks/valid.json') {
+				return '{"blockName":"valid-block","title":"Valid"}';
+			}
+			return false;
+		});
+
+		$result = $this->wrapper::getItemsWrapper('/test/blocks/*', $data, 'blocks');
+
+		$this->assertArrayHasKey('valid-block', $result);
+		$this->assertCount(1, $result);
+	}
+
+	/**
 	 * Data providers
 	 */
 	public static function developmentEnvironmentProvider(): array

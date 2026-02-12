@@ -1260,4 +1260,1073 @@ class CssVariablesTraitTest extends BaseTestCase
 
 		$this->clearHelpersCache();
 	}
+
+	/**
+	 * Helper to call private static getCssVariablesTypeInline via reflection.
+	 *
+	 * @param string $name Output css selector name.
+	 * @param array<mixed> $data Data prepared for checking.
+	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param string $unique Unique key.
+	 *
+	 * @return array<mixed>
+	 */
+	private function callGetCssVariablesTypeInline(string $name, array $data, array $manifest, string $unique): array
+	{
+		$method = new \ReflectionMethod(CssVariablesTraitWrapper::class, 'getCssVariablesTypeInline');
+		$method->setAccessible(true);
+
+		return $method->invoke(null, $name, $data, $manifest, $unique);
+	}
+
+	/**
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testGetCssVariablesTypeInlineReturnsCorrectStructure(): void
+	{
+		Functions\when('esc_html')->returnArg();
+
+		$data = [
+			[
+				'type' => 'min',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => ['--my-color: red;'],
+			],
+			[
+				'type' => 'min',
+				'name' => 'tablet',
+				'value' => 768,
+				'variable' => [],
+			],
+		];
+
+		$manifest = ['blockName' => 'test-block'];
+
+		$result = $this->callGetCssVariablesTypeInline('block-test', $data, $manifest, 'unique-abc');
+
+		$this->assertIsArray($result);
+		$this->assertSame('block-test', $result['name']);
+		$this->assertSame('unique-abc', $result['unique']);
+		$this->assertIsArray($result['variables']);
+		$this->assertNotEmpty($result['variables']);
+
+		// First variable should be the default breakpoint.
+		$firstVar = $result['variables'][0];
+		$this->assertSame('min', $firstVar['type']);
+		$this->assertSame(0, $firstVar['value']);
+		$this->assertStringContainsString('--my-color: red;', $firstVar['variable']);
+	}
+
+	/**
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testGetCssVariablesTypeInlineWithEmptyVariablesReturnsEmpty(): void
+	{
+		Functions\when('esc_html')->returnArg();
+
+		$data = [
+			[
+				'type' => 'min',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			],
+		];
+
+		$manifest = ['blockName' => 'test-block'];
+
+		$result = $this->callGetCssVariablesTypeInline('block-test', $data, $manifest, 'unique-1');
+
+		// No variables and no variablesCustom → empty array.
+		$this->assertSame([], $result);
+	}
+
+	/**
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testGetCssVariablesTypeInlineProcessesVariablesCustom(): void
+	{
+		Functions\when('esc_html')->returnArg();
+
+		$data = [
+			[
+				'type' => 'min',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			],
+		];
+
+		$manifest = [
+			'blockName' => 'test-block',
+			'variablesCustom' => [
+				'font-size: 16px',
+				'line-height: 1.5',
+			],
+		];
+
+		$result = $this->callGetCssVariablesTypeInline('block-test', $data, $manifest, 'unique-2');
+
+		$this->assertIsArray($result);
+		$this->assertNotEmpty($result['variables']);
+
+		// variablesCustom should appear as a min/0 entry.
+		$customVar = \end($result['variables']);
+		$this->assertSame('min', $customVar['type']);
+		$this->assertSame(0, $customVar['value']);
+		$this->assertStringContainsString('font-size: 16px', $customVar['variable']);
+		$this->assertStringContainsString('line-height: 1.5', $customVar['variable']);
+	}
+
+	/**
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testGetCssVariablesTypeInlineWithMultipleBreakpoints(): void
+	{
+		Functions\when('esc_html')->returnArg();
+
+		$data = [
+			[
+				'type' => 'min',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => ['--spacing: 10px;'],
+			],
+			[
+				'type' => 'min',
+				'name' => 'tablet',
+				'value' => 768,
+				'variable' => ['--spacing: 20px;'],
+			],
+			[
+				'type' => 'max',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => [],
+			],
+			[
+				'type' => 'max',
+				'name' => 'desktop',
+				'value' => 1200,
+				'variable' => ['--spacing: 30px;'],
+			],
+		];
+
+		$manifest = ['blockName' => 'test-block'];
+
+		$result = $this->callGetCssVariablesTypeInline('block-test', $data, $manifest, 'unique-3');
+
+		$this->assertCount(3, $result['variables']);
+
+		// Verify breakpoint types and values.
+		$types = \array_column($result['variables'], 'type');
+		$this->assertContains('min', $types);
+		$this->assertContains('max', $types);
+	}
+
+	/**
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testGetCssVariablesTypeInlineWithBothVariablesAndCustom(): void
+	{
+		Functions\when('esc_html')->returnArg();
+
+		$data = [
+			[
+				'type' => 'min',
+				'name' => 'default',
+				'value' => 0,
+				'variable' => ['--bg-color: blue;'],
+			],
+		];
+
+		$manifest = [
+			'blockName' => 'test-block',
+			'variablesCustom' => [
+				'display: flex',
+			],
+		];
+
+		$result = $this->callGetCssVariablesTypeInline('block-test', $data, $manifest, 'unique-4');
+
+		// Should have both the breakpoint variable and the custom variable.
+		$this->assertCount(2, $result['variables']);
+		$this->assertStringContainsString('--bg-color: blue;', $result['variables'][0]['variable']);
+		$this->assertStringContainsString('display: flex', $result['variables'][1]['variable']);
+	}
+
+	/**
+	 * Helper to call private static prepareVariableData via reflection.
+	 *
+	 * @param array<string, mixed> $breakpoints Global breakpoints.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function callPrepareVariableData(array $breakpoints): array
+	{
+		$method = new \ReflectionMethod(CssVariablesTraitWrapper::class, 'prepareVariableData');
+		$method->setAccessible(true);
+
+		return $method->invoke(null, $breakpoints);
+	}
+
+	/**
+	 * @covers ::prepareVariableData
+	 */
+	public function testPrepareVariableDataCreatesMinAndMaxBreakpoints(): void
+	{
+		$breakpoints = [
+			'tablet' => 768,
+			'desktop' => 1200,
+		];
+
+		$result = $this->callPrepareVariableData($breakpoints);
+
+		// Should have min entries: default(0), desktop(768) and max entries: default(0), tablet(768).
+		$this->assertIsArray($result);
+
+		$minEntries = \array_filter($result, fn($item) => $item['type'] === 'min');
+		$maxEntries = \array_filter($result, fn($item) => $item['type'] === 'max');
+
+		$this->assertCount(2, $minEntries);
+		$this->assertCount(2, $maxEntries);
+
+		// Verify default min entry.
+		$minDefault = \array_values($minEntries)[0];
+		$this->assertSame('default', $minDefault['name']);
+		$this->assertSame(0, $minDefault['value']);
+		$this->assertSame('min', $minDefault['type']);
+		$this->assertSame([], $minDefault['variable']);
+	}
+
+	/**
+	 * @covers ::prepareVariableData
+	 */
+	public function testPrepareVariableDataWithSingleBreakpoint(): void
+	{
+		$breakpoints = [
+			'mobile' => 480,
+		];
+
+		$result = $this->callPrepareVariableData($breakpoints);
+
+		// 1 breakpoint: min has default(0), max has default(0).
+		$minEntries = \array_filter($result, fn($item) => $item['type'] === 'min');
+		$maxEntries = \array_filter($result, fn($item) => $item['type'] === 'max');
+
+		$this->assertCount(1, $minEntries);
+		$this->assertCount(1, $maxEntries);
+	}
+
+	/**
+	 * @covers ::prepareVariableData
+	 */
+	public function testPrepareVariableDataWithThreeBreakpoints(): void
+	{
+		$breakpoints = [
+			'mobile' => 480,
+			'tablet' => 768,
+			'desktop' => 1200,
+		];
+
+		$result = $this->callPrepareVariableData($breakpoints);
+
+		$minEntries = \array_filter($result, fn($item) => $item['type'] === 'min');
+		$maxEntries = \array_filter($result, fn($item) => $item['type'] === 'max');
+
+		$this->assertCount(3, $minEntries);
+		$this->assertCount(3, $maxEntries);
+
+		// min default should have value 0.
+		$firstMin = \array_values($minEntries)[0];
+		$this->assertSame(0, $firstMin['value']);
+
+		// max default should also have value 0.
+		$firstMax = \array_values($maxEntries)[0];
+		$this->assertSame(0, $firstMax['value']);
+	}
+
+	/**
+	 * Helper to set Helpers::$styles array via reflection.
+	 *
+	 * @param array<mixed> $styles Styles array.
+	 */
+	private function setHelpersStyles(array $styles): void
+	{
+		$reflection = new \ReflectionClass(\EightshiftLibs\Helpers\Helpers::class);
+		$stylesProperty = $reflection->getProperty('styles');
+		$stylesProperty->setValue(null, $styles);
+	}
+
+	/**
+	 * Helper to get Helpers::$styles array via reflection.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getHelpersStyles(): array
+	{
+		$reflection = new \ReflectionClass(\EightshiftLibs\Helpers\Helpers::class);
+		$stylesProperty = $reflection->getProperty('styles');
+
+		return $stylesProperty->getValue(null);
+	}
+
+	/**
+	 * Helper to clear Helpers::$styles array.
+	 */
+	private function clearHelpersStyles(): void
+	{
+		$this->setHelpersStyles([]);
+	}
+
+	/**
+	 * @covers ::outputCssVariables
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testOutputCssVariablesInlinePathReturnsEmptyAndSetsStyle(): void
+	{
+		$this->setupHelpersCache();
+		$this->clearHelpersStyles();
+		$this->mockOutputCssVariablesDependencies();
+
+		// Redefine getConfigOutputCssGlobally to return true (bypasses getConfig static cache).
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$manifest = [
+			'blockName' => 'my-block',
+			'variables' => [
+				'myColor' => [
+					[
+						'variable' => [
+							'my-color' => '%value%',
+						],
+					],
+				],
+			],
+		];
+
+		$attributes = [
+			'blockClass' => 'block-my-block',
+			'myColor' => '#FF0000',
+		];
+
+		$result = $this->wrapper::outputCssVariables($attributes, $manifest, 'unique-1', '', $this->getTestGlobalSettings());
+
+		// Inline path returns empty string.
+		$this->assertSame('', $result);
+
+		// But styles should have been populated via Helpers::setStyle.
+		$styles = $this->getHelpersStyles();
+		$this->assertNotEmpty($styles);
+		$this->assertSame('block-my-block', $styles[0]['name']);
+		$this->assertSame('unique-1', $styles[0]['unique']);
+		$this->assertNotEmpty($styles[0]['variables']);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariables
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testOutputCssVariablesInlinePathWithComponentClass(): void
+	{
+		$this->setupHelpersCache();
+		$this->clearHelpersStyles();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$manifest = [
+			'componentClass' => 'comp-button',
+			'blockName' => 'button',
+			'variables' => [
+				'btnSize' => [
+					[
+						'variable' => [
+							'btn-size' => '%value%',
+						],
+					],
+				],
+			],
+		];
+
+		$attributes = [
+			'blockClass' => 'block-button',
+			'btnSize' => 'large',
+		];
+
+		$result = $this->wrapper::outputCssVariables($attributes, $manifest, 'btn-1', '', $this->getTestGlobalSettings());
+
+		$this->assertSame('', $result);
+
+		$styles = $this->getHelpersStyles();
+		$this->assertNotEmpty($styles);
+		// Should use componentClass as name.
+		$this->assertSame('comp-button', $styles[0]['name']);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariables
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testOutputCssVariablesInlinePathWithCustomSelector(): void
+	{
+		$this->setupHelpersCache();
+		$this->clearHelpersStyles();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$manifest = [
+			'blockName' => 'test-block',
+			'variables' => [
+				'testVar' => [
+					[
+						'variable' => [
+							'test-var' => '%value%',
+						],
+					],
+				],
+			],
+		];
+
+		$attributes = [
+			'blockClass' => 'block-test',
+			'testVar' => '42px',
+		];
+
+		$result = $this->wrapper::outputCssVariables($attributes, $manifest, 'uid-1', '.custom-selector', $this->getTestGlobalSettings());
+
+		$this->assertSame('', $result);
+
+		$styles = $this->getHelpersStyles();
+		$this->assertSame('.custom-selector', $styles[0]['name']);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariables
+	 * @covers ::getCssVariablesTypeInline
+	 */
+	public function testOutputCssVariablesInlinePathWithVariablesCustom(): void
+	{
+		$this->setupHelpersCache();
+		$this->clearHelpersStyles();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$manifest = [
+			'blockName' => 'test-block',
+			'variablesCustom' => [
+				'font-size: 16px',
+				'line-height: 1.5',
+			],
+		];
+
+		$attributes = [
+			'blockClass' => 'block-test',
+		];
+
+		$result = $this->wrapper::outputCssVariables($attributes, $manifest, 'uid-2', '', $this->getTestGlobalSettings());
+
+		$this->assertSame('', $result);
+
+		$styles = $this->getHelpersStyles();
+		$this->assertNotEmpty($styles);
+
+		// variablesCustom should produce a variable entry.
+		$variables = $styles[0]['variables'] ?? [];
+		$customFound = false;
+		foreach ($variables as $var) {
+			if (\str_contains($var['variable'], 'font-size: 16px')) {
+				$customFound = true;
+				break;
+			}
+		}
+		$this->assertTrue($customFound, 'variablesCustom content should be in the style variables');
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanProcessesStyles(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		// Populate styles directly.
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-heading',
+				'unique' => 'heading-1',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => '--heading-color: red;',
+						'value' => 0,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		$this->assertNotEmpty($result);
+		$this->assertStringContainsString('block-heading', $result);
+		$this->assertStringContainsString("data-id='heading-1'", $result);
+		$this->assertStringContainsString('--heading-color: red;', $result);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanGeneratesMediaQueries(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-card',
+				'unique' => 'card-1',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => '--card-width: 100%;',
+						'value' => 0,
+					],
+					[
+						'type' => 'min',
+						'variable' => '--card-width: 50%;',
+						'value' => 768,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		$this->assertNotEmpty($result);
+		// Default breakpoint (value=0) should have no media query.
+		$this->assertStringContainsString('--card-width: 100%;', $result);
+		// Tablet breakpoint should have media query.
+		$this->assertStringContainsString('@media (min-width:768px)', $result);
+		$this->assertStringContainsString('--card-width: 50%;', $result);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanWithMaxBreakpoint(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-hero',
+				'unique' => 'hero-1',
+				'variables' => [
+					[
+						'type' => 'max',
+						'variable' => '--hero-height: 300px;',
+						'value' => 1200,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		$this->assertStringContainsString('@media (max-width:1200px)', $result);
+		$this->assertStringContainsString('--hero-height: 300px;', $result);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanWithNoUniqueOmitsDataId(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-text',
+				'unique' => '',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => '--text-size: 14px;',
+						'value' => 0,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		$this->assertStringContainsString('.block-text{', $result);
+		$this->assertStringNotContainsString('data-id', $result);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanSkipsEmptyVariables(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-empty',
+				'unique' => 'empty-1',
+				'variables' => [],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		// Should be empty or just whitespace + additional styles.
+		$this->assertStringNotContainsString('block-empty', \trim($result));
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanSkipsEmptyVariableEntry(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-skip',
+				'unique' => 'skip-1',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => '',
+						'value' => 0,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		// Empty variable string → skipped.
+		$this->assertStringNotContainsString('block-skip', \trim($result));
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanWithOptimize(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssOptimize',
+			function () {
+				return true;
+			}
+		);
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-opt',
+				'unique' => 'opt-1',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => "--opt-color: blue;\n--opt-size: 12px;",
+						'value' => 0,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		// With optimize, newlines should be removed.
+		$this->assertStringNotContainsString("\n", $result);
+		$this->assertStringContainsString('--opt-color: blue;', $result);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanWithAdditionalStyles(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGloballyAdditionalStyles',
+			function () {
+				return ['body { margin: 0 }', '.container { max-width: 1200px }'];
+			}
+		);
+
+		// Even without styles populated, the additional styles should appear.
+		$this->setHelpersStyles([]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		$this->assertStringContainsString('body { margin: 0 }', $result);
+		$this->assertStringContainsString('.container { max-width: 1200px }', $result);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanWithMultipleStyles(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-a',
+				'unique' => 'a-1',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => '--a-color: red;',
+						'value' => 0,
+					],
+				],
+			],
+			[
+				'name' => 'block-b',
+				'unique' => 'b-1',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => '--b-color: blue;',
+						'value' => 0,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		$this->assertStringContainsString('block-a', $result);
+		$this->assertStringContainsString('block-b', $result);
+		$this->assertStringContainsString('--a-color: red;', $result);
+		$this->assertStringContainsString('--b-color: blue;', $result);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInline
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineWithActualContent(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-heading',
+				'unique' => 'heading-1',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => '--heading-size: 24px;',
+						'value' => 0,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInline($this->getTestGlobalSettings());
+
+		// Should wrap in style tag with ID.
+		$this->assertStringContainsString('<style', $result);
+		$this->assertStringContainsString('</style>', $result);
+		// Should contain actual CSS content.
+		$this->assertStringContainsString('--heading-size: 24px;', $result);
+		$this->assertStringContainsString('block-heading', $result);
+
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * @covers ::outputCssVariablesInlineClean
+	 */
+	public function testOutputCssVariablesInlineCleanInJsonEditContextReturnsEmpty(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		// Even with globally=true, if JSON request + context=edit, should return empty.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getConfigOutputCssGlobally',
+			function () {
+				return true;
+			}
+		);
+
+		Functions\when('wp_is_json_request')->justReturn(true);
+
+		$_GET['context'] = 'edit';
+
+		$this->setHelpersStyles([
+			[
+				'name' => 'block-test',
+				'unique' => 'test-1',
+				'variables' => [
+					[
+						'type' => 'min',
+						'variable' => '--test: value;',
+						'value' => 0,
+					],
+				],
+			],
+		]);
+
+		$result = $this->wrapper::outputCssVariablesInlineClean($this->getTestGlobalSettings());
+
+		$this->assertSame('', $result);
+
+		unset($_GET['context']);
+		$this->clearHelpersStyles();
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * Tests %attr-key% substitution without prefix attribute.
+	 *
+	 * @covers ::outputCssVariables
+	 * @covers ::variablesInner
+	 */
+	public function testOutputCssVariablesWithAttrSubstitutionNoPrefix(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		$manifest = [
+			'blockName' => 'my-block',
+			'variables' => [
+				'mySize' => [
+					[
+						'variable' => [
+							'size' => '%attr-otherAttr%',
+						],
+					],
+				],
+			],
+		];
+
+		$attributes = [
+			'blockClass' => 'block-my-block',
+			'mySize' => '16px',
+			'otherAttr' => '42px',
+		];
+
+		$result = $this->wrapper::outputCssVariables($attributes, $manifest, 'u1', '', $this->getTestGlobalSettings());
+
+		$this->assertStringContainsString('<style>', $result);
+		$this->assertStringContainsString('--size: 42px;', $result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * Tests %attr-key% substitution with prefix attribute.
+	 *
+	 * @covers ::outputCssVariables
+	 * @covers ::variablesInner
+	 */
+	public function testOutputCssVariablesWithAttrSubstitutionWithPrefix(): void
+	{
+		$this->setupHelpersCache();
+		$this->mockOutputCssVariablesDependencies();
+
+		$manifest = [
+			'blockName' => 'my-block',
+			'variables' => [
+				'myBlockSize' => [
+					[
+						'variable' => [
+							'size' => '%attr-myBlockColor%',
+						],
+					],
+				],
+			],
+		];
+
+		$attributes = [
+			'blockClass' => 'block-my-block',
+			'prefix' => 'my',
+			'myBlockSize' => '16px',
+			'myColor' => 'blue',
+		];
+
+		$result = $this->wrapper::outputCssVariables($attributes, $manifest, 'u1', '', $this->getTestGlobalSettings());
+
+		$this->assertStringContainsString('<style>', $result);
+
+		$this->clearHelpersCache();
+	}
+
+	/**
+	 * Tests outputCssVariablesGlobalClean with CSS optimization enabled.
+	 *
+	 * @covers ::outputCssVariablesGlobalClean
+	 */
+	public function testOutputCssVariablesGlobalCleanWithOptimize(): void
+	{
+		$this->setupHelpersCache(['outputCssOptimize' => true]);
+
+		$globalSettings = [
+			'globalVariables' => [
+				'maxWidth' => '1200px',
+				'baseFontSize' => '16px',
+			],
+		];
+
+		$result = $this->wrapper::outputCssVariablesGlobalClean($globalSettings);
+
+		// With optimization, newlines should be removed.
+		$this->assertStringNotContainsString("\n", $result);
+		$this->assertStringContainsString('--global-max-width: 1200px;', $result);
+
+		$this->clearHelpersCache();
+	}
 }

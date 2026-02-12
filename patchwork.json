@@ -14,7 +14,18 @@
 		"ob_start",
 		"ob_get_clean",
 		"trim",
-		"error_log"
+		"error_log",
+		"imagecreatefromjpeg",
+		"imagecreatefrompng",
+		"imagecreatefromgif",
+		"imagecreatefrombmp",
+		"imagepalettetotruecolor",
+		"imagealphablending",
+		"imagesavealpha",
+		"imagewebp",
+		"fopen",
+		"filemtime",
+		"unlink"
 	],
 	"whitelist": ["WP_CLI", "WP_ENVIRONMENT_TYPE"]
 }
