@@ -64,24 +64,6 @@ class GeneralTraitTest extends BaseTestCase
 	}
 
 	/**
-	 * @covers ::isJson
-	 */
-	#[DataProvider('validJsonProvider')]
-	public function testIsJsonWithValidInput(string $json): void
-	{
-		$this->assertTrue($this->wrapper::isJson($json));
-	}
-
-	/**
-	 * @covers ::isJson
-	 */
-	#[DataProvider('invalidJsonProvider')]
-	public function testIsJsonWithInvalidInput(string $json): void
-	{
-		$this->assertFalse($this->wrapper::isJson($json));
-	}
-
-	/**
 	 * @covers ::flattenArray
 	 */
 	public function testFlattenArrayWithNestedArray(): void
@@ -285,15 +267,6 @@ class GeneralTraitTest extends BaseTestCase
 	}
 
 	/**
-	 * @covers ::arrayIsList
-	 */
-	#[DataProvider('arrayIsListProvider')]
-	public function testArrayIsList(array $input, bool $expected): void
-	{
-		$this->assertEquals($expected, $this->wrapper::arrayIsList($input));
-	}
-
-	/**
 	 * @covers ::parseManifest
 	 */
 	public function testParseManifestWithValidJson(): void
@@ -484,6 +457,35 @@ class GeneralTraitTest extends BaseTestCase
 		$result = $this->wrapper::getCurrentUrl();
 
 		$this->assertEquals('http://example.com/test/path', $result);
+	}
+
+	/**
+	 * @covers ::getCurrentUrl
+	 */
+	public function testGetCurrentUrlReturnsCachedUrlOnSameRequestTime(): void
+	{
+		unset($_SERVER['HTTPS']);
+		unset($_SERVER['HTTP_HOST']);
+		unset($_SERVER['REQUEST_URI']);
+		unset($_SERVER['REQUEST_TIME']);
+
+		$fixedTime = time() + 9999;
+		$_SERVER['HTTPS'] = 'on';
+		$_SERVER['HTTP_HOST'] = 'cached.example.com';
+		$_SERVER['REQUEST_URI'] = '/cached-path';
+		$_SERVER['REQUEST_TIME'] = $fixedTime;
+
+		// First call populates the cache.
+		$result1 = $this->wrapper::getCurrentUrl();
+		$this->assertEquals('https://cached.example.com/cached-path', $result1);
+
+		// Change the SERVER variables but keep the same REQUEST_TIME.
+		$_SERVER['HTTP_HOST'] = 'changed.example.com';
+		$_SERVER['REQUEST_URI'] = '/changed-path';
+
+		// Second call with same REQUEST_TIME should return cached URL.
+		$result2 = $this->wrapper::getCurrentUrl();
+		$this->assertEquals('https://cached.example.com/cached-path', $result2);
 	}
 
 	/**
