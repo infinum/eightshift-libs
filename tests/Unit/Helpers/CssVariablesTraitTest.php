@@ -471,7 +471,7 @@ class CssVariablesTraitTest extends BaseTestCase
 	 */
 	public function testOutputCssVariablesGlobalWrapsInStyleTag(): void
 	{
-		$this->setupHelpersCache(['outputCssSelectorName' => 'my-prefix']);
+		$this->setupHelpersCache();
 
 		$globalSettings = [
 			'globalVariables' => [
@@ -481,7 +481,7 @@ class CssVariablesTraitTest extends BaseTestCase
 
 		$result = $this->wrapper::outputCssVariablesGlobal($globalSettings);
 
-		$this->assertStringStartsWith("<style id='my-prefix-global'>", $result);
+		$this->assertStringStartsWith("<style id='es-css-global'>", $result);
 		$this->assertStringEndsWith('</style>', $result);
 		$this->assertStringContainsString(':root {', $result);
 		$this->assertStringContainsString('--global-max-width: 960px;', $result);
