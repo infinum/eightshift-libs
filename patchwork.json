@@ -13,7 +13,8 @@
 		"basename",
 		"ob_start",
 		"ob_get_clean",
-		"trim"
+		"trim",
+		"error_log"
 	],
 	"whitelist": ["WP_CLI", "WP_ENVIRONMENT_TYPE"]
 }

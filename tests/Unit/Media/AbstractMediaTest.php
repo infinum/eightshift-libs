@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Tests\Unit\Media;
 
 use Brain\Monkey;
+use Brain\Monkey\Functions;
 use EightshiftLibs\Media\AbstractMedia;
 use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Tests\BaseTestCase;
@@ -284,6 +285,228 @@ class AbstractMediaTest extends BaseTestCase
 		$result = $reflection->invoke($media);
 
 		$this->assertEquals(['jpg', 'jpeg', 'png', 'bmp'], $result);
+	}
+
+	/**
+	 * Test convertMediaToWebP returns upload unchanged for non-allowed extension
+	 *
+	 * @return void
+	 */
+	public function testConvertMediaToWebPReturnsUnchangedForNonAllowedExt(): void
+	{
+		$media = new ConcreteMedia();
+
+		$upload = [
+			'file' => '/tmp/uploads/document.pdf',
+			'url' => 'https://example.com/document.pdf',
+			'type' => 'application/pdf',
+		];
+
+		$result = $media->convertMediaToWebP($upload);
+
+		$this->assertSame($upload, $result);
+	}
+
+	/**
+	 * Test convertMediaToWebP returns upload unchanged for GIF_extension
+	 *
+	 * @return void
+	 */
+	public function testConvertMediaToWebPReturnsUnchangedForGif(): void
+	{
+		$media = new ConcreteMedia();
+
+		$upload = [
+			'file' => '/tmp/uploads/animation.gif',
+			'url' => 'https://example.com/animation.gif',
+			'type' => 'image/gif',
+		];
+
+		$result = $media->convertMediaToWebP($upload);
+
+		$this->assertSame($upload, $result);
+	}
+
+	/**
+	 * Test convertMediaToWebP returns upload unchanged on exception
+	 *
+	 * @return void
+	 */
+	public function testConvertMediaToWebPReturnsUnchangedOnException(): void
+	{
+		Functions\when('esc_html__')->returnArg();
+		Functions\when('wp_get_upload_dir')->justReturn([
+			'basedir' => '/tmp/uploads',
+			'baseurl' => 'https://example.com/uploads',
+		]);
+
+		// file_exists returns false → convertMediaToWebPByPath throws,
+		// convertMediaToWebP catches and returns original upload.
+		Functions\when('file_exists')->justReturn(false);
+
+		$media = new ConcreteMedia();
+
+		$upload = [
+			'file' => '/tmp/uploads/photo.jpg',
+			'url' => 'https://example.com/photo.jpg',
+			'type' => 'image/jpeg',
+		];
+
+		$result = $media->convertMediaToWebP($upload);
+
+		$this->assertSame($upload, $result);
+	}
+
+	/**
+	 * Test enableSvgMediaLibraryPreview sets image data for valid SVG
+	 *
+	 * @return void
+	 */
+	public function testEnableSvgMediaLibraryPreviewSetsImageDataForSvg(): void
+	{
+		$svgPath = \dirname(__DIR__, 2) . '/fixtures/media/test.svg';
+
+		Functions\when('get_attached_file')->justReturn($svgPath);
+		Functions\when('file_exists')->alias('file_exists');
+
+		$media = new ConcreteMedia();
+
+		$response = [
+			'type' => 'image',
+			'subtype' => 'svg+xml',
+			'url' => 'https://example.com/test.svg',
+		];
+
+		$result = $media->enableSvgMediaLibraryPreview($response, 123);
+
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('image', $result);
+		$this->assertArrayHasKey('thumb', $result);
+		$this->assertArrayHasKey('sizes', $result);
+		$this->assertEquals('https://example.com/test.svg', $result['image']['src']);
+		$this->assertEquals(100, $result['image']['width']);
+		$this->assertEquals(50, $result['image']['height']);
+		$this->assertArrayHasKey('full', $result['sizes']);
+		$this->assertEquals('landscape', $result['sizes']['full']['orientation']);
+	}
+
+	/**
+	 * Test enableSvgMediaLibraryPreview returns false for invalid SVG XML
+	 *
+	 * @return void
+	 */
+	public function testEnableSvgMediaLibraryPreviewReturnsFalseForInvalidSvg(): void
+	{
+		// Create a temporary invalid SVG file.
+		$tmpFile = \tempnam(\sys_get_temp_dir(), 'svg_test');
+		\file_put_contents($tmpFile, 'not valid xml at all');
+
+		Functions\when('get_attached_file')->justReturn($tmpFile);
+		Functions\when('file_exists')->alias('file_exists');
+		Functions\when('esc_html__')->returnArg();
+
+		// Define WP_Error stub if it doesn't exist.
+		if (!\class_exists('WP_Error')) {
+			eval('class WP_Error { public function __construct($code = \'\', $message = \'\', $data = \'\') {} }');
+		}
+
+		$media = new ConcreteMedia();
+
+		$response = [
+			'type' => 'image',
+			'subtype' => 'svg+xml',
+			'url' => 'https://example.com/bad.svg',
+		];
+
+		$result = $media->enableSvgMediaLibraryPreview($response, 123);
+
+		$this->assertFalse($result);
+
+		\unlink($tmpFile);
+	}
+
+	/**
+	 * Test enableSvgMediaLibraryPreview accepts WP_Post as attachment
+	 *
+	 * @return void
+	 */
+	public function testEnableSvgMediaLibraryPreviewAcceptsWpPostAttachment(): void
+	{
+		$svgPath = \dirname(__DIR__, 2) . '/fixtures/media/test.svg';
+
+		Functions\when('get_attached_file')->justReturn($svgPath);
+		Functions\when('file_exists')->alias('file_exists');
+
+		$media = new ConcreteMedia();
+
+		// Create a mock WP_Post.
+		$post = \Mockery::mock('WP_Post');
+		$post->ID = 42;
+
+		$response = [
+			'type' => 'image',
+			'subtype' => 'svg+xml',
+			'url' => 'https://example.com/test.svg',
+		];
+
+		$result = $media->enableSvgMediaLibraryPreview($response, $post);
+
+		$this->assertIsArray($result);
+		$this->assertArrayHasKey('image', $result);
+	}
+
+	/**
+	 * Test validateSvgOnUpload returns unchanged for valid SVG
+	 *
+	 * @return void
+	 */
+	public function testValidateSvgOnUploadReturnsUnchangedForValidSvg(): void
+	{
+		$svgPath = \dirname(__DIR__, 2) . '/fixtures/media/test.svg';
+
+		Functions\when('file_exists')->alias('file_exists');
+
+		$media = new ConcreteMedia();
+
+		$response = [
+			'type' => 'image/svg+xml',
+			'tmp_name' => $svgPath,
+			'name' => 'test.svg',
+		];
+
+		$result = $media->validateSvgOnUpload($response);
+
+		$this->assertSame($response, $result);
+	}
+
+	/**
+	 * Test validateSvgOnUpload returns error-like structure for invalid SVG
+	 *
+	 * @return void
+	 */
+	public function testValidateSvgOnUploadReturnsErrorForInvalidSvg(): void
+	{
+		$tmpFile = \tempnam(\sys_get_temp_dir(), 'svg_val');
+		\file_put_contents($tmpFile, 'not xml content');
+
+		Functions\when('file_exists')->alias('file_exists');
+
+		$media = new ConcreteMedia();
+
+		$response = [
+			'type' => 'image/svg+xml',
+			'tmp_name' => $tmpFile,
+			'name' => 'bad.svg',
+		];
+
+		$result = $media->validateSvgOnUpload($response);
+
+		// Invalid SVG should return error-like structure with 'size' and 'name' keys.
+		$this->assertArrayHasKey('size', $result);
+		$this->assertArrayHasKey('name', $result);
+		$this->assertSame('bad.svg', $result['name']);
+
+		\unlink($tmpFile);
 	}
 }
 

@@ -12,7 +12,10 @@ namespace EightshiftLibs\Tests\Unit\Helpers;
 
 use EightshiftLibs\Tests\BaseTestCase;
 use EightshiftLibs\Helpers\DeprecatedTrait;
+use EightshiftLibs\Helpers\Helpers;
+use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Rest\Routes\AbstractRoute;
+use Brain\Monkey\Functions;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -260,5 +263,158 @@ class DeprecatedTraitTest extends BaseTestCase
 		$this->assertSame($msg, $result['message']);
 		$this->assertArrayHasKey('data', $result);
 		$this->assertSame($additional, $result['data']);
+	}
+
+	/**
+	 * Set up Helpers path caches via reflection so getProjectPaths('src') returns a known path.
+	 */
+	private function setupPathsCache(): void
+	{
+		$reflection = new \ReflectionClass(Helpers::class);
+
+		$basePaths = $reflection->getProperty('basePaths');
+		$basePaths->setAccessible(true);
+		$basePaths->setValue(null, [
+			'root' => '/test',
+			'projectRoot' => '/test',
+			'src' => '/test/src',
+			'public' => '/test/public',
+			'blocksRoot' => '/test/src/Blocks',
+		]);
+
+		$pathConfigs = $reflection->getProperty('pathConfigs');
+		$pathConfigs->setAccessible(true);
+		$pathConfigs->setValue(null, [
+			'src' => ['/test', 'src'],
+		]);
+	}
+
+	/**
+	 * Clear Helpers path caches and block cache.
+	 */
+	private function clearPathsAndCache(): void
+	{
+		$reflection = new \ReflectionClass(Helpers::class);
+
+		$basePaths = $reflection->getProperty('basePaths');
+		$basePaths->setAccessible(true);
+		$basePaths->setValue(null, null);
+
+		$pathConfigs = $reflection->getProperty('pathConfigs');
+		$pathConfigs->setAccessible(true);
+		$pathConfigs->setValue(null, null);
+
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, []);
+	}
+
+	/**
+	 * Set up Helpers cache with block data for getManifestByDir tests.
+	 */
+	private function setupBlockCache(): void
+	{
+		$cache = [
+			'blocks' => [
+				'wrapper' => ['componentName' => 'wrapper', 'blockName' => 'wrapper'],
+				'components' => [
+					'heading' => ['componentName' => 'heading'],
+				],
+				'blocks' => [
+					'my-block' => ['blockName' => 'my-block'],
+				],
+			],
+		];
+
+		$reflection = new \ReflectionClass(Helpers::class);
+		$cacheProperty = $reflection->getProperty('cache');
+		$cacheProperty->setAccessible(true);
+		$cacheProperty->setValue(null, $cache);
+	}
+
+	/**
+	 * @covers ::getManifestByDir
+	 */
+	public function testGetManifestByDirReturnsWrapperData(): void
+	{
+		$this->setupPathsCache();
+		$this->setupBlockCache();
+
+		$result = DeprecatedTraitWrapper::getManifestByDir('/test/src/Blocks/wrapper');
+
+		$this->assertIsArray($result);
+		$this->assertSame('wrapper', $result['componentName']);
+
+		$this->clearPathsAndCache();
+	}
+
+	/**
+	 * @covers ::getManifestByDir
+	 */
+	public function testGetManifestByDirReturnsComponentData(): void
+	{
+		$this->setupPathsCache();
+		$this->setupBlockCache();
+
+		$result = DeprecatedTraitWrapper::getManifestByDir('/test/src/Blocks/components/heading');
+
+		$this->assertIsArray($result);
+		$this->assertSame('heading', $result['componentName']);
+
+		$this->clearPathsAndCache();
+	}
+
+	/**
+	 * @covers ::getManifestByDir
+	 */
+	public function testGetManifestByDirReturnsBlockData(): void
+	{
+		$this->setupPathsCache();
+		$this->setupBlockCache();
+
+		$result = DeprecatedTraitWrapper::getManifestByDir('/test/src/Blocks/custom/my-block');
+
+		$this->assertIsArray($result);
+		$this->assertSame('my-block', $result['blockName']);
+
+		$this->clearPathsAndCache();
+	}
+
+	/**
+	 * @covers ::getManifestByDir
+	 */
+	public function testGetManifestByDirThrowsForUnknownPathType(): void
+	{
+		$this->setupPathsCache();
+		$this->setupBlockCache();
+
+		Functions\when('esc_html__')->returnArg();
+
+		$this->expectException(InvalidManifest::class);
+
+		try {
+			DeprecatedTraitWrapper::getManifestByDir('/test/src/Blocks/unknown/something');
+		} finally {
+			$this->clearPathsAndCache();
+		}
+	}
+
+	/**
+	 * @covers ::getManifestByDir
+	 */
+	public function testGetManifestByDirThrowsWhenMissingSecondSegment(): void
+	{
+		$this->setupPathsCache();
+		$this->setupBlockCache();
+
+		Functions\when('esc_html__')->returnArg();
+
+		$this->expectException(InvalidManifest::class);
+
+		try {
+			DeprecatedTraitWrapper::getManifestByDir('/test/src/Blocks');
+		} finally {
+			$this->clearPathsAndCache();
+		}
 	}
 }
