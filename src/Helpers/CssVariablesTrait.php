@@ -683,7 +683,11 @@ trait CssVariablesTrait
 						$item['name'] === $breakpoint &&
 						$item['type'] === $type &&
 						(
-							(string) $attributeValue !== ''
+							!empty((string) $attributeValue) ||
+							\gettype($attributeValue) === 'integer' ||
+							\gettype($attributeValue) === 'float' ||
+							\gettype($attributeValue) === 'double' ||
+							$attributeValue === '0' // @phpstan-ignore-line
 						)
 					) {
 						// Merge data variables with the new variables array.
