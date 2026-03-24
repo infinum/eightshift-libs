@@ -38,7 +38,7 @@ trait MediaTrait
 		return \array_merge(
 			self::convertMediaToWebPByPath($filePath, $quality, $onlyOutput),
 			[
-				'attachmentId' => $attachmentId,
+				'attachmentId' => (string) $attachmentId,
 			]
 		);
 	}
