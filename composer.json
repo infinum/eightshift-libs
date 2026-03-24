@@ -33,13 +33,13 @@
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "1.2.0",
-		"infinum/eightshift-coding-standards": "^3.0.0",
+		"infinum/eightshift-coding-standards": "^3.0.1",
 		"php-parallel-lint/php-parallel-lint": "^v1.4.0",
-		"php-stubs/wordpress-stubs": "6.9.0",
+		"php-stubs/wordpress-stubs": "6.9.1",
 		"szepeviktor/phpstan-wordpress": "2.0.3",
 		"wp-cli/wp-cli": "2.12.0",
-		"phpunit/phpunit": "^12.5.0",
-		"brain/monkey": "^2.6.2",
+		"phpunit/phpunit": "^12.5.14",
+		"brain/monkey": "^2.7.0",
 		"mockery/mockery": "^1.6.12"
 	},
 	"autoload": {

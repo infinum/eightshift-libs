@@ -516,7 +516,7 @@ trait CssVariablesTrait
 	/**
 	 * Sets up a breakpoint value to responsive attribute objects from responsiveAttribute object.
 	 *
-	 * @param array<string, mixed> $attributeVariables Array of attribute variables object.
+	 * @param array<int|string, mixed> $attributeVariables Array of attribute variables object.
 	 * @param string $breakpointName Breakpoint name from responsiveAttribute's breakpoint in block's/component's manifest.
 	 * @param integer $breakpointIndex Index of responsiveAttribute's breakpoint in manifest.
 	 * @param integer $numberOfBreakpoints Number of responsiveAttribute breakpoints in block's/component's manifest.
@@ -687,7 +687,7 @@ trait CssVariablesTrait
 							\gettype($attributeValue) === 'integer' ||
 							\gettype($attributeValue) === 'float' ||
 							\gettype($attributeValue) === 'double' ||
-							$attributeValue === '0'
+							$attributeValue === '0' // @phpstan-ignore-line
 						)
 					) {
 						// Merge data variables with the new variables array.

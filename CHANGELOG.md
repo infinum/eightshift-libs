@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [12.0.0]
+
+### Changed
+
+- Updated default `getAdminScriptDependencies()` in `AbstractEnqueueAdmin` to return only `['wp-dom-ready']` instead of `['wp-element', 'wp-i18n', 'wp-api-fetch', 'wp-blocks']`.
+- Updated default `getBlockFrontendScriptDependencies()` in `AbstractEnqueueBlocks` to return only `['wp-dom-ready']` instead of `['wp-element', 'wp-i18n', 'wp-api-fetch', 'wp-blocks']`.
+
+### Fixed
+
+- Fixed PHPStan type errors in `CssVariablesTrait` and `MediaTrait`.
+
 ## [11.0.4]
 
 ### Added
@@ -1075,6 +1086,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[12.0.0]: https://github.com/infinum/eightshift-libs/compare/11.0.4...12.0.0
 [11.0.4]: https://github.com/infinum/eightshift-libs/compare/11.0.3...11.0.4
 [11.0.3]: https://github.com/infinum/eightshift-libs/compare/11.0.2...11.0.3
 [11.0.2]: https://github.com/infinum/eightshift-libs/compare/11.0.1...11.0.2

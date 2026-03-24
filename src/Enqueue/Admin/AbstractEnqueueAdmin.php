@@ -130,7 +130,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 	 */
 	protected function getAdminScriptDependencies(): array
 	{
-		return ['wp-element', 'wp-i18n', 'wp-api-fetch', 'wp-blocks'];
+		return ['wp-dom-ready'];
 	}
 
 	/**

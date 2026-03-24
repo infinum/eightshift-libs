@@ -28,7 +28,7 @@ trait MediaTrait
 	 * @throws Exception Media not found.
 	 * @throws Throwable Failed to create image.
 	 *
-	 * @return array<string, string>
+	 * @return array<string, int|string>
 	 */
 	public static function convertMediaToWebPById(int $attachmentId, int $quality = 80, bool $onlyOutput = false): array
 	{
