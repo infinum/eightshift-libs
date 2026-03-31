@@ -241,7 +241,7 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE): array // @phpstan-ignore-line
+	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
 		// Check type of request and extract params.
 		switch ($type) {
@@ -275,7 +275,7 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function prepareSimpleApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array // @phpstan-ignore-line
+	protected function prepareSimpleApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
 		return Helpers::sanitizeArray($this->getRequestParams($request, $type), 'sanitize_text_field');
 	}
