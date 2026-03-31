@@ -17,11 +17,11 @@
 	<file>.</file>
 
 	<!-- Check for PHP cross-version compatibility. -->
-	<config name="testVersion" value="8.3-"/>
+	<config name="testVersion" value="8.4-"/>
 	<rule ref="PHPCompatibilityWP"/>
 
 	<!-- Support only latest 3 WP versions. -->
-	<config name="minimum_supported_wp_version" value="8.2"/>
+	<config name="minimum_supported_wp_version" value="8.3"/>
 
 	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
 		<exclude-pattern>*/src/**/*Cli</exclude-pattern>
