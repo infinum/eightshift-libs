@@ -24,7 +24,7 @@
 		"source": "https://github.com/infinum/eightshift-libs"
 	},
 	"require": {
-		"php": ">=8.3",
+		"php": ">=8.4",
 		"ext-dom": "*",
 		"ext-json": "*",
 		"ext-libxml": "*",
@@ -70,10 +70,10 @@
 	},
 	"scripts": {
 		"test:types": "@php ./vendor/bin/phpstan analyze",
-		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.3-",
+		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.4-",
 		"test:unit": "@php ./vendor/bin/phpunit",
 		"test:unit-coverage": "@php ./vendor/bin/phpunit --coverage-html=coverage",
-		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.3-",
+		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.4-",
 		"test": [
 			"@test:standards",
 			"@test:types",

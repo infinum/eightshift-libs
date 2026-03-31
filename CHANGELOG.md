@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [12.1.0]
+
+### Added
+
+- PHP 8.4 is now the minimum version.
+
 ## [12.0.0]
 
 ### Changed
@@ -1086,6 +1092,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[12.1.0]: https://github.com/infinum/eightshift-libs/compare/12.0.0...12.1.0
 [12.0.0]: https://github.com/infinum/eightshift-libs/compare/11.0.4...12.0.0
 [11.0.4]: https://github.com/infinum/eightshift-libs/compare/11.0.3...11.0.4
 [11.0.3]: https://github.com/infinum/eightshift-libs/compare/11.0.2...11.0.3
