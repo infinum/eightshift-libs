@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [12.2.0]
+
+### Added
+
+- When rendering blocks, you can now get raw attributes of inner blocks in templates via `$innerBlockData`.
+
 ## [12.1.0]
 
 ### Added
@@ -1092,6 +1098,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[12.2.0]: https://github.com/infinum/eightshift-libs/compare/12.1.0...12.2.0
 [12.1.0]: https://github.com/infinum/eightshift-libs/compare/12.0.0...12.1.0
 [12.0.0]: https://github.com/infinum/eightshift-libs/compare/11.0.4...12.0.0
 [11.0.4]: https://github.com/infinum/eightshift-libs/compare/11.0.3...11.0.4

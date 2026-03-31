@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Exception\InvalidPath;
+use WP_Block;
 
 /**
  * Class RenderTrait Helper
@@ -131,6 +132,25 @@ trait RenderTrait
 	}
 
 	/**
+	 * Recursively clean inner blocks data to only include necessary properties.
+	 *
+	 * @param array<int, WP_Block> $innerBlocks The inner blocks data to clean.
+	 *
+	 * @return array<int, array{name: string, attributes: array<string, mixed>, innerBlocks: array<int, array>}> Cleaned inner blocks data.
+	 */
+	private static function cleanInnerBlocks(array $innerBlocks): array // @phpstan-ignore-line
+	{
+		return \array_map(static function ($blockData) {
+			return [
+				'name' => $blockData->name,
+				'attributes' => $blockData->attributes,
+				// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+				'innerBlocks' => self::cleanInnerBlocks([...$blockData->inner_blocks]),
+			];
+		}, $innerBlocks);
+	}
+
+	/**
 	 * Renders a components and (optionally) passes some attributes to it.
 	 *
 	 * @param string $renderName The name of the component to render.
@@ -139,6 +159,7 @@ trait RenderTrait
 	 * @param bool $renderUseComponentDefaults Should we use the default attributes from the component.
 	 * @param string $renderPrefixPath The prefix path to the component.
 	 * @param string $renderContent The content to pass to the component.
+	 * @param WP_Block|null $renderBlock The current WP_Block instance, available as $block in the template.
 	 *
 	 * @throws InvalidPath If the file is missing.
 	 *
@@ -150,7 +171,8 @@ trait RenderTrait
 		string $renderPathName = '',
 		bool $renderUseComponentDefaults = false,
 		string $renderPrefixPath = '',
-		string $renderContent = ''
+		string $renderContent = '',
+		?WP_Block $renderBlock = null
 	): string {
 		// Initialize render caches and path caches.
 		self::initializeRenderCaches();
@@ -202,13 +224,25 @@ trait RenderTrait
 		$attributes = $renderAttributes;
 		$globalManifest = Helpers::getSettings();
 
+		$innerBlockData = null;
+
+		// Only process innerBlocks data for blocks to avoid unnecessary processing.
+		if ($renderPathName === 'blocks') {
+			// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+			$innerBlockData = [...$renderBlock->inner_blocks];
+
+			if (!empty($innerBlockData)) {
+				$innerBlockData = self::cleanInnerBlocks($innerBlockData);
+			}
+		}
+
 		// Unset variables for memory optimization.
-		unset($renderName, $renderAttributes, $renderPathName, $renderUseComponentDefaults, $renderPrefixPath, $componentName);
+		unset($renderName, $renderAttributes, $renderPathName, $renderUseComponentDefaults, $renderPrefixPath, $componentName, $renderBlock);
 
 		include $renderPath;
 
 		// Clean up variables.
-		unset($attributes, $renderContent, $renderPath, $manifest, $globalManifest);
+		unset($attributes, $renderContent, $innerBlockData, $renderPath, $manifest, $globalManifest);
 
 		return \trim((string) \ob_get_clean());
 	}
