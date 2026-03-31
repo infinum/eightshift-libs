@@ -119,11 +119,11 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
-	 * @param \WP_Block|null $block The current WP_Block instance, available as $block in the template.
+	 * @param WP_Block|null $block The current WP_Block instance, available as $block in the template.
 	 *
 	 * @return string Html template for block.
 	 */
-	public function render(array $attributes, string $innerBlockContent, ?\WP_Block $block = null): string
+	public function render(array $attributes, string $innerBlockContent, ?WP_Block $block = null): string // @phpstan-ignore-line
 	{
 		// Get block view path.
 		$blockOutput = Helpers::render(
@@ -133,7 +133,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			false,
 			'',
 			$innerBlockContent,
-			$block
+			$block // @phpstan-ignore-line
 		);
 
 		// Get block wrapper view path.
@@ -145,7 +145,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 				false,
 				'',
 				$blockOutput,
-				$block
 			);
 		}
 
