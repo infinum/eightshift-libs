@@ -12,6 +12,7 @@ namespace EightshiftLibs\Helpers;
 
 use Exception;
 use Throwable;
+use Imagick;
 
 /**
  * Class MediaTrait Helper
@@ -129,7 +130,25 @@ trait MediaTrait
 			'dirnameUpload' => $uploadDir['basedir'],
 		];
 
-		// Convert using different methods for different extensions.
+		if (\extension_loaded('imagick')) {
+			try {
+				$image = new Imagick($filePath);
+				$image->setImageFormat('webp');
+				$image->setImageCompressionQuality($quality);
+				$image->writeImage($filePathNew);
+				$image->destroy();
+			} catch (Throwable $e) {
+				if (\file_exists($filePathNew)) {
+					\wp_delete_file($filePathNew);
+				}
+
+				throw new Exception(\esc_html__('Failed to create image', 'eightshift-libs'));
+			}
+
+			return $output;
+		}
+
+		// Fallback: convert using GD for different extensions.
 		switch ($originalExtension) {
 			case 'gif':
 				try {
