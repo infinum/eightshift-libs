@@ -12,6 +12,7 @@ namespace EightshiftLibs\Helpers;
 
 use Exception;
 use Throwable;
+use Imagick;
 
 /**
  * Class MediaTrait Helper
@@ -26,7 +27,6 @@ trait MediaTrait
 	 * @param boolean $onlyOutput Only return output array.
 	 *
 	 * @throws Exception Media not found.
-	 * @throws Throwable Failed to create image.
 	 *
 	 * @return array<string, int|string>
 	 */
@@ -34,6 +34,10 @@ trait MediaTrait
 	{
 		// Get attached file to get path.
 		$filePath = \get_attached_file($attachmentId);
+
+		if (!$filePath) {
+			throw new Exception(\esc_html__('Media not found', 'eightshift-libs'));
+		}
 
 		return \array_merge(
 			self::convertMediaToWebPByPath($filePath, $quality, $onlyOutput),
@@ -67,15 +71,47 @@ trait MediaTrait
 		}
 
 		// Detect type of media.
-		$originalExtension = \pathinfo($filePath, \PATHINFO_EXTENSION);
-		$originalFileName = \pathinfo($filePath, \PATHINFO_FILENAME);
-		$originalDirname = \pathinfo($filePath, \PATHINFO_DIRNAME);
+		$pathInfo = \pathinfo($filePath);
+		$originalExtension = \strtolower($pathInfo['extension'] ?? '');
+		$originalFileName = $pathInfo['filename'] ?? '';
+		$originalDirname = $pathInfo['dirname'] ?? '';
 
 		// Replace the image name extension with the WebP.
-		$filePathNew =  $originalDirname . '/' . $originalFileName . '.webp';
+		$filePathNew = $originalDirname . '/' . $originalFileName . '.webp';
+
+		// Bailout if only output is requested used for WP-CLI.
+		if ($onlyOutput) {
+			$uploadDir = \wp_get_upload_dir();
+			$dirnameRelative = \ltrim(\str_replace($uploadDir['basedir'], '', $originalDirname), '/');
+
+			return [
+				'newFullPath' => $filePathNew,
+				'newUrl' => $uploadDir['baseurl'] . '/' . $dirnameRelative . "/{$originalFileName}.webp",
+				'newExtension' => 'webp',
+				'newType' => 'image/webp',
+				'newFileName' => "{$originalFileName}.webp",
+				'originalFullPath' => $filePath,
+				'originalUrl' => $uploadDir['baseurl'] . '/' . $dirnameRelative . "/{$originalFileName}.{$originalExtension}",
+				'originalExtension' => $originalExtension,
+				'originalFileName' => $originalFileName,
+				'originalType' => "image/{$originalExtension}",
+				'dirnameRelative' => $dirnameRelative,
+				'dirname' => $originalDirname,
+				'dirnameUpload' => $uploadDir['basedir'],
+			];
+		}
+
+		// Bailout if media exists.
+		if (\file_exists($filePathNew)) {
+			throw new Exception(\esc_html__('Media already exists', 'eightshift-libs'));
+		}
+
+		// Bailout if media origin doesn't exist.
+		if (!\file_exists($filePath)) {
+			throw new Exception(\esc_html__('Media origin does not exist', 'eightshift-libs'));
+		}
 
 		$uploadDir = \wp_get_upload_dir();
-
 		$dirnameRelative = \ltrim(\str_replace($uploadDir['basedir'], '', $originalDirname), '/');
 
 		$output = [
@@ -94,23 +130,25 @@ trait MediaTrait
 			'dirnameUpload' => $uploadDir['basedir'],
 		];
 
-		// Bailout if only output is requested used for WP-CLI.
-		if ($onlyOutput) {
+		if (\extension_loaded('imagick')) {
+			try {
+				$image = new Imagick($filePath);
+				$image->setImageFormat('webp');
+				$image->setImageCompressionQuality($quality);
+				$image->writeImage($filePathNew);
+				$image->destroy();
+			} catch (Throwable $e) {
+				if (\file_exists($filePathNew)) {
+					\wp_delete_file($filePathNew);
+				}
+
+				throw new Exception(\esc_html__('Failed to create image', 'eightshift-libs'));
+			}
+
 			return $output;
 		}
 
-
-		// Bailout if media exists.
-		if (\file_exists($filePathNew)) {
-			throw new Exception(\esc_html__('Media already exists', 'eightshift-libs'));
-		}
-
-		// Bailout if media origin doesn't exist.
-		if (!\file_exists($filePath)) {
-			throw new Exception(\esc_html__('Media origin does not exist', 'eightshift-libs'));
-		}
-
-		// Convert using different methods for different extensions.
+		// Fallback: convert using GD for different extensions.
 		switch ($originalExtension) {
 			case 'gif':
 				try {
@@ -165,9 +203,13 @@ trait MediaTrait
 		$newImage = \imagewebp($createdImage, $filePathNew, $quality);
 
 		// Free up memory.
-		unset($createdImage);
+		\imagedestroy($createdImage);
 
 		if (!$newImage) {
+			if (\file_exists($filePathNew)) {
+				\wp_delete_file($filePathNew);
+			}
+
 			throw new Exception(\esc_html__('Failed to create image due to unknown error', 'eightshift-libs'));
 		}
 
