@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [12.3.1]
+
+### Fixed
+
+- Fixed broken release.
+
 ## [12.3.0]
 
 ### Changed
@@ -17,7 +23,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Fixed uppercase file extensions (e.g. `.JPG`, `.PNG`) incorrectly throwing "Unsupported media extension" in `convertMediaToWebPByPath`.
 - Fixed corrupt or partial `.webp` file being left on disk after a failed `imagewebp()` call, which blocked retries with a false "Media already exists" error.
 
-## [12.2.0]
+## [12.2.0] - broken release
 
 ### Added
 
@@ -1111,6 +1117,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[12.3.1]: https://github.com/infinum/eightshift-libs/compare/12.3.0...12.3.1
 [12.3.0]: https://github.com/infinum/eightshift-libs/compare/12.2.0...12.3.0
 [12.2.0]: https://github.com/infinum/eightshift-libs/compare/12.1.0...12.2.0
 [12.1.0]: https://github.com/infinum/eightshift-libs/compare/12.0.0...12.1.0
