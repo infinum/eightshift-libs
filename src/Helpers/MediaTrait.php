@@ -130,7 +130,7 @@ trait MediaTrait
 			'dirnameUpload' => $uploadDir['basedir'],
 		];
 
-		if (\extension_loaded('imagick')) {
+		if (\extension_loaded('imagick') && \stream_is_local($filePath)) {
 			try {
 				$image = new Imagick($filePath);
 				$image->setImageFormat('webp');

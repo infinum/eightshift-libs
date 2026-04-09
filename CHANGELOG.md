@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [12.3.2]
+
+### Fixed
+
+- Fixed for uploads on remote servers.
+
 ## [12.3.1]
 
 ### Fixed
