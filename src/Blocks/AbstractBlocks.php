@@ -15,6 +15,7 @@ use EightshiftLibs\Exception\InvalidBlock;
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use WP_Block_Editor_Context;
+use WP_Block;
 
 /**
  * Class Blocks
@@ -123,7 +124,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @return string Html template for block.
 	 */
-	public function render(array $attributes, string $innerBlockContent, ?WP_Block $block = null): string // @phpstan-ignore-line
+	public function render(array $attributes, string $innerBlockContent, ?WP_Block $block = null): string
 	{
 		// Get block view path.
 		$blockOutput = Helpers::render(
@@ -133,7 +134,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			false,
 			'',
 			$innerBlockContent,
-			$block // @phpstan-ignore-line
+			$block
 		);
 
 		// Get block wrapper view path.
