@@ -145,7 +145,8 @@ trait RenderTrait
 				'name' => $blockData->name,
 				'attributes' => $blockData->attributes,
 				// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-				'innerBlocks' => self::cleanInnerBlocks([...($blockData->inner_blocks ?? [])]),
+				// @phpstan-ignore nullCoalesce.property
+				'innerBlocks' => self::cleanInnerBlocks([...($blockData->inner_blocks ?? [])]), // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 			];
 		}, $innerBlocks);
 	}
@@ -229,7 +230,8 @@ trait RenderTrait
 		// Only process innerBlocks data for blocks to avoid unnecessary processing.
 		if ($renderPathName === 'blocks') {
 			// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-			$innerBlockData = [...($renderBlock->inner_blocks ?? [])];
+			// @phpstan-ignore nullCoalesce.property
+			$innerBlockData = [...($renderBlock->inner_blocks ?? [])]; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
 			if (!empty($innerBlockData)) {
 				$innerBlockData = self::cleanInnerBlocks($innerBlockData);
