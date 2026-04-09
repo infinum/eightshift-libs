@@ -34,7 +34,7 @@ class MediaExample extends AbstractMedia
 		\add_filter('wp_check_filetype_and_ext', [$this, 'enableJsonUpload'], 10, 3);
 
 		// WebP.
-		if (\extension_loaded('gd')) {
+		if (\extension_loaded('gd') || \extension_loaded('imagick')) {
 			\add_filter('wp_handle_upload', [$this, 'convertMediaToWebP']);
 		}
 	}
