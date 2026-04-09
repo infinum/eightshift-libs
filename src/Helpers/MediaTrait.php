@@ -77,7 +77,8 @@ trait MediaTrait
 		$originalDirname = $pathInfo['dirname'] ?? '';
 
 		// Replace the image name extension with the WebP.
-		$filePathNew = $originalDirname . '/' . $originalFileName . '.webp';
+		$uniqueWebPName = \wp_unique_filename($originalDirname, $originalFileName . '.webp');
+		$filePathNew = $originalDirname . '/' . $uniqueWebPName;
 
 		// Bailout if only output is requested used for WP-CLI.
 		if ($onlyOutput) {
@@ -101,11 +102,6 @@ trait MediaTrait
 			];
 		}
 
-		// Bailout if media exists.
-		if (\file_exists($filePathNew)) {
-			throw new Exception(\esc_html__('Media already exists', 'eightshift-libs'));
-		}
-
 		// Bailout if media origin doesn't exist.
 		if (!\file_exists($filePath)) {
 			throw new Exception(\esc_html__('Media origin does not exist', 'eightshift-libs'));
@@ -116,10 +112,10 @@ trait MediaTrait
 
 		$output = [
 			'newFullPath' => $filePathNew,
-			'newUrl' => $uploadDir['baseurl'] . '/' . $dirnameRelative . "/{$originalFileName}.webp",
+			'newUrl' => $uploadDir['baseurl'] . '/' . $dirnameRelative . "/{$uniqueWebPName}",
 			'newExtension' => 'webp',
 			'newType' => 'image/webp',
-			'newFileName' => "{$originalFileName}.webp",
+			'newFileName' => $uniqueWebPName,
 			'originalFullPath' => $filePath,
 			'originalUrl' => $uploadDir['baseurl'] . '/' . $dirnameRelative . "/{$originalFileName}.{$originalExtension}",
 			'originalExtension' => $originalExtension,
@@ -201,9 +197,6 @@ trait MediaTrait
 
 		// Create new WebP image and store it to the same location.
 		$newImage = \imagewebp($createdImage, $filePathNew, $quality);
-
-		// Free up memory.
-		\imagedestroy($createdImage);
 
 		if (!$newImage) {
 			if (\file_exists($filePathNew)) {
