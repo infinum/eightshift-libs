@@ -291,7 +291,7 @@ trait CssVariablesTrait
 	 */
 	public static function outputCssVariablesInline(array $globalSettings = []): string
 	{
-		$output = self::outputCssVariablesInlineClean($globalSettings);
+		$output = self::outputCssVariablesInlineClean();
 		$selector = Helpers::getConfigOutputCssSelectorName();
 
 		return "<style id='{$selector}'>{$output}</style>";

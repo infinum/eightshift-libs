@@ -167,7 +167,6 @@ trait RenderTrait
 	 * @return string
 	 */
 	public static function render(
-		string $componentName,
 		string $renderName,
 		array $renderAttributes = [],
 		string $renderPathName = '',

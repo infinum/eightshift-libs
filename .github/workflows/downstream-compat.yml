@@ -100,29 +100,3 @@ jobs:
                   else
                       echo "No PHPStan config found — skipping"
                   fi
-
-    # notify-slack:
-    #     name: Notify Slack on failure
-    #     needs: downstream
-    #     if: failure()
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #         - name: Send failure notification
-    #           uses: slackapi/slack-github-action@v1.27.0
-    #           with:
-    #               payload: |
-    #                   {
-    #                     "text": ":x: Downstream compatibility check failed",
-    #                     "blocks": [
-    #                       {
-    #                         "type": "section",
-    #                         "text": {
-    #                           "type": "mrkdwn",
-    #                           "text": ":x: *Downstream compatibility check failed*\n*Repo:* `${{ github.repository }}`\n*Branch/Tag:* `${{ github.ref_name }}`\n*Triggered by:* ${{ github.actor }}\n*<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View failed run>*"
-    #                         }
-    #                       }
-    #                     ]
-    #                   }
-    #           env:
-    #               SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    #               SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
