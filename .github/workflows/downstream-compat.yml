@@ -1,0 +1,127 @@
+name: Downstream Compatibility
+
+on:
+    push:
+        branches:
+            - main
+            - "release/**"
+        tags: ["*"]
+        paths-ignore:
+            - "**.md"
+    pull_request:
+        branches:
+            - main
+        paths-ignore:
+            - "**.md"
+
+concurrency:
+    group: "${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
+
+jobs:
+    downstream:
+        name: "${{ matrix.repo }}"
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                repo:
+                    - infinum/eightshift-forms
+                    # - infinum/eightshift-utils
+                    # - infinum/eightshift-sso
+                    - infinum/eightshift-boilerplate
+                    - infinum/eightshift-boilerplate-plugin
+
+        continue-on-error: true
+        steps:
+            - name: Checkout downstream repo
+              uses: actions/checkout@v4
+              with:
+                  repository: ${{ matrix.repo }}
+                  # Uncomment when testing private repos:
+                  # token: ${{ secrets.DOWNSTREAM_PAT }}
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+                  coverage: none
+                  extensions: json, mbstring, xml, curl
+                  tools: composer:v2
+
+            - name: Get Composer cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache Composer dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ matrix.repo }}-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-${{ matrix.repo }}-
+
+            - name: Point to current eightshift-libs
+              run: |
+                  composer config repositories.libs-dev \
+                    '{"type": "vcs", "url": "https://github.com/${{ github.repository }}"}'
+
+                  if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+                      VERSION="${{ github.ref_name }}"
+                  elif [[ "${{ github.ref }}" == refs/pull/* ]]; then
+                      VERSION="dev-${{ github.head_ref }}#${{ github.sha }}"
+                  else
+                      VERSION="dev-${{ github.ref_name }}#${{ github.sha }}"
+                  fi
+
+                  composer require "infinum/eightshift-libs:${VERSION}" \
+                    --no-interaction --no-progress
+
+            - name: Run PHPUnit
+              run: |
+                  if [ -f "phpunit.xml" ] || [ -f "phpunit.xml.dist" ]; then
+                      vendor/bin/phpunit
+                  else
+                      echo "No PHPUnit config found — skipping"
+                  fi
+
+            - name: Run PHPCS
+              run: |
+                  if [ -f "phpcs.xml" ] || [ -f "phpcs.xml.dist" ] || [ -f ".phpcs.xml" ]; then
+                      vendor/bin/phpcs
+                  else
+                      echo "No PHPCS config found — skipping"
+                  fi
+
+            - name: Run PHPStan
+              run: |
+                  if [ -f "phpstan.neon" ] || [ -f "phpstan.neon.dist" ]; then
+                      vendor/bin/phpstan analyse
+                  else
+                      echo "No PHPStan config found — skipping"
+                  fi
+
+    # notify-slack:
+    #     name: Notify Slack on failure
+    #     needs: downstream
+    #     if: failure()
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - name: Send failure notification
+    #           uses: slackapi/slack-github-action@v1.27.0
+    #           with:
+    #               payload: |
+    #                   {
+    #                     "text": ":x: Downstream compatibility check failed",
+    #                     "blocks": [
+    #                       {
+    #                         "type": "section",
+    #                         "text": {
+    #                           "type": "mrkdwn",
+    #                           "text": ":x: *Downstream compatibility check failed*\n*Repo:* `${{ github.repository }}`\n*Branch/Tag:* `${{ github.ref_name }}`\n*Triggered by:* ${{ github.actor }}\n*<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View failed run>*"
+    #                         }
+    #                       }
+    #                     ]
+    #                   }
+    #           env:
+    #               SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    #               SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
