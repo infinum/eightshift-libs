@@ -239,6 +239,8 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	 * @param WP_REST_Request $request $request Data got from endpoint url.
 	 * @param string $type Request type.
 	 *
+	 * @phpstan-param WP_REST_Request<array<string, mixed>> $request
+	 *
 	 * @return array<string, mixed>
 	 */
 	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE): array
@@ -272,6 +274,8 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	 *
 	 * @param WP_REST_Request $request $request Data got from endpoint url.
 	 * @param string $type Request type.
+	 *
+	 * @phpstan-param WP_REST_Request<array<string, mixed>> $request
 	 *
 	 * @return array<string, mixed>
 	 */

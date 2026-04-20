@@ -14,6 +14,14 @@ use Exception;
 
 /**
  * Class AttributesTrait Helper
+ *
+ * @phpstan-type ManifestShape array{
+ *   attributes?: array<string, array{default?: mixed, type?: string}>,
+ *   blockName?: string,
+ *   componentName?: string,
+ *   components?: array<string, string>,
+ *   responsiveAttributes?: array<string, array<string, string>>
+ * }
  */
 trait AttributesTrait
 {
@@ -25,6 +33,7 @@ trait AttributesTrait
 	 * @param array<string, mixed> $attributes Array of attributes.
 	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
 	 * @param bool $undefinedAllowed Allowed detection of undefined values.
+	 * @phpstan-param ManifestShape $manifest
 	 *
 	 * @throws Exception When we're unable to find the component by $component.
 	 *
@@ -104,6 +113,7 @@ trait AttributesTrait
 	 * @param array<string, mixed> $attributes Array of attributes.
 	 * @param array<string, mixed> $manifest Array of default attributes from manifest.json.
 	 * @param bool $undefinedAllowed Allowed detection of undefined values.
+	 * @phpstan-param ManifestShape $manifest
 	 *
 	 * @throws Exception If missing responsiveAttributes or keyName in responsiveAttributes.
 	 * @throws Exception If missing keyName in responsiveAttributes.
@@ -143,6 +153,7 @@ trait AttributesTrait
 	 * @param string $key Key to check.
 	 * @param array<string, mixed> $attributes Array of attributes.
 	 * @param array<string, mixed> $manifest Components/blocks manifest.json.
+	 * @phpstan-param ManifestShape $manifest
 	 *
 	 * @return string
 	 */
@@ -265,6 +276,7 @@ trait AttributesTrait
 	 *
 	 * @param array<string, mixed> $manifest Block/Component manifest data.
 	 * @param array<string, mixed> $attributes Block/Component rendered attributes data.
+	 * @phpstan-param ManifestShape $manifest
 	 *
 	 * @return array<string, mixed>
 	 */

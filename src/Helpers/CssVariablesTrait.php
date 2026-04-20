@@ -12,6 +12,28 @@ namespace EightshiftLibs\Helpers;
 
 /**
  * Class OutputCssVariablesTrait Helper
+ *
+ * @phpstan-type GlobalSettingsShape array{
+ *   globalVariables?: array{
+ *     breakpoints?: array<string, int>,
+ *     colors?: array<int, array{slug: string, color: string}>,
+ *     gradients?: array<int, array{slug: string, gradient: string}>
+ *   }
+ * }
+ * @phpstan-type CssVariableDataItemShape array{
+ *   name: string,
+ *   type: string,
+ *   value: int,
+ *   variable: array<int, string>
+ * }
+ * @phpstan-type CssVariablesManifestShape array{
+ *   variables?: array<string, mixed>,
+ *   variablesCustom?: array<int, string>,
+ *   responsiveAttributes?: array<string, array<string, string>>,
+ *   componentClass?: string,
+ *   blockName?: string,
+ *   componentName?: string
+ * }
  */
 trait CssVariablesTrait
 {
@@ -19,6 +41,7 @@ trait CssVariablesTrait
 	 * Get Global Manifest.json and return globalVariables as CSS variables. Not wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
+	 * @phpstan-param GlobalSettingsShape $globalSettings
 	 *
 	 * @return string
 	 */
@@ -51,6 +74,7 @@ trait CssVariablesTrait
 	 * Get Global Manifest.json and return globalVariables as CSS variables. Wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
+	 * @phpstan-param GlobalSettingsShape $globalSettings
 	 *
 	 * @return string
 	 */
@@ -70,6 +94,8 @@ trait CssVariablesTrait
 	 * @param string $unique Unique key.
 	 * @param string $customSelector Output custom selector to use as a style prefix.
 	 * @param array<string, mixed> $globalSettings Global settings.
+	 * @phpstan-param CssVariablesManifestShape $manifest
+	 * @phpstan-param GlobalSettingsShape $globalSettings
 	 *
 	 * @return string
 	 */
@@ -158,6 +184,7 @@ trait CssVariablesTrait
 	 * Output css variables as a one inline style tag. Used with wp_footer filter. Not wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
+	 * @phpstan-param GlobalSettingsShape $globalSettings
 	 *
 	 * @return string
 	 */
@@ -286,6 +313,7 @@ trait CssVariablesTrait
 	 * Output css variables as a one inline style tag. Used with wp_footer filter. Wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
+	 * @phpstan-param GlobalSettingsShape $globalSettings
 	 *
 	 * @return string
 	 */
@@ -351,6 +379,8 @@ trait CssVariablesTrait
 	 * @param array<mixed> $data Data prepared for checking.
 	 * @param array<mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
+	 * @phpstan-param array<int, CssVariableDataItemShape> $data
+	 * @phpstan-param CssVariablesManifestShape $manifest
 	 *
 	 * @return string
 	 */
@@ -420,6 +450,8 @@ trait CssVariablesTrait
 	 * @param array<mixed> $data Data prepared for checking.
 	 * @param array<mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
+	 * @phpstan-param array<int, CssVariableDataItemShape> $data
+	 * @phpstan-param CssVariablesManifestShape $manifest
 	 *
 	 * @return array<mixed>
 	 */
@@ -704,8 +736,10 @@ trait CssVariablesTrait
 	 * Create initial array of data to be able to populate later.
 	 *
 	 * @param array<string, mixed> $globalBreakpoints Global breakpoints from global manifest to set the correct output.
+	 * @phpstan-param array<string, int> $globalBreakpoints
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, mixed>
+	 * @phpstan-return array<int, CssVariableDataItemShape>
 	 */
 	private static function prepareVariableData(array $globalBreakpoints): array
 	{

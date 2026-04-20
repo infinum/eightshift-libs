@@ -119,6 +119,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Provides block registration callback method for rendering when using wrapper.
 	 *
 	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
+	 * @phpstan-param array{blockName?: string}&array<string, mixed> $attributes
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 * @param WP_Block|null $block The current WP_Block instance, available as $block in the template.
 	 *
@@ -185,8 +186,10 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param array<string, mixed> $parsedBlock Array of block details.
 	 * @param array<string, mixed> $sourceBlock Array of block source details.
+	 * @phpstan-param array{blockName: string, attrs?: array<string, mixed>, innerHTML?: string, innerBlocks?: array<int, mixed>, innerContent?: array<int, mixed>} $parsedBlock
 	 *
 	 * @return array<string, mixed>
+	 * @phpstan-return array{blockName: string, attrs?: array<string, mixed>, innerHTML?: string, innerBlocks?: array<int, mixed>, innerContent?: array<int, mixed>}
 	 */
 	public function filterBlocksContent(array $parsedBlock, array $sourceBlock): array
 	{

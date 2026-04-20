@@ -1,0 +1,162 @@
+name: API Surface Check
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - "src/**"
+    push:
+        branches:
+            - main
+            - "release/**"
+        paths:
+            - "src/**"
+            - ".github/workflows/api-surface.yml"
+    workflow_dispatch:
+
+concurrency:
+    group: "${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
+
+jobs:
+    snapshot:
+        name: Snapshot diff
+        runs-on: ubuntu-latest
+
+        permissions:
+            pull-requests: write
+            contents: read
+
+        steps:
+            - name: Checkout PR branch
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Get Composer cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache Composer dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              run: composer install --no-interaction --no-progress --prefer-dist
+
+            - name: Generate current snapshot
+              run: php bin/generate-api-snapshot.php > /tmp/api-surface-current.json
+
+            # The committed api-surface.json is the main-branch baseline.
+            # Using git show ensures we always compare against main, not the PR's own file.
+            - name: Get main baseline
+              run: |
+                  git show origin/main:api-surface.json > /tmp/api-surface-main.json 2>/dev/null || echo '{}' > /tmp/api-surface-main.json
+
+            - name: Diff snapshots
+              id: diff
+              run: |
+                  DIFF=$(diff --unified=2 /tmp/api-surface-main.json /tmp/api-surface-current.json || true)
+
+                  if [ -z "$DIFF" ]; then
+                      echo "changed=false" >> $GITHUB_OUTPUT
+                  else
+                      echo "changed=true" >> $GITHUB_OUTPUT
+
+                      # Extract the changed keys (class / method names).
+                      CHANGED=$(echo "$DIFF" | grep -E '^[+-]\s+"[^"]+":' | \
+                          grep -v '^+++\|^---' | \
+                          sed 's/^[+-]\s*"\(.*\)":.*/\1/' | \
+                          sort -u | head -30)
+                      echo "methods<<EOF" >> $GITHUB_OUTPUT
+                      echo "$CHANGED" >> $GITHUB_OUTPUT
+                      echo "EOF" >> $GITHUB_OUTPUT
+
+                      echo "$DIFF" > /tmp/api-surface-diff.txt
+                  fi
+
+            - name: Comment on PR
+              if: steps.diff.outputs.changed == 'true' && github.event_name == 'pull_request'
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const fs = require('fs');
+                      const diff = fs.readFileSync('/tmp/api-surface-diff.txt', 'utf8');
+                      const methodLines = `${{ steps.diff.outputs.methods }}`;
+
+                      const methodList = methodLines.split('\n').filter(Boolean)
+                        .map(m => `- \`${m}\``).join('\n');
+
+                      const body = [
+                        '## :warning: API surface changed',
+                        '',
+                        'This PR modifies public/protected method signatures or PHPDoc array shapes.',
+                        'Downstream repos (Forms, Utils, SSO, boilerplate) may be affected.',
+                        '',
+                        '**Changed entries:**',
+                        methodList,
+                        '',
+                        '<details>',
+                        '<summary>Full diff</summary>',
+                        '',
+                        '```diff',
+                        diff.slice(0, 20000),
+                        '```',
+                        '</details>',
+                        '',
+                        '> Once `DOWNSTREAM_CI_TOKEN` is set up, this job will also dispatch a',
+                        '> `libs-api-changed` event to downstream repos so their CI runs automatically.',
+                      ].join('\n');
+
+                      const marker = ':warning: API surface changed';
+                      const { data: comments } = await github.rest.issues.listComments({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: context.issue.number,
+                      });
+
+                      const existing = comments.find(c => c.body.includes(marker));
+                      if (existing) {
+                        await github.rest.issues.updateComment({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          comment_id: existing.id,
+                          body,
+                        });
+                      } else {
+                        await github.rest.issues.createComment({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          issue_number: context.issue.number,
+                          body,
+                        });
+                      }
+
+            # TODO: Once DOWNSTREAM_CI_TOKEN is configured with `repo` scope on downstream
+            # repos, add a repository_dispatch step here to trigger their compatibility CI:
+            #
+            # - name: Dispatch to downstream repos
+            #   if: steps.diff.outputs.changed == 'true'
+            #   uses: peter-evans/repository-dispatch@v3
+            #   with:
+            #       token: ${{ secrets.DOWNSTREAM_CI_TOKEN }}
+            #       repository: infinum/eightshift-forms
+            #       event-type: libs-api-changed
+            #       client-payload: |
+            #           {
+            #             "libs_pr": "${{ github.event.pull_request.number }}",
+            #             "libs_ref": "${{ github.sha }}",
+            #             "libs_branch": "${{ github.head_ref }}",
+            #             "changed_methods": "${{ steps.diff.outputs.methods }}"
+            #           }
