@@ -25,7 +25,8 @@
 		"imagewebp",
 		"fopen",
 		"filemtime",
-		"unlink"
+		"unlink",
+		"stream_is_local"
 	],
 	"whitelist": ["WP_CLI", "WP_ENVIRONMENT_TYPE"]
 }

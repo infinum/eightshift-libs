@@ -339,6 +339,9 @@ class AbstractMediaTest extends BaseTestCase
 			'basedir' => '/tmp/uploads',
 			'baseurl' => 'https://example.com/uploads',
 		]);
+		Functions\when('wp_unique_filename')->alias(function ($dir, $name) {
+			return $name;
+		});
 
 		// file_exists returns false → convertMediaToWebPByPath throws,
 		// convertMediaToWebP catches and returns original upload.

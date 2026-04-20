@@ -342,6 +342,9 @@ class CacheTraitTest extends BaseTestCase
 			}
 			return false;
 		});
+		Functions\when('is_dir')->justReturn(true);
+		Functions\when('mkdir')->justReturn(true);
+		Functions\when('file_put_contents')->justReturn(1);
 
 		$this->wrapper::setAllCache();
 
@@ -380,6 +383,10 @@ class CacheTraitTest extends BaseTestCase
 			]
 		]);
 
+		Functions\when('is_dir')->justReturn(true);
+		Functions\when('mkdir')->justReturn(true);
+		Functions\when('file_put_contents')->justReturn(1);
+
 		$this->wrapper::setAllCache();
 
 		// Should set cache directly from getAllManifests
@@ -417,6 +424,8 @@ class CacheTraitTest extends BaseTestCase
 			}
 			return false;
 		});
+
+		Functions\when('filemtime')->justReturn(0);
 
 		// Note: Can't easily mock static class methods with Brain Monkey
 		// This test will call the actual helper method or fail silently
@@ -491,6 +500,9 @@ class CacheTraitTest extends BaseTestCase
 		Functions\when('file_exists')->alias(function ($path) {
 			return false;
 		});
+
+		Functions\when('is_dir')->justReturn(true);
+		Functions\when('mkdir')->justReturn(true);
 
 		// Mock successful file writing
 		Functions\when('file_put_contents')->alias(function ($path, $content, $flags) {

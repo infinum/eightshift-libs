@@ -45,6 +45,12 @@ class MediaTraitTest extends BaseTestCase
 				'baseurl' => 'https://example.com/uploads',
 			];
 		});
+		Functions\when('wp_unique_filename')->alias(function ($dir, $name) {
+			return $name;
+		});
+
+		// Force GD branch in convertMediaToWebPByPath regardless of host Imagick availability.
+		Functions\when('stream_is_local')->justReturn(false);
 	}
 
 	/**
@@ -324,25 +330,6 @@ class MediaTraitTest extends BaseTestCase
 	/**
 	 * @covers ::convertMediaToWebPByPath
 	 */
-	public function testConvertMediaToWebPByPathThrowsWhenWebpAlreadyExists(): void
-	{
-		$filePath = '/var/www/uploads/test.jpg';
-
-		// Mock file_exists: the new .webp path already exists.
-		Functions\when('file_exists')->alias(function ($path) {
-			// The new webp path would be /var/www/uploads/test.webp.
-			return \str_ends_with($path, '.webp');
-		});
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Media already exists');
-
-		$this->wrapper::convertMediaToWebPByPath($filePath, 80, false);
-	}
-
-	/**
-	 * @covers ::convertMediaToWebPByPath
-	 */
 	public function testConvertMediaToWebPByPathThrowsWhenOriginDoesNotExist(): void
 	{
 		$filePath = '/var/www/uploads/nonexistent.jpg';
@@ -382,7 +369,7 @@ class MediaTraitTest extends BaseTestCase
 		Functions\when('get_attached_file')->justReturn('');
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Media origin does not exist');
+		$this->expectExceptionMessage('Media not found');
 
 		$this->wrapper::convertMediaToWebPById(999, 80, false);
 	}

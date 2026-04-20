@@ -417,4 +417,21 @@ class DeprecatedTraitTest extends BaseTestCase
 			$this->clearPathsAndCache();
 		}
 	}
+
+	/**
+	 * @covers ::arrayIsList
+	 */
+	public function testArrayIsListFallbackWhenNativeFunctionMissing(): void
+	{
+		Functions\when('function_exists')->alias(function ($name) {
+			if ($name === 'array_is_list') {
+				return false;
+			}
+			return \function_exists($name);
+		});
+
+		$this->assertTrue(DeprecatedTraitWrapper::arrayIsList([1, 2, 3]));
+		$this->assertFalse(DeprecatedTraitWrapper::arrayIsList(['a' => 1]));
+		$this->assertFalse(DeprecatedTraitWrapper::arrayIsList([1 => 'a', 2 => 'b']));
+	}
 }

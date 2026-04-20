@@ -902,6 +902,65 @@ class PostTraitTest extends BaseTestCase
 	}
 
 	/**
+	 * @covers ::getReadingTime
+	 */
+	public function testGetReadingTimeHitsPostContentCacheWhenContentCacheIsEmpty(): void
+	{
+		$postId = 555;
+		$content = '<p>' . \str_repeat('word ', 200) . '</p>';
+
+		// Pre-populate only the post content cache, leave content cache empty.
+		// Forces getRawPostContent to hit its cache short-circuit (line 137).
+		$reflection = new ReflectionClass(PostTraitWrapper::class);
+		$postContentCache = $reflection->getProperty('postContentCache');
+		$postContentCache->setAccessible(true);
+		$postContentCache->setValue(null, [$postId => $content]);
+
+		$getContentCalls = 0;
+		Functions\when('get_the_content')->alias(function () use (&$getContentCalls) {
+			$getContentCalls++;
+			return '';
+		});
+		Functions\when('parse_blocks')->alias(function ($rawContent) {
+			return [[
+				'blockName' => 'core/paragraph',
+				'innerHTML' => $rawContent
+			]];
+		});
+		Functions\when('render_block')->alias(function ($block) {
+			return $block['innerHTML'] ?? '';
+		});
+		Functions\when('apply_filters')->alias(function ($hook, $value) {
+			return $value;
+		});
+
+		$result = $this->wrapper::getReadingTime($postId, 200);
+
+		$this->assertEquals(1, $result);
+		$this->assertEquals(0, $getContentCalls, 'get_the_content should not be called when postContentCache is hit');
+	}
+
+	/**
+	 * @covers ::getReadingTime
+	 */
+	public function testGetReadingTimeReturnsZeroWhenParseBlocksReturnsEmpty(): void
+	{
+		$postId = 666;
+		$content = '<p>non-empty content</p>';
+
+		Functions\when('get_the_content')->justReturn($content);
+		Functions\when('parse_blocks')->justReturn([]);
+		Functions\when('render_block')->justReturn('');
+		Functions\when('apply_filters')->alias(function ($hook, $value) {
+			return $value;
+		});
+
+		$result = $this->wrapper::getReadingTime($postId, 200);
+
+		$this->assertEquals(0, $result);
+	}
+
+	/**
 	 * Data providers
 	 */
 	public static function readingTimeProvider(): array
