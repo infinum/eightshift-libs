@@ -14,6 +14,8 @@ use EightshiftLibs\Tests\BaseTestCase;
 use EightshiftLibs\Helpers\PathsTrait;
 use Brain\Monkey\Functions;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Wrapper class to test PathsTrait methods without conflicts.
@@ -315,9 +317,9 @@ class PathsTraitTest extends BaseTestCase
 
 	/**
 	 * @covers ::getEightshiftOutputPath
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
 	 */
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState(false)]
 	public function testGetEightshiftOutputPathCreatesDirectoryWhenMissing(): void
 	{
 		Functions\when('is_dir')->justReturn(false);
