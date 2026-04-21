@@ -101,7 +101,7 @@ class RenderTraitWrapper
 		// Unset variables for memory optimization.
 		unset($renderName, $renderAttributes, $renderPathName, $renderUseComponentDefaults, $renderPrefixPath, $componentName);
 
-		// Instead of including the actual file (which would cause warnings), 
+		// Instead of including the actual file (which would cause warnings),
 		// we simulate the file inclusion by directly getting the mocked output
 		// This prevents "file not found" warnings while still testing the logic
 
@@ -818,6 +818,296 @@ class RenderTraitTest extends BaseTestCase
 		$this->wrapper::setTestConfig(['useLegacyComponents' => false]);
 		$result3 = $this->wrapper::render('card', [], 'components');
 		$this->assertEquals('test content', $result3);
+	}
+
+	/**
+	 * @covers ::initializeRenderCaches
+	 */
+	public function testRenderHandlersPointToExistingMethods(): void
+	{
+		$this->wrapper::initializeRenderCachesWrapper();
+		$handlers = $this->wrapper::getRenderHandlersCache();
+
+		foreach ($handlers as $key => $handler) {
+			$this->assertIsArray($handler, "Handler for '{$key}' should be an array");
+			$this->assertCount(2, $handler, "Handler for '{$key}' should have class and method");
+			$this->assertTrue(
+				\method_exists($handler[0], $handler[1]),
+				"Handler method '{$handler[1]}' should exist on class '{$handler[0]}'"
+			);
+		}
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderDefaultPathNameSwitchesWithLegacyFlag(): void
+	{
+		// Default (non-legacy) → blocks
+		$this->wrapper::setTestConfig(['useLegacyComponents' => false]);
+		$result1 = $this->wrapper::render('test-item');
+		$this->assertEquals('test content', $result1);
+
+		// Legacy → components
+		$this->wrapper::setTestConfig(['useLegacyComponents' => true]);
+		$result2 = $this->wrapper::render('test-item');
+		$this->assertEquals('test content', $result2);
+	}
+
+	/**
+	 * Wrapper pathName is not 'components' or 'blocks', so componentName should
+	 * remain empty regardless of renderPrefixPath.
+	 *
+	 * @covers ::render
+	 */
+	public function testRenderComponentNameNotExtractedForWrapperPath(): void
+	{
+		// Even with a prefix path the wrapper handler ignores it
+		$result = $this->wrapper::render('wrapper', [], 'wrapper', false, 'some/prefix');
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderDefaultPathBuildingForSrcType(): void
+	{
+		// 'src' is valid but not in the handler map → default path building
+		$result = $this->wrapper::render('my-file', [], 'src');
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderDefaultPathBuildingForBlocksRootType(): void
+	{
+		$result = $this->wrapper::render('my-file', [], 'blocksRoot');
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderDefaultPathBuildingForVariationsType(): void
+	{
+		$result = $this->wrapper::render('my-variation', [], 'variations');
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderDefaultPathBuildingForThemeRootType(): void
+	{
+		$result = $this->wrapper::render('theme-file', [], 'themeRoot');
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderDefaultPathBuildingForPluginRootType(): void
+	{
+		$result = $this->wrapper::render('plugin-file', [], 'pluginRoot');
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithUseComponentDefaultsMergesAttributes(): void
+	{
+		$this->wrapper::setTestConfig([
+			'components' => ['componentName' => 'heading', 'has-content' => true],
+			'defaultAttributes' => ['color' => 'red', 'size' => 'large'],
+		]);
+
+		// userAttributes override defaults
+		$result = $this->wrapper::render('heading', ['color' => 'blue'], 'components', true);
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * Ensure useComponentDefaults has no effect when the manifest is empty.
+	 *
+	 * @covers ::render
+	 */
+	public function testRenderUseComponentDefaultsSkippedWhenManifestEmpty(): void
+	{
+		$this->wrapper::setTestConfig([
+			'components' => [],
+			'defaultAttributes' => ['color' => 'red'],
+		]);
+
+		$result = $this->wrapper::render('heading', [], 'components', true);
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithPrefixPathContainingDirectorySeparator(): void
+	{
+		$result = $this->wrapper::render(
+			'input',
+			[],
+			'components',
+			false,
+			'forms' . \DIRECTORY_SEPARATOR . 'inputs'
+		);
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithPrefixPathWithoutSeparator(): void
+	{
+		$result = $this->wrapper::render('input', [], 'blocks', false, 'forms');
+
+		$this->assertEquals('test content', $result);
+	}
+
+	/**
+	 * Verify the exception message content for an invalid path name.
+	 *
+	 * @covers ::render
+	 */
+	public function testRenderInvalidPathExceptionMessageContainsAllowedNames(): void
+	{
+		try {
+			$this->wrapper::render('button', [], 'badPath');
+			$this->fail('Expected InvalidPath exception was not thrown');
+		} catch (InvalidPath $e) {
+			$this->assertStringContainsString('badPath', $e->getMessage());
+		}
+	}
+
+	/**
+	 * @covers ::handleComponentsRender
+	 */
+	public function testHandleComponentsRenderPathFormatWithComponentName(): void
+	{
+		$result = $this->wrapper::handleComponentsRenderWrapper('icon', 'icons/icon', 'icons');
+
+		$this->assertStringEndsWith('icon.php', $result['path']);
+		$this->assertStringContainsString('icons/icon', $result['path']);
+	}
+
+	/**
+	 * @covers ::handleComponentsRender
+	 */
+	public function testHandleComponentsRenderPathFormatWithoutComponentName(): void
+	{
+		$result = $this->wrapper::handleComponentsRenderWrapper('icon', '', '');
+
+		// Without componentName: path includes renderName twice (folder + file)
+		$this->assertStringEndsWith('icon/icon.php', $result['path']);
+	}
+
+	/**
+	 * @covers ::handleBlocksRender
+	 */
+	public function testHandleBlocksRenderPathFormatWithComponentName(): void
+	{
+		$result = $this->wrapper::handleBlocksRenderWrapper('hero', 'sections/hero', 'sections');
+
+		$this->assertStringEndsWith('hero.php', $result['path']);
+		$this->assertStringContainsString('sections/hero', $result['path']);
+	}
+
+	/**
+	 * @covers ::handleBlocksRender
+	 */
+	public function testHandleBlocksRenderPathFormatWithoutComponentName(): void
+	{
+		$result = $this->wrapper::handleBlocksRenderWrapper('hero', '', '');
+
+		$this->assertStringEndsWith('hero/hero.php', $result['path']);
+	}
+
+	/**
+	 * @covers ::handleWrapperRender
+	 */
+	public function testHandleWrapperRenderPathFormat(): void
+	{
+		$result = $this->wrapper::handleWrapperRenderWrapper('wrapper');
+
+		$this->assertStringEndsWith('wrapper.php', $result['path']);
+		$this->assertArrayHasKey('manifest', $result);
+		$this->assertEquals(['wrapperName' => 'test'], $result['manifest']);
+	}
+
+	/**
+	 * Verify render works correctly with sequential different path types.
+	 *
+	 * @covers ::render
+	 */
+	public function testRenderSequentialCallsWithDifferentPaths(): void
+	{
+		// Components
+		$result1 = $this->wrapper::render('heading', [], 'components');
+		$this->assertEquals('test content', $result1);
+
+		// Blocks
+		$result2 = $this->wrapper::render('card', [], 'blocks');
+		$this->assertEquals('test content', $result2);
+
+		// Wrapper
+		$result3 = $this->wrapper::render('wrapper', [], 'wrapper');
+		$this->assertEquals('test content', $result3);
+
+		// Default path (src)
+		$result4 = $this->wrapper::render('file', [], 'src');
+		$this->assertEquals('test content', $result4);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithNullObGetCleanReturnsEmptyString(): void
+	{
+		Functions\when('ob_get_clean')->justReturn(null);
+
+		$result = $this->wrapper::render('button');
+
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithFalseObGetCleanReturnsEmptyString(): void
+	{
+		Functions\when('ob_get_clean')->justReturn(false);
+
+		$result = $this->wrapper::render('button');
+
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithMultilineHtmlOutput(): void
+	{
+		Functions\when('ob_get_clean')->justReturn(
+			"\n  <div class=\"block\">\n    <p>Content</p>\n  </div>\n"
+		);
+
+		$result = $this->wrapper::render('button');
+
+		$this->assertEquals("<div class=\"block\">\n    <p>Content</p>\n  </div>", $result);
 	}
 
 	/**

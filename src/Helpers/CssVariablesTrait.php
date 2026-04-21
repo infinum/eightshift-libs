@@ -683,7 +683,7 @@ trait CssVariablesTrait
 						$item['name'] === $breakpoint &&
 						$item['type'] === $type &&
 						(
-							!empty((string) $attributeValue) ||
+							(string) $attributeValue !== '' ||
 							\gettype($attributeValue) === 'integer' ||
 							\gettype($attributeValue) === 'float' ||
 							\gettype($attributeValue) === 'double' ||

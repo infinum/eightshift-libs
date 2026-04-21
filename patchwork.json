@@ -13,7 +13,20 @@
 		"basename",
 		"ob_start",
 		"ob_get_clean",
-		"trim"
+		"trim",
+		"error_log",
+		"imagecreatefromjpeg",
+		"imagecreatefrompng",
+		"imagecreatefromgif",
+		"imagecreatefrombmp",
+		"imagepalettetotruecolor",
+		"imagealphablending",
+		"imagesavealpha",
+		"imagewebp",
+		"fopen",
+		"filemtime",
+		"unlink",
+		"stream_is_local"
 	],
 	"whitelist": ["WP_CLI", "WP_ENVIRONMENT_TYPE"]
 }

@@ -53,6 +53,15 @@ class ProjectInfoTraitWrapper
 }
 
 /**
+ * Wrapper class that does NOT override getPluginDetails,
+ * so the real implementation is exercised.
+ */
+class RealProjectInfoTraitWrapper
+{
+	use ProjectInfoTrait;
+}
+
+/**
  * Comprehensive test case for ProjectInfoTrait utility methods.
  *
  * @coversDefaultClass EightshiftLibs\Helpers\ProjectInfoTrait
@@ -636,5 +645,33 @@ class ProjectInfoTraitTest extends BaseTestCase
 		$this->assertEquals('  1.0.0  ', $this->wrapper::getPluginVersion());
 		$this->assertEquals('  Test Plugin  ', $this->wrapper::getPluginName());
 		$this->assertEquals('  test-plugin  ', $this->wrapper::getPluginTextDomain());
+	}
+
+	/**
+	 * @covers ::getPluginDetails
+	 */
+	public function testGetPluginDetailsWhenFunctionExists(): void
+	{
+		// Mock function_exists to return true (skip require_once).
+		Functions\when('function_exists')->justReturn(true);
+
+		// Mock Helpers::getProjectPaths to return a known path.
+		\Patchwork\redefine(
+			'EightshiftLibs\Helpers\Helpers::getProjectPaths',
+			function ($type = '', $suffix = '') {
+				return '/test/plugins/my-plugin/';
+			}
+		);
+
+		// get_plugin_data is defined as a stub in bootstrap.php returning [].
+		// All getPlugin* methods use fallback values when keys are missing.
+		$result = RealProjectInfoTraitWrapper::getPluginVersion();
+		$this->assertEquals('1.0.0', $result);
+
+		$result = RealProjectInfoTraitWrapper::getPluginName();
+		$this->assertEquals('Plugin', $result);
+
+		$result = RealProjectInfoTraitWrapper::getPluginTextDomain();
+		$this->assertEquals('PluginTextDomain', $result);
 	}
 }

@@ -12,7 +12,10 @@ namespace EightshiftLibs\Tests\Unit\Helpers;
 
 use EightshiftLibs\Tests\BaseTestCase;
 use EightshiftLibs\Helpers\PathsTrait;
+use Brain\Monkey\Functions;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 
 /**
  * Wrapper class to test PathsTrait methods without conflicts.
@@ -285,6 +288,9 @@ class PathsTraitTest extends BaseTestCase
 	 */
 	public function testGetEightshiftOutputPathWithoutFileName(): void
 	{
+		Functions\when('is_dir')->justReturn(true);
+		Functions\when('mkdir')->justReturn(true);
+
 		$result = $this->wrapper::getEightshiftOutputPath();
 
 		$this->assertIsString($result);
@@ -298,12 +304,36 @@ class PathsTraitTest extends BaseTestCase
 	 */
 	public function testGetEightshiftOutputPathWithFileName(): void
 	{
+		Functions\when('is_dir')->justReturn(true);
+		Functions\when('mkdir')->justReturn(true);
+
 		$fileName = 'test-file.json';
 		$result = $this->wrapper::getEightshiftOutputPath($fileName);
 
 		$this->assertIsString($result);
 		$this->assertStringEndsWith($fileName, $result);
 		$this->assertStringContainsString('eightshift', $result);
+	}
+
+	/**
+	 * @covers ::getEightshiftOutputPath
+	 */
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState(false)]
+	public function testGetEightshiftOutputPathCreatesDirectoryWhenMissing(): void
+	{
+		Functions\when('is_dir')->justReturn(false);
+
+		$mkdirCalled = false;
+		Functions\when('mkdir')->alias(function () use (&$mkdirCalled) {
+			$mkdirCalled = true;
+			return true;
+		});
+
+		$result = $this->wrapper::getEightshiftOutputPath();
+
+		$this->assertIsString($result);
+		$this->assertTrue($mkdirCalled, 'mkdir should be called when directory is missing');
 	}
 
 	/**
