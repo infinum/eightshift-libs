@@ -22,7 +22,7 @@ trait StoreBlocksTrait
 	/**
 	 * Styles key
 	 *
-	 * @var array<mixed>
+	 * @var list<array<string, mixed>>
 	 */
 	public static $styles = [];
 
@@ -36,7 +36,7 @@ trait StoreBlocksTrait
 	 * @param string $type Data type to retrieve.
 	 * @param string $key Data key to retrieve.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	private static function getCachedData(string $type, string $key): array
 	{
@@ -52,7 +52,7 @@ trait StoreBlocksTrait
 	 *
 	 * @throws InvalidBlock If blocks are missing.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, array<string, mixed>>
 	 */
 	public static function getBlocks(): array
 	{
@@ -66,7 +66,7 @@ trait StoreBlocksTrait
 	 *
 	 * @param string $block Block name to get.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getBlock(string $block): array
 	{
@@ -89,7 +89,7 @@ trait StoreBlocksTrait
 	 *
 	 * @throws InvalidBlock If components are missing.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, array<string, mixed>>
 	 */
 	public static function getComponents(): array
 	{
@@ -103,7 +103,7 @@ trait StoreBlocksTrait
 	 *
 	 * @throws InvalidBlock If component is missing.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getComponent(string $component): array
 	{
@@ -126,7 +126,7 @@ trait StoreBlocksTrait
 	 *
 	 * @throws InvalidBlock If variations are missing.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, array<string, mixed>>
 	 */
 	public static function getVariations(): array
 	{
@@ -140,7 +140,7 @@ trait StoreBlocksTrait
 	 *
 	 * @throws InvalidBlock If variation is missing.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getVariation(string $variation): array
 	{
@@ -163,7 +163,7 @@ trait StoreBlocksTrait
 	 *
 	 * @throws InvalidBlock If wrapper is missing.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getWrapper(): array
 	{
@@ -177,7 +177,7 @@ trait StoreBlocksTrait
 	/**
 	 * Get all global config settings with optimized caching.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getConfig(): array
 	{
@@ -272,7 +272,7 @@ trait StoreBlocksTrait
 	 *
 	 * @throws InvalidBlock If settings are missing.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getSettings(): array
 	{
@@ -307,7 +307,7 @@ trait StoreBlocksTrait
 	/**
 	 * Get global settings details - global variables with optimized access.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getSettingsGlobalVariables(): array
 	{
@@ -326,7 +326,7 @@ trait StoreBlocksTrait
 	/**
 	 * Get global settings details - global variables breakpoints with optimized access.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getSettingsGlobalVariablesBreakpoints(): array
 	{
@@ -345,7 +345,7 @@ trait StoreBlocksTrait
 	/**
 	 * Get global settings details - global variables colors with optimized access.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getSettingsGlobalVariablesColors(): array
 	{
@@ -368,7 +368,7 @@ trait StoreBlocksTrait
 	/**
 	 * Set styles details with validation.
 	 *
-	 * @param array<mixed> $style Style to store.
+	 * @param array<string, mixed> $style Style to store.
 	 *
 	 * @return void
 	 */
@@ -385,7 +385,7 @@ trait StoreBlocksTrait
 	/**
 	 * Get styles details.
 	 *
-	 * @return array<mixed>
+	 * @return list<array<string, mixed>>
 	 */
 	public static function getStyles(): array
 	{
@@ -430,7 +430,7 @@ trait StoreBlocksTrait
 	 *
 	 * @throws InvalidManifest If geolocation countries are missing.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function getGeolocationCountries(): array
 	{
