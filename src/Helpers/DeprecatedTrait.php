@@ -118,7 +118,7 @@ trait DeprecatedTrait
 	 *
 	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
 	 *
-	 * @return array<string, array<mixed>|int|string>
+	 * @return array<string, array<int|string, mixed>|int|string>
 	 */
 	public static function getApiSuccessPublicOutput(string $msg, array $additional = []): array
 	{
@@ -143,7 +143,7 @@ trait DeprecatedTrait
 	 *
 	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
 	 *
-	 * @return array<string, array<mixed>|int|string>
+	 * @return array<string, array<int|string, mixed>|int|string>
 	 */
 	public static function getApiWarningPublicOutput(string $msg, array $additional = []): array
 	{
@@ -168,7 +168,7 @@ trait DeprecatedTrait
 	 *
 	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
 	 *
-	 * @return array<string, array<mixed>|int|string>
+	 * @return array<string, array<int|string, mixed>|int|string>
 	 */
 	public static function getApiErrorPublicOutput(string $msg, array $additional = []): array
 	{

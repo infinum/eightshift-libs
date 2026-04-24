@@ -75,7 +75,7 @@ trait RenderTrait
 	 * @param string $renderPrefixPath Prefix path.
 	 * @param string $componentName Component name.
 	 *
-	 * @return array{path: string, manifest: array<mixed>}
+	 * @return array{path: string, manifest: array<string, mixed>}
 	 */
 	private static function handleComponentsRender(string $renderName, string $renderPrefixPath, string $componentName): array
 	{
@@ -97,7 +97,7 @@ trait RenderTrait
 	 *
 	 * @param string $renderName Render name.
 	 *
-	 * @return array{path: string, manifest: array<mixed>}
+	 * @return array{path: string, manifest: array<string, mixed>}
 	 */
 	private static function handleWrapperRender(string $renderName): array
 	{
@@ -114,7 +114,7 @@ trait RenderTrait
 	 * @param string $renderPrefixPath Prefix path.
 	 * @param string $componentName Component name.
 	 *
-	 * @return array{path: string, manifest: array<mixed>}
+	 * @return array{path: string, manifest: array<string, mixed>}
 	 */
 	private static function handleBlocksRender(string $renderName, string $renderPrefixPath, string $componentName): array
 	{

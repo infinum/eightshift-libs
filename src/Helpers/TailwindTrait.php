@@ -46,7 +46,7 @@ trait TailwindTrait
 	 * The part needs to be defined within the manifest, in the `tailwind` object.
 	 *
 	 * @param string $part Part name.
-	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
 	 *
 	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
@@ -74,8 +74,8 @@ trait TailwindTrait
 	 * The part needs to be defined within the manifest, in the `tailwind` object.
 	 *
 	 * @param string $part Part name.
-	 * @param array<mixed> $attributes Component/block attributes.
-	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param array<string, mixed> $attributes Component/block attributes.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
 	 *
 	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
@@ -171,8 +171,8 @@ trait TailwindTrait
 	/**
 	 * Get Tailwind classes for the given component/block.
 	 *
-	 * @param array<mixed> $attributes Component/block attributes.
-	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param array<string, mixed> $attributes Component/block attributes.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
 	 *
 	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
@@ -324,7 +324,7 @@ trait TailwindTrait
 	 *
 	 * @param string $partName The name of the part for which the option is being processed.
 	 * @param mixed $optionValue The value of the option to be processed.
-	 * @param array<mixed> $defs The definitions that dictate how the option should be processed.
+	 * @param array<string, mixed> $defs The definitions that dictate how the option should be processed.
 	 *
 	 * @return string The processed option value.
 	 */
@@ -392,8 +392,8 @@ trait TailwindTrait
 	 *
 	 * @param string $partName The name of the part for which the combination is being processed.
 	 * @param mixed $combo The combination value to be processed.
-	 * @param array<mixed> $attributes The attributes that dictate how the combination should be processed.
-	 * @param array<mixed> $manifest The manifest that provides additional context for processing the combination.
+	 * @param array<string, mixed> $attributes The attributes that dictate how the combination should be processed.
+	 * @param array<string, mixed> $manifest The manifest that provides additional context for processing the combination.
 	 *
 	 * @throws JsonException If the combination was not defined correctly.
 	 *
@@ -441,8 +441,8 @@ trait TailwindTrait
 	 * Get Tailwind classes for the given component/block.
 	 *
 	 * @param string $part Part to get classes for.
-	 * @param array<mixed> $attributes Component/block attributes.
-	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param array<string, mixed> $attributes Component/block attributes.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
 	 *
 	 * @throws Exception If the part is not defined in the manifest.
