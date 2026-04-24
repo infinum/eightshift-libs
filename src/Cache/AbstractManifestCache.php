@@ -83,7 +83,7 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 	/**
 	 * Get cache builder.
 	 *
-	 * @return array<string, array<mixed>> Array of cache builder.
+	 * @return array<string, array<string, array<string, mixed>>> Array of cache builder.
 	 */
 	protected function getCacheBuilder(): array
 	{

@@ -78,7 +78,7 @@ trait ProjectInfoTrait
 	/**
 	 * Get the plugin details.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, bool|string>
 	 */
 	protected static function getPluginDetails(): array
 	{

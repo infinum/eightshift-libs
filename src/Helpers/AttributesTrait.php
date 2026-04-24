@@ -108,7 +108,7 @@ trait AttributesTrait
 	 * @throws Exception If missing responsiveAttributes or keyName in responsiveAttributes.
 	 * @throws Exception If missing keyName in responsiveAttributes.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function checkAttrResponsive(string $keyName, array $attributes, array $manifest, bool $undefinedAllowed = false): array
 	{

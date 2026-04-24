@@ -92,7 +92,7 @@ class ThemeOptionsExample implements ServiceInterface
 	/**
 	 * Get reusable blocks patterns.
 	 *
-	 * @return array<mixed> Available patterns.
+	 * @return list<array{value: string, label: string}> Available patterns.
 	 */
 	public static function getPatterns(): array
 	{
