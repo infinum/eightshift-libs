@@ -521,7 +521,7 @@ trait CssVariablesTrait
 	 * @param integer $breakpointIndex Index of responsiveAttribute's breakpoint in manifest.
 	 * @param integer $numberOfBreakpoints Number of responsiveAttribute breakpoints in block's/component's manifest.
 	 *
-	 * @return array<int, mixed>
+	 * @return list<array<string, mixed>>
 	 */
 	private static function setBreakpointResponsiveVariables(
 		array $attributeVariables,
@@ -791,7 +791,7 @@ trait CssVariablesTrait
 	 * @param array<string, mixed> $attributes Attributes that are read from component's/block's manifest.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 *
-	 * @return array<int, mixed>|string[]
+	 * @return list<string>
 	 */
 	private static function variablesInner(array $variables, $attributeValue, array $attributes, array $manifest): array
 	{

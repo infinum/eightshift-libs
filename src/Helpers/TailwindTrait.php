@@ -303,7 +303,7 @@ trait TailwindTrait
 	 * Takes an array or string of CSS classes and unifies them into a single string,
 	 * ensuring that there are no duplicate classes and that the classes are properly formatted.
 	 *
-	 * @param mixed $input The input classes to be unified. This can be a string or an array of strings.
+	 * @param string|array<string> $input The input classes to be unified. This can be a string or an array of strings.
 	 *
 	 * @return string The unified string of CSS classes.
 	 */
@@ -323,7 +323,7 @@ trait TailwindTrait
 	 * It ensures that the option value is correctly handled according to the definitions.
 	 *
 	 * @param string $partName The name of the part for which the option is being processed.
-	 * @param mixed $optionValue The value of the option to be processed.
+	 * @param string|array<string, string> $optionValue The value of the option to be processed.
 	 * @param array<string, mixed> $defs The definitions that dictate how the option should be processed.
 	 *
 	 * @return string The processed option value.
@@ -391,7 +391,7 @@ trait TailwindTrait
 	 * It ensures that the combination is correctly handled according to the attributes and manifest.
 	 *
 	 * @param string $partName The name of the part for which the combination is being processed.
-	 * @param mixed $combo The combination value to be processed.
+	 * @param array<string, mixed> $combo The combination value to be processed.
 	 * @param array<string, mixed> $attributes The attributes that dictate how the combination should be processed.
 	 * @param array<string, mixed> $manifest The manifest that provides additional context for processing the combination.
 	 *
