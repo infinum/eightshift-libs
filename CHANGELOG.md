@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [12.3.4]
+
+### Changed
+
+- Narrowed generic `array<mixed>` PHPDoc annotations to accurate inline types across 19 files — string-keyed maps, typed list shapes, nested cache structures, CSS variable internals, union types, and precise shape annotations.
+
 ## [12.3.3]
 
 ### Fixed
@@ -1130,6 +1136,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[12.3.4]: https://github.com/infinum/eightshift-libs/compare/12.3.3...12.3.4
 [12.3.3]: https://github.com/infinum/eightshift-libs/compare/12.3.2...12.3.3
 [12.3.2]: https://github.com/infinum/eightshift-libs/compare/12.3.1...12.3.2
 [12.3.1]: https://github.com/infinum/eightshift-libs/compare/12.3.0...12.3.1
