@@ -107,7 +107,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 	/**
 	 * Gets additional locations for country list.
 	 *
-	 * @return array<mixed>
+	 * @return list<array{label: string, value: string, group: list<string>}>
 	 */
 	public function getAdditionalCountries(): array
 	{
@@ -127,7 +127,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 	/**
 	 * Gets the list of all countries from the manifest.
 	 *
-	 * @return array<mixed>
+	 * @return list<array{label: string, value: string, group: list<string>}>
 	 */
 	public function getCountries(): array
 	{

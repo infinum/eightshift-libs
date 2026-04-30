@@ -62,9 +62,9 @@ trait GeneralTrait
 	/**
 	 * Flatten multidimensional array with optimized performance.
 	 *
-	 * @param array<mixed> $arrayToFlatten Multidimensional array to flatten.
+	 * @param array<int|string, mixed> $arrayToFlatten Multidimensional array to flatten.
 	 *
-	 * @return array<mixed>
+	 * @return list<mixed>
 	 */
 	public static function flattenArray(array $arrayToFlatten): array
 	{
@@ -85,7 +85,7 @@ trait GeneralTrait
 	/**
 	 * Find array value by key in recursive array with optimized search.
 	 *
-	 * @param array<mixed> $array Array to find.
+	 * @param array<int|string, mixed> $array Array to find.
 	 * @param string $needle Key name to find.
 	 *
 	 * @return array<int, string>
@@ -110,10 +110,10 @@ trait GeneralTrait
 	 *
 	 * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
 	 *
-	 * @param array<mixed> $arrayToSanitize Provided array.
+	 * @param array<int|string, mixed> $arrayToSanitize Provided array.
 	 * @param string $sanitizationFunction WordPress function used for sanitization purposes.
 	 *
-	 * @return array<mixed>
+	 * @return array<int|string, mixed>
 	 */
 	public static function sanitizeArray(array $arrayToSanitize, string $sanitizationFunction): array
 	{
@@ -144,9 +144,9 @@ trait GeneralTrait
 	 * Sort array by order key. Used to sort terms.
 	 * Already optimized but added safety checks.
 	 *
-	 * @param array<mixed> $items Items array to sort. Must have order key.
+	 * @param list<array<string, mixed>> $items Items array to sort. Must have order key.
 	 *
-	 * @return array<mixed>
+	 * @return list<array<string, mixed>>
 	 */
 	public static function sortArrayByOrderKey(array $items): array
 	{

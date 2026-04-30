@@ -38,9 +38,9 @@ abstract class AbstractMedia implements ServiceInterface
 	/**
 	 * Enable SVG preview in Media Library.
 	 *
-	 * @param array<mixed> $response   Array of prepared attachment data.
+	 * @param array<string, mixed> $response   Array of prepared attachment data.
 	 * @param int|object $attachment Attachment ID or object.
-	 * @return array<object>|false Array of attachment details, or void if the parameter does not correspond to an attachment.
+	 * @return array<string, mixed>|false Array of attachment details, or void if the parameter does not correspond to an attachment.
 	 */
 	public function enableSvgMediaLibraryPreview($response, $attachment)
 	{
@@ -88,7 +88,7 @@ abstract class AbstractMedia implements ServiceInterface
 	 * Check if SVG is valid on Add New Media Page.
 	 *
 	 * @param array<object|string> $response Response array.
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	public function validateSvgOnUpload($response)
 	{

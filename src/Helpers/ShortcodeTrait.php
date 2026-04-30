@@ -19,7 +19,7 @@ trait ShortcodeTrait
 	 * Call a shortcode function by tag name.
 	 *
 	 * @param string $tag The shortcode whose function to call.
-	 * @param array<mixed> $attr The attributes to pass to the shortcode function. Optional.
+	 * @param array<string, mixed> $attr The attributes to pass to the shortcode function. Optional.
 	 * @param string $content The shortcode's content. Default is empty string.
 	 *
 	 * @return string|bool False on failure, the result of the shortcode on success.

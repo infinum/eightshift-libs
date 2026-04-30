@@ -162,8 +162,8 @@ class RegenerateWebPMediaCli extends AbstractCli
 	/**
 	 * Generate media.
 	 *
-	 * @param array<mixed> $options Options from WP-CLI.
-	 * @param array<mixed> $args Parameters from WP-CLI.
+	 * @param array{quality: int} $options Options from WP-CLI.
+	 * @param array<string, mixed> $args Parameters from WP-CLI.
 	 * @param bool $onlyUpdateDb Only update the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.
 	 *
 	 * @return void

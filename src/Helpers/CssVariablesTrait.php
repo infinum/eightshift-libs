@@ -348,8 +348,8 @@ trait CssVariablesTrait
 	 * Return CSS variables in default type. On the place where it was called.
 	 *
 	 * @param string $name Output css selector name.
-	 * @param array<mixed> $data Data prepared for checking.
-	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param array<int, array<string, mixed>> $data Data prepared for checking.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
 	 *
 	 * @return string
@@ -417,11 +417,11 @@ trait CssVariablesTrait
 	 * Get css variables in inline type. In one place in dom.
 	 *
 	 * @param string $name Output css selector name.
-	 * @param array<mixed> $data Data prepared for checking.
-	 * @param array<mixed> $manifest Component/block manifest data.
+	 * @param array<int, array<string, mixed>> $data Data prepared for checking.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, mixed>
 	 */
 	private static function getCssVariablesTypeInline(string $name, array $data, array $manifest, string $unique): array
 	{
@@ -521,7 +521,7 @@ trait CssVariablesTrait
 	 * @param integer $breakpointIndex Index of responsiveAttribute's breakpoint in manifest.
 	 * @param integer $numberOfBreakpoints Number of responsiveAttribute breakpoints in block's/component's manifest.
 	 *
-	 * @return array<int, mixed>
+	 * @return list<array<string, mixed>>
 	 */
 	private static function setBreakpointResponsiveVariables(
 		array $attributeVariables,
@@ -791,7 +791,7 @@ trait CssVariablesTrait
 	 * @param array<string, mixed> $attributes Attributes that are read from component's/block's manifest.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 *
-	 * @return array<int, mixed>|string[]
+	 * @return list<string>
 	 */
 	private static function variablesInner(array $variables, $attributeValue, array $attributes, array $manifest): array
 	{

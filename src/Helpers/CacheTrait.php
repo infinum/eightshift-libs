@@ -23,14 +23,14 @@ trait CacheTrait
 	/**
 	 * Cache.
 	 *
-	 * @var array<mixed>
+	 * @var array<string, array<string, mixed>>
 	 */
 	private static $cache = [];
 
 	/**
 	 * Cache builder.
 	 *
-	 * @var array<mixed>
+	 * @var array<string, array<string, array<string, mixed>>>
 	 */
 	private static $cacheBuilder = [];
 
@@ -69,7 +69,7 @@ trait CacheTrait
 	/**
 	 * Set cache details with optimized validation.
 	 *
-	 * @param array<mixed> $cacheBuilder Cache builder.
+	 * @param array<string, array<string, array<string, mixed>>> $cacheBuilder Cache builder.
 	 * @param string $cacheName Cache name.
 	 * @param string $version Cache version.
 	 *
@@ -174,7 +174,7 @@ trait CacheTrait
 	/**
 	 * Get cache.
 	 *
-	 * @return array<mixed>
+	 * @return array<string, array<string, mixed>>
 	 */
 	public static function getCache(): array
 	{
@@ -326,7 +326,7 @@ trait CacheTrait
 	/**
 	 * Get all manifests from the paths with optimized processing.
 	 *
-	 * @return array<string, array<mixed>> Array of manifests.
+	 * @return array<string, array<string, mixed>> Array of manifests.
 	 */
 	private static function getAllManifests(): array
 	{
@@ -370,7 +370,7 @@ trait CacheTrait
 	 * Get single item from the path with optimized file operations and error handling.
 	 *
 	 * @param string $path Path to the item.
-	 * @param array<mixed> $data Data array.
+	 * @param array<string, mixed> $data Data array.
 	 * @param string $parent Parent key.
 	 *
 	 * @throws InvalidManifest If manifest key is missing.
@@ -418,7 +418,7 @@ trait CacheTrait
 	 * Process autoset configuration efficiently.
 	 *
 	 * @param array<string, mixed> $fileDecoded Decoded file data.
-	 * @param array<mixed> $data Configuration data.
+	 * @param array<string, mixed> $data Configuration data.
 	 *
 	 * @return array<string, mixed> Processed file data.
 	 */
@@ -495,7 +495,7 @@ trait CacheTrait
 	 * Validate manifest keys efficiently.
 	 *
 	 * @param array<string, mixed> $fileDecoded Decoded file data.
-	 * @param array<mixed> $data Configuration data.
+	 * @param array<string, mixed> $data Configuration data.
 	 * @param string $path File path for error reporting.
 	 *
 	 * @throws InvalidManifest If required key is missing.
@@ -521,10 +521,10 @@ trait CacheTrait
 	 * Get multiple items from the path with optimized processing.
 	 *
 	 * @param string $path Path to the items.
-	 * @param array<mixed> $data Data array.
+	 * @param array<string, mixed> $data Data array.
 	 * @param string $parent Parent key.
 	 *
-	 * @return array<string, array<mixed>> Array of items.
+	 * @return array<string, array<string, mixed>> Array of items.
 	 */
 	private static function getItems(string $path, array $data, string $parent): array
 	{

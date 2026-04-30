@@ -61,7 +61,7 @@ class TaxonomyExample extends AbstractTaxonomy
 	/**
 	 * Get the arguments that configure the custom taxonomy.
 	 *
-	 * @return array<mixed> Array of arguments.
+	 * @return array<string, mixed> Array of arguments.
 	 */
 	protected function getTaxonomyArguments(): array
 	{

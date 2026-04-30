@@ -229,7 +229,7 @@ class AdminPatternsHeaderFooterMenuExample extends AbstractAdminMenu
 	/**
 	 * Renders the "Header partial" select menu.
 	 *
-	 * @param array<mixed> $args Arguments to pass.
+	 * @param array<string, mixed> $args Arguments to pass.
 	 * @return void
 	 */
 	public function renderPartialSelector($args): void
