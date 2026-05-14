@@ -130,6 +130,7 @@ class Autowiring
 		// Ignore dependencies for autowire and main class.
 		$ignorePaths = \array_flip([
 			'psr4Prefixes',
+			'namespace',
 			'projectNamespace',
 		]);
 
