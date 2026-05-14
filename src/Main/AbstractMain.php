@@ -21,6 +21,8 @@ use EightshiftLibs\Services\ServiceCliInterface;
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
 use ReflectionClass;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 
 /**
  * The main start class.
@@ -168,6 +170,12 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 */
 	private function getServiceClassesPreparedArray(): array
 	{
+		// Dev-mode fast path: reuse the previous autowire result while project source is unchanged.
+		$cached = $this->loadDevServiceCache();
+		if ($cached !== null) {
+			return $cached;
+		}
+
 		$output = [];
 
 		foreach ($this->getServiceClassesWithAutowire() as $class => $dependencies) {
@@ -179,7 +187,156 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 			$output[$dependencies] = [];
 		}
 
+		$this->writeDevServiceCache($output);
+
 		return $output;
+	}
+
+	/**
+	 * Load the development service cache, keyed by max mtime of the namespace's source tree.
+	 *
+	 * Returns null when the cache is disabled, missing, malformed, or stale.
+	 *
+	 * @return array<string, mixed>|null
+	 */
+	private function loadDevServiceCache(): ?array
+	{
+		if (!$this->isDevServiceCacheEnabled()) {
+			return null;
+		}
+
+		$cachePath = $this->getDevServiceCachePath();
+		if (!\is_file($cachePath)) {
+			return null;
+		}
+
+		$content = \file_get_contents($cachePath); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		if ($content === false || $content === '') {
+			return null;
+		}
+
+		$payload = \json_decode($content, true);
+		if (
+			!\is_array($payload) ||
+			!isset($payload['mtime'], $payload['services']) ||
+			!\is_array($payload['services'])
+		) {
+			return null;
+		}
+
+		if ((int) $payload['mtime'] !== $this->getNamespaceMaxMtime()) {
+			return null;
+		}
+
+		return $payload['services'];
+	}
+
+	/**
+	 * Persist the prepared services array to the development cache.
+	 *
+	 * No-op when the dev cache is disabled or the target is unwritable.
+	 *
+	 * @param array<string, mixed> $services Services array to persist.
+	 *
+	 * @return void
+	 */
+	private function writeDevServiceCache(array $services): void
+	{
+		if (!$this->isDevServiceCacheEnabled()) {
+			return;
+		}
+
+		$cachePath = $this->getDevServiceCachePath();
+		$directory = \dirname($cachePath);
+
+		if (!\is_dir($directory) && !\mkdir($directory, 0755, true) && !\is_dir($directory)) {
+			return;
+		}
+
+		$encoded = \wp_json_encode([
+			'mtime' => $this->getNamespaceMaxMtime(),
+			'services' => $services,
+		]);
+
+		if (!\is_string($encoded)) {
+			return;
+		}
+
+		if (\file_put_contents($cachePath, $encoded, \LOCK_EX) !== false) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			\chmod($cachePath, 0644); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
+		}
+	}
+
+	/**
+	 * Whether the development autowiring cache should be consulted.
+	 *
+	 * Disabled in production (compiled container handles it) and under WP-CLI
+	 * to ensure scaffolding sees freshly added classes.
+	 *
+	 * @return bool
+	 */
+	private function isDevServiceCacheEnabled(): bool
+	{
+		if (Helpers::shouldCache()) {
+			return false;
+		}
+
+		if (\defined('WP_CLI') && \WP_CLI) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Cache file path for the development autowiring cache.
+	 *
+	 * @return string
+	 */
+	private function getDevServiceCachePath(): string
+	{
+		$file = \explode('\\', $this->namespace);
+		return Helpers::getEightshiftOutputPath("{$file[0]}DevServiceClasses.json");
+	}
+
+	/**
+	 * Maximum mtime of any PHP file under the namespace's psr-4 root. Memoized per request.
+	 *
+	 * @return int
+	 */
+	private function getNamespaceMaxMtime(): int
+	{
+		static $cached = null;
+		if ($cached !== null) {
+			return $cached;
+		}
+
+		$namespaceWithSlash = "{$this->namespace}\\";
+		$pathToNamespace = $this->psr4Prefixes[$namespaceWithSlash][0] ?? '';
+
+		if (!\is_string($pathToNamespace) || !\is_dir($pathToNamespace)) {
+			$cached = 0;
+			return 0;
+		}
+
+		$max = 0;
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($pathToNamespace, RecursiveDirectoryIterator::SKIP_DOTS)
+		);
+
+		foreach ($iterator as $entry) {
+			if (!$entry->isFile() || $entry->getExtension() !== 'php') {
+				continue;
+			}
+
+			$mtime = $entry->getMTime();
+			if ($mtime > $max) {
+				$max = $mtime;
+			}
+		}
+
+		$cached = $max;
+		return $max;
 	}
 
 	/**

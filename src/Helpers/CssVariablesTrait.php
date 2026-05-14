@@ -56,7 +56,7 @@ trait CssVariablesTrait
 	public static function outputCssVariablesGlobal(array $globalSettings = []): string
 	{
 		$output = self::outputCssVariablesGlobalClean($globalSettings);
-		$id = Helpers::getConfigOutputCssSelectorName() . '-global';
+		$id = \esc_attr(Helpers::getConfigOutputCssSelectorName() . '-global');
 
 		return "<style id='{$id}'>{$output}</style>";
 	}
@@ -291,7 +291,7 @@ trait CssVariablesTrait
 	public static function outputCssVariablesInline(array $globalSettings = []): string
 	{
 		$output = self::outputCssVariablesInlineClean($globalSettings);
-		$selector = Helpers::getConfigOutputCssSelectorName();
+		$selector = \esc_attr(Helpers::getConfigOutputCssSelectorName());
 
 		return "<style id='{$selector}'>{$output}</style>";
 	}
