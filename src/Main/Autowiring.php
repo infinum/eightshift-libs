@@ -97,10 +97,13 @@ class Autowiring
 		}
 
 		// Resolve transitive dependencies via a work list queue rather than mutating
-		// the array while iterating it by reference.
+		// the array while iterating it by reference. Use an index pointer instead of
+		// array_shift() to avoid O(n) reindexing on each dequeue. isset() is used
+		// rather than count() because the queue grows during iteration.
 		$queue = \array_keys($dependencyTree);
-		while ($queue !== []) {
-			$current = (string) \array_shift($queue);
+		$queueIndex = 0;
+		while (isset($queue[$queueIndex])) {
+			$current = (string) $queue[$queueIndex++];
 			foreach (\array_keys($dependencyTree[$current] ?? []) as $depClass) {
 				if (isset($dependencyTree[$depClass])) {
 					continue;
