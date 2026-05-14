@@ -34,7 +34,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	/**
 	 * Array of instantiated services.
 	 *
-	 * @var Object[]
+	 * @var object[]
 	 */
 	protected array $services = [];
 
@@ -52,44 +52,36 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * @return void
 	 */
-	public function registerServices()
+	public function registerServices(): void
 	{
-		// Bail early so we don't instantiate services twice.
-		if (!empty($this->services)) {
+		if ($this->services !== []) {
 			return;
 		}
 
 		$this->services = $this->getServiceClassesWithDi();
 
-		\array_walk(
-			$this->services,
-			function ($class) {
-				// Load services classes but not in the WP-CLI env, unless they have the ShouldLoadInCliContext attr.
-				if (!\defined('WP_CLI') && $class instanceof ServiceInterface) {
+		$isCli = \defined('WP_CLI');
+		$cliLoadCache = [];
+
+		foreach ($this->services as $class) {
+			if (!$isCli) {
+				if ($class instanceof ServiceInterface) {
 					$class->register();
 				}
-
-				if (\defined('WP_CLI')) {
-					if ($class instanceof ServiceCliInterface) {
-						// Classes implementing ServiceCliInterface should be loaded only in CLI contexts.
-						$class->register();
-						return;
-					}
-
-					// Allow loading service classes in CLI contexts if it
-					// or a parent class has ShouldLoadInCliContext attribute.
-					$reflection = new ReflectionClass($class);
-					while ($reflection) {
-						if (\count($reflection->getAttributes(ShouldLoadInCliContext::class))) {
-							$class->register();
-							return;
-						}
-
-						$reflection = $reflection->getParentClass();
-					}
-				}
+				continue;
 			}
-		);
+
+			if ($class instanceof ServiceCliInterface) {
+				$class->register();
+				continue;
+			}
+
+			$className = $class::class;
+			$cliLoadCache[$className] ??= $this->classWantsCliLoad($class);
+			if ($cliLoadCache[$className]) {
+				$class->register();
+			}
+		}
 	}
 
 	/**
@@ -124,7 +116,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	/**
 	 * Return array of services with Dependency Injection parameters.
 	 *
-	 * @return Object[]
+	 * @return object[]
 	 *
 	 * @throws Exception Exception thrown by the DI container.
 	 */
@@ -132,20 +124,19 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	{
 		$services = $this->getServiceClassesPreparedArray();
 
-		if (!$services) {
+		if ($services === []) {
 			return [];
 		}
 
-		$services = $this->createServiceClassesCacheFile($services);
-
+		$services = $this->maybeCacheProductionServices($services);
 		$container = $this->getDiContainer($services);
 
-		return \array_map(
-			function ($class) use ($container) {
-				return $container->get($class);
-			},
-			\array_keys($services)
-		);
+		$instances = [];
+		foreach (\array_keys($services) as $class) {
+			$instances[] = $container->get($class);
+		}
+
+		return $instances;
 	}
 
 	/**
@@ -158,14 +149,17 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 */
 	private function getServiceClassesPreparedArray(): array
 	{
-		// Dev-mode fast path: reuse the previous autowire result while project source is unchanged.
-		$cached = $this->loadDevServiceCache();
-		if ($cached !== null) {
-			return $cached;
+		$devCacheEnabled = $this->isDevServiceCacheEnabled();
+		$devCachePath = $devCacheEnabled ? $this->getCachePath('DevServiceClasses.json') : '';
+
+		if ($devCacheEnabled) {
+			$cached = $this->loadServicesCache($devCachePath, true);
+			if ($cached !== null) {
+				return $cached;
+			}
 		}
 
 		$output = [];
-
 		foreach ($this->getServiceClassesWithAutowire() as $class => $dependencies) {
 			if (\is_array($dependencies)) {
 				$output[$class] = $dependencies;
@@ -175,30 +169,57 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 			$output[$dependencies] = [];
 		}
 
-		$this->writeDevServiceCache($output);
+		if ($devCacheEnabled) {
+			$this->storeServicesCache($devCachePath, $output, true);
+		}
 
 		return $output;
 	}
 
 	/**
-	 * Load the development service cache, keyed by max mtime of the namespace's source tree.
+	 * Read or write the production service-classes cache.
 	 *
-	 * Returns null when the cache is disabled, missing, malformed, or stale.
+	 * Returns the cached services when available, otherwise persists the input array and returns it.
+	 * Returns the input untouched when production caching is disabled.
 	 *
-	 * @return array<string, mixed>|null
+	 * @param array<string, mixed> $services Services to cache if no cache exists yet.
+	 *
+	 * @return array<string, mixed>
 	 */
-	private function loadDevServiceCache(): ?array
+	private function maybeCacheProductionServices(array $services): array
 	{
-		if (!$this->isDevServiceCacheEnabled()) {
+		if (!Helpers::shouldCache()) {
+			return $services;
+		}
+
+		$path = $this->getCachePath('ServiceClasses.json');
+
+		$cached = $this->loadServicesCache($path, false);
+		if ($cached !== null) {
+			return $cached;
+		}
+
+		$this->storeServicesCache($path, $services, false);
+
+		return $services;
+	}
+
+	/**
+	 * Load a cached services array from disk.
+	 *
+	 * @param string $path Absolute cache file path.
+	 * @param bool $checkMtime When true, the cache is invalidated if the namespace mtime changed.
+	 *
+	 * @return array<string, mixed>|null Cached services, or null if missing/stale/malformed.
+	 */
+	private function loadServicesCache(string $path, bool $checkMtime): ?array
+	{
+		if (!\is_file($path)) {
 			return null;
 		}
 
-		$cachePath = $this->getDevServiceCachePath();
-		if (!\is_file($cachePath)) {
-			return null;
-		}
-
-		$content = \file_get_contents($cachePath); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$content = \file_get_contents($path);
 		if ($content === false || $content === '') {
 			return null;
 		}
@@ -206,13 +227,13 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		$payload = \json_decode($content, true);
 		if (
 			!\is_array($payload) ||
-			!isset($payload['mtime'], $payload['services']) ||
+			!isset($payload['services']) ||
 			!\is_array($payload['services'])
 		) {
 			return null;
 		}
 
-		if ((int) $payload['mtime'] !== $this->getNamespaceMaxMtime()) {
+		if ($checkMtime && (int) ($payload['mtime'] ?? -1) !== $this->getNamespaceMaxMtime()) {
 			return null;
 		}
 
@@ -220,38 +241,35 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	}
 
 	/**
-	 * Persist the prepared services array to the development cache.
+	 * Persist a services array to the cache file atomically.
 	 *
-	 * No-op when the dev cache is disabled or the target is unwritable.
-	 *
-	 * @param array<string, mixed> $services Services array to persist.
+	 * @param string $path Absolute cache file path.
+	 * @param array<string, mixed> $services Services to persist.
+	 * @param bool $includeMtime When true, embed the namespace mtime for later invalidation.
 	 *
 	 * @return void
 	 */
-	private function writeDevServiceCache(array $services): void
+	private function storeServicesCache(string $path, array $services, bool $includeMtime): void
 	{
-		if (!$this->isDevServiceCacheEnabled()) {
-			return;
-		}
-
-		$cachePath = $this->getDevServiceCachePath();
-		$directory = \dirname($cachePath);
+		$directory = \dirname($path);
 
 		if (!\is_dir($directory) && !\mkdir($directory, 0755, true) && !\is_dir($directory)) {
 			return;
 		}
 
-		$encoded = \wp_json_encode([
-			'mtime' => $this->getNamespaceMaxMtime(),
-			'services' => $services,
-		]);
+		$payload = ['services' => $services];
+		if ($includeMtime) {
+			$payload['mtime'] = $this->getNamespaceMaxMtime();
+		}
 
+		$encoded = \wp_json_encode($payload);
 		if (!\is_string($encoded)) {
 			return;
 		}
 
-		if (\file_put_contents($cachePath, $encoded, \LOCK_EX) !== false) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-			\chmod($cachePath, 0644); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		if (\file_put_contents($path, $encoded, \LOCK_EX) !== false) {
+			\chmod($path, 0644); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 		}
 	}
 
@@ -277,34 +295,50 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	}
 
 	/**
-	 * Cache file path for the development autowiring cache.
+	 * Absolute path to a cache file within the Eightshift output directory.
+	 *
+	 * Namespaced by the first segment of the project's PHP namespace so multiple
+	 * AbstractMain subclasses don't collide.
+	 *
+	 * @param string $filename Filename including extension.
 	 *
 	 * @return string
 	 */
-	private function getDevServiceCachePath(): string
+	private function getCachePath(string $filename): string
 	{
-		$file = \explode('\\', $this->namespace);
-		return Helpers::getEightshiftOutputPath("{$file[0]}DevServiceClasses.json");
+		return Helpers::getEightshiftOutputPath("{$this->getNamespaceRoot()}{$filename}");
 	}
 
 	/**
-	 * Maximum mtime of any PHP file under the namespace's psr-4 root. Memoized per request.
+	 * First segment of the configured namespace, used as a cache key prefix.
+	 *
+	 * @return string
+	 */
+	private function getNamespaceRoot(): string
+	{
+		static $cache = [];
+		return $cache[$this->namespace] ??= \explode('\\', $this->namespace)[0];
+	}
+
+	/**
+	 * Maximum mtime of any PHP file under the namespace's psr-4 root.
+	 *
+	 * Memoized per namespace so independent AbstractMain subclasses do not poison each other's cache.
 	 *
 	 * @return int
 	 */
 	private function getNamespaceMaxMtime(): int
 	{
-		static $cached = null;
-		if ($cached !== null) {
-			return $cached;
+		static $cache = [];
+		if (isset($cache[$this->namespace])) {
+			return $cache[$this->namespace];
 		}
 
 		$namespaceWithSlash = "{$this->namespace}\\";
 		$pathToNamespace = $this->psr4Prefixes[$namespaceWithSlash][0] ?? '';
 
 		if (!\is_string($pathToNamespace) || !\is_dir($pathToNamespace)) {
-			$cached = 0;
-			return 0;
+			return $cache[$this->namespace] = 0;
 		}
 
 		$max = 0;
@@ -323,8 +357,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 			}
 		}
 
-		$cached = $max;
-		return $max;
+		return $cache[$this->namespace] = $max;
 	}
 
 	/**
@@ -350,15 +383,16 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 			}
 
 			$autowire = new AutowireDefinitionHelper();
-
 			$definitions[$serviceKey] = $autowire->constructor(...$this->getDiDependencies($serviceValues));
 		}
 
 		$builder = new ContainerBuilder();
 
 		if (Helpers::shouldCache()) {
-			$fileName = \explode('\\', $this->namespace);
-			$builder->enableCompilation(Helpers::getEightshiftOutputPath(), "{$fileName[0]}CompiledContainer");
+			$builder->enableCompilation(
+				Helpers::getEightshiftOutputPath(),
+				"{$this->getNamespaceRoot()}CompiledContainer"
+			);
 		}
 
 		return $builder->addDefinitions($definitions)->build();
@@ -366,23 +400,32 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 	/**
 	 * Return prepared Dependency Injection objects.
-	 * If you pass a class use PHP-DI to prepare if not just output it.
+	 *
+	 * If a dependency value is a known class name it becomes a `Reference`, otherwise it is
+	 * passed through unchanged. `class_exists` lookups are memoized to avoid repeated autoload hits.
 	 *
 	 * @param array<string, mixed> $dependencies Array of classes/parameters to push in constructor.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, mixed>
 	 */
 	private function getDiDependencies(array $dependencies): array
 	{
-		return \array_map(
-			function ($dependency) {
-				if (\class_exists($dependency)) {
-					return new Reference($dependency);
+		static $classExistsCache = [];
+
+		$resolved = [];
+		foreach ($dependencies as $dependency) {
+			if (\is_string($dependency)) {
+				$exists = $classExistsCache[$dependency] ??= \class_exists($dependency);
+				if ($exists) {
+					$resolved[] = new Reference($dependency);
+					continue;
 				}
-				return $dependency;
-			},
-			$dependencies
-		);
+			}
+
+			$resolved[] = $dependency;
+		}
+
+		return $resolved;
 	}
 
 	/**
@@ -398,33 +441,24 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	}
 
 	/**
-	 * Create the service classes cache file and return the services array.
+	 * Determine whether a service class (or any ancestor) is marked with
+	 * the ShouldLoadInCliContext attribute.
 	 *
-	 * @param array<string, mixed> $services Array of services.
+	 * @param object $class Service instance.
 	 *
-	 * @return array<string, mixed>
+	 * @return bool
 	 */
-	private function createServiceClassesCacheFile(array $services): array
+	private function classWantsCliLoad(object $class): bool
 	{
-		if (Helpers::shouldCache()) {
-			$file = \explode('\\', $this->namespace);
+		$reflection = new ReflectionClass($class);
 
-			$cacheFile = Helpers::getEightshiftOutputPath("{$file[0]}ServiceClasses.json");
-
-			if (\file_exists($cacheFile)) {
-				$handle = \fopen($cacheFile, 'r');
-				$output = \stream_get_contents($handle);
-
-				return \json_decode($output, true);
+		while ($reflection !== false) {
+			if ($reflection->getAttributes(ShouldLoadInCliContext::class) !== []) {
+				return true;
 			}
-
-			if (\file_put_contents($cacheFile, \json_encode($services))) { // phpcs:ignore
-				\chmod($cacheFile, 0644); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
-			}
-
-			return $services;
+			$reflection = $reflection->getParentClass();
 		}
 
-		return $services;
+		return false;
 	}
 }
