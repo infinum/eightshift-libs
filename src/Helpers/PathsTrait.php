@@ -135,9 +135,10 @@ trait PathsTrait
 
 		$joinedPath = $sep . \implode($sep, $filteredPaths);
 
-		// Treat as a file path when the last segment carries an extension (dot after the final separator).
+		// Treat as a file path when the last segment carries a non-empty extension.
 		$lastDot = \strrpos($joinedPath, '.');
-		if ($lastDot !== false && $lastDot > \strrpos($joinedPath, $sep)) {
+		$lastSeparator = \strrpos($joinedPath, $sep);
+		if ($lastDot !== false && $lastDot > $lastSeparator && $lastDot < \strlen($joinedPath) - 1) {
 			return $joinedPath;
 		}
 
