@@ -80,7 +80,7 @@ trait CssVariablesTrait
 		}
 
 		// Define variables from globalManifest.
-		$breakpoints = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : self::getSettingsGlobalVariablesBreakpoints();
+		$breakpoints = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : Helpers::getSettingsGlobalVariablesBreakpoints();
 
 		// Sort breakpoints in ascending order.
 		\asort($breakpoints);
@@ -140,6 +140,7 @@ trait CssVariablesTrait
 		}
 
 		// Load normal styles if server side render is used.
+		// Read-only switch between two render paths for the block editor's SSR preview; no state change, so a nonce is not required.
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
@@ -163,6 +164,7 @@ trait CssVariablesTrait
 	public static function outputCssVariablesInlineClean(array $globalSettings = []): string
 	{
 		// Load normal styles if server side render is used.
+		// Read-only switch between two render paths for the block editor's SSR preview; no state change, so a nonce is not required.
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
@@ -178,7 +180,7 @@ trait CssVariablesTrait
 		// Bailout if styles are missing.
 		if ($styles) {
 			// Define variables from globalManifest.
-			$breakpointsData = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : self::getSettingsGlobalVariablesBreakpoints();
+			$breakpointsData = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : Helpers::getSettingsGlobalVariablesBreakpoints();
 
 			// Sort breakpoints in ascending order.
 			\asort($breakpointsData);
