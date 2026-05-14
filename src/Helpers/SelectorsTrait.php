@@ -116,7 +116,7 @@ trait SelectorsTrait
 		}
 
 		// Use optimized classnames method.
-		return self::classnames($output);
+		return Helpers::clsx($output);
 	}
 
 	/**
