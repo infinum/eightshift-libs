@@ -24,21 +24,20 @@ trait CssVariablesTrait
 	 */
 	public static function outputCssVariablesGlobalClean(array $globalSettings = []): string
 	{
-		$output = '';
-
 		$globalVariables = !empty($globalSettings) ? ($globalSettings['globalVariables'] ?? []) : Helpers::getSettingsGlobalVariables();
 
+		$parts = [];
 		foreach ($globalVariables as $itemKey => $itemValue) {
 			$itemKey = Helpers::camelToKebabCase($itemKey);
 
-			if (\gettype($itemValue) === 'array') {
-				$output .= self::globalInner($itemValue, $itemKey);
+			if (\is_array($itemValue)) {
+				$parts[] = self::globalInner($itemValue, $itemKey);
 			} else {
-				$output .= "--global-{$itemKey}: {$itemValue};\n";
+				$parts[] = "--global-{$itemKey}: {$itemValue};\n";
 			}
 		}
 
-		$output = ":root {{$output}}";
+		$output = ':root {' . \implode('', $parts) . '}';
 
 		if (Helpers::getConfigOutputCssOptimize()) {
 			$output = \str_replace(["\n", "\r"], '', $output);
@@ -485,32 +484,28 @@ trait CssVariablesTrait
 	 */
 	private static function globalInner(array $itemValues, string $itemKey): string
 	{
-		$output = '';
+		$itemKey = Helpers::camelToKebabCase($itemKey);
+		$parts = [];
 
 		foreach ($itemValues as $key => $value) {
-			$key = Helpers::camelToKebabCase((string)$key);
-			$itemKey = Helpers::camelToKebabCase((string)$itemKey);
-
 			switch ($itemKey) {
 				case 'colors':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
-
-					$rgbValues = self::hexToRgb($value['color']);
-					$output .= "--global-{$itemKey}-{$value['slug']}-values: {$rgbValues};\n";
+					$parts[] = "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
+					$parts[] = "--global-{$itemKey}-{$value['slug']}-values: " . self::hexToRgb($value['color']) . ";\n";
 					break;
 				case 'gradients':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
+					$parts[] = "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
 					break;
 				case 'font-sizes':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['slug']};\n";
+					$parts[] = "--global-{$itemKey}-{$value['slug']}: {$value['slug']};\n";
 					break;
 				default:
-					$output .= "--global-{$itemKey}-{$key}: {$value};\n";
+					$parts[] = '--global-' . $itemKey . '-' . Helpers::camelToKebabCase((string)$key) . ": {$value};\n";
 					break;
 			}
 		}
 
-		return $output;
+		return \implode('', $parts);
 	}
 
 	/**
@@ -643,6 +638,12 @@ trait CssVariablesTrait
 	 */
 	private static function setVariablesToBreakpoints(array $attributes, array $variables, array $data, array $manifest, array $defaultBreakpoints): array
 	{
+		// Build an O(1) lookup from name+type to index so the inner match avoids a linear scan per breakpoint item.
+		$dataIndex = [];
+		foreach ($data as $index => $item) {
+			$dataIndex["{$item['name']}---{$item['type']}"] = $index;
+		}
+
 		foreach ($variables as $variableName => $variableValue) {
 			// Constant for attributes set value (in db or default).
 			$attributeValue = $attributes[Helpers::getAttrKey($variableName, $attributes, $manifest)] ?? '';
@@ -675,24 +676,22 @@ trait CssVariablesTrait
 				$isDefaultBreakpoint = empty($breakpointItem['breakpoint']) || $breakpointItem['breakpoint'] === $defaultBreakpoints[$type];
 				$breakpoint = $isDefaultBreakpoint ? 'default' : $breakpointItem['breakpoint'];
 
+				$lookupKey = "{$breakpoint}---{$type}";
+				if (!isset($dataIndex[$lookupKey])) {
+					continue;
+				}
 
-				// Iterate each data array to find the correct breakpoint.
-				foreach ($data as $index => $item) {
-					// Check if breakpoint and type match.
-					if (
-						$item['name'] === $breakpoint &&
-						$item['type'] === $type &&
-						(
-							!empty((string) $attributeValue) ||
-							\gettype($attributeValue) === 'integer' ||
-							\gettype($attributeValue) === 'float' ||
-							\gettype($attributeValue) === 'double' ||
-							$attributeValue === '0' // @phpstan-ignore-line
-						)
-					) {
-						// Merge data variables with the new variables array.
-						$data[$index]['variable'] = \array_merge($item['variable'], self::variablesInner($variable, $attributeValue, $attributes, $manifest));
-					}
+				if (
+					!empty((string) $attributeValue) ||
+					\is_int($attributeValue) ||
+					\is_float($attributeValue) ||
+					$attributeValue === '0' // @phpstan-ignore-line
+				) {
+					$index = $dataIndex[$lookupKey];
+					$data[$index]['variable'] = \array_merge(
+						$data[$index]['variable'],
+						self::variablesInner($variable, $attributeValue, $attributes, $manifest)
+					);
 				}
 			}
 		}
@@ -709,6 +708,12 @@ trait CssVariablesTrait
 	 */
 	private static function prepareVariableData(array $globalBreakpoints): array
 	{
+		// Request-scoped cache: breakpoints are stable per request but this function is invoked once per block render.
+		static $cache = [];
+		$cacheKey = (string) \wp_json_encode($globalBreakpoints);
+		if (isset($cache[$cacheKey])) {
+			return $cache[$cacheKey];
+		}
 
 		// Define the min and max arrays.
 		$min = [];
@@ -779,8 +784,8 @@ trait CssVariablesTrait
 			]
 		);
 
-		// Merge both arrays.
-		return \array_merge($min, $max);
+		$cache[$cacheKey] = \array_merge($min, $max);
+		return $cache[$cacheKey];
 	}
 
 	/**
@@ -802,33 +807,27 @@ trait CssVariablesTrait
 			return $output;
 		}
 
-		// Iterate each attribute and make corrections.
-		foreach ($variables as $variableKey => $variableValue) {
-			// Convert to correct case.
-			$internalKey = Helpers::camelToKebabCase($variableKey);
+		// Build the token replacement map once. Previously the inner attribute loop rebuilt the
+		// prefix/key for every variable, producing N (variables) * M (attributes) work.
+		$replacementMap = ['%value%' => (string) $attributeValue];
 
-			// If value contains magic variable swap that variable with original attribute value.
-			if (\str_contains($variableValue, '%value%')) {
-				$variableValue = \str_replace('%value%', (string) $attributeValue, $variableValue);
-			}
-
+		$prefix = $attributes['prefix'] ?? null;
+		if ($prefix !== null && $prefix !== '') {
+			$replacement = Helpers::kebabToCamelCase(Helpers::getConfigUseLegacyComponents() ? $manifest['componentName'] : $manifest['blockName']);
 			foreach ($attributes as $attrKey => $attrValue) {
-				if (isset($attributes['prefix'])) {
-					$key = (string)\str_replace(
-						$attributes['prefix'],
-						Helpers::kebabToCamelCase(Helpers::getConfigUseLegacyComponents() ? $manifest['componentName'] : $manifest['blockName']),
-						$attrKey
-					);
-				} else {
-					$key = $attrKey;
-				}
-
-				if (\str_contains($variableValue, "%attr-{$key}%")) {
-					$variableValue = \str_replace("%attr-{$key}%", (string) $attrValue, $variableValue);
-				}
+				$key = (string) \str_replace($prefix, $replacement, (string) $attrKey);
+				$replacementMap["%attr-{$key}%"] = (string) $attrValue;
 			}
+		} else {
+			foreach ($attributes as $attrKey => $attrValue) {
+				$replacementMap["%attr-{$attrKey}%"] = (string) $attrValue;
+			}
+		}
 
-			// Output the custom CSS variable by adding the attribute key + custom object key.
+		foreach ($variables as $variableKey => $variableValue) {
+			$internalKey = Helpers::camelToKebabCase($variableKey);
+			$variableValue = \strtr($variableValue, $replacementMap);
+
 			$output[] = "--{$internalKey}: {$variableValue};";
 		}
 

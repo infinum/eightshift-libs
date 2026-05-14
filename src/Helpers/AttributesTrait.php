@@ -327,7 +327,7 @@ trait AttributesTrait
 	 */
 	public static function getAttrsOutput(array $attrs, bool $escape = true): string
 	{
-		$htmlAttrs = '';
+		$parts = [];
 
 		foreach ($attrs as $key => $value) {
 			if ($escape) {
@@ -335,14 +335,15 @@ trait AttributesTrait
 				$key = \esc_attr($key);
 			}
 
-			if ($value == 0 || !empty($value)) { // intentional loose comparison to allow 0 values.
-				$htmlAttrs .= " {$key}='{$value}'";
+			// Write key-only form for empty string; keep '0' / non-empty values quoted.
+			if ($value !== '') {
+				$parts[] = " {$key}='{$value}'";
 				continue;
 			}
 
-			$htmlAttrs .= " {$key}";
+			$parts[] = " {$key}";
 		}
 
-		return $htmlAttrs;
+		return \implode('', $parts);
 	}
 }
