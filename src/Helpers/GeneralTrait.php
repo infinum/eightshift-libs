@@ -35,6 +35,7 @@ trait GeneralTrait
 		}
 
 		$originalErrorState = \libxml_use_internal_errors(true);
+		\libxml_clear_errors();
 
 		try {
 			$doc = new DOMDocument('1.0', 'utf-8');
