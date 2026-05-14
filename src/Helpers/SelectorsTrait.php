@@ -147,11 +147,11 @@ trait SelectorsTrait
 
 			if ($isAssociative) {
 				// For associative arrays, build data attributes.
-				$output = '';
+				$parts = [];
 				foreach ($variable as $key => $value) {
-					$output .= $key . '="' . \htmlspecialchars((string)$value, \ENT_QUOTES, 'UTF-8') . '" ';
+					$parts[] = $key . '="' . \htmlspecialchars((string)$value, \ENT_QUOTES, 'UTF-8') . '"';
 				}
-				return \rtrim($output); // Remove trailing space.
+				return \implode(' ', $parts);
 			} else {
 				// For sequential arrays, join elements.
 				return \implode('', $variable);

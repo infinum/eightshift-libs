@@ -27,6 +27,13 @@ trait TailwindTrait
 	 */
 	public static function getTwBreakpoints($desktopFirst = false)
 	{
+		static $cache = [];
+
+		$key = $desktopFirst ? 'desktop' : 'mobile';
+		if (isset($cache[$key])) {
+			return $cache[$key];
+		}
+
 		$breakpointData = Helpers::getSettingsGlobalVariablesBreakpoints();
 
 		$breakpointNames = \array_keys($breakpointData);
@@ -34,10 +41,12 @@ trait TailwindTrait
 		\usort($breakpointNames, fn($a, $b) => $breakpointData[$a] - $breakpointData[$b]);
 
 		if ($desktopFirst) {
-			return \array_map(fn($breakpoint) => "max-{$breakpoint}", $breakpointNames);
+			$cache[$key] = \array_map(fn($breakpoint) => "max-{$breakpoint}", $breakpointNames);
+			return $cache[$key];
 		}
 
-		return $breakpointNames;
+		$cache[$key] = $breakpointNames;
+		return $cache[$key];
 	}
 
 	/**
