@@ -19,13 +19,20 @@ use JsonException;
 trait TailwindTrait
 {
 	/**
+	 * Per-title slug cache for the debug prefix emitted by `tailwindClasses` under `WP_DEBUG`.
+	 *
+	 * @var array<string, string>
+	 */
+	private static array $tailwindDebugSlugCache = [];
+
+	/**
 	 * Get Tailwind breakpoints.
 	 *
 	 * @param bool $desktopFirst Whether to use desktop-first breakpoints.
 	 *
 	 * @return array<string>
 	 */
-	public static function getTwBreakpoints($desktopFirst = false)
+	public static function getTwBreakpoints(bool $desktopFirst = false): array
 	{
 		static $cache = [];
 
@@ -316,7 +323,7 @@ trait TailwindTrait
 	 *
 	 * @return string The unified string of CSS classes.
 	 */
-	private static function unifyClasses($input): string
+	private static function unifyClasses(string|array $input): string
 	{
 		if (\is_array($input)) {
 			return Helpers::clsx($input);
@@ -337,15 +344,14 @@ trait TailwindTrait
 	 *
 	 * @return string The processed option value.
 	 */
-	private static function processOption($partName, $optionValue, $defs): string
+	private static function processOption(string $partName, string|array $optionValue, array $defs): string
 	{
 		$optionClasses = [];
 
 		$isResponsive = $defs['responsive'] ?? false;
-		$itemPartName = isset($defs['part']) ? $defs['part'] : 'base';
+		$itemPartName = $defs['part'] ?? 'base';
 		$isSingleValue = isset($defs['twClasses']) || isset($defs['twClassesEditor']);
 
-		// Part checks.
 		if (!$isSingleValue && !isset($defs[$partName])) {
 			return '';
 		}
@@ -354,24 +360,14 @@ trait TailwindTrait
 			return '';
 		}
 
-		// Non-responsive options.
 		if (!$isResponsive) {
 			$rawValue = $defs['twClasses'][$optionValue] ?? $defs[$partName]['twClasses'][$optionValue] ?? '';
 
 			return self::unifyClasses($rawValue);
 		}
 
-		// Responsive options.
-		$breakpoints = \array_keys($optionValue);
-
-		if (\in_array('_desktopFirst', $breakpoints, true)) {
-			$breakpoints = \array_filter($breakpoints, fn($breakpoint) => $breakpoint !== '_desktopFirst');
-		}
-
-		foreach ($breakpoints as $breakpoint) {
-			$breakpointValue = $optionValue[$breakpoint];
-
-			if (!$breakpointValue) {
+		foreach ($optionValue as $breakpoint => $breakpointValue) {
+			if ($breakpoint === '_desktopFirst' || !$breakpointValue) {
 				continue;
 			}
 
@@ -380,14 +376,15 @@ trait TailwindTrait
 
 			if ($breakpoint === '_default') {
 				$optionClasses[] = $rawClasses;
-
 				continue;
 			}
 
-			$splitClasses = \explode(' ', $rawClasses);
-			$splitClasses = \array_map(fn($cn) => empty($cn) ? null : "{$breakpoint}:{$cn}", $splitClasses);
-
-			$optionClasses = [...$optionClasses, ...$splitClasses];
+			foreach (\explode(' ', $rawClasses) as $cn) {
+				if ($cn === '') {
+					continue;
+				}
+				$optionClasses[] = "{$breakpoint}:{$cn}";
+			}
 		}
 
 		return self::unifyClasses($optionClasses);
@@ -408,7 +405,7 @@ trait TailwindTrait
 	 *
 	 * @return string The processed combination value.
 	 */
-	private static function processCombination($partName, $combo, $attributes, $manifest): string
+	private static function processCombination(string $partName, array $combo, array $attributes, array $manifest): string
 	{
 		$matches = true;
 
@@ -430,7 +427,7 @@ trait TailwindTrait
 			return '';
 		}
 
-		$itemPartName = isset($combo['part']) ? $combo['part'] : 'base';
+		$itemPartName = $combo['part'] ?? 'base';
 		$isSingleValue = isset($combo['twClasses']) || isset($combo['twClassesEditor']);
 
 		if ($isSingleValue && !\str_contains($itemPartName, $partName)) {
@@ -458,29 +455,24 @@ trait TailwindTrait
 	 *
 	 * @return string
 	 */
-	public static function tailwindClasses($part, $attributes, $manifest, ...$custom): string
+	public static function tailwindClasses(string $part, array $attributes, array $manifest, ...$custom): string
 	{
 		// If nothing is set, return custom classes as a fallback.
-		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
+		if (!$part || !$manifest || !isset($manifest['tailwind']) || $manifest['tailwind'] === []) {
 			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
-		$allParts = isset($manifest['tailwind']['parts']) ? ['base', ...\array_keys($manifest['tailwind']['parts'])] : ['base'];
-
 		$partName = 'base';
 
-		if (isset($manifest['tailwind']['parts'][$part]) && \in_array($part, $allParts, true)) {
+		if (isset($manifest['tailwind']['parts'][$part])) {
 			$partName = $part;
 		} elseif ($part !== 'base') {
 			throw new Exception("Part '{$part}' is not defined in the manifest.");
 		}
 
-		// Base classes.
 		$baseClasses = self::unifyClasses($manifest['tailwind']['parts'][$partName]['twClasses'] ?? $manifest['tailwind']['base']['twClasses'] ?? ['']);
 
-		// Option classes.
 		$options = $manifest['tailwind']['options'] ?? [];
-
 		$optionClasses = [];
 
 		foreach ($options as $attributeName => $defs) {
@@ -493,9 +485,7 @@ trait TailwindTrait
 			$optionClasses[] = self::processOption($partName, $optionValue, $defs);
 		}
 
-		// Combinations.
 		$combinations = $manifest['tailwind']['combinations'] ?? [];
-
 		$combinationClasses = [];
 
 		foreach ($combinations as $combo) {
@@ -504,12 +494,11 @@ trait TailwindTrait
 
 		$debugPrefix = '';
 		if (\defined('WP_DEBUG') && \WP_DEBUG) {
-			static $slugCache = [];
 			$title = (string) ($manifest['title'] ?? '');
-			if (!isset($slugCache[$title])) {
-				$slugCache[$title] = \strtolower(\preg_replace('/[^a-zA-Z]+/', '-', $title));
+			if (!isset(self::$tailwindDebugSlugCache[$title])) {
+				self::$tailwindDebugSlugCache[$title] = \strtolower(\preg_replace('/[^a-zA-Z]+/', '-', $title));
 			}
-			$debugPrefix = "_es__{$slugCache[$title]}/{$part}";
+			$debugPrefix = "_es__" . self::$tailwindDebugSlugCache[$title] . "/{$part}";
 		}
 
 		return Helpers::clsx([$debugPrefix, $baseClasses, ...$optionClasses, ...$combinationClasses, ...$custom]);
