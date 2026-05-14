@@ -809,17 +809,29 @@ trait CssVariablesTrait
 
 		// Build the token replacement map once. Previously the inner attribute loop rebuilt the
 		// prefix/key for every variable, producing N (variables) * M (attributes) work.
-		$replacementMap = ['%value%' => (string) $attributeValue];
+		// Skip non-stringable attributes (arrays/objects) — substituting them into a CSS template
+		// is never meaningful and the original code only cast them when a template actually
+		// referenced the token, so emitting an unconditional cast here would log warnings.
+		$replacementMap = [];
+		if (\is_scalar($attributeValue) || $attributeValue === null) {
+			$replacementMap['%value%'] = (string) $attributeValue;
+		}
 
 		$prefix = $attributes['prefix'] ?? null;
 		if ($prefix !== null && $prefix !== '') {
 			$replacement = Helpers::kebabToCamelCase(Helpers::getConfigUseLegacyComponents() ? $manifest['componentName'] : $manifest['blockName']);
 			foreach ($attributes as $attrKey => $attrValue) {
+				if (!\is_scalar($attrValue) && $attrValue !== null) {
+					continue;
+				}
 				$key = (string) \str_replace($prefix, $replacement, (string) $attrKey);
 				$replacementMap["%attr-{$key}%"] = (string) $attrValue;
 			}
 		} else {
 			foreach ($attributes as $attrKey => $attrValue) {
+				if (!\is_scalar($attrValue) && $attrValue !== null) {
+					continue;
+				}
 				$replacementMap["%attr-{$attrKey}%"] = (string) $attrValue;
 			}
 		}
