@@ -46,18 +46,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	protected Container $container;
 
 	/**
-	 * Constructs object and inserts prefixes from composer.
-	 *
-	 * @param array<string, mixed> $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
-	 * @param string $projectNamespace Projects namespace.
-	 */
-	public function __construct(array $psr4Prefixes, string $projectNamespace)
-	{
-		$this->psr4Prefixes = $psr4Prefixes;
-		$this->namespace = $projectNamespace;
-	}
-
-	/**
 	 * Register the individual services with optional dependency injection.
 	 *
 	 * @throws Exception Exception thrown by DI container.
@@ -357,7 +345,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		$definitions = [];
 
 		foreach ($services as $serviceKey => $serviceValues) {
-			if (\gettype($serviceValues) !== 'array') {
+			if (!\is_array($serviceValues)) {
 				continue;
 			}
 

@@ -28,18 +28,16 @@ use ReflectionException;
 class Autowiring
 {
 	/**
-	 * Array of psr-4 prefixes. Should be provided by Composer's ClassLoader. $ClassLoader->getPsr4Prefixes().
+	 * Initialize the autowiring scanner with the composer PSR-4 map and the target project namespace.
 	 *
-	 * @var array<string, mixed>
+	 * @param array<string, mixed> $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
+	 * @param string $namespace Project namespace.
 	 */
-	protected array $psr4Prefixes;
-
-	/**
-	 * Project namespace
-	 *
-	 * @var string
-	 */
-	protected string $namespace;
+	public function __construct(
+		protected array $psr4Prefixes,
+		protected string $namespace,
+	) {
+	}
 
 	/**
 	 * Autowiring.
@@ -79,10 +77,10 @@ class Autowiring
 			}
 
 			// Build the dependency tree.
-			$dependencyTree = \array_merge(
-				$this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex),
-				$dependencyTree
-			);
+			$dependencyTree = [
+				...$this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex),
+				...$dependencyTree,
+			];
 		}
 
 		// Build dependency tree for dependencies. Things that need to be injected but were skipped because
@@ -94,15 +92,18 @@ class Autowiring
 					continue;
 				}
 
-				$dependencyTree = \array_merge(
-					$this->buildDependencyTree((string)$depClass, $filenameIndex, $classInterfaceIndex),
-					$dependencyTree
-				);
+				$dependencyTree = [
+					...$this->buildDependencyTree((string)$depClass, $filenameIndex, $classInterfaceIndex),
+					...$dependencyTree,
+				];
 			}
 		}
 
 		// Convert dependency tree into PHP-DI's definition list.
-		return \array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
+		return [
+			...$this->convertDependencyTreeIntoDefinitionList($dependencyTree),
+			...$manuallyDefinedDependencies,
+		];
 	}
 
 	// phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
@@ -332,14 +333,10 @@ class Autowiring
 	{
 		$classInterfaceIndex = [];
 		foreach ($reflectionClasses as $projectClass => $reflectionClass) {
-			$interfaces = \array_map(
-				function () {
-					return true;
-				},
+			$classInterfaceIndex[$projectClass] = \array_map(
+				static fn () => true,
 				$reflectionClass->getInterfaces()
 			);
-
-			$classInterfaceIndex[$projectClass] = $interfaces;
 		}
 
 		return $classInterfaceIndex;

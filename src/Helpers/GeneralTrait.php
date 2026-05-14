@@ -14,6 +14,7 @@ use DOMDocument;
 use EightshiftLibs\Exception\InvalidManifest;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
+use JsonException;
 
 /**
  * Class General Helper
@@ -251,29 +252,26 @@ trait GeneralTrait
 			throw InvalidManifest::manifestStructureException(\esc_html__('Empty manifest provided.', 'eightshift-libs'));
 		}
 
-		$result = \json_decode($manifest, true);
-		$jsonError = \json_last_error();
+		try {
+			$result = \json_decode($manifest, true, 512, \JSON_THROW_ON_ERROR);
+		} catch (JsonException $e) {
+			$errorMessages = [
+				\JSON_ERROR_DEPTH => \esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs'),
+				\JSON_ERROR_STATE_MISMATCH => \esc_html__('Invalid or malformed JSON.', 'eightshift-libs'),
+				\JSON_ERROR_CTRL_CHAR => \esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs'),
+				\JSON_ERROR_SYNTAX => \esc_html__('Syntax error, malformed JSON.', 'eightshift-libs'),
+				\JSON_ERROR_UTF8 => \esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs'),
+				\JSON_ERROR_RECURSION => \esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs'),
+				\JSON_ERROR_INF_OR_NAN => \esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs'),
+				\JSON_ERROR_UNSUPPORTED_TYPE => \esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs'),
+			];
 
-		// Fast path for no errors.
-		if ($jsonError === \JSON_ERROR_NONE) {
-			return $result ?? [];
+			$error = $errorMessages[$e->getCode()] ?? \esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
+
+			throw InvalidManifest::manifestStructureException($error);
 		}
 
-		// Optimized error handling using lookup table.
-		$errorMessages = [
-			\JSON_ERROR_DEPTH => \esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs'),
-			\JSON_ERROR_STATE_MISMATCH => \esc_html__('Invalid or malformed JSON.', 'eightshift-libs'),
-			\JSON_ERROR_CTRL_CHAR => \esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs'),
-			\JSON_ERROR_SYNTAX => \esc_html__('Syntax error, malformed JSON.', 'eightshift-libs'),
-			\JSON_ERROR_UTF8 => \esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs'),
-			\JSON_ERROR_RECURSION => \esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs'),
-			\JSON_ERROR_INF_OR_NAN => \esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs'),
-			\JSON_ERROR_UNSUPPORTED_TYPE => \esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs'),
-		];
-
-		$error = $errorMessages[$jsonError] ?? \esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
-
-		throw InvalidManifest::manifestStructureException($error);
+		return \is_array($result) ? $result : [];
 	}
 
 	/**
