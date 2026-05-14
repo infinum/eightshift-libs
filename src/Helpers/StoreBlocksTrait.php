@@ -276,13 +276,20 @@ trait StoreBlocksTrait
 	 */
 	public static function getSettings(): array
 	{
+		static $settingsCache = null;
+
+		if ($settingsCache !== null) {
+			return $settingsCache;
+		}
+
 		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::SETTINGS_KEY);
 
 		if (empty($data)) {
 			throw InvalidBlock::missingItemException('project', 'global settings');
 		}
 
-		return $data;
+		$settingsCache = $data;
+		return $settingsCache;
 	}
 
 	/**

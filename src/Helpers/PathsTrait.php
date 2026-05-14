@@ -92,16 +92,16 @@ trait PathsTrait
 
 		// Fast path for empty type.
 		if ($type === '') {
-			return self::joinPaths(\array_merge([self::$basePaths['root']], $suffix));
+			return self::joinPaths([self::$basePaths['root'], ...$suffix]);
 		}
 
 		// Use cached path configuration for fast lookup.
 		if (isset(self::$pathConfigs[$type])) {
-			return self::joinPaths(\array_merge(self::$pathConfigs[$type], $suffix));
+			return self::joinPaths([...self::$pathConfigs[$type], ...$suffix]);
 		}
 
 		// Fallback for unknown type (should rarely happen).
-		return self::joinPaths(\array_merge([self::$basePaths['root']], $suffix));
+		return self::joinPaths([self::$basePaths['root'], ...$suffix]);
 	}
 
 	/**
@@ -135,7 +135,9 @@ trait PathsTrait
 
 		$joinedPath = $sep . \implode($sep, $filteredPaths);
 
-		if (\pathinfo($joinedPath, \PATHINFO_EXTENSION)) {
+		// Treat as a file path when the last segment carries an extension (dot after the final separator).
+		$lastDot = \strrpos($joinedPath, '.');
+		if ($lastDot !== false && $lastDot > \strrpos($joinedPath, $sep)) {
 			return $joinedPath;
 		}
 
