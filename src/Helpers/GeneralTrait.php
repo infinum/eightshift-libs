@@ -14,6 +14,7 @@ use DOMDocument;
 use EightshiftLibs\Exception\InvalidManifest;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
+use JsonException;
 
 /**
  * Class General Helper
@@ -21,8 +22,7 @@ use RecursiveIteratorIterator;
 trait GeneralTrait
 {
 	/**
-	 * Check if XML is valid file used for svg.
-	 * Optimized with early validation and error handling.
+	 * Check if XML is a valid document (used for SVG validation).
 	 *
 	 * @param string $xml Full xml document.
 	 *
@@ -30,37 +30,26 @@ trait GeneralTrait
 	 */
 	public static function isValidXml(string $xml): bool
 	{
-		// Early return for empty or very short strings.
-		if (\strlen($xml) < 5) {
+		if (\strlen($xml) < 5 || !\str_contains($xml, '<') || !\str_contains($xml, '>')) {
 			return false;
 		}
 
-		// Quick check for basic XML structure.
-		if (!\str_contains($xml, '<') || !\str_contains($xml, '>')) {
-			return false;
-		}
-
-		// Suppress errors during validation.
 		$originalErrorState = \libxml_use_internal_errors(true);
+		\libxml_clear_errors();
 
 		try {
 			$doc = new DOMDocument('1.0', 'utf-8');
-			$doc->strictErrorChecking = false;
-			$doc->recover = true;
-
-			$result = $doc->loadXML($xml);
-			$errors = \libxml_get_errors();
-
-			return $result && empty($errors);
+			return $doc->loadXML($xml) && \libxml_get_errors() === [];
 		} finally {
-			// Restore original settings.
 			\libxml_use_internal_errors($originalErrorState);
 			\libxml_clear_errors();
 		}
 	}
 
 	/**
-	 * Flatten multidimensional array with optimized performance.
+	 * Flatten a multidimensional array into a single-level list.
+	 *
+	 * Null values are skipped; all other scalars (including 0, false, '') are preserved.
 	 *
 	 * @param array<int|string, mixed> $arrayToFlatten Multidimensional array to flatten.
 	 *
@@ -72,9 +61,9 @@ trait GeneralTrait
 
 		\array_walk_recursive(
 			$arrayToFlatten,
-			function ($a) use (&$output) {
-				if (!empty($a)) {
-					$output[] = $a;
+			function ($value) use (&$output): void {
+				if ($value !== null) {
+					$output[] = $value;
 				}
 			}
 		);
@@ -83,30 +72,32 @@ trait GeneralTrait
 	}
 
 	/**
-	 * Find array value by key in recursive array with optimized search.
+	 * Find array value by key in a recursive array.
 	 *
-	 * @param array<int|string, mixed> $array Array to find.
+	 * @param array<int|string, mixed> $array Array to search.
 	 * @param string $needle Key name to find.
 	 *
-	 * @return array<int, string>
+	 * @return array<int, mixed>
 	 */
 	public static function recursiveArrayFind(array $array, string $needle): array
 	{
-		$iterator  = new RecursiveArrayIterator($array);
+		$iterator = new RecursiveArrayIterator($array);
 		$recursive = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
-		$aHitList = [];
+		$hits = [];
 
 		foreach ($recursive as $key => $value) {
 			if ($key === $needle) {
-				\array_push($aHitList, $value);
+				$hits[] = $value;
 			}
 		}
 
-		return $aHitList;
+		return $hits;
 	}
 
 	/**
-	 * Sanitize all values in an array with optimized recursion.
+	 * Sanitize all values in an array recursively.
+	 *
+	 * Resolves the sanitization function once and reuses it across recursive calls.
 	 *
 	 * @link https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
 	 *
@@ -117,32 +108,29 @@ trait GeneralTrait
 	 */
 	public static function sanitizeArray(array $arrayToSanitize, string $sanitizationFunction): array
 	{
-		// Early return for empty array.
-		if (empty($arrayToSanitize)) {
+		if ($arrayToSanitize === []) {
 			return [];
 		}
 
-		// Validate function exists.
 		if (!\function_exists($sanitizationFunction)) {
 			return $arrayToSanitize;
 		}
 
-		$sanitized = [];
+		$callable = $sanitizationFunction(...);
 
-		foreach ($arrayToSanitize as $key => $value) {
-			if (\is_array($value)) {
-				$sanitized[$key] = self::sanitizeArray($value, $sanitizationFunction);
-			} else {
-				$sanitized[$key] = $sanitizationFunction($value);
+		$walk = static function (array $items) use (&$walk, $callable): array {
+			$result = [];
+			foreach ($items as $key => $value) {
+				$result[$key] = \is_array($value) ? $walk($value) : $callable($value);
 			}
-		}
+			return $result;
+		};
 
-		return $sanitized;
+		return $walk($arrayToSanitize);
 	}
 
 	/**
-	 * Sort array by order key. Used to sort terms.
-	 * Already optimized but added safety checks.
+	 * Sort array by `order` key (used for term ordering).
 	 *
 	 * @param list<array<string, mixed>> $items Items array to sort. Must have order key.
 	 *
@@ -150,25 +138,22 @@ trait GeneralTrait
 	 */
 	public static function sortArrayByOrderKey(array $items): array
 	{
-		// Early return for arrays with less than 2 items.
 		if (\count($items) < 2) {
 			return $items;
 		}
 
 		\usort(
 			$items,
-			function ($item1, $item2) {
-				$order1 = $item1['order'] ?? 0;
-				$order2 = $item2['order'] ?? 0;
-				return $order1 <=> $order2;
-			}
+			fn($a, $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0)
 		);
 
 		return $items;
 	}
 
 	/**
-	 * Convert string from camel to kebab case.
+	 * Convert string from camel case to kebab case.
+	 *
+	 * Handles acronyms (`APIKey` → `api-key`) and existing separators (`foo_bar` → `foo-bar`).
 	 *
 	 * @param string $input String to convert.
 	 *
@@ -176,14 +161,18 @@ trait GeneralTrait
 	 */
 	public static function camelToKebabCase(string $input): string
 	{
-		// Early return for empty string.
 		if ($input === '') {
 			return '';
 		}
 
-		// Optimized conversion using modern PHP functions.
-		$output = \ltrim(\mb_strtolower((string)\preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '-$0', $input)), '-');
-		return \str_replace(['_', ' ', '--'], ['-', '-', '-'], $output);
+		$normalized = \str_replace(['_', ' '], '-', $input);
+		$output = (string) \preg_replace(
+			['/([a-z\d])([A-Z])/', '/([A-Z]+)([A-Z][a-z])/'],
+			'$1-$2',
+			$normalized
+		);
+
+		return \mb_strtolower(\trim($output, '-'));
 	}
 
 	/**
@@ -234,79 +223,56 @@ trait GeneralTrait
 	}
 
 	/**
-	 * Helper method to check the validity of JSON string with optimized error handling.
-	 *
-	 * @link https://stackoverflow.com/a/15198925/629127
+	 * Parse and validate a JSON manifest string.
 	 *
 	 * @param string $manifest JSON string to validate.
 	 *
-	 * @throws InvalidManifest Error in the case json file has errors.
+	 * @throws InvalidManifest When the manifest is empty or contains invalid JSON.
 	 *
 	 * @return array<string, mixed> Parsed JSON string into an array.
 	 */
 	public static function parseManifest(string $manifest): array
 	{
-		// Early return for empty manifest.
 		if ($manifest === '') {
 			throw InvalidManifest::manifestStructureException(\esc_html__('Empty manifest provided.', 'eightshift-libs'));
 		}
 
-		$result = \json_decode($manifest, true);
-		$jsonError = \json_last_error();
-
-		// Fast path for no errors.
-		if ($jsonError === \JSON_ERROR_NONE) {
-			return $result ?? [];
+		try {
+			$result = \json_decode($manifest, true, 512, \JSON_THROW_ON_ERROR);
+		} catch (JsonException $e) {
+			throw InvalidManifest::manifestStructureException(\esc_html($e->getMessage()));
 		}
 
-		// Optimized error handling using lookup table.
-		$errorMessages = [
-			\JSON_ERROR_DEPTH => \esc_html__('The maximum stack depth has been exceeded.', 'eightshift-libs'),
-			\JSON_ERROR_STATE_MISMATCH => \esc_html__('Invalid or malformed JSON.', 'eightshift-libs'),
-			\JSON_ERROR_CTRL_CHAR => \esc_html__('Control character error, possibly incorrectly encoded.', 'eightshift-libs'),
-			\JSON_ERROR_SYNTAX => \esc_html__('Syntax error, malformed JSON.', 'eightshift-libs'),
-			\JSON_ERROR_UTF8 => \esc_html__('Malformed UTF-8 characters, possibly incorrectly encoded.', 'eightshift-libs'),
-			\JSON_ERROR_RECURSION => \esc_html__('One or more recursive references in the value to be encoded.', 'eightshift-libs'),
-			\JSON_ERROR_INF_OR_NAN => \esc_html__('One or more NAN or INF values in the value to be encoded.', 'eightshift-libs'),
-			\JSON_ERROR_UNSUPPORTED_TYPE => \esc_html__('A value of a type that cannot be encoded was given.', 'eightshift-libs'),
-		];
-
-		$error = $errorMessages[$jsonError] ?? \esc_html__('Unknown JSON error occurred.', 'eightshift-libs');
-
-		throw InvalidManifest::manifestStructureException($error);
+		return \is_array($result) ? $result : [];
 	}
 
 	/**
-	 * Get current URL with params using optimized string building.
+	 * Get the current request URL (including query string).
+	 *
+	 * Result is cached for the lifetime of the request since the URL cannot change mid-request.
 	 *
 	 * @return string
 	 */
 	public static function getCurrentUrl(): string
 	{
-		// Cache server variables to avoid repeated sanitization.
-		static $cachedUrl = null;
-		static $lastRequestTime = null;
-		$currentTime = isset($_SERVER['REQUEST_TIME']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_TIME'])) : \time();
+		static $cached = null;
 
-		// Return cached URL if it's from the same request.
-		if ($cachedUrl !== null && $lastRequestTime === $currentTime) {
-			return $cachedUrl;
+		if ($cached !== null) {
+			return $cached;
 		}
 
-		$isHttps = isset($_SERVER['HTTPS']) && \sanitize_text_field(\wp_unslash($_SERVER['HTTPS']));
+		$https = isset($_SERVER['HTTPS']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTPS'])) : '';
 		$host = isset($_SERVER['HTTP_HOST']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_HOST'])) : '';
 		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : '';
 
-		// Optimized URL building.
-		$protocol = $isHttps ? 'https' : 'http';
-		$cachedUrl = "{$protocol}://{$host}{$request}";
-		$lastRequestTime = $currentTime;
+		$protocol = ($https !== '' && $https !== 'off') ? 'https' : 'http';
+		$cached = "{$protocol}://{$host}{$request}";
 
-		return $cachedUrl;
+		return $cached;
 	}
 
 	/**
-	 * Clean url from query params using optimized string operations.
+	 * Strip query string and fragment from a URL.
 	 *
 	 * @param string $url URL to clean.
 	 *
@@ -314,17 +280,12 @@ trait GeneralTrait
 	 */
 	public static function cleanUrlParams(string $url): string
 	{
-		// Early return for empty URL.
 		if ($url === '') {
 			return '';
 		}
 
-		// Fast path using strpos instead of preg_replace for simple cases.
-		$queryPos = \strpos($url, '?');
-		if ($queryPos === false) {
-			return $url;
-		}
+		$cutoff = \strcspn($url, '?#');
 
-		return \substr($url, 0, $queryPos);
+		return $cutoff === \strlen($url) ? $url : \substr($url, 0, $cutoff);
 	}
 }

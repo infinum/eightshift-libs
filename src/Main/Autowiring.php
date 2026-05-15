@@ -28,18 +28,29 @@ use ReflectionException;
 class Autowiring
 {
 	/**
-	 * Array of psr-4 prefixes. Should be provided by Composer's ClassLoader. $ClassLoader->getPsr4Prefixes().
+	 * Constructor parameter names that are passed through from Main itself and must
+	 * be ignored when the autowire scanner encounters them as primitive dependencies.
 	 *
-	 * @var array<string, mixed>
+	 * Classes whose constructors contain ONLY ignored primitives (e.g. Main) are
+	 * intentionally not registered in the dependency tree.
 	 */
-	protected array $psr4Prefixes;
+	private const IGNORED_PRIMITIVE_PARAMS = [
+		'psr4Prefixes' => true,
+		'namespace' => true,
+		'projectNamespace' => true,
+	];
 
 	/**
-	 * Project namespace
+	 * Initialize the autowiring scanner with the composer PSR-4 map and the target project namespace.
 	 *
-	 * @var string
+	 * @param array<string, mixed> $psr4Prefixes Composer's ClassLoader psr4Prefixes. $ClassLoader->getPsr4Prefixes().
+	 * @param string $namespace Project namespace.
 	 */
-	protected string $namespace;
+	public function __construct(
+		protected readonly array $psr4Prefixes,
+		protected readonly string $namespace,
+	) {
+	}
 
 	/**
 	 * Autowiring.
@@ -62,6 +73,7 @@ class Autowiring
 		);
 
 		$dependencyTree = [];
+		$reflectionCache = $projectReflectionClasses;
 
 		// Prepare the filename index.
 		$filenameIndex = $this->buildFilenameIndex($projectReflectionClasses);
@@ -78,31 +90,41 @@ class Autowiring
 				continue;
 			}
 
-			// Build the dependency tree.
-			$dependencyTree = \array_merge(
-				$this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex),
-				$dependencyTree
-			);
+			// First-write-wins so the initial entry for a class survives later passes.
+			foreach ($this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex, $reflectionCache) as $class => $deps) {
+				$dependencyTree[$class] ??= $deps;
+			}
 		}
 
-		// Build dependency tree for dependencies. Things that need to be injected but were skipped because
-		// they were initially irrelevant.
-		foreach ($dependencyTree as &$dependencies) {
-			foreach ($dependencies as $depClass => $subDeps) {
-				// No need to build dependencies for this again if we already have them.
+		// Resolve transitive dependencies via a work list queue rather than mutating
+		// the array while iterating it by reference. Use an index pointer instead of
+		// array_shift() to avoid O(n) reindexing on each dequeue. isset() is used
+		// rather than count() because the queue grows during iteration.
+		$queue = \array_keys($dependencyTree);
+		$queueIndex = 0;
+		while (isset($queue[$queueIndex])) {
+			$current = (string) $queue[$queueIndex++];
+			foreach (\array_keys($dependencyTree[$current] ?? []) as $depClass) {
 				if (isset($dependencyTree[$depClass])) {
 					continue;
 				}
 
-				$dependencyTree = \array_merge(
-					$this->buildDependencyTree((string)$depClass, $filenameIndex, $classInterfaceIndex),
-					$dependencyTree
-				);
+				foreach ($this->buildDependencyTree((string)$depClass, $filenameIndex, $classInterfaceIndex, $reflectionCache) as $newClass => $newDeps) {
+					if (isset($dependencyTree[$newClass])) {
+						continue;
+					}
+
+					$dependencyTree[$newClass] = $newDeps;
+					$queue[] = $newClass;
+				}
 			}
 		}
 
 		// Convert dependency tree into PHP-DI's definition list.
-		return \array_merge($this->convertDependencyTreeIntoDefinitionList($dependencyTree), $manuallyDefinedDependencies);
+		return [
+			...$this->convertDependencyTreeIntoDefinitionList($dependencyTree),
+			...$manuallyDefinedDependencies,
+		];
 	}
 
 	// phpcs:disable Squiz.Commenting.FunctionCommentThrowTag.WrongNumber
@@ -112,78 +134,100 @@ class Autowiring
 	 * @param string $relevantClass Class we're building dependency tree for.
 	 * @param array<string, mixed> $filenameIndex Filename index. Maps filenames to class names.
 	 * @param array<string, mixed> $classInterfaceIndex Class interface index. Map classes to interface they implement.
+	 * @param array<string, ReflectionClass<object>> $reflectionCache Memoized ReflectionClass instances shared across the build.
 	 *
-	 * @throws InvalidAutowireDependency If a primitive dependency is found.
+	 * @throws InvalidAutowireDependency If a primitive dependency is found without a default value.
 	 * @throws ReflectionException If reflection exception happens.
 	 * @throws Exception General exception.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function buildDependencyTree(string $relevantClass, array $filenameIndex, array $classInterfaceIndex): array
-	{
+	private function buildDependencyTree(
+		string $relevantClass,
+		array $filenameIndex,
+		array $classInterfaceIndex,
+		array &$reflectionCache,
+	): array {
 		// Keeping PHPStan happy.
 		if (!\class_exists($relevantClass, false)) {
 			return [];
 		}
 
-		// Ignore dependencies for autowire and main class.
-		$ignorePaths = \array_flip([
-			'psr4Prefixes',
-			'projectNamespace',
-		]);
+		$reflClass = $reflectionCache[$relevantClass] ??= new ReflectionClass($relevantClass);
+		$constructor = $reflClass->getConstructor();
+
+		// No constructor or no parameters - register the class with no deps.
+		if ($constructor === null || $constructor->getParameters() === []) {
+			return [$relevantClass => []];
+		}
 
 		$dependencyTree = [];
-		$reflClass = new ReflectionClass($relevantClass);
-		// If this class has dependencies, we need to figure those out. Otherwise,
-		// we just add it to the dependency tree as a class without dependencies.
-		if (!empty($reflClass->getConstructor()) && !empty($reflClass->getConstructor()->getParameters())) {
-			// Go through each constructor parameter.
-			foreach ($reflClass->getConstructor()->getParameters() as $reflParam) {
-				$type = $reflParam->gettype();
+		$hasDefaultedPrimitive = false;
 
-				// Skip parameters without type hints.
-				if ($type instanceof ReflectionNamedType) {
-					$className = $type->getName();
-					$isBuiltin = $type->isBuiltin();
-				} else {
+		// Go through each constructor parameter.
+		foreach ($constructor->getParameters() as $reflParam) {
+			$type = $reflParam->getType();
+
+			// Skip parameters without a single named type hint (preserves legacy behavior).
+			if (!$type instanceof ReflectionNamedType) {
+				continue;
+			}
+
+			$paramName = $reflParam->getName();
+			$isBuiltin = $type->isBuiltin();
+
+			if ($isBuiltin) {
+				// Allowlisted primitives (Main's psr4Prefixes/namespace) — skip silently
+				// without registering the owning class so Main isn't autowired.
+				if (isset(self::IGNORED_PRIMITIVE_PARAMS[$paramName])) {
 					continue;
 				}
 
-				// We're unable to autowire primitive dependency and there doesn't seem to yet be a way
-				// to check if this parameter has a default value or not (so we need to throw an exception regardless).
-				// See: https://www.php.net/manual/en/class.reflectionnamedtype.php.
-				if ($isBuiltin && !isset($ignorePaths[$reflParam->getName()])) {
-					throw InvalidAutowireDependency::throwPrimitiveDependencyFound($relevantClass, $reflParam->getName());
+				// Primitive with a default value — PHP-DI will use the default at construction time.
+				if ($reflParam->isDefaultValueAvailable() || $reflParam->isOptional()) {
+					$hasDefaultedPrimitive = true;
+					continue;
 				}
 
-				// Keeping PHPStan happy.
-				if (\class_exists($className, false) || \interface_exists($className, false)) {
-					$reflClassForParam = new ReflectionClass($className);
-
-					// If the expected type is interface, try guessing based on var name.
-					// Otherwise, just inject that class.
-					if ($reflClassForParam->isInterface()) {
-						$matchedClass = $this->tryToFindMatchingClass(
-							$reflParam->getName(),
-							$className,
-							$filenameIndex,
-							$classInterfaceIndex
-						);
-
-						// If we're unable to find exactly 1 class for whatever reason, just skip it, the user
-						// will have to define the dependencies manually.
-						if (empty($matchedClass)) {
-							continue;
-						}
-						$dependencyTree[$relevantClass][$matchedClass] = [];
-					} else {
-						$dependencyTree[$relevantClass][$className] = [];
-					}
-				}
+				throw InvalidAutowireDependency::throwPrimitiveDependencyFound($relevantClass, $paramName);
 			}
-		} else {
+
+			$className = $type->getName();
+
+			// Keeping PHPStan happy.
+			if (!\class_exists($className, false) && !\interface_exists($className, false)) {
+				continue;
+			}
+
+			$reflClassForParam = $reflectionCache[$className] ??= new ReflectionClass($className);
+
+			// If the expected type is interface, try guessing based on var name.
+			// Otherwise, just inject that class.
+			if ($reflClassForParam->isInterface()) {
+				$matchedClass = $this->tryToFindMatchingClass(
+					$paramName,
+					$className,
+					$filenameIndex,
+					$classInterfaceIndex
+				);
+
+				// If we're unable to find exactly 1 class for whatever reason, just skip it, the user
+				// will have to define the dependencies manually.
+				if ($matchedClass === '') {
+					continue;
+				}
+
+				$dependencyTree[$relevantClass][$matchedClass] = [];
+			} else {
+				$dependencyTree[$relevantClass][$className] = [];
+			}
+		}
+
+		// Class has resolvable defaults but no class-typed deps - still register so DI can construct it.
+		if (!isset($dependencyTree[$relevantClass]) && $hasDefaultedPrimitive) {
 			$dependencyTree[$relevantClass] = [];
 		}
+
 		return $dependencyTree;
 	}
 	// phpcs:enable
@@ -206,13 +250,15 @@ class Autowiring
 			return [];
 		}
 
-		$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($pathToNamespace));
+		$it = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($pathToNamespace, RecursiveDirectoryIterator::SKIP_DOTS)
+		);
 		foreach ($it as $file) {
 			if ($file->isDir()) {
 				continue;
 			}
 
-			if (\preg_match('/^[A-Z]{1}[A-Za-z0-9]+\.php/', $file->getFileName())) {
+			if (\preg_match('/^[A-Z][A-Za-z0-9]+\.php$/', $file->getFileName())) {
 				$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespaceName, $pathToNamespace);
 			}
 		}
@@ -332,14 +378,10 @@ class Autowiring
 	{
 		$classInterfaceIndex = [];
 		foreach ($reflectionClasses as $projectClass => $reflectionClass) {
-			$interfaces = \array_map(
-				function () {
-					return true;
-				},
+			$classInterfaceIndex[$projectClass] = \array_map(
+				static fn() => true,
 				$reflectionClass->getInterfaces()
 			);
-
-			$classInterfaceIndex[$projectClass] = $interfaces;
 		}
 
 		return $classInterfaceIndex;

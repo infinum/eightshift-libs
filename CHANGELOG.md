@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.0.0]
+
+### Added
+
+- Added a production service-classes cache (`{Namespace}ServiceClasses.json`) alongside the compiled PHP-DI container so the autowire scan only runs on a cold cache.
+- Added a development service-classes cache (`{Namespace}DevServiceClasses.json`) keyed by the namespace mtime, disabled under WP-CLI so scaffolding always sees freshly added classes.
+- Added stampede protection to `CacheTrait::populateCacheData()` via an advisory `flock()` lock with a double-checked load on contention.
+- Added support in `Autowiring` for primitive constructor parameters that declare a default value — DI now registers classes that mix object and defaulted scalar dependencies instead of throwing.
+- Added a shared `ReflectionClass` cache reused across the autowire build.
+- Added a `PROPS_PASSTHROUGH_KEYS` constant in `AttributesTrait` for the special keys propagated through `props()`.
+
+### Changed
+
+- Promoted `Autowiring` constructor parameters to `readonly` properties and removed the now-redundant `AbstractMain::__construct()` (inherited from `Autowiring`).
+- Rewrote `Autowiring::buildServiceClasses()` to resolve transitive dependencies through a work-queue instead of mutating the array under a `foreach` reference.
+- Hoisted `Helpers::getSettings()` and wrapper attribute lookups out of the per-block loop in `AbstractBlocks::registerBlocks()` and threaded a shared `$context` into block registration.
+- Memoized camel↔kebab conversions in `AbstractBlocks::prepareComponentAttribute()`/`prepareComponentAttributes()` and replaced per-iteration `array_merge` chains with a single varargs merge.
+- Memoized `StoreBlocksTrait::getSettings()`, `TailwindTrait::getTwBreakpoints()`, `RenderTrait` default path name, and per-file existence checks for the request lifetime.
+- Tightened parameter/return types in `TailwindTrait` (`unifyClasses`, `processOption`, `getTwBreakpoints`) and `AttributesTrait::checkAttr()` (now `: mixed`).
+- `CssVariablesTrait::outputCssVariablesGlobalClean()` now builds the inner CSS with a single `implode()` and escapes the `id` / selector attributes via `esc_attr()` in `outputCssVariablesGlobal`/`outputCssVariablesInline`.
+- `PathsTrait::joinPaths()` replaces `pathinfo()` extension detection with an inline `strrpos` check; `getProjectPaths()` uses spread-operator path composition.
+- `GeneralTrait::isValidXml()` simplified to a single tight check; `flattenArray()` now preserves all non-`null` scalars; `recursiveArrayFind()` annotated as `array<int, mixed>`.
+- `SelectorsTrait` serializers use `implode()` instead of trailing-space concatenation and route through `Helpers::clsx()` directly.
+- `ComponentException::throwNotStringOrArray()` inverted to use `is_object()` instead of `gettype() !== 'object'`.
+- Bumped dev dependencies: `dealerdirect/phpcodesniffer-composer-installer` → `1.2.1`, `infinum/eightshift-coding-standards` → `^3.1.0`.
+
+### Removed
+
+- Removed `RenderTrait::initializeRenderCaches()` and the `$renderHandlers` lookup table — dispatch is now inlined.
+- Removed `AbstractMain::__construct()` (the promoted `Autowiring` constructor is used instead).
+
+### Fixed
+
+- Fixed `Autowiring::buildClasses()` filename regex so it requires the `.php` extension to terminate the filename (previously `Foo.phpinfo` would have matched).
+- Fixed `Autowiring`/`AbstractMain` directory walks to skip `.` and `..` via `RecursiveDirectoryIterator::SKIP_DOTS`.
+- Fixed `CssVariablesTrait` to call `Helpers::getSettingsGlobalVariablesBreakpoints()` instead of `self::` so the trait works when consumed by classes that don't import that helper directly.
+- Fixed double `wp_json_encode()` of the manifest payload on the cache write path in `CacheTrait`.
+- Fixed `flattenArray()` dropping legitimate falsy scalars (`0`, `false`, `''`).
+
 ## [12.3.4]
 
 ### Changed
@@ -1136,6 +1175,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.0.0]: https://github.com/infinum/eightshift-libs/compare/12.3.4...13.0.0
 [12.3.4]: https://github.com/infinum/eightshift-libs/compare/12.3.3...12.3.4
 [12.3.3]: https://github.com/infinum/eightshift-libs/compare/12.3.2...12.3.3
 [12.3.2]: https://github.com/infinum/eightshift-libs/compare/12.3.1...12.3.2
