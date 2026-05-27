@@ -1,0 +1,38 @@
+{
+	"name": "@eightshift/libs",
+	"version": "17.0.0",
+	"description": "A collection of useful backend utility modules. powered by Eightshift",
+	"author": {
+		"name": "Eightshift team",
+		"email": "team@eightshift.com",
+		"url": "https://eightshift.com/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/infinum/eightshift-libs.git"
+	},
+	"keywords": [
+		"backend",
+		"WordPress"
+	],
+	"bugs": {
+		"url": "https://github.com/infinum/eightshift-libs/issues"
+	},
+	"scripts": {
+		"lintStyle": "stylelint **/*.scss",
+		"lintJs": "eslint",
+		"prepare": "husky"
+	},
+	"homepage": "https://github.com/infinum/eightshift-libs#readme",
+	"license": "MIT",
+	"devDependencies": {
+		"lint-staged": "^17.0.5",
+		"husky": "^9.1.7"
+	},
+	"sideEffects": false,
+	"lint-staged": {
+		"*.php": [
+			"composer lint"
+		]
+	}
+}
