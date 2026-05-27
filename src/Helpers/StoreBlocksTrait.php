@@ -359,11 +359,11 @@ trait StoreBlocksTrait
 	// -----------------------------------------------------
 				// STYLES.
 				// -----------------------------------------------------
-				/**
-				 * Set styles details with validation.
-				 *
-				 * @param array<string, mixed> $style Style to store.
-				 */
+	/**
+	 * Set styles details with validation.
+	 *
+	 * @param array<string, mixed> $style Style to store.
+	 */
 	public static function setStyle(array $style): void
 	{
 		// Early return for empty style.
@@ -387,13 +387,13 @@ trait StoreBlocksTrait
 	// -----------------------------------------------------
 				// ASSETS.
 				// -----------------------------------------------------
-				/**
-				 * Get asset details with optimized error handling.
-				 *
-				 * @param string $asset Asset name to get.
-				 *
-				 * @throws InvalidBlock If asset is missing.
-				 */
+	/**
+	 * Get asset details with optimized error handling.
+	 *
+	 * @param string $asset Asset name to get.
+	 *
+	 * @throws InvalidBlock If asset is missing.
+	 */
 	public static function getAsset(string $asset): string
 	{
 		// Early return for empty asset name.

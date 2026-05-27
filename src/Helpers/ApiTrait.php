@@ -33,9 +33,9 @@ trait ApiTrait
 		array $additional = []
 	): WP_REST_Response {
 		$output = [
-		'status' => $status,
-		'code' => $code,
-		'message' => $msg,
+			'status' => $status,
+			'code' => $code,
+			'message' => $msg,
 		];
 
 		if ($additional !== []) {

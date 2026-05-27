@@ -58,15 +58,15 @@ trait TailwindTrait
 	}
 
 	/**
-				 * Gets Tailwind classes for the provided part.
-				 *
-				 * The part needs to be defined within the manifest, in the `tailwind` object.
-				 *
-				 * @param string $part Part name.
-				 * @param array<string, mixed> $manifest Component/block manifest data.
-				 * @param array<string> ...$custom Additional custom classes.
-				 */
-				#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	 * Gets Tailwind classes for the provided part.
+	 *
+	 * The part needs to be defined within the manifest, in the `tailwind` object.
+	 *
+	 * @param string $part Part name.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
+	 * @param array<string> ...$custom Additional custom classes.
+	 */
+	#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
 	public static function getTwPart($part, array $manifest, ...$custom): string
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
@@ -83,16 +83,16 @@ trait TailwindTrait
 	}
 
 	/**
-				 * Gets Tailwind classes for the provided dynamic part.
-				 *
-				 * The part needs to be defined within the manifest, in the `tailwind` object.
-				 *
-				 * @param string $part Part name.
-				 * @param array<string, mixed> $attributes Component/block attributes.
-				 * @param array<string, mixed> $manifest Component/block manifest data.
-				 * @param array<string> ...$custom Additional custom classes.
-				 */
-				#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	 * Gets Tailwind classes for the provided dynamic part.
+	 *
+	 * The part needs to be defined within the manifest, in the `tailwind` object.
+	 *
+	 * @param string $part Part name.
+	 * @param array<string, mixed> $attributes Component/block attributes.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
+	 * @param array<string> ...$custom Additional custom classes.
+	 */
+	#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
 	public static function getTwDynamicPart($part, array $attributes, array $manifest, ...$custom): string
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
@@ -110,12 +110,12 @@ trait TailwindTrait
 		if (isset($manifest['tailwind']['options'])) {
 			foreach ($manifest['tailwind']['options'] as $attributeName => $value) {
 				if (!isset($value['part'])) {
-																	continue;
+					continue;
 				}
 				if ($value['part'] !== $part) {
 					continue;
 				}
-																$responsive = $value['responsive'] ?? false;
+				$responsive = $value['responsive'] ?? false;
 				$twClasses = $value['twClasses'] ?? null;
 
 				if (!$twClasses) {
@@ -182,13 +182,13 @@ trait TailwindTrait
 	}
 
 	/**
-				 * Get Tailwind classes for the given component/block.
-				 *
-				 * @param array<string, mixed> $attributes Component/block attributes.
-				 * @param array<string, mixed> $manifest Component/block manifest data.
-				 * @param array<string> ...$custom Additional custom classes.
-				 */
-				#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	 * Get Tailwind classes for the given component/block.
+	 *
+	 * @param array<string, mixed> $attributes Component/block attributes.
+	 * @param array<string, mixed> $manifest Component/block manifest data.
+	 * @param array<string> ...$custom Additional custom classes.
+	 */
+	#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
 	public static function getTwClasses($attributes, array $manifest, ...$custom): string
 	{
 		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
@@ -362,12 +362,12 @@ trait TailwindTrait
 
 		foreach ($optionValue as $breakpoint => $breakpointValue) {
 			if ($breakpoint === '_desktopFirst') {
-													continue;
+				continue;
 			}
 			if (!$breakpointValue) {
 				continue;
 			}
-												$rawValue = $defs['twClasses'][$breakpointValue] ?? $defs[$partName]['twClasses'][$breakpointValue] ?? '';
+			$rawValue = $defs['twClasses'][$breakpointValue] ?? $defs[$partName]['twClasses'][$breakpointValue] ?? '';
 			$rawClasses = self::unifyClasses($rawValue);
 
 			if ($breakpoint === '_default') {

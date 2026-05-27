@@ -279,7 +279,7 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		if (Helpers::shouldCache()) {
 			return false;
 		}
-					return !(\defined('WP_CLI') && \WP_CLI);
+		return !(\defined('WP_CLI') && \WP_CLI);
 	}
 
 	/**
@@ -330,12 +330,12 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 		foreach ($iterator as $entry) {
 			if (!$entry->isFile()) {
-													continue;
+				continue;
 			}
 			if ($entry->getExtension() !== 'php') {
 				continue;
 			}
-												$mtime = $entry->getMTime();
+			$mtime = $entry->getMTime();
 			if ($mtime > $max) {
 				$max = $mtime;
 			}

@@ -121,9 +121,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	{
 		$settings = Helpers::getSettings();
 		$context = [
-		'blockClassPrefix' => $settings['blockClassPrefix'] ?? 'block',
-		'settingsAttributes' => $settings['attributes'] ?? [],
-		'wrapperAttributes' => Helpers::getConfigUseWrapper() ? (Helpers::getWrapper()['attributes'] ?? []) : [],
+			'blockClassPrefix' => $settings['blockClassPrefix'] ?? 'block',
+			'settingsAttributes' => $settings['attributes'] ?? [],
+			'wrapperAttributes' => Helpers::getConfigUseWrapper() ? (Helpers::getWrapper()['attributes'] ?? []) : [],
 		];
 
 		foreach (Helpers::getBlocks() as $block) {
@@ -253,9 +253,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		\register_block_type(
 			$blockDetails['blockFullName'],
 			[
-			'render_callback' => $this->render(...),
-			'attributes' => $this->getAttributes($blockDetails, $context),
-					]
+				'render_callback' => $this->render(...),
+				'attributes' => $this->getAttributes($blockDetails, $context),
+			]
 		);
 	}
 

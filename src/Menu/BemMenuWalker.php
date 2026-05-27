@@ -26,21 +26,21 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	public $cssClassPrefix;
 
 	/**
-				 * Menu item CSS suffixes.
-				 *
-				 * @var string[]
-				 */
-				// Define menu item names appropriately.
-				public $itemCssClassSuffixes = [
-			'item' => '__item',
-			'parent_item' => '__item--parent',
-			'active_item' => '__item--active',
-			'parent_of_active_item' => '__item--parent--active',
-			'ancestor_of_active_item' => '__item--ancestor--active',
-			'sub_menu' => '__sub-menu',
-			'sub_menu_item' => '__sub-menu__item',
-			'link' => '__link',
-		];
+	 * Menu item CSS suffixes.
+	 *
+	 * @var string[]
+	 */
+	// Define menu item names appropriately.
+	public $itemCssClassSuffixes = [
+		'item' => '__item',
+		'parent_item' => '__item--parent',
+		'active_item' => '__item--active',
+		'parent_of_active_item' => '__item--parent--active',
+		'ancestor_of_active_item' => '__item--ancestor--active',
+		'sub_menu' => '__sub-menu',
+		'sub_menu_item' => '__sub-menu__item',
+		'link' => '__link',
+	];
 
 	/**
 	 * Constructor function
@@ -76,7 +76,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	): void {
 		$id_field = $this->db_fields['id'];
 
-		if (isset($args[0]-> has_children)) {
+		if (isset($args[0]->has_children)) {
 			$args[0]->has_children = !empty($children_elements[$element->$id_field]);
 		}
 
@@ -84,15 +84,15 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	}
 
 	/**
-				 * Start level
-				 *
-				 * @see \Walker_Nav_Menu::start_lvl()
-				 *
-				 * @param string $output Used to append additional content (passed by reference).
-				 * @param int $depth Depth of menu item. Used for padding.
-				 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
-				 */
-				public function start_lvl( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+	 * Start level
+	 *
+	 * @see \Walker_Nav_Menu::start_lvl()
+	 *
+	 * @param string $output Used to append additional content (passed by reference).
+	 * @param int $depth Depth of menu item. Used for padding.
+	 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
+	 */
+	public function start_lvl( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
 		&$output,
 		$depth = 1,
 		$args = null
@@ -116,18 +116,18 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	}
 
 	/**
-				 * Add main/sub classes to li's and links.
-				 *
-				 * @param string $output Used to append additional content (passed by reference).
-				 * @param \WP_Post $item Menu item data object.
-				 * @param int $depth Depth of menu item. Used for padding.
-				 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
-				 * @param int $id Current item ID.
-				 *
-				 * @see \Walker_Nav_Menu::start_el()
-				 *
-				 */
-				public function start_el( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+	 * Add main/sub classes to li's and links.
+	 *
+	 * @param string $output Used to append additional content (passed by reference).
+	 * @param \WP_Post $item Menu item data object.
+	 * @param int $depth Depth of menu item. Used for padding.
+	 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
+	 * @param int $id Current item ID.
+	 *
+	 * @see \Walker_Nav_Menu::start_el()
+	 *
+	 */
+	public function start_el( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
 		&$output,
 		$item,
 		$depth = 0,
@@ -147,8 +147,8 @@ class BemMenuWalker extends \Walker_Nav_Menu
 			$userClasses = \array_map(
 				function (string $className) use ($prefix): string {
 					if (str_contains($className, 'js-')) {
-																					return $className;
-																				}
+						return $className;
+					}
 					return $prefix . '__item--' . $className;
 				},
 				$item->classes

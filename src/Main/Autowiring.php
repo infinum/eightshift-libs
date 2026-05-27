@@ -50,6 +50,7 @@ class Autowiring
 		protected readonly array $psr4Prefixes,
 		protected readonly string $namespace,
 	) {
+		// No initialization needed currently, but we might want to do some caching here in the future if we find performance bottlenecks.
 	}
 
 	/**
@@ -93,7 +94,7 @@ class Autowiring
 			if (!$reflClass->implementsInterface(ServiceInterface::class) && !$reflClass->implementsInterface(ServiceCliInterface::class)) {
 				continue;
 			}
-												// First-write-wins so the initial entry for a class survives later passes.
+			// First-write-wins so the initial entry for a class survives later passes.
 			foreach ($this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex, $reflectionCache) as $class => $deps) {
 				$dependencyTree[$class] ??= $deps;
 			}
@@ -443,7 +444,7 @@ class Autowiring
 				if ($skipInvalid) {
 					continue;
 				}
-																throw NonPsr4CompliantClass::throwInvalidNamespace($className);
+				throw NonPsr4CompliantClass::throwInvalidNamespace($className);
 			}
 		}
 

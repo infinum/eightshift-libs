@@ -34,7 +34,7 @@ trait CssVariablesTrait
 		$output = ':root {' . \implode('', $parts) . '}';
 
 		if (Helpers::getConfigOutputCssOptimize()) {
-									return \str_replace(["\n", "\r"], '', $output);
+			return \str_replace(["\n", "\r"], '', $output);
 		}
 
 		return $output;
@@ -536,7 +536,7 @@ trait CssVariablesTrait
 			if (!isset($variables[$responsiveAttributeName])) {
 				continue;
 			}
-												// Used for determination of default breakpoint.
+			// Used for determination of default breakpoint.
 			$numberOfBreakpoints = \count($responsiveAttributeObject);
 			$responsiveAttribute = [];
 			$breakpointIndex = 0;

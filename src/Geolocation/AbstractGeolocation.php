@@ -244,10 +244,10 @@ abstract class AbstractGeolocation implements ServiceInterface
 		// Provide custom countries.
 		$additionalLocations = $this->getAdditionalCountries();
 		if ($additionalLocations !== []) {
-									return \array_merge(
-										$output,
-										$additionalLocations
-									);
+			return \array_merge(
+				$output,
+				$additionalLocations
+			);
 		}
 
 		return $output;

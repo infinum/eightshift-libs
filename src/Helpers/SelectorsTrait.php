@@ -96,7 +96,7 @@ trait SelectorsTrait
 		$selectorBase = "{$parent}__{$selector}-";
 
 		foreach ($items as $itemKey => $itemValue) {
-									// Optimized type and value checking.
+			// Optimized type and value checking.
 			if ($itemValue === '') {
 				continue;
 			}
@@ -106,8 +106,8 @@ trait SelectorsTrait
 			if (\is_array($itemValue)) {
 				continue;
 			}
-									// Build selector efficiently.
-									$output[] = $useModifier ? $selectorBase . $itemKey . '--' . $itemValue : $selectorBase . $itemKey;
+			// Build selector efficiently.
+			$output[] = $useModifier ? $selectorBase . $itemKey . '--' . $itemValue : $selectorBase . $itemKey;
 		}
 
 		// Use optimized classnames method.
@@ -146,8 +146,8 @@ trait SelectorsTrait
 				}
 				return \implode(' ', $parts);
 			}
-												// For sequential arrays, join elements.
-												return \implode('', $variable);
+			// For sequential arrays, join elements.
+			return \implode('', $variable);
 		}
 
 		// Invalid type - throw exception.

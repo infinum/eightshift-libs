@@ -128,12 +128,12 @@ trait RenderTrait
 	private static function cleanInnerBlocks(array $innerBlocks): array // @phpstan-ignore-line
 	{
 		return \array_map(static fn(WP_Block $blockData): array => [
-				'name' => $blockData->name,
-				'attributes' => $blockData->attributes,
-				// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-				// @phpstan-ignore nullCoalesce.property
-				'innerBlocks' => self::cleanInnerBlocks([...($blockData->inner_blocks ?? [])]), // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-			], $innerBlocks);
+			'name' => $blockData->name,
+			'attributes' => $blockData->attributes,
+			// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+			// @phpstan-ignore nullCoalesce.property
+			'innerBlocks' => self::cleanInnerBlocks([...($blockData->inner_blocks ?? [])]), // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+		], $innerBlocks);
 	}
 
 	/**
@@ -191,8 +191,8 @@ trait RenderTrait
 			],
 		};
 
-					$renderPath = $result['path'];
-					$manifest = $result['manifest'];
+		$renderPath = $result['path'];
+		$manifest = $result['manifest'];
 
 		if (!isset(self::$fileExistsCache[$renderPath])) {
 			if (!\file_exists($renderPath)) {
@@ -205,15 +205,15 @@ trait RenderTrait
 			$renderAttributes = Helpers::getDefaultRenderAttributes($manifest, $renderAttributes);
 		}
 
-					\ob_start();
+		\ob_start();
 
-					$attributes = $renderAttributes;
-					$globalManifest = Helpers::getSettings();
+		$attributes = $renderAttributes;
+		$globalManifest = Helpers::getSettings();
 
-					$innerBlockData = null;
+		$innerBlockData = null;
 
 		if ($renderPathName === 'blocks') {
-            // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+			// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 			// @phpstan-ignore nullCoalesce.property
 			$innerBlockData = [...($renderBlock->inner_blocks ?? [])]; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
@@ -223,17 +223,17 @@ trait RenderTrait
 		}
 
 		// Strip internal variables so only the intentional set leaks into the included template scope.
-					unset(
-						$renderName,
-						$renderAttributes,
-						$renderPathName,
-						$renderUseComponentDefaults,
-						$renderPrefixPath,
-						$componentName,
-						$renderBlock,
-						$separatorPos,
-						$result
-					);
+		unset(
+			$renderName,
+			$renderAttributes,
+			$renderPathName,
+			$renderUseComponentDefaults,
+			$renderPrefixPath,
+			$componentName,
+			$renderBlock,
+			$separatorPos,
+			$result
+		);
 
 		include $renderPath;
 

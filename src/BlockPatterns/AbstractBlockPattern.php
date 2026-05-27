@@ -33,12 +33,12 @@ abstract class AbstractBlockPattern implements ServiceInterface
 		\register_block_pattern(
 			$this->getName(),
 			[
-			'title' => $this->getTitle(),
-			'description' => $this->getDescription(),
-			'content' => $this->getContent(),
-			'categories' => $this->getCategories(),
-			'keywords' => $this->getKeywords(),
-					]
+				'title' => $this->getTitle(),
+				'description' => $this->getDescription(),
+				'content' => $this->getContent(),
+				'categories' => $this->getCategories(),
+				'keywords' => $this->getKeywords(),
+			]
 		);
 	}
 

@@ -65,13 +65,13 @@ trait CacheTrait
 	// -----------------------------------------------------
 				// CACHE
 				// -----------------------------------------------------
-				/**
-				 * Set cache details with optimized validation.
-				 *
-				 * @param array<string, array<string, array<string, mixed>>> $cacheBuilder Cache builder.
-				 * @param string $cacheName Cache name.
-				 * @param string $version Cache version.
-				 */
+	/**
+	 * Set cache details with optimized validation.
+	 *
+	 * @param array<string, array<string, array<string, mixed>>> $cacheBuilder Cache builder.
+	 * @param string $cacheName Cache name.
+	 * @param string $version Cache version.
+	 */
 	public static function setCacheDetails(
 		array $cacheBuilder,
 		string $cacheName,

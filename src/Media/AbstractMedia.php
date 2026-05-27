@@ -100,9 +100,9 @@ abstract class AbstractMedia implements ServiceInterface
 
 			if (\file_exists($path) && !Helpers::isValidXml($svgContent)) {
 				return [
-						'size' => $response,
-						'name' => $response['name'],
-					];
+					'size' => $response,
+					'name' => $response['name'],
+				];
 			}
 		}
 

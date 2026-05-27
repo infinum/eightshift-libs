@@ -20,15 +20,15 @@ use Deprecated;
 trait DeprecatedTrait
 {
 	/**
-				 * Get manifest json by path and name.
-				 *
-				 * @param string $path Absolute path to.
-				 *
-				 * @throws InvalidManifest If the manifest is not allowed.
+	 * Get manifest json by path and name.
 	 *
-				 * @return array<string, mixed>
-				 */
-				#[Deprecated(message: 'This method is deprecated and will be removed in the next major release. Every component and block has $manifest variable available by default.', since: '10.0.0')]
+	 * @param string $path Absolute path to.
+	 *
+	 * @throws InvalidManifest If the manifest is not allowed.
+	 *
+	 * @return array<string, mixed>
+	 */
+	#[Deprecated(message: 'This method is deprecated and will be removed in the next major release. Every component and block has $manifest variable available by default.', since: '10.0.0')]
 	public static function getManifestByDir(string $path): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;
@@ -45,31 +45,31 @@ trait DeprecatedTrait
 		}
 
 		return match ($newPath[1]) {
-									'wrapper' => Helpers::getWrapper(),
-									'components' => Helpers::getComponent(\end($newPath)),
-									'custom' => Helpers::getBlock(\end($newPath)),
-									default => throw InvalidManifest::missingManifestException($path),
+			'wrapper' => Helpers::getWrapper(),
+			'components' => Helpers::getComponent(\end($newPath)),
+			'custom' => Helpers::getBlock(\end($newPath)),
+			default => throw InvalidManifest::missingManifestException($path),
 		};
 	}
 
 	/**
-				 * Converts an array of classes into a string which can be echoed.
-				 *
-				 * @param array<string> $classes Array of classes.
-				 */
-				#[Deprecated(message: 'This method is deprecated and will be removed in the next major release. Replace with clsx.', since: '10.0.0')]
+	 * Converts an array of classes into a string which can be echoed.
+	 *
+	 * @param array<string> $classes Array of classes.
+	 */
+	#[Deprecated(message: 'This method is deprecated and will be removed in the next major release. Replace with clsx.', since: '10.0.0')]
 	public static function classnames(array $classes): string
 	{
 		return Helpers::clsx($classes);
 	}
 
 	/**
-				 * Check if provided array is associative or sequential. Will return true if array is sequential.
-				 * Optimized to use modern PHP functions when available.
-				 *
-				 * @param array<string, mixed>|string[] $array Array to check.
-				 */
-				#[Deprecated(message: 'Since 10.8.0. Use array_is_list instead.')]
+	 * Check if provided array is associative or sequential. Will return true if array is sequential.
+	 * Optimized to use modern PHP functions when available.
+	 *
+	 * @param array<string, mixed>|string[] $array Array to check.
+	 */
+	#[Deprecated(message: 'Since 10.8.0. Use array_is_list instead.')]
 	public static function arrayIsList(array $array): bool
 	{
 		// Early return for empty array.
@@ -87,31 +87,31 @@ trait DeprecatedTrait
 	}
 
 	/**
-				 * Check if json is valid with caching for repeated checks.
-				 *
-				 * @param string $jsonString String to check.
-				 */
-				#[Deprecated(message: 'Since 10.8.0. Use json_validate instead.')]
+	 * Check if json is valid with caching for repeated checks.
+	 *
+	 * @param string $jsonString String to check.
+	 */
+	#[Deprecated(message: 'Since 10.8.0. Use json_validate instead.')]
 	public static function isJson(string $jsonString): bool
 	{
 		return \json_validate($jsonString);
 	}
 
 	/**
-				 * Return API success response array.
-				 *
-				 * @param string $msg Message for the user.
-				 * @param array<int|string, mixed> $additional Additional data to attach to response.
+	 * Return API success response array.
 	 *
-				 * @return array<string, array<int|string, mixed>|int|string>
-				 */
-				#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
+	 * @param string $msg Message for the user.
+	 * @param array<int|string, mixed> $additional Additional data to attach to response.
+	 *
+	 * @return array<string, array<int|string, mixed>|int|string>
+	 */
+	#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
 	public static function getApiSuccessPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
-		'status' => AbstractRoute::STATUS_SUCCESS,
-		'code' => AbstractRoute::API_RESPONSE_CODE_OK,
-		'message' => $msg,
+			'status' => AbstractRoute::STATUS_SUCCESS,
+			'code' => AbstractRoute::API_RESPONSE_CODE_OK,
+			'message' => $msg,
 		];
 
 		if ($additional !== []) {
@@ -122,20 +122,20 @@ trait DeprecatedTrait
 	}
 
 	/**
-				 * Return API warning response array.
-				 *
-				 * @param string $msg Msg for the user.
-				 * @param array<int|string, mixed> $additional Additional data to attach to response.
+	 * Return API warning response array.
 	 *
-				 * @return array<string, array<int|string, mixed>|int|string>
-				 */
-				#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
+	 * @param string $msg Msg for the user.
+	 * @param array<int|string, mixed> $additional Additional data to attach to response.
+	 *
+	 * @return array<string, array<int|string, mixed>|int|string>
+	 */
+	#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
 	public static function getApiWarningPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
-		'status' => AbstractRoute::STATUS_WARNING,
-		'code' => AbstractRoute::API_RESPONSE_CODE_OK,
-		'message' => $msg,
+			'status' => AbstractRoute::STATUS_WARNING,
+			'code' => AbstractRoute::API_RESPONSE_CODE_OK,
+			'message' => $msg,
 		];
 
 		if ($additional !== []) {
@@ -146,20 +146,20 @@ trait DeprecatedTrait
 	}
 
 	/**
-				 * Return API error response array.
-				 *
-				 * @param string $msg Message for the user.
-				 * @param array<string, mixed> $additional Additional data to attach to response.
+	 * Return API error response array.
 	 *
-				 * @return array<string, array<int|string, mixed>|int|string>
-				 */
-				#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
+	 * @param string $msg Message for the user.
+	 * @param array<string, mixed> $additional Additional data to attach to response.
+	 *
+	 * @return array<string, array<int|string, mixed>|int|string>
+	 */
+	#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
 	public static function getApiErrorPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
-		'status' => AbstractRoute::STATUS_ERROR,
-		'code' => AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
-		'message' => $msg,
+			'status' => AbstractRoute::STATUS_ERROR,
+			'code' => AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
+			'message' => $msg,
 		];
 
 		if ($additional !== []) {

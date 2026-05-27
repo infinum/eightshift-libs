@@ -164,6 +164,7 @@ abstract class AbstractCli implements CliInterface
 		 */
 		protected string $commandParentName
 	) {
+		// No initialization needed currently, but we might want to do some caching here in the future if we find performance bottlenecks.
 	}
 
 	/**
@@ -403,7 +404,7 @@ abstract class AbstractCli implements CliInterface
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		if (\file_exists($path)) {
-									$templateFile = \file_get_contents($path);
+			$templateFile = \file_get_contents($path);
 		} elseif ($skipMissing) {
 			$this->fileContents = '';
 		} else {
