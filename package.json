@@ -32,7 +32,7 @@
 	"sideEffects": false,
 	"lint-staged": {
 		"*.php": [
-			"composer lint"
+			"composer test"
 		]
 	}
 }
