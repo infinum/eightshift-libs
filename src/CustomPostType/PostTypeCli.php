@@ -13,6 +13,7 @@ namespace EightshiftLibs\CustomPostType;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class PostTypeCli
@@ -21,8 +22,6 @@ class PostTypeCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -31,8 +30,6 @@ class PostTypeCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -44,6 +41,7 @@ class PostTypeCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -140,7 +138,7 @@ class PostTypeCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
@@ -158,7 +156,7 @@ class PostTypeCli extends AbstractCli
 
 		// Get full class name.
 		$className = $this->getFileName($slug);
-		$className = $className . $this->getClassShortName();
+		$className .= $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
@@ -170,15 +168,15 @@ class PostTypeCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('label'), $label)
 			->searchReplaceString($this->getArgTemplate('plural_label'), $pluralLabel);
 
-		if (!empty($capability)) {
+		if ($capability !== '' && $capability !== '0') {
 			$class->searchReplaceString($this->getArgTemplate('capability'), $capability);
 		}
 
-		if (!empty($menuPosition)) {
+		if ($menuPosition !== '' && $menuPosition !== '0') {
 			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);
 		}
 
-		if (!empty($menuIcon)) {
+		if ($menuIcon !== '' && $menuIcon !== '0') {
 			$class->searchReplaceString($this->getArgTemplate('menu_icon'), $menuIcon);
 		}
 

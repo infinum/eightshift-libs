@@ -24,8 +24,6 @@ interface ServiceInterface
 	 * Following the single responsibility principle, every class
 	 * holds a functionality for a certain part of the plugin.
 	 * This is why every class should hold its own hooks.
-	 *
-	 * @return void
 	 */
 	public function register(): void;
 }

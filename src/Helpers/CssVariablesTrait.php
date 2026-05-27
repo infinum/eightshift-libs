@@ -19,28 +19,22 @@ trait CssVariablesTrait
 	 * Get Global Manifest.json and return globalVariables as CSS variables. Not wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariablesGlobalClean(array $globalSettings = []): string
 	{
-		$globalVariables = !empty($globalSettings) ? ($globalSettings['globalVariables'] ?? []) : Helpers::getSettingsGlobalVariables();
+		$globalVariables = $globalSettings === [] ? (Helpers::getSettingsGlobalVariables()) : $globalSettings['globalVariables'] ?? [];
 
 		$parts = [];
 		foreach ($globalVariables as $itemKey => $itemValue) {
 			$itemKey = Helpers::camelToKebabCase($itemKey);
 
-			if (\is_array($itemValue)) {
-				$parts[] = self::globalInner($itemValue, $itemKey);
-			} else {
-				$parts[] = "--global-{$itemKey}: {$itemValue};\n";
-			}
+			$parts[] = \is_array($itemValue) ? self::globalInner($itemValue, $itemKey) : "--global-{$itemKey}: {$itemValue};\n";
 		}
 
 		$output = ':root {' . \implode('', $parts) . '}';
 
 		if (Helpers::getConfigOutputCssOptimize()) {
-			$output = \str_replace(["\n", "\r"], '', $output);
+									return \str_replace(["\n", "\r"], '', $output);
 		}
 
 		return $output;
@@ -50,8 +44,6 @@ trait CssVariablesTrait
 	 * Get Global Manifest.json and return globalVariables as CSS variables. Wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariablesGlobal(array $globalSettings = []): string
 	{
@@ -69,8 +61,6 @@ trait CssVariablesTrait
 	 * @param string $unique Unique key.
 	 * @param string $customSelector Output custom selector to use as a style prefix.
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = '', array $globalSettings = []): string
 	{
@@ -80,7 +70,7 @@ trait CssVariablesTrait
 		}
 
 		// Define variables from globalManifest.
-		$breakpoints = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : Helpers::getSettingsGlobalVariablesBreakpoints();
+		$breakpoints = $globalSettings === [] ? (Helpers::getSettingsGlobalVariablesBreakpoints()) : $globalSettings['globalVariables']['breakpoints'] ?? [];
 
 		// Sort breakpoints in ascending order.
 		\asort($breakpoints);
@@ -108,15 +98,13 @@ trait CssVariablesTrait
 		$defaultAttributes = \array_keys(
 			\array_filter(
 				$variables,
-				static function ($key) use ($attributes) {
-					return !isset($attributes[$key]);
-				},
+				static fn($key): bool => !isset($attributes[$key]),
 				\ARRAY_FILTER_USE_KEY
 			)
 		);
 
 		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
-		if ($defaultAttributes) {
+		if ($defaultAttributes !== []) {
 			$default = [];
 
 			foreach ($defaultAttributes as $key) {
@@ -158,8 +146,6 @@ trait CssVariablesTrait
 	 * Output css variables as a one inline style tag. Used with wp_footer filter. Not wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariablesInlineClean(array $globalSettings = []): string
 	{
@@ -178,18 +164,16 @@ trait CssVariablesTrait
 		$styles = Helpers::getStyles();
 
 		// Bailout if styles are missing.
-		if ($styles) {
+		if ($styles !== []) {
 			// Define variables from globalManifest.
-			$breakpointsData = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : Helpers::getSettingsGlobalVariablesBreakpoints();
+			$breakpointsData = $globalSettings === [] ? (Helpers::getSettingsGlobalVariablesBreakpoints()) : $globalSettings['globalVariables']['breakpoints'] ?? [];
 
 			// Sort breakpoints in ascending order.
 			\asort($breakpointsData);
 
 			// Populate min values.
 			$breakpointsMin = \array_map(
-				static function ($item) {
-					return "min---{$item}";
-				},
+				static fn($item): string => "min---{$item}",
 				\array_values($breakpointsData)
 			);
 			// Append 0 value.
@@ -197,9 +181,7 @@ trait CssVariablesTrait
 
 			// Populate max values.
 			$breakpointsMax = \array_map(
-				static function ($item) {
-					return "max---{$item}";
-				},
+				static fn($item): string => "max---{$item}",
 				\array_reverse(\array_values($breakpointsData))
 			);
 			// Append 0 value.
@@ -207,9 +189,7 @@ trait CssVariablesTrait
 
 			// Return empty array of items.
 			$breakpoints = \array_map(
-				static function () {
-					return '';
-				},
+				static fn(): string => '',
 				\array_flip(\array_values(\array_merge($breakpointsMin, $breakpointsMax)))
 			);
 
@@ -278,7 +258,7 @@ trait CssVariablesTrait
 
 		// Add additional style from config settings.
 		$additionalStyles = Helpers::getConfigOutputCssGloballyAdditionalStyles();
-		$additionalStylesOutput = $additionalStyles ? \esc_html(\implode(";\n", $additionalStyles)) : '';
+		$additionalStylesOutput = $additionalStyles !== [] ? \esc_html(\implode(";\n", $additionalStyles)) : '';
 
 		return "{$output} {$additionalStylesOutput}";
 	}
@@ -287,8 +267,6 @@ trait CssVariablesTrait
 	 * Output css variables as a one inline style tag. Used with wp_footer filter. Wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariablesInline(array $globalSettings = []): string
 	{
@@ -302,24 +280,22 @@ trait CssVariablesTrait
 	 * Convert a hex color into RGB values.
 	 *
 	 * @param string $hex Input hex color.
-	 *
-	 * @return string
 	 */
 	public static function hexToRgb(string $hex): string
 	{
 		// Remove the # at the beginning and filter out invalid hex characters.
 		$hex = \preg_replace("/[^0-9A-Fa-f]/", '', $hex);
 
-		$length = \strlen($hex);
+		$length = \strlen((string) $hex);
 
 		if ($length === 3) {
-			$r = \hexdec(\str_repeat(\substr($hex, 0, 1), 2));
-			$g = \hexdec(\str_repeat(\substr($hex, 1, 1), 2));
-			$b = \hexdec(\str_repeat(\substr($hex, 2, 1), 2));
+			$r = \hexdec(\str_repeat(\substr((string) $hex, 0, 1), 2));
+			$g = \hexdec(\str_repeat(\substr((string) $hex, 1, 1), 2));
+			$b = \hexdec(\str_repeat(\substr((string) $hex, 2, 1), 2));
 		} elseif ($length === 6) {
-			$r = \hexdec(\substr($hex, 0, 2));
-			$g = \hexdec(\substr($hex, 2, 2));
-			$b = \hexdec(\substr($hex, 4, 2));
+			$r = \hexdec(\substr((string) $hex, 0, 2));
+			$g = \hexdec(\substr((string) $hex, 2, 2));
+			$b = \hexdec(\substr((string) $hex, 4, 2));
 		} else {
 			$r = '0';
 			$g = '0';
@@ -333,8 +309,6 @@ trait CssVariablesTrait
 	 * Return unique ID for block processing.
 	 *
 	 * @param array<string, mixed> $attributes Attributes.
-	 *
-	 * @return string
 	 */
 	public static function getUnique(array $attributes = []): string
 	{
@@ -352,8 +326,6 @@ trait CssVariablesTrait
 	 * @param array<int, array<string, mixed>> $data Data prepared for checking.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
-	 *
-	 * @return string
 	 */
 	private static function getCssVariablesTypeDefault(string $name, array $data, array $manifest, string $unique): string
 	{
@@ -361,7 +333,7 @@ trait CssVariablesTrait
 
 		$uniqueSelector = "[data-id='{$unique}']";
 
-		if (!$unique) {
+		if ($unique === '' || $unique === '0') {
 			$uniqueSelector = '';
 		}
 
@@ -398,7 +370,7 @@ trait CssVariablesTrait
 			";
 
 		// Check if final output is empty and and remove if it is.
-		if (empty(\trim($fullOutput))) {
+		if (\in_array(\trim($fullOutput), ['', '0'], true)) {
 			return '';
 		}
 
@@ -481,8 +453,6 @@ trait CssVariablesTrait
 	 *
 	 * @param array<string, mixed> $itemValues Values of data to check.
 	 * @param string $itemKey Item key to check.
-	 *
-	 * @return string
 	 */
 	private static function globalInner(array $itemValues, string $itemKey): string
 	{
@@ -532,7 +502,7 @@ trait CssVariablesTrait
 			 * Calculate default breakpoint index based on order of the breakpoint, inverse property
 			 * and number of properties in responsiveAttributeObject.
 			 */
-			$defaultBreakpointIndex = (isset($attributeVariablesObject['inverse']) && $attributeVariablesObject['inverse']) ? 0 : ((int) $numberOfBreakpoints - 1);
+			$defaultBreakpointIndex = (isset($attributeVariablesObject['inverse']) && $attributeVariablesObject['inverse']) ? 0 : ($numberOfBreakpoints - 1);
 
 			// Expanding an object with an additional breakpoint property.
 			$attributeVariablesObject['breakpoint'] = ($breakpointIndex === $defaultBreakpointIndex) ? 'default' : $breakpointName;
@@ -557,11 +527,16 @@ trait CssVariablesTrait
 		// Iterate through responsive attributes.
 		foreach ($responsiveAttributes as $responsiveAttributeName => $responsiveAttributeObject) {
 			// If responsive attribute doesn't exist in variables object, skip it.
-			if (!$responsiveAttributeName || !isset($variables[$responsiveAttributeName])) {
+			if ($responsiveAttributeName === '') {
 				continue;
 			}
-
-			// Used for determination of default breakpoint.
+			if ($responsiveAttributeName === '0') {
+				continue;
+			}
+			if (!isset($variables[$responsiveAttributeName])) {
+				continue;
+			}
+												// Used for determination of default breakpoint.
 			$numberOfBreakpoints = \count($responsiveAttributeObject);
 			$responsiveAttribute = [];
 			$breakpointIndex = 0;
@@ -684,7 +659,7 @@ trait CssVariablesTrait
 				}
 
 				if (
-					!empty((string) $attributeValue) ||
+					(string) $attributeValue !== '' && (string) $attributeValue !== '0' ||
 					\is_int($attributeValue) ||
 					\is_float($attributeValue) ||
 					$attributeValue === '0' // @phpstan-ignore-line
@@ -826,7 +801,7 @@ trait CssVariablesTrait
 				if (!\is_scalar($attrValue) && $attrValue !== null) {
 					continue;
 				}
-				$key = (string) \str_replace($prefix, $replacement, (string) $attrKey);
+				$key = \str_replace($prefix, $replacement, (string) $attrKey);
 				$replacementMap["%attr-{$key}%"] = (string) $attrValue;
 			}
 		} else {

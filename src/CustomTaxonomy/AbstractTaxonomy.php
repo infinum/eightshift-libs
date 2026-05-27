@@ -20,18 +20,14 @@ abstract class AbstractTaxonomy implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Register custom taxonomy.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'taxonomyRegisterCallback']);
+		\add_action('init', $this->taxonomyRegisterCallback(...));
 	}
 
 	/**
 	 * Method that registers taxonomy that is used inside init hook.
-	 *
-	 * @return void
 	 */
 	public function taxonomyRegisterCallback(): void
 	{

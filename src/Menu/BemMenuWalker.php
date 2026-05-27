@@ -26,23 +26,12 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	public $cssClassPrefix;
 
 	/**
-	 * Menu item CSS suffixes.
-	 *
-	 * @var string[]
-	 */
-	public $itemCssClassSuffixes;
-
-	/**
-	 * Constructor function
-	 *
-	 * @param string $cssClassPrefix load menu prefix for class.
-	 */
-	public function __construct(string $cssClassPrefix)
-	{
-		$this->cssClassPrefix = $cssClassPrefix;
-
-		// Define menu item names appropriately.
-		$this->itemCssClassSuffixes = [
+				 * Menu item CSS suffixes.
+				 *
+				 * @var string[]
+				 */
+				// Define menu item names appropriately.
+				public $itemCssClassSuffixes = [
 			'item' => '__item',
 			'parent_item' => '__item--parent',
 			'active_item' => '__item--active',
@@ -52,6 +41,15 @@ class BemMenuWalker extends \Walker_Nav_Menu
 			'sub_menu_item' => '__sub-menu__item',
 			'link' => '__link',
 		];
+
+	/**
+	 * Constructor function
+	 *
+	 * @param string $cssClassPrefix load menu prefix for class.
+	 */
+	public function __construct(string $cssClassPrefix)
+	{
+		$this->cssClassPrefix = $cssClassPrefix;
 	}
 
 	/**
@@ -75,7 +73,7 @@ class BemMenuWalker extends \Walker_Nav_Menu
 		$depth,
 		$args, // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
 		&$output
-	) {
+	): void {
 		$id_field = $this->db_fields['id'];
 
 		if (isset($args[0]-> has_children)) {
@@ -86,21 +84,19 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	}
 
 	/**
-	 * Start level
-	 *
-	 * @see \Walker_Nav_Menu::start_lvl()
-	 *
-	 * @param string $output Used to append additional content (passed by reference).
-	 * @param int $depth Depth of menu item. Used for padding.
-	 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
-	 *
-	 * @return void
-	 */
-	public function start_lvl( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+				 * Start level
+				 *
+				 * @see \Walker_Nav_Menu::start_lvl()
+				 *
+				 * @param string $output Used to append additional content (passed by reference).
+				 * @param int $depth Depth of menu item. Used for padding.
+				 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
+				 */
+				public function start_lvl( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
 		&$output,
 		$depth = 1,
 		$args = null
-	) {
+	): void {
 		$real_depth = $depth + 1;
 
 		$indent = str_repeat("\t", $real_depth);
@@ -120,25 +116,24 @@ class BemMenuWalker extends \Walker_Nav_Menu
 	}
 
 	/**
-	 * Add main/sub classes to li's and links.
-	 *
-	 * @param string $output Used to append additional content (passed by reference).
-	 * @param \WP_Post $item Menu item data object.
-	 * @param int $depth Depth of menu item. Used for padding.
-	 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
-	 * @param int $id Current item ID.
-	 *
-	 * @return void
-	 * @see \Walker_Nav_Menu::start_el()
-	 *
-     */
-	public function start_el( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
+				 * Add main/sub classes to li's and links.
+				 *
+				 * @param string $output Used to append additional content (passed by reference).
+				 * @param \WP_Post $item Menu item data object.
+				 * @param int $depth Depth of menu item. Used for padding.
+				 * @param \stdClass|null $args An object of wp_nav_menu() arguments.
+				 * @param int $id Current item ID.
+				 *
+				 * @see \Walker_Nav_Menu::start_el()
+				 *
+				 */
+				public function start_el( // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps, PEAR.Functions.ValidDefaultValue.NotAtEnd
 		&$output,
 		$item,
 		$depth = 0,
 		$args = null,
 		$id = 0
-	) {
+	): void {
 		$indent = ($depth > 0 ? str_repeat('    ', $depth) : ''); // code indent.
 
 		$prefix = $this->cssClassPrefix;
@@ -150,13 +145,11 @@ class BemMenuWalker extends \Walker_Nav_Menu
 
 		if (!empty($item->classes)) {
 			$userClasses = \array_map(
-				function ($className) use ($prefix) {
-					if (\strpos($className, 'js-') !== false) {
-						$output = $className;
-					} else {
-						$output = $prefix . '__item--' . $className;
-					}
-					return $output;
+				function (string $className) use ($prefix): string {
+					if (str_contains($className, 'js-')) {
+																					return $className;
+																				}
+					return $prefix . '__item--' . $className;
 				},
 				$item->classes
 			);
@@ -182,13 +175,13 @@ class BemMenuWalker extends \Walker_Nav_Menu
 				) ? $prefix . $suffix['ancestor_of_active_item'] : '',
 				'depth_class' => $depth >= 1 ? $prefix . $suffix['sub_menu_item'] . ' ' . $prefix . $suffix['sub_menu'] . '--' . $depth . '__item' : '',
 				'item_id_class' => property_exists($item, 'object_id') ? $prefix . '__item--' . $item->object_id : '',
-				'user_class' => !empty($userClasses) ? \implode(' ', $userClasses) : '',
+				'user_class' => \implode(' ', $userClasses),
 			];
 		}
 
 		// Convert array to string excluding any empty values.
 		$itemClasses = \apply_filters('walker_nav_menu_item_classes', $itemClasses, $item, $depth, $args);
-		$class_string = !empty($itemClasses) ? \implode('  ', \array_filter($itemClasses)) : '';
+		$class_string = empty($itemClasses) ? '' : \implode('  ', \array_filter($itemClasses));
 
 		// Add the classes to the wrapping <li>.
 		$output .= $indent . '<li class="' . $class_string . '">';
@@ -212,18 +205,18 @@ class BemMenuWalker extends \Walker_Nav_Menu
 		$link_text_class_output = 'class="' . $link_text_class_string . '"';
 
 		// link attributes.
-		$attributes = !empty($item->attr_title) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
-		$attributes .= !empty($item->target) ? ' target="' . esc_attr($item->target) . '"' : '';
-		$attributes .= !empty($item->xfn) ? ' rel="' . esc_attr($item->xfn) . '"' : '';
-		$attributes .= !empty($item->url) ? ' href="' . esc_attr($item->url) . '"' : '';
+		$attributes = empty($item->attr_title) ? '' : ' title="' . esc_attr($item->attr_title) . '"';
+		$attributes .= empty($item->target) ? '' : ' target="' . esc_attr($item->target) . '"';
+		$attributes .= empty($item->xfn) ? '' : ' rel="' . esc_attr($item->xfn) . '"';
+		$attributes .= empty($item->url) ? '' : ' href="' . esc_attr($item->url) . '"';
 
 		// Create link markup.
-		$item_output = !empty($args->before) ? $args->before : '';
+		$item_output = empty($args->before) ? '' : $args->before;
 		$item_output .= '<a' . $attributes . ' ' . $link_class_output . '><span ' . $link_text_class_output . '>';
-		$item_output .= !empty($args->link_before) ? $args->link_before : '';
-		$item_output .= !empty($item->title) ? apply_filters('the_title', $item->title, $item->ID) : '';
-		$item_output .= !empty($args->link_after) ? $args->link_after : '';
-		$item_output .= !empty($args->after) ? $args->after : '';
+		$item_output .= empty($args->link_before) ? '' : $args->link_before;
+		$item_output .= empty($item->title) ? '' : apply_filters('the_title', $item->title, $item->ID);
+		$item_output .= empty($args->link_after) ? '' : $args->link_after;
+		$item_output .= empty($args->after) ? '' : $args->after;
 		$item_output .= '</span></a>';
 
 		$output .= apply_filters('walker_nav_menu_link_element', $item_output, $item, $depth, $args);

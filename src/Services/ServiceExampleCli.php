@@ -13,6 +13,7 @@ namespace EightshiftLibs\Services;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class ServiceExampleCli
@@ -26,8 +27,6 @@ class ServiceExampleCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -36,8 +35,6 @@ class ServiceExampleCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -49,6 +46,7 @@ class ServiceExampleCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;
@@ -101,7 +99,7 @@ class ServiceExampleCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
@@ -118,9 +116,7 @@ class ServiceExampleCli extends AbstractCli
 
 		// Create new namespace from the folder structure.
 		$folderParts = \array_map(
-			function ($item) {
-				return \ucfirst($item);
-			},
+			\ucfirst(...),
 			\explode($ds, $folder)
 		);
 

@@ -21,8 +21,6 @@ interface RouteSecurityInterface
 	 * Authenticate the access of the endpoint
 	 *
 	 * A register method holds authenticationCheck function for the route.
-	 *
-	 * @return void
 	 */
 	public function authenticationCheck(): void;
 }

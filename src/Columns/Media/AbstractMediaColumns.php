@@ -21,14 +21,12 @@ abstract class AbstractMediaColumns implements ServiceInterface
 {
 	/**
 	 * Register the media columns and content in them.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter('manage_upload_columns', [$this, 'addColumnName']);
-		\add_filter('manage_media_custom_column', [$this, 'renderColumnContent'], 10, 2);
-		\add_filter('manage_upload_sortable_columns', [$this, 'sortAddedColumns'], 10);
+		\add_filter('manage_upload_columns', $this->addColumnName(...));
+		\add_filter('manage_media_custom_column', $this->renderColumnContent(...), 10, 2);
+		\add_filter('manage_upload_sortable_columns', $this->sortAddedColumns(...), 10);
 	}
 
 	/**

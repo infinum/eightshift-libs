@@ -124,15 +124,11 @@ abstract class AbstractAssets implements ServiceInterface
 
 	/**
 	 * Method that returns assets name used to prefix asset handlers.
-	 *
-	 * @return string
 	 */
 	abstract public function getAssetsPrefix(): string;
 
 	/**
 	 * Method that returns assets version for versioning asset handlers.
-	 *
-	 * @return string
 	 */
 	abstract public function getAssetsVersion(): string;
 }

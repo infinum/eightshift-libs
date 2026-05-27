@@ -49,8 +49,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Register the individual services with optional dependency injection.
 	 *
 	 * @throws Exception Exception thrown by DI container.
-	 *
-	 * @return void
 	 */
 	public function registerServices(): void
 	{
@@ -89,7 +87,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * Allows it to be used in different context (for example in tests outside of WP environment).
 	 *
-	 * @return Container
 	 * @throws Exception Exception thrown by the DI container.
 	 */
 	public function buildDiContainer(): Container
@@ -246,8 +243,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * @param string $path Absolute cache file path.
 	 * @param array<string, mixed> $services Services to persist.
 	 * @param bool $includeMtime When true, embed the namespace mtime for later invalidation.
-	 *
-	 * @return void
 	 */
 	private function storeServicesCache(string $path, array $services, bool $includeMtime): void
 	{
@@ -278,20 +273,13 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 *
 	 * Disabled in production (compiled container handles it) and under WP-CLI
 	 * to ensure scaffolding sees freshly added classes.
-	 *
-	 * @return bool
 	 */
 	private function isDevServiceCacheEnabled(): bool
 	{
 		if (Helpers::shouldCache()) {
 			return false;
 		}
-
-		if (\defined('WP_CLI') && \WP_CLI) {
-			return false;
-		}
-
-		return true;
+					return !(\defined('WP_CLI') && \WP_CLI);
 	}
 
 	/**
@@ -301,8 +289,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * AbstractMain subclasses don't collide.
 	 *
 	 * @param string $filename Filename including extension.
-	 *
-	 * @return string
 	 */
 	private function getCachePath(string $filename): string
 	{
@@ -311,8 +297,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 
 	/**
 	 * First segment of the configured namespace, used as a cache key prefix.
-	 *
-	 * @return string
 	 */
 	private function getNamespaceRoot(): string
 	{
@@ -324,8 +308,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * Maximum mtime of any PHP file under the namespace's psr-4 root.
 	 *
 	 * Memoized per namespace so independent AbstractMain subclasses do not poison each other's cache.
-	 *
-	 * @return int
 	 */
 	private function getNamespaceMaxMtime(): int
 	{
@@ -347,11 +329,13 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		);
 
 		foreach ($iterator as $entry) {
-			if (!$entry->isFile() || $entry->getExtension() !== 'php') {
+			if (!$entry->isFile()) {
+													continue;
+			}
+			if ($entry->getExtension() !== 'php') {
 				continue;
 			}
-
-			$mtime = $entry->getMTime();
+												$mtime = $entry->getMTime();
 			if ($mtime > $max) {
 				$max = $mtime;
 			}
@@ -370,8 +354,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * @param array<string, mixed> $services Array of service.
 	 *
 	 * @throws Exception Exception thrown by the DI container.
-	 *
-	 * @return Container
 	 */
 	private function getDiContainer(array $services): Container
 	{
@@ -445,8 +427,6 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 * the ShouldLoadInCliContext attribute.
 	 *
 	 * @param object $class Service instance.
-	 *
-	 * @return bool
 	 */
 	private function classWantsCliLoad(object $class): bool
 	{

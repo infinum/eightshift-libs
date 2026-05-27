@@ -19,10 +19,8 @@ abstract class AbstractMenu implements ServiceInterface, MenuPositionsInterface
 {
 	/**
 	 * Register All Menu positions
-	 *
-	 * @return void
 	 */
-	public function registerMenuPositions()
+	public function registerMenuPositions(): void
 	{
 		\register_nav_menus(
 			$this->getMenuPositions()

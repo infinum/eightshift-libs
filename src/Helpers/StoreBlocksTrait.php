@@ -196,30 +196,24 @@ trait StoreBlocksTrait
 
 	/**
 	 * Get global config value for output css globally with type safety.
-	 *
-	 * @return boolean
 	 */
 	public static function getConfigOutputCssGlobally(): bool
 	{
 		$config = self::getConfig();
-		return isset($config['outputCssGlobally']) ? (bool) $config['outputCssGlobally'] : false;
+		return isset($config['outputCssGlobally']) && (bool) $config['outputCssGlobally'];
 	}
 
 	/**
 	 * Get global config value for output css optimize with type safety.
-	 *
-	 * @return boolean
 	 */
 	public static function getConfigOutputCssOptimize(): bool
 	{
 		$config = self::getConfig();
-		return isset($config['outputCssOptimize']) ? (bool) $config['outputCssOptimize'] : false;
+		return isset($config['outputCssOptimize']) && (bool) $config['outputCssOptimize'];
 	}
 
 	/**
 	 * Get global config value for output css selector name with type safety.
-	 *
-	 * @return string
 	 */
 	public static function getConfigOutputCssSelectorName(): string
 	{
@@ -243,24 +237,20 @@ trait StoreBlocksTrait
 
 	/**
 	 * Get global config value for use wrapper with type safety.
-	 *
-	 * @return bool
 	 */
 	public static function getConfigUseWrapper(): bool
 	{
 		$config = self::getConfig();
-		return isset($config['useWrapper']) ? (bool) $config['useWrapper'] : false;
+		return isset($config['useWrapper']) && (bool) $config['useWrapper'];
 	}
 
 	/**
 	 * Get global config value for use legacy components with type safety.
-	 *
-	 * @return bool
 	 */
 	public static function getConfigUseLegacyComponents(): bool
 	{
 		$config = self::getConfig();
-		return isset($config['useLegacyComponents']) ? (bool) $config['useLegacyComponents'] : false;
+		return isset($config['useLegacyComponents']) && (bool) $config['useLegacyComponents'];
 	}
 
 	// -----------------------------------------------------
@@ -284,7 +274,7 @@ trait StoreBlocksTrait
 
 		$data = self::getCachedData(AbstractManifestCache::TYPE_BLOCKS, AbstractManifestCache::SETTINGS_KEY);
 
-		if (empty($data)) {
+		if ($data === []) {
 			throw InvalidBlock::missingItemException('project', 'global settings');
 		}
 
@@ -294,8 +284,6 @@ trait StoreBlocksTrait
 
 	/**
 	 * Get global settings details - namespace with optimized access.
-	 *
-	 * @return string
 	 */
 	public static function getSettingsNamespace(): string
 	{
@@ -369,20 +357,17 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// STYLES.
-	// -----------------------------------------------------
-
-	/**
-	 * Set styles details with validation.
-	 *
-	 * @param array<string, mixed> $style Style to store.
-	 *
-	 * @return void
-	 */
+				// STYLES.
+				// -----------------------------------------------------
+				/**
+				 * Set styles details with validation.
+				 *
+				 * @param array<string, mixed> $style Style to store.
+				 */
 	public static function setStyle(array $style): void
 	{
 		// Early return for empty style.
-		if (empty($style)) {
+		if ($style === []) {
 			return;
 		}
 
@@ -400,18 +385,15 @@ trait StoreBlocksTrait
 	}
 
 	// -----------------------------------------------------
-	// ASSETS.
-	// -----------------------------------------------------
-
-	/**
-	 * Get asset details with optimized error handling.
-	 *
-	 * @param string $asset Asset name to get.
-	 *
-	 * @throws InvalidBlock If asset is missing.
-	 *
-	 * @return string
-	 */
+				// ASSETS.
+				// -----------------------------------------------------
+				/**
+				 * Get asset details with optimized error handling.
+				 *
+				 * @param string $asset Asset name to get.
+				 *
+				 * @throws InvalidBlock If asset is missing.
+				 */
 	public static function getAsset(string $asset): string
 	{
 		// Early return for empty asset name.
@@ -443,7 +425,7 @@ trait StoreBlocksTrait
 	{
 		$data = self::getCachedData(AbstractManifestCache::TYPE_GEOLOCATION, AbstractManifestCache::COUNTRIES_KEY);
 
-		if (empty($data)) {
+		if ($data === []) {
 			throw InvalidManifest::missingManifestException(AbstractManifestCache::TYPE_GEOLOCATION);
 		}
 

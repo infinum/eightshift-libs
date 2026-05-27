@@ -13,6 +13,7 @@ namespace EightshiftLibs\Rest\Fields;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class FieldCli
@@ -21,8 +22,6 @@ class FieldCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -31,8 +30,6 @@ class FieldCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -44,6 +41,7 @@ class FieldCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -95,7 +93,7 @@ class FieldCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
@@ -107,7 +105,7 @@ class FieldCli extends AbstractCli
 
 		// Get full class name.
 		$className = $this->getFileName($fieldName);
-		$className = $className . $this->getClassShortName();
+		$className .= $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())

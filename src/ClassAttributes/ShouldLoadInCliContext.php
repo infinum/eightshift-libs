@@ -6,6 +6,8 @@
  * @package EightshiftLibs\ClassAttributes
  */
 
+declare(strict_types=1);
+
 namespace EightshiftLibs\ClassAttributes;
 
 use Attribute;
@@ -18,4 +20,5 @@ use Attribute;
 #[Attribute]
 class ShouldLoadInCliContext
 {
+	// No properties or methods needed, the presence of the attribute is enough to indicate the intent.
 }

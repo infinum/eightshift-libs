@@ -66,7 +66,7 @@ trait RenderTrait
 	 */
 	private static function handleComponentsRender(string $renderName, string $renderPrefixPath, string $componentName): array
 	{
-		if ($componentName) {
+		if ($componentName !== '' && $componentName !== '0') {
 			return [
 				'path' => Helpers::getProjectPaths('components', [$renderPrefixPath, "{$renderName}.php"]),
 				'manifest' => Helpers::getComponent($componentName)
@@ -105,7 +105,7 @@ trait RenderTrait
 	 */
 	private static function handleBlocksRender(string $renderName, string $renderPrefixPath, string $componentName): array
 	{
-		if ($componentName) {
+		if ($componentName !== '' && $componentName !== '0') {
 			return [
 				'path' => Helpers::getProjectPaths('blocks', [$renderPrefixPath, "{$renderName}.php"]),
 				'manifest' => Helpers::getBlock($componentName)
@@ -127,15 +127,13 @@ trait RenderTrait
 	 */
 	private static function cleanInnerBlocks(array $innerBlocks): array // @phpstan-ignore-line
 	{
-		return \array_map(static function ($blockData) {
-			return [
+		return \array_map(static fn(WP_Block $blockData): array => [
 				'name' => $blockData->name,
 				'attributes' => $blockData->attributes,
 				// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 				// @phpstan-ignore nullCoalesce.property
 				'innerBlocks' => self::cleanInnerBlocks([...($blockData->inner_blocks ?? [])]), // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-			];
-		}, $innerBlocks);
+			], $innerBlocks);
 	}
 
 	/**
@@ -150,8 +148,6 @@ trait RenderTrait
 	 * @param WP_Block|null $renderBlock The current WP_Block instance, available as $block in the template.
 	 *
 	 * @throws InvalidPath If the file is missing.
-	 *
-	 * @return string
 	 */
 	public static function render(
 		string $renderName,
@@ -168,7 +164,7 @@ trait RenderTrait
 
 		Helpers::initializePathCaches();
 
-		if (!$renderPathName) {
+		if ($renderPathName === '' || $renderPathName === '0') {
 			if (self::$defaultPathName === null) {
 				self::$defaultPathName = Helpers::getConfigUseLegacyComponents() ? 'components' : 'blocks';
 			}
@@ -195,8 +191,8 @@ trait RenderTrait
 			],
 		};
 
-		$renderPath = $result['path'];
-		$manifest = $result['manifest'];
+					$renderPath = $result['path'];
+					$manifest = $result['manifest'];
 
 		if (!isset(self::$fileExistsCache[$renderPath])) {
 			if (!\file_exists($renderPath)) {
@@ -209,35 +205,35 @@ trait RenderTrait
 			$renderAttributes = Helpers::getDefaultRenderAttributes($manifest, $renderAttributes);
 		}
 
-		\ob_start();
+					\ob_start();
 
-		$attributes = $renderAttributes;
-		$globalManifest = Helpers::getSettings();
+					$attributes = $renderAttributes;
+					$globalManifest = Helpers::getSettings();
 
-		$innerBlockData = null;
+					$innerBlockData = null;
 
 		if ($renderPathName === 'blocks') {
-			// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+            // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 			// @phpstan-ignore nullCoalesce.property
 			$innerBlockData = [...($renderBlock->inner_blocks ?? [])]; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
-			if (!empty($innerBlockData)) {
+			if ($innerBlockData !== []) {
 				$innerBlockData = self::cleanInnerBlocks($innerBlockData);
 			}
 		}
 
 		// Strip internal variables so only the intentional set leaks into the included template scope.
-		unset(
-			$renderName,
-			$renderAttributes,
-			$renderPathName,
-			$renderUseComponentDefaults,
-			$renderPrefixPath,
-			$componentName,
-			$renderBlock,
-			$separatorPos,
-			$result
-		);
+					unset(
+						$renderName,
+						$renderAttributes,
+						$renderPathName,
+						$renderUseComponentDefaults,
+						$renderPrefixPath,
+						$componentName,
+						$renderBlock,
+						$separatorPos,
+						$result
+					);
 
 		include $renderPath;
 

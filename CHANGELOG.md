@@ -28,12 +28,19 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `GeneralTrait::isValidXml()` simplified to a single tight check; `flattenArray()` now preserves all non-`null` scalars; `recursiveArrayFind()` annotated as `array<int, mixed>`.
 - `SelectorsTrait` serializers use `implode()` instead of trailing-space concatenation and route through `Helpers::clsx()` directly.
 - `ComponentException::throwNotStringOrArray()` inverted to use `is_object()` instead of `gettype() !== 'object'`.
-- Bumped dev dependencies: `dealerdirect/phpcodesniffer-composer-installer` → `1.2.1`, `infinum/eightshift-coding-standards` → `^3.1.0`.
+- Bumped dev dependencies: `dealerdirect/phpcodesniffer-composer-installer` → `1.2.1`, `infinum/eightshift-coding-standards` → `^4.0.1`, `php-stubs/wordpress-stubs` → `6.9.4`, `phpunit/phpunit` → `^12.5.27`.
+- Adopted Rector across the codebase: converted constructors to property promotion, switched `get_class($x)` to `$x::class`, tightened array/empty checks (`if ($composerFile)` → `if ($composerFile !== [])`), and modernized callable references (`[$this, 'method']` → `$this->method(...)`).
+- Raised the PHPCS `minimum_supported_wp_version` from `8.3` to `8.4`.
+- PHPStan now loads `phpstan/phpstan-deprecation-rules` to surface deprecated API usage.
+- Added `roave/security-advisories` to dev requirements as a tripwire against installing known-vulnerable transitive packages.
 
 ### Removed
 
 - Removed `RenderTrait::initializeRenderCaches()` and the `$renderHandlers` lookup table — dispatch is now inlined.
 - Removed `AbstractMain::__construct()` (the promoted `Autowiring` constructor is used instead).
+- Removed the `php-parallel-lint/php-parallel-lint` dev dependency — Rector and PHPStan cover the same ground.
+- Removed the bespoke `Generic.Files.LineLength` override for `*Cli.php` files from `phpcs.xml.dist`; coding-standards v4 owns the line-length policy now.
+- Removed redundant `@return` docblocks across the library where the native return type already documents the contract.
 
 ### Fixed
 

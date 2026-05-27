@@ -19,30 +19,26 @@ abstract class AbstractBlockPattern implements ServiceInterface
 {
 	/**
 	 * Register block pattern.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'registerBlockPattern']);
+		\add_action('init', $this->registerBlockPattern(...));
 	}
 
 	/**
 	 * Method that registers new block pattern that is used inside init hook.
-	 *
-	 * @return void
 	 */
 	public function registerBlockPattern(): void
 	{
 		\register_block_pattern(
 			$this->getName(),
 			[
-				'title' => $this->getTitle(),
-				'description' => $this->getDescription(),
-				'content' => $this->getContent(),
-				'categories' => $this->getCategories(),
-				'keywords' => $this->getKeywords(),
-			]
+			'title' => $this->getTitle(),
+			'description' => $this->getDescription(),
+			'content' => $this->getContent(),
+			'categories' => $this->getCategories(),
+			'keywords' => $this->getKeywords(),
+					]
 		);
 	}
 

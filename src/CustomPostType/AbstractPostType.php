@@ -20,18 +20,14 @@ abstract class AbstractPostType implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Register custom post type.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'postTypeRegisterCallback']);
+		\add_action('init', $this->postTypeRegisterCallback(...));
 	}
 
 	/**
 	 * Method that registers post_type that is used inside init hook.
-	 *
-	 * @return void
 	 */
 	public function postTypeRegisterCallback(): void
 	{

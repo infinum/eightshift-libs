@@ -34,7 +34,7 @@ class Autowiring
 	 * Classes whose constructors contain ONLY ignored primitives (e.g. Main) are
 	 * intentionally not registered in the dependency tree.
 	 */
-	private const IGNORED_PRIMITIVE_PARAMS = [
+	private const array IGNORED_PRIMITIVE_PARAMS = [
 		'psr4Prefixes' => true,
 		'namespace' => true,
 		'projectNamespace' => true,
@@ -81,16 +81,19 @@ class Autowiring
 
 		foreach ($projectReflectionClasses as $projectClass => $reflClass) {
 			// Skip abstract classes, interfaces & traits, and non-service classes.
-			if (
-				$reflClass->isAbstract() ||
-				$reflClass->isInterface() ||
-				$reflClass->isTrait() ||
-				!($reflClass->implementsInterface(ServiceInterface::class) || $reflClass->implementsInterface(ServiceCliInterface::class))
-			) {
+			if ($reflClass->isAbstract()) {
 				continue;
 			}
-
-			// First-write-wins so the initial entry for a class survives later passes.
+			if ($reflClass->isInterface()) {
+				continue;
+			}
+			if ($reflClass->isTrait()) {
+				continue;
+			}
+			if (!$reflClass->implementsInterface(ServiceInterface::class) && !$reflClass->implementsInterface(ServiceCliInterface::class)) {
+				continue;
+			}
+												// First-write-wins so the initial entry for a class survives later passes.
 			foreach ($this->buildDependencyTree($projectClass, $filenameIndex, $classInterfaceIndex, $reflectionCache) as $class => $deps) {
 				$dependencyTree[$class] ??= $deps;
 			}
@@ -103,7 +106,7 @@ class Autowiring
 		$queue = \array_keys($dependencyTree);
 		$queueIndex = 0;
 		while (isset($queue[$queueIndex])) {
-			$current = (string) $queue[$queueIndex++];
+			$current = $queue[$queueIndex++];
 			foreach (\array_keys($dependencyTree[$current] ?? []) as $depClass) {
 				if (isset($dependencyTree[$depClass])) {
 					continue;
@@ -258,7 +261,7 @@ class Autowiring
 				continue;
 			}
 
-			if (\preg_match('/^[A-Z][A-Za-z0-9]+\.php$/', $file->getFileName())) {
+			if (\preg_match('/^[A-Z][A-Za-z0-9]+\.php$/', (string) $file->getFileName())) {
 				$classes[] = $this->getNamespaceFromFilepath($file->getPathname(), $namespaceName, $pathToNamespace);
 			}
 		}
@@ -272,8 +275,6 @@ class Autowiring
 	 * @param string $filepath Path to a file.
 	 * @param string $rootNamespace Root namespace Vendor\we're getting classes from.
 	 * @param string $rootNamespacePath Path to root namespace Vendor\.
-	 *
-	 * @return string
 	 */
 	private function getNamespaceFromFilepath(
 		string $filepath,
@@ -300,8 +301,6 @@ class Autowiring
 	 *
 	 * @throws InvalidAutowireDependency If we didn't find exactly 1 class when trying to inject interface-based dependencies.
 	 * @throws Exception If things we're looking for are missing inside filename or classInterface index (which shouldn't happen).
-	 *
-	 * @return string
 	 */
 	private function tryToFindMatchingClass(
 		string $filename,
@@ -358,7 +357,7 @@ class Autowiring
 	private function buildFilenameIndex(array $reflectionClasses): array
 	{
 		$filenameIndex = [];
-		foreach ($reflectionClasses as $relevantClass => $reflClass) {
+		foreach (\array_keys($reflectionClasses) as $relevantClass) {
 			$filename = $this->getFilenameFromClass($relevantClass);
 
 			$filenameIndex[$filename][] = $relevantClass;
@@ -379,7 +378,7 @@ class Autowiring
 		$classInterfaceIndex = [];
 		foreach ($reflectionClasses as $projectClass => $reflectionClass) {
 			$classInterfaceIndex[$projectClass] = \array_map(
-				static fn() => true,
+				static fn(): true => true,
 				$reflectionClass->getInterfaces()
 			);
 		}
@@ -393,8 +392,6 @@ class Autowiring
 	 * Example: AutowiringTest/Something/Class => class
 	 *
 	 * @param string $className Fully qualified classname.
-	 *
-	 * @return string
 	 */
 	private function getFilenameFromClass(string $className): string
 	{
@@ -442,12 +439,11 @@ class Autowiring
 			try {
 				$reflClass = new ReflectionClass($className);
 				$reflectionClasses[(string)$className] = $reflClass;
-			} catch (Exception $e) {
+			} catch (Exception) {
 				if ($skipInvalid) {
 					continue;
-				} else {
-					throw NonPsr4CompliantClass::throwInvalidNamespace($className);
 				}
+																throw NonPsr4CompliantClass::throwInvalidNamespace($className);
 			}
 		}
 
@@ -464,8 +460,6 @@ class Autowiring
 	 */
 	private function filterManuallyDefinedDependencies(array $serviceClasses, array $manuallyDefinedDependencies): array
 	{
-		return \array_filter($serviceClasses, function ($classNamespace) use ($manuallyDefinedDependencies) {
-			return !isset($manuallyDefinedDependencies[$classNamespace]);
-		});
+		return \array_filter($serviceClasses, fn($classNamespace): bool => !isset($manuallyDefinedDependencies[$classNamespace]));
 	}
 }

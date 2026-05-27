@@ -12,6 +12,7 @@ namespace EightshiftLibs\Helpers;
 
 use Exception;
 use JsonException;
+use Deprecated;
 
 /**
  * Class TailwindTrait Helper.
@@ -45,10 +46,10 @@ trait TailwindTrait
 
 		$breakpointNames = \array_keys($breakpointData);
 
-		\usort($breakpointNames, fn($a, $b) => $breakpointData[$a] - $breakpointData[$b]);
+		\usort($breakpointNames, fn($a, $b): int|float => $breakpointData[$a] - $breakpointData[$b]);
 
 		if ($desktopFirst) {
-			$cache[$key] = \array_map(fn($breakpoint) => "max-{$breakpoint}", $breakpointNames);
+			$cache[$key] = \array_map(fn(string $breakpoint): string => "max-{$breakpoint}", $breakpointNames);
 			return $cache[$key];
 		}
 
@@ -57,22 +58,19 @@ trait TailwindTrait
 	}
 
 	/**
-	 * Gets Tailwind classes for the provided part.
-	 *
-	 * The part needs to be defined within the manifest, in the `tailwind` object.
-	 *
-	 * @param string $part Part name.
-	 * @param array<string, mixed> $manifest Component/block manifest data.
-	 * @param array<string> ...$custom Additional custom classes.
-	 *
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
-	 * @return string
-	 */
-	public static function getTwPart($part, $manifest, ...$custom)
+				 * Gets Tailwind classes for the provided part.
+				 *
+				 * The part needs to be defined within the manifest, in the `tailwind` object.
+				 *
+				 * @param string $part Part name.
+				 * @param array<string, mixed> $manifest Component/block manifest data.
+				 * @param array<string> ...$custom Additional custom classes.
+				 */
+				#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	public static function getTwPart($part, array $manifest, ...$custom): string
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
+			return $custom !== [] ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$partClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
@@ -85,23 +83,20 @@ trait TailwindTrait
 	}
 
 	/**
-	 * Gets Tailwind classes for the provided dynamic part.
-	 *
-	 * The part needs to be defined within the manifest, in the `tailwind` object.
-	 *
-	 * @param string $part Part name.
-	 * @param array<string, mixed> $attributes Component/block attributes.
-	 * @param array<string, mixed> $manifest Component/block manifest data.
-	 * @param array<string> ...$custom Additional custom classes.
-	 *
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
-	 * @return string
-	 */
-	public static function getTwDynamicPart($part, $attributes, $manifest, ...$custom)
+				 * Gets Tailwind classes for the provided dynamic part.
+				 *
+				 * The part needs to be defined within the manifest, in the `tailwind` object.
+				 *
+				 * @param string $part Part name.
+				 * @param array<string, mixed> $attributes Component/block attributes.
+				 * @param array<string, mixed> $manifest Component/block manifest data.
+				 * @param array<string> ...$custom Additional custom classes.
+				 */
+				#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	public static function getTwDynamicPart($part, array $attributes, array $manifest, ...$custom): string
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
+			return $custom !== [] ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
@@ -114,11 +109,13 @@ trait TailwindTrait
 
 		if (isset($manifest['tailwind']['options'])) {
 			foreach ($manifest['tailwind']['options'] as $attributeName => $value) {
-				if (!isset($value['part']) || $value['part'] !== $part) {
+				if (!isset($value['part'])) {
+																	continue;
+				}
+				if ($value['part'] !== $part) {
 					continue;
 				}
-
-				$responsive = $value['responsive'] ?? false;
+																$responsive = $value['responsive'] ?? false;
 				$twClasses = $value['twClasses'] ?? null;
 
 				if (!$twClasses) {
@@ -152,7 +149,7 @@ trait TailwindTrait
 
 				$valueKeys = \array_keys($value);
 
-				$responsiveClasses = \array_reduce($valueKeys, function ($curr, $breakpoint) use ($twClasses, $value) {
+				$responsiveClasses = \array_reduce($valueKeys, function ($curr, int|string $breakpoint) use ($twClasses, $value) {
 					if ($breakpoint === '_desktopFirst') {
 						return $curr;
 					}
@@ -172,7 +169,7 @@ trait TailwindTrait
 					}
 
 					$currentClasses = \explode(' ', $currentClasses);
-					$currentClasses = \array_map(fn($currentClass) => "{$breakpoint}:{$currentClass}", $currentClasses);
+					$currentClasses = \array_map(fn($currentClass): string => "{$breakpoint}:{$currentClass}", $currentClasses);
 
 					return [...$curr, ...$currentClasses];
 				}, []);
@@ -185,20 +182,17 @@ trait TailwindTrait
 	}
 
 	/**
-	 * Get Tailwind classes for the given component/block.
-	 *
-	 * @param array<string, mixed> $attributes Component/block attributes.
-	 * @param array<string, mixed> $manifest Component/block manifest data.
-	 * @param array<string> ...$custom Additional custom classes.
-	 *
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
-	 * @return string
-	 */
-	public static function getTwClasses($attributes, $manifest, ...$custom)
+				 * Get Tailwind classes for the given component/block.
+				 *
+				 * @param array<string, mixed> $attributes Component/block attributes.
+				 * @param array<string, mixed> $manifest Component/block manifest data.
+				 * @param array<string> ...$custom Additional custom classes.
+				 */
+				#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	public static function getTwClasses($attributes, array $manifest, ...$custom): string
 	{
 		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
+			return $custom !== [] ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['base']['twClasses'] ?? '';
@@ -249,7 +243,7 @@ trait TailwindTrait
 
 				$valueKeys = \array_keys($value);
 
-				$responsiveClasses = \array_reduce($valueKeys, function ($curr, $breakpoint) use ($twClasses, $value) {
+				$responsiveClasses = \array_reduce($valueKeys, function ($curr, int|string $breakpoint) use ($twClasses, $value) {
 					if ($breakpoint === '_desktopFirst') {
 						return $curr;
 					}
@@ -265,7 +259,7 @@ trait TailwindTrait
 					}
 
 					$currentClasses = \explode(' ', $currentClasses);
-					$currentClasses = \array_map(fn($currentClass) => "{$breakpoint}:{$currentClass}", $currentClasses);
+					$currentClasses = \array_map(fn($currentClass): string => "{$breakpoint}:{$currentClass}", $currentClasses);
 
 					return [...$curr, ...$currentClasses];
 				}, []);
@@ -356,7 +350,7 @@ trait TailwindTrait
 			return '';
 		}
 
-		if ($isSingleValue && !\str_contains($itemPartName, $partName)) {
+		if ($isSingleValue && !\str_contains((string) $itemPartName, $partName)) {
 			return '';
 		}
 
@@ -367,11 +361,13 @@ trait TailwindTrait
 		}
 
 		foreach ($optionValue as $breakpoint => $breakpointValue) {
-			if ($breakpoint === '_desktopFirst' || !$breakpointValue) {
+			if ($breakpoint === '_desktopFirst') {
+													continue;
+			}
+			if (!$breakpointValue) {
 				continue;
 			}
-
-			$rawValue = $defs['twClasses'][$breakpointValue] ?? $defs[$partName]['twClasses'][$breakpointValue] ?? '';
+												$rawValue = $defs['twClasses'][$breakpointValue] ?? $defs[$partName]['twClasses'][$breakpointValue] ?? '';
 			$rawClasses = self::unifyClasses($rawValue);
 
 			if ($breakpoint === '_default') {
@@ -430,7 +426,7 @@ trait TailwindTrait
 		$itemPartName = $combo['part'] ?? 'base';
 		$isSingleValue = isset($combo['twClasses']) || isset($combo['twClassesEditor']);
 
-		if ($isSingleValue && !\str_contains($itemPartName, $partName)) {
+		if ($isSingleValue && !\str_contains((string) $itemPartName, $partName)) {
 			return '';
 		}
 
@@ -452,14 +448,12 @@ trait TailwindTrait
 	 * @param array<string> ...$custom Additional custom classes.
 	 *
 	 * @throws Exception If the part is not defined in the manifest.
-	 *
-	 * @return string
 	 */
 	public static function tailwindClasses(string $part, array $attributes, array $manifest, ...$custom): string
 	{
 		// If nothing is set, return custom classes as a fallback.
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || $manifest['tailwind'] === []) {
-			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
+			return $custom !== [] ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$partName = 'base';
@@ -496,7 +490,7 @@ trait TailwindTrait
 		if (\defined('WP_DEBUG') && \WP_DEBUG) {
 			$title = (string) ($manifest['title'] ?? '');
 			if (!isset(self::$tailwindDebugSlugCache[$title])) {
-				self::$tailwindDebugSlugCache[$title] = \strtolower(\preg_replace('/[^a-zA-Z]+/', '-', $title));
+				self::$tailwindDebugSlugCache[$title] = \strtolower((string) \preg_replace('/[^a-zA-Z]+/', '-', $title));
 			}
 			$debugPrefix = "_es__" . self::$tailwindDebugSlugCache[$title] . "/{$part}";
 		}

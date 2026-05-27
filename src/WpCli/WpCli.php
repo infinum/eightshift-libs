@@ -13,6 +13,7 @@ namespace EightshiftLibs\WpCli;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class WP-CLI
@@ -21,8 +22,6 @@ class WpCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -31,8 +30,6 @@ class WpCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -44,6 +41,7 @@ class WpCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -90,7 +88,7 @@ class WpCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
@@ -101,7 +99,7 @@ class WpCli extends AbstractCli
 
 		// Get full class name.
 		$className = $this->getFileName($commandName);
-		$className = $className . $this->getClassShortName(true);
+		$className .= $this->getClassShortName(true);
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName(true))

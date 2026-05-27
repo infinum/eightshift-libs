@@ -31,8 +31,6 @@ trait PathsTrait
 
 	/**
 	 * Initialize path-related static caches if not already done.
-	 *
-	 * @return void
 	 */
 	public static function initializePathCaches(): void
 	{
@@ -77,8 +75,6 @@ trait PathsTrait
 	 *
 	 * @param string $type Type fo path to return.
 	 * @param string|array<int, string> $suffix Suffix to add to the path.
-	 *
-	 * @return string
 	 */
 	public static function getProjectPaths(string $type = '', array|string $suffix = ''): string
 	{
@@ -108,13 +104,11 @@ trait PathsTrait
 	 * Optimized paths join with reduced function calls and memory allocations.
 	 *
 	 * @param array<int, string> $paths Paths to join.
-	 *
-	 * @return string
 	 */
 	public static function joinPaths(array $paths): string
 	{
 		// Early return for empty paths.
-		if (empty($paths)) {
+		if ($paths === []) {
 			return \DIRECTORY_SEPARATOR;
 		}
 
@@ -129,7 +123,7 @@ trait PathsTrait
 			}
 		}
 
-		if (empty($filteredPaths)) {
+		if ($filteredPaths === []) {
 			return $sep;
 		}
 
@@ -150,8 +144,6 @@ trait PathsTrait
 	 * Optimized with static caching.
 	 *
 	 * @param string $fileName File name to append to the path.
-	 *
-	 * @return string
 	 */
 	public static function getEightshiftOutputPath($fileName = ''): string
 	{

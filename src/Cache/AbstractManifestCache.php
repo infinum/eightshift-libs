@@ -58,8 +58,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 	/**
 	 * Set all cache.
-	 *
-	 * @return void
 	 */
 	public function setAllCache(): void
 	{
@@ -72,8 +70,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 
 	/**
 	 * Get cache for geolocation
-	 *
-	 * @return bool
 	 */
 	public function useGeolocation(): bool
 	{

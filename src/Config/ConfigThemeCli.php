@@ -13,6 +13,7 @@ namespace EightshiftLibs\Config;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class ConfigThemeCli
@@ -21,8 +22,6 @@ class ConfigThemeCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -31,8 +30,6 @@ class ConfigThemeCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -44,6 +41,7 @@ class ConfigThemeCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [];
@@ -77,7 +75,7 @@ class ConfigThemeCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 

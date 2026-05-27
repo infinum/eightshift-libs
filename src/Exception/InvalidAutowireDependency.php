@@ -25,14 +25,12 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 	 *
 	 * @param string $className Class name we're looking for.
 	 * @param string $interfaceName Class we're looking for needs to implement this.
-	 *
-	 * @return static
 	 */
 	public static function throwUnableToFindClass(string $className, string $interfaceName): InvalidAutowireDependency
 	{
 		return new InvalidAutowireDependency(
 			\sprintf(
-				/* translators: 1: the className, 2: the interface name. */
+			/* translators: 1: the className, 2: the interface name. */
 				'Unable to find "%1$s" class that implements %2$s (looking in $filenameIndex).
 				When injecting Interface dependencies, please make sure your variable name in __construct()
 				matches the filename of a class implementing that interface (otherwise we don\'t know which class to inject).
@@ -49,14 +47,12 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 	 *
 	 * @param string $className Class name we're looking for.
 	 * @param string $interfaceName Class we're looking for needs to implement this.
-	 *
-	 * @return static
 	 */
 	public static function throwMoreThanOneClassFound(string $className, string $interfaceName): InvalidAutowireDependency
 	{
 		return new InvalidAutowireDependency(
 			\sprintf(
-				/* translators: 1: The class name, 2: The interface name, 3: The interface name */
+			/* translators: 1: The class name, 2: The interface name, 3: The interface name */
 				'Found more than 1 class called "%1$s" that implements %2$s interface.
 				Please make sure you don\'t have more than 1 class with the same name implementing the same interface.
 				Alternatively, you can manually define dependencies for the class that uses the %3$s interface as a dependency.
@@ -73,14 +69,12 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 	 *
 	 * @param string $className Class name we're looking for.
 	 * @param string $param Parameter name that is causing the issue.
-	 *
-	 * @return static
 	 */
 	public static function throwPrimitiveDependencyFound(string $className, string $param): InvalidAutowireDependency
 	{
 		return new InvalidAutowireDependency(
 			\sprintf(
-				/* translators: %s is replaced with the className and interfaceName. */
+			/* translators: %s is replaced with the className and interfaceName. */
 				"Found a primitive dependency for %s with param %s. Autowire is unable to figure out what value needs to be injected here.
 				Please define the dependency tree for this class manually using \$main->getServiceClasses().
 				See: https://eightshift.com/docs/basics/autowiring#what-if-my-class-has-a-primitive-parameter-string-int-etc-inside-a-constructor-method",

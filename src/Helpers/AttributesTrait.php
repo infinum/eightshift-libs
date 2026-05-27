@@ -48,8 +48,6 @@ trait AttributesTrait
 	 * @param bool $undefinedAllowed Allowed detection of undefined values.
 	 *
 	 * @throws Exception When we're unable to find the component by $component.
-	 *
-	 * @return mixed
 	 */
 	public static function checkAttr(string $key, array $attributes, array $manifest, bool $undefinedAllowed = false): mixed
 	{
@@ -146,8 +144,6 @@ trait AttributesTrait
 	 * @param string $key Key to check.
 	 * @param array<string, mixed> $attributes Array of attributes.
 	 * @param array<string, mixed> $manifest Components/blocks manifest.json.
-	 *
-	 * @return string
 	 */
 	public static function getAttrKey(string $key, array $attributes, array $manifest): string
 	{
@@ -201,12 +197,12 @@ trait AttributesTrait
 		foreach ($attributes as $key => $value) {
 			if (isset(self::PROPS_PASSTHROUGH_KEYS[$key])) {
 				$output[$key] = $value;
-			} elseif ($prefixLength > 0 && \str_starts_with($key, $output['prefix'])) {
+			} elseif ($prefixLength > 0 && \str_starts_with($key, (string) $output['prefix'])) {
 				$output[$key] = $value;
 			}
 		}
 
-		if ($manual) {
+		if ($manual !== []) {
 			$componentPattern = \lcfirst($newNameCamel);
 
 			foreach ($manual as $key => $value) {
@@ -256,7 +252,7 @@ trait AttributesTrait
 				continue;
 			}
 
-			if ($needsKeyTransformation && !\str_contains($itemKey, 'wrapper')) {
+			if ($needsKeyTransformation && !\str_contains((string) $itemKey, 'wrapper')) {
 				$newKey = \str_replace($componentNameCamel, $prefix, $itemKey);
 			} else {
 				$newKey = $itemKey;
@@ -274,8 +270,6 @@ trait AttributesTrait
 	 *
 	 * @param array<string, string> $attrs Array of attributes.
 	 * @param bool $escape Escape the attributes.
-	 *
-	 * @return string
 	 */
 	public static function getAttrsOutput(array $attrs, bool $escape = true): string
 	{

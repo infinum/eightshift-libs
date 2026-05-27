@@ -17,8 +17,6 @@ trait ProjectInfoTrait
 {
 	/**
 	 * Get the plugin version.
-	 *
-	 * @return string
 	 */
 	public static function getPluginVersion(): string
 	{
@@ -27,8 +25,6 @@ trait ProjectInfoTrait
 
 	/**
 	 * Get the plugin version.
-	 *
-	 * @return string
 	 */
 	public static function getPluginName(): string
 	{
@@ -37,8 +33,6 @@ trait ProjectInfoTrait
 
 	/**
 	 * Get the plugin text domain.
-	 *
-	 * @return string
 	 */
 	public static function getPluginTextDomain(): string
 	{
@@ -47,8 +41,6 @@ trait ProjectInfoTrait
 
 	/**
 	 * Get the theme version.
-	 *
-	 * @return string
 	 */
 	public static function getThemeVersion(): string
 	{
@@ -57,8 +49,6 @@ trait ProjectInfoTrait
 
 	/**
 	 * Get the theme name.
-	 *
-	 * @return string
 	 */
 	public static function getThemeName(): string
 	{
@@ -67,8 +57,6 @@ trait ProjectInfoTrait
 
 	/**
 	 * Get the theme text domain.
-	 *
-	 * @return string
 	 */
 	public static function getThemeTextDomain(): string
 	{

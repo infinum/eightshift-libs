@@ -39,8 +39,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
-	 *
-	 * @return void
 	 */
 	public function changeEditorColorPalette(): void
 	{
@@ -51,8 +49,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Register multiple theme support options.
-	 *
-	 * @return void
 	 */
 	public function addThemeSupport(): void
 	{
@@ -83,8 +79,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		if ($projectBlockNames === null) {
 			$blocks = Helpers::getBlocks();
-			$projectBlockNames = $blocks
-				? \array_values(\array_map(static fn($block) => $block['blockFullName'], $blocks))
+			$projectBlockNames = $blocks !== []
+				? \array_values(\array_map(static fn(array $block): mixed => $block['blockFullName'], $blocks))
 				: [];
 		}
 
@@ -120,16 +116,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Method used to register all custom blocks with data fetched from blocks manifest.json.
-	 *
-	 * @return void
 	 */
 	public function registerBlocks(): void
 	{
 		$settings = Helpers::getSettings();
 		$context = [
-			'blockClassPrefix' => $settings['blockClassPrefix'] ?? 'block',
-			'settingsAttributes' => $settings['attributes'] ?? [],
-			'wrapperAttributes' => Helpers::getConfigUseWrapper() ? (Helpers::getWrapper()['attributes'] ?? []) : [],
+		'blockClassPrefix' => $settings['blockClassPrefix'] ?? 'block',
+		'settingsAttributes' => $settings['attributes'] ?? [],
+		'wrapperAttributes' => Helpers::getConfigUseWrapper() ? (Helpers::getWrapper()['attributes'] ?? []) : [],
 		];
 
 		foreach (Helpers::getBlocks() as $block) {
@@ -228,8 +222,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Render inline css variables in dom. Used with wp_footer hook.
-	 *
-	 * @return void
 	 */
 	public function outputCssVariablesInline(): void
 	{
@@ -238,8 +230,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Render global css variables in dom. Used with wp_head hook.
-	 *
-	 * @return void
 	 */
 	public function outputCssVariablesGlobal(): void
 	{
@@ -253,8 +243,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 *
 	 * @param array<string, mixed> $blockDetails Full Block Manifest details.
 	 * @param array<string, mixed> $context Shared registration context (blockClassPrefix, settingsAttributes, wrapperAttributes).
-	 *
-	 * @return void
 	 */
 	private function registerBlock(array $blockDetails, array $context): void
 	{
@@ -265,9 +253,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		\register_block_type(
 			$blockDetails['blockFullName'],
 			[
-				'render_callback' => [$this, 'render'],
-				'attributes' => $this->getAttributes($blockDetails, $context),
-			]
+			'render_callback' => $this->render(...),
+			'attributes' => $this->getAttributes($blockDetails, $context),
+					]
 		);
 	}
 
@@ -372,11 +360,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			}
 
 			// Determine if parent is empty and if parent name is the same as component/block name and skip wrapper attributes.
-			if (\str_starts_with($attribute, 'wrapper')) {
-				$attributeName = $attribute;
-			} else {
-				$attributeName = $newParent . \ucfirst($attribute);
-			}
+			$attributeName = \str_starts_with($attribute, 'wrapper') ? $attribute : $newParent . \ucfirst($attribute);
 
 			// Output new attribute names.
 			$output[$attributeName] = $attributeValue;
@@ -418,7 +402,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			$component = Helpers::getComponent($realKebab);
 
 			// Bailout if component doesn't exist.
-			if (!$component) {
+			if ($component === []) {
 				throw InvalidBlock::wrongComponentNameException($name, $realComponentName);
 			}
 

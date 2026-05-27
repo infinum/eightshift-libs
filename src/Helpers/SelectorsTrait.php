@@ -25,8 +25,6 @@ trait SelectorsTrait
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
 	 * @param string $modifier BEM Modifier selector.
-	 *
-	 * @return string
 	 */
 	public static function selector($condition, string $block, string $element = '', string $modifier = ''): string
 	{
@@ -44,8 +42,6 @@ trait SelectorsTrait
 	 * @param string $block BEM Block selector.
 	 * @param string $element BEM Element selector.
 	 * @param string $modifier BEM Modifier selector.
-	 *
-	 * @return string
 	 */
 	public static function bem(string $block, string $element = '', string $modifier = ''): string
 	{
@@ -85,13 +81,11 @@ trait SelectorsTrait
 	 * @param string $selector Selector for this breakpoint.
 	 * @param string $parent Parent block selector.
 	 * @param boolean $useModifier If false you can use this selector for visibility.
-	 *
-	 * @return string
 	 */
 	public static function responsiveSelectors(array $items, string $selector, string $parent, bool $useModifier = true): string
 	{
 		// Early return for empty items.
-		if (empty($items)) {
+		if ($items === []) {
 			return '';
 		}
 
@@ -102,17 +96,18 @@ trait SelectorsTrait
 		$selectorBase = "{$parent}__{$selector}-";
 
 		foreach ($items as $itemKey => $itemValue) {
-			// Optimized type and value checking.
-			if ($itemValue === '' || $itemValue === false || \is_array($itemValue)) {
+									// Optimized type and value checking.
+			if ($itemValue === '') {
 				continue;
 			}
-
-			// Build selector efficiently.
-			if ($useModifier) {
-				$output[] = $selectorBase . $itemKey . '--' . $itemValue;
-			} else {
-				$output[] = $selectorBase . $itemKey;
+			if ($itemValue === false) {
+				continue;
 			}
+			if (\is_array($itemValue)) {
+				continue;
+			}
+									// Build selector efficiently.
+									$output[] = $useModifier ? $selectorBase . $itemKey . '--' . $itemValue : $selectorBase . $itemKey;
 		}
 
 		// Use optimized classnames method.
@@ -126,8 +121,6 @@ trait SelectorsTrait
 	 * @param array<string, mixed>|string[]|string $variable Variable we need to convert into a string.
 	 *
 	 * @throws ComponentException When $variable is not a string or array.
-	 *
-	 * @return string
 	 */
 	public static function ensureString($variable): string
 	{
@@ -138,7 +131,7 @@ trait SelectorsTrait
 
 		if (\is_array($variable)) {
 			// Early return for empty arrays.
-			if (empty($variable)) {
+			if ($variable === []) {
 				return '';
 			}
 
@@ -152,10 +145,9 @@ trait SelectorsTrait
 					$parts[] = $key . '="' . \htmlspecialchars((string)$value, \ENT_QUOTES, 'UTF-8') . '"';
 				}
 				return \implode(' ', $parts);
-			} else {
-				// For sequential arrays, join elements.
-				return \implode('', $variable);
 			}
+												// For sequential arrays, join elements.
+												return \implode('', $variable);
 		}
 
 		// Invalid type - throw exception.
@@ -166,12 +158,10 @@ trait SelectorsTrait
 	 * Converts an array of classes into a string which can be echoed.
 	 *
 	 * @param array<string|null|false> $classes Array of classes.
-	 *
-	 * @return string
 	 */
 	public static function clsx(array $classes): string
 	{
 		// Use array_filter with a more efficient callback and avoid trim.
-		return \implode(' ', \array_filter($classes, fn($class) => $class !== '' && $class !== null && $class !== false));
+		return \implode(' ', \array_filter($classes, fn(string|false|null $class): bool => !\in_array($class, ['', null, false], true)));
 	}
 }

@@ -6,6 +6,8 @@
  * @package EightshiftLibs\View
  */
 
+declare(strict_types=1);
+
 namespace EightshiftLibs\View;
 
 use EightshiftLibs\Services\ServiceInterface;

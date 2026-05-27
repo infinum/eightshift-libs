@@ -23,8 +23,6 @@ interface HasDeactivationInterface
 	 * Can be used to remove parts of the functionality defined by certain service.
 	 *
 	 * Examples: remove_role, remove_cap, flush_rewrite_rules etc.
-	 *
-	 * @return void
 	 */
 	public function deactivate(): void;
 }

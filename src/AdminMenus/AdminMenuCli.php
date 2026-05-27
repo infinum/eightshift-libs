@@ -13,6 +13,7 @@ namespace EightshiftLibs\AdminMenus;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class AdminMenuCli
@@ -21,8 +22,6 @@ class AdminMenuCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -31,8 +30,6 @@ class AdminMenuCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -44,6 +41,7 @@ class AdminMenuCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -132,7 +130,7 @@ class AdminMenuCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
@@ -148,7 +146,7 @@ class AdminMenuCli extends AbstractCli
 
 		// Get full class name.
 		$className = $this->getFileName($menuSlug);
-		$className = $className . $this->getClassShortName();
+		$className .= $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
@@ -160,11 +158,11 @@ class AdminMenuCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('menu_slug'), $menuSlug)
 			->searchReplaceString($this->getArgTemplate('view_component'), $viewComponent);
 
-		if (!empty($menuPosition)) {
+		if ($menuPosition !== '' && $menuPosition !== '0') {
 			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);
 		}
 
-		if (!empty($menuIcon)) {
+		if ($menuIcon !== '' && $menuIcon !== '0') {
 			$class->searchReplaceString($this->getArgTemplate('menu_icon'), $menuIcon);
 		}
 

@@ -21,13 +21,12 @@ final class NonPsr4CompliantClass extends InvalidArgumentException implements Ge
 	 * Throws exception if class has non psr-4 compliant namespace.
 	 *
 	 * @param string $className Class name we're looking for.
-	 * @return static
 	 */
 	public static function throwInvalidNamespace(string $className): NonPsr4CompliantClass
 	{
 		return new NonPsr4CompliantClass(
 			\sprintf(
-				/* translators: %s is replaced with the className. */
+			/* translators: %s is replaced with the className. */
 				'Unable to autowire %s. Please check if the namespace is PSR-4 compliant (i.e. it needs to match the folder structure).
 				See: https://www.php-fig.org/psr/psr-4/#3-examples',
 				$className

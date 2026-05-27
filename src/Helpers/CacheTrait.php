@@ -63,18 +63,15 @@ trait CacheTrait
 	private static ?bool $shouldCacheResult = null;
 
 	// -----------------------------------------------------
-	// CACHE
-	// -----------------------------------------------------
-
-	/**
-	 * Set cache details with optimized validation.
-	 *
-	 * @param array<string, array<string, array<string, mixed>>> $cacheBuilder Cache builder.
-	 * @param string $cacheName Cache name.
-	 * @param string $version Cache version.
-	 *
-	 * @return void
-	 */
+				// CACHE
+				// -----------------------------------------------------
+				/**
+				 * Set cache details with optimized validation.
+				 *
+				 * @param array<string, array<string, array<string, mixed>>> $cacheBuilder Cache builder.
+				 * @param string $cacheName Cache name.
+				 * @param string $version Cache version.
+				 */
 	public static function setCacheDetails(
 		array $cacheBuilder,
 		string $cacheName,
@@ -159,8 +156,6 @@ trait CacheTrait
 	 * @param string $timestampKey Timestamp option key.
 	 *
 	 * @throws Exception If a stored payload fails to parse.
-	 *
-	 * @return bool
 	 */
 	private static function tryLoadFromCache(string $cacheFile, string $transientKey, string $timestampKey): bool
 	{
@@ -225,8 +220,6 @@ trait CacheTrait
 	 * Release a previously-acquired rebuild lock.
 	 *
 	 * @param resource|null $handle Lock handle returned by acquireRebuildLock().
-	 *
-	 * @return void
 	 */
 	private static function releaseRebuildLock($handle): void
 	{
@@ -250,8 +243,6 @@ trait CacheTrait
 
 	/**
 	 * Get cache name.
-	 *
-	 * @return string
 	 */
 	public static function getCacheName(): string
 	{
@@ -260,8 +251,6 @@ trait CacheTrait
 
 	/**
 	 * Check if we should cache the service classes with optimized environment detection.
-	 *
-	 * @return bool
 	 */
 	public static function shouldCache(): bool
 	{
@@ -291,8 +280,6 @@ trait CacheTrait
 
 	/**
 	 * Get transient key for cache storage.
-	 *
-	 * @return string
 	 */
 	private static function getTransientKey(): string
 	{
@@ -301,8 +288,6 @@ trait CacheTrait
 
 	/**
 	 * Get timestamp key for version tracking.
-	 *
-	 * @return string
 	 */
 	private static function getTimestampKey(): string
 	{
@@ -330,7 +315,7 @@ trait CacheTrait
 			}
 
 			// Compare timestamps.
-			return (int) $storedTimestamp === (int) $fileTimestamp;
+			return (int) $storedTimestamp === $fileTimestamp;
 		}
 
 		// If no file exists, transient is invalid.
@@ -344,8 +329,6 @@ trait CacheTrait
 	 * @param string $timestampKey Database option key for timestamp.
 	 * @param string $data Cache data to store.
 	 * @param string $cacheFile Path to the cache file.
-	 *
-	 * @return void
 	 */
 	private static function updateTransientCache(
 		string $transientKey,
@@ -360,15 +343,13 @@ trait CacheTrait
 		if (\file_exists($cacheFile)) {
 			$fileTimestamp = \filemtime($cacheFile);
 			if ($fileTimestamp !== false) {
-				\update_option($timestampKey, (int) $fileTimestamp, true);
+				\update_option($timestampKey, $fileTimestamp, true);
 			}
 		}
 	}
 
 	/**
 	 * Clear all cache layers (transient, file, and memory).
-	 *
-	 * @return void
 	 */
 	public static function clearAllCache(): void
 	{
@@ -398,7 +379,7 @@ trait CacheTrait
 	private static function getAllManifests(): array
 	{
 		// Early return for empty cache builder.
-		if (empty(self::$cacheBuilder)) {
+		if (self::$cacheBuilder === []) {
 			return [];
 		}
 
@@ -424,7 +405,7 @@ trait CacheTrait
 					$result = self::getItem(self::getFullPath($parent, $type), $data, $parent);
 				}
 
-				if (!empty($result)) {
+				if ($result !== []) {
 					$output[$type][$parent] = $result;
 				}
 			}
@@ -465,7 +446,7 @@ trait CacheTrait
 		// Optimized JSON decoding.
 		try {
 			$fileDecoded = self::parseManifest($fileContent);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return [];
 		}
 
@@ -566,8 +547,6 @@ trait CacheTrait
 	 * @param string $path File path for error reporting.
 	 *
 	 * @throws InvalidManifest If required key is missing.
-	 *
-	 * @return void
 	 */
 	private static function validateManifestKeys(array $fileDecoded, array $data, string $path): void
 	{
@@ -620,7 +599,7 @@ trait CacheTrait
 			}
 
 			$item = self::getItem($itemPath, $data, $parent);
-			if (empty($item)) {
+			if ($item === []) {
 				continue;
 			}
 
@@ -683,10 +662,8 @@ trait CacheTrait
 	{
 		// Ensure directory exists.
 		$directory = \dirname($path);
-		if (!\is_dir($directory)) {
-			if (!\mkdir($directory, 0755, true)) {
-				return false;
-			}
+		if (!\is_dir($directory) && !\mkdir($directory, 0755, true)) {
+			return false;
 		}
 
 		// Use LOCK_EX for atomic writes.

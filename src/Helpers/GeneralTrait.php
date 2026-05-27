@@ -25,8 +25,6 @@ trait GeneralTrait
 	 * Check if XML is a valid document (used for SVG validation).
 	 *
 	 * @param string $xml Full xml document.
-	 *
-	 * @return boolean
 	 */
 	public static function isValidXml(string $xml): bool
 	{
@@ -144,7 +142,7 @@ trait GeneralTrait
 
 		\usort(
 			$items,
-			fn($a, $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0)
+			fn(array $a, array $b): int => ($a['order'] ?? 0) <=> ($b['order'] ?? 0)
 		);
 
 		return $items;
@@ -156,8 +154,6 @@ trait GeneralTrait
 	 * Handles acronyms (`APIKey` → `api-key`) and existing separators (`foo_bar` → `foo-bar`).
 	 *
 	 * @param string $input String to convert.
-	 *
-	 * @return string
 	 */
 	public static function camelToKebabCase(string $input): string
 	{
@@ -179,8 +175,6 @@ trait GeneralTrait
 	 * Convert camel to snake case.
 	 *
 	 * @param string $input String to convert.
-	 *
-	 * @return string
 	 */
 	public static function camelToSnakeCase(string $input): string
 	{
@@ -197,8 +191,6 @@ trait GeneralTrait
 	 *
 	 * @param string $input String to convert.
 	 * @param string $separator Separator to use for conversion.
-	 *
-	 * @return string
 	 */
 	public static function kebabToCamelCase(string $input, string $separator = '-'): string
 	{
@@ -209,8 +201,6 @@ trait GeneralTrait
 	 * Convert string from kebab to snake case.
 	 *
 	 * @param string $input String to convert.
-	 *
-	 * @return string
 	 */
 	public static function kebabToSnakeCase(string $input): string
 	{
@@ -250,8 +240,6 @@ trait GeneralTrait
 	 * Get the current request URL (including query string).
 	 *
 	 * Result is cached for the lifetime of the request since the URL cannot change mid-request.
-	 *
-	 * @return string
 	 */
 	public static function getCurrentUrl(): string
 	{
@@ -275,8 +263,6 @@ trait GeneralTrait
 	 * Strip query string and fragment from a URL.
 	 *
 	 * @param string $url URL to clean.
-	 *
-	 * @return string
 	 */
 	public static function cleanUrlParams(string $url): string
 	{

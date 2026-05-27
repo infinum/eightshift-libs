@@ -23,8 +23,6 @@ final class ComponentException extends InvalidArgumentException implements Gener
 	 * Throws exception if ensure_string argument is invalid.
 	 *
 	 * @param mixed $variable Variable that's of invalid type.
-	 *
-	 * @return static
 	 */
 	public static function throwNotStringOrArray($variable): ComponentException
 	{

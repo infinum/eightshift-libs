@@ -37,8 +37,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Get block editor JavaScript handle.
-	 *
-	 * @return string
 	 */
 	public function getBlockEditorScriptsHandle(): string
 	{
@@ -47,8 +45,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Enqueue blocks script for editor only.
-	 *
-	 * @return void
 	 */
 	public function enqueueBlockEditorScript(): void
 	{
@@ -98,8 +94,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Get block editor stylesheet handle.
-	 *
-	 * @return string
 	 */
 	public function getBlockEditorStyleHandle(): string
 	{
@@ -108,8 +102,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Enqueue blocks style for editor only.
-	 *
-	 * @return void
 	 */
 	public function enqueueBlockEditorStyle(): void
 	{
@@ -158,8 +150,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Get block frontend JavaScript handle.
-	 *
-	 * @return string
 	 */
 	public function getBlockFrontendScriptHandle(): string
 	{
@@ -168,8 +158,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Enqueue blocks script for frontend only.
-	 *
-	 * @return void
 	 */
 	public function enqueueBlockFrontendScript(): void
 	{
@@ -205,8 +193,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Get block frontend Stylesheet handle.
-	 *
-	 * @return string
 	 */
 	public function getBlockFrontendStyleHandle(): string
 	{
@@ -215,8 +201,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Enqueue blocks style for frontend only.
-	 *
-	 * @return void
 	 */
 	public function enqueueBlockFrontendStyle(): void
 	{
@@ -258,8 +242,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Get block Stylesheet handle.
-	 *
-	 * @return string
 	 */
 	public function getBlockStyleHandle(): string
 	{
@@ -268,8 +250,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Enqueue blocks style for editor and frontend.
-	 *
-	 * @return void
 	 */
 	public function enqueueBlockStyle(): void
 	{
@@ -299,19 +279,16 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	// ---------------------------------------------------------------------------
-	// GENERAL
-	// ---------------------------------------------------------------------------
-
-	/**
-	 * Un-registers some default styles that add unnecessary overrides.
-	 * The styles are re-registered with a fake URL to prevent breaking style dependencies.
-	 *
-	 * This is a workaround until Gutenberg provides a better way to disable these styles.
-	 *
-	 * Verify that everything looks good in the Block editor after adding!
-	 *
-	 * @return void
-	 */
+				// GENERAL
+				// ---------------------------------------------------------------------------
+				/**
+				 * Un-registers some default styles that add unnecessary overrides.
+				 * The styles are re-registered with a fake URL to prevent breaking style dependencies.
+				 *
+				 * This is a workaround until Gutenberg provides a better way to disable these styles.
+				 *
+				 * Verify that everything looks good in the Block editor after adding!
+				 */
 	public function unregisterDefaultStyleOverrides(): void
 	{
 		// Unregister unneeded default styles.
@@ -330,8 +307,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 *
 	 * This is used for debugging purposes when working with `tailwindClasses` helper in Eightshift Frontend Libs Tailwind.
 	 * The class is used to check for WP_DEBUG mode and if it is true it will be used to prepend the block/component title to the tailwindClasses output.
-	 *
-	 * @return void
 	 */
 	public function addEditorBodyDebugClass(): void
 	{
@@ -344,8 +319,6 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			return;
 		}
 
-		\add_filter('admin_body_class', function ($classes) {
-			return "{$classes} es-wp-debug";
-		});
+		\add_filter('admin_body_class', fn($classes): string => "{$classes} es-wp-debug");
 	}
 }
