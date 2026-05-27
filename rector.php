@@ -35,5 +35,4 @@ return RectorConfig::configure()
 		__DIR__ . '/src/**/*Example.php',
 	])
 	->withIndent("\t", indentSize: 1)
-	->withImportNames(importShortClasses: false, removeUnusedImports: true)
-	->withParallel();
+	->withImportNames(importShortClasses: false, removeUnusedImports: true);

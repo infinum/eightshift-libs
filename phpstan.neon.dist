@@ -9,10 +9,17 @@ parameters:
 		- vendor/wp-cli/wp-cli/php/class-wp-cli.php
 	bootstrapFiles:
 		- %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
-	paths:
-		- src/
 	excludePaths:
 		- src/**/*Example.php
+		- */vendor/*
+		- */vendor-prefixed/*
+		- */node_modules/*
+		- */eightshift/*
+		- */public/*
+		- */tests/*
+		- */docs/*
+	paths:
+		- .
 	ignoreErrors:
 		# Ignore errors about reflection class variable being undefined. Errors are caught.
 		- '/^Variable \$reflectionClass might not be defined\.$/'
