@@ -22,17 +22,17 @@ use EightshiftLibs\Helpers\Helpers;
 class GeolocationCli extends AbstractCli
 {
 	/**
-				 * Get WP-CLI command parent name
-				 */
-				public function getCommandParentName(): string
+	 * Get WP-CLI command parent name
+	 */
+	public function getCommandParentName(): string
 	{
 		return CliCreate::COMMAND_NAME;
 	}
 
 	/**
-				 * Get WP-CLI command name
-				 */
-				public function getCommandName(): string
+	 * Get WP-CLI command name
+	 */
+	public function getCommandName(): string
 	{
 		return 'geolocation';
 	}
@@ -43,7 +43,7 @@ class GeolocationCli extends AbstractCli
 	 * @return array<string, mixed>
 	 */
 	#[\Override]
-				public function getDefaultArgs(): array
+	public function getDefaultArgs(): array
 	{
 		return [
 			'cookie_name' => 'es-geolocation',

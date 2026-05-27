@@ -26,7 +26,7 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	{
 		return new InvalidPath(
 			\sprintf(
-			/* translators: %s is going to be replaced with the missing directory path. */
+				/* translators: %s is going to be replaced with the missing directory path. */
 				\esc_html__('Failed to read the directory at "%s". Please check the implementation and try again.', 'eightshift-libs'),
 				$path,
 			)
@@ -42,7 +42,7 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	{
 		return new InvalidPath(
 			\sprintf(
-			/* translators: %s is going to be replaced with the missing file path. */
+				/* translators: %s is going to be replaced with the missing file path. */
 				\esc_html__('Failed to open the file at "%s". Please check the implementation and try again.', 'eightshift-libs'),
 				$path,
 			)
@@ -59,7 +59,7 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	{
 		return new InvalidPath(
 			\sprintf(
-			/* translators: %1$s is going to be replaced with the missing file path. %2$s is going to be replaced with the expected file name. */
+				/* translators: %1$s is going to be replaced with the missing file path. %2$s is going to be replaced with the expected file name. */
 				\esc_html__('Failed to open the file at "%1$s". Expected file: "%2$s".', 'eightshift-libs'),
 				$path,
 				$example
@@ -77,7 +77,7 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	{
 		return new InvalidPath(
 			\sprintf(
-			/* translators: %1$s is going to be replaced with the missing file path name. %2$s is going to be replaced with the allowed path names. */
+				/* translators: %1$s is going to be replaced with the missing file path name. %2$s is going to be replaced with the allowed path names. */
 				\esc_html__('Parent path is incorrect or not allowed. Path used: "%1$s". Allowed path: "%2$s". Please check the implementation.', 'eightshift-libs'),
 				$pathName,
 				$allowed

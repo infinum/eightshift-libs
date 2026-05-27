@@ -28,9 +28,9 @@ interface CliInterface
 	 * @return void
 	 */
 	public function __invoke(array $args, array $assocArgs); // @phpstan-ignore-line
-				/**
-				 * Get WP-CLI command parent name
-				 */
+	/**
+	 * Get WP-CLI command parent name
+	 */
 	public function getCommandParentName(): string;
 
 	/**

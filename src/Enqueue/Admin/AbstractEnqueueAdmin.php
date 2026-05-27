@@ -103,8 +103,8 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 		}
 
 		$screen = \get_current_screen();
-                    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-					return \is_object($screen) && $screen->is_block_editor;
+		// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+		return \is_object($screen) && $screen->is_block_editor;
 	}
 
 	/**

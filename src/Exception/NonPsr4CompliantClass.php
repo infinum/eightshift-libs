@@ -26,7 +26,7 @@ final class NonPsr4CompliantClass extends InvalidArgumentException implements Ge
 	{
 		return new NonPsr4CompliantClass(
 			\sprintf(
-			/* translators: %s is replaced with the className. */
+				/* translators: %s is replaced with the className. */
 				'Unable to autowire %s. Please check if the namespace is PSR-4 compliant (i.e. it needs to match the folder structure).
 				See: https://www.php-fig.org/psr/psr-4/#3-examples',
 				$className

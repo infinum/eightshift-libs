@@ -279,16 +279,16 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	}
 
 	// ---------------------------------------------------------------------------
-				// GENERAL
-				// ---------------------------------------------------------------------------
-				/**
-				 * Un-registers some default styles that add unnecessary overrides.
-				 * The styles are re-registered with a fake URL to prevent breaking style dependencies.
-				 *
-				 * This is a workaround until Gutenberg provides a better way to disable these styles.
-				 *
-				 * Verify that everything looks good in the Block editor after adding!
-				 */
+	// GENERAL
+	// ---------------------------------------------------------------------------
+	/**
+	 * Un-registers some default styles that add unnecessary overrides.
+	 * The styles are re-registered with a fake URL to prevent breaking style dependencies.
+	 *
+	 * This is a workaround until Gutenberg provides a better way to disable these styles.
+	 *
+	 * Verify that everything looks good in the Block editor after adding!
+	 */
 	public function unregisterDefaultStyleOverrides(): void
 	{
 		// Unregister unneeded default styles.

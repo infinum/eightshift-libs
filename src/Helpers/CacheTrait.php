@@ -63,8 +63,9 @@ trait CacheTrait
 	private static ?bool $shouldCacheResult = null;
 
 	// -----------------------------------------------------
-				// CACHE
-				// -----------------------------------------------------
+	// CACHE
+	// -----------------------------------------------------
+
 	/**
 	 * Set cache details with optimized validation.
 	 *
