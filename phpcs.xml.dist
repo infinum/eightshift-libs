@@ -21,7 +21,7 @@
 	<rule ref="PHPCompatibilityWP"/>
 
 	<!-- Support only latest 3 WP versions. -->
-	<config name="minimum_supported_wp_version" value="8.4"/>
+	<config name="minimum_supported_wp_version" value="6.9"/>
 
 	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
 		<exclude-pattern>*/src/**/*Cli</exclude-pattern>
