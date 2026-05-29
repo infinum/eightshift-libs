@@ -21,8 +21,6 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	 * Throws error if the directory is missing.
 	 *
 	 * @param string $path Missing file path.
-	 *
-	 * @return static
 	 */
 	public static function missingDirectoryException(string $path): InvalidPath
 	{
@@ -39,8 +37,6 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	 * Throws error if the file is missing.
 	 *
 	 * @param string $path Missing file path.
-	 *
-	 * @return static
 	 */
 	public static function missingFileException(string $path): InvalidPath
 	{
@@ -58,8 +54,6 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	 *
 	 * @param string $path Missing file path.
 	 * @param string $example Expected file name.
-	 *
-	 * @return static
 	 */
 	public static function missingFileWithExampleException(string $path, string $example): InvalidPath
 	{
@@ -78,8 +72,6 @@ final class InvalidPath extends InvalidArgumentException implements GeneralExcep
 	 *
 	 * @param string $pathName Missing file path name.
 	 * @param string $allowed Allowed path name.
-	 *
-	 * @return static
 	 */
 	public static function wrongOrNotAllowedParentPathException(string $pathName, string $allowed): InvalidPath
 	{

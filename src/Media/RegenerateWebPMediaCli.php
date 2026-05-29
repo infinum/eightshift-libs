@@ -16,6 +16,7 @@ use EightshiftLibs\Helpers\Helpers;
 use Exception;
 use WP_CLI;
 use WP_Query;
+use Override;
 
 /**
  * Class RegenerateWebPMediaCli
@@ -24,8 +25,6 @@ class RegenerateWebPMediaCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -34,8 +33,6 @@ class RegenerateWebPMediaCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -47,6 +44,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -120,7 +118,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
@@ -133,13 +131,11 @@ class RegenerateWebPMediaCli extends AbstractCli
 
 		$args = [];
 
-		if ($ids) {
+		if ($ids !== '' && $ids !== '0') {
 			$args['post__in'] = \explode(',', $ids);
 		} else {
 			$args['post_mime_type'] = \array_map(
-				static function ($item) {
-					return "image/{$item}";
-				},
+				static fn($item): string => "image/{$item}",
 				\explode(',', \str_replace(' ', '', $allowedExt))
 			);
 		}
@@ -165,8 +161,6 @@ class RegenerateWebPMediaCli extends AbstractCli
 	 * @param array{quality: int} $options Options from WP-CLI.
 	 * @param array<string, mixed> $args Parameters from WP-CLI.
 	 * @param bool $onlyUpdateDb Only update the database, not the media files as assumed that the media files are already converted and locaded on S3 or other storage.
-	 *
-	 * @return void
 	 */
 	private function generateMedia(array $options, array $args = [], bool $onlyUpdateDb = false): void
 	{
@@ -235,7 +229,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 					}
 				}
 
-				if ($outputSizesMeta) {
+				if ($outputSizesMeta !== []) {
 					$attachmentMetadata['sizes'] = $outputSizesMeta;
 				}
 
@@ -256,7 +250,7 @@ class RegenerateWebPMediaCli extends AbstractCli
 			WP_CLI::log('--------------------------------------------------');
 		}
 
-		if ($skipped) {
+		if ($skipped !== []) {
 			WP_CLI::log('--------------------------------------------------');
 			WP_CLI::log('Here is the list of skipped attachments:');
 			WP_CLI::log('Skipped attachments count: ' . \count($skipped));

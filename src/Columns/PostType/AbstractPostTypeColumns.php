@@ -21,16 +21,14 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 {
 	/**
 	 * Register the post columns and content in them.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
 		$postTypes = $this->getPostTypeSlugs();
 
 		foreach ($postTypes as $postType) {
-			\add_filter("manage_{$postType}_posts_columns", [$this, 'addColumnName']);
-			\add_action("manage_{$postType}_posts_custom_column", [$this, 'renderColumnContent'], 10, 2);
+			\add_filter("manage_{$postType}_posts_columns", $this->addColumnName(...));
+			\add_action("manage_{$postType}_posts_custom_column", $this->renderColumnContent(...), 10, 2);
 		}
 	}
 
@@ -48,8 +46,6 @@ abstract class AbstractPostTypeColumns implements ServiceInterface
 	 *
 	 * @param string $columnName The name of the column to display.
 	 * @param int    $postId The current post ID.
-	 *
-	 * @return void
 	 */
 	abstract public function renderColumnContent(string $columnName, int $postId): void;
 

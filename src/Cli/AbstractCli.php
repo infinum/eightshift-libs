@@ -25,13 +25,6 @@ use WP_CLI\ExitException;
 abstract class AbstractCli implements CliInterface
 {
 	/**
-	 * Top level commands name.
-	 *
-	 * @var string
-	 */
-	protected string $commandParentName;
-
-	/**
 	 * Contents of the example class
 	 *
 	 * When some renaming classes will be called, contents will get
@@ -165,19 +158,21 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string $commandParentName Define top level commands name.
 	 */
-	public function __construct(string $commandParentName)
-	{
-		$this->commandParentName = $commandParentName;
+	public function __construct(
+		/**
+		 * Top level commands name.
+		 */
+		protected string $commandParentName
+	) {
+		// No initialization needed currently, but we might want to do some caching here in the future if we find performance bottlenecks.
 	}
 
 	/**
 	 * Register method for WP-CLI command
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('cli_init', [$this, 'registerCommand']);
+		\add_action('cli_init', $this->registerCommand(...));
 	}
 
 	/**
@@ -231,7 +226,7 @@ abstract class AbstractCli implements CliInterface
 		$configPath = $args[self::ARG_COMPOSER_CONFIG_PATH] ?? Helpers::getProjectPaths('', 'composer.json');
 		$composerFile = $this->getComposer($configPath);
 
-		$namespace = $composerFile ? \rtrim(\array_key_first($composerFile['autoload']['psr-4']), '\\') : 'EightshiftBoilerplate';
+		$namespace = $composerFile !== [] ? \rtrim((string) \array_key_first($composerFile['autoload']['psr-4']), '\\') : 'EightshiftBoilerplate';
 
 		if (isset($args[self::ARG_GROUP_OUTPUT])) {
 			$args[self::ARG_GROUP_OUTPUT] = \filter_var($args[self::ARG_GROUP_OUTPUT], \FILTER_VALIDATE_BOOLEAN);
@@ -244,7 +239,7 @@ abstract class AbstractCli implements CliInterface
 		return \array_merge(
 			[
 				self::ARG_NAMESPACE => $namespace,
-				self::ARG_NAMESPACE_VENDOR_PREFIX => $composerFile ? $composerFile['extra']['strauss']['namespace_prefix'] : "{$namespace}Vendor",
+				self::ARG_NAMESPACE_VENDOR_PREFIX => $composerFile !== [] ? $composerFile['extra']['strauss']['namespace_prefix'] : "{$namespace}Vendor",
 				self::ARG_TEXTDOMAIN => Helpers::camelToKebabCase($namespace),
 				self::ARG_GROUP_OUTPUT => false,
 			],
@@ -278,7 +273,7 @@ abstract class AbstractCli implements CliInterface
 		$class = $reflectionClass->newInstanceArgs([$this->commandParentName]);
 
 		if (!\is_callable($class)) {
-			$className = \get_class($class);
+			$className = $class::class;
 			$this->cliError("Class '{$className}' is not callable.\nMake sure the command class has an __invoke method.");
 		}
 
@@ -306,26 +301,22 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param array<string, string> $arguments Array of args to check.
 	 * @param string $key Argument name to check.
-	 *
-	 * @return string
 	 */
 	public function getArg(array $arguments, string $key): string
 	{
-		return isset($arguments[$key]) ? (string) $arguments[$key] : $this->getDefaultArg($key);
+		return $arguments[$key] ?? $this->getDefaultArg($key);
 	}
 
 	/**
 	 * Get one default argument.
 	 *
 	 * @param string $key Argument name to get.
-	 *
-	 * @return string
 	 */
 	public function getDefaultArg(string $key): string
 	{
 		$args = $this->getDefaultArgs();
 
-		if (!$args) {
+		if ($args === []) {
 			return '';
 		}
 
@@ -336,8 +327,6 @@ abstract class AbstractCli implements CliInterface
 	 * Get argument template based on the key.
 	 *
 	 * @param string $key Key to search.
-	 *
-	 * @return string
 	 */
 	public function getArgTemplate(string $key): string
 	{
@@ -346,12 +335,10 @@ abstract class AbstractCli implements CliInterface
 
 	/**
 	 * Get full class name for current class
-	 *
-	 * @return string
 	 */
 	public function getClassName(): string
 	{
-		return \get_class($this);
+		return static::class;
 	}
 
 	/**
@@ -360,8 +347,6 @@ abstract class AbstractCli implements CliInterface
 	 * @param bool $skipReplace Skip replacing CLI string.
 	 *
 	 * @throws RuntimeException Exception in the case the class name is missing.
-	 *
-	 * @return string
 	 */
 	public function getClassShortName(bool $skipReplace = false): string
 	{
@@ -382,17 +367,13 @@ abstract class AbstractCli implements CliInterface
 	 * Remove _, - and empty space. Create a camelcase from string.
 	 *
 	 * @param string $fileName File name from string.
-	 *
-	 * @return string
 	 */
 	public function getFileName(string $fileName): string
 	{
 		$class = \explode('_', \str_replace('-', '_', \str_replace(' ', '_', $fileName)));
 
 		$className = \array_map(
-			function ($item) {
-				return \ucfirst($item);
-			},
+			\ucfirst(...),
 			$class
 		);
 
@@ -415,7 +396,7 @@ abstract class AbstractCli implements CliInterface
 		$path = "{$currentDir}{$ds}{$this->getExampleFileName($fileName)}.php";
 
 		// If you pass file name with extension the version will be used.
-		if (\strpos($fileName, '.') !== false) {
+		if (\str_contains($fileName, '.')) {
 			$path = "{$currentDir}{$ds}{$fileName}";
 		}
 
@@ -424,12 +405,10 @@ abstract class AbstractCli implements CliInterface
 		// Read the template contents, and replace the placeholders with provided variables.
 		if (\file_exists($path)) {
 			$templateFile = \file_get_contents($path);
+		} elseif ($skipMissing) {
+			$this->fileContents = '';
 		} else {
-			if ($skipMissing) {
-				$this->fileContents = '';
-			} else {
-				$this->cliError("The template {$path} seems to be missing.");
-			}
+			$this->cliError("The template {$path} seems to be missing.");
 		}
 
 		$this->fileContents = (string)$templateFile;
@@ -441,8 +420,6 @@ abstract class AbstractCli implements CliInterface
 	 * Generate example template file/class name
 	 *
 	 * @param string $filename File name.
-	 *
-	 * @return string
 	 */
 	public function getExampleFileName(string $filename): string
 	{
@@ -455,8 +432,6 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $destination Absolute path to output.
 	 * @param string $fileName File name to use on a new file..
 	 * @param array<string, mixed> $args Optional arguments.
-	 *
-	 * @return void
 	 */
 	public function outputWrite(string $destination, string $fileName, array $args = []): void
 	{
@@ -514,8 +489,6 @@ abstract class AbstractCli implements CliInterface
 				'Success'
 			);
 		}
-
-		return;
 	}
 
 	/**
@@ -548,7 +521,7 @@ abstract class AbstractCli implements CliInterface
 	{
 		if (isset($args[$keyName])) {
 			if ($keyName === self::ARG_PROJECT_NAME) {
-				$args[$keyName] = \ucfirst($args[$keyName]);
+				$args[$keyName] = \ucfirst((string) $args[$keyName]);
 			}
 
 			$this->fileContents = \str_replace(
@@ -658,12 +631,10 @@ abstract class AbstractCli implements CliInterface
 	 * if the string contains empty space.
 	 *
 	 * @param string $stringToConvert String to convert.
-	 *
-	 * @return string
 	 */
 	public function prepareSlug(string $stringToConvert): string
 	{
-		if (\strpos($stringToConvert, ' ') !== false) {
+		if (\str_contains($stringToConvert, ' ')) {
 			$stringToConvert = \strtolower($stringToConvert);
 		}
 
@@ -674,8 +645,6 @@ abstract class AbstractCli implements CliInterface
 	 * Check and prepare default value for skip_existing arg.
 	 *
 	 * @param array<string, mixed> $args Optional arguments.
-	 *
-	 * @return boolean
 	 */
 	public function getSkipExisting(array $args): bool
 	{
@@ -702,7 +671,7 @@ abstract class AbstractCli implements CliInterface
 
 		// Set optional props to false in case of development.
 		$synopsis = \array_map(
-			static function ($item) {
+			static function (array $item): array {
 				$optional = $item['optional'] ?? true;
 
 				$item['optional'] = $optional;
@@ -732,8 +701,6 @@ abstract class AbstractCli implements CliInterface
 	 * Return cli intro.
 	 *
 	 * @param array<string, mixed> $assocArgs $argument to pass.
-	 *
-	 * @return void
 	 */
 	protected function getIntroText(array $assocArgs): void
 	{
@@ -755,8 +722,6 @@ abstract class AbstractCli implements CliInterface
 
 	/**
 	 * Return assets command text.
-	 *
-	 * @return void
 	 */
 	protected function getAssetsCommandText(): void
 	{
@@ -774,8 +739,6 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $commandClass Command class to run.
 	 * @param string $commandParentName Parent name of the command.
 	 * @param array<string, mixed> $args Arguments to pass.
-	 *
-	 * @return void
 	 */
 	public function runCliCommand(string $commandClass, string $commandParentName, array $args): void
 	{
@@ -793,8 +756,6 @@ abstract class AbstractCli implements CliInterface
 	 * A wrapper for the WP_CLI::error with error handling.
 	 *
 	 * @param string $errorMessage Error message to log in the CLI.
-	 *
-	 * @return void
 	 */
 	public function cliError(string $errorMessage): void
 	{
@@ -811,8 +772,6 @@ abstract class AbstractCli implements CliInterface
 	 *
 	 * @param string $msg Msg to output.
 	 * @param string $color Color to use from this list https://make.wordpress.org/cli/handbook/references/internal-api/wp-cli-colorize/.
-	 *
-	 * @return void
 	 */
 	protected function cliLog(string $msg, string $color = ''): void
 	{
@@ -821,7 +780,7 @@ abstract class AbstractCli implements CliInterface
 			return;
 		}
 
-		if ($color) {
+		if ($color !== '' && $color !== '0') {
 			WP_CLI::log(WP_CLI::colorize("%{$color}{$msg}%n"));
 			return;
 		}
@@ -835,8 +794,6 @@ abstract class AbstractCli implements CliInterface
 	 * @param string $msg Msg to output.
 	 * @param string $type Type of message, either "success", "error", "warning" or "info".
 	 * @param string $heading Alert heading.
-	 *
-	 * @return void
 	 */
 	protected function cliLogAlert(string $msg, string $type = 'success', string $heading = ''): void
 	{
@@ -858,9 +815,9 @@ abstract class AbstractCli implements CliInterface
 				break;
 		}
 
-		$headingToUse = empty($heading) ? $defaultHeading : $heading;
+		$headingToUse = $heading === '' || $heading === '0' ? $defaultHeading : $heading;
 
-		if (\strpos($msg, '\n') !== false) {
+		if (\str_contains($msg, '\n')) {
 			$output = "{$colorToUse}╭\n";
 			$output .= "│ {$headingToUse}\n";
 
@@ -899,11 +856,9 @@ abstract class AbstractCli implements CliInterface
 	 * Adds new line before and after ## heading.
 	 *
 	 * @param string $string String to convert.
-	 *
-	 * @return string
 	 */
 	public function prepareLongDesc(string $string): string
 	{
-		return \preg_replace('/(##+)(.*)/m', "\n" . '${1}${2}' . "\n", \preg_replace('/\s*^\s*/m', "\n", \trim($string)));
+		return \preg_replace('/(##+)(.*)/m', "\n" . '${1}${2}' . "\n", (string) \preg_replace('/\s*^\s*/m', "\n", \trim($string)));
 	}
 }

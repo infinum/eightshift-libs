@@ -21,18 +21,14 @@ abstract class AbstractAdminMenu implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('admin_menu', [$this, 'callback'], $this->getPriorityOrder());
+		\add_action('admin_menu', $this->callback(...), $this->getPriorityOrder());
 	}
 
 	/**
 	 * Return action callback method.
-	 *
-	 * @return void
 	 */
 	public function callback(): void
 	{
@@ -41,7 +37,7 @@ abstract class AbstractAdminMenu implements ServiceInterface
 			$this->getMenuTitle(),
 			$this->getCapability(),
 			$this->getMenuSlug(),
-			[$this, 'processAdminMenu'],
+			$this->processAdminMenu(...),
 			$this->getIcon(),
 			$this->getPosition()
 		);
@@ -49,8 +45,6 @@ abstract class AbstractAdminMenu implements ServiceInterface
 
 	/**
 	 * Return hook priority order.
-	 *
-	 * @return integer
 	 */
 	public function getPriorityOrder(): int
 	{

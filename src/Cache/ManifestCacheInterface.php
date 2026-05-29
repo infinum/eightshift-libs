@@ -19,8 +19,6 @@ interface ManifestCacheInterface
 {
 	/**
 	 * Set all cache.
-	 *
-	 * @return void
 	 */
 	public function setAllCache(): void;
 }

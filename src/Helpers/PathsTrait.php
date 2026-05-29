@@ -31,8 +31,6 @@ trait PathsTrait
 
 	/**
 	 * Initialize path-related static caches if not already done.
-	 *
-	 * @return void
 	 */
 	public static function initializePathCaches(): void
 	{
@@ -77,8 +75,6 @@ trait PathsTrait
 	 *
 	 * @param string $type Type fo path to return.
 	 * @param string|array<int, string> $suffix Suffix to add to the path.
-	 *
-	 * @return string
 	 */
 	public static function getProjectPaths(string $type = '', array|string $suffix = ''): string
 	{
@@ -92,29 +88,27 @@ trait PathsTrait
 
 		// Fast path for empty type.
 		if ($type === '') {
-			return self::joinPaths(\array_merge([self::$basePaths['root']], $suffix));
+			return self::joinPaths([self::$basePaths['root'], ...$suffix]);
 		}
 
 		// Use cached path configuration for fast lookup.
 		if (isset(self::$pathConfigs[$type])) {
-			return self::joinPaths(\array_merge(self::$pathConfigs[$type], $suffix));
+			return self::joinPaths([...self::$pathConfigs[$type], ...$suffix]);
 		}
 
 		// Fallback for unknown type (should rarely happen).
-		return self::joinPaths(\array_merge([self::$basePaths['root']], $suffix));
+		return self::joinPaths([self::$basePaths['root'], ...$suffix]);
 	}
 
 	/**
 	 * Optimized paths join with reduced function calls and memory allocations.
 	 *
 	 * @param array<int, string> $paths Paths to join.
-	 *
-	 * @return string
 	 */
 	public static function joinPaths(array $paths): string
 	{
 		// Early return for empty paths.
-		if (empty($paths)) {
+		if ($paths === []) {
 			return \DIRECTORY_SEPARATOR;
 		}
 
@@ -129,13 +123,16 @@ trait PathsTrait
 			}
 		}
 
-		if (empty($filteredPaths)) {
+		if ($filteredPaths === []) {
 			return $sep;
 		}
 
 		$joinedPath = $sep . \implode($sep, $filteredPaths);
 
-		if (\pathinfo($joinedPath, \PATHINFO_EXTENSION)) {
+		// Treat as a file path when the last segment carries a non-empty extension.
+		$lastDot = \strrpos($joinedPath, '.');
+		$lastSeparator = \strrpos($joinedPath, $sep);
+		if ($lastDot !== false && $lastDot > $lastSeparator && $lastDot < \strlen($joinedPath) - 1) {
 			return $joinedPath;
 		}
 
@@ -147,8 +144,6 @@ trait PathsTrait
 	 * Optimized with static caching.
 	 *
 	 * @param string $fileName File name to append to the path.
-	 *
-	 * @return string
 	 */
 	public static function getEightshiftOutputPath($fileName = ''): string
 	{

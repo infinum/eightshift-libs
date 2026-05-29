@@ -13,6 +13,7 @@ namespace EightshiftLibs\BlockPatterns;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliBlocks;
 use EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class BlockPatternCli
@@ -21,8 +22,6 @@ class BlockPatternCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -31,8 +30,6 @@ class BlockPatternCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -44,6 +41,7 @@ class BlockPatternCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -111,7 +109,7 @@ class BlockPatternCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
@@ -122,12 +120,12 @@ class BlockPatternCli extends AbstractCli
 		$content = $this->getArg($assocArgs, 'content');
 		$description = $this->getArg($assocArgs, 'description');
 
-		if (!$name) {
+		if ($name === '' || $name === '0') {
 			$name = $this->generateName($title);
 		}
 
 		$className = $this->getFileName($title);
-		$className = $className . $this->getClassShortName();
+		$className .= $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$this->getExampleTemplate(__DIR__, $this->getClassShortName())
@@ -144,7 +142,6 @@ class BlockPatternCli extends AbstractCli
 	 * Generated the name of the block pattern from title.
 	 *
 	 * @param string $title Title of the pattern.
-	 * @return string
 	 */
 	private function generateName(string $title): string
 	{

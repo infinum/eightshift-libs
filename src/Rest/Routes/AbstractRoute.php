@@ -15,6 +15,7 @@ use EightshiftLibs\Services\ServiceInterface;
 use EightshiftLibs\Rest\RouteInterface;
 use WP_REST_Request;
 use WP_REST_Server;
+use Deprecated;
 
 /**
  * Abstract base route class
@@ -114,72 +115,62 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	/**
 	 * API response code success const.
 	 *
-	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_OK instead.
-	 *
 	 * @var int
 	 */
+	#[Deprecated(message: 'Use API_RESPONSE_CODE_OK instead.', since: '10.0.0')]
 	public const API_RESPONSE_CODE_SUCCESS = 200;
 
 	/**
 	 * API response code success range const.
 	 *
-	 * @deprecated 10.0.0 Do not use this constant.
-	 *
 	 * @var int
 	 */
+	#[Deprecated(message: 'Do not use this constant.', since: '10.0.0')]
 	public const API_RESPONSE_CODE_SUCCESS_RANGE = 299;
 	/**
 	 * API response code error const.
 	 *
-	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_BAD_REQUEST instead.
-	 *
 	 * @var int
 	 */
+	#[Deprecated(message: 'Use API_RESPONSE_CODE_BAD_REQUEST instead.', since: '10.0.0')]
 	public const API_RESPONSE_CODE_ERROR = 400;
 
 	/**
 	 * API response code error missing const.
 	 *
-	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_NOT_FOUND instead.
-	 *
 	 * @var int
 	 */
+	#[Deprecated(message: 'Use API_RESPONSE_CODE_NOT_FOUND instead.', since: '10.0.0')]
 	public const API_RESPONSE_CODE_ERROR_MISSING = 404;
 
 	/**
 	 * API response code error forbidden const.
 	 *
-	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_FORBIDDEN instead.
-	 *
 	 * @var int
 	 */
+	#[Deprecated(message: 'Use API_RESPONSE_CODE_FORBIDDEN instead.', since: '10.0.0')]
 	public const API_RESPONSE_CODE_ERROR_FORBIDDEN = 403;
 
 	/**
 	 * API response code error server const.
 	 *
-	 * @deprecated 10.0.0 Use API_RESPONSE_CODE_INTERNAL_SERVER_ERROR instead.
-	 *
 	 * @var int
 	 */
+	#[Deprecated(message: 'Use API_RESPONSE_CODE_INTERNAL_SERVER_ERROR instead.', since: '10.0.0')]
 	public const API_RESPONSE_CODE_ERROR_SERVER = 500;
 
 	/**
 	 * A register method holds register_rest_route function to register api route
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('rest_api_init', [$this, 'routeRegisterCallback']);
+		\add_action('rest_api_init', $this->routeRegisterCallback(...));
 	}
 
 	/**
 	 * Method that registers rest route that is used inside rest_api_init hook
 	 *
 	 * @param WP_REST_Server $wpRestServer Server object.
-	 *
-	 * @return void
 	 */
 	public function routeRegisterCallback(WP_REST_Server $wpRestServer): void
 	{
@@ -244,21 +235,15 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
 		// Check type of request and extract params.
-		switch ($type) {
-			case self::CREATABLE:
-				$params = $request->get_body_params();
-				break;
-			case self::READABLE:
-				$params = $request->get_params();
-				break;
-			default:
-				$params = [];
-				break;
-		}
+		$params = match ($type) {
+			self::CREATABLE => $request->get_body_params(),
+			self::READABLE => $request->get_params(),
+			default => [],
+		};
 
 		// Check if request maybe has json params usually sent by the Block editor.
 		if ($request->get_json_params()) {
-			$params = \array_merge(
+			return \array_merge(
 				$params,
 				$request->get_json_params(),
 			);
@@ -296,7 +281,7 @@ abstract class AbstractRoute implements RouteInterface, ServiceInterface
 
 		return [
 			'status' => self::STATUS_ERROR,
-			'code' => self::API_RESPONSE_CODE_ERROR_FORBIDDEN,
+			'code' => self::API_RESPONSE_CODE_FORBIDDEN,
 			'message' => \__('You don\'t have enough permissions to perform this action!', 'eightshift-libs'),
 			'data' => $additional,
 		];

@@ -22,8 +22,6 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	 *
 	 * @param string $name Block/component name.
 	 * @param string $componentName Component name to check.
-	 *
-	 * @return static
 	 */
 	public static function wrongComponentNameException(string $name, string $componentName): InvalidBlock
 	{
@@ -43,8 +41,6 @@ final class InvalidBlock extends InvalidArgumentException implements GeneralExce
 	 *
 	 * @param string $name Block/component name.
 	 * @param string $type Type of the item.
-	 *
-	 * @return static
 	 */
 	public static function missingItemException(string $name, string $type): InvalidBlock
 	{

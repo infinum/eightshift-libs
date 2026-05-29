@@ -19,29 +19,22 @@ trait CssVariablesTrait
 	 * Get Global Manifest.json and return globalVariables as CSS variables. Not wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariablesGlobalClean(array $globalSettings = []): string
 	{
-		$output = '';
+		$globalVariables = $globalSettings === [] ? (Helpers::getSettingsGlobalVariables()) : $globalSettings['globalVariables'] ?? [];
 
-		$globalVariables = !empty($globalSettings) ? ($globalSettings['globalVariables'] ?? []) : Helpers::getSettingsGlobalVariables();
-
+		$parts = [];
 		foreach ($globalVariables as $itemKey => $itemValue) {
 			$itemKey = Helpers::camelToKebabCase($itemKey);
 
-			if (\gettype($itemValue) === 'array') {
-				$output .= self::globalInner($itemValue, $itemKey);
-			} else {
-				$output .= "--global-{$itemKey}: {$itemValue};\n";
-			}
+			$parts[] = \is_array($itemValue) ? self::globalInner($itemValue, $itemKey) : "--global-{$itemKey}: {$itemValue};\n";
 		}
 
-		$output = ":root {{$output}}";
+		$output = ':root {' . \implode('', $parts) . '}';
 
 		if (Helpers::getConfigOutputCssOptimize()) {
-			$output = \str_replace(["\n", "\r"], '', $output);
+			return \str_replace(["\n", "\r"], '', $output);
 		}
 
 		return $output;
@@ -51,13 +44,11 @@ trait CssVariablesTrait
 	 * Get Global Manifest.json and return globalVariables as CSS variables. Wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariablesGlobal(array $globalSettings = []): string
 	{
 		$output = self::outputCssVariablesGlobalClean($globalSettings);
-		$id = Helpers::getConfigOutputCssSelectorName() . '-global';
+		$id = \esc_attr(Helpers::getConfigOutputCssSelectorName() . '-global');
 
 		return "<style id='{$id}'>{$output}</style>";
 	}
@@ -70,8 +61,6 @@ trait CssVariablesTrait
 	 * @param string $unique Unique key.
 	 * @param string $customSelector Output custom selector to use as a style prefix.
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariables(array $attributes, array $manifest, string $unique, string $customSelector = '', array $globalSettings = []): string
 	{
@@ -81,7 +70,7 @@ trait CssVariablesTrait
 		}
 
 		// Define variables from globalManifest.
-		$breakpoints = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : self::getSettingsGlobalVariablesBreakpoints();
+		$breakpoints = $globalSettings === [] ? (Helpers::getSettingsGlobalVariablesBreakpoints()) : $globalSettings['globalVariables']['breakpoints'] ?? [];
 
 		// Sort breakpoints in ascending order.
 		\asort($breakpoints);
@@ -109,15 +98,13 @@ trait CssVariablesTrait
 		$defaultAttributes = \array_keys(
 			\array_filter(
 				$variables,
-				static function ($key) use ($attributes) {
-					return !isset($attributes[$key]);
-				},
+				static fn($key): bool => !isset($attributes[$key]),
 				\ARRAY_FILTER_USE_KEY
 			)
 		);
 
 		// On frontend attributes are returned only the ones saved in the DB. So we check the manifest for the attributes with variable key and get the default value.
-		if ($defaultAttributes) {
+		if ($defaultAttributes !== []) {
 			$default = [];
 
 			foreach ($defaultAttributes as $key) {
@@ -141,6 +128,7 @@ trait CssVariablesTrait
 		}
 
 		// Load normal styles if server side render is used.
+		// Read-only switch between two render paths for the block editor's SSR preview; no state change, so a nonce is not required.
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
@@ -158,12 +146,11 @@ trait CssVariablesTrait
 	 * Output css variables as a one inline style tag. Used with wp_footer filter. Not wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariablesInlineClean(array $globalSettings = []): string
 	{
 		// Load normal styles if server side render is used.
+		// Read-only switch between two render paths for the block editor's SSR preview; no state change, so a nonce is not required.
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
@@ -177,18 +164,16 @@ trait CssVariablesTrait
 		$styles = Helpers::getStyles();
 
 		// Bailout if styles are missing.
-		if ($styles) {
+		if ($styles !== []) {
 			// Define variables from globalManifest.
-			$breakpointsData = !empty($globalSettings) ? ($globalSettings['globalVariables']['breakpoints'] ?? []) : self::getSettingsGlobalVariablesBreakpoints();
+			$breakpointsData = $globalSettings === [] ? (Helpers::getSettingsGlobalVariablesBreakpoints()) : $globalSettings['globalVariables']['breakpoints'] ?? [];
 
 			// Sort breakpoints in ascending order.
 			\asort($breakpointsData);
 
 			// Populate min values.
 			$breakpointsMin = \array_map(
-				static function ($item) {
-					return "min---{$item}";
-				},
+				static fn($item): string => "min---{$item}",
 				\array_values($breakpointsData)
 			);
 			// Append 0 value.
@@ -196,9 +181,7 @@ trait CssVariablesTrait
 
 			// Populate max values.
 			$breakpointsMax = \array_map(
-				static function ($item) {
-					return "max---{$item}";
-				},
+				static fn($item): string => "max---{$item}",
 				\array_reverse(\array_values($breakpointsData))
 			);
 			// Append 0 value.
@@ -206,9 +189,7 @@ trait CssVariablesTrait
 
 			// Return empty array of items.
 			$breakpoints = \array_map(
-				static function () {
-					return '';
-				},
+				static fn(): string => '',
 				\array_flip(\array_values(\array_merge($breakpointsMin, $breakpointsMax)))
 			);
 
@@ -277,7 +258,7 @@ trait CssVariablesTrait
 
 		// Add additional style from config settings.
 		$additionalStyles = Helpers::getConfigOutputCssGloballyAdditionalStyles();
-		$additionalStylesOutput = $additionalStyles ? \esc_html(\implode(";\n", $additionalStyles)) : '';
+		$additionalStylesOutput = $additionalStyles !== [] ? \esc_html(\implode(";\n", $additionalStyles)) : '';
 
 		return "{$output} {$additionalStylesOutput}";
 	}
@@ -286,13 +267,11 @@ trait CssVariablesTrait
 	 * Output css variables as a one inline style tag. Used with wp_footer filter. Wrapped in a style tag.
 	 *
 	 * @param array<string, mixed> $globalSettings Global settings.
-	 *
-	 * @return string
 	 */
 	public static function outputCssVariablesInline(array $globalSettings = []): string
 	{
 		$output = self::outputCssVariablesInlineClean($globalSettings);
-		$selector = Helpers::getConfigOutputCssSelectorName();
+		$selector = \esc_attr(Helpers::getConfigOutputCssSelectorName());
 
 		return "<style id='{$selector}'>{$output}</style>";
 	}
@@ -301,24 +280,22 @@ trait CssVariablesTrait
 	 * Convert a hex color into RGB values.
 	 *
 	 * @param string $hex Input hex color.
-	 *
-	 * @return string
 	 */
 	public static function hexToRgb(string $hex): string
 	{
 		// Remove the # at the beginning and filter out invalid hex characters.
 		$hex = \preg_replace("/[^0-9A-Fa-f]/", '', $hex);
 
-		$length = \strlen($hex);
+		$length = \strlen((string) $hex);
 
 		if ($length === 3) {
-			$r = \hexdec(\str_repeat(\substr($hex, 0, 1), 2));
-			$g = \hexdec(\str_repeat(\substr($hex, 1, 1), 2));
-			$b = \hexdec(\str_repeat(\substr($hex, 2, 1), 2));
+			$r = \hexdec(\str_repeat(\substr((string) $hex, 0, 1), 2));
+			$g = \hexdec(\str_repeat(\substr((string) $hex, 1, 1), 2));
+			$b = \hexdec(\str_repeat(\substr((string) $hex, 2, 1), 2));
 		} elseif ($length === 6) {
-			$r = \hexdec(\substr($hex, 0, 2));
-			$g = \hexdec(\substr($hex, 2, 2));
-			$b = \hexdec(\substr($hex, 4, 2));
+			$r = \hexdec(\substr((string) $hex, 0, 2));
+			$g = \hexdec(\substr((string) $hex, 2, 2));
+			$b = \hexdec(\substr((string) $hex, 4, 2));
 		} else {
 			$r = '0';
 			$g = '0';
@@ -332,8 +309,6 @@ trait CssVariablesTrait
 	 * Return unique ID for block processing.
 	 *
 	 * @param array<string, mixed> $attributes Attributes.
-	 *
-	 * @return string
 	 */
 	public static function getUnique(array $attributes = []): string
 	{
@@ -351,8 +326,6 @@ trait CssVariablesTrait
 	 * @param array<int, array<string, mixed>> $data Data prepared for checking.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param string $unique Unique key.
-	 *
-	 * @return string
 	 */
 	private static function getCssVariablesTypeDefault(string $name, array $data, array $manifest, string $unique): string
 	{
@@ -360,7 +333,7 @@ trait CssVariablesTrait
 
 		$uniqueSelector = "[data-id='{$unique}']";
 
-		if (!$unique) {
+		if ($unique === '' || $unique === '0') {
 			$uniqueSelector = '';
 		}
 
@@ -397,7 +370,7 @@ trait CssVariablesTrait
 			";
 
 		// Check if final output is empty and and remove if it is.
-		if (empty(\trim($fullOutput))) {
+		if (\in_array(\trim($fullOutput), ['', '0'], true)) {
 			return '';
 		}
 
@@ -480,37 +453,31 @@ trait CssVariablesTrait
 	 *
 	 * @param array<string, mixed> $itemValues Values of data to check.
 	 * @param string $itemKey Item key to check.
-	 *
-	 * @return string
 	 */
 	private static function globalInner(array $itemValues, string $itemKey): string
 	{
-		$output = '';
+		$itemKey = Helpers::camelToKebabCase($itemKey);
+		$parts = [];
 
 		foreach ($itemValues as $key => $value) {
-			$key = Helpers::camelToKebabCase((string)$key);
-			$itemKey = Helpers::camelToKebabCase((string)$itemKey);
-
 			switch ($itemKey) {
 				case 'colors':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
-
-					$rgbValues = self::hexToRgb($value['color']);
-					$output .= "--global-{$itemKey}-{$value['slug']}-values: {$rgbValues};\n";
+					$parts[] = "--global-{$itemKey}-{$value['slug']}: {$value['color']};\n";
+					$parts[] = "--global-{$itemKey}-{$value['slug']}-values: " . self::hexToRgb($value['color']) . ";\n";
 					break;
 				case 'gradients':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
+					$parts[] = "--global-{$itemKey}-{$value['slug']}: {$value['gradient']};\n";
 					break;
 				case 'font-sizes':
-					$output .= "--global-{$itemKey}-{$value['slug']}: {$value['slug']};\n";
+					$parts[] = "--global-{$itemKey}-{$value['slug']}: {$value['slug']};\n";
 					break;
 				default:
-					$output .= "--global-{$itemKey}-{$key}: {$value};\n";
+					$parts[] = '--global-' . $itemKey . '-' . Helpers::camelToKebabCase((string)$key) . ": {$value};\n";
 					break;
 			}
 		}
 
-		return $output;
+		return \implode('', $parts);
 	}
 
 	/**
@@ -535,7 +502,7 @@ trait CssVariablesTrait
 			 * Calculate default breakpoint index based on order of the breakpoint, inverse property
 			 * and number of properties in responsiveAttributeObject.
 			 */
-			$defaultBreakpointIndex = (isset($attributeVariablesObject['inverse']) && $attributeVariablesObject['inverse']) ? 0 : ((int) $numberOfBreakpoints - 1);
+			$defaultBreakpointIndex = (isset($attributeVariablesObject['inverse']) && $attributeVariablesObject['inverse']) ? 0 : ($numberOfBreakpoints - 1);
 
 			// Expanding an object with an additional breakpoint property.
 			$attributeVariablesObject['breakpoint'] = ($breakpointIndex === $defaultBreakpointIndex) ? 'default' : $breakpointName;
@@ -560,10 +527,15 @@ trait CssVariablesTrait
 		// Iterate through responsive attributes.
 		foreach ($responsiveAttributes as $responsiveAttributeName => $responsiveAttributeObject) {
 			// If responsive attribute doesn't exist in variables object, skip it.
-			if (!$responsiveAttributeName || !isset($variables[$responsiveAttributeName])) {
+			if ($responsiveAttributeName === '') {
 				continue;
 			}
-
+			if ($responsiveAttributeName === '0') {
+				continue;
+			}
+			if (!isset($variables[$responsiveAttributeName])) {
+				continue;
+			}
 			// Used for determination of default breakpoint.
 			$numberOfBreakpoints = \count($responsiveAttributeObject);
 			$responsiveAttribute = [];
@@ -643,6 +615,12 @@ trait CssVariablesTrait
 	 */
 	private static function setVariablesToBreakpoints(array $attributes, array $variables, array $data, array $manifest, array $defaultBreakpoints): array
 	{
+		// Build an O(1) lookup from name+type to index so the inner match avoids a linear scan per breakpoint item.
+		$dataIndex = [];
+		foreach ($data as $index => $item) {
+			$dataIndex["{$item['name']}---{$item['type']}"] = $index;
+		}
+
 		foreach ($variables as $variableName => $variableValue) {
 			// Constant for attributes set value (in db or default).
 			$attributeValue = $attributes[Helpers::getAttrKey($variableName, $attributes, $manifest)] ?? '';
@@ -675,24 +653,22 @@ trait CssVariablesTrait
 				$isDefaultBreakpoint = empty($breakpointItem['breakpoint']) || $breakpointItem['breakpoint'] === $defaultBreakpoints[$type];
 				$breakpoint = $isDefaultBreakpoint ? 'default' : $breakpointItem['breakpoint'];
 
+				$lookupKey = "{$breakpoint}---{$type}";
+				if (!isset($dataIndex[$lookupKey])) {
+					continue;
+				}
 
-				// Iterate each data array to find the correct breakpoint.
-				foreach ($data as $index => $item) {
-					// Check if breakpoint and type match.
-					if (
-						$item['name'] === $breakpoint &&
-						$item['type'] === $type &&
-						(
-							!empty((string) $attributeValue) ||
-							\gettype($attributeValue) === 'integer' ||
-							\gettype($attributeValue) === 'float' ||
-							\gettype($attributeValue) === 'double' ||
-							$attributeValue === '0' // @phpstan-ignore-line
-						)
-					) {
-						// Merge data variables with the new variables array.
-						$data[$index]['variable'] = \array_merge($item['variable'], self::variablesInner($variable, $attributeValue, $attributes, $manifest));
-					}
+				if (
+					(string) $attributeValue !== '' && (string) $attributeValue !== '0' ||
+					\is_int($attributeValue) ||
+					\is_float($attributeValue) ||
+					$attributeValue === '0' // @phpstan-ignore-line
+				) {
+					$index = $dataIndex[$lookupKey];
+					$data[$index]['variable'] = \array_merge(
+						$data[$index]['variable'],
+						self::variablesInner($variable, $attributeValue, $attributes, $manifest)
+					);
 				}
 			}
 		}
@@ -709,6 +685,12 @@ trait CssVariablesTrait
 	 */
 	private static function prepareVariableData(array $globalBreakpoints): array
 	{
+		// Request-scoped cache: breakpoints are stable per request but this function is invoked once per block render.
+		static $cache = [];
+		$cacheKey = (string) \wp_json_encode($globalBreakpoints);
+		if (isset($cache[$cacheKey])) {
+			return $cache[$cacheKey];
+		}
 
 		// Define the min and max arrays.
 		$min = [];
@@ -779,8 +761,8 @@ trait CssVariablesTrait
 			]
 		);
 
-		// Merge both arrays.
-		return \array_merge($min, $max);
+		$cache[$cacheKey] = \array_merge($min, $max);
+		return $cache[$cacheKey];
 	}
 
 	/**
@@ -802,33 +784,39 @@ trait CssVariablesTrait
 			return $output;
 		}
 
-		// Iterate each attribute and make corrections.
-		foreach ($variables as $variableKey => $variableValue) {
-			// Convert to correct case.
-			$internalKey = Helpers::camelToKebabCase($variableKey);
+		// Build the token replacement map once. Previously the inner attribute loop rebuilt the
+		// prefix/key for every variable, producing N (variables) * M (attributes) work.
+		// Skip non-stringable attributes (arrays/objects) — substituting them into a CSS template
+		// is never meaningful and the original code only cast them when a template actually
+		// referenced the token, so emitting an unconditional cast here would log warnings.
+		$replacementMap = [];
+		if (\is_scalar($attributeValue) || $attributeValue === null) {
+			$replacementMap['%value%'] = (string) $attributeValue;
+		}
 
-			// If value contains magic variable swap that variable with original attribute value.
-			if (\str_contains($variableValue, '%value%')) {
-				$variableValue = \str_replace('%value%', (string) $attributeValue, $variableValue);
-			}
-
+		$prefix = $attributes['prefix'] ?? null;
+		if ($prefix !== null && $prefix !== '') {
+			$replacement = Helpers::kebabToCamelCase(Helpers::getConfigUseLegacyComponents() ? $manifest['componentName'] : $manifest['blockName']);
 			foreach ($attributes as $attrKey => $attrValue) {
-				if (isset($attributes['prefix'])) {
-					$key = (string)\str_replace(
-						$attributes['prefix'],
-						Helpers::kebabToCamelCase(Helpers::getConfigUseLegacyComponents() ? $manifest['componentName'] : $manifest['blockName']),
-						$attrKey
-					);
-				} else {
-					$key = $attrKey;
+				if (!\is_scalar($attrValue) && $attrValue !== null) {
+					continue;
 				}
-
-				if (\str_contains($variableValue, "%attr-{$key}%")) {
-					$variableValue = \str_replace("%attr-{$key}%", (string) $attrValue, $variableValue);
-				}
+				$key = \str_replace($prefix, $replacement, (string) $attrKey);
+				$replacementMap["%attr-{$key}%"] = (string) $attrValue;
 			}
+		} else {
+			foreach ($attributes as $attrKey => $attrValue) {
+				if (!\is_scalar($attrValue) && $attrValue !== null) {
+					continue;
+				}
+				$replacementMap["%attr-{$attrKey}%"] = (string) $attrValue;
+			}
+		}
 
-			// Output the custom CSS variable by adding the attribute key + custom object key.
+		foreach ($variables as $variableKey => $variableValue) {
+			$internalKey = Helpers::camelToKebabCase($variableKey);
+			$variableValue = \strtr($variableValue, $replacementMap);
+
 			$output[] = "--{$internalKey}: {$variableValue};";
 		}
 

@@ -13,6 +13,7 @@ namespace EightshiftLibs\AdminMenus\AdminPatternsHeaderFooterMenu;
 use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
+use Override;
 
 /**
  * Class AdminPatternsHeaderFooterMenuCli
@@ -21,8 +22,6 @@ class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -31,8 +30,6 @@ class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -44,6 +41,7 @@ class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -111,7 +109,7 @@ class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 		$this->getIntroText($assocArgs);
@@ -119,12 +117,12 @@ class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 		// Get Arguments.
 		$title = $this->getArg($assocArgs, 'title');
 		$menuTitle = $this->getArg($assocArgs, 'menu_title');
-		$menuPosition = (string)($this->getArg($assocArgs, 'menu_position'));
+		$menuPosition = $this->getArg($assocArgs, 'menu_position');
 		$capability = $this->getArg($assocArgs, 'capability');
 
 		// Get full class name.
 		$className = $this->getFileName('');
-		$className = $className . $this->getClassShortName();
+		$className .= $this->getClassShortName();
 
 		// Read the template contents, and replace the placeholders with provided variables.
 		$class = $this->getExampleTemplate(__DIR__, $this->getClassShortName())
@@ -134,7 +132,7 @@ class AdminPatternsHeaderFooterMenuCli extends AbstractCli
 			->searchReplaceString($this->getArgTemplate('capability'), $capability)
 			->searchReplaceString($this->getArgTemplate('menu_title'), $menuTitle);
 
-		if (!empty($menuPosition)) {
+		if ($menuPosition !== '' && $menuPosition !== '0') {
 			$class->searchReplaceString($this->getDefaultArg('menu_position'), $menuPosition);
 		}
 

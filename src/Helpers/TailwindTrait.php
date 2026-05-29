@@ -12,6 +12,7 @@ namespace EightshiftLibs\Helpers;
 
 use Exception;
 use JsonException;
+use Deprecated;
 
 /**
  * Class TailwindTrait Helper.
@@ -19,25 +20,41 @@ use JsonException;
 trait TailwindTrait
 {
 	/**
+	 * Per-title slug cache for the debug prefix emitted by `tailwindClasses` under `WP_DEBUG`.
+	 *
+	 * @var array<string, string>
+	 */
+	private static array $tailwindDebugSlugCache = [];
+
+	/**
 	 * Get Tailwind breakpoints.
 	 *
 	 * @param bool $desktopFirst Whether to use desktop-first breakpoints.
 	 *
 	 * @return array<string>
 	 */
-	public static function getTwBreakpoints($desktopFirst = false)
+	public static function getTwBreakpoints(bool $desktopFirst = false): array
 	{
+		static $cache = [];
+
+		$key = $desktopFirst ? 'desktop' : 'mobile';
+		if (isset($cache[$key])) {
+			return $cache[$key];
+		}
+
 		$breakpointData = Helpers::getSettingsGlobalVariablesBreakpoints();
 
 		$breakpointNames = \array_keys($breakpointData);
 
-		\usort($breakpointNames, fn($a, $b) => $breakpointData[$a] - $breakpointData[$b]);
+		\usort($breakpointNames, fn($a, $b): int|float => $breakpointData[$a] - $breakpointData[$b]);
 
 		if ($desktopFirst) {
-			return \array_map(fn($breakpoint) => "max-{$breakpoint}", $breakpointNames);
+			$cache[$key] = \array_map(fn(string $breakpoint): string => "max-{$breakpoint}", $breakpointNames);
+			return $cache[$key];
 		}
 
-		return $breakpointNames;
+		$cache[$key] = $breakpointNames;
+		return $cache[$key];
 	}
 
 	/**
@@ -48,15 +65,12 @@ trait TailwindTrait
 	 * @param string $part Part name.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
-	 *
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
-	 * @return string
 	 */
-	public static function getTwPart($part, $manifest, ...$custom)
+	#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	public static function getTwPart($part, array $manifest, ...$custom): string
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
+			return $custom !== [] ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$partClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
@@ -77,15 +91,12 @@ trait TailwindTrait
 	 * @param array<string, mixed> $attributes Component/block attributes.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
-	 *
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
-	 * @return string
 	 */
-	public static function getTwDynamicPart($part, $attributes, $manifest, ...$custom)
+	#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	public static function getTwDynamicPart($part, array $attributes, array $manifest, ...$custom): string
 	{
 		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
+			return $custom !== [] ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['parts'][$part]['twClasses'] ?? '';
@@ -98,10 +109,12 @@ trait TailwindTrait
 
 		if (isset($manifest['tailwind']['options'])) {
 			foreach ($manifest['tailwind']['options'] as $attributeName => $value) {
-				if (!isset($value['part']) || $value['part'] !== $part) {
+				if (!isset($value['part'])) {
 					continue;
 				}
-
+				if ($value['part'] !== $part) {
+					continue;
+				}
 				$responsive = $value['responsive'] ?? false;
 				$twClasses = $value['twClasses'] ?? null;
 
@@ -136,7 +149,7 @@ trait TailwindTrait
 
 				$valueKeys = \array_keys($value);
 
-				$responsiveClasses = \array_reduce($valueKeys, function ($curr, $breakpoint) use ($twClasses, $value) {
+				$responsiveClasses = \array_reduce($valueKeys, function ($curr, int|string $breakpoint) use ($twClasses, $value) {
 					if ($breakpoint === '_desktopFirst') {
 						return $curr;
 					}
@@ -156,7 +169,7 @@ trait TailwindTrait
 					}
 
 					$currentClasses = \explode(' ', $currentClasses);
-					$currentClasses = \array_map(fn($currentClass) => "{$breakpoint}:{$currentClass}", $currentClasses);
+					$currentClasses = \array_map(fn($currentClass): string => "{$breakpoint}:{$currentClass}", $currentClasses);
 
 					return [...$curr, ...$currentClasses];
 				}, []);
@@ -174,15 +187,12 @@ trait TailwindTrait
 	 * @param array<string, mixed> $attributes Component/block attributes.
 	 * @param array<string, mixed> $manifest Component/block manifest data.
 	 * @param array<string> ...$custom Additional custom classes.
-	 *
-	 * @deprecated 9.2.0 Use `tailwindClasses` instead.
-	 *
-	 * @return string
 	 */
-	public static function getTwClasses($attributes, $manifest, ...$custom)
+	#[Deprecated(message: 'Use `tailwindClasses` instead.', since: '9.2.0')]
+	public static function getTwClasses($attributes, array $manifest, ...$custom): string
 	{
 		if (!$attributes || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
+			return $custom !== [] ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
 
 		$baseClasses = $manifest['tailwind']['base']['twClasses'] ?? '';
@@ -233,7 +243,7 @@ trait TailwindTrait
 
 				$valueKeys = \array_keys($value);
 
-				$responsiveClasses = \array_reduce($valueKeys, function ($curr, $breakpoint) use ($twClasses, $value) {
+				$responsiveClasses = \array_reduce($valueKeys, function ($curr, int|string $breakpoint) use ($twClasses, $value) {
 					if ($breakpoint === '_desktopFirst') {
 						return $curr;
 					}
@@ -249,7 +259,7 @@ trait TailwindTrait
 					}
 
 					$currentClasses = \explode(' ', $currentClasses);
-					$currentClasses = \array_map(fn($currentClass) => "{$breakpoint}:{$currentClass}", $currentClasses);
+					$currentClasses = \array_map(fn($currentClass): string => "{$breakpoint}:{$currentClass}", $currentClasses);
 
 					return [...$curr, ...$currentClasses];
 				}, []);
@@ -307,7 +317,7 @@ trait TailwindTrait
 	 *
 	 * @return string The unified string of CSS classes.
 	 */
-	private static function unifyClasses($input): string
+	private static function unifyClasses(string|array $input): string
 	{
 		if (\is_array($input)) {
 			return Helpers::clsx($input);
@@ -328,57 +338,49 @@ trait TailwindTrait
 	 *
 	 * @return string The processed option value.
 	 */
-	private static function processOption($partName, $optionValue, $defs): string
+	private static function processOption(string $partName, string|array $optionValue, array $defs): string
 	{
 		$optionClasses = [];
 
 		$isResponsive = $defs['responsive'] ?? false;
-		$itemPartName = isset($defs['part']) ? $defs['part'] : 'base';
+		$itemPartName = $defs['part'] ?? 'base';
 		$isSingleValue = isset($defs['twClasses']) || isset($defs['twClassesEditor']);
 
-		// Part checks.
 		if (!$isSingleValue && !isset($defs[$partName])) {
 			return '';
 		}
 
-		if ($isSingleValue && !\str_contains($itemPartName, $partName)) {
+		if ($isSingleValue && !\str_contains((string) $itemPartName, $partName)) {
 			return '';
 		}
 
-		// Non-responsive options.
 		if (!$isResponsive) {
 			$rawValue = $defs['twClasses'][$optionValue] ?? $defs[$partName]['twClasses'][$optionValue] ?? '';
 
 			return self::unifyClasses($rawValue);
 		}
 
-		// Responsive options.
-		$breakpoints = \array_keys($optionValue);
-
-		if (\in_array('_desktopFirst', $breakpoints, true)) {
-			$breakpoints = \array_filter($breakpoints, fn($breakpoint) => $breakpoint !== '_desktopFirst');
-		}
-
-		foreach ($breakpoints as $breakpoint) {
-			$breakpointValue = $optionValue[$breakpoint];
-
+		foreach ($optionValue as $breakpoint => $breakpointValue) {
+			if ($breakpoint === '_desktopFirst') {
+				continue;
+			}
 			if (!$breakpointValue) {
 				continue;
 			}
-
 			$rawValue = $defs['twClasses'][$breakpointValue] ?? $defs[$partName]['twClasses'][$breakpointValue] ?? '';
 			$rawClasses = self::unifyClasses($rawValue);
 
 			if ($breakpoint === '_default') {
 				$optionClasses[] = $rawClasses;
-
 				continue;
 			}
 
-			$splitClasses = \explode(' ', $rawClasses);
-			$splitClasses = \array_map(fn($cn) => empty($cn) ? null : "{$breakpoint}:{$cn}", $splitClasses);
-
-			$optionClasses = [...$optionClasses, ...$splitClasses];
+			foreach (\explode(' ', $rawClasses) as $cn) {
+				if ($cn === '') {
+					continue;
+				}
+				$optionClasses[] = "{$breakpoint}:{$cn}";
+			}
 		}
 
 		return self::unifyClasses($optionClasses);
@@ -399,7 +401,7 @@ trait TailwindTrait
 	 *
 	 * @return string The processed combination value.
 	 */
-	private static function processCombination($partName, $combo, $attributes, $manifest): string
+	private static function processCombination(string $partName, array $combo, array $attributes, array $manifest): string
 	{
 		$matches = true;
 
@@ -421,10 +423,10 @@ trait TailwindTrait
 			return '';
 		}
 
-		$itemPartName = isset($combo['part']) ? $combo['part'] : 'base';
+		$itemPartName = $combo['part'] ?? 'base';
 		$isSingleValue = isset($combo['twClasses']) || isset($combo['twClassesEditor']);
 
-		if ($isSingleValue && !\str_contains($itemPartName, $partName)) {
+		if ($isSingleValue && !\str_contains((string) $itemPartName, $partName)) {
 			return '';
 		}
 
@@ -446,32 +448,25 @@ trait TailwindTrait
 	 * @param array<string> ...$custom Additional custom classes.
 	 *
 	 * @throws Exception If the part is not defined in the manifest.
-	 *
-	 * @return string
 	 */
-	public static function tailwindClasses($part, $attributes, $manifest, ...$custom): string
+	public static function tailwindClasses(string $part, array $attributes, array $manifest, ...$custom): string
 	{
 		// If nothing is set, return custom classes as a fallback.
-		if (!$part || !$manifest || !isset($manifest['tailwind']) || \array_keys($manifest['tailwind']) === []) {
-			return $custom ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
+		if (!$part || !$manifest || !isset($manifest['tailwind']) || $manifest['tailwind'] === []) {
+			return $custom !== [] ? Helpers::clsx($custom) : ''; // @phpstan-ignore-line
 		}
-
-		$allParts = isset($manifest['tailwind']['parts']) ? ['base', ...\array_keys($manifest['tailwind']['parts'])] : ['base'];
 
 		$partName = 'base';
 
-		if (isset($manifest['tailwind']['parts'][$part]) && \in_array($part, $allParts, true)) {
+		if (isset($manifest['tailwind']['parts'][$part])) {
 			$partName = $part;
 		} elseif ($part !== 'base') {
 			throw new Exception("Part '{$part}' is not defined in the manifest.");
 		}
 
-		// Base classes.
 		$baseClasses = self::unifyClasses($manifest['tailwind']['parts'][$partName]['twClasses'] ?? $manifest['tailwind']['base']['twClasses'] ?? ['']);
 
-		// Option classes.
 		$options = $manifest['tailwind']['options'] ?? [];
-
 		$optionClasses = [];
 
 		foreach ($options as $attributeName => $defs) {
@@ -484,18 +479,22 @@ trait TailwindTrait
 			$optionClasses[] = self::processOption($partName, $optionValue, $defs);
 		}
 
-		// Combinations.
 		$combinations = $manifest['tailwind']['combinations'] ?? [];
-
 		$combinationClasses = [];
 
 		foreach ($combinations as $combo) {
 			$combinationClasses[] = self::processCombination($partName, $combo, $attributes, $manifest);
 		}
 
-		$partPrefix = \strtolower(\preg_replace('/[^a-zA-Z]+/', '-', $manifest['title']));
-		$isWpDebugActive = \defined('WP_DEBUG') && \WP_DEBUG;
+		$debugPrefix = '';
+		if (\defined('WP_DEBUG') && \WP_DEBUG) {
+			$title = (string) ($manifest['title'] ?? '');
+			if (!isset(self::$tailwindDebugSlugCache[$title])) {
+				self::$tailwindDebugSlugCache[$title] = \strtolower((string) \preg_replace('/[^a-zA-Z]+/', '-', $title));
+			}
+			$debugPrefix = "_es__" . self::$tailwindDebugSlugCache[$title] . "/{$part}";
+		}
 
-		return Helpers::clsx([$isWpDebugActive ? "_es__{$partPrefix}/{$part}" : '', $baseClasses, ...$optionClasses, ...$combinationClasses, ...$custom]);
+		return Helpers::clsx([$debugPrefix, $baseClasses, ...$optionClasses, ...$combinationClasses, ...$custom]);
 	}
 }

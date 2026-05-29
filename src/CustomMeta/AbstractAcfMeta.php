@@ -19,8 +19,6 @@ abstract class AbstractAcfMeta implements ServiceInterface
 {
 	/**
 	 * Register custom acf meta.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
@@ -29,13 +27,11 @@ abstract class AbstractAcfMeta implements ServiceInterface
 			return;
 		}
 
-		\add_action('acf/init', [$this, 'fields']);
+		\add_action('acf/init', $this->fields(...));
 	}
 
 	/**
 	 * Render acf fields.
-	 *
-	 * @return void
 	 */
 	abstract public function fields(): void;
 }

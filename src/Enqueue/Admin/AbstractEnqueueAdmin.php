@@ -35,8 +35,6 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 	/**
 	 * Get admin Stylesheet handle.
-	 *
-	 * @return string
 	 */
 	public function getAdminStyleHandle(): string
 	{
@@ -45,8 +43,6 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 	/**
 	 * Register the Stylesheets for the admin area.
-	 *
-	 * @return void
 	 */
 	public function enqueueAdminStyles(): void
 	{
@@ -67,8 +63,6 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 	/**
 	 * Get admin JavaScript handle.
-	 *
-	 * @return string
 	 */
 	public function getAdminScriptHandle(): string
 	{
@@ -77,8 +71,6 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 	/**
 	 * Register the JavaScript for the admin area.
-	 *
-	 * @return void
 	 */
 	public function enqueueAdminScripts(): void
 	{
@@ -103,8 +95,6 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 
 	/**
 	 * Condition script usage.
-	 *
-	 * @return boolean
 	 */
 	public function getConditionUse(): bool
 	{
@@ -113,12 +103,8 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 		}
 
 		$screen = \get_current_screen();
-
-		if (\is_object($screen) && $screen->is_block_editor) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-			return true;
-		}
-
-		return false;
+		// phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+		return \is_object($screen) && $screen->is_block_editor;
 	}
 
 	/**

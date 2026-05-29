@@ -42,7 +42,7 @@ abstract class AbstractMedia implements ServiceInterface
 	 * @param int|object $attachment Attachment ID or object.
 	 * @return array<string, mixed>|false Array of attachment details, or void if the parameter does not correspond to an attachment.
 	 */
-	public function enableSvgMediaLibraryPreview($response, $attachment)
+	public function enableSvgMediaLibraryPreview(array $response, $attachment)
 	{
 		if ($response['type'] === 'image' && $response['subtype'] === 'svg+xml' && \class_exists('SimpleXMLElement')) {
 			try {
@@ -64,8 +64,8 @@ abstract class AbstractMedia implements ServiceInterface
 					$height = (int) $svg['height'];
 
 					// media gallery.
-					$response['image'] = \compact('src', 'width', 'height');
-					$response['thumb'] = \compact('src', 'width', 'height');
+					$response['image'] = ['src' => $src, 'width' => $width, 'height' => $height];
+					$response['thumb'] = ['src' => $src, 'width' => $width, 'height' => $height];
 
 					// media single.
 					$response['sizes']['full'] = [
@@ -90,7 +90,7 @@ abstract class AbstractMedia implements ServiceInterface
 	 * @param array<object|string> $response Response array.
 	 * @return array<string, mixed>
 	 */
-	public function validateSvgOnUpload($response)
+	public function validateSvgOnUpload(array $response)
 	{
 		if ($response['type'] === 'image/svg+xml' && \class_exists('SimpleXMLElement')) {
 			$path = $response['tmp_name'];
@@ -98,13 +98,11 @@ abstract class AbstractMedia implements ServiceInterface
 			$svgContent = \file($path);
 			$svgContent = \implode(' ', $svgContent);
 
-			if (\file_exists($path)) {
-				if (!Helpers::isValidXml($svgContent)) {
-					return [
-						'size' => $response,
-						'name' => $response['name'],
-					];
-				}
+			if (\file_exists($path) && !Helpers::isValidXml($svgContent)) {
+				return [
+					'size' => $response,
+					'name' => $response['name'],
+				];
 			}
 		}
 
@@ -119,9 +117,9 @@ abstract class AbstractMedia implements ServiceInterface
 	 * @param string $filename          The name of the file (may differ from $file due to $file being in a tmp directory).
 	 * @return array<object|string>
 	 */
-	public function enableSvgUpload($filetypeExtData, $file, $filename): array
+	public function enableSvgUpload(array $filetypeExtData, $file, $filename): array
 	{
-		if (\substr($filename, -4) === '.svg') {
+		if (\str_ends_with($filename, '.svg')) {
 			$filetypeExtData['ext']  = 'svg';
 			$filetypeExtData['type'] = 'image/svg+xml';
 		}
@@ -136,9 +134,9 @@ abstract class AbstractMedia implements ServiceInterface
 	 * @param string $filename          The name of the file (may differ from $file due to $file being in a tmp directory).
 	 * @return array<object|string>
 	 */
-	public function enableJsonUpload($filetypeExtData, $file, $filename): array
+	public function enableJsonUpload(array $filetypeExtData, $file, $filename): array
 	{
-		if (\substr($filename, -5) === '.json') {
+		if (\str_ends_with($filename, '.json')) {
 			$filetypeExtData['ext']  = 'json';
 			$filetypeExtData['type'] = 'application/json';
 		}
@@ -155,7 +153,7 @@ abstract class AbstractMedia implements ServiceInterface
 	public function convertMediaToWebP(array $upload): array
 	{
 		try {
-			$ext = \pathinfo($upload['file'], \PATHINFO_EXTENSION);
+			$ext = \pathinfo((string) $upload['file'], \PATHINFO_EXTENSION);
 
 			if (!\in_array($ext, $this->getWebPAllowedExt(), true)) {
 				return $upload;
@@ -172,15 +170,13 @@ abstract class AbstractMedia implements ServiceInterface
 			\wp_delete_file($upload['file']);
 
 			return $output;
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return $upload;
 		}
 	}
 
 	/**
 	 * WebP Quality compression range 0-100.
-	 *
-	 * @return integer
 	 */
 	protected function getMediaWebPQuality(): int
 	{

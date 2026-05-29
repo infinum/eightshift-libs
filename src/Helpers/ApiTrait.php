@@ -25,8 +25,6 @@ trait ApiTrait
 	 * @param int $code The code.
 	 * @param string $status The status.
 	 * @param array<string, mixed> $additional Additional data to attach to response.
-	 *
-	 * @return WP_REST_Response
 	 */
 	public static function getApiResponse(
 		string $msg,
@@ -40,7 +38,7 @@ trait ApiTrait
 			'message' => $msg,
 		];
 
-		if ($additional) {
+		if ($additional !== []) {
 			$output['data'] = $additional;
 		}
 

@@ -66,7 +66,7 @@ trait MediaTrait
 	 */
 	public static function convertMediaToWebPByPath(string $filePath, int $quality = 80, bool $onlyOutput = false): array
 	{
-		if (!$filePath) {
+		if ($filePath === '' || $filePath === '0') {
 			throw new Exception(\esc_html__('Media origin does not exist', 'eightshift-libs'));
 		}
 
@@ -133,7 +133,7 @@ trait MediaTrait
 				$image->setImageCompressionQuality($quality);
 				$image->writeImage($filePathNew);
 				$image->destroy();
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				if (\file_exists($filePathNew)) {
 					\wp_delete_file($filePathNew);
 				}
@@ -149,7 +149,7 @@ trait MediaTrait
 			case 'gif':
 				try {
 					$createdImage = \imagecreatefromgif($filePath);
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					throw new Exception(\esc_html__('Failed to create image from GIF', 'eightshift-libs'));
 				}
 
@@ -163,14 +163,14 @@ trait MediaTrait
 			case 'jpeg':
 				try {
 					$createdImage = \imagecreatefromjpeg($filePath);
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					throw new Exception(\esc_html__('Failed to create image from JPEG', 'eightshift-libs'));
 				}
 				break;
 			case 'png':
 				try {
 					$createdImage = \imagecreatefrompng($filePath);
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					throw new Exception(\esc_html__('Failed to create image from PNG', 'eightshift-libs'));
 				}
 
@@ -183,7 +183,7 @@ trait MediaTrait
 			case 'bmp':
 				try {
 					$createdImage = \imagecreatefrombmp($filePath);
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					throw new Exception(\esc_html__('Failed to create image from BMP', 'eightshift-libs'));
 				}
 				break;

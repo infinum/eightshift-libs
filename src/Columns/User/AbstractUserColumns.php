@@ -21,14 +21,12 @@ abstract class AbstractUserColumns implements ServiceInterface
 {
 	/**
 	 * Register the user columns and content in them.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_filter('manage_users_columns', [$this, 'addColumnName']);
-		\add_filter('manage_users_custom_column', [$this, 'renderColumnContent'], 10, 3);
-		\add_filter('manage_users_sortable_columns', [$this, 'sortAddedColumns'], 10);
+		\add_filter('manage_users_columns', $this->addColumnName(...));
+		\add_filter('manage_users_custom_column', $this->renderColumnContent(...), 10, 3);
+		\add_filter('manage_users_sortable_columns', $this->sortAddedColumns(...), 10);
 	}
 
 	/**

@@ -22,8 +22,6 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 *
 	 * @param string $key Missing manifest key.
 	 * @param string $path Missing manifest path.
-	 *
-	 * @return static
 	 */
 	public static function missingManifestKeyException(string $key, string $path): InvalidManifest
 	{
@@ -44,8 +42,6 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 * Throws error if manifest is empty or has errors.
 	 *
 	 * @param string $path Missing manifest path.
-	 *
-	 * @return static
 	 */
 	public static function emptyOrErrorManifestException(string $path): InvalidManifest
 	{
@@ -65,8 +61,6 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 * Throws error if manifest is missing.
 	 *
 	 * @param string $path Missing manifest path.
-	 *
-	 * @return static
 	 */
 	public static function missingManifestException(string $path): InvalidManifest
 	{
@@ -86,8 +80,6 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 * Throws error if trying to access manifest on non allowed path.
 	 *
 	 * @param string $path Missing manifest path.
-	 *
-	 * @return static
 	 */
 	public static function notAllowedManifestPathException(string $path): InvalidManifest
 	{
@@ -107,8 +99,6 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 * Throws error if trying to access manifest on non allowed path item.
 	 *
 	 * @param string $path Missing manifest path.
-	 *
-	 * @return static
 	 */
 	public static function notAllowedManifestPathItemException(string $path): InvalidManifest
 	{
@@ -135,8 +125,6 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 *
 	 * @param string $key Missing manifest key.
 	 * @param string $cacheType Missing cache type.
-	 *
-	 * @return static
 	 */
 	public static function missingCacheTopItemException(string $key, string $cacheType): InvalidManifest
 	{
@@ -159,8 +147,6 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 * @param string $key Missing manifest key.
 	 * @param string $name Name of the subitem.
 	 * @param string $cacheType Missing cache type.
-	 *
-	 * @return static
 	 */
 	public static function missingCacheSubItemException(string $key, string $name, string $cacheType): InvalidManifest
 	{
@@ -185,8 +171,6 @@ final class InvalidManifest extends InvalidArgumentException implements GeneralE
 	 * Errors like trailing commas or malformed json file.
 	 *
 	 * @param string $error Error message.
-	 *
-	 * @return static
 	 */
 	public static function manifestStructureException(string $error): InvalidManifest
 	{

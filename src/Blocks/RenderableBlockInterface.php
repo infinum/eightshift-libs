@@ -26,7 +26,6 @@ interface RenderableBlockInterface
 	 * @param array<string, mixed> $attributes Array of attributes as defined in block's manifest.json.
 	 * @param string $innerBlockContent Block's content if using inner blocks.
 	 *
-	 * @return string
 	 * @throws Exception On missing attributes OR missing template.
 	 */
 	public function render(array $attributes, string $innerBlockContent): string;

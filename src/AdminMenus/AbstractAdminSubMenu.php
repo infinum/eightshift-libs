@@ -12,6 +12,7 @@ namespace EightshiftLibs\AdminMenus;
 
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use Exception;
+use Override;
 
 /**
  * Abstract class AbstractAdminSubMenu class.
@@ -22,19 +23,17 @@ abstract class AbstractAdminSubMenu extends AbstractAdminMenu
 {
 	/**
 	 * Register all the hooks
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function register(): void
 	{
-		\add_action('admin_menu', [$this, 'callback'], $this->getPriorityOrder());
+		\add_action('admin_menu', $this->callback(...), $this->getPriorityOrder());
 	}
 
 	/**
 	 * Return action callback method.
-	 *
-	 * @return void
 	 */
+	#[Override]
 	public function callback(): void
 	{
 		\add_submenu_page(
@@ -43,15 +42,14 @@ abstract class AbstractAdminSubMenu extends AbstractAdminMenu
 			$this->getMenuTitle(),
 			$this->getCapability(),
 			$this->getMenuSlug(),
-			[$this, 'processAdminSubmenu']
+			$this->processAdminSubmenu(...)
 		);
 	}
 
 	/**
 	 * Return hook priority order.
-	 *
-	 * @return integer
 	 */
+	#[Override]
 	public function getPriorityOrder(): int
 	{
 		return 200;

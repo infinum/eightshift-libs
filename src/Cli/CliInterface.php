@@ -14,8 +14,6 @@ interface CliInterface
 {
 	/**
 	 * Register method for WP-CLI command
-	 *
-	 * @return void
 	 */
 	public function register(): void;
 
@@ -30,18 +28,13 @@ interface CliInterface
 	 * @return void
 	 */
 	public function __invoke(array $args, array $assocArgs); // @phpstan-ignore-line
-
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string;
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string;
 

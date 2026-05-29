@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Geolocation;
 
+use GeoIp2\Database\Reader;
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
 use Exception;
@@ -22,29 +23,21 @@ abstract class AbstractGeolocation implements ServiceInterface
 {
 	/**
 	 * Get geolocation cookie name.
-	 *
-	 * @return string
 	 */
 	abstract public function getGeolocationCookieName(): string;
 
 	/**
 	 * Get geolocation executable phar location.
-	 *
-	 * @return string
 	 */
 	abstract public function getGeolocationPharLocation(): string;
 
 	/**
 	 * Get geolocation database location.
-	 *
-	 * @return string
 	 */
 	abstract public function getGeolocationDbLocation(): string;
 
 	/**
 	 * Toggle geolocation usage based on this flag.
-	 *
-	 * @return boolean
 	 */
 	public function useGeolocation(): bool
 	{
@@ -53,8 +46,6 @@ abstract class AbstractGeolocation implements ServiceInterface
 
 	/**
 	 * Get geolocation expiration time.
-	 *
-	 * @return int
 	 */
 	public function getGeolocationExpiration(): int
 	{
@@ -63,8 +54,6 @@ abstract class AbstractGeolocation implements ServiceInterface
 
 	/**
 	 * Set geolocation cookie.
-	 *
-	 * @return void
 	 */
 	public function setLocationCookie(): void
 	{
@@ -116,8 +105,6 @@ abstract class AbstractGeolocation implements ServiceInterface
 
 	/**
 	 * Gets an IP address manually. Generally used for development and testing.
-	 *
-	 * @return string
 	 */
 	public function getIpAddress(): string
 	{
@@ -249,15 +236,15 @@ abstract class AbstractGeolocation implements ServiceInterface
 				'label' => $country['Name'] ?? '',
 				'value' => $code,
 				'group' => [
-					\strtoupper($code),
+					\strtoupper((string) $code),
 				],
 			];
 		}
 
 		// Provide custom countries.
 		$additionalLocations = $this->getAdditionalCountries();
-		if ($additionalLocations) {
-			$output = \array_merge(
+		if ($additionalLocations !== []) {
+			return \array_merge(
 				$output,
 				$additionalLocations
 			);
@@ -279,8 +266,6 @@ abstract class AbstractGeolocation implements ServiceInterface
 	 * @param string $domain Domain of usage.
 	 * @param boolean $secure Indicates that the cookie should only be transmitted over a secure HTTPS connection from the client.
 	 * @param boolean $httponly When true the cookie will be made accessible only through the HTTP protocol.
-	 *
-	 * @return bool
 	 */
 	public function setCookie(
 		string $name,
@@ -291,13 +276,12 @@ abstract class AbstractGeolocation implements ServiceInterface
 		bool $secure = false,
 		bool $httponly = false
 	): bool {
-		return \setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+		return \setcookie($name, $value, ['expires' => $expire, 'path' => $path, 'domain' => $domain, 'secure' => $secure, 'httponly' => $httponly]);
 	}
 
 	/**
 	 * Gets the 2-digit location code provided by the project.
 	 *
-	 * @return string
 	 * @throws Exception Throws exception in case the geolocation phar or db file are missing.
 	 */
 	public function getGeolocation(): string
@@ -309,7 +293,7 @@ abstract class AbstractGeolocation implements ServiceInterface
 			$ipAddr = \filter_var($_SERVER['REMOTE_ADDR'], \FILTER_VALIDATE_IP); //phpcs:ignore
 		}
 
-		if ($this->getIpAddress()) {
+		if ($this->getIpAddress() !== '' && $this->getIpAddress() !== '0') {
 			$ipAddr = $this->getIpAddress();
 		}
 
@@ -334,14 +318,14 @@ abstract class AbstractGeolocation implements ServiceInterface
 				require_once $phar;
 
 				// phpcs:disable
-				$reader = new \GeoIp2\Database\Reader($db); // @phpstan-ignore-line
+				$reader = new Reader($db); // @phpstan-ignore-line
 				// phpcs:enable
 
 				$record = $reader->country($ipAddr); // @phpstan-ignore-line
 				$cookieCountry = $record->country;
 
 				if (!empty($cookieCountry)) {
-					return \strtoupper($cookieCountry->isoCode);
+					return \strtoupper((string) $cookieCountry->isoCode);
 				}
 
 				return '';

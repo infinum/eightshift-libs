@@ -12,6 +12,7 @@ namespace EightshiftLibs\Helpers;
 
 use EightshiftLibs\Exception\InvalidManifest;
 use EightshiftLibs\Rest\Routes\AbstractRoute;
+use Deprecated;
 
 /**
  * Class DeprecatedTrait Helper.
@@ -25,10 +26,9 @@ trait DeprecatedTrait
 	 *
 	 * @throws InvalidManifest If the manifest is not allowed.
 	 *
-	 * @deprecated 10.0.0 This method is deprecated and will be removed in the next major release. Every component and block has $manifest variable available by default.
-	 *
 	 * @return array<string, mixed>
 	 */
+	#[Deprecated(message: 'This method is deprecated and will be removed in the next major release. Every component and block has $manifest variable available by default.', since: '10.0.0')]
 	public static function getManifestByDir(string $path): array
 	{
 		$sep = \DIRECTORY_SEPARATOR;
@@ -44,27 +44,20 @@ trait DeprecatedTrait
 			throw InvalidManifest::notAllowedManifestPathException($path);
 		}
 
-		switch ($newPath[1]) {
-			case 'wrapper':
-				return Helpers::getWrapper();
-			case 'components':
-				return Helpers::getComponent(\end($newPath));
-			case 'custom':
-				return Helpers::getBlock(\end($newPath));
-			default:
-				throw InvalidManifest::missingManifestException($path);
-		}
+		return match ($newPath[1]) {
+			'wrapper' => Helpers::getWrapper(),
+			'components' => Helpers::getComponent(\end($newPath)),
+			'custom' => Helpers::getBlock(\end($newPath)),
+			default => throw InvalidManifest::missingManifestException($path),
+		};
 	}
 
 	/**
 	 * Converts an array of classes into a string which can be echoed.
 	 *
 	 * @param array<string> $classes Array of classes.
-	 *
-	 * @deprecated 10.0.0 This method is deprecated and will be removed in the next major release. Replace with clsx.
-	 *
-	 * @return string
 	 */
+	#[Deprecated(message: 'This method is deprecated and will be removed in the next major release. Replace with clsx.', since: '10.0.0')]
 	public static function classnames(array $classes): string
 	{
 		return Helpers::clsx($classes);
@@ -75,15 +68,12 @@ trait DeprecatedTrait
 	 * Optimized to use modern PHP functions when available.
 	 *
 	 * @param array<string, mixed>|string[] $array Array to check.
-	 *
-	 * @deprecated Since 10.8.0. Use array_is_list instead.
-	 *
-	 * @return boolean
 	 */
+	#[Deprecated(message: 'Since 10.8.0. Use array_is_list instead.')]
 	public static function arrayIsList(array $array): bool
 	{
 		// Early return for empty array.
-		if (empty($array)) {
+		if ($array === []) {
 			return true;
 		}
 
@@ -100,11 +90,8 @@ trait DeprecatedTrait
 	 * Check if json is valid with caching for repeated checks.
 	 *
 	 * @param string $jsonString String to check.
-	 *
-	 * @deprecated Since 10.8.0. Use json_validate instead.
-	 *
-	 * @return bool
 	 */
+	#[Deprecated(message: 'Since 10.8.0. Use json_validate instead.')]
 	public static function isJson(string $jsonString): bool
 	{
 		return \json_validate($jsonString);
@@ -116,10 +103,9 @@ trait DeprecatedTrait
 	 * @param string $msg Message for the user.
 	 * @param array<int|string, mixed> $additional Additional data to attach to response.
 	 *
-	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
-	 *
 	 * @return array<string, array<int|string, mixed>|int|string>
 	 */
+	#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
 	public static function getApiSuccessPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
@@ -128,7 +114,7 @@ trait DeprecatedTrait
 			'message' => $msg,
 		];
 
-		if ($additional) {
+		if ($additional !== []) {
 			$output['data'] = $additional;
 		}
 
@@ -141,10 +127,9 @@ trait DeprecatedTrait
 	 * @param string $msg Msg for the user.
 	 * @param array<int|string, mixed> $additional Additional data to attach to response.
 	 *
-	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
-	 *
 	 * @return array<string, array<int|string, mixed>|int|string>
 	 */
+	#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
 	public static function getApiWarningPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
@@ -153,7 +138,7 @@ trait DeprecatedTrait
 			'message' => $msg,
 		];
 
-		if ($additional) {
+		if ($additional !== []) {
 			$output['data'] = $additional;
 		}
 
@@ -166,10 +151,9 @@ trait DeprecatedTrait
 	 * @param string $msg Message for the user.
 	 * @param array<string, mixed> $additional Additional data to attach to response.
 	 *
-	 * @deprecated 10.0.0 Use getApiResponsePublicOutput instead.
-	 *
 	 * @return array<string, array<int|string, mixed>|int|string>
 	 */
+	#[Deprecated(message: 'Use getApiResponsePublicOutput instead.', since: '10.0.0')]
 	public static function getApiErrorPublicOutput(string $msg, array $additional = []): array
 	{
 		$output = [
@@ -178,7 +162,7 @@ trait DeprecatedTrait
 			'message' => $msg,
 		];
 
-		if ($additional) {
+		if ($additional !== []) {
 			$output['data'] = $additional;
 		}
 

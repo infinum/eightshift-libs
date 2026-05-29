@@ -72,8 +72,6 @@ trait CacheTrait
 	 * @param array<string, array<string, array<string, mixed>>> $cacheBuilder Cache builder.
 	 * @param string $cacheName Cache name.
 	 * @param string $version Cache version.
-	 *
-	 * @return void
 	 */
 	public static function setCacheDetails(
 		array $cacheBuilder,
@@ -122,53 +120,116 @@ trait CacheTrait
 		$transientKey = self::getTransientKey();
 		$timestampKey = self::getTimestampKey();
 
-		// Try to load from transient first.
+		// Fast path: try transient + file without locking.
+		if (self::tryLoadFromCache($cacheFile, $transientKey, $timestampKey)) {
+			return;
+		}
+
+		// Slow path: rebuild under an advisory lock to prevent stampede.
+		$lockHandle = self::acquireRebuildLock($cacheFile);
+
+		try {
+			// Another request may have rebuilt while we were waiting on the lock.
+			if (self::tryLoadFromCache($cacheFile, $transientKey, $timestampKey)) {
+				return;
+			}
+
+			$data = self::getAllManifests();
+			$encoded = \wp_json_encode($data);
+
+			if (\is_string($encoded) && self::writeFileOptimized($cacheFile, $encoded)) {
+				self::updateTransientCache($transientKey, $timestampKey, $encoded, $cacheFile);
+			}
+
+			self::$cache = $data;
+		} finally {
+			self::releaseRebuildLock($lockHandle);
+		}
+	}
+
+	/**
+	 * Try to populate the in-memory cache from transient or file. Returns true on hit.
+	 *
+	 * @phpstan-impure Result depends on external state (transient store, file mtime) that another process can change between calls.
+	 *
+	 * @param string $cacheFile Path to the cache file.
+	 * @param string $transientKey Transient key.
+	 * @param string $timestampKey Timestamp option key.
+	 *
+	 * @throws Exception If a stored payload fails to parse.
+	 */
+	private static function tryLoadFromCache(string $cacheFile, string $transientKey, string $timestampKey): bool
+	{
 		$transientData = \get_transient($transientKey);
 
 		if ($transientData !== false && \is_string($transientData)) {
-			// Validate timestamp consistency between transient and file.
 			if (self::isTransientValid($cacheFile, $timestampKey)) {
-				try {
-					self::$cache = self::parseManifest($transientData);
-				} catch (Exception $e) {
-					throw $e;
-				}
-
-				return;
+				self::$cache = self::parseManifest($transientData);
+				return true;
 			}
 
 			// Timestamp mismatch, remove invalid transient.
 			\delete_transient($transientKey);
 		}
 
-		// Try to load from file cache.
 		if (\file_exists($cacheFile)) {
 			$content = \file_get_contents($cacheFile); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-
 			if ($content !== false) {
-				try {
-					$decoded = self::parseManifest($content);
-					// Update transient and timestamp from file cache.
-					self::updateTransientCache($transientKey, $timestampKey, $content, $cacheFile);
-					self::$cache = $decoded;
-					return;
-				} catch (Exception $e) {
-					throw $e;
-				}
+				$decoded = self::parseManifest($content);
+				self::updateTransientCache($transientKey, $timestampKey, $content, $cacheFile);
+				self::$cache = $decoded;
+				return true;
 			}
 		}
 
-		// Generate new cache data.
-		$data = self::getAllManifests();
+		return false;
+	}
 
-		// Write to file and update transient.
-		if (self::writeFileOptimized($cacheFile, \wp_json_encode($data))) {
-			self::updateTransientCache($transientKey, $timestampKey, \wp_json_encode($data), $cacheFile);
-			self::$cache = $data;
-		} else {
-			// Fallback if file writing fails.
-			self::$cache = $data;
+	/**
+	 * Acquire an exclusive advisory lock for the cache rebuild path.
+	 *
+	 * Returns the lock handle on success, or null when the lock can't be obtained
+	 * (caller proceeds without stampede protection in that case).
+	 *
+	 * @param string $cacheFile Path to the cache file (lock lives next to it).
+	 *
+	 * @return resource|null
+	 */
+	private static function acquireRebuildLock(string $cacheFile)
+	{
+		$lockPath = $cacheFile . '.lock';
+		$directory = \dirname($lockPath);
+
+		if (!\is_dir($directory) && !\mkdir($directory, 0755, true) && !\is_dir($directory)) {
+			return null;
 		}
+
+		$handle = \fopen($lockPath, 'c'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+		if ($handle === false) {
+			return null;
+		}
+
+		if (!\flock($handle, \LOCK_EX)) {
+			\fclose($handle);
+			return null;
+		}
+
+		return $handle;
+	}
+
+	/**
+	 * Release a previously-acquired rebuild lock.
+	 *
+	 * @param resource|null $handle Lock handle returned by acquireRebuildLock().
+	 */
+	private static function releaseRebuildLock($handle): void
+	{
+		if (!\is_resource($handle)) {
+			return;
+		}
+
+		\flock($handle, \LOCK_UN);
+		\fclose($handle);
 	}
 
 	/**
@@ -183,8 +244,6 @@ trait CacheTrait
 
 	/**
 	 * Get cache name.
-	 *
-	 * @return string
 	 */
 	public static function getCacheName(): string
 	{
@@ -193,8 +252,6 @@ trait CacheTrait
 
 	/**
 	 * Check if we should cache the service classes with optimized environment detection.
-	 *
-	 * @return bool
 	 */
 	public static function shouldCache(): bool
 	{
@@ -224,8 +281,6 @@ trait CacheTrait
 
 	/**
 	 * Get transient key for cache storage.
-	 *
-	 * @return string
 	 */
 	private static function getTransientKey(): string
 	{
@@ -234,8 +289,6 @@ trait CacheTrait
 
 	/**
 	 * Get timestamp key for version tracking.
-	 *
-	 * @return string
 	 */
 	private static function getTimestampKey(): string
 	{
@@ -263,7 +316,7 @@ trait CacheTrait
 			}
 
 			// Compare timestamps.
-			return (int) $storedTimestamp === (int) $fileTimestamp;
+			return (int) $storedTimestamp === $fileTimestamp;
 		}
 
 		// If no file exists, transient is invalid.
@@ -277,8 +330,6 @@ trait CacheTrait
 	 * @param string $timestampKey Database option key for timestamp.
 	 * @param string $data Cache data to store.
 	 * @param string $cacheFile Path to the cache file.
-	 *
-	 * @return void
 	 */
 	private static function updateTransientCache(
 		string $transientKey,
@@ -293,15 +344,13 @@ trait CacheTrait
 		if (\file_exists($cacheFile)) {
 			$fileTimestamp = \filemtime($cacheFile);
 			if ($fileTimestamp !== false) {
-				\update_option($timestampKey, (int) $fileTimestamp, true);
+				\update_option($timestampKey, $fileTimestamp, true);
 			}
 		}
 	}
 
 	/**
 	 * Clear all cache layers (transient, file, and memory).
-	 *
-	 * @return void
 	 */
 	public static function clearAllCache(): void
 	{
@@ -331,7 +380,7 @@ trait CacheTrait
 	private static function getAllManifests(): array
 	{
 		// Early return for empty cache builder.
-		if (empty(self::$cacheBuilder)) {
+		if (self::$cacheBuilder === []) {
 			return [];
 		}
 
@@ -357,7 +406,7 @@ trait CacheTrait
 					$result = self::getItem(self::getFullPath($parent, $type), $data, $parent);
 				}
 
-				if (!empty($result)) {
+				if ($result !== []) {
 					$output[$type][$parent] = $result;
 				}
 			}
@@ -398,7 +447,7 @@ trait CacheTrait
 		// Optimized JSON decoding.
 		try {
 			$fileDecoded = self::parseManifest($fileContent);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return [];
 		}
 
@@ -499,8 +548,6 @@ trait CacheTrait
 	 * @param string $path File path for error reporting.
 	 *
 	 * @throws InvalidManifest If required key is missing.
-	 *
-	 * @return void
 	 */
 	private static function validateManifestKeys(array $fileDecoded, array $data, string $path): void
 	{
@@ -553,7 +600,7 @@ trait CacheTrait
 			}
 
 			$item = self::getItem($itemPath, $data, $parent);
-			if (empty($item)) {
+			if ($item === []) {
 				continue;
 			}
 
@@ -616,10 +663,8 @@ trait CacheTrait
 	{
 		// Ensure directory exists.
 		$directory = \dirname($path);
-		if (!\is_dir($directory)) {
-			if (!\mkdir($directory, 0755, true)) {
-				return false;
-			}
+		if (!\is_dir($directory) && !\mkdir($directory, 0755, true)) {
+			return false;
 		}
 
 		// Use LOCK_EX for atomic writes.

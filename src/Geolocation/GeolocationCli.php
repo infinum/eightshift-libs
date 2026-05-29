@@ -23,8 +23,6 @@ class GeolocationCli extends AbstractCli
 {
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -33,8 +31,6 @@ class GeolocationCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -46,6 +42,7 @@ class GeolocationCli extends AbstractCli
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -94,7 +91,7 @@ class GeolocationCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 

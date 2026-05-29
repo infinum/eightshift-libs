@@ -21,7 +21,6 @@ final class NonPsr4CompliantClass extends InvalidArgumentException implements Ge
 	 * Throws exception if class has non psr-4 compliant namespace.
 	 *
 	 * @param string $className Class name we're looking for.
-	 * @return static
 	 */
 	public static function throwInvalidNamespace(string $className): NonPsr4CompliantClass
 	{

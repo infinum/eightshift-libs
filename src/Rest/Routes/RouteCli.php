@@ -14,6 +14,7 @@ use EightshiftLibs\Cli\AbstractCli;
 use EightshiftLibs\Cli\ParentGroups\CliCreate;
 use EightshiftLibs\Helpers\Helpers;
 use WP_CLI;
+use Override;
 
 /**
  * Class RouteCli
@@ -35,8 +36,6 @@ class RouteCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command parent name
-	 *
-	 * @return string
 	 */
 	public function getCommandParentName(): string
 	{
@@ -45,8 +44,6 @@ class RouteCli extends AbstractCli
 
 	/**
 	 * Get WP-CLI command name
-	 *
-	 * @return string
 	 */
 	public function getCommandName(): string
 	{
@@ -58,6 +55,7 @@ class RouteCli extends AbstractCli
 	 *
 	 * @return array<string, int|string|boolean>
 	 */
+	#[Override]
 	public function getDefaultArgs(): array
 	{
 		return [
@@ -116,7 +114,7 @@ class RouteCli extends AbstractCli
 	}
 
 	/* @phpstan-ignore-next-line */
-	public function __invoke(array $args, array $assocArgs)
+	public function __invoke(array $args, array $assocArgs): void
 	{
 		$assocArgs = $this->prepareArgs($assocArgs);
 
@@ -128,7 +126,7 @@ class RouteCli extends AbstractCli
 
 		// Get full class name.
 		$className = $this->getFileName($endpointSlug);
-		$className = $className . $this->getClassShortName();
+		$className .= $this->getClassShortName();
 
 
 		// If method is invalid throw error.

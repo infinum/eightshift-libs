@@ -21,7 +21,7 @@
 	<rule ref="PHPCompatibilityWP"/>
 
 	<!-- Support only latest 3 WP versions. -->
-	<config name="minimum_supported_wp_version" value="8.3"/>
+	<config name="minimum_supported_wp_version" value="6.9"/>
 
 	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
 		<exclude-pattern>*/src/**/*Cli</exclude-pattern>
@@ -64,12 +64,5 @@
 	</rule>
 	<rule ref="WordPress.WP.AlternativeFunctions.file_system_operations_fclose">
 		<severity>0</severity>
-	</rule>
-
-	<rule ref="Generic.Files.LineLength">
-		<exclude-pattern>*/src/**/*Cli.php</exclude-pattern>
-		<properties>
-			<property name="lineLimit" value="180" />
-		</properties>
 	</rule>
 </ruleset>

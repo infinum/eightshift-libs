@@ -25,8 +25,6 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 	 *
 	 * @param string $className Class name we're looking for.
 	 * @param string $interfaceName Class we're looking for needs to implement this.
-	 *
-	 * @return static
 	 */
 	public static function throwUnableToFindClass(string $className, string $interfaceName): InvalidAutowireDependency
 	{
@@ -49,8 +47,6 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 	 *
 	 * @param string $className Class name we're looking for.
 	 * @param string $interfaceName Class we're looking for needs to implement this.
-	 *
-	 * @return static
 	 */
 	public static function throwMoreThanOneClassFound(string $className, string $interfaceName): InvalidAutowireDependency
 	{
@@ -73,8 +69,6 @@ final class InvalidAutowireDependency extends InvalidArgumentException implement
 	 *
 	 * @param string $className Class name we're looking for.
 	 * @param string $param Parameter name that is causing the issue.
-	 *
-	 * @return static
 	 */
 	public static function throwPrimitiveDependencyFound(string $className, string $param): InvalidAutowireDependency
 	{

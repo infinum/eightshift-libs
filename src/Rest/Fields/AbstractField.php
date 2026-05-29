@@ -20,20 +20,16 @@ abstract class AbstractField implements ServiceInterface
 {
 	/**
 	 * A register method holds register_rest_route function to register or override api field.
-	 *
-	 * @return void
 	 */
 	public function register(): void
 	{
-		\add_action('rest_api_init', [$this, 'fieldRegisterCallback']);
+		\add_action('rest_api_init', $this->fieldRegisterCallback(...));
 	}
 
 	/**
 	 * Method that register rest field that is used inside rest_api_init hook.
 	 *
 	 * @param WP_REST_Server $wpRestServer Server object.
-	 *
-	 * @return void
 	 */
 	public function fieldRegisterCallback(WP_REST_Server $wpRestServer): void
 	{

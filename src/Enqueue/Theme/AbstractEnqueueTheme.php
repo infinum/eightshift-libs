@@ -33,8 +33,6 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 
 	/**
 	 * Get theme Stylesheet handle.
-	 *
-	 * @return string
 	 */
 	public function getThemeStyleHandle(): string
 	{
@@ -43,8 +41,6 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 
 	/**
 	 * Get theme JavaScript handle.
-	 *
-	 * @return string
 	 */
 	public function getThemeScriptHandle(): string
 	{
@@ -53,8 +49,6 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 
 	/**
 	 * Register the Stylesheets for the front end of the theme.
-	 *
-	 * @return void
 	 */
 	public function enqueueThemeStyles(): void
 	{
@@ -73,8 +67,6 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 
 	/**
 	 * Register the JavaScript for the front end of the theme.
-	 *
-	 * @return void
 	 */
 	public function enqueueThemeScripts(): void
 	{

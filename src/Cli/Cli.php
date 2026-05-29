@@ -156,8 +156,6 @@ class Cli
 	 * @param string $commandParentName Define top level commands name.
 	 *
 	 * @throws Exception Exception if the class doesn't exist.
-	 *
-	 * @return void
 	 */
 	public function load(string $commandParentName): void
 	{

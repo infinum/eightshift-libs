@@ -23,10 +23,22 @@ use WP_Block;
 abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterface
 {
 	/**
+	 * Memoized camel-to-kebab conversions for component names.
+	 *
+	 * @var array<string, string>
+	 */
+	private static array $camelToKebabMemo = [];
+
+	/**
+	 * Memoized kebab-to-camel conversions for parent prefixes.
+	 *
+	 * @var array<string, string>
+	 */
+	private static array $kebabToCamelMemo = [];
+
+	/**
 	 * Create custom project color palette.
 	 * These colors are fetched from the main settings manifest.json.
-	 *
-	 * @return void
 	 */
 	public function changeEditorColorPalette(): void
 	{
@@ -37,8 +49,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Register multiple theme support options.
-	 *
-	 * @return void
 	 */
 	public function addThemeSupport(): void
 	{
@@ -65,16 +75,17 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 			return $allowedBlockTypes;
 		}
 
-		$blocks = Helpers::getBlocks();
+		static $projectBlockNames = null;
 
-		if ($blocks) {
-			$allowedBlockTypes = \array_values(\array_merge(
-				\array_map(
-					fn($block) => $block['blockFullName'],
-					$blocks
-				),
-				$allowedBlockTypes,
-			));
+		if ($projectBlockNames === null) {
+			$blocks = Helpers::getBlocks();
+			$projectBlockNames = $blocks !== []
+				? \array_values(\array_map(static fn(array $block): mixed => $block['blockFullName'], $blocks))
+				: [];
+		}
+
+		if ($projectBlockNames) {
+			$allowedBlockTypes = \array_values(\array_merge($projectBlockNames, $allowedBlockTypes));
 		}
 
 		// Allow reusable block.
@@ -105,13 +116,18 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Method used to register all custom blocks with data fetched from blocks manifest.json.
-	 *
-	 * @return void
 	 */
 	public function registerBlocks(): void
 	{
+		$settings = Helpers::getSettings();
+		$context = [
+			'blockClassPrefix' => $settings['blockClassPrefix'] ?? 'block',
+			'settingsAttributes' => $settings['attributes'] ?? [],
+			'wrapperAttributes' => Helpers::getConfigUseWrapper() ? (Helpers::getWrapper()['attributes'] ?? []) : [],
+		];
+
 		foreach (Helpers::getBlocks() as $block) {
-			$this->registerBlock($block);
+			$this->registerBlock($block, $context);
 		}
 	}
 
@@ -206,8 +222,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Render inline css variables in dom. Used with wp_footer hook.
-	 *
-	 * @return void
 	 */
 	public function outputCssVariablesInline(): void
 	{
@@ -216,8 +230,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 	/**
 	 * Render global css variables in dom. Used with wp_head hook.
-	 *
-	 * @return void
 	 */
 	public function outputCssVariablesGlobal(): void
 	{
@@ -230,10 +242,9 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * It uses native register_block_type() function from WP.
 	 *
 	 * @param array<string, mixed> $blockDetails Full Block Manifest details.
-	 *
-	 * @return void
+	 * @param array<string, mixed> $context Shared registration context (blockClassPrefix, settingsAttributes, wrapperAttributes).
 	 */
-	private function registerBlock(array $blockDetails): void
+	private function registerBlock(array $blockDetails, array $context): void
 	{
 		if (($blockDetails['active'] ?? true) === false) {
 			return;
@@ -242,8 +253,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		\register_block_type(
 			$blockDetails['blockFullName'],
 			[
-				'render_callback' => [$this, 'render'],
-				'attributes' => $this->getAttributes($blockDetails),
+				'render_callback' => $this->render(...),
+				'attributes' => $this->getAttributes($blockDetails, $context),
 			]
 		);
 	}
@@ -257,19 +268,14 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 * Also it is doing recursive loop for all children components and their attributes.
 	 *
 	 * @param array<string, mixed> $blockDetails Block Manifest details.
+	 * @param array<string, mixed> $context Shared registration context (blockClassPrefix, settingsAttributes, wrapperAttributes).
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getAttributes(array $blockDetails): array
+	private function getAttributes(array $blockDetails, array $context): array
 	{
 		$blockName = $blockDetails['blockName'];
-		$blockClassPrefix = Helpers::getSettings()['blockClassPrefix'] ?? 'block';
-
-		$wrapperAttributes = [];
-
-		if (Helpers::getConfigUseWrapper()) {
-			$wrapperAttributes = Helpers::getWrapper()['attributes'] ?? [];
-		}
+		$blockClassPrefix = $context['blockClassPrefix'];
 
 		return \array_merge(
 			[
@@ -302,8 +308,8 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 					'default' => false,
 				],
 			],
-			Helpers::getSettings()['attributes'] ?? [],
-			$wrapperAttributes,
+			$context['settingsAttributes'],
+			$context['wrapperAttributes'],
 			$this->prepareComponentAttributes($blockDetails)
 		);
 	}
@@ -332,32 +338,32 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 		}
 
 		// Make sure the case is always correct for parent.
-		$newParent = Helpers::kebabToCamelCase($parent);
+		$newParent = self::$kebabToCamelMemo[$parent] ??= Helpers::kebabToCamelCase($parent);
+
+		// Precompute the prefix that gets stripped when currentAttributes is true.
+		$currentPrefix = $currentAttributes
+			? \lcfirst(self::$kebabToCamelMemo[$realName] ??= Helpers::kebabToCamelCase($realName))
+			: '';
 
 		// Iterate each attribute and attach parent prefixes.
-		$componentAttributeKeys = \array_keys($componentAttributes);
-		foreach ($componentAttributeKeys as $componentAttribute) {
-			$attribute = $componentAttribute;
+		foreach ($componentAttributes as $componentAttribute => $attributeValue) {
+			$attribute = (string) $componentAttribute;
 
 			// If there is an attribute name switch, use the new one.
 			if ($newName !== $realName) {
-				$attribute = \str_replace($realName, $newName, (string) $componentAttribute);
+				$attribute = \str_replace($realName, $newName, $attribute);
 			}
 
 			// Check if current attribute is used strip component prefix from attribute and replace it with parent prefix.
 			if ($currentAttributes) {
-				$attribute = \str_replace(\lcfirst(Helpers::kebabToCamelCase($realName)), '', (string) $componentAttribute);
+				$attribute = \str_replace($currentPrefix, '', (string) $componentAttribute);
 			}
 
 			// Determine if parent is empty and if parent name is the same as component/block name and skip wrapper attributes.
-			if (\substr((string)$attribute, 0, \strlen('wrapper')) === 'wrapper') {
-				$attributeName = $attribute;
-			} else {
-				$attributeName = $newParent . \ucfirst((string)$attribute);
-			}
+			$attributeName = \str_starts_with($attribute, 'wrapper') ? $attribute : $newParent . \ucfirst($attribute);
 
 			// Output new attribute names.
-			$output[$attributeName] = $componentAttributes[$componentAttribute];
+			$output[$attributeName] = $attributeValue;
 		}
 
 		return $output;
@@ -376,8 +382,6 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	 */
 	private function prepareComponentAttributes(array $manifest, string $parent = ''): array
 	{
-		$output = [];
-
 		// Determine if this is component or block and provide the name, not used for anything important but only to output the error msg.
 		$name = $manifest['blockName'] ?? '';
 
@@ -389,34 +393,31 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 
 		$newParent = ($parent === '') ? $name : $parent;
 
+		$collected = [];
+
 		// Iterate over components key in manifest recursively and check component names.
 		foreach ($components as $newComponentName => $realComponentName) {
 			// Filter components real name.
-			$component = Helpers::getComponent(Helpers::camelToKebabCase($realComponentName));
+			$realKebab = self::$camelToKebabMemo[$realComponentName] ??= Helpers::camelToKebabCase($realComponentName);
+			$component = Helpers::getComponent($realKebab);
 
 			// Bailout if component doesn't exist.
-			if (!$component) {
+			if ($component === []) {
 				throw InvalidBlock::wrongComponentNameException($name, $realComponentName);
 			}
 
 			// If component has more components do recursive loop.
 			if (isset($component['components'])) {
-				$outputAttributes = $this->prepareComponentAttributes($component, $newParent . \ucfirst(Helpers::camelToKebabCase($newComponentName)));
+				$newKebab = self::$camelToKebabMemo[$newComponentName] ??= Helpers::camelToKebabCase($newComponentName);
+				$collected[] = $this->prepareComponentAttributes($component, $newParent . \ucfirst($newKebab));
 			} else {
 				// Output the component attributes if there is no nesting left, and append the parent prefixes.
-				$outputAttributes = $this->prepareComponentAttribute($component, $newComponentName, $realComponentName, $newParent);
+				$collected[] = $this->prepareComponentAttribute($component, $newComponentName, $realComponentName, $newParent);
 			}
-
-			// Populate the output recursively.
-			$output = \array_merge(
-				$output,
-				$outputAttributes
-			);
 		}
 
-		return \array_merge(
-			$output,
-			$this->prepareComponentAttribute($manifest, '', $name, $newParent, true)
-		);
+		$collected[] = $this->prepareComponentAttribute($manifest, '', $name, $newParent, true);
+
+		return \array_merge(...$collected);
 	}
 }
