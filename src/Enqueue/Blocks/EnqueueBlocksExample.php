@@ -24,22 +24,22 @@ class EnqueueBlocksExample extends AbstractEnqueueBlocks
 	public function register(): void
 	{
 		// Editor only script.
-		\add_action('enqueue_block_assets', [$this, 'enqueueBlockEditorScript']);
+		\add_action('enqueue_block_assets', $this->enqueueBlockEditorScript(...));
 
 		// Editor only style.
-		\add_action('enqueue_block_assets', [$this, 'enqueueBlockEditorStyle'], 50);
+		\add_action('enqueue_block_assets', $this->enqueueBlockEditorStyle(...), 50);
 
 		// Editor and frontend style.
-		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyle'], 50);
+		\add_action('enqueue_block_assets', $this->enqueueBlockStyle(...), 50);
 
 		// Frontend only script.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript']);
+		\add_action('wp_enqueue_scripts', $this->enqueueBlockFrontendScript(...));
 
 		// Frontend only style.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyle'], 50);
+		\add_action('wp_enqueue_scripts', $this->enqueueBlockFrontendStyle(...), 50);
 
 		// Unregister default style overrides.
-		\add_action('enqueue_block_editor_assets', [$this, 'unregisterDefaultStyleOverrides'], 102);
+		\add_action('enqueue_block_editor_assets', $this->unregisterDefaultStyleOverrides(...), 102);
 	}
 
 	/**

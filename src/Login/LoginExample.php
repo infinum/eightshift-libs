@@ -26,7 +26,7 @@ class LoginExample implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('login_headerurl', [$this, 'customLoginUrl']);
+		\add_filter('login_headerurl', $this->customLoginUrl(...));
 	}
 
 	/**

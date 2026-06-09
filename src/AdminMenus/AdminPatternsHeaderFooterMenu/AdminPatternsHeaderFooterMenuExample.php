@@ -78,8 +78,8 @@ class AdminPatternsHeaderFooterMenuExample extends AbstractAdminMenu
 	 */
 	public function register(): void
 	{
-		\add_action('admin_init', [$this, 'registerWpSettings']);
-		\add_action('admin_menu', [$this, 'callback'], $this->getPriorityOrder());
+		\add_action('admin_init', $this->registerWpSettings(...));
+		\add_action('admin_menu', $this->callback(...), $this->getPriorityOrder());
 	}
 
 	/**
@@ -204,7 +204,7 @@ class AdminPatternsHeaderFooterMenuExample extends AbstractAdminMenu
 		\add_settings_field(
 			self::HEADER_PARTIAL,
 			\__('Header partial', '%g_textdomain%'),
-			[$this, 'renderPartialSelector'],
+			$this->renderPartialSelector(...),
 			self::ADMIN_MENU_SLUG,
 			self::SETTINGS_SECTION_NAME,
 			[
@@ -216,7 +216,7 @@ class AdminPatternsHeaderFooterMenuExample extends AbstractAdminMenu
 		\add_settings_field(
 			self::FOOTER_PARTIAL,
 			\__('Footer partial', '%g_textdomain%'),
-			[$this, 'renderPartialSelector'],
+			$this->renderPartialSelector(...),
 			self::ADMIN_MENU_SLUG,
 			self::SETTINGS_SECTION_NAME,
 			[

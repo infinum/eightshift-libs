@@ -33,7 +33,7 @@ class WpCliExample implements ServiceCliInterface
 	 */
 	public function register(): void
 	{
-		\add_action('cli_init', [$this, 'registerCommand']);
+		\add_action('cli_init', $this->registerCommand(...));
 	}
 
 	/**

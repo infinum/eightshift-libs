@@ -33,7 +33,7 @@ class ThemeOptionsExample implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'addRbHfSettings']);
+		\add_action('init', $this->addRbHfSettings(...));
 	}
 
 	/**

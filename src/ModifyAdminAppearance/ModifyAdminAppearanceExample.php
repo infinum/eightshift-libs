@@ -38,7 +38,7 @@ class ModifyAdminAppearanceExample implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('get_user_option_admin_color', [$this, 'adminColor'], 10, 0);
+		\add_filter('get_user_option_admin_color', $this->adminColor(...));
 	}
 
 	/**
