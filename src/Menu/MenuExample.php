@@ -24,7 +24,7 @@ class MenuExample extends AbstractMenu
 	 */
 	public function register(): void
 	{
-		\add_action('after_setup_theme', [$this, 'registerMenuPositions'], 11);
+		\add_action('after_setup_theme', $this->registerMenuPositions(...), 11);
 	}
 
 	/**

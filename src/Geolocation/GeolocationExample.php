@@ -23,7 +23,7 @@ class GeolocationExample extends AbstractGeolocation
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'setLocationCookie']);
+		\add_action('init', $this->setLocationCookie(...));
 	}
 
 	/**

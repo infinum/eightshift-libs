@@ -28,8 +28,8 @@ class I18nThemeExample implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_action('after_setup_theme', [$this, 'loadThemeTextdomain'], 20);
-		\add_action('enqueue_block_editor_assets', [$this, 'setScriptTranslations'], 20);
+		\add_action('after_setup_theme', $this->loadThemeTextdomain(...), 20);
+		\add_action('enqueue_block_editor_assets', $this->setScriptTranslations(...), 20);
 	}
 
 	/**

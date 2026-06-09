@@ -48,7 +48,7 @@ class FieldExample extends AbstractField implements CallableFieldInterface
 	protected function getCallbackArguments(): array
 	{
 		return [
-			'get_callback' => [$this, 'fieldCallback'],
+			'get_callback' => $this->fieldCallback(...),
 		];
 	}
 

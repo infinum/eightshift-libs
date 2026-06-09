@@ -26,8 +26,8 @@ class OptimizationExample implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_action('wp_enqueue_scripts', [$this, 'dequeueStyles'], 100);
-		\add_action('wp_enqueue_scripts', [$this, 'dequeueScripts'], 100);
+		\add_action('wp_enqueue_scripts', $this->dequeueStyles(...), 100);
+		\add_action('wp_enqueue_scripts', $this->dequeueScripts(...), 100);
 
 		\remove_action('wp_head', 'print_emoji_detection_script', 7);
 	}

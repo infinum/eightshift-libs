@@ -28,7 +28,7 @@ class I18nPluginExample implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_action('load_plugin_textdomain', [$this, 'loadThemeTextdomain'], 20);
+		\add_action('load_plugin_textdomain', $this->loadThemeTextdomain(...), 20);
 	}
 
 	/**

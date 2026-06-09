@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.1.0]
+
+### Fixed
+
+- `enqueueBlockEditorScript` and `enqueueBlockEditorStyle` methods in `AbstractEnqueueBlocks` now check for `is_admin()` to prevent unnecessary execution on the frontend when using `enqueue_block_assets` hook required with the Block Editor API 3 version.
+
+### Migration guide
+
+- If you are using `enqueue_block_editor_assets` hooks replace them with `enqueue_block_assets` and make sure to check for `is_admin()` if you are overriding the `enqueueBlockEditorScript` and `enqueueBlockEditorStyle` methods in your custom enqueue class.
+
 ## [13.0.0]
 
 ### Added
@@ -1182,6 +1192,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.1.0]: https://github.com/infinum/eightshift-libs/compare/13.0.0...13.1.0
 [13.0.0]: https://github.com/infinum/eightshift-libs/compare/12.3.4...13.0.0
 [12.3.4]: https://github.com/infinum/eightshift-libs/compare/12.3.3...12.3.4
 [12.3.3]: https://github.com/infinum/eightshift-libs/compare/12.3.2...12.3.3
