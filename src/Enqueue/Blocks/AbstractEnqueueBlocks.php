@@ -48,6 +48,10 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockEditorScript(): void
 	{
+		if (!\is_admin()) {
+			return;
+		}
+
 		$handle = $this->getBlockEditorScriptsHandle();
 
 		\wp_register_script(
@@ -105,6 +109,10 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function enqueueBlockEditorStyle(): void
 	{
+		if (!\is_admin()) {
+			return;
+		}
+
 		$handle = $this->getBlockEditorStyleHandle();
 
 		\wp_register_style(

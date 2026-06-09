@@ -24,10 +24,10 @@ class EnqueueBlocksExample extends AbstractEnqueueBlocks
 	public function register(): void
 	{
 		// Editor only script.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorScript']);
+		\add_action('enqueue_block_assets', [$this, 'enqueueBlockEditorScript']);
 
 		// Editor only style.
-		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
+		\add_action('enqueue_block_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
 		// Editor and frontend style.
 		\add_action('enqueue_block_assets', [$this, 'enqueueBlockStyle'], 50);
