@@ -383,11 +383,7 @@ abstract class AbstractBlocks implements ServiceInterface, RenderableBlockInterf
 	private function prepareComponentAttributes(array $manifest, string $parent = ''): array
 	{
 		// Determine if this is component or block and provide the name, not used for anything important but only to output the error msg.
-		$name = $manifest['blockName'] ?? '';
-
-		if (Helpers::getConfigUseLegacyComponents()) {
-			$name = $manifest['blockName'] ?? $manifest['componentName'];
-		}
+		$name = $manifest['blockName'] ?? $manifest['componentName'];
 
 		$components = $manifest['components'] ?? [];
 

@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [17.1.0]
+
+### Changed
+
+- Updated CSS variables output to always be minified — the optimization behavior previously gated behind the `outputCssOptimize` config option is now always applied.
+- Updated CSS variables to always render with the default per-block output — the global inline-style output path previously gated behind the `outputCssGlobally` config option is removed.
+- Updated block and component name resolution to always fall back to `componentName` — the behavior previously gated behind the `useLegacyComponents` config option is now the default.
+- Updated `Helpers::render()` default path to always resolve to `components`.
+
+### Removed
+
+- Removed `outputCssGlobally`, `outputCssOptimize`, and `useLegacyComponents` keys from the global settings config defaults.
+- Removed `Helpers::getConfigOutputCssGlobally()`, `Helpers::getConfigOutputCssOptimize()`, and `Helpers::getConfigUseLegacyComponents()` helper methods.
+
 ## [13.1.0]
 
 ### Fixed
@@ -1192,6 +1206,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[17.1.0]: https://github.com/infinum/eightshift-libs/compare/13.1.0...17.1.0
 [13.1.0]: https://github.com/infinum/eightshift-libs/compare/13.0.0...13.1.0
 [13.0.0]: https://github.com/infinum/eightshift-libs/compare/12.3.4...13.0.0
 [12.3.4]: https://github.com/infinum/eightshift-libs/compare/12.3.3...12.3.4
