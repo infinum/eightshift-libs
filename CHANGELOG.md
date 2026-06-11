@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.1.1]
+
+### Fixed
+
+- Fixed `TailwindTrait::getTwClasses()` to skip `null` option values returned by `Helpers::checkAttr()` instead of passing them to `processOption()`, preventing a type error when an attribute is absent from the block attributes.
+
 ## [13.1.0]
 
 ### Fixed
@@ -1192,6 +1198,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.1.1]: https://github.com/infinum/eightshift-libs/compare/13.1.0...13.1.1
 [13.1.0]: https://github.com/infinum/eightshift-libs/compare/13.0.0...13.1.0
 [13.0.0]: https://github.com/infinum/eightshift-libs/compare/12.3.4...13.0.0
 [12.3.4]: https://github.com/infinum/eightshift-libs/compare/12.3.3...12.3.4
