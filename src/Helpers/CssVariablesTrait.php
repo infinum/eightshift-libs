@@ -123,7 +123,19 @@ trait CssVariablesTrait
 			$data = self::setVariablesToBreakpoints($attributes, $variables, $data, $manifest, $defaultBreakpoints);
 		}
 
-		return self::getCssVariablesTypeDefault($name, $data, $manifest, $unique);
+		// Load normal styles if server side render is used.
+		// Read-only switch between two render paths for the block editor's SSR preview; no state change, so a nonce is not required.
+		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		// If default output just echo.
+		if (\wp_is_json_request() && $context === 'edit') {
+			return self::getCssVariablesTypeDefault($name, $data, $manifest, $unique);
+		}
+
+		// Set inline styles.
+		Helpers::setStyle(self::getCssVariablesTypeInline($name, $data, $manifest, $unique));
+
+		return '';
 	}
 
 	/**
@@ -133,6 +145,15 @@ trait CssVariablesTrait
 	 */
 	public static function outputCssVariablesInlineClean(array $globalSettings = []): string
 	{
+		// Load normal styles if server side render is used.
+		// Read-only switch between two render paths for the block editor's SSR preview; no state change, so a nonce is not required.
+		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		// If default output just echo.
+		if (\wp_is_json_request() && $context === 'edit') {
+			return '';
+		}
+
 		// Prepare final output.
 		$output = '';
 
