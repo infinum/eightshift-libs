@@ -33,11 +33,7 @@ trait CssVariablesTrait
 
 		$output = ':root {' . \implode('', $parts) . '}';
 
-		if (Helpers::getConfigOutputCssOptimize()) {
-			return \str_replace(["\n", "\r"], '', $output);
-		}
-
-		return $output;
+		return \str_replace(["\n", "\r"], '', $output);
 	}
 
 	/**
@@ -132,7 +128,7 @@ trait CssVariablesTrait
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
-		if (!Helpers::getConfigOutputCssGlobally() || (\wp_is_json_request() && $context === 'edit')) {
+		if (\wp_is_json_request() && $context === 'edit') {
 			return self::getCssVariablesTypeDefault($name, $data, $manifest, $unique);
 		}
 
@@ -154,7 +150,7 @@ trait CssVariablesTrait
 		$context = isset($_GET['context']) ? \sanitize_text_field(\wp_unslash($_GET['context'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If default output just echo.
-		if (!Helpers::getConfigOutputCssGlobally() || (\wp_is_json_request() && $context === 'edit')) {
+		if (\wp_is_json_request() && $context === 'edit') {
 			return '';
 		}
 
@@ -252,9 +248,7 @@ trait CssVariablesTrait
 		}
 
 		// Remove newlines is config is set.
-		if (Helpers::getConfigOutputCssOptimize()) {
-			$output = \str_replace(["\n", "\r"], '', $output);
-		}
+		$output = \str_replace(["\n", "\r"], '', $output);
 
 		// Add additional style from config settings.
 		$additionalStyles = Helpers::getConfigOutputCssGloballyAdditionalStyles();
@@ -377,10 +371,8 @@ trait CssVariablesTrait
 		// Prepare output for manual variables.
 		$finalManualOutput = $manual ? "\n .{$name}{$uniqueSelector}{\n{$manual}\n}" : '';
 
-		if (Helpers::getConfigOutputCssOptimize()) {
-			$output = \str_replace(["\n", "\r"], '', $output);
-			$finalManualOutput = \str_replace(["\n", "\r"], '', $finalManualOutput);
-		}
+		$output = \str_replace(["\n", "\r"], '', $output);
+		$finalManualOutput = \str_replace(["\n", "\r"], '', $finalManualOutput);
 
 		// Output the style for CSS variables.
 		return "<style>{$output} {$finalManualOutput}</style>";
@@ -796,7 +788,7 @@ trait CssVariablesTrait
 
 		$prefix = $attributes['prefix'] ?? null;
 		if ($prefix !== null && $prefix !== '') {
-			$replacement = Helpers::kebabToCamelCase(Helpers::getConfigUseLegacyComponents() ? $manifest['componentName'] : $manifest['blockName']);
+			$replacement = Helpers::kebabToCamelCase($manifest['componentName']);
 			foreach ($attributes as $attrKey => $attrValue) {
 				if (!\is_scalar($attrValue) && $attrValue !== null) {
 					continue;

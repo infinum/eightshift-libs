@@ -96,21 +96,6 @@ abstract class AbstractManifestCache implements ManifestCacheInterface
 					],
 					'autoset' => [
 						[
-							'key' => 'outputCssGlobally',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
-							'key' => 'useLegacyComponents',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
-							'key' => 'outputCssOptimize',
-							'value' => true,
-							'parent' => 'config',
-						],
-						[
 							'key' => 'useWrapper',
 							'value' => true,
 							'parent' => 'config',

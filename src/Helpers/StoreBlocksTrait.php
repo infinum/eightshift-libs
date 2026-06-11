@@ -195,24 +195,6 @@ trait StoreBlocksTrait
 	}
 
 	/**
-	 * Get global config value for output css globally with type safety.
-	 */
-	public static function getConfigOutputCssGlobally(): bool
-	{
-		$config = self::getConfig();
-		return isset($config['outputCssGlobally']) && (bool) $config['outputCssGlobally'];
-	}
-
-	/**
-	 * Get global config value for output css optimize with type safety.
-	 */
-	public static function getConfigOutputCssOptimize(): bool
-	{
-		$config = self::getConfig();
-		return isset($config['outputCssOptimize']) && (bool) $config['outputCssOptimize'];
-	}
-
-	/**
 	 * Get global config value for output css selector name with type safety.
 	 */
 	public static function getConfigOutputCssSelectorName(): string
@@ -242,15 +224,6 @@ trait StoreBlocksTrait
 	{
 		$config = self::getConfig();
 		return isset($config['useWrapper']) && (bool) $config['useWrapper'];
-	}
-
-	/**
-	 * Get global config value for use legacy components with type safety.
-	 */
-	public static function getConfigUseLegacyComponents(): bool
-	{
-		$config = self::getConfig();
-		return isset($config['useLegacyComponents']) && (bool) $config['useLegacyComponents'];
 	}
 
 	// -----------------------------------------------------

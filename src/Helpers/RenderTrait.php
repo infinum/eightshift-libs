@@ -166,7 +166,7 @@ trait RenderTrait
 
 		if ($renderPathName === '' || $renderPathName === '0') {
 			if (self::$defaultPathName === null) {
-				self::$defaultPathName = Helpers::getConfigUseLegacyComponents() ? 'components' : 'blocks';
+				self::$defaultPathName = 'components';
 			}
 			$renderPathName = self::$defaultPathName;
 		}
