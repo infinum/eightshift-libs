@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.1.1]
+
+### Fixed
+
+- Fixed `TailwindTrait::getTwClasses()` to skip `null` option values returned by `Helpers::checkAttr()` instead of passing them to `processOption()`, preventing a type error when an attribute is absent from the block attributes.
+
 ## [13.1.0]
 
 ### Fixed

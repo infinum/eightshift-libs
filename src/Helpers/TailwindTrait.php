@@ -472,6 +472,10 @@ trait TailwindTrait
 		foreach ($options as $attributeName => $defs) {
 			$optionValue = Helpers::checkAttr($attributeName, $attributes, $manifest, true);
 
+			if ($optionValue === null) {
+				continue;
+			}
+
 			if (\is_bool($optionValue)) {
 				$optionValue = $optionValue ? 'true' : 'false';
 			}
