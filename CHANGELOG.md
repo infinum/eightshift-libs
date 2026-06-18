@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.2.1]
+
+### Fixed
+
+- `unregisterDefaultStyleOverrides` in `AbstractEnqueueBlocks` now checks for `is_admin()` and returns early on the frontend, preventing an unnecessary request to the `wp-admin/css` URL used to re-register the `forms` and `reset` style dependencies. This is an additional safeguard in case the hook is accidentally changed from `enqueue_block_editor_assets` to `enqueue_block_assets`, which also fires on the frontend.
+
 ## [13.2.0]
 
 ### Changed
@@ -1212,6 +1218,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.2.1]: https://github.com/infinum/eightshift-libs/compare/13.2.0...13.2.1
 [13.2.0]: https://github.com/infinum/eightshift-libs/compare/13.1.1...13.2.0
 [13.1.1]: https://github.com/infinum/eightshift-libs/compare/13.1.0...13.1.1
 [13.1.0]: https://github.com/infinum/eightshift-libs/compare/13.0.0...13.1.0
