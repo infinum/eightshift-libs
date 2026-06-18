@@ -299,6 +299,10 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 	 */
 	public function unregisterDefaultStyleOverrides(): void
 	{
+		if (!\is_admin()) {
+			return;
+		}
+
 		// Unregister unneeded default styles.
 		\wp_deregister_style('forms');
 		\wp_deregister_style('reset');
