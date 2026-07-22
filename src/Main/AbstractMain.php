@@ -279,7 +279,8 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 		if (Helpers::shouldCache()) {
 			return false;
 		}
-		return !(\defined('WP_CLI') && \WP_CLI);
+
+		return !\defined('WP_CLI') || !\WP_CLI;
 	}
 
 	/**

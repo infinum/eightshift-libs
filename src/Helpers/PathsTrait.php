@@ -129,6 +129,11 @@ trait PathsTrait
 
 		$joinedPath = $sep . \implode($sep, $filteredPaths);
 
+		// Fix extra directory separator on Windows absolute paths (e.g., \C:\path\to\file) so file_exists() works.
+		if ($sep === '\\' && \preg_match('#^\\\\[A-Za-z]:\\\\#', $joinedPath)) {
+			$joinedPath = \substr($joinedPath, 1);
+		}
+
 		// Treat as a file path when the last segment carries a non-empty extension.
 		$lastDot = \strrpos($joinedPath, '.');
 		$lastSeparator = \strrpos($joinedPath, $sep);
