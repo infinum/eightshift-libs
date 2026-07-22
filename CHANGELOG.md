@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.3.0]
+
+### Fixed
+
+- `PathsTrait::joinPaths()` now correctly handles Windows absolute paths (e.g., `C:\path\to\file`) by removing the leading backslash that was erroneously added when joining paths, which caused `file_exists()` checks to fail. This fix ensures that absolute paths on Windows are correctly recognized and processed.
+
 ## [13.2.1]
 
 ### Fixed
@@ -1218,6 +1224,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.3.0]: https://github.com/infinum/eightshift-libs/compare/13.2.1...13.3.0
 [13.2.1]: https://github.com/infinum/eightshift-libs/compare/13.2.0...13.2.1
 [13.2.0]: https://github.com/infinum/eightshift-libs/compare/13.1.1...13.2.0
 [13.1.1]: https://github.com/infinum/eightshift-libs/compare/13.1.0...13.1.1
