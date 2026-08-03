@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.4.0]
+
+### Added
+
+- Missing `<textarea>` escapes in `AbstractEscapedView`.
+
 ## [13.3.0]
 
 ### Fixed
@@ -1224,6 +1230,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.4.0]: https://github.com/infinum/eightshift-libs/compare/13.3.0...13.4.0
 [13.3.0]: https://github.com/infinum/eightshift-libs/compare/13.2.1...13.3.0
 [13.2.1]: https://github.com/infinum/eightshift-libs/compare/13.2.0...13.2.1
 [13.2.0]: https://github.com/infinum/eightshift-libs/compare/13.1.1...13.2.0
