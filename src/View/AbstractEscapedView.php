@@ -134,6 +134,17 @@ abstract class AbstractEscapedView implements ServiceInterface
 			'checked' => true,
 			'disabled' => true,
 		],
+		'textarea' => [
+			'name' => true,
+			'value' => true,
+			'type' => true,
+			'placeholder' => true,
+			'class' => true,
+			'id' => true,
+			'readonly' => true,
+			'checked' => true,
+			'disabled' => true,
+		],
 		'select' => [
 			'name' => true,
 			'id' => true,
