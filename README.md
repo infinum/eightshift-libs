@@ -9,7 +9,12 @@
 
 This library is aimed at bringing the modern backend development tools to the [Eightshift Boilerplate](https://github.com/infinum/eightshift-boilerplate) or [Eightshift Boilerplate Plugin](https://github.com/infinum/eightshift-boilerplate-plugin), but you can use it on any WordPress project.
 
+## Manifest cache
+
+Runtime manifest caches exclude the optional examples fixture data used by provisioning and testing tools. Cache entries are rebuilt automatically when the project cache version changes, including after upgrading the library.
+
 ## Documentation
+
 **For the full documentation please check this [link](https://eightshift.com).**
 
 ## Who do I talk to?
