@@ -11,7 +11,7 @@ This library is aimed at bringing the modern backend development tools to the [E
 
 ## Manifest cache
 
-Runtime manifest caches exclude the optional examples fixture data used by provisioning and testing tools. Cache entries are rebuilt automatically when the project cache version changes, including after upgrading the library.
+Runtime manifest caches exclude the optional examples fixture data used by provisioning and testing tools. Legacy cache entries without the version marker are discarded on first use after updating this library. Later cache rebuilds also happen when the project cache version changes.
 
 ## Documentation
 
