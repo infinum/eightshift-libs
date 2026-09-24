@@ -451,6 +451,8 @@ trait CacheTrait
 			return [];
 		}
 
+		// Provisioning fixtures are source metadata and do not belong in the runtime cache.
+		unset($fileDecoded['examples']);
 		// Process autoset configuration efficiently.
 		$fileDecoded = self::processAutoset($fileDecoded, $data);
 

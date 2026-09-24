@@ -12,6 +12,7 @@ namespace EightshiftLibs\Tests\Unit\Helpers;
 
 use EightshiftLibs\Tests\BaseTestCase;
 use EightshiftLibs\Helpers\CacheTrait;
+use EightshiftLibs\Helpers\GeneralTrait;
 use EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftLibs\Exception\InvalidManifest;
 use Brain\Monkey\Functions;
@@ -23,7 +24,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class CacheTraitWrapper
 {
 	use CacheTrait;
-
+	use GeneralTrait;
 	/**
 	 * Public wrapper for getFullPath method for testing.
 	 */
@@ -624,6 +625,28 @@ class CacheTraitTest extends BaseTestCase
 		$this->assertIsArray($result);
 		$this->assertEquals('test-block', $result['blockName']);
 		$this->assertEquals('Test Block', $result['title']);
+	}
+
+	/**
+	 * @covers ::getItem
+	 */
+	public function testGetItemExcludesProvisioningExamplesFromCache(): void
+	{
+		$filePath = '/test/with-examples.json';
+		$fileContent = '{"blockName":"test-block","examples":{"default":{"attributes":{"content":"fixture"}}}}';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) use ($filePath, $fileContent) {
+			return $path === $filePath ? $fileContent : false;
+		});
+
+		$result = $this->wrapper::getItemWrapper($filePath, ['validation' => ['blockName']], 'blocks');
+
+		$this->assertSame('test-block', $result['blockName']);
+		$this->assertArrayNotHasKey('examples', $result);
 	}
 
 	/**
