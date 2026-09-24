@@ -526,17 +526,13 @@ trait CacheTrait
 
 			// Handle case with no parent.
 			if ($parent === '') {
-				if (!isset($fileDecoded[$key])) {
-					$fileDecoded[$key] = $value;
-				}
+				$fileDecoded[$key] ??= $value;
 				continue;
 			}
 
 			// Handle case with parent.
 			if (!isset($fileDecoded[$parent][$key])) {
-				if (!isset($fileDecoded[$parent])) {
-					$fileDecoded[$parent] = [];
-				}
+				$fileDecoded[$parent] ??= [];
 				$fileDecoded[$parent][$key] = $value;
 			}
 		}
