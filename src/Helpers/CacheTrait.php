@@ -120,7 +120,7 @@ trait CacheTrait
 		$transientKey = self::getTransientKey();
 		$timestampKey = self::getTimestampKey();
 
-		// Fast path: try transient + file without locking.
+		// Fast path only loads persisted cache for the current version.
 		if (self::tryLoadFromCache($cacheFile, $transientKey, $timestampKey)) {
 			return;
 		}
@@ -134,11 +134,16 @@ trait CacheTrait
 				return;
 			}
 
+			if (!self::isCacheVersionValid()) {
+				self::clearAllCache();
+			}
+
 			$data = self::getAllManifests();
 			$encoded = \wp_json_encode($data);
 
 			if (\is_string($encoded) && self::writeFileOptimized($cacheFile, $encoded)) {
 				self::updateTransientCache($transientKey, $timestampKey, $encoded, $cacheFile);
+				\update_option(self::getVersionKey(), self::$version, true);
 			}
 
 			self::$cache = $data;
@@ -160,6 +165,10 @@ trait CacheTrait
 	 */
 	private static function tryLoadFromCache(string $cacheFile, string $transientKey, string $timestampKey): bool
 	{
+		if (!self::isCacheVersionValid()) {
+			return false;
+		}
+
 		$transientData = \get_transient($transientKey);
 
 		if ($transientData !== false && \is_string($transientData)) {
@@ -288,6 +297,24 @@ trait CacheTrait
 	}
 
 	/**
+	 * Get cache version key.
+	 */
+	private static function getVersionKey(): string
+	{
+		return 'es_cache_version_' . \md5(self::$cacheName);
+	}
+
+	/**
+	 * Check whether persisted cache belongs to the current version.
+	 */
+	private static function isCacheVersionValid(): bool
+	{
+		$storedVersion = \get_option(self::getVersionKey(), null);
+
+		return \is_string($storedVersion) && $storedVersion === self::$version;
+	}
+
+	/**
 	 * Get timestamp key for version tracking.
 	 */
 	private static function getTimestampKey(): string
@@ -365,6 +392,9 @@ trait CacheTrait
 		$timestampKey = self::getTimestampKey();
 		\delete_option($timestampKey);
 
+		// Clear cache version marker.
+		$versionKey = self::getVersionKey();
+		\delete_option($versionKey);
 		// Remove cache file.
 		$cacheFile = Helpers::getEightshiftOutputPath('manifests.json');
 		if (\file_exists($cacheFile)) {

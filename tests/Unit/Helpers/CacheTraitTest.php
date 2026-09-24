@@ -82,6 +82,26 @@ class CacheTraitWrapper
 	}
 
 	/**
+	 * Public wrapper for tryLoadFromCache method for testing.
+	 */
+	public static function tryLoadFromCacheWrapper(string $cacheFile, string $transientKey, string $timestampKey): bool
+	{
+		return self::tryLoadFromCache($cacheFile, $transientKey, $timestampKey);
+	}
+
+	/**
+	 * Set cache identity for version validation tests.
+	 */
+	public static function setCacheIdentityWrapper(string $cacheName, string $version): void
+	{
+		$reflection = new \ReflectionClass(self::class);
+		$cacheNameProperty = $reflection->getProperty('cacheName');
+		$cacheNameProperty->setValue(null, $cacheName);
+		$versionProperty = $reflection->getProperty('version');
+		$versionProperty->setValue(null, $version);
+	}
+
+	/**
 	 * Public wrapper for getItems method for testing.
 	 */
 	public static function getItemsWrapper(string $path, array $data, string $parent): array
@@ -647,6 +667,28 @@ class CacheTraitTest extends BaseTestCase
 
 		$this->assertSame('test-block', $result['blockName']);
 		$this->assertArrayNotHasKey('examples', $result);
+	}
+
+	/**
+	 * @covers ::tryLoadFromCache
+	 */
+	public function testTryLoadFromCacheRejectsStaleVersionBeforeReadingPayload(): void
+	{
+		$transientRead = false;
+		$this->wrapper::setCacheIdentityWrapper('test-cache', '2.0.0');
+
+		Functions\when('get_option')->alias(function ($key, $default = false) {
+			return '1.0.0';
+		});
+		Functions\when('get_transient')->alias(function () use (&$transientRead) {
+			$transientRead = true;
+			return false;
+		});
+
+		$result = $this->wrapper::tryLoadFromCacheWrapper('/test/manifests.json', 'transient-key', 'timestamp-key');
+
+		$this->assertFalse($result);
+		$this->assertFalse($transientRead);
 	}
 
 	/**
