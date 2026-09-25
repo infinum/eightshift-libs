@@ -12,6 +12,7 @@ namespace EightshiftLibs\Tests\Unit\Helpers;
 
 use EightshiftLibs\Tests\BaseTestCase;
 use EightshiftLibs\Helpers\CacheTrait;
+use EightshiftLibs\Helpers\GeneralTrait;
 use EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftLibs\Exception\InvalidManifest;
 use Brain\Monkey\Functions;
@@ -23,7 +24,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class CacheTraitWrapper
 {
 	use CacheTrait;
-
+	use GeneralTrait;
 	/**
 	 * Public wrapper for getFullPath method for testing.
 	 */
@@ -78,6 +79,26 @@ class CacheTraitWrapper
 	public static function getItemWrapper(string $path, array $data, string $parent): array
 	{
 		return self::getItem($path, $data, $parent);
+	}
+
+	/**
+	 * Public wrapper for tryLoadFromCache method for testing.
+	 */
+	public static function tryLoadFromCacheWrapper(string $cacheFile, string $transientKey, string $timestampKey): bool
+	{
+		return self::tryLoadFromCache($cacheFile, $transientKey, $timestampKey);
+	}
+
+	/**
+	 * Set cache identity for version validation tests.
+	 */
+	public static function setCacheIdentityWrapper(string $cacheName, string $version): void
+	{
+		$reflection = new \ReflectionClass(self::class);
+		$cacheNameProperty = $reflection->getProperty('cacheName');
+		$cacheNameProperty->setValue(null, $cacheName);
+		$versionProperty = $reflection->getProperty('version');
+		$versionProperty->setValue(null, $version);
 	}
 
 	/**
@@ -624,6 +645,50 @@ class CacheTraitTest extends BaseTestCase
 		$this->assertIsArray($result);
 		$this->assertEquals('test-block', $result['blockName']);
 		$this->assertEquals('Test Block', $result['title']);
+	}
+
+	/**
+	 * @covers ::getItem
+	 */
+	public function testGetItemExcludesProvisioningExamplesFromCache(): void
+	{
+		$filePath = '/test/with-examples.json';
+		$fileContent = '{"blockName":"test-block","examples":{"default":{"attributes":{"content":"fixture"}}}}';
+
+		Functions\when('file_exists')->alias(function ($path) use ($filePath) {
+			return $path === $filePath;
+		});
+
+		Functions\when('file_get_contents')->alias(function ($path) use ($filePath, $fileContent) {
+			return $path === $filePath ? $fileContent : false;
+		});
+
+		$result = $this->wrapper::getItemWrapper($filePath, ['validation' => ['blockName']], 'blocks');
+
+		$this->assertSame('test-block', $result['blockName']);
+		$this->assertArrayNotHasKey('examples', $result);
+	}
+
+	/**
+	 * @covers ::tryLoadFromCache
+	 */
+	public function testTryLoadFromCacheRejectsStaleVersionBeforeReadingPayload(): void
+	{
+		$transientRead = false;
+		$this->wrapper::setCacheIdentityWrapper('test-cache', '2.0.0');
+
+		Functions\when('get_option')->alias(function ($key, $default = false) {
+			return '1.0.0';
+		});
+		Functions\when('get_transient')->alias(function () use (&$transientRead) {
+			$transientRead = true;
+			return false;
+		});
+
+		$result = $this->wrapper::tryLoadFromCacheWrapper('/test/manifests.json', 'transient-key', 'timestamp-key');
+
+		$this->assertFalse($result);
+		$this->assertFalse($transientRead);
 	}
 
 	/**

@@ -493,12 +493,9 @@ trait TailwindTrait
 		$debugPrefix = '';
 		if (\defined('WP_DEBUG') && \WP_DEBUG) {
 			$title = (string) ($manifest['title'] ?? '');
-			if (!isset(self::$tailwindDebugSlugCache[$title])) {
-				self::$tailwindDebugSlugCache[$title] = \strtolower((string) \preg_replace('/[^a-zA-Z]+/', '-', $title));
-			}
+			self::$tailwindDebugSlugCache[$title] ??= \strtolower((string) \preg_replace('/[^a-zA-Z]+/', '-', $title));
 			$debugPrefix = "_es__" . self::$tailwindDebugSlugCache[$title] . "/{$part}";
 		}
-
 		return Helpers::clsx([$debugPrefix, $baseClasses, ...$optionClasses, ...$combinationClasses, ...$custom]);
 	}
 }

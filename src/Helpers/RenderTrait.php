@@ -158,16 +158,12 @@ trait RenderTrait
 		string $renderContent = '',
 		?WP_Block $renderBlock = null
 	): string {
-		if (self::$allowedNamesFlipped === null) {
-			self::$allowedNamesFlipped = \array_flip(self::PROJECT_RENDER_ALLOWED_NAMES);
-		}
+		self::$allowedNamesFlipped ??= \array_flip(self::PROJECT_RENDER_ALLOWED_NAMES);
 
 		Helpers::initializePathCaches();
 
 		if ($renderPathName === '' || $renderPathName === '0') {
-			if (self::$defaultPathName === null) {
-				self::$defaultPathName = 'components';
-			}
+			self::$defaultPathName ??= 'components';
 			$renderPathName = self::$defaultPathName;
 		}
 
