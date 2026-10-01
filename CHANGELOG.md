@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [13.5.1]
+## [13.6.0]
 
 ### Fixed
 
