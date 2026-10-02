@@ -1243,6 +1243,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.6.0]: https://github.com/infinum/eightshift-libs/compare/13.5.0...13.6.0
 [13.4.1]: https://github.com/infinum/eightshift-libs/compare/13.4.0...13.4.1
 [13.4.0]: https://github.com/infinum/eightshift-libs/compare/13.3.0...13.4.0
 [13.3.0]: https://github.com/infinum/eightshift-libs/compare/13.2.1...13.3.0
