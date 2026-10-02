@@ -90,6 +90,14 @@ class CacheTraitWrapper
 	}
 
 	/**
+	 * Public wrapper for updateTransientCache method for testing.
+	 */
+	public static function updateTransientCacheWrapper(string $transientKey, string $timestampKey, string $data): void
+	{
+		self::updateTransientCache($transientKey, $timestampKey, $data);
+	}
+
+	/**
 	 * Set cache identity for version validation tests.
 	 */
 	public static function setCacheIdentityWrapper(string $cacheName, string $version): void
@@ -689,6 +697,227 @@ class CacheTraitTest extends BaseTestCase
 
 		$this->assertFalse($result);
 		$this->assertFalse($transientRead);
+	}
+
+	/**
+	 * @covers ::tryLoadFromCache
+	 */
+	public function testTryLoadFromCacheServesTransientWhenStampMatchesContent(): void
+	{
+		$cacheFile = '/test/manifests.json';
+		$fileContent = '{"title": "manifest"}';
+		$payload = '{"title": "manifest"}';
+
+		$this->wrapper::setCacheIdentityWrapper('test-cache', '1.0.0');
+
+		Functions\when('get_option')->alias(function ($key, $default = false) use ($fileContent) {
+			if ($key === 'es_cache_version_' . \md5('test-cache')) {
+				return '1.0.0';
+			}
+
+			// Stamp written by any server for the same file content.
+			return \md5($fileContent);
+		});
+		Functions\when('get_transient')->justReturn($payload);
+		Functions\when('file_exists')->alias(function ($path) use ($cacheFile) {
+			return $path === $cacheFile;
+		});
+		Functions\when('file_get_contents')->alias(function ($path) use ($cacheFile, $fileContent) {
+			return $path === $cacheFile ? $fileContent : false;
+		});
+		Functions\when('md5_file')->alias(function ($path) use ($cacheFile, $fileContent) {
+			return $path === $cacheFile ? \md5($fileContent) : false;
+		});
+
+		// Read path must not write to the database.
+		$writes = [
+			'delete_transient' => 0,
+			'set_transient' => 0,
+			'update_option' => 0,
+		];
+		Functions\when('delete_transient')->alias(function () use (&$writes) {
+			$writes['delete_transient']++;
+			return true;
+		});
+		Functions\when('set_transient')->alias(function () use (&$writes) {
+			$writes['set_transient']++;
+			return true;
+		});
+		Functions\when('update_option')->alias(function () use (&$writes) {
+			$writes['update_option']++;
+			return true;
+		});
+
+		$result = $this->wrapper::tryLoadFromCacheWrapper($cacheFile, 'transient-key', 'stamp-key');
+
+		$this->assertTrue($result);
+		$this->assertSame(['title' => 'manifest'], $this->wrapper::getCache());
+		$this->assertSame(['delete_transient' => 0, 'set_transient' => 0, 'update_option' => 0], $writes);
+	}
+
+	/**
+	 * @covers ::tryLoadFromCache
+	 */
+	public function testTryLoadFromCacheFallsBackToLocalFileOnStampMismatchWithoutWrites(): void
+	{
+		$cacheFile = '/test/manifests.json';
+		$fileContent = '{"title": "local-file"}';
+
+		$this->wrapper::setCacheIdentityWrapper('test-cache', '1.0.0');
+
+		Functions\when('get_option')->alias(function ($key, $default = false) {
+			if ($key === 'es_cache_version_' . \md5('test-cache')) {
+				return '1.0.0';
+			}
+
+			// Stamp written by another server for different file content.
+			return 'hash-written-by-another-server';
+		});
+		Functions\when('get_transient')->justReturn('{"title": "other-server"}');
+		Functions\when('file_exists')->alias(function ($path) use ($cacheFile) {
+			return $path === $cacheFile;
+		});
+		Functions\when('file_get_contents')->alias(function ($path) use ($cacheFile, $fileContent) {
+			return $path === $cacheFile ? $fileContent : false;
+		});
+		Functions\when('md5_file')->alias(function ($path) use ($cacheFile, $fileContent) {
+			return $path === $cacheFile ? \md5($fileContent) : false;
+		});
+
+		// The transient of another server must be left alone, not deleted or rewritten.
+		$writes = [
+			'delete_transient' => 0,
+			'set_transient' => 0,
+			'update_option' => 0,
+		];
+		Functions\when('delete_transient')->alias(function () use (&$writes) {
+			$writes['delete_transient']++;
+			return true;
+		});
+		Functions\when('set_transient')->alias(function () use (&$writes) {
+			$writes['set_transient']++;
+			return true;
+		});
+		Functions\when('update_option')->alias(function () use (&$writes) {
+			$writes['update_option']++;
+			return true;
+		});
+
+		$result = $this->wrapper::tryLoadFromCacheWrapper($cacheFile, 'transient-key', 'stamp-key');
+
+		$this->assertTrue($result);
+		$this->assertSame(['title' => 'local-file'], $this->wrapper::getCache());
+		$this->assertSame(['delete_transient' => 0, 'set_transient' => 0, 'update_option' => 0], $writes);
+	}
+
+	/**
+	 * @covers ::tryLoadFromCache
+	 */
+	public function testTryLoadFromCacheFallsBackToLocalFileWhenTransientMissingWithoutWrites(): void
+	{
+		$cacheFile = '/test/manifests.json';
+		$fileContent = '{"title": "local-file"}';
+
+		$this->wrapper::setCacheIdentityWrapper('test-cache', '1.0.0');
+
+		Functions\when('get_option')->alias(function ($key, $default = false) use ($fileContent) {
+			if ($key === 'es_cache_version_' . \md5('test-cache')) {
+				return '1.0.0';
+			}
+
+			return \md5($fileContent);
+		});
+		Functions\when('get_transient')->justReturn(false);
+		Functions\when('file_exists')->alias(function ($path) use ($cacheFile) {
+			return $path === $cacheFile;
+		});
+		Functions\when('file_get_contents')->alias(function ($path) use ($cacheFile, $fileContent) {
+			return $path === $cacheFile ? $fileContent : false;
+		});
+		Functions\when('md5_file')->alias(function ($path) use ($cacheFile, $fileContent) {
+			return $path === $cacheFile ? \md5($fileContent) : false;
+		});
+
+		$writes = [
+			'delete_transient' => 0,
+			'set_transient' => 0,
+			'update_option' => 0,
+		];
+		Functions\when('delete_transient')->alias(function () use (&$writes) {
+			$writes['delete_transient']++;
+			return true;
+		});
+		Functions\when('set_transient')->alias(function () use (&$writes) {
+			$writes['set_transient']++;
+			return true;
+		});
+		Functions\when('update_option')->alias(function () use (&$writes) {
+			$writes['update_option']++;
+			return true;
+		});
+
+		$result = $this->wrapper::tryLoadFromCacheWrapper($cacheFile, 'transient-key', 'stamp-key');
+
+		$this->assertTrue($result);
+		$this->assertSame(['title' => 'local-file'], $this->wrapper::getCache());
+		$this->assertSame(['delete_transient' => 0, 'set_transient' => 0, 'update_option' => 0], $writes);
+	}
+
+	/**
+	 * @covers ::updateTransientCache
+	 */
+	public function testUpdateTransientCacheSkipsWriteWhenPayloadIdentical(): void
+	{
+		$data = '{"title": "same"}';
+		$setTransientCalls = [];
+		$updateOptionCalls = [];
+
+		Functions\when('get_transient')->justReturn($data);
+		Functions\when('set_transient')->alias(function ($key, $value, $expiration) use (&$setTransientCalls) {
+			$setTransientCalls[] = [$key, $value, $expiration];
+			return true;
+		});
+		Functions\when('update_option')->alias(function ($key, $value, $autoload) use (&$updateOptionCalls) {
+			$updateOptionCalls[] = [$key, $value, $autoload];
+			return true;
+		});
+
+		// wp_set_option_autoload is not stubbed: also covers cores without it.
+		$this->wrapper::updateTransientCacheWrapper('transient-key', 'stamp-key', $data);
+
+		$this->assertSame([], $setTransientCalls);
+		$this->assertSame([['stamp-key', \md5($data), true]], $updateOptionCalls);
+	}
+
+	/**
+	 * @covers ::updateTransientCache
+	 */
+	public function testUpdateTransientCacheWritesPayloadAndHashStamp(): void
+	{
+		$data = '{"title": "new"}';
+		$setTransientCalls = [];
+		$autoloadCalls = [];
+		$updateOptionCalls = [];
+
+		Functions\when('get_transient')->justReturn(false);
+		Functions\when('set_transient')->alias(function ($key, $value, $expiration) use (&$setTransientCalls) {
+			$setTransientCalls[] = [$key, $value, $expiration];
+			return true;
+		});
+		Functions\when('wp_set_option_autoload')->alias(function ($option, $autoload) use (&$autoloadCalls) {
+			$autoloadCalls[] = [$option, $autoload];
+			return true;
+		});
+		Functions\when('update_option')->alias(function ($key, $value, $autoload) use (&$updateOptionCalls) {
+			$updateOptionCalls[] = [$key, $value, $autoload];
+			return true;
+		});
+
+		$this->wrapper::updateTransientCacheWrapper('transient-key', 'stamp-key', $data);
+
+		$this->assertSame([['transient-key', $data, 0]], $setTransientCalls);
+		$this->assertSame([['_transient_transient-key', false]], $autoloadCalls);
+		$this->assertSame([['stamp-key', \md5($data), true]], $updateOptionCalls);
 	}
 
 	/**

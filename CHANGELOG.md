@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.6.0]
+
+### Fixed
+
+- `Helpers\CacheTrait` manifest transient cache is no longer invalidated and rewritten on every request when multiple web servers share one database. The cache stamp now stores a content hash (`md5`) instead of `filemtime()`, the cache read path performs no database writes, and the large transient payload is kept out of autoloaded options when the WordPress core API allows it.
+
 ## [13.5.0]
 
 ### Fixed
@@ -1237,6 +1243,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.6.0]: https://github.com/infinum/eightshift-libs/compare/13.5.0...13.6.0
 [13.4.1]: https://github.com/infinum/eightshift-libs/compare/13.4.0...13.4.1
 [13.4.0]: https://github.com/infinum/eightshift-libs/compare/13.3.0...13.4.0
 [13.3.0]: https://github.com/infinum/eightshift-libs/compare/13.2.1...13.3.0

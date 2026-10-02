@@ -3,6 +3,7 @@
 		"defined",
 		"constant",
 		"file_exists",
+		"md5_file",
 		"file_get_contents",
 		"file_put_contents",
 		"is_dir",
