@@ -142,7 +142,7 @@ trait CacheTrait
 			$encoded = \wp_json_encode($data);
 
 			if (\is_string($encoded) && self::writeFileOptimized($cacheFile, $encoded)) {
-				self::updateTransientCache($transientKey, $timestampKey, $encoded, $cacheFile);
+				self::updateTransientCache($transientKey, $timestampKey, $encoded);
 				\update_option(self::getVersionKey(), self::$version, true);
 			}
 
@@ -155,11 +155,16 @@ trait CacheTrait
 	/**
 	 * Try to populate the in-memory cache from transient or file. Returns true on hit.
 	 *
-	 * @phpstan-impure Result depends on external state (transient store, file mtime) that another process can change between calls.
+	 * Never writes to the database: on multi-server setups sharing one database,
+	 * a write here would invalidate the cache for every other server on every
+	 * request. The local cache file is the source of truth when the transient
+	 * can't be validated.
+	 *
+	 * @phpstan-impure Result depends on external state (transient store, cache file) that another process can change between calls.
 	 *
 	 * @param string $cacheFile Path to the cache file.
 	 * @param string $transientKey Transient key.
-	 * @param string $timestampKey Timestamp option key.
+	 * @param string $timestampKey Content-hash stamp option key.
 	 *
 	 * @throws Exception If a stored payload fails to parse.
 	 */
@@ -171,22 +176,17 @@ trait CacheTrait
 
 		$transientData = \get_transient($transientKey);
 
-		if ($transientData !== false && \is_string($transientData)) {
-			if (self::isTransientValid($cacheFile, $timestampKey)) {
-				self::$cache = self::parseManifest($transientData);
-				return true;
-			}
-
-			// Timestamp mismatch, remove invalid transient.
-			\delete_transient($transientKey);
+		if (\is_string($transientData) && self::isTransientValid($cacheFile, $timestampKey)) {
+			self::$cache = self::parseManifest($transientData);
+			return true;
 		}
 
+		// Stale or missing transient: fall back to the local file without
+		// re-creating the transient. Another server may still be using it.
 		if (\file_exists($cacheFile)) {
 			$content = \file_get_contents($cacheFile); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			if ($content !== false) {
-				$decoded = self::parseManifest($content);
-				self::updateTransientCache($transientKey, $timestampKey, $content, $cacheFile);
-				self::$cache = $decoded;
+				self::$cache = self::parseManifest($content);
 				return true;
 			}
 		}
@@ -315,7 +315,7 @@ trait CacheTrait
 	}
 
 	/**
-	 * Get timestamp key for version tracking.
+	 * Get stamp (content hash) key for transient validation.
 	 */
 	private static function getTimestampKey(): string
 	{
@@ -323,57 +323,60 @@ trait CacheTrait
 	}
 
 	/**
-	 * Check if transient cache is valid by comparing timestamps.
+	 * Check if transient cache is valid by comparing the stored content hash with the local cache file.
+	 *
+	 * The hash is server-independent: identical file content validates on every
+	 * server, unlike filemtime() which differs per server even for identical files.
 	 *
 	 * @param string $cacheFile Path to the cache file.
-	 * @param string $timestampKey Database option key for timestamp.
+	 * @param string $timestampKey Database option key for the content hash.
 	 *
 	 * @return bool Whether the transient is valid.
 	 */
 	private static function isTransientValid(string $cacheFile, string $timestampKey): bool
 	{
-		// Get stored timestamp from database.
-		$storedTimestamp = \get_option($timestampKey, 0);
+		// Get stored content hash from database.
+		$storedTimestamp = \get_option($timestampKey, '');
 
-		// Get file modification time if file exists.
-		if (\file_exists($cacheFile)) {
-			$fileTimestamp = \filemtime($cacheFile);
-			if ($fileTimestamp === false) {
-				return false;
-			}
-
-			// Compare timestamps.
-			return (int) $storedTimestamp === $fileTimestamp;
+		if (!\is_string($storedTimestamp) || $storedTimestamp === '') {
+			return false;
 		}
 
-		// If no file exists, transient is invalid.
-		return false;
+		if (!\file_exists($cacheFile)) {
+			return false;
+		}
+
+		$fileTimestamp = \md5_file($cacheFile);
+
+		return $fileTimestamp !== false && $storedTimestamp === $fileTimestamp;
 	}
 
 	/**
-	 * Update transient cache and timestamp in database.
+	 * Store the manifest payload and its content hash in the database.
+	 *
+	 * Only called from the rebuild path. Skips the transient write when the
+	 * stored payload is already identical; update_option() does the same for the stamp.
 	 *
 	 * @param string $transientKey Transient key for cache storage.
-	 * @param string $timestampKey Database option key for timestamp.
+	 * @param string $timestampKey Database option key for the content hash.
 	 * @param string $data Cache data to store.
-	 * @param string $cacheFile Path to the cache file.
 	 */
 	private static function updateTransientCache(
 		string $transientKey,
 		string $timestampKey,
-		string $data,
-		string $cacheFile
+		string $data
 	): void {
-		// Store data in transient.
-		\set_transient($transientKey, $data, 0);
+		if (\get_transient($transientKey) !== $data) {
+			\set_transient($transientKey, $data, 0);
 
-		// Update timestamp in database.
-		if (\file_exists($cacheFile)) {
-			$fileTimestamp = \filemtime($cacheFile);
-			if ($fileTimestamp !== false) {
-				\update_option($timestampKey, $fileTimestamp, true);
+			// The payload can be large; keep it out of alloptions when the core
+			// API allows it. No-op on multisite (network transients) and older WP cores.
+			if (\function_exists('wp_set_option_autoload')) {
+				\wp_set_option_autoload('_transient_' . $transientKey, false);
 			}
 		}
+
+		\update_option($timestampKey, \md5($data), true);
 	}
 
 	/**
