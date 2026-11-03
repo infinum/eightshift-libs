@@ -148,7 +148,7 @@ abstract class AbstractAssets implements ServiceInterface
 		foreach ([$entry . '.asset.json', $entry . '.json'] as $key) {
 			try {
 				$asset = $this->setAssetsItem($key);
-			} catch (Throwable $exception) {
+			} catch (Throwable) {
 				continue;
 			}
 
@@ -162,12 +162,11 @@ abstract class AbstractAssets implements ServiceInterface
 				continue;
 			}
 
-			$name = \basename($path);
-			if (!\str_ends_with($name, '.json')) {
+			if (!\str_ends_with($path, '.json')) {
 				continue;
 			}
 
-			$file = \realpath($root . \DIRECTORY_SEPARATOR . $name);
+			$file = \realpath($root . \DIRECTORY_SEPARATOR . \ltrim($path, '/'));
 			if ($file === false || !\str_starts_with($file, $root . \DIRECTORY_SEPARATOR) || !\is_file($file) || !\is_readable($file)) {
 				continue;
 			}
@@ -181,7 +180,7 @@ abstract class AbstractAssets implements ServiceInterface
 			}
 
 			foreach ($generated as $dependency) {
-				if (!\is_string($dependency) || $dependency === '') {
+				if (!\is_string($dependency) || \trim($dependency) === '') {
 					continue 2;
 				}
 			}
