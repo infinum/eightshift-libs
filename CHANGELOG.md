@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [13.6.1]
+
+### Changed
+
+- Bumped dev dependencies: `phpunit/phpunit` → `^13.4.4`, `php-stubs/wordpress-stubs` → `7.1.2`, `szepeviktor/phpstan-wordpress` → `2.0.4`, `phpstan/phpstan-deprecation-rules` → `^2.0.5`, `rector/rector` → `^2.8.3`.
+- Updated `phpunit.xml.dist` for PHPUnit 13: `executionOrder="defects"` with `resolveDependencies="true"` replaces the deprecated `depends` order.
+
 ## [13.6.0]
 
 ### Fixed
@@ -1243,6 +1250,7 @@ Init setup
 - Gutenberg Blocks Registration.
 - Assets Manifest data.
 
+[13.6.1]: https://github.com/infinum/eightshift-libs/compare/13.6.0...13.6.1
 [13.6.0]: https://github.com/infinum/eightshift-libs/compare/13.5.0...13.6.0
 [13.4.1]: https://github.com/infinum/eightshift-libs/compare/13.4.0...13.4.1
 [13.4.0]: https://github.com/infinum/eightshift-libs/compare/13.3.0...13.4.0

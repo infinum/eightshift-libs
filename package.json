@@ -1,6 +1,6 @@
 {
 	"name": "@eightshift/libs",
-	"version": "13.6.0",
+	"version": "13.6.1",
 	"description": "A collection of useful backend utility modules. powered by Eightshift",
 	"author": {
 		"name": "Eightshift team",
@@ -26,7 +26,7 @@
 	"homepage": "https://github.com/infinum/eightshift-libs#readme",
 	"license": "MIT",
 	"devDependencies": {
-		"lint-staged": "^17.0.5",
+		"lint-staged": "^17.6.0",
 		"husky": "^9.1.7"
 	},
 	"sideEffects": false,
