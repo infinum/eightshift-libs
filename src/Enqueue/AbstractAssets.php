@@ -144,6 +144,19 @@ abstract class AbstractAssets implements ServiceInterface
 			return $dependencies;
 		}
 
+		$projectRoot = \dirname($root);
+
+		if (\realpath(\get_stylesheet_directory()) === $projectRoot) {
+			$publicUrl = \get_stylesheet_directory_uri() . '/public/';
+		} elseif (\realpath(\get_template_directory()) === $projectRoot) {
+			$publicUrl = \get_template_directory_uri() . '/public/';
+		} else {
+			$publicUrl = \plugins_url('public/', $projectRoot . '/index.php');
+		}
+
+		$publicUrlPath = \wp_parse_url($publicUrl, \PHP_URL_PATH);
+		$publicUrlPath = \is_string($publicUrlPath) ? \rtrim(\rawurldecode($publicUrlPath), '/') . '/' : '';
+
 		$entry = \substr($scriptKey, 0, -3);
 		foreach ([$entry . '.asset.json', $entry . '.json'] as $key) {
 			try {
@@ -164,6 +177,10 @@ abstract class AbstractAssets implements ServiceInterface
 
 			if (!\str_ends_with($path, '.json')) {
 				continue;
+			}
+
+			if ($publicUrlPath !== '' && \str_starts_with($path, $publicUrlPath)) {
+				$path = \substr($path, \strlen($publicUrlPath));
 			}
 
 			$file = \realpath($root . \DIRECTORY_SEPARATOR . \ltrim($path, '/'));
