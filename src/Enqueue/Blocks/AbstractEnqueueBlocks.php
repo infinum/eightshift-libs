@@ -57,7 +57,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		\wp_register_script(
 			$handle,
 			$this->setAssetsItem(static::BLOCKS_EDITOR_SCRIPT_URI),
-			$this->getBlockEditorScriptDependencies(),
+			$this->mergeAssetDependencies(static::BLOCKS_EDITOR_SCRIPT_URI, $this->getBlockEditorScriptDependencies()),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
@@ -174,7 +174,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		\wp_register_script(
 			$handle,
 			$this->setAssetsItem(static::BLOCKS_FRONTEND_SCRIPT_URI),
-			$this->getBlockFrontendScriptDependencies(),
+			$this->mergeAssetDependencies(static::BLOCKS_FRONTEND_SCRIPT_URI, $this->getBlockFrontendScriptDependencies()),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
