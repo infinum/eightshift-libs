@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Added
+
+- Merge optional generated `.asset.json` or legacy `.json` script dependencies with explicitly declared handles for admin, block editor, block frontend and theme scripts. Missing or invalid metadata leaves the declared dependencies unchanged.
+
 ## [13.6.0]
 
 ### Fixed
