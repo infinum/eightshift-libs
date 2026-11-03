@@ -26,7 +26,7 @@
 	"homepage": "https://github.com/infinum/eightshift-libs#readme",
 	"license": "MIT",
 	"devDependencies": {
-		"lint-staged": "^17.0.5",
+		"lint-staged": "^17.6.0",
 		"husky": "^9.1.7"
 	},
 	"sideEffects": false,
