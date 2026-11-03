@@ -75,7 +75,7 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 		\wp_register_script(
 			$handle,
 			$this->setAssetsItem(static::THEME_SCRIPT_URI),
-			$this->getThemeScriptDependencies(),
+			$this->mergeAssetDependencies(static::THEME_SCRIPT_URI, $this->getThemeScriptDependencies()),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);

@@ -12,6 +12,7 @@ namespace EightshiftLibs\Enqueue;
 
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
+use Throwable;
 
 /**
  * Class Assets
@@ -120,6 +121,81 @@ abstract class AbstractAssets implements ServiceInterface
 	public function setAssetsItem(string $key): string
 	{
 		return Helpers::getAsset($key);
+	}
+
+	/**
+	 * Merge optional generated JSON dependencies with explicitly declared handles.
+	 *
+	 * The manifest may contain an un-hashed .asset.json or legacy .json key.
+	 * Only files within the project public directory are read.
+	 *
+	 * @param string $scriptKey Script manifest key.
+	 * @param array<int, string> $dependencies Explicit dependencies.
+	 * @return array<int, string> Dependencies with generated handles appended.
+	 */
+	protected function mergeAssetDependencies(string $scriptKey, array $dependencies): array
+	{
+		if (!\str_ends_with($scriptKey, '.js')) {
+			return $dependencies;
+		}
+
+		$root = \realpath(Helpers::getProjectPaths('public'));
+		if ($root === false) {
+			return $dependencies;
+		}
+
+		$entry = \substr($scriptKey, 0, -3);
+		foreach ([$entry . '.asset.json', $entry . '.json'] as $key) {
+			try {
+				$asset = $this->setAssetsItem($key);
+			} catch (Throwable $exception) {
+				continue;
+			}
+
+			$path = \wp_parse_url($asset, \PHP_URL_PATH);
+			if (!\is_string($path)) {
+				continue;
+			}
+
+			$path = \rawurldecode($path);
+			if (\str_contains($path, "\0") || \str_contains($path, '\\')) {
+				continue;
+			}
+
+			$name = \basename($path);
+			if (!\str_ends_with($name, '.json')) {
+				continue;
+			}
+
+			$file = \realpath($root . \DIRECTORY_SEPARATOR . $name);
+			if ($file === false || !\str_starts_with($file, $root . \DIRECTORY_SEPARATOR) || !\is_file($file) || !\is_readable($file)) {
+				continue;
+			}
+
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- The resolved file is local and confined to the public directory.
+			$json = @\file_get_contents($file);
+			$data = \is_string($json) ? \json_decode($json, true) : null;
+			$generated = $data['dependencies'] ?? null;
+			if (!\is_array($generated) || !\array_is_list($generated)) {
+				continue;
+			}
+
+			foreach ($generated as $dependency) {
+				if (!\is_string($dependency) || $dependency === '') {
+					continue 2;
+				}
+			}
+
+			foreach ($generated as $dependency) {
+				if (!\in_array($dependency, $dependencies, true)) {
+					$dependencies[] = $dependency;
+				}
+			}
+
+			return $dependencies;
+		}
+
+		return $dependencies;
 	}
 
 	/**
