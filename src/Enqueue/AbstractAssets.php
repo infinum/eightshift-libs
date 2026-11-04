@@ -144,7 +144,7 @@ abstract class AbstractAssets implements ServiceInterface
 			return $dependencies;
 		}
 
-		$projectRoot = \dirname($root);
+		$projectRoot = \realpath(Helpers::getProjectPaths());
 
 		if (\realpath(\get_stylesheet_directory()) === $projectRoot) {
 			$publicUrl = \get_stylesheet_directory_uri() . '/public/';
