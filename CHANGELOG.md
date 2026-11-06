@@ -8,7 +8,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
+- Experimental unified editor ESM opt-in via generated `format: "module"` / `readiness: "eightshift-editor-v1"` metadata. Preserve classic WordPress dependencies, localization/translations and script attributes while exposing per-handle readiness promises; reject incompatible strategies (including registered transitive dependencies), late registration and missing module completion. Existing classic modes remain unchanged.
 - Merge optional generated `.asset.json` or legacy `.json` script dependencies with explicitly declared handles for admin, block editor, block frontend and theme scripts. Missing or invalid metadata leaves the declared dependencies unchanged.
+
+### Fixed
+
+- Use `enqueue_block_editor_assets` for editor JavaScript in the enqueue example, keeping registration out of Gutenberg's content iframe while leaving shared styles on `enqueue_block_assets`.
+- Scope experimental editor module configuration, tag filters and observed footer completion to each `WP_Scripts` registry. Gutenberg's temporary iframe footer no longer prevents later registration in the main editor; repeated enqueues and copied registrations do not duplicate readiness bootstrap scripts.
 
 ## [13.6.0]
 

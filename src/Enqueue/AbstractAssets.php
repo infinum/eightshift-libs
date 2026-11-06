@@ -135,13 +135,31 @@ abstract class AbstractAssets implements ServiceInterface
 	 */
 	protected function mergeAssetDependencies(string $scriptKey, array $dependencies): array
 	{
+		$data = $this->readAssetMetadata($scriptKey);
+		foreach ($data['dependencies'] ?? [] as $dependency) {
+			if (!\in_array($dependency, $dependencies, true)) {
+				$dependencies[] = $dependency;
+			}
+		}
+
+		return $dependencies;
+	}
+
+	/**
+	 * Read optional generated metadata from a validated local public-directory file.
+	 *
+	 * @param string $scriptKey Script manifest key.
+	 * @return array<string, mixed>|null Metadata with a validated dependency list, or null.
+	 */
+	protected function readAssetMetadata(string $scriptKey): ?array
+	{
 		if (!\str_ends_with($scriptKey, '.js')) {
-			return $dependencies;
+			return null;
 		}
 
 		$root = \realpath(Helpers::getProjectPaths('public'));
 		if ($root === false) {
-			return $dependencies;
+			return null;
 		}
 
 		$projectRoot = \realpath(Helpers::getProjectPaths());
@@ -202,16 +220,10 @@ abstract class AbstractAssets implements ServiceInterface
 				}
 			}
 
-			foreach ($generated as $dependency) {
-				if (!\in_array($dependency, $dependencies, true)) {
-					$dependencies[] = $dependency;
-				}
-			}
-
-			return $dependencies;
+			return $data;
 		}
 
-		return $dependencies;
+		return null;
 	}
 
 	/**
