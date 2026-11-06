@@ -10,13 +10,23 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue\Blocks;
 
+use _WP_Dependency; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse -- Used in WeakMap PHPDoc.
 use EightshiftLibs\Enqueue\AbstractAssets;
+use RuntimeException;
+use WeakMap;
 
 /**
  * Enqueue_Blocks class.
  */
 abstract class AbstractEnqueueBlocks extends AbstractAssets
 {
+	/**
+	 * Registrations owned by this service, including copies into an iframe registry.
+	 *
+	 * @var WeakMap<_WP_Dependency, bool>|null
+	 */
+	private ?WeakMap $editorModuleRegistrations = null;
+
 	// ---------------------------------------------------------------------------
 	// ONLY EDITOR
 	// ---------------------------------------------------------------------------
@@ -45,6 +55,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Enqueue blocks script for editor only.
+	 *
+	 * @throws RuntimeException If module metadata or handle ownership is invalid.
 	 */
 	public function enqueueBlockEditorScript(): void
 	{
@@ -53,6 +65,21 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		}
 
 		$handle = $this->getBlockEditorScriptsHandle();
+		$metadata = $this->readAssetMetadata(static::BLOCKS_EDITOR_SCRIPT_URI);
+		$isModule = ($metadata['format'] ?? null) === 'module';
+
+		if ($isModule || \array_key_exists('readiness', $metadata ?? [])) {
+			if (!$isModule || ($metadata['readiness'] ?? null) !== 'eightshift-editor-v1') {
+				throw new RuntimeException('Unsupported Eightshift editor module readiness metadata.');
+			}
+
+			EditorModule::validateRegistration($handle, $this->scriptArgs());
+			$this->editorModuleRegistrations ??= new WeakMap();
+			$registration = \wp_scripts()->registered[$handle] ?? null;
+			if ($registration !== null && !isset($this->editorModuleRegistrations[$registration])) {
+				throw new RuntimeException('Eightshift editor module handle is already registered: ' . $handle);
+			}
+		}
 
 		\wp_register_script(
 			$handle,
@@ -61,6 +88,11 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
+
+		if ($isModule) {
+			EditorModule::configure($handle);
+			$this->editorModuleRegistrations[\wp_scripts()->registered[$handle]] = true;
+		}
 
 		\wp_enqueue_script($handle);
 
