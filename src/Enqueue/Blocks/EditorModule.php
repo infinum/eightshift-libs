@@ -40,7 +40,7 @@ final class EditorModule
 	 */
 	private static function trackFooterPrinting(): void
 	{
-		if (self::$footerPrinted !== null) {
+		if (self::$footerPrinted instanceof WeakMap) {
 			return;
 		}
 
@@ -117,7 +117,7 @@ final class EditorModule
 
 			$processor = new WP_HTML_Tag_Processor($tag);
 			$matches = 0;
-			while ($processor->next_tag('SCRIPT')) {
+			while ($processor->next_tag(['tag_name' => 'SCRIPT'])) {
 				if ($processor->get_attribute('id') !== $handle . '-js') {
 					continue;
 				}
@@ -172,7 +172,11 @@ final class EditorModule
 				}
 			}
 
-			foreach ($scripts->registered[$dependency]->deps ?? [] as $nested) {
+			if (!isset($scripts->registered[$dependency])) {
+				continue;
+			}
+
+			foreach ($scripts->registered[$dependency]->deps as $nested) {
 				$pending[] = $nested;
 			}
 		}
