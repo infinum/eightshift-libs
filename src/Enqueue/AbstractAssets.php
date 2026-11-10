@@ -227,6 +227,27 @@ abstract class AbstractAssets implements ServiceInterface
 	}
 
 	/**
+	 * Enqueue optional local shared font declarations.
+	 */
+	protected function enqueueSharedFonts(): void
+	{
+		$projectRoot = \realpath(Helpers::getProjectPaths());
+		if ($projectRoot === false) {
+			return;
+		}
+
+		if (\realpath(\get_stylesheet_directory()) === $projectRoot) {
+			$url = \get_stylesheet_directory_uri() . '/public/';
+		} elseif (\realpath(\get_template_directory()) === $projectRoot) {
+			$url = \get_template_directory_uri() . '/public/';
+		} else {
+			$url = \plugins_url('public/', $projectRoot . '/index.php');
+		}
+
+		SharedFonts::enqueue(Helpers::getProjectPaths('public'), $url);
+	}
+
+	/**
 	 * Method that returns assets name used to prefix asset handlers.
 	 */
 	abstract public function getAssetsPrefix(): string;

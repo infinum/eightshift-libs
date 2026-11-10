@@ -155,6 +155,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			$this->getMedia()
 		);
 
+		$this->enqueueSharedFonts();
+
 		\wp_enqueue_style($handle);
 	}
 
@@ -254,6 +256,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			$this->getMedia()
 		);
 
+		$this->enqueueSharedFonts();
+
 		\wp_enqueue_style($handle);
 	}
 
@@ -302,6 +306,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
+
+		$this->enqueueSharedFonts();
 
 		\wp_enqueue_style($handle);
 	}
