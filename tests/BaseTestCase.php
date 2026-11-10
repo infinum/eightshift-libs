@@ -32,6 +32,7 @@ abstract class BaseTestCase extends TestCase
 	{
 		parent::setUp();
 		Monkey\setUp();
+		Monkey\Functions\stubEscapeFunctions();
 	}
 
 	/**
