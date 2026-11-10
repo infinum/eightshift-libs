@@ -63,7 +63,6 @@ class MediaTraitWrapper
 		foreach ($properties as $property) {
 			if ($reflection->hasProperty($property)) {
 				$prop = $reflection->getProperty($property);
-				$prop->setAccessible(true);
 
 				if ($property === 'allowedExtensionsFlipped') {
 					$prop->setValue(null, null);
@@ -81,7 +80,6 @@ class MediaTraitWrapper
 	{
 		$reflection = new \ReflectionClass(self::class);
 		$prop = $reflection->getProperty('allowedExtensionsFlipped');
-		$prop->setAccessible(true);
 		return $prop->getValue();
 	}
 
@@ -92,7 +90,6 @@ class MediaTraitWrapper
 	{
 		$reflection = new \ReflectionClass(self::class);
 		$prop = $reflection->getProperty('webpMediaCache');
-		$prop->setAccessible(true);
 		return $prop->getValue();
 	}
 
@@ -103,7 +100,6 @@ class MediaTraitWrapper
 	{
 		$reflection = new \ReflectionClass(self::class);
 		$prop = $reflection->getProperty('webpExistsCache');
-		$prop->setAccessible(true);
 		return $prop->getValue();
 	}
 }

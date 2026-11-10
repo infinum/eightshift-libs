@@ -162,7 +162,6 @@ class CacheTraitWrapper
 		foreach ($properties as $property) {
 			if ($reflection->hasProperty($property)) {
 				$prop = $reflection->getProperty($property);
-				$prop->setAccessible(true);
 
 				if (in_array($property, ['cache', 'cacheBuilder', 'fileExistsCache', 'fileContentsCache', 'jsonDecodeCache'])) {
 					$prop->setValue(null, []);
@@ -326,7 +325,6 @@ class CacheTraitTest extends BaseTestCase
 		// Simulate cache already set
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheProperty = $reflection->getProperty('cache');
-		$cacheProperty->setAccessible(true);
 		$cacheProperty->setValue(null, ['test' => 'data']);
 
 		// Should return early
@@ -379,7 +377,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder with data
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'blocks' => [
 				'component' => [
@@ -535,7 +532,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'blocks' => [
 				'component' => [
@@ -562,7 +558,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder with empty items
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'blocks' => [],
 			'settings' => [
@@ -589,7 +584,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder with multiple flag
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'blocks' => [
 				'component' => [
@@ -1160,7 +1154,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder without the requested type
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'blocks' => [
 				'button' => [
@@ -1182,7 +1175,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder with empty path
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'blocks' => [
 				'component' => [
@@ -1204,7 +1196,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'blocks' => [
 				'component' => [
@@ -1228,7 +1219,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'blocks' => [
 				'component' => [
@@ -1252,7 +1242,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up cache builder with custom fileName
 		$reflection = new \ReflectionClass($this->wrapper);
 		$cacheBuilderProperty = $reflection->getProperty('cacheBuilder');
-		$cacheBuilderProperty->setAccessible(true);
 		$cacheBuilderProperty->setValue(null, [
 			'settings' => [
 				'global' => [
@@ -1556,7 +1545,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up blocks namespace
 		$reflection = new \ReflectionClass($this->wrapper);
 		$namespaceProperty = $reflection->getProperty('blocksNamespace');
-		$namespaceProperty->setAccessible(true);
 		$namespaceProperty->setValue(null, 'test-namespace');
 
 		$fileDecoded = ['blockName' => 'test-block'];
@@ -1575,7 +1563,6 @@ class CacheTraitTest extends BaseTestCase
 		// Set up blocks namespace
 		$reflection = new \ReflectionClass($this->wrapper);
 		$namespaceProperty = $reflection->getProperty('blocksNamespace');
-		$namespaceProperty->setAccessible(true);
 		$namespaceProperty->setValue(null, 'test-namespace');
 
 		$fileDecoded = ['someOtherKey' => 'value'];
