@@ -57,6 +57,8 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 				$this->getMedia()
 			);
 
+			$this->enqueueSharedFonts();
+
 			\wp_enqueue_style($handle);
 		}
 	}
