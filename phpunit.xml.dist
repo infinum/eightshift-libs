@@ -21,6 +21,7 @@
 			<directory suffix=".php">src</directory>
 		</include>
 		<exclude>
+			<directory suffix="Example.php">src</directory>
 			<directory>src/WpCli</directory>
 			<file>src/AdminMenus/AdminMenuExample.php</file>
 			<file>src/AdminMenus/AdminSubMenuExample.php</file>
