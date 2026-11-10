@@ -277,7 +277,6 @@ class RenderTraitWrapper
 	{
 		$reflection = new \ReflectionClass(self::class);
 		$prop = $reflection->getProperty('allowedNamesFlipped');
-		$prop->setAccessible(true);
 		return $prop->getValue();
 	}
 
@@ -288,7 +287,6 @@ class RenderTraitWrapper
 	{
 		$reflection = new \ReflectionClass(self::class);
 		$prop = $reflection->getProperty('renderHandlers');
-		$prop->setAccessible(true);
 		return $prop->getValue();
 	}
 
@@ -303,7 +301,6 @@ class RenderTraitWrapper
 		foreach ($properties as $property) {
 			if ($reflection->hasProperty($property)) {
 				$prop = $reflection->getProperty($property);
-				$prop->setAccessible(true);
 				$prop->setValue(null, null);
 			}
 		}
