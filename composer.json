@@ -76,7 +76,7 @@
 		"test:rector": "@php ./vendor/bin/rector process --dry-run",
 		"fix:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.4-",
 		"fix:rector": "@php ./vendor/bin/rector process",
-		"test:unit": "@php ./vendor/bin/phpunit",
+		"test:unit": "@php ./vendor/bin/phpunit --no-coverage",
 		"test:unit-coverage": "@php ./vendor/bin/phpunit --coverage-html=coverage",
 		"test": [
 			"@test:rector",

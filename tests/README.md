@@ -6,10 +6,10 @@ This directory contains unit tests for the EightshiftLibs project.
 
 The testing setup uses:
 
-- **PHPUnit 11**: Main testing framework
+- **PHPUnit 12**: Main testing framework
 - **Brain\Monkey**: WordPress function mocking
 - **Mockery**: Advanced mocking capabilities
-- **PHP 8.3+**: Minimum required version
+- **PHP 8.4+**: Minimum required version
 
 ## Running Tests
 
@@ -24,14 +24,14 @@ composer install
 ### Run All Tests
 
 ```bash
-# Run the full test suite (standards, types, and unit tests)
+# Run static checks (Rector, standards, and types)
 composer test
 
 # Run only unit tests
 composer test:unit
 
 # Run unit tests with coverage report
-composer test:unit-coverage
+XDEBUG_MODE=coverage composer test:unit-coverage
 ```
 
 ### Run Specific Tests
@@ -170,3 +170,5 @@ Open `coverage/index.html` in your browser to view the detailed coverage report.
 # Run tests with debug information
 ./vendor/bin/phpunit --debug
 ```
+
+Unit runs do not collect coverage. Coverage requires Xdebug coverage mode (or PCOV); scaffold `*Example.php` files are excluded because they contain template placeholders. Request-scoped URL cache tests use separate processes to model separate requests.
