@@ -6,7 +6,7 @@ This directory contains unit tests for the EightshiftLibs project.
 
 The testing setup uses:
 
-- **PHPUnit 12**: Main testing framework
+- **PHPUnit 13**: Main testing framework
 - **Brain\Monkey**: WordPress function mocking
 - **Mockery**: Advanced mocking capabilities
 - **PHP 8.4+**: Minimum required version
