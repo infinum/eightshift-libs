@@ -130,6 +130,9 @@ final class EditorModule
 					throw new RuntimeException('Eightshift editor modules cannot have async or defer attributes: ' . $handle);
 				}
 
+				// URL fragments survive redirects unless the redirect explicitly replaces them.
+				$source = \explode('#', \html_entity_decode($src, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'), 2)[0];
+				$processor->set_attribute('src', $source . '#' . \rawurlencode($handle));
 				$processor->set_attribute('type', 'module');
 				$processor->set_attribute('data-eightshift-editor-ready', $handle);
 				$matches++;
@@ -254,12 +257,12 @@ final class EditorModule
 			document.addEventListener('DOMContentLoaded', onDeadline, true);
 		},
 		complete(url) {
-			const scripts = Array.from(document.scripts).filter((script) => script.src === url && script.hasAttribute(attribute));
+			const handle = decodeURIComponent(new URL(url).hash.slice(1));
+			const scripts = Array.from(document.scripts).filter((script) => script.id === `${handle}-js` && script.getAttribute(attribute) === handle);
 			if (scripts.length !== 1) {
 				throw new Error('Eightshift editor module completion must identify exactly one script.');
 			}
 			const script = scripts[0];
-			const handle = script.getAttribute(attribute);
 			const state = states.get(handle);
 			if (!state) {
 				throw new Error(`Eightshift editor module "${handle}" was not registered.`);
