@@ -17,7 +17,7 @@ Library-specific guides:
 
 - [Manifest cache](docs/manifest-cache.md) — cache invalidation and shared-database behavior.
 - [Generated script dependencies](docs/generated-script-dependencies.md) — merge build-generated WordPress dependencies with project-declared handles.
-- [Unified editor modules](docs/unified-editor-modules.md) — loading, readiness, migration requirements and compatibility limits for the Frontend Libs Tailwind 4 beta's default editor mode. Classic 3.x builds remain unchanged.
+- [Unified editor modules](docs/unified-editor-modules.md) — loading, readiness and migration requirements for unified editor builds. Classic builds remain supported.
 - [Shared fonts](docs/shared-fonts.md) — optional same-origin font sharing between themes and plugins.
 
 ## Who do I talk to?

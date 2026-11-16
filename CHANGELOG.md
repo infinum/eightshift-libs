@@ -6,12 +6,6 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [14.0.0]
 
-### 14.0.0-alpha.4
-
-- Match editor readiness completion by the registered handle in the URL fragment, including redirects that preserve it.
-- Clarify structured build integration and shared-font deployment documentation.
-- Validation: inherited unit-suite failures are explicitly waived for this prerelease; this is not an all-tests-green release.
-
 ### Added
 
 - Support generated `.asset.json` and legacy `.json` metadata for admin, block editor, block frontend and theme scripts. Generated WordPress dependency handles are appended without duplicating declared handles. Metadata is read only from files inside the project's public directory; missing or invalid metadata leaves declared dependencies unchanged.
@@ -32,10 +26,21 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Migration guide
 
+- Upgrading from 13.6.1 does not require a PHP runtime bump or remove existing helper APIs. PHP 8.4 or newer remains required. The requirements below apply when adopting unified editor output or shared fonts; classic builds remain supported.
+- Projects upgrading from earlier 13.x releases must also account for the helper/config removals documented in 13.2.0: remove the three obsolete config getters, render components from `components`, and use the always-minified per-block CSS output.
+
 - Existing classic editor builds, including Frontend Libs Tailwind 3.x builds, do not switch to modules automatically. Frontend and admin scripts also retain their existing registration behavior.
 - When using Frontend Libs Tailwind 4's unified editor build, deploy matching scripts and metadata with this PHP integration. Register editor JavaScript through `enqueue_block_editor_assets`; custom enqueue classes must apply this hook change themselves. Classic scripts that need registered blocks must await `eightshiftEditorModules.ready.get(handle)` after the handle's readiness bootstrap has run.
 - Unified editor modules require `WP_HTML_Tag_Processor`, normal script output during document loading, and blocking classic dependencies. Async/defer strategies, late registration and missing completion signals are rejected. The script URL fragment is reserved for the registered handle; redirects must not replace or clear it.
 - Shared fonts remain optional and same-origin only. Emit the manifest and hashed font files together, keep their declarations out of ordinary CSS, and retain provider files for cached pages that may still reference them.
+
+### Prerelease history
+
+### 14.0.0-alpha.4
+
+- Match editor readiness completion by the registered handle in the URL fragment, including redirects that preserve it.
+- Clarify structured build integration and shared-font deployment documentation.
+- Validation: inherited unit-suite failures are explicitly waived for this prerelease; this is not an all-tests-green release.
 
 ## [13.6.1]
 
