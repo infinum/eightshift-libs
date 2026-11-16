@@ -15,7 +15,8 @@ Keep font declarations out of ordinary CSS when emitting this manifest.
 Only version 1, complete plain `@font-face` rules and exact `./fonts/<hash>.woff2`
 URLs are accepted. CSS escapes, nested rules, HTML and other URLs are rejected.
 Files must resolve inside the public directory and match their SHA-256 hashes.
-The public URL must have the same scheme, host and port as WordPress `home_url()`;
+The automatic enqueue methods use the WordPress theme or plugin public URL; it must
+serve these files and have the same scheme, host and port as WordPress `home_url()`.
 CDN origins are intentionally unsupported. Missing or invalid manifests are a
 no-op. Existing builds without the artifact are unchanged.
 

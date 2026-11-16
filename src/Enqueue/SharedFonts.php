@@ -58,9 +58,14 @@ final class SharedFonts
 			if (!\is_array($font) || !\is_string($font['hash'] ?? null) || !\preg_match('/^[a-f0-9]{64}$/D', $font['hash']) || ($font['file'] ?? null) !== 'fonts/' . $font['hash'] . '.woff2') {
 				return;
 			}
-			$file = \realpath($root . '/' . $font['file']);
-			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- A file removed during deployment must fail closed.
-			if ($file === false || !\str_starts_with($file, $root . \DIRECTORY_SEPARATOR) || !\is_file($file) || !\is_readable($file) || @\hash_file('sha256', $file) !== $font['hash']) {
+			$path = $root . '/' . $font['file'];
+			\clearstatcache(true, $path);
+			$file = \realpath($path);
+			if ($file === false || !\str_starts_with($file, $root . \DIRECTORY_SEPARATOR)) {
+				return;
+			}
+			\clearstatcache(true, $file);
+			if (!\is_file($file) || !\is_readable($file) || !self::verifyFont($file, $font['hash'])) {
 				return;
 			}
 			$fonts[$font['hash']] = \rtrim($url, '/') . '/' . $font['file'];
@@ -107,5 +112,72 @@ final class SharedFonts
 			}
 			\wp_enqueue_style($handle);
 		}
+	}
+
+	/**
+	 * Verify a font's contents, reusing only an unchanged, previously verified file.
+	 *
+	 * @param string $file Resolved local font path.
+	 * @param string $hash Expected SHA-256 hash.
+	 */
+	private static function verifyFont(string $file, string $hash): bool
+	{
+		// A shared global lets independently prefixed library copies reuse verification.
+		$verified = &$GLOBALS['eightshift_shared_fonts_verified_v1'];
+		$verified ??= [];
+
+		$now = \time();
+		$state = null;
+		// Windows ctime is creation time, so it cannot detect changes to a font's contents.
+		if (\PHP_OS_FAMILY !== 'Windows') {
+			$state = self::getFontState($file);
+		}
+		// PHP reports whole-second timestamps; recently changed files cannot be cached safely.
+		$stable = $state !== null && $state['mtime'] < $now && $state['ctime'] < $now;
+		if ($stable && isset($verified[$file]) && $verified[$file]['hash'] === $hash && $verified[$file]['state'] === $state) {
+			return true;
+		}
+
+		unset($verified[$file]);
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- A file removed during deployment must fail closed.
+		if (@\hash_file('sha256', $file) !== $hash) {
+			return false;
+		}
+
+		if ($stable && self::getFontState($file) === $state) {
+			$verified[$file] = [
+				'hash' => $hash,
+				'state' => $state,
+			];
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the file identity and change indicators used to validate cached hashes.
+	 *
+	 * @param string $file Resolved local font path.
+	 * @return array{dev: int, ino: int, mode: int, uid: int, gid: int, size: int, mtime: int, ctime: int}|null
+	 */
+	private static function getFontState(string $file): ?array
+	{
+		\clearstatcache(true, $file);
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- A file may disappear during deployment.
+		$state = @\stat($file);
+		if ($state === false) {
+			return null;
+		}
+
+		return [
+			'dev' => $state['dev'],
+			'ino' => $state['ino'],
+			'mode' => $state['mode'],
+			'uid' => $state['uid'],
+			'gid' => $state['gid'],
+			'size' => $state['size'],
+			'mtime' => $state['mtime'],
+			'ctime' => $state['ctime'],
+		];
 	}
 }
