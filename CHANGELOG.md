@@ -38,14 +38,6 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Unified editor modules require `WP_HTML_Tag_Processor`, normal script output during document loading, and blocking classic dependencies. Async/defer strategies, late registration and missing completion signals are rejected. The script URL fragment is reserved for the registered handle; redirects must not replace or clear it.
 - Shared fonts remain optional and same-origin only. Emit the manifest and hashed font files together, keep their declarations out of ordinary CSS, and retain provider files for cached pages that may still reference them. The WordPress theme or plugin public URL must serve these files.
 
-### Prerelease history
-
-### 14.0.0-alpha.4
-
-- Match editor readiness completion by the registered handle in the URL fragment, including redirects that preserve it.
-- Clarify structured build integration and shared-font deployment documentation.
-- Validation: inherited unit-suite failures are explicitly waived for this prerelease; this is not an all-tests-green release.
-
 ## [13.6.1]
 
 ### Changed
