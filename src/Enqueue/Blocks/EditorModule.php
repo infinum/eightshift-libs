@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue\Blocks;
 
-use _WP_Dependency; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse -- Used in WeakMap PHPDoc.
 use RuntimeException;
+use Throwable;
 use WeakMap;
 use WP_Scripts; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse -- Used in WeakMap PHPDoc.
 use WP_HTML_Tag_Processor;
@@ -22,11 +22,16 @@ use WP_HTML_Tag_Processor;
 final class EditorModule
 {
 	/**
-	 * Registrations configured separately for each WordPress script registry.
-	 *
-	 * @var WeakMap<WP_Scripts, array<string, _WP_Dependency>>|null
+	 * Registry state is copied on clone, including configured registrations.
 	 */
-	private static ?WeakMap $registrations = null;
+	private const string REGISTRY_STATE_PROPERTY = 'eightshiftEditorModuleRegistryState';
+
+	/**
+	 * Handles with an installed script tag filter.
+	 *
+	 * @var array<string, bool>|null
+	 */
+	private static ?array $registrations = null;
 
 	/**
 	 * Registries whose footer processing has finished since tracking started.
@@ -46,9 +51,25 @@ final class EditorModule
 
 		self::$footerPrinted = new WeakMap();
 		\add_filter('print_footer_scripts', static function (bool $print): bool {
-			self::$footerPrinted[\wp_scripts()] = true;
+			$scripts = \wp_scripts();
+			self::$footerPrinted[$scripts] = true;
+			$state = self::getRegistryState($scripts);
+			$state['footerPrinted'] = true;
+			$scripts->{self::REGISTRY_STATE_PROPERTY} = $state;
 			return $print;
 		}, \PHP_INT_MIN);
+	}
+
+	/**
+	 * Read the state attached to a script registry.
+	 *
+	 * @param object $scripts WordPress script registry.
+	 * @return array<string, mixed> Copy-on-write registry state.
+	 */
+	private static function getRegistryState(object $scripts): array
+	{
+		$state = $scripts->{self::REGISTRY_STATE_PROPERTY} ?? [];
+		return \is_array($state) ? $state : [];
 	}
 
 	/**
@@ -69,7 +90,9 @@ final class EditorModule
 		}
 
 		self::trackFooterPrinting();
-		if (\wp_script_is($handle, 'done') || isset(self::$footerPrinted[\wp_scripts()])) {
+		$scripts = \wp_scripts();
+		$state = self::getRegistryState($scripts);
+		if (\wp_script_is($handle, 'done') || isset(self::$footerPrinted[$scripts]) || !empty($state['footerPrinted'])) {
 			throw new RuntimeException('Eightshift editor modules must be registered before scripts are printed.');
 		}
 	}
@@ -79,6 +102,7 @@ final class EditorModule
 	 *
 	 * @param string $handle Registered script handle.
 	 * @throws RuntimeException If readiness setup or script output is invalid.
+	 * @throws Throwable If inline registration throws unexpectedly.
 	 */
 	public static function configure(string $handle): void
 	{
@@ -91,9 +115,10 @@ final class EditorModule
 			throw new RuntimeException('Eightshift editor module handle is not registered: ' . $handle);
 		}
 
-		self::$registrations ??= new WeakMap();
-		$registrations = self::$registrations[$scripts] ?? [];
-		if (($registrations[$handle] ?? null) === $registration) {
+		self::$registrations ??= [];
+		$state = self::getRegistryState($scripts);
+		$configured = $state['registrations'][self::class][$handle] ?? [];
+		if (\is_array($configured) && \in_array($registration, $configured, true)) {
 			return;
 		}
 
@@ -103,13 +128,42 @@ final class EditorModule
 		}
 
 		$bootstrap = self::getBootstrap() . "\nglobalThis.eightshiftEditorModules.register({$encodedHandle});";
-		// Core copies registration objects into its temporary iframe registry.
-		if (!\in_array($bootstrap, $scripts->get_data($handle, 'before') ?: [], true) && !\wp_add_inline_script($handle, $bootstrap, 'before')) {
-			throw new RuntimeException('Unable to register Eightshift editor module readiness: ' . $handle);
+		// Registrations can be shared by shallow-cloned or copied script registries.
+		if (!\in_array($bootstrap, $scripts->get_data($handle, 'before') ?: [], true)) {
+			$previousRegistration = $registration;
+			$registration = clone $registration;
+			$scripts->registered[$handle] = $registration;
+
+			try {
+				if (!\wp_add_inline_script($handle, $bootstrap, 'before')) {
+					throw new RuntimeException('Unable to register Eightshift editor module readiness: ' . $handle);
+				}
+			} catch (Throwable $exception) {
+				$scripts->registered[$handle] = $previousRegistration;
+				throw $exception;
+			}
 		}
 
-		\add_filter('script_loader_tag', static function (string $tag, string $scriptHandle, string $src) use ($handle, $scripts, $registration): string {
-			if ($scriptHandle !== $handle || \wp_scripts() !== $scripts || ($scripts->registered[$handle] ?? null) !== $registration) {
+		$state = self::getRegistryState($scripts);
+		$registrations = \is_array($state['registrations'] ?? null) ? $state['registrations'] : [];
+		$classRegistrations = \is_array($registrations[self::class] ?? null) ? $registrations[self::class] : [];
+		$configured = \is_array($classRegistrations[$handle] ?? null) ? $classRegistrations[$handle] : [];
+		$configured[] = $registration;
+		$classRegistrations[$handle] = $configured;
+		$registrations[self::class] = $classRegistrations;
+		$state['registrations'] = $registrations;
+		$scripts->{self::REGISTRY_STATE_PROPERTY} = $state;
+
+		if (isset(self::$registrations[$handle])) {
+			return;
+		}
+
+		\add_filter('script_loader_tag', static function (string $tag, string $scriptHandle, string $src) use ($handle): string {
+			$scripts = \wp_scripts();
+			$state = self::getRegistryState($scripts);
+			$registration = $scripts->registered[$handle] ?? null;
+			$configured = $state['registrations'][self::class][$handle] ?? [];
+			if ($scriptHandle !== $handle || $registration === null || !\is_array($configured) || !\in_array($registration, $configured, true)) {
 				return $tag;
 			}
 
@@ -145,8 +199,7 @@ final class EditorModule
 			return $processor->get_updated_html();
 		}, \PHP_INT_MAX, 3);
 
-		$registrations[$handle] = $registration;
-		self::$registrations[$scripts] = $registrations;
+		self::$registrations[$handle] = true;
 	}
 
 	/**

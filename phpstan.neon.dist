@@ -5,6 +5,8 @@ parameters:
 	level: 6
 	inferPrivatePropertyTypeFromConstructor: true
 	treatPhpDocTypesAsCertain: false
+	stubFiles:
+		- phpstan-wp-scripts.stub
 	scanFiles:
 		- vendor/wp-cli/wp-cli/php/class-wp-cli.php
 	bootstrapFiles:

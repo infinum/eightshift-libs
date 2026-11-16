@@ -2,7 +2,7 @@
 
 Unified editor builds share one ES module graph between initial registration and lazy editor code. This is the default editor mode in the Frontend Libs Tailwind 4 beta's `defineThemeBuild()` preset. PHP enables it only when valid editor asset metadata declares both `format: "module"` and `readiness: "eightshift-editor-v1"` alongside `dependencies`.
 
-Classic editor builds, including Frontend Libs Tailwind 3.x builds, do not switch modes automatically. Frontend and admin script registration is unchanged. When switching build modes, deploy matching scripts and metadata together with compatible PHP integration; unified output cannot be loaded as a classic script.
+Classic editor builds, including Frontend Libs Tailwind 3.x builds, do not switch modes automatically; frontend and admin scripts also remain classic. Generated metadata dependencies are merged for all supported scripts. When switching build modes, deploy matching scripts and metadata together with compatible PHP integration; unified output cannot be loaded as a classic script. The metadata URL must map to the local public directory as described in [Generated script dependencies](generated-script-dependencies.md).
 
 ## Loading and completion
 
@@ -32,7 +32,9 @@ Repeated registration of the same handle is idempotent. Use distinct asset prefi
 ## Requirements and limits
 
 - Hook editor JavaScript to `enqueue_block_editor_assets`, not `enqueue_block_assets`. Shared content styles can remain on `enqueue_block_assets`. The enqueue example uses this split; existing custom enqueue classes must update their own hooks.
+- Frontend Libs Tailwind 4's conventional theme build requires WordPress 7.0 or newer. Custom builds must provide a compatible module-readiness integration.
 - Keep the normal WordPress-generated script tags in the page HTML and register modules before scripts are printed. `WP_HTML_Tag_Processor` is required. PHP rejects already-printed handles and registration after a footer pass observed since module tracking began; the browser bootstrap also rejects registration after document loading.
+- When adding a readiness bootstrap, the integration clones the registered script object to isolate WordPress registry snapshots. Code that stores a direct reference to that object before module configuration must look it up again afterward. Script handles, existing data, localization and translations remain in place.
 - Module setup and footer tracking are scoped to each `WP_Scripts` registry. Gutenberg's temporary iframe registry does not close registration in the main editor. Repeated enqueues and copied registrations do not duplicate the readiness bootstrap.
 - Do not add async/defer strategies or attributes to the module or its registered dependency chain. Classic WordPress dependencies must execute before the module. Modules already defer execution; use this integration rather than `wp_enqueue_script_module()` because WordPress package dependencies remain classic scripts.
 - A loading/evaluation failure, a load event without a completion signal, or missing completion by `DOMContentLoaded` rejects readiness. Top-level await or dynamically inserted scripts that cross that deadline are unsupported; late completion cannot reverse failure.

@@ -1,0 +1,12 @@
+<?php
+
+class _WP_Dependency
+{
+}
+
+/**
+ * @property array{registrations?: array<class-string, array<string, list<_WP_Dependency>>>, footerPrinted?: bool} $eightshiftEditorModuleRegistryState
+ */
+class WP_Scripts
+{
+}
