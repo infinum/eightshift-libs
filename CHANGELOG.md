@@ -6,15 +6,36 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [14.0.0]
 
+### 14.0.0-alpha.4
+
+- Match editor readiness completion by the registered handle in the URL fragment, including redirects that preserve it.
+- Clarify structured build integration and shared-font deployment documentation.
+- Validation: inherited unit-suite failures are explicitly waived for this prerelease; this is not an all-tests-green release.
+
 ### Added
 
-- Experimental unified editor ESM opt-in via generated `format: "module"` / `readiness: "eightshift-editor-v1"` metadata. Preserve classic WordPress dependencies, localization/translations and script attributes while exposing per-handle readiness promises; reject incompatible strategies (including registered transitive dependencies), late registration and missing module completion. Existing classic modes remain unchanged.
-- Merge optional generated `.asset.json` or legacy `.json` script dependencies with explicitly declared handles for admin, block editor, block frontend and theme scripts. Missing or invalid metadata leaves the declared dependencies unchanged.
+- Support generated `.asset.json` and legacy `.json` metadata for admin, block editor, block frontend and theme scripts. Generated WordPress dependency handles are appended without duplicating declared handles. Metadata is read only from files inside the project's public directory; missing or invalid metadata leaves declared dependencies unchanged.
+- Support unified editor modules through `format: "module"` and `readiness: "eightshift-editor-v1"` metadata. The editor entry loads as an ES module while retaining its WordPress handle, classic dependencies, localization, translations and CSP nonce. Per-handle readiness promises let dependent scripts wait for initial editor registration.
+- Share same-origin WOFF2 fonts between themes and plugins through an optional `public/shared-fonts.json` manifest. Validate file hashes and font-face declarations, reuse the first provider for identical font files, and deduplicate matching declarations across independently prefixed library copies. Existing style enqueue methods load the manifest automatically; missing or invalid manifests leave existing builds unchanged.
+
+### Changed
+
+- Register editor JavaScript on `enqueue_block_editor_assets` in the enqueue example, while keeping shared content styles on `enqueue_block_assets`.
+- Run `composer test:unit` without coverage by default. Keep coverage in `composer test:unit-coverage` and exclude scaffold `*Example.php` files from coverage collection.
 
 ### Fixed
 
-- Use `enqueue_block_editor_assets` for editor JavaScript in the enqueue example, keeping registration out of Gutenberg's content iframe while leaving shared styles on `enqueue_block_assets`.
-- Scope experimental editor module configuration, tag filters and observed footer completion to each `WP_Scripts` registry. Gutenberg's temporary iframe footer no longer prevents later registration in the main editor; repeated enqueues and copied registrations do not duplicate readiness bootstrap scripts.
+- Resolve generated asset metadata against the owning theme or plugin's public directory, including full public URLs, without allowing paths outside that directory.
+- Keep editor module configuration and footer tracking separate for each `WP_Scripts` registry. Gutenberg's temporary iframe footer no longer blocks registration in the main editor, and repeated enqueues or copied registrations do not duplicate the readiness bootstrap.
+- Match editor module completion using the registered handle stored in the script URL fragment, rather than the response URL. Redirects that preserve the fragment no longer prevent completion; script ID and readiness-attribute checks remain in place.
+- Update unit-test helpers for escaping calls and request-scoped URL caches, and remove obsolete reflection accessibility calls.
+
+### Migration guide
+
+- Existing classic editor builds, including Frontend Libs Tailwind 3.x builds, do not switch to modules automatically. Frontend and admin scripts also retain their existing registration behavior.
+- When using Frontend Libs Tailwind 4's unified editor build, deploy matching scripts and metadata with this PHP integration. Register editor JavaScript through `enqueue_block_editor_assets`; custom enqueue classes must apply this hook change themselves. Classic scripts that need registered blocks must await `eightshiftEditorModules.ready.get(handle)` after the handle's readiness bootstrap has run.
+- Unified editor modules require `WP_HTML_Tag_Processor`, normal script output during document loading, and blocking classic dependencies. Async/defer strategies, late registration and missing completion signals are rejected. The script URL fragment is reserved for the registered handle; redirects must not replace or clear it.
+- Shared fonts remain optional and same-origin only. Emit the manifest and hashed font files together, keep their declarations out of ordinary CSS, and retain provider files for cached pages that may still reference them.
 
 ## [13.6.1]
 
