@@ -20,19 +20,23 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Fixed
 
 - Resolve generated asset metadata against the owning theme or plugin's public directory, including full public URLs, without allowing paths outside that directory.
-- Keep editor module configuration and footer tracking separate for each `WP_Scripts` registry. Gutenberg's temporary iframe footer no longer blocks registration in the main editor, and repeated enqueues or copied registrations do not duplicate the readiness bootstrap.
+- Reuse verified font hashes within a request where filesystem change metadata is reliable.
+- Keep editor module configuration and footer tracking separate for each `WP_Scripts` registry. Gutenberg's temporary iframe footer no longer blocks registration in the main editor, and repeated enqueues or copied registrations do not duplicate the readiness bootstrap. Preserve module loading when WordPress clones and restores the script registry.
 - Match editor module completion using the registered handle stored in the script URL fragment, rather than the response URL. Redirects that preserve the fragment no longer prevent completion; script ID and readiness-attribute checks remain in place.
 - Update unit-test helpers for escaping calls and request-scoped URL caches, and remove obsolete reflection accessibility calls.
 
 ### Migration guide
 
-- Upgrading from 13.6.1 does not require a PHP runtime bump or remove existing helper APIs. PHP 8.4 or newer remains required. The requirements below apply when adopting unified editor output or shared fonts; classic builds remain supported.
+- Upgrading from 13.6.1 does not require a PHP runtime bump or remove existing helper APIs. PHP 8.4 or newer remains required. Review the dependency and editor-loading requirements below when upgrading, including for classic builds.
+- Themes and plugins that bundle separate copies of this library must update each affected dependency and regenerate its Strauss-prefixed code. Updating the theme does not update a plugin's bundled copy.
 - Projects upgrading from earlier 13.x releases must also account for the helper/config removals documented in 13.2.0: remove the three obsolete config getters, render components from `components`, and use the always-minified per-block CSS output.
+- Projects with their own `AbstractAssets` subclasses should check for method-name collisions with `mergeAssetDependencies()`, `readAssetMetadata()`, and `enqueueSharedFonts()`. Existing overrides must remain compatible with the new protected methods.
 
-- Existing classic editor builds, including Frontend Libs Tailwind 3.x builds, do not switch to modules automatically. Frontend and admin scripts also retain their existing registration behavior.
-- When using Frontend Libs Tailwind 4's unified editor build, deploy matching scripts and metadata with this PHP integration. Register editor JavaScript through `enqueue_block_editor_assets`; custom enqueue classes must apply this hook change themselves. Classic scripts that need registered blocks must await `eightshiftEditorModules.ready.get(handle)` after the handle's readiness bootstrap has run.
+- Existing classic editor builds, including Frontend Libs Tailwind 3.x builds, do not switch to modules automatically. Frontend and admin scripts also remain classic. All supported script enqueues now merge generated dependency handles when metadata is present; ensure those handles are registered and do not create dependency cycles.
+- When using Frontend Libs Tailwind 4's unified editor build, deploy matching scripts and metadata with this PHP integration. Its conventional theme build requires WordPress 7.0 or newer. Register editor JavaScript through `enqueue_block_editor_assets`; custom enqueue classes must apply this hook change themselves. Classic scripts that need registered blocks must await `eightshiftEditorModules.ready.get(handle)` after the handle's readiness bootstrap has run.
+- Extensions that retain a direct reference to a module's registration in `WP_Scripts::$registered` must look it up again after enqueue, because readiness setup may replace that registration object.
 - Unified editor modules require `WP_HTML_Tag_Processor`, normal script output during document loading, and blocking classic dependencies. Async/defer strategies, late registration and missing completion signals are rejected. The script URL fragment is reserved for the registered handle; redirects must not replace or clear it.
-- Shared fonts remain optional and same-origin only. Emit the manifest and hashed font files together, keep their declarations out of ordinary CSS, and retain provider files for cached pages that may still reference them.
+- Shared fonts remain optional and same-origin only. Emit the manifest and hashed font files together, keep their declarations out of ordinary CSS, and retain provider files for cached pages that may still reference them. The WordPress theme or plugin public URL must serve these files.
 
 ### Prerelease history
 
