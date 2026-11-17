@@ -113,7 +113,11 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		return $scriptKey === static::BLOCKS_EDITOR_SCRIPT_URI;
 	}
 
-	/** Editor scripts are blocking independently of frontend strategy. */
+	/**
+	 * Editor scripts are blocking independently of frontend strategy.
+	 *
+	 * @return array<string, string|bool> Editor script arguments.
+	 */
 	protected function editorScriptArgs(): array
 	{
 		return ['in_footer' => $this->scriptInFooter()];
