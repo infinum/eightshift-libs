@@ -39,11 +39,9 @@ class PathsTraitTest extends BaseTestCase
 		// Reset static caches between tests
 		$reflection = new \ReflectionClass(PathsTraitWrapper::class);
 		$basePathsProperty = $reflection->getProperty('basePaths');
-		$basePathsProperty->setAccessible(true);
 		$basePathsProperty->setValue(null, null);
 
 		$pathConfigsProperty = $reflection->getProperty('pathConfigs');
-		$pathConfigsProperty->setAccessible(true);
 		$pathConfigsProperty->setValue(null, null);
 	}
 
@@ -59,11 +57,9 @@ class PathsTraitTest extends BaseTestCase
 		$reflection = new \ReflectionClass(PathsTraitWrapper::class);
 
 		$basePathsProperty = $reflection->getProperty('basePaths');
-		$basePathsProperty->setAccessible(true);
 		$basePaths = $basePathsProperty->getValue();
 
 		$pathConfigsProperty = $reflection->getProperty('pathConfigs');
-		$pathConfigsProperty->setAccessible(true);
 		$pathConfigs = $pathConfigsProperty->getValue();
 
 		$this->assertIsArray($basePaths);
@@ -94,7 +90,6 @@ class PathsTraitTest extends BaseTestCase
 
 		$reflection = new \ReflectionClass(PathsTraitWrapper::class);
 		$basePathsProperty = $reflection->getProperty('basePaths');
-		$basePathsProperty->setAccessible(true);
 		$firstCall = $basePathsProperty->getValue();
 
 		$this->wrapper::initializePathCaches();

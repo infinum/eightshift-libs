@@ -62,6 +62,8 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 			$this->getMedia()
 		);
 
+		$this->enqueueSharedFonts();
+
 		\wp_enqueue_style($handle);
 	}
 
@@ -75,15 +77,51 @@ abstract class AbstractEnqueueTheme extends AbstractAssets
 		\wp_register_script(
 			$handle,
 			$this->setAssetsItem(static::THEME_SCRIPT_URI),
-			$this->getThemeScriptDependencies(),
+			$this->mergeAssetDependencies(static::THEME_SCRIPT_URI, $this->getThemeScriptDependencies()),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
 
 		\wp_enqueue_script($handle);
+		\add_action('wp_print_footer_scripts', $this->diagnoseMissingThemeScriptDependencies(...), \PHP_INT_MAX);
 
 		foreach ($this->getLocalizations() as $objectName => $dataArray) {
 			\wp_localize_script($handle, $objectName, $dataArray);
+		}
+	}
+
+	/**
+	 * Report unresolved dependencies after scripts have had a chance to print.
+	 */
+	public function diagnoseMissingThemeScriptDependencies(): void
+	{
+		$scripts = \wp_scripts();
+		$handle = $this->getThemeScriptHandle();
+		if (!\in_array($handle, $scripts->queue, true) || \in_array($handle, $scripts->done, true)) {
+			return;
+		}
+
+		$pending = [$handle];
+		$visited = [];
+		$missing = [];
+		while ($pending !== []) {
+			$dependency = \array_pop($pending);
+			$dependency = \explode('?', $dependency, 2)[0];
+			if (isset($visited[$dependency])) {
+				continue;
+			}
+			$visited[$dependency] = true;
+			if (!isset($scripts->registered[$dependency])) {
+				$missing[] = $dependency;
+				continue;
+			}
+			foreach ($scripts->registered[$dependency]->deps as $child) {
+				$pending[] = $child;
+			}
+		}
+
+		if ($missing !== []) {
+			\_doing_it_wrong(__METHOD__, 'Theme script ' . \esc_html($handle) . ' has unregistered dependencies: ' . \esc_html(\implode(', ', $missing)), '');
 		}
 	}
 

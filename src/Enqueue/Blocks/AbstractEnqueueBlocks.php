@@ -10,13 +10,23 @@ declare(strict_types=1);
 
 namespace EightshiftLibs\Enqueue\Blocks;
 
+use _WP_Dependency; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse -- Used in WeakMap PHPDoc.
 use EightshiftLibs\Enqueue\AbstractAssets;
+use RuntimeException;
+use WeakMap;
 
 /**
  * Enqueue_Blocks class.
  */
 abstract class AbstractEnqueueBlocks extends AbstractAssets
 {
+	/**
+	 * Registrations owned by this service, including copies into an iframe registry.
+	 *
+	 * @var WeakMap<_WP_Dependency, bool>|null
+	 */
+	private ?WeakMap $editorModuleRegistrations = null;
+
 	// ---------------------------------------------------------------------------
 	// ONLY EDITOR
 	// ---------------------------------------------------------------------------
@@ -45,6 +55,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 	/**
 	 * Enqueue blocks script for editor only.
+	 *
+	 * @throws RuntimeException If module metadata or handle ownership is invalid.
 	 */
 	public function enqueueBlockEditorScript(): void
 	{
@@ -53,14 +65,34 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		}
 
 		$handle = $this->getBlockEditorScriptsHandle();
+		$metadata = $this->readAssetMetadata(static::BLOCKS_EDITOR_SCRIPT_URI);
+		if ($metadata === null) {
+			throw new RuntimeException('Eightshift editor module metadata is missing or invalid.');
+		}
+		if (($metadata['format'] ?? null) !== 'module') {
+			throw new RuntimeException('Eightshift editor module metadata must declare module format.');
+		}
+		if (($metadata['readiness'] ?? null) !== 'eightshift-editor-v1') {
+			throw new RuntimeException('Unsupported Eightshift editor module readiness metadata.');
+		}
+
+		EditorModule::validateRegistration($handle, $this->editorScriptArgs());
+		$this->editorModuleRegistrations ??= new WeakMap();
+		$registration = \wp_scripts()->registered[$handle] ?? null;
+		if ($registration !== null && !isset($this->editorModuleRegistrations[$registration])) {
+			throw new RuntimeException('Eightshift editor module handle is already registered: ' . $handle);
+		}
 
 		\wp_register_script(
 			$handle,
 			$this->setAssetsItem(static::BLOCKS_EDITOR_SCRIPT_URI),
-			$this->getBlockEditorScriptDependencies(),
+			$this->mergeAssetDependencies(static::BLOCKS_EDITOR_SCRIPT_URI, $this->getBlockEditorScriptDependencies()),
 			$this->getAssetsVersion(),
-			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
+			\is_wp_version_compatible('6.3') ? $this->editorScriptArgs() : $this->scriptInFooter()
 		);
+
+		EditorModule::configure($handle);
+		$this->editorModuleRegistrations[\wp_scripts()->registered[$handle]] = true;
 
 		\wp_enqueue_script($handle);
 
@@ -69,6 +101,26 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		}
 
 		$this->addEditorBodyDebugClass();
+	}
+
+	/**
+	 * Reject invalid declared editor metadata rather than loading it as classic.
+	 *
+	 * @param string $scriptKey Script manifest key.
+	 */
+	protected function strictAssetMetadata(string $scriptKey): bool
+	{
+		return $scriptKey === static::BLOCKS_EDITOR_SCRIPT_URI;
+	}
+
+	/**
+	 * Editor scripts are blocking independently of frontend strategy.
+	 *
+	 * @return array<string, string|bool> Editor script arguments.
+	 */
+	protected function editorScriptArgs(): array
+	{
+		return ['in_footer' => $this->scriptInFooter()];
 	}
 
 	/**
@@ -123,6 +175,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			$this->getMedia()
 		);
 
+		$this->enqueueSharedFonts();
+
 		\wp_enqueue_style($handle);
 	}
 
@@ -174,7 +228,7 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		\wp_register_script(
 			$handle,
 			$this->setAssetsItem(static::BLOCKS_FRONTEND_SCRIPT_URI),
-			$this->getBlockFrontendScriptDependencies(),
+			$this->mergeAssetDependencies(static::BLOCKS_FRONTEND_SCRIPT_URI, $this->getBlockFrontendScriptDependencies()),
 			$this->getAssetsVersion(),
 			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 		);
@@ -221,6 +275,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
+
+		$this->enqueueSharedFonts();
 
 		\wp_enqueue_style($handle);
 	}
@@ -270,6 +326,8 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
+
+		$this->enqueueSharedFonts();
 
 		\wp_enqueue_style($handle);
 	}

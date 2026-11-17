@@ -57,6 +57,8 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 				$this->getMedia()
 			);
 
+			$this->enqueueSharedFonts();
+
 			\wp_enqueue_style($handle);
 		}
 	}
@@ -80,7 +82,7 @@ abstract class AbstractEnqueueAdmin extends AbstractAssets
 			\wp_register_script(
 				$handle,
 				$this->setAssetsItem(static::ADMIN_SCRIPT_URI),
-				$this->getAdminScriptDependencies(),
+				$this->mergeAssetDependencies(static::ADMIN_SCRIPT_URI, $this->getAdminScriptDependencies()),
 				$this->getAssetsVersion(),
 				\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
 			);

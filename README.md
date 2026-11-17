@@ -9,15 +9,16 @@
 
 This library is aimed at bringing the modern backend development tools to the [Eightshift Boilerplate](https://github.com/infinum/eightshift-boilerplate) or [Eightshift Boilerplate Plugin](https://github.com/infinum/eightshift-boilerplate-plugin), but you can use it on any WordPress project.
 
-## Manifest cache
-
-Runtime manifest caches exclude the optional examples fixture data used by provisioning and testing tools. Legacy cache entries without the version marker are discarded on first use after updating this library. Later cache rebuilds also happen when the project cache version changes.
-
-The transient cache stamp uses a content hash of the manifest payload instead of the file modification time, so multiple web servers sharing one database no longer invalidate each other's cache on every request. The cache read path never writes to the database, and the large transient payload is stored without autoloading when the WordPress version supports it.
-
 ## Documentation
 
-**For the full documentation please check this [link](https://eightshift.com).**
+For the full Eightshift documentation, visit [eightshift.com](https://eightshift.com).
+
+Library-specific guides:
+
+- [Manifest cache](docs/manifest-cache.md) — cache invalidation and shared-database behavior.
+- [Generated script dependencies](docs/generated-script-dependencies.md) — merge build-generated WordPress dependencies with project-declared handles.
+- [Unified editor modules](docs/unified-editor-modules.md) — loading, readiness and migration requirements for unified editor builds. Classic builds remain supported.
+- [Shared fonts](docs/shared-fonts.md) — optional same-origin font sharing between themes and plugins.
 
 ## Who do I talk to?
 

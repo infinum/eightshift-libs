@@ -448,6 +448,8 @@ class GeneralTraitTest extends BaseTestCase
 	/**
 	 * @covers ::getCurrentUrl
 	 */
+	#[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+	#[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
 	public function testGetCurrentUrl(): void
 	{
 		// Clear any existing SERVER variables
@@ -469,6 +471,8 @@ class GeneralTraitTest extends BaseTestCase
 	/**
 	 * @covers ::getCurrentUrl
 	 */
+	#[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+	#[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
 	public function testGetCurrentUrlWithoutHttps(): void
 	{
 		// Clear any existing SERVER variables that might interfere

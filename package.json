@@ -1,6 +1,6 @@
 {
 	"name": "@eightshift/libs",
-	"version": "13.6.1",
+	"version": "14.0.0",
 	"description": "A collection of useful backend utility modules. powered by Eightshift",
 	"author": {
 		"name": "Eightshift team",
@@ -19,8 +19,6 @@
 		"url": "https://github.com/infinum/eightshift-libs/issues"
 	},
 	"scripts": {
-		"lintStyle": "stylelint **/*.scss",
-		"lintJs": "eslint",
 		"prepare": "husky"
 	},
 	"homepage": "https://github.com/infinum/eightshift-libs#readme",
@@ -29,7 +27,6 @@
 		"lint-staged": "^17.6.0",
 		"husky": "^9.1.7"
 	},
-	"sideEffects": false,
 	"lint-staged": {
 		"*.php": [
 			"composer test"
