@@ -138,6 +138,7 @@ abstract class AbstractAssets implements ServiceInterface
 	{
 		$data = $this->readAssetMetadata($scriptKey);
 		foreach ($data['dependencies'] ?? [] as $dependency) {
+			$dependency = \trim($dependency);
 			if (!\in_array($dependency, $dependencies, true)) {
 				$dependencies[] = $dependency;
 			}
@@ -234,8 +235,8 @@ abstract class AbstractAssets implements ServiceInterface
 
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- The resolved file is local and confined to the public directory.
 			$json = @\file_get_contents($file);
-			$data = \is_string($json) ? \json_decode($json, true) : null;
-			$generated = $data['dependencies'] ?? null;
+			$decoded = \is_string($json) ? \json_decode($json) : null;
+			$generated = \is_object($decoded) ? ($decoded->dependencies ?? null) : null;
 			if (!\is_array($generated) || !\array_is_list($generated)) {
 				if ($strict) {
 					throw new RuntimeException('Invalid script metadata dependencies: ' . $key);
@@ -252,7 +253,7 @@ abstract class AbstractAssets implements ServiceInterface
 				}
 			}
 
-			return $data;
+			return \json_decode($json, true);
 		}
 
 		return null;

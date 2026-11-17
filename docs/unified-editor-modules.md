@@ -22,10 +22,14 @@ if (!ready) {
   throw new Error(`Editor readiness is not registered for ${handle}`);
 }
 
-await ready;
+ready.then(() => {
+  // Run code that depends on the registered blocks here.
+}).catch((error) => {
+  console.error('Editor registration failed:', error);
+});
 ```
 
-Run this after the handle's inline bootstrap has executed, in a module or an async function. A missing map entry does not mean the editor is ready. The promise resolves after initial registration finishes, not after later lazy extensions load. Failures reject the promise and are also logged.
+Run this after the handle's inline bootstrap has executed. A missing map entry does not mean the editor is ready. The promise resolves after initial registration finishes, not after later lazy extensions load. Failures reject the promise and are also logged.
 
 Repeated registration of the same handle is idempotent. Use distinct asset prefixes for independent themes and plugins; conflicting registrations and incompatible readiness metadata fail explicitly.
 
