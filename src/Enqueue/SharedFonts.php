@@ -46,9 +46,7 @@ final class SharedFonts
 			return;
 		}
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Validated local build artifact.
-		$json = @\file_get_contents($manifest);
-		$data = \is_string($json) ? \json_decode($json, true) : null;
+		$data = self::readManifest($manifest);
 		if (!\is_array($data) || ($data['version'] ?? null) !== 1 || !\is_array($data['fonts'] ?? null) || !\is_string($data['css'] ?? null)) {
 			return;
 		}
@@ -115,6 +113,31 @@ final class SharedFonts
 	}
 
 	/**
+	 * Read an unchanged manifest once per request, including across prefixed copies.
+	 *
+	 * @param string $manifest Resolved manifest path.
+	 * @return mixed Decoded manifest.
+	 */
+	private static function readManifest(string $manifest): mixed
+	{
+		$cache = &$GLOBALS['eightshift_shared_fonts_manifests_v1'];
+		$cache ??= [];
+		$state = \PHP_OS_FAMILY === 'Windows' ? null : self::getFontState($manifest);
+		$stable = $state !== null && $state['mtime'] < \time() && $state['ctime'] < \time();
+		if ($stable && isset($cache[$manifest]) && $cache[$manifest]['state'] === $state) {
+			return $cache[$manifest]['data'];
+		}
+		unset($cache[$manifest]);
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.PHP.NoSilencedErrors.Discouraged -- Validated local build artifact may disappear during deployment.
+		$json = @\file_get_contents($manifest);
+		$data = \is_string($json) ? \json_decode($json, true) : null;
+		if ($stable && \is_array($data) && self::getFontState($manifest) === $state) {
+			$cache[$manifest] = ['state' => $state, 'data' => $data];
+		}
+		return $data;
+	}
+
+	/**
 	 * Verify a font's contents, reusing only an unchanged, previously verified file.
 	 *
 	 * @param string $file Resolved local font path.
@@ -139,16 +162,32 @@ final class SharedFonts
 		}
 
 		unset($verified[$file]);
+		$host = \gethostname();
+		$cacheKey = null;
+		if ($stable && \is_string($host) && $host !== '' && \function_exists('wp_using_ext_object_cache') && \wp_using_ext_object_cache()) {
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- Only scalar metadata is encoded and never unserialized.
+			$cacheKey = \hash('sha256', \serialize([$host, $file, $hash, $state]));
+			if (\wp_cache_get($cacheKey, 'eightshift_shared_fonts_v1') === true && self::getFontState($file) === $state) {
+				$verified[$file] = ['hash' => $hash, 'state' => $state];
+				return true;
+			}
+		}
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- A file removed during deployment must fail closed.
 		if (@\hash_file('sha256', $file) !== $hash) {
 			return false;
 		}
 
-		if ($stable && self::getFontState($file) === $state) {
+		if ($state !== null && self::getFontState($file) !== $state) {
+			return false;
+		}
+		if ($stable) {
 			$verified[$file] = [
 				'hash' => $hash,
 				'state' => $state,
 			];
+			if ($cacheKey !== null) {
+				\wp_cache_set($cacheKey, true, 'eightshift_shared_fonts_v1', 300);
+			}
 		}
 
 		return true;

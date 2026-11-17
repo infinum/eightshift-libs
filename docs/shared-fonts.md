@@ -26,8 +26,17 @@ complete face content with hash-based URL placeholders, not family names, so
 identical declarations share one inline style while distinct weights, subsets,
 descriptors and versions survive. Declaration formatting differences may produce
 separate handles. Styles use a false source and no external stylesheet request.
-The registry contains only request-local data: there are no filesystem writes,
-transients or database changes. Provider files must remain publicly reachable
+The registry and manifest cache contain only request-local data: there are no filesystem writes,
+transients or database changes. Unchanged, older files reuse manifest reads and font
+verification within a request, including across prefixed copies. Recently changed
+files are checked again; Windows always rereads and rehashes because its ctime
+cannot reliably detect content changes. When a persistent WordPress object cache is
+available, successful font verification is also cached for five minutes, scoped to
+the hostname, resolved path, expected hash and file metadata (including device and
+inode). Hosts sharing an object cache must have unique hostnames. Filesystems must
+provide reliable device, inode and change timestamps; metadata-preserving changes
+or duplicate hostnames can defeat invalidation. Disable the persistent object cache
+for deployments where these guarantees cannot be made. Provider files must remain publicly reachable
 while pages using them are loaded, including cached pages that outlive the PHP
 request. Deployment and cache retention remain the project's responsibility.
 

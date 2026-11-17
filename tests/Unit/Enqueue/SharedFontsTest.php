@@ -55,7 +55,7 @@ final class SharedFontsTest extends BaseTestCase
 		$this->activeRegistry = 'main';
 		$this->styles = [];
 		$this->enqueued = [];
-		unset($GLOBALS['eightshift_shared_fonts_v1'], $GLOBALS['eightshift_shared_fonts_verified_v1']);
+		unset($GLOBALS['eightshift_shared_fonts_v1'], $GLOBALS['eightshift_shared_fonts_verified_v1'], $GLOBALS['eightshift_shared_fonts_manifests_v1']);
 		$GLOBALS['shared_fonts_test_hashes'] = 0;
 		$GLOBALS['shared_fonts_test_windows_ctimes'] = [];
 
@@ -74,6 +74,7 @@ final class SharedFontsTest extends BaseTestCase
 			require $copy;
 		}
 
+		Functions\when('wp_using_ext_object_cache')->justReturn(false);
 		Functions\when('home_url')->justReturn('https://example.test/');
 		Functions\when('wp_parse_url')->alias('parse_url');
 		Functions\when('wp_style_is')->alias(function (string $handle, string $status): bool {
@@ -97,6 +98,30 @@ final class SharedFontsTest extends BaseTestCase
 		unset($GLOBALS['eightshift_shared_fonts_v1'], $GLOBALS['eightshift_shared_fonts_verified_v1'], $GLOBALS['shared_fonts_test_hashes'], $GLOBALS['shared_fonts_test_windows_ctimes']);
 		$this->removeFixtureDirectory($this->fixtureDirectory);
 		parent::tearDown();
+	}
+
+	public function testPersistentCacheAvoidsHashingAcrossRequests(): void
+	{
+		if (\PHP_OS_FAMILY === 'Windows') {
+			self::markTestSkipped('Persistent stat caching is disabled on Windows.');
+		}
+		$cache = [];
+		Functions\when('wp_using_ext_object_cache')->justReturn(true);
+		Functions\when('wp_cache_get')->alias(static function (string $key, string $group) use (&$cache): mixed {
+			return $cache[$group][$key] ?? false;
+		});
+		Functions\when('wp_cache_set')->alias(static function (string $key, mixed $value, string $group, int $ttl) use (&$cache): bool {
+			$cache[$group][$key] = $value;
+			return true;
+		});
+		[$directory] = $this->createProvider('persistent');
+		\sleep(2);
+		self::enqueuePrefixed($directory, 'https://example.test/persistent/public/');
+		self::assertSame(1, $GLOBALS['shared_fonts_test_hashes']);
+		unset($GLOBALS['eightshift_shared_fonts_verified_v1']);
+		self::enqueuePrefixed($directory, 'https://example.test/persistent/public/');
+		self::assertSame(1, $GLOBALS['shared_fonts_test_hashes']);
+		self::assertNotEmpty($cache);
 	}
 
 	public function testRepeatedFontsRegisterEachFaceOnce(): void

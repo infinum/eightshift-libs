@@ -2,7 +2,7 @@
 
 Unified editor builds share one ES module graph between initial registration and lazy editor code. This is the default editor mode in the Frontend Libs Tailwind 4 beta's `defineThemeBuild()` preset. PHP enables it only when valid editor asset metadata declares both `format: "module"` and `readiness: "eightshift-editor-v1"` alongside `dependencies`.
 
-Classic editor builds, including Frontend Libs Tailwind 3.x builds, do not switch modes automatically; frontend and admin scripts also remain classic. Generated metadata dependencies are merged for all supported scripts. When switching build modes, deploy matching scripts and metadata together with compatible PHP integration; unified output cannot be loaded as a classic script. The metadata URL must map to the local public directory as described in [Generated script dependencies](generated-script-dependencies.md).
+Libs 14 requires unified editor builds from Frontend Libs Tailwind 4; classic editor builds, including 3.x builds, are unsupported. Frontend and admin scripts remain classic. Generated metadata dependencies are merged for all supported scripts. When switching build modes, deploy matching scripts and metadata together with compatible PHP integration; unified output cannot be loaded as a classic script. The metadata URL must map to the local public directory as described in [Generated script dependencies](generated-script-dependencies.md).
 
 ## Loading and completion
 
@@ -41,5 +41,7 @@ Repeated registration of the same handle is idempotent. Use distinct asset prefi
 - Classic script dependencies alone do not wait for module evaluation. Use the readiness promise where needed. Core editor boot and `wp.domReady` are not changed; verify block registration, editor controls and save/reload behavior with the target WordPress version and plugins.
 - CSP must allow the WordPress-generated inline bootstrap and the external module. Existing external-script nonces are preserved; the integration does not bypass CSP.
 - Filters that rewrite script IDs, sources, readiness attributes or loading strategies can break the integration. Late changes and dependency attributes added only to HTML are outside the registered dependency checks.
+
+Missing, invalid or classic editor metadata fails registration. Editor script arguments are controlled by `editorScriptArgs()` independently of frontend strategy. Unsafe late changes to module tags or dependency strategies suppress the module tag and log an error rather than throwing during output.
 
 [Back to README](../README.md)

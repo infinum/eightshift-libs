@@ -100,7 +100,7 @@ final class EditorModuleTestTagProcessor
 	}
 }
 
-final class EditorModuleEnqueueProbe extends AbstractEnqueueBlocks
+class EditorModuleEnqueueProbe extends AbstractEnqueueBlocks
 {
 	public function register(): void {}
 
@@ -129,6 +129,17 @@ final class EditorModuleEnqueueProbe extends AbstractEnqueueBlocks
 	}
 
 	public function addEditorBodyDebugClass(): void {}
+}
+
+final class StrictEditorMetadataProbe extends EditorModuleEnqueueProbe
+{
+	public ?array $metadata = null;
+
+	protected function readAssetMetadata(string $scriptKey): ?array
+	{
+		return $this->metadata;
+	}
+
 }
 
 final class EditorModuleTest extends BaseTestCase
@@ -395,6 +406,21 @@ final class EditorModuleTest extends BaseTestCase
 		$this->assertModuleTag($this->filterTag());
 	}
 
+	public function testEditorRejectsMissingAndClassicMetadata(): void
+	{
+		Functions\when('is_admin')->justReturn(true);
+		$service = new StrictEditorMetadataProbe();
+		foreach ([null, ['dependencies' => [], 'format' => 'classic'], ['dependencies' => [], 'format' => 'module'], ['dependencies' => [], 'format' => 'module', 'readiness' => 'invalid']] as $metadata) {
+			$service->metadata = $metadata;
+			try {
+				$service->enqueueBlockEditorScript();
+				self::fail('Expected metadata rejection.');
+			} catch (RuntimeException $exception) {
+				self::assertStringContainsString('metadata', $exception->getMessage());
+			}
+		}
+	}
+
 	public function testEnqueueServiceOwnsConfiguredAndCopiedRegistrations(): void
 	{
 		Functions\when('is_admin')->justReturn(true);
@@ -515,9 +541,7 @@ final class EditorModuleTest extends BaseTestCase
 		$this->scripts = clone $this->scripts;
 		$this->scripts->registered['dependency']->extra['strategy'] = 'defer';
 
-		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('unsupported strategy on: dependency');
-		$this->filterTag();
+		self::assertSame('', $this->filterTag());
 	}
 
 	#[DataProvider('invalidModuleTags')]
@@ -526,9 +550,7 @@ final class EditorModuleTest extends BaseTestCase
 		EditorModule::configure(self::HANDLE);
 		$this->scripts = clone $this->scripts;
 
-		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage($message);
-		$this->filterTag(self::HANDLE, $tag);
+		self::assertSame('', $this->filterTag(self::HANDLE, $tag));
 	}
 
 	/** @return array<string, array{string, string}> */

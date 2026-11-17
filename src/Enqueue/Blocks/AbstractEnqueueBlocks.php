@@ -66,19 +66,21 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 
 		$handle = $this->getBlockEditorScriptsHandle();
 		$metadata = $this->readAssetMetadata(static::BLOCKS_EDITOR_SCRIPT_URI);
-		$isModule = ($metadata['format'] ?? null) === 'module';
+		if ($metadata === null) {
+			throw new RuntimeException('Eightshift editor module metadata is missing or invalid.');
+		}
+		if (($metadata['format'] ?? null) !== 'module') {
+			throw new RuntimeException('Eightshift editor module metadata must declare module format.');
+		}
+		if (($metadata['readiness'] ?? null) !== 'eightshift-editor-v1') {
+			throw new RuntimeException('Unsupported Eightshift editor module readiness metadata.');
+		}
 
-		if ($isModule || \array_key_exists('readiness', $metadata ?? [])) {
-			if (!$isModule || ($metadata['readiness'] ?? null) !== 'eightshift-editor-v1') {
-				throw new RuntimeException('Unsupported Eightshift editor module readiness metadata.');
-			}
-
-			EditorModule::validateRegistration($handle, $this->scriptArgs());
-			$this->editorModuleRegistrations ??= new WeakMap();
-			$registration = \wp_scripts()->registered[$handle] ?? null;
-			if ($registration !== null && !isset($this->editorModuleRegistrations[$registration])) {
-				throw new RuntimeException('Eightshift editor module handle is already registered: ' . $handle);
-			}
+		EditorModule::validateRegistration($handle, $this->editorScriptArgs());
+		$this->editorModuleRegistrations ??= new WeakMap();
+		$registration = \wp_scripts()->registered[$handle] ?? null;
+		if ($registration !== null && !isset($this->editorModuleRegistrations[$registration])) {
+			throw new RuntimeException('Eightshift editor module handle is already registered: ' . $handle);
 		}
 
 		\wp_register_script(
@@ -86,13 +88,11 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 			$this->setAssetsItem(static::BLOCKS_EDITOR_SCRIPT_URI),
 			$this->mergeAssetDependencies(static::BLOCKS_EDITOR_SCRIPT_URI, $this->getBlockEditorScriptDependencies()),
 			$this->getAssetsVersion(),
-			\is_wp_version_compatible('6.3') ? $this->scriptArgs() : $this->scriptInFooter()
+			\is_wp_version_compatible('6.3') ? $this->editorScriptArgs() : $this->scriptInFooter()
 		);
 
-		if ($isModule) {
-			EditorModule::configure($handle);
-			$this->editorModuleRegistrations[\wp_scripts()->registered[$handle]] = true;
-		}
+		EditorModule::configure($handle);
+		$this->editorModuleRegistrations[\wp_scripts()->registered[$handle]] = true;
 
 		\wp_enqueue_script($handle);
 
@@ -101,6 +101,22 @@ abstract class AbstractEnqueueBlocks extends AbstractAssets
 		}
 
 		$this->addEditorBodyDebugClass();
+	}
+
+	/**
+	 * Reject invalid declared editor metadata rather than loading it as classic.
+	 *
+	 * @param string $scriptKey Script manifest key.
+	 */
+	protected function strictAssetMetadata(string $scriptKey): bool
+	{
+		return $scriptKey === static::BLOCKS_EDITOR_SCRIPT_URI;
+	}
+
+	/** Editor scripts are blocking independently of frontend strategy. */
+	protected function editorScriptArgs(): array
+	{
+		return ['in_footer' => $this->scriptInFooter()];
 	}
 
 	/**

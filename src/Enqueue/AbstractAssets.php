@@ -12,6 +12,7 @@ namespace EightshiftLibs\Enqueue;
 
 use EightshiftLibs\Helpers\Helpers;
 use EightshiftLibs\Services\ServiceInterface;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -150,6 +151,7 @@ abstract class AbstractAssets implements ServiceInterface
 	 *
 	 * @param string $scriptKey Script manifest key.
 	 * @return array<string, mixed>|null Metadata with a validated dependency list, or null.
+	 * @throws RuntimeException If required metadata is invalid.
 	 */
 	protected function readAssetMetadata(string $scriptKey): ?array
 	{
@@ -159,6 +161,17 @@ abstract class AbstractAssets implements ServiceInterface
 
 		$root = \realpath(Helpers::getProjectPaths('public'));
 		if ($root === false) {
+			if ($this->strictAssetMetadata($scriptKey)) {
+				$entry = \substr($scriptKey, 0, -3);
+				foreach ([$entry . '.asset.json', $entry . '.json'] as $key) {
+					try {
+						$this->setAssetsItem($key);
+					} catch (Throwable) {
+						continue;
+					}
+					throw new RuntimeException('Script metadata public directory is unavailable: ' . $key);
+				}
+			}
 			return null;
 		}
 
@@ -183,17 +196,27 @@ abstract class AbstractAssets implements ServiceInterface
 				continue;
 			}
 
+			$strict = $this->strictAssetMetadata($scriptKey);
 			$path = \wp_parse_url($asset, \PHP_URL_PATH);
 			if (!\is_string($path)) {
+				if ($strict) {
+					throw new RuntimeException('Invalid script metadata path: ' . $key);
+				}
 				continue;
 			}
 
 			$path = \rawurldecode($path);
 			if (\str_contains($path, "\0") || \str_contains($path, '\\')) {
+				if ($strict) {
+					throw new RuntimeException('Invalid script metadata path: ' . $key);
+				}
 				continue;
 			}
 
 			if (!\str_ends_with($path, '.json')) {
+				if ($strict) {
+					throw new RuntimeException('Invalid script metadata path: ' . $key);
+				}
 				continue;
 			}
 
@@ -203,6 +226,9 @@ abstract class AbstractAssets implements ServiceInterface
 
 			$file = \realpath($root . \DIRECTORY_SEPARATOR . \ltrim($path, '/'));
 			if ($file === false || !\str_starts_with($file, $root . \DIRECTORY_SEPARATOR) || !\is_file($file) || !\is_readable($file)) {
+				if ($strict) {
+					throw new RuntimeException('Script metadata is missing or unreadable: ' . $key);
+				}
 				continue;
 			}
 
@@ -211,11 +237,17 @@ abstract class AbstractAssets implements ServiceInterface
 			$data = \is_string($json) ? \json_decode($json, true) : null;
 			$generated = $data['dependencies'] ?? null;
 			if (!\is_array($generated) || !\array_is_list($generated)) {
+				if ($strict) {
+					throw new RuntimeException('Invalid script metadata dependencies: ' . $key);
+				}
 				continue;
 			}
 
 			foreach ($generated as $dependency) {
 				if (!\is_string($dependency) || \trim($dependency) === '') {
+					if ($strict) {
+						throw new RuntimeException('Invalid script metadata dependencies: ' . $key);
+					}
 					continue 2;
 				}
 			}
@@ -224,6 +256,16 @@ abstract class AbstractAssets implements ServiceInterface
 		}
 
 		return null;
+	}
+
+	/**
+	 * Whether a declared metadata entry must be valid.
+	 *
+	 * @param string $scriptKey Script manifest key.
+	 */
+	protected function strictAssetMetadata(string $scriptKey): bool
+	{
+		return false;
 	}
 
 	/**

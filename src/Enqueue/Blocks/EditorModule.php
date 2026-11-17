@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Opt-in parser-inserted editor module integration.
+ * Parser-inserted editor module integration.
  *
  * @package EightshiftLibs\Enqueue\Blocks
  */
@@ -167,7 +167,13 @@ final class EditorModule
 				return $tag;
 			}
 
-			self::validateDependencyStrategies($handle);
+			try {
+				self::validateDependencyStrategies($handle);
+			} catch (RuntimeException $exception) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Report a suppressed unsafe module without interrupting page output.
+				\error_log($exception->getMessage());
+				return '';
+			}
 
 			$processor = new WP_HTML_Tag_Processor($tag);
 			$matches = 0;
@@ -177,11 +183,15 @@ final class EditorModule
 				}
 
 				if ($processor->get_attribute('src') !== \html_entity_decode($src, \ENT_QUOTES | \ENT_HTML5, 'UTF-8')) {
-					throw new RuntimeException('Eightshift editor module source was changed: ' . $handle);
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Report a suppressed unsafe module without interrupting page output.
+					\error_log('Eightshift editor module source was changed: ' . $handle);
+					return '';
 				}
 
 				if ($processor->get_attribute('async') !== null || $processor->get_attribute('defer') !== null) {
-					throw new RuntimeException('Eightshift editor modules cannot have async or defer attributes: ' . $handle);
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Report a suppressed unsafe module without interrupting page output.
+					\error_log('Eightshift editor modules cannot have async or defer attributes: ' . $handle);
+					return '';
 				}
 
 				// URL fragments survive redirects unless the redirect explicitly replaces them.
@@ -193,7 +203,9 @@ final class EditorModule
 			}
 
 			if ($matches !== 1) {
-				throw new RuntimeException('Expected exactly one Eightshift editor module script tag: ' . $handle);
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Report a suppressed unsafe module without interrupting page output.
+				\error_log('Expected exactly one Eightshift editor module script tag: ' . $handle);
+				return '';
 			}
 
 			return $processor->get_updated_html();
