@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+
+- Read the production `ServiceClasses.json` cache before scanning the namespace in `AbstractMain`, so cached requests no longer scan the filesystem and reflect every class. Autowiring errors now surface when the cache is rebuilt, and non-service class files are no longer autoloaded on cached requests.
+
 ## [14.0.0]
 
 ### Added
