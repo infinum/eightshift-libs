@@ -119,13 +119,21 @@ abstract class AbstractMain extends Autowiring implements ServiceInterface
 	 */
 	protected function getServiceClassesWithDi(): array
 	{
-		$services = $this->getServiceClassesPreparedArray();
+		// Read the production cache first so cached requests skip the filesystem scan and reflection.
+		$services = Helpers::shouldCache() ? $this->loadServicesCache($this->getCachePath('ServiceClasses.json'), false) : null;
+
+		if ($services === null) {
+			$services = $this->getServiceClassesPreparedArray();
+
+			if ($services !== []) {
+				$services = $this->maybeCacheProductionServices($services);
+			}
+		}
 
 		if ($services === []) {
 			return [];
 		}
 
-		$services = $this->maybeCacheProductionServices($services);
 		$container = $this->getDiContainer($services);
 
 		$instances = [];
